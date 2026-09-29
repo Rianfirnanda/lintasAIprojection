@@ -8,7 +8,7 @@ Panduan per peran untuk sistem pemantauan harga pangan BPS Kabupaten Bengkulu Te
    Di ponsel Android/iOS dapat dipasang ke layar utama ("Tambahkan ke layar utama").
 2. Isi tanggal, pasar, kode petugas, dan kode responden anonim (R1, R2, …). **Jangan** menulis nama/NIK/HP pedagang.
 3. Isi harga per varian. Satuan dapat diubah (mis. ons); sistem mengonversi otomatis ke kg/liter.
-   Peringatan merah berarti harga di luar batas kewajaran — periksa ulang, tetap boleh disimpan.
+   Peringatan merah berarti harga di luar batas kewajaran. Periksa ulang, tetapi data tetap boleh disimpan.
 4. Tekan **Simpan ke antrean perangkat**. Data tetap tersimpan walau tidak ada sinyal (wilayah blank spot).
 5. Saat ada sinyal, tekan **Unduh CSV** atau **Bagikan** (WhatsApp/email) ke operator.
 6. Setelah operator mengonfirmasi, tekan **Hapus yang sudah dikirim**.
@@ -19,7 +19,7 @@ Batas tepat waktu: data hari pencatatan diinput paling lambat pukul 14.00 WIB (`
 
 1. Terima CSV dari petugas (atau siapkan CSV/Excel sesuai `docs/templat/templat_harga.csv`).
 2. Di GitHub buka `data/masuk/harga/` → **Add file → Upload files** → seret berkas → **Commit changes**.
-   Gunakan nama berkas unik, mis. `2026-10-09_PSR01_PTG01.csv`. **Jangan mengedit/menghapus berkas lama** —
+   Gunakan nama berkas unik, mis. `2026-10-09_PSR01_PTG01.csv`. **Jangan mengedit atau menghapus berkas lama**, karena
    berkas mentah adalah jejak audit; koreksi dilakukan lewat keputusan validator.
 3. Pipeline berjalan otomatis (tab **Actions → Pipeline & Dashboard**). Bila ingin memeriksa sebelum masuk `main`,
    unggah ke cabang baru dan buat pull request: workflow **Periksa data & kode** akan melaporkan baris yang ditolak.
@@ -36,9 +36,9 @@ Batas tepat waktu: data hari pencatatan diinput paling lambat pukul 14.00 WIB (`
 ## 3. Validator (quality gate)
 
 1. Buka halaman **Quality Gate**. Bagian *Antrean validasi manusia* berisi observasi yang ditahan beserta tandanya:
-   - `di_luar_batas_wajar` — kemungkinan salah ketik/satuan.
-   - `perubahan_ekstrem` / `pencilan_statistik` — lonjakan yang tidak didukung pasar/responden lain.
-   - `duplikat_konflik` — kunci sama, harga berbeda.
+   - `di_luar_batas_wajar`: kemungkinan salah ketik/satuan.
+   - `perubahan_ekstrem` / `pencilan_statistik`: lonjakan yang tidak didukung pasar/responden lain.
+   - `duplikat_konflik`: kunci sama, harga berbeda.
 2. Konfirmasi ke petugas bila perlu, pilih **Terima** atau **Tolak**, isi alasan dan nama validator.
 3. Tekan **Unduh berkas keputusan** dan unggah ke `data/validasi/`. Pada jalannya pipeline berikutnya, observasi yang
    diterima masuk analisis; yang ditolak dikeluarkan (berkas mentah tetap utuh).
@@ -66,7 +66,7 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 2. **Actions → AI Data Finder → Run workflow**, isi komoditas, periode, jenis data, wilayah, dan penyedia
    (`otomatis` = Gemini, lalu GitHub Models bila Gemini belum diatur/kuota habis).
 3. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**:
-   - *URL di hasil pencarian?* "tidak" = URL tidak muncul di hasil pencarian Google — periksa dengan saksama.
+   - *URL di hasil pencarian?* "tidak" = URL tidak muncul di hasil pencarian Google, jadi periksa dengan saksama.
    - *URL dapat dibuka?* "tidak" = alamat tidak bisa dibuka (kemungkinan dikarang/berubah).
    - Hasil GitHub Models ditandai **tanpa pencarian web**: semua URL wajib dicek manual.
 4. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
@@ -102,10 +102,10 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 - **Menambah pasar**: tambahkan baris di `config/pasar.csv` (isi koordinat dari peta, `koordinat_terverifikasi=1`,
   `blank_spot=1` bila perlu).
 - **Mengaktifkan item kajian Bapokting**: ubah `aktif` menjadi `1` di `config/komoditas.csv`.
-- **Mengubah ambang**: `config/pengaturan.json` (setiap perubahan tercatat di git — tulis alasan di pesan commit).
+- **Mengubah ambang**: `config/pengaturan.json` (setiap perubahan tercatat di git, jadi tulis alasan di pesan commit).
 - **Tanggal hari raya**: perbarui `config/kalender.csv` setelah SKB 3 Menteri terbit (`status=pasti`).
 - **Jadwal**: `.github/workflows/pipeline.yml` (cron dalam UTC; WIB = UTC+7). GitHub menonaktifkan workflow terjadwal
-  pada repo publik yang tidak ada aktivitas selama 60 hari — commit data rutin mencegah hal ini.
+  pada repo publik yang tidak ada aktivitas selama 60 hari. Commit data rutin mencegah hal ini.
 - **Mode demo**: `mode_demo` di `pengaturan.json` (`otomatis` / `ya` / `tidak`) atau input saat *Run workflow*.
 
 ## 9. Pemecahan masalah

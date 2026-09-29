@@ -158,7 +158,7 @@ function render() {
       </div>
       <div class="meta-kecil" style="text-align:right">
         Disusun otomatis ${esc(waktu(meta?.dibuat))} WIB<br>Data terakhir ${esc(tgl(meta?.tanggal_data_terakhir))}
-        ${meta?.mode_demo ? '<br><span class="lencana tinggi">DATA DEMO — bukan angka resmi</span>' : ""}
+        ${meta?.mode_demo ? '<br><span class="lencana tinggi">Data demo, bukan angka resmi</span>' : ""}
       </div>
     </header>
     ${p.periode_berjalan ? '<div class="pesan peringatan">Periode masih berjalan; angka dapat berubah sampai periode berakhir.</div>' : ""}
@@ -166,9 +166,9 @@ function render() {
     <h2>Ringkasan</h2>
     <ul class="ringkasan">${p.ringkasan.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>
     <div class="indeks"><span class="angka-besar">${p.indeks_sederhana === null ? "–" : angka(p.indeks_sederhana, 2)}</span>
-      <span class="meta-kecil">Indeks harga pangan sederhana (${esc(p.pembanding.sebelumnya)} = 100). Rata-rata geometrik relatif harga ${p.varian.length} varian tanpa bobot — indikatif, bukan IHK resmi BPS.</span></div>
+      <span class="meta-kecil">Indeks harga pangan sederhana (${esc(p.pembanding.sebelumnya)} = 100). Dihitung dari rata-rata geometrik harga ${p.varian.length} varian tanpa bobot. Angka ini hanya indikasi, bukan IHK resmi BPS.</span></div>
 
-    <h2>Harga rata-rata per varian — Kabupaten Bengkulu Tengah</h2>
+    <h2>Harga rata-rata per varian di Kabupaten Bengkulu Tengah</h2>
     ${tabelVarian(p)}
 
     <div class="kolom-dua">
@@ -188,7 +188,7 @@ function render() {
     <p>Hari pencatatan wajib: ${angka(p.kelengkapan.hari_wajib)} · kelengkapan rata-rata ${persen(p.kelengkapan.rata_persen)}</p>
     <ul>${p.kelengkapan.per_pasar.map((x) => `<li>${esc(x.nama_pasar)}: ${persen(x.kelengkapan_persen)}</li>`).join("")}</ul>
 
-    ${p.hari_raya ? `<h2>Menjelang hari raya</h2><p>${esc(p.hari_raya.nama)} — ${esc(tgl(p.hari_raya.tanggal, true))} (H-${p.hari_raya.h_minus} dari akhir periode).</p>` : ""}
+    ${p.hari_raya ? `<h2>Menjelang hari raya</h2><p>${esc(p.hari_raya.nama)} jatuh pada ${esc(tgl(p.hari_raya.tanggal, true))} (H-${p.hari_raya.h_minus} dari akhir periode).</p>` : ""}
 
     ${kinerjaModel(p.kinerja_model)}
     ${p.waktu_respons ? `<h2>Waktu respons tindak lanjut</h2><p>Median ${p.waktu_respons.median_hari_terkini ?? p.waktu_respons.median_hari_semua ?? "–"} hari
@@ -197,11 +197,11 @@ function render() {
     ${indikatorSmart(p.indikator)}
 
     <h2>Rekomendasi</h2>
-    <p class="meta-kecil">Disusun otomatis berbasis aturan sebagai bahan pertimbangan; wajib ditelaah analis sebelum disampaikan ke TPID.</p>
+    <p class="meta-kecil">Rekomendasi ini disusun otomatis sebagai bahan diskusi. Mohon ditelaah analis dulu sebelum dibawa ke TPID.</p>
     <ol class="rekomendasi">${p.rekomendasi.map((r) => `<li>${esc(r)}</li>`).join("")}</ol>
 
     <h2>Catatan metodologi</h2>
-    <p class="meta-kecil">Harga harian Bengkulu Tengah = median observasi lolos quality gate dari sumber berprioritas tertinggi.
+    <p class="meta-kecil">Harga harian Bengkulu Tengah adalah median data yang lolos pemeriksaan dari sumber berprioritas tertinggi.
       Rata-rata periode = rerata harga harian yang tersedia. Volatilitas = simpangan baku perubahan log harga harian.
       Proyeksi H+7 memakai model terbaik hasil rolling-origin backtesting dengan interval 90%.
       Sumber: pencatatan harga pasar BPS Kabupaten Bengkulu Tengah; cuaca © Open-Meteo. Angka bukan rilis resmi BPS.</p>`;

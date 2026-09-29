@@ -15,7 +15,7 @@
   <div class="judul-halaman">
     <div>
       <h1>Sumber data</h1>
-      <p>Big Data di proyek ini = integrasi data yang beragam dan relevan dari banyak sumber, bukan sekadar data yang banyak.</p>
+      <p>Big Data di proyek ini berarti menggabungkan data yang beragam dan relevan dari banyak sumber, tidak hanya soal jumlahnya.</p>
     </div>
   </div>
 
@@ -35,7 +35,7 @@
 
   <section class="kartu">
     <div class="kartu-kepala">
-      <div><h2>Inventaris sumber (config/sumber.csv)</h2><p>Prioritas rekonsiliasi: angka lebih kecil = lebih dipercaya bila dua sumber berbeda.</p></div>
+      <div><h2>Inventaris sumber (config/sumber.csv)</h2><p>Kalau dua sumber berbeda angka, sumber dengan nomor prioritas lebih kecil yang dipakai.</p></div>
     </div>
     <div class="gulir-tabel"><table id="tabel-sumber"><thead><tr>
       <th>Kode</th><th>Nama</th><th>Kelompok</th><th>Metode akses</th><th>Frekuensi</th><th>Status</th>
@@ -45,7 +45,7 @@
   <section class="kartu">
     <div class="kartu-kepala">
       <div>
-        <h2>AI Data Finder — kandidat sumber</h2>
+        <h2>AI Data Finder: kandidat sumber</h2>
         <p>Agen AI gratis (Gemini + pencarian Google; cadangan GitHub Models) mencari kandidat sumber. Hasil berstatus <em>kandidat</em> dan wajib diverifikasi analis sebelum ditambahkan ke inventaris.</p>
       </div>
       <a class="tombol" id="tautan-finder" href="#">Jalankan pencarian</a>
@@ -89,7 +89,7 @@ if (!pencarian.length) {
     const kandidat = h.kandidat || [];
     return `<details ${p === pencarian[0] ? "open" : ""} style="margin-bottom:12px">
       <summary><strong>${esc(p.permintaan.komoditas)}</strong> · ${esc(p.permintaan.periode)} · ${esc(waktu(p.waktu))} · ${kandidat.length} kandidat · ${esc(p.penyedia || "anthropic")}</summary>
-      <p class="meta-kecil" style="margin:6px 0">Model: ${esc(p.model)}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web — semua URL wajib dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
+      <p class="meta-kecil" style="margin:6px 0">Model: ${esc(p.model)}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web, jadi semua URL perlu dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
       <p class="meta-kecil" style="margin:6px 0">Prompt: ${esc(p.permintaan.prompt)}</p>
       <div class="gulir-tabel"><table><thead><tr><th>Sumber</th><th>Wilayah</th><th>Periode</th><th>Komoditas/satuan</th><th>Frekuensi</th>
         <th>Akses</th><th>URL di hasil pencarian?</th><th>URL dapat dibuka?</th><th>Perlu izin?</th><th>Catatan</th></tr></thead><tbody>
@@ -98,7 +98,7 @@ if (!pencarian.length) {
         <td>${esc(k.wilayah)}<br><span class="meta-kecil">${esc(k.peran_wilayah)}</span></td><td>${esc(k.periode_data)}</td>
         <td>${esc(k.komoditas_varian)}<br><span class="meta-kecil">${esc(k.satuan)}</span></td><td>${esc(k.frekuensi_pembaruan)}</td>
         <td>${esc(k.metode_akses)}</td>
-        <td>${k.url_ada_di_hasil_pencarian === null || k.url_ada_di_hasil_pencarian === undefined ? '<span class="lencana polos">tidak ada pencarian</span>' : k.url_ada_di_hasil_pencarian ? '<span class="lencana baik">ya</span>' : '<span class="lencana tinggi">tidak — periksa</span>'}</td>
+        <td>${k.url_ada_di_hasil_pencarian === null || k.url_ada_di_hasil_pencarian === undefined ? '<span class="lencana polos">tidak ada pencarian</span>' : k.url_ada_di_hasil_pencarian ? '<span class="lencana baik">ya</span>' : '<span class="lencana tinggi">tidak, periksa</span>'}</td>
         <td>${k.url_dapat_diakses === true ? '<span class="lencana baik">ya</span>' : k.url_dapat_diakses === false ? '<span class="lencana tinggi">tidak</span>' : '<span class="lencana polos">belum pasti</span>'}<br><span class="meta-kecil">${esc(k.keterangan_url || "")}</span></td>
         <td>${k.perlu_izin ? '<span class="lencana rendah">ya</span>' : "tidak"}</td>
         <td class="meta-kecil">${esc(k.relevansi)} ${esc(k.catatan_keandalan)} ${esc(k.lisensi_atau_ketentuan)}</td></tr>`).join("")

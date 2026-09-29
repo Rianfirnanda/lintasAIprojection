@@ -40,14 +40,14 @@ function el(tag, attr = {}, induk) {
  * @param wadah  elemen .iris-wadah
  * @param varian ringkasan.varian
  * @param komoditas master.komoditas (menentukan urutan & kelompok)
- * @param ambang {kelompok: persen} — batas "di luar pola normal"
+ * @param ambang {kelompok: persen}: batas "di luar pola normal"
  * @param opsi {diLuar, sinyalTinggi, saatPilih(kode)}
  */
 export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
   wadah.innerHTML = "";
   const id = `iris${++nomor}`;
   const w = {
-    brass: warna("brass"), rule: warna("rule-2"), halus: warna("rule"), ink: warna("ink"), ink2: warna("ink-2"),
+    aksen: warna("aksen"), rule: warna("rule-2"), halus: warna("rule"), ink: warna("ink"), ink2: warna("ink-2"),
     muted: warna("muted"), up: warna("up"), down: warna("down"), netral: warna("baseline"), kritis: warna("critical"),
     bg: warna("bg"), surface2: warna("surface-2"),
   };
@@ -68,7 +68,7 @@ export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
 
   // Bezel instrumen: 120 tik, tiap 10 lebih panjang
   el("circle", { cx: C, cy: C, r: R_BEZEL, fill: "none", stroke: w.halus }, akar);
-  const tik = el("g", { stroke: w.brass, "stroke-opacity": 0.45 }, akar);
+  const tik = el("g", { stroke: w.aksen, "stroke-opacity": 0.45 }, akar);
   for (let i = 0; i < 120; i++) {
     const a = (i / 120) * Math.PI * 2 - Math.PI / 2;
     const [x1, y1] = titik(R_BEZEL, a), [x2, y2] = titik(i % 10 === 0 ? 276 : 285, a);
@@ -76,7 +76,7 @@ export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
   }
 
   // Serat iris di sekitar pupil (tekstur)
-  const serat = el("g", { stroke: w.brass, "stroke-opacity": 0.08 }, akar);
+  const serat = el("g", { stroke: w.aksen, "stroke-opacity": 0.08 }, akar);
   for (let i = 0; i < 180; i++) {
     const a = (i / 180) * Math.PI * 2;
     const [x1, y1] = titik(R_PUPIL + 4, a), [x2, y2] = titik(R_PUPIL + 22 + (i % 3) * 7, a);
@@ -121,7 +121,7 @@ export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
       el("path", { d: sektor(R_PUPIL, R_BUSUR, tengah - lebarSlot / 2, tengah + lebarSlot / 2), fill: "transparent" }, kel);
       // alur slot ±30%: memberi struktur "kelopak" pada iris
       el("path", { d: sektor(R_BASE - BATAS * SKALA, R_BASE + BATAS * SKALA, tengah - setengah, tengah + setengah),
-        fill: w.brass, "fill-opacity": 0.045 }, kel);
+        fill: w.aksen, "fill-opacity": 0.045 }, kel);
       if (adaData) el("path", { d: sektor(r1, r2, tengah - setengah, tengah + setengah), fill: isi }, kel);
       if (Math.abs(devAsli) > BATAS) {
         // tanda batang terpotong skala: dua garis melintang di ujung
@@ -170,7 +170,7 @@ export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
       sudut += lebarSlot;
     }
     const a1 = sudut;
-    el("path", { d: busur(R_BUSUR, a0 + lebarSlot * 0.12, a1 - lebarSlot * 0.12), fill: "none", stroke: w.brass,
+    el("path", { d: busur(R_BUSUR, a0 + lebarSlot * 0.12, a1 - lebarSlot * 0.12), fill: "none", stroke: w.aksen,
       "stroke-opacity": 0.55, "stroke-width": 1 }, akar);
     // label kelompok melengkung mengikuti cincin; di belahan bawah dibalik agar tetap terbaca
     const tengahGrup = (a0 + a1) / 2;
@@ -194,16 +194,16 @@ export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
   }
 
   // Pupil
-  el("circle", { cx: C, cy: C, r: R_PUPIL, fill: w.surface2, stroke: w.brass, "stroke-opacity": 0.5, "stroke-width": 1 }, akar);
-  el("circle", { cx: C, cy: C, r: R_PUPIL - 7, fill: "none", stroke: w.brass, "stroke-opacity": 0.14, "stroke-width": 0.8,
+  el("circle", { cx: C, cy: C, r: R_PUPIL, fill: w.surface2, stroke: w.aksen, "stroke-opacity": 0.5, "stroke-width": 1 }, akar);
+  el("circle", { cx: C, cy: C, r: R_PUPIL - 7, fill: "none", stroke: w.aksen, "stroke-opacity": 0.14, "stroke-width": 0.8,
     "stroke-dasharray": "1 3" }, akar);
   if (opsi.sinyalTinggi) {
     el("circle", { cx: C, cy: C, r: R_PUPIL + 6, fill: "none", stroke: w.kritis, "stroke-width": 1.2, class: "iris-pupil-denyut" }, akar);
   }
-  const t0 = el("text", { x: C, y: C - 42, "text-anchor": "middle", ...huruf, "font-size": 8.5, "letter-spacing": 2.6, fill: w.brass }, akar);
+  const t0 = el("text", { x: C, y: C - 42, "text-anchor": "middle", ...huruf, "font-size": 8.5, "letter-spacing": 2.6, fill: w.aksen }, akar);
   t0.textContent = "LINTAS AI";
-  const angkaBesar = el("text", { x: C, y: C + 18, "text-anchor": "middle", "font-family": "Instrument Serif, serif",
-    "font-size": 76, fill: w.ink }, akar);
+  const angkaBesar = el("text", { x: C, y: C + 18, "text-anchor": "middle", "font-family": "Plex Mono, monospace", "font-weight": 500,
+    "font-size": 64, fill: w.ink }, akar);
   angkaBesar.textContent = opsi.diLuar === null || opsi.diLuar === undefined ? "–" : String(opsi.diLuar);
   const t1 = el("text", { class: "iris-kecil", x: C, y: C + 40, "text-anchor": "middle", ...huruf, "font-size": 8.5, "letter-spacing": 1.4, fill: w.muted }, akar);
   const menunggu = opsi.diLuar === null || opsi.diLuar === undefined;
@@ -213,9 +213,9 @@ export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
 }
 
 export function legendaIris() {
-  return `<span><span class="kunci-pita" style="background:var(--up)"></span>Di atas baseline</span>
-    <span><span class="kunci-pita" style="background:var(--down)"></span>Di bawah baseline</span>
+  return `<span><span class="kunci-pita" style="background:var(--up)"></span>Di atas harga normal</span>
+    <span><span class="kunci-pita" style="background:var(--down)"></span>Di bawah harga normal</span>
     <span><span class="kunci-pita" style="background:var(--baseline)"></span>Selisih &lt;1%</span>
     <span><span class="kunci-titik" style="background:var(--critical)"></span>Sinyal prioritas</span>
-    <span class="catatan">Batang terang = melewati ambang kelompok · skala linear, dipotong di ±30%</span>`;
+    <span class="catatan">Batang terang melewati ambang kelompoknya. Skala linear, dipotong di ±30%</span>`;
 }

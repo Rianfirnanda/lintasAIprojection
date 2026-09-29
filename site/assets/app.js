@@ -146,7 +146,7 @@ export async function pasangKerangka(aktif) {
   kepala.className = "kepala";
   kepala.innerHTML = `
     <div class="kepala-dalam">
-      <a class="merek" href="index.html" aria-label="${NAMA_SISTEM} — beranda">
+      <a class="merek" href="index.html" aria-label="${NAMA_SISTEM}, beranda">
         ${IKON}
         <span class="merek-teks"><span class="merek-nama">${NAMA_SISTEM}</span><span class="merek-sub">Pemantauan Harga Pangan · BPS Kabupaten Bengkulu Tengah</span></span>
       </a>
@@ -194,21 +194,21 @@ export async function pasangKerangka(aktif) {
     <span class="opsional">Observasi <b>${angka(meta.jumlah?.observasi_dipakai)}</b></span>
     <span class="opsional">Wilayah <b>${esc(meta.wilayah_target?.nama || "")}</b></span>
     <span class="opsional">Pipeline <b>v${esc(meta.versi)}</b></span>
-    ${meta.mode_demo ? "<span><b style=\"color:var(--brass-2)\">Mode demo</b></span>" : ""}
+    ${meta.mode_demo ? "<span><b style=\"color:var(--aksen-2)\">Mode demo</b></span>" : ""}
   </div>`;
   kepala.after(telemetri);
   if (meta.mode_demo) {
     const b = document.createElement("div");
     b.className = "banner-demo";
     b.setAttribute("role", "status");
-    b.innerHTML = `<div><strong>DATA DEMO — BUKAN ANGKA RESMI.</strong> Belum ada berkas harga nyata di <code>data/masuk/harga</code>; seluruh angka di bawah adalah data sintetis untuk uji sistem. Mode demo mati otomatis setelah data pertama diunggah.</div>`;
+    b.innerHTML = `<div><strong>MODE DEMO.</strong> Angka di halaman ini masih data contoh untuk menguji sistem, bukan angka resmi. Begitu berkas harga pertama masuk ke <code>data/masuk/harga</code>, data asli langsung menggantikannya.</div>`;
     telemetri.after(b);
   }
   const tautanRun = meta.url_run ? ` · <a href="${esc(meta.url_run)}">log proses</a>` : "";
   const tautanRepo = meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">repositori</a>` : "";
   kaki.innerHTML = `
     <p><span class="mono" style="letter-spacing:.12em;color:var(--ink-2)">${NAMA_SISTEM.toUpperCase()}</span> · BPS Kabupaten Bengkulu Tengah · Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
-    <p>Sinyal dan proyeksi adalah alat bantu analisis dan wajib diverifikasi manusia sebelum menjadi dasar keputusan. Angka pada dashboard ini bukan rilis resmi BPS.</p>
+    <p>Sinyal dan proyeksi di sini membantu analisis, tetapi tetap perlu dicek petugas sebelum dipakai untuk mengambil keputusan. Angka di dashboard ini bukan rilis resmi BPS.</p>
     <p>Sumber: BPS Kabupaten Bengkulu Tengah (pencatatan harga pasar), Pemda (bila tersedia), cuaca © Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
     ${tautanLayanan(meta.layanan)}`;
   // Kanvas grafik & SVG iris baru memakai huruf Plex setelah berkasnya termuat.

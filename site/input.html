@@ -16,7 +16,7 @@
   <div class="judul-halaman">
     <div>
       <h1>Input harga pasar (luring-ke-daring)</h1>
-      <p>Formulir tetap bisa dipakai tanpa sinyal setelah halaman pernah dibuka sekali. Data tersimpan di perangkat sampai diekspor dan dikirim.</p>
+      <p>Cukup buka halaman ini sekali saat ada sinyal, setelah itu formulir tetap bisa dipakai tanpa internet. Data tersimpan di perangkat sampai Anda kirim.</p>
     </div>
     <span class="status-koneksi" id="status-koneksi"></span>
   </div>
@@ -31,7 +31,7 @@
       <label>Pasar<select id="pasar" required></select></label>
       <label>Kode petugas<input type="text" id="petugas" placeholder="mis. PTG01" required autocomplete="off"></label>
       <label>Kode responden (anonim)<input type="text" id="responden" placeholder="mis. R1" autocomplete="off"></label>
-      <label>Sumber<select id="sumber"><option value="PSR-ENUM">PSR-ENUM — pencatatan petugas pasar</option><option value="BPS-HRG">BPS-HRG — survei harga BPS</option><option value="PMD-DISDAG">PMD-DISDAG — Dinas Perdagangan</option></select></label>
+      <label>Sumber<select id="sumber"><option value="PSR-ENUM">PSR-ENUM: pencatatan petugas pasar</option><option value="BPS-HRG">BPS-HRG: survei harga BPS</option><option value="PMD-DISDAG">PMD-DISDAG: Dinas Perdagangan</option></select></label>
     </form>
   </section>
 
@@ -93,7 +93,7 @@ function tulis(kunci, nilai) {
 
 function statusKoneksi() {
   document.getElementById("status-koneksi").innerHTML = navigator.onLine
-    ? '<span class="lencana baik">daring</span>' : '<span class="lencana rendah">luring — data tetap tersimpan di perangkat</span>';
+    ? '<span class="lencana baik">daring</span>' : '<span class="lencana rendah">luring, data tetap tersimpan di perangkat</span>';
 }
 window.addEventListener("online", statusKoneksi);
 window.addEventListener("offline", statusKoneksi);

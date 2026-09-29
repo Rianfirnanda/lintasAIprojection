@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lintas AI Projection · BPS Kabupaten Bengkulu Tengah</title>
-  <meta name="description" content="Dashboard pemantauan harga pangan berbasis AI dan Big Data — BPS Kabupaten Bengkulu Tengah untuk TPID.">
+  <meta name="description" content="Dashboard pemantauan harga pangan berbasis AI dan Big Data dari BPS Kabupaten Bengkulu Tengah untuk TPID.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
@@ -40,7 +40,7 @@
       <div class="kartu-kepala">
         <div>
           <h2 id="judul-grafik">Pergerakan harga</h2>
-          <p id="info-model">Aktual, baseline, proyeksi 14 hari, dan interval prediksi</p>
+          <p id="info-model">Harga aktual, harga normal, dan proyeksi 14 hari ke depan</p>
         </div>
         <div class="baris-kontrol">
           <label class="sr-only" for="pilih-varian">Varian</label>
@@ -60,7 +60,7 @@
 
     <section class="kartu" aria-labelledby="judul-prioritas">
       <div class="kartu-kepala">
-        <div><h2 id="judul-prioritas">Komoditas prioritas</h2><p>Sinyal aktif yang perlu diverifikasi</p></div>
+        <div><h2 id="judul-prioritas">Komoditas prioritas</h2><p>Sinyal aktif yang perlu dicek</p></div>
         <a class="tombol" href="sinyal.html">Semua sinyal</a>
       </div>
       <ul class="daftar-sinyal" id="daftar-prioritas"></ul>
@@ -75,12 +75,12 @@
     </section>
 
     <section class="kartu" aria-labelledby="judul-hariraya">
-      <div class="kartu-kepala"><div><h2 id="judul-hariraya">Situasi menjelang hari raya</h2><p>Kenaikan puncak historis di sekitar hari raya</p></div></div>
+      <div class="kartu-kepala"><div><h2 id="judul-hariraya">Situasi menjelang hari raya</h2><p>Seberapa tinggi harga naik pada hari raya sebelumnya</p></div></div>
       <div id="hari-raya"></div>
     </section>
 
     <section class="kartu" aria-labelledby="judul-tl">
-      <div class="kartu-kepala"><div><h2 id="judul-tl">Tindak lanjut sinyal harga</h2><p>Status sinyal anomali (umpan balik TPID)</p></div></div>
+      <div class="kartu-kepala"><div><h2 id="judul-tl">Tindak lanjut sinyal harga</h2><p>Status sinyal anomali dari TPID</p></div></div>
       <div id="tindak-lanjut"></div>
     </section>
   </div>
@@ -89,7 +89,7 @@
     <div class="kartu-kepala">
       <div>
         <h2 id="judul-tabel">Perbandingan perubahan harga</h2>
-        <p>Perubahan harga terakhir terhadap harian, mingguan, bulanan, triwulanan, semesteran, dan tahunan. Klik baris untuk melihat grafik.</p>
+        <p>Harga terakhir dibanding sehari, seminggu, sebulan, tiga bulan, enam bulan, dan setahun sebelumnya. Klik baris untuk membuka grafiknya.</p>
       </div>
       <div class="legenda" style="margin:0">
         <span><span class="kunci-pita" style="background:var(--up-wash-strong)"></span>Naik ≥ 2× ambang</span>
@@ -164,12 +164,12 @@ function renderObservatorium(r, master, meta) {
     ? `Pembacaan · ${tgl(meta.tanggal_data_terakhir, true)}` : "Observatorium siap · belum ada pembacaan";
   const kalimat = [];
   if (terjauh && Math.abs(terjauh.deviasi_persen) >= 1) {
-    kalimat.push(`Penyimpangan terbesar: ${esc(terjauh.nama)} ${persen(terjauh.deviasi_persen, 1, true)} ${terjauh.deviasi_persen > 0 ? "di atas" : "di bawah"} baseline 28 hari (${rp(terjauh.harga_terakhir)}/${esc(terjauh.satuan)}).`);
+    kalimat.push(`Yang paling menyimpang: ${esc(terjauh.nama)}, sekarang ${rp(terjauh.harga_terakhir)}/${esc(terjauh.satuan)} atau ${persen(Math.abs(terjauh.deviasi_persen), 1)} ${terjauh.deviasi_persen > 0 ? "di atas" : "di bawah"} harga normal 28 hari terakhir.`);
   }
   kalimat.push(k.sinyal_tinggi
-    ? `${angka(k.sinyal_tinggi)} sinyal prioritas menunggu verifikasi TPID.`
-    : "Tidak ada sinyal prioritas yang menunggu verifikasi.");
-  kalimat.push(`Dipantau: ${angka(k.jumlah_komoditas)} komoditas, ${angka(k.jumlah_varian)} varian, ${angka(k.pasar_target)} pasar target.`);
+    ? `${angka(k.sinyal_tinggi)} sinyal prioritas sedang menunggu dicek TPID.`
+    : "Belum ada sinyal prioritas yang perlu dicek.");
+  kalimat.push(`Saat ini kami memantau ${angka(k.jumlah_komoditas)} komoditas (${angka(k.jumlah_varian)} varian) di ${angka(k.pasar_target)} pasar.`);
   document.getElementById("dek").innerHTML = kalimat.join(" ");
 
   document.getElementById("bacaan").innerHTML = [
@@ -178,7 +178,7 @@ function renderObservatorium(r, master, meta) {
       `ketepatan waktu ${persen(k.ketepatan_persen)} · target ${k.target_ketepatan_persen}%`),
     bacaan("Perlu validasi", angka(k.perlu_validasi), `<a href="kualitas.html">antrean quality gate</a>`),
     bacaan("Galat proyeksi", k.smape_median === null ? "–" : `${angka(k.smape_median, 2)}%`,
-      `sMAPE median · ${k.model_lolos_target}/${k.model_dinilai} varian unggul ≥10% dari naif`),
+      `sMAPE median, ${k.model_lolos_target} dari ${k.model_dinilai} varian lebih akurat dari metode naif`),
   ].join("");
 
   const wadah = document.getElementById("iris");
@@ -215,7 +215,7 @@ function itemSinyal(s) {
 function renderPrioritas(daftar) {
   const aktif = daftar.filter((s) => s.aktif && s.jenis !== "drift").slice(0, 6);
   document.getElementById("daftar-prioritas").innerHTML = aktif.length ? aktif.map(itemSinyal).join("")
-    : `<li class="kosong">Tidak ada sinyal aktif. Harga seluruh varian berada dalam pola normal.</li>`;
+    : `<li class="kosong">Tidak ada sinyal aktif. Harga semua varian masih normal.</li>`;
 }
 
 function renderHariRaya(h) {
@@ -227,16 +227,16 @@ function renderHariRaya(h) {
       <span class="meta-kecil">${b.hari_menuju === 0 ? "hari ini" : `H-${b.hari_menuju}`}</span></p>`;
   }
   html += h.mode_intensif
-    ? `<div class="pesan peringatan" style="margin-bottom:10px"><strong>Mode pemantauan intensif aktif</strong> (${esc(h.posisi.acara)}, H${h.posisi.hari >= 0 ? "+" : ""}${h.posisi.hari}). Verifikasi sinyal setiap hari.</div>`
-    : `<p class="meta-kecil">Mode intensif aktif mulai H-${h.jendela.sebelum} hingga H+${h.jendela.sesudah}.</p>`;
+    ? `<div class="pesan peringatan" style="margin-bottom:10px"><strong>Pemantauan intensif sedang berjalan</strong> (${esc(h.posisi.acara)}, H${h.posisi.hari >= 0 ? "+" : ""}${h.posisi.hari}). Sinyal sebaiknya dicek setiap hari.</div>`
+    : `<p class="meta-kecil">Pemantauan intensif berjalan dari H-${h.jendela.sebelum} sampai H+${h.jendela.sesudah}.</p>`;
   if (h.profil_top?.length) {
     const maks = Math.max(...h.profil_top.map((p) => p.kenaikan_puncak_persen), 1);
     html += `<div class="corong" aria-label="Kenaikan puncak historis">` + h.profil_top.map((p) => `
       <div class="baris"><span>${esc(p.nama)}</span><div class="batang"><span style="width:${Math.max(0, p.kenaikan_puncak_persen) / maks * 100}%"></span></div>
       <span class="n">${persen(p.kenaikan_puncak_persen, 0, true)}</span></div>`).join("") + `</div>
-      <p class="meta-kecil" style="margin-top:8px">Rata-rata kenaikan puncak H-14 s.d. H+3 dibanding harga normal pada hari raya sebelumnya.</p>`;
+      <p class="meta-kecil" style="margin-top:8px">Rata-rata kenaikan tertinggi antara H-14 dan H+3 pada hari raya sebelumnya, dibanding harga normal.</p>`;
   } else {
-    html += `<p class="kosong">Riwayat belum mencakup hari raya sebelumnya.</p>`;
+    html += `<p class="kosong">Data historis belum mencakup hari raya sebelumnya.</p>`;
   }
   el.innerHTML = html;
 }
@@ -253,8 +253,8 @@ function renderTindakLanjut(r) {
   const maks = Math.max(1, ...baris.map((b) => b[1]));
   document.getElementById("tindak-lanjut").innerHTML = `<div class="corong">` + baris.map(([l, n]) => `
     <div class="baris"><span>${l}</span><div class="batang"><span style="width:${n / maks * 100}%"></span></div><span class="n">${n}</span></div>`).join("") +
-    `</div><p class="meta-kecil" style="margin-top:10px">Sinyal prioritas ditindaklanjuti: <strong>${persen(r.prioritas_ditindaklanjuti_persen, 0)}</strong> (target ≥ ${r.target_tindak_lanjut_persen}%).
-     Status diperbarui dari GitHub Issues / buku tindak lanjut.</p>`;
+    `</div><p class="meta-kecil" style="margin-top:10px">Sinyal prioritas yang sudah ditindaklanjuti: <strong>${persen(r.prioritas_ditindaklanjuti_persen, 0)}</strong> (target ${r.target_tindak_lanjut_persen}%).
+     Status diambil dari GitHub Issues dan buku tindak lanjut.</p>`;
 }
 
 function sel(x, kelompok) {
@@ -342,14 +342,14 @@ function renderPeta(daftar, master) {
   const belum = ada.filter((p) => !p.koordinat_terverifikasi).length;
   document.getElementById("catatan-peta").innerHTML =
     `<span class="kunci-titik" style="background:var(--series-1)"></span> pasar target &nbsp; <span class="kunci-titik" style="background:var(--series-3)"></span> pasar pembanding` +
-    (belum ? ` · ${belum} koordinat masih perkiraan (verifikasi di config/pasar.csv)` : "");
+    (belum ? ` · ${belum} koordinat masih perkiraan, perlu dicek di config/pasar.csv` : "");
 }
 
 function siapkanGrafik(varian, master, model) {
   const pilih = document.getElementById("pilih-varian");
   if (!varian.length) {
     document.querySelector(".wadah-grafik").innerHTML =
-      `<div class="pesan">Belum ada data harga yang lolos quality gate. Unggah berkas harga ke <code>data/masuk/harga/</code> atau periksa halaman <a href="kualitas.html">Quality Gate</a>.</div>`;
+      `<div class="pesan">Belum ada data harga yang lolos pemeriksaan. Unggah berkas harga ke <code>data/masuk/harga/</code> atau cek halaman <a href="kualitas.html">Quality Gate</a>.</div>`;
     pilih.disabled = true;
     return;
   }
@@ -380,7 +380,7 @@ function siapkanGrafik(varian, master, model) {
     document.getElementById("judul-grafik").textContent = `Pergerakan harga ${seri.nama} (${seri.satuan})`;
     const metrik = m?.metrik?.[m.model_terpilih];
     document.getElementById("info-model").textContent = m
-      ? `Model: ${m.nama_model}${metrik ? ` · sMAPE backtest ${angka(metrik.smape, 2)}%` : ""}${m.perbaikan_vs_naif_persen !== null ? ` · ${persen(m.perbaikan_vs_naif_persen, 1, true)} vs baseline naif` : ""}`
+      ? `Model ${m.nama_model}${metrik ? `, rata-rata meleset ${angka(metrik.smape, 2)}% saat diuji` : ""}${m.perbaikan_vs_naif_persen !== null ? ` (${persen(m.perbaikan_vs_naif_persen, 1, true)} dibanding metode naif)` : ""}`
       : "";
     document.getElementById("catatan-seri").textContent = (seri.catatan || []).join(" ");
   }

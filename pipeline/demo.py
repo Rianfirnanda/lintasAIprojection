@@ -4,7 +4,7 @@ PERINGATAN: seluruh angka buatan generator ini BUKAN angka resmi. Dashboard mena
 selama mode demo aktif. Mode demo otomatis mati begitu ada berkas harga nyata di data/masuk/harga.
 
 Generator sengaja menyuntikkan: pola hari raya, gejolak (anomali) dengan kebenaran yang diketahui, salah satuan,
-salah ketik, duplikat, baris kosong, keterlambatan kiriman — supaya quality gate dan deteksi anomali teruji.
+salah ketik, duplikat, baris kosong, keterlambatan kiriman, supaya quality gate dan deteksi anomali teruji.
 """
 
 from __future__ import annotations

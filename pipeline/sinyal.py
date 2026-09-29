@@ -1,6 +1,6 @@
 """Pembentukan sinyal prioritas + konteks otomatis (cuaca, hari raya, wilayah pembanding, stok).
 
-Konteks disusun berbasis aturan dari data yang tersedia — bukan kesimpulan kausal. Setiap sinyal wajib
+Konteks disusun berbasis aturan dari data yang tersedia, bukan kesimpulan sebab-akibat. Setiap sinyal wajib
 diverifikasi manusia sebelum dipakai sebagai dasar keputusan TPID.
 """
 
@@ -74,13 +74,13 @@ def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float 
         if normal and normal > 0:
             rasio = hujan7 / normal
             if rasio >= 1.5:
-                kalimat.append(f"Curah hujan 7 hari terakhir {hujan7:.0f} mm, {rasio:.1f}x di atas pola 90 hari sebelumnya "
-                               "(kandidat faktor gangguan panen/distribusi).")
+                kalimat.append(f"Curah hujan 7 hari terakhir {hujan7:.0f} mm, {rasio:.1f} kali lipat dari biasanya. "
+                               "Hujan setinggi ini bisa mengganggu panen atau pengiriman.")
             elif rasio <= 0.5:
-                kalimat.append(f"Curah hujan 7 hari terakhir {hujan7:.0f} mm, jauh di bawah pola 90 hari sebelumnya "
-                               "(kandidat faktor kekeringan).")
+                kalimat.append(f"Curah hujan 7 hari terakhir hanya {hujan7:.0f} mm, jauh di bawah biasanya. "
+                               "Cuaca kering mungkin ikut menekan pasokan.")
             else:
-                kalimat.append(f"Curah hujan 7 hari terakhir {hujan7:.0f} mm, dalam kisaran pola 90 hari sebelumnya.")
+                kalimat.append(f"Curah hujan 7 hari terakhir {hujan7:.0f} mm, masih wajar dibanding 90 hari sebelumnya.")
 
     # Hari raya terdekat.
     mendatang = [a for a in konf.kalender if a.jenis in ("hari_raya", "awal_ramadan") and 0 <= (a.tanggal - tgl).days <= 30]
@@ -88,8 +88,8 @@ def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float 
         a = mendatang[0]
         h = (a.tanggal - tgl).days
         konteks["hari_raya_terdekat"] = {"nama": a.nama, "tanggal": a.tanggal.isoformat(), "h_minus": h, "status": a.status}
-        kalimat.append(f"H-{h} menuju {a.nama} ({a.tanggal.isoformat()}{', tanggal perkiraan' if a.status != 'pasti' else ''}); "
-                       "permintaan musiman dapat berperan.")
+        kalimat.append(f"{a.nama} tinggal {h} hari lagi ({a.tanggal.isoformat()}{', tanggal masih perkiraan' if a.status != 'pasti' else ''}). "
+                       "Permintaan biasanya ikut naik menjelang hari raya.")
 
     # Wilayah pembanding (rantai pasok).
     pembanding_info = {}
@@ -111,10 +111,10 @@ def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float 
     if pembanding_info:
         konteks["wilayah_pembanding"] = pembanding_info
         bagian = [
-            f"{i['wilayah']} {_rp(i['harga'])}" + (f" (Bengkulu Tengah {i['selisih_persen']:+.0f}%)" if "selisih_persen" in i else "")
+            f"{i['wilayah']} {_rp(i['harga'])}" + (f" (selisih Bengkulu Tengah {i['selisih_persen']:+.0f}%)" if "selisih_persen" in i else "")
             for i in pembanding_info.values()
         ]
-        kalimat.append("Harga pembanding terakhir: " + "; ".join(bagian) + ".")
+        kalimat.append("Harga terakhir di wilayah pembanding: " + "; ".join(bagian) + ".")
 
     # Stok/pasokan dari Pemda bila ada.
     for ind in indeks.indikator_stok(wil, kode_varian):
@@ -124,7 +124,12 @@ def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float 
             entri = {"tanggal": kini[0].isoformat(), "nilai": kini[1]}
             if lalu and lalu[1]:
                 entri["perubahan_4_minggu_persen"] = round((kini[1] / lalu[1] - 1) * 100, 1)
-                kalimat.append(f"Indikator {ind.replace('_', ' ')}: {kini[1]:,.0f} ({entri['perubahan_4_minggu_persen']:+.0f}% dalam 4 minggu).".replace(",", "."))
+                nama_ind, satuan = ind.replace("_", " "), ""
+                if nama_ind.endswith(" ton"):
+                    nama_ind, satuan = nama_ind[:-4], " ton"
+                nilai_ind = f"{kini[1]:,.0f}".replace(",", ".")
+                kalimat.append(f"Menurut data Pemda, {nama_ind} saat ini {nilai_ind}{satuan} "
+                               f"({entri['perubahan_4_minggu_persen']:+.0f}% dibanding 4 minggu lalu).")
             konteks.setdefault("stok_pasokan", {})[ind] = entri
 
     return konteks, " ".join(kalimat)
@@ -156,7 +161,7 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
             sinyal.append({
                 "id": id_sinyal("anomali_harga", kode, wil, ep[0].tanggal.isoformat()),
                 "jenis": "anomali_harga", **dasar,
-                "judul": f"{v.nama} {akhir.arah} {abs(puncak.deviasi_persen):.0f}% dari baseline di {nama_wil}",
+                "judul": f"Harga {v.nama} {akhir.arah} {abs(puncak.deviasi_persen):.0f}% dari harga normal di {nama_wil}",
                 "tanggal_mulai": ep[0].tanggal.isoformat(), "tanggal_terakhir": akhir.tanggal.isoformat(),
                 "hari_anomali": len(ep), "keparahan": keparahan, "arah": akhir.arah, "aktif": aktif,
                 "nilai_aktual": round(akhir.nilai), "baseline": round(akhir.baseline),
@@ -205,8 +210,7 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
                     "deviasi_persen": round(potensi, 2),
                     "konteks": {"hari_raya": acara.nama, "tanggal": acara.tanggal.isoformat(), "posisi_hari": k_kini,
                                 "puncak_historis_hari": puncak_k},
-                    "narasi": f"Pada hari raya sebelumnya, harga {v.nama} mencapai puncak sekitar "
-                              f"H{puncak_k:+d} relatif terhadap hari raya.",
+                    "narasi": f"Pada hari raya sebelumnya, harga {v.nama} memuncak sekitar H{puncak_k:+d}.",
                 })
 
         # 4. Drift data (distribusi/volatilitas) dan drift model (penurunan metrik dua periode berturut-turut).
@@ -215,11 +219,11 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
             sinyal.append({
                 "id": id_sinyal("drift", kode, wil, tanggal_data.strftime("%Y-%m")),
                 "jenis": "drift", **dasar,
-                "judul": f"Pola harga/kinerja model {v.nama} berubah",
+                "judul": f"Pola harga {v.nama} berubah, model proyeksi perlu dicek",
                 "tanggal_mulai": tanggal_data.isoformat(), "tanggal_terakhir": tanggal_data.isoformat(),
                 "keparahan": "rendah", "arah": None, "aktif": True, "nilai_aktual": None, "baseline": None,
                 "deviasi_persen": None, "konteks": hv.drift,
-                "narasi": " ".join(alasan) + " Model perlu dievaluasi ulang/dikalibrasi.",
+                "narasi": " ".join(alasan) + " Sebaiknya model dievaluasi ulang sebelum proyeksinya dipakai.",
             })
 
     # 5. Data terlambat per pasar wilayah target.
@@ -238,8 +242,8 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
                 "keparahan": "tinggi" if tertinggal >= 2 * ambang_hari else "sedang", "arah": None, "aktif": True,
                 "nilai_aktual": None, "baseline": None, "deviasi_persen": None,
                 "konteks": {"tanggal_data_terakhir": p["tanggal_terakhir"], "blank_spot": p["blank_spot"]},
-                "narasi": ("Pasar ini berstatus blank spot: gunakan formulir luring lalu sinkronkan saat ada sinyal."
-                           if p["blank_spot"] else "Hubungi petugas pencatat untuk memastikan pengiriman data."),
+                "narasi": ("Pasar ini termasuk blank spot. Petugas bisa memakai formulir luring lalu mengirim data saat dapat sinyal."
+                           if p["blank_spot"] else "Coba hubungi petugas pencatat, kemungkinan datanya belum terkirim."),
             })
 
     sinyal.sort(key=lambda s: s["tanggal_terakhir"], reverse=True)
@@ -251,14 +255,14 @@ def alasan_drift(d: dict, s_cfg: dict, batas_penurunan: float) -> list[str]:
     alasan = []
     alfa = s_cfg.get("alfa_uji_drift", 0.01)
     if d.get("psi") is not None and d["psi"] >= s_cfg["psi_ambang"] and (d.get("p_psi") or 1) < alfa:
-        alasan.append(f"Distribusi perubahan harga harian 30 hari terakhir bergeser (PSI {d['psi']:.2f}, p={d['p_psi']:.3f}).")
+        alasan.append(f"Pola perubahan harga harian 30 hari terakhir bergeser (PSI {d['psi']:.2f}, p={d['p_psi']:.3f}).")
     lo, hi = s_cfg.get("rasio_volatilitas_batas", [0.5, 2.0])
     r = d.get("rasio_volatilitas")
     if r is not None and not (lo <= r <= hi) and (d.get("p_volatilitas") or 1) < alfa:
-        alasan.append(f"Volatilitas 30 hari terakhir {r:.1f}x dibanding 4 bulan sebelumnya (p={d['p_volatilitas']:.3f}).")
+        alasan.append(f"Gejolak harga 30 hari terakhir {r:.1f} kali lipat dibanding 4 bulan sebelumnya (p={d['p_volatilitas']:.3f}).")
     p0, p1 = d.get("penurunan_periode_terakhir_persen"), d.get("penurunan_periode_sebelumnya_persen")
     if p0 is not None and p1 is not None and p0 > batas_penurunan and p1 > batas_penurunan:
-        alasan.append(f"Galat proyeksi (sMAPE) memburuk {p1:.0f}% dan {p0:.0f}% pada dua periode terakhir.")
+        alasan.append(f"Kesalahan proyeksi (sMAPE) membesar {p1:.0f}% lalu {p0:.0f}% dalam dua periode terakhir.")
     return alasan
 
 

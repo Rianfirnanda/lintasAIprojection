@@ -16,7 +16,7 @@
   <div class="judul-halaman">
     <div>
       <h1>Indikator kinerja</h1>
-      <p>Capaian terhadap indikator SMART Rancangan Aksi Perubahan (Tabel 1 &amp; 5). Nilai yang belum memenuhi ditampilkan apa adanya.</p>
+      <p>Capaian indikator SMART dari Rancangan Aksi Perubahan (Tabel 1 dan 5). Yang belum tercapai tetap ditampilkan apa adanya.</p>
     </div>
   </div>
 
@@ -150,7 +150,7 @@ const tautan = meta?.layanan || {};
 document.getElementById("layanan").innerHTML = `
   <p><a class="tombol" href="${esc(tautan.url_survei_eksternal || tautan.url_survei || "#")}">Isi survei kepuasan</a>
      <a class="tombol" href="${esc(tautan.url_pengaduan_eksternal || tautan.url_pengaduan || "#")}">Sampaikan pengaduan</a></p>
-  ${skm.ikm ? `<p style="margin-top:10px"><strong>IKM ${angka(skm.ikm, 2)}</strong> — mutu ${esc(skm.mutu)} (${esc(skm.kinerja)}), ${skm.responden} responden.
+  ${skm.ikm ? `<p style="margin-top:10px"><strong>IKM ${angka(skm.ikm, 2)}</strong>, mutu ${esc(skm.mutu)} (${esc(skm.kinerja)}), ${skm.responden} responden.
      Unsur terendah: ${esc(skm.unsur_terendah)}.</p>
      <div class="gulir-tabel"><table><thead><tr><th>Unsur</th><th class="angka">Nilai rata-rata (1–4)</th></tr></thead><tbody>
      ${skm.nrr_per_unsur.map((x) => `<tr><td>${esc(x.kode)}. ${esc(x.unsur)}</td><td class="angka">${angka(x.nrr, 2)}</td></tr>`).join("")}</tbody></table></div>`

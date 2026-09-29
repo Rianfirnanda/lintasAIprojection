@@ -158,7 +158,7 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     ringkas = publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, harian_pasar, hasil_varian,
                            seri_pembanding, daftar_sinyal, evaluasi, tanggal_data, pesan_github, data_kinerja)
 
-    # Notifikasi (Telegram/email) — setelah publikasi agar tautan dashboard & buletin sudah tersedia.
+    # Notifikasi (Telegram/email) dikirim setelah publikasi agar tautan dashboard & buletin sudah tersedia.
     laporan_mingguan = json.loads((keluaran / "laporan.json").read_text(encoding="utf-8")).get("mingguan", [])
     pesan_notifikasi = notifikasi.jalankan(konf, daftar_sinyal, laporan_mingguan, url_dashboard, pakai_demo) \
         if kirim_notifikasi else "notifikasi dilewati"

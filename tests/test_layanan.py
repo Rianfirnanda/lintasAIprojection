@@ -51,7 +51,7 @@ def test_ringkas_pengaduan_dan_kumpulkan():
     p = h["pengaduan"]
     assert (p["total"], p["terbuka"], p["ditanggapi"], p["ditanggapi_persen"]) == (2, 1, 1, 50.0)
     assert p["median_hari_selesai"] == 2.0 and p["per_jenis"]["Data terlambat / tidak diperbarui"] == 1
-    assert "Butuh GitHub Actions" in layanan.kumpulkan(None, date(2026, 9, 29))["catatan_ikm"]
+    assert "GitHub Actions" in layanan.kumpulkan(None, date(2026, 9, 29))["catatan_ikm"]
 
     class Gagal:
         def daftar_issue(self, label):

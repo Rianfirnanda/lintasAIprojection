@@ -63,7 +63,7 @@ def koreksi_supervisor(observasi: list, hari_ini: date) -> dict:
     lengkap = [s for s in seri if s["bulan"] < hari_ini.strftime("%Y-%m") and s["observasi"] >= 50]
     if len(lengkap) < 2:
         return {"per_bulan": seri, "acuan": None, "terkini": None, "perubahan_persen": None,
-                "catatan": "Butuh minimal dua bulan penuh data untuk dibandingkan."}
+                "catatan": "Perlu data minimal dua bulan penuh agar bisa dibandingkan."}
     acuan, terkini = lengkap[0], lengkap[-1]
     perubahan = round((terkini["persen"] / acuan["persen"] - 1) * 100, 1) if acuan["persen"] else None
     return {"per_bulan": seri, "acuan": acuan, "terkini": terkini, "perubahan_persen": perubahan}
@@ -101,7 +101,7 @@ def waktu_respons(sinyal: list[dict], buku: dict, status_issue: dict, hari_ini: 
     catatan.sort()
     hasil = {"jumlah_respons": len(catatan), "median_hari_semua": round(median(c[1] for c in catatan), 2) if catatan else None}
     if len(catatan) < jumlah_acuan + 3:
-        hasil["catatan"] = (f"Butuh minimal {jumlah_acuan + 3} sinyal yang sudah ditanggapi untuk membandingkan periode acuan "
+        hasil["catatan"] = (f"Perlu minimal {jumlah_acuan + 3} sinyal yang sudah ditanggapi untuk membandingkan periode acuan "
                             f"({jumlah_acuan} tanggapan pertama) dengan periode terkini.")
         hasil.update({"median_hari_acuan": None, "median_hari_terkini": None, "perbaikan_persen": None})
         return hasil
@@ -153,7 +153,7 @@ def stabilitas_segmen(hasil_varian: dict, varian: dict) -> dict:
 def ringkas_uptime(path: Path, hari_ini: date, hari: int = 30) -> dict:
     """Ringkas log uptime (dibuat workflow uptime.yml di cabang log-uptime)."""
     if not path.exists():
-        return {"catatan": "Log uptime belum tersedia (workflow Uptime belum berjalan)."}
+        return {"catatan": "Log uptime belum ada. Isinya muncul setelah workflow Uptime berjalan."}
     with path.open(newline="", encoding="utf-8") as f:
         baris = list(csv.DictReader(f))
     batas = hari_ini - timedelta(days=hari)
@@ -254,7 +254,7 @@ def indikator_smart(konf, hasil_qc, hasil_masuk, ringkasan_model: dict, evaluasi
           _status(uptime.get("uptime_persen"), 99.5, ">="), "Workflow Uptime (cabang log-uptime)", uptime.get("catatan", "")),
         i("D1", "Adopsi perubahan", "Tingkat adopsi SOP/dashboard", None, "35% → 95%", "diukur_manual",
           "Log penggunaan, survei kesiapan",
-          "GitHub Pages tidak menyediakan log akses; ukur lewat survei kesiapan & berita acara evaluasi."),
+          "GitHub Pages tidak mencatat kunjungan, jadi indikator ini diukur lewat survei kesiapan dan berita acara evaluasi."),
         i("K1", "Komunikasi & partisipasi", "Kepuasan pengguna (Indeks Kepuasan Masyarakat)", layanan.get("ikm"), 76.61,
           _status(layanan.get("ikm"), 76.61, ">="), "Survei kepuasan (Issue Forms)", layanan.get("catatan_ikm", ""), satuan=""),
         i("K2", "Komunikasi & partisipasi", "Pengaduan data yang sudah ditanggapi", layanan.get("pengaduan_ditanggapi_persen"),
