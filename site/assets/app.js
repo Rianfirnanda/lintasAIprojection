@@ -98,54 +98,84 @@ export function kelasPerubahan(x, ambang = 5) {
   return "";
 }
 
-// ---------- tema
+// ---------- tema (bawaan: observatorium gelap; "light" = kertas)
 function temaTersimpan() {
   try { return localStorage.getItem("tema"); } catch { return null; }
 }
 function simpanTema(t) {
-  try { t ? localStorage.setItem("tema", t) : localStorage.removeItem("tema"); } catch { /* abaikan */ }
+  try { localStorage.setItem("tema", t); } catch { /* abaikan */ }
 }
 const t0 = temaTersimpan();
-if (t0) document.documentElement.dataset.theme = t0;
+if (t0 === "light") document.documentElement.dataset.theme = "light";
 
 export function temaGelap() {
-  const t = document.documentElement.dataset.theme;
-  if (t) return t === "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return document.documentElement.dataset.theme !== "light";
 }
 
 const pendengarTema = new Set();
 export function saatTemaBerubah(fn) { pendengarTema.add(fn); }
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => pendengarTema.forEach((f) => f()));
 
 export function warna(nama) {
   return getComputedStyle(document.documentElement).getPropertyValue(`--${nama}`).trim();
 }
 
+// Gaya bawaan Chart.js mengikuti token tema (huruf Plex, garis tipis, tooltip datar).
+function aturGayaGrafik() {
+  const C = window.Chart;
+  if (!C) return;
+  C.defaults.font.family = warna("sans") || "sans-serif";
+  C.defaults.font.size = 11;
+  C.defaults.color = warna("muted");
+  C.defaults.borderColor = warna("grid");
+  const tip = C.defaults.plugins.tooltip;
+  Object.assign(tip, {
+    backgroundColor: warna("surface-2"), titleColor: warna("ink"), bodyColor: warna("ink-2"),
+    borderColor: warna("rule-2"), borderWidth: 1, cornerRadius: 2, padding: 10, boxPadding: 4,
+    titleFont: { family: warna("mono"), size: 11, weight: "500" }, bodyFont: { family: warna("sans"), size: 12 },
+  });
+}
+aturGayaGrafik();
+
 // ---------- kerangka halaman
-const IKON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/></svg>`;
+export const NAMA_SISTEM = "NETRA";
+const IKON = `<svg class="merek-ikon" viewBox="0 0 44 26" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
+  <path d="M1.5 13C9 2.6 35 2.6 42.5 13 35 23.4 9 23.4 1.5 13Z"/>
+  <circle cx="22" cy="13" r="7.2"/>
+  <circle cx="22" cy="13" r="2.7" fill="currentColor" stroke="none"/>
+  <g stroke-width="0.9">${Array.from({ length: 16 }, (_, i) => {
+    const a = (i / 16) * Math.PI * 2;
+    const r1 = 4.3, r2 = i % 4 === 0 ? 6.2 : 5.4;
+    return `<line x1="${(22 + Math.cos(a) * r1).toFixed(2)}" y1="${(13 + Math.sin(a) * r1).toFixed(2)}" x2="${(22 + Math.cos(a) * r2).toFixed(2)}" y2="${(13 + Math.sin(a) * r2).toFixed(2)}"/>`;
+  }).join("")}</g></svg>`;
 
 export async function pasangKerangka(aktif) {
   const kepala = document.createElement("header");
   kepala.className = "kepala";
   kepala.innerHTML = `
     <div class="kepala-dalam">
-      <a class="merek" href="index.html" style="color:inherit;text-decoration:none">
-        <span class="merek-ikon">${IKON}</span>
-        <span><strong>Pemantauan Harga Pangan</strong><small>BPS Kabupaten Bengkulu Tengah · TPID</small></span>
+      <a class="merek" href="index.html" aria-label="${NAMA_SISTEM} — beranda">
+        ${IKON}
+        <span class="merek-teks"><span class="merek-nama">${NAMA_SISTEM}</span><span class="merek-sub">Observatorium Harga Pangan · BPS Kabupaten Bengkulu Tengah</span></span>
       </a>
       <div class="kepala-kanan">
         <nav class="navigasi" aria-label="Navigasi utama">
           ${HALAMAN.map(([h, n]) => `<a href="${h}"${h === aktif ? ' aria-current="page"' : ""}>${n}</a>`).join("")}
         </nav>
-        <button class="tombol tombol-tema" type="button" aria-label="Ganti tema terang/gelap" title="Ganti tema">◐</button>
+        <button class="tombol tombol-tema" type="button" aria-label="Ganti tema terang/gelap">${temaGelap() ? "Terang" : "Gelap"}</button>
       </div>
     </div>`;
   document.body.prepend(kepala);
-  kepala.querySelector(".tombol-tema").addEventListener("click", () => {
+  // di layar sempit navigasi dapat digulir: pastikan halaman aktif terlihat
+  const navAktif = kepala.querySelector('.navigasi [aria-current="page"]');
+  if (navAktif) navAktif.parentElement.scrollLeft = Math.max(0, navAktif.offsetLeft - 16);
+  const tombolTema = kepala.querySelector(".tombol-tema");
+  tombolTema.addEventListener("click", () => {
     const baru = temaGelap() ? "light" : "dark";
-    document.documentElement.dataset.theme = baru;
+    if (baru === "light") document.documentElement.dataset.theme = "light";
+    else delete document.documentElement.dataset.theme;
     simpanTema(baru);
+    tombolTema.textContent = temaGelap() ? "Terang" : "Gelap";
+    aturGayaGrafik();
     pendengarTema.forEach((f) => f());
   });
 
@@ -160,20 +190,36 @@ export async function pasangKerangka(aktif) {
     kaki.innerHTML = `<p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline (GitHub Actions) terlebih dahulu.</p>`;
     return null;
   }
+  const umurJam = (Date.now() - new Date(meta.dibuat).getTime()) / 3.6e6;
+  const telemetri = document.createElement("div");
+  telemetri.className = "telemetri";
+  telemetri.setAttribute("aria-label", "Status sistem");
+  telemetri.innerHTML = `<div>
+    <span class="${umurJam < 36 ? "hidup" : ""}">${umurJam < 36 ? "Sistem aktif" : `<b style="color:var(--serious)">Belum diperbarui ${Math.round(umurJam / 24)} hari</b>`}</span>
+    <span>Data <b>${esc(tgl(meta.tanggal_data_terakhir))}</b></span>
+    <span>Diperbarui <b>${esc(waktu(meta.dibuat))} WIB</b></span>
+    <span class="opsional">Observasi <b>${angka(meta.jumlah?.observasi_dipakai)}</b></span>
+    <span class="opsional">Wilayah <b>${esc(meta.wilayah_target?.nama || "")}</b></span>
+    <span class="opsional">Pipeline <b>v${esc(meta.versi)}</b></span>
+    ${meta.mode_demo ? "<span><b style=\"color:var(--brass-2)\">Mode demo</b></span>" : ""}
+  </div>`;
+  kepala.after(telemetri);
   if (meta.mode_demo) {
     const b = document.createElement("div");
     b.className = "banner-demo";
     b.setAttribute("role", "status");
-    b.innerHTML = `<div><strong>DATA DEMO (sintetis) — bukan angka resmi.</strong> Sistem berjalan dalam mode demo karena belum ada berkas harga nyata di <code>data/masuk/harga</code>. Mode demo otomatis mati setelah data pertama diunggah.</div>`;
-    kepala.after(b);
+    b.innerHTML = `<div><strong>DATA DEMO — BUKAN ANGKA RESMI.</strong> Belum ada berkas harga nyata di <code>data/masuk/harga</code>; seluruh angka di bawah adalah data sintetis untuk uji sistem. Mode demo mati otomatis setelah data pertama diunggah.</div>`;
+    telemetri.after(b);
   }
   const tautanRun = meta.url_run ? ` · <a href="${esc(meta.url_run)}">log proses</a>` : "";
   const tautanRepo = meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">repositori</a>` : "";
   kaki.innerHTML = `
-    <p>Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
+    <p><span class="mono" style="letter-spacing:.2em;color:var(--ink-2)">${NAMA_SISTEM}</span> · Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
     <p>Sinyal dan proyeksi adalah alat bantu analisis dan wajib diverifikasi manusia sebelum menjadi dasar keputusan. Angka pada dashboard ini bukan rilis resmi BPS.</p>
     <p>Sumber: BPS Kabupaten Bengkulu Tengah (pencatatan harga pasar), Pemda (bila tersedia), cuaca © Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
     ${tautanLayanan(meta.layanan)}`;
+  // Kanvas grafik & SVG iris baru memakai huruf Plex setelah berkasnya termuat.
+  try { await document.fonts?.ready; } catch { /* abaikan */ }
   return meta;
 }
 

@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Harga Pangan</title>
+  <title>NETRA · Observatorium Harga Pangan</title>
   <meta name="description" content="Dashboard pemantauan harga pangan berbasis AI dan Big Data — BPS Kabupaten Bengkulu Tengah untuk TPID.">
+  <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/app.css">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
@@ -13,15 +14,25 @@
 </head>
 <body>
 <main class="utama">
-  <div class="judul-halaman">
-    <div>
-      <h1>Dashboard Pemantauan Harga Pangan TPID</h1>
-      <p id="subjudul">Kabupaten Bengkulu Tengah · memuat data…</p>
+  <section class="observatorium" aria-labelledby="judul-utama">
+    <div class="obs-teks">
+      <span class="eyebrow" id="eyebrow">Pembacaan</span>
+      <h1 id="judul-utama">Memuat observasi…</h1>
+      <p class="dek" id="dek"></p>
+      <div class="bacaan" id="bacaan" aria-label="Indikator utama"></div>
+      <div class="obs-aksi">
+        <a class="tombol utama-aksi" href="sinyal.html">Sinyal &amp; tindak lanjut</a>
+        <a class="tombol" href="laporan.html">Buletin</a>
+        <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh CSV harian</a>
+      </div>
     </div>
-    <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh harga harian (CSV)</a>
-  </div>
-
-  <section class="grid kpi-grid" id="kpi" aria-label="Indikator utama"></section>
+    <figure class="obs-iris">
+      <div class="iris-wadah" id="iris"></div>
+      <figcaption>
+        <div class="iris-legenda" id="iris-legenda"></div>
+      </figcaption>
+    </figure>
+  </section>
 
   <div class="grid dua-kolom">
     <section class="kartu" aria-labelledby="judul-grafik">
@@ -105,6 +116,7 @@
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, lencanaKeparahan, kelasPerubahan, saatTemaBerubah,
          JENIS_SINYAL, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
 import { gambarGrafikHarga, legendaHarga, potongSeri } from "./assets/grafik.js";
+import { gambarIris, legendaIris } from "./assets/iris.js";
 
 const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
 const meta = await pasangKerangka("index.html");
@@ -114,9 +126,7 @@ try {
   const [ringkasan, sinyal, pasar, master, model] = await Promise.all([
     muatJSON("ringkasan.json"), muatJSON("sinyal.json"), muatJSON("pasar.json"), muatJSON("master.json"), muatJSON("model.json"),
   ]);
-  document.getElementById("subjudul").textContent =
-    `${meta.wilayah_target.nama} · data per ${tgl(meta.tanggal_data_terakhir, true)} · ${ringkasan.kpi.jumlah_komoditas} komoditas, ${ringkasan.kpi.jumlah_varian} varian`;
-  renderKPI(ringkasan.kpi, meta);
+  renderObservatorium(ringkasan, master, meta);
   renderPrioritas(sinyal.sinyal);
   renderHariRaya(ringkasan.hari_raya);
   renderTindakLanjut(sinyal.ringkasan);
@@ -128,22 +138,66 @@ try {
   tampilkanGalat(utama, e);
 }
 
-function kpi(label, nilai, sub, meterPersen = null) {
-  const meter = meterPersen === null ? "" :
-    `<div class="meter" aria-hidden="true"><span style="width:${Math.max(0, Math.min(100, meterPersen))}%"></span></div>`;
-  return `<div class="kartu kpi"><div class="label">${esc(label)}</div><div class="nilai">${nilai}</div><div class="sub">${sub}</div>${meter}</div>`;
+function diLuarPola(v) {
+  return v.deviasi_persen !== null && v.deviasi_persen !== undefined && Math.abs(v.deviasi_persen) >= (AMBANG[v.kelompok] ?? 10);
 }
 
-function renderKPI(k, meta) {
-  document.getElementById("kpi").innerHTML = [
-    kpi("Cakupan pemantauan", `${k.jumlah_komoditas} / ${k.jumlah_varian}`, `komoditas / varian · ${k.pasar_target} pasar target`),
-    kpi("Data terakhir", tgl(meta.tanggal_data_terakhir), `${angka(meta.jumlah.observasi_dipakai)} observasi lolos quality gate`),
-    kpi("Kelengkapan data (30 hari)", persen(k.kelengkapan_persen), `ketepatan waktu ${persen(k.ketepatan_persen)} · target ${k.target_ketepatan_persen}%`, k.kelengkapan_persen),
-    kpi("Sinyal aktif", angka(k.sinyal_aktif), `${k.sinyal_tinggi} prioritas tinggi`),
-    kpi("Perlu validasi", angka(k.perlu_validasi), `<a href="kualitas.html">buka antrean quality gate</a>`),
-    kpi("Mutu model proyeksi", k.smape_median === null ? "–" : `${angka(k.smape_median, 2)}%`,
-        `sMAPE median · ${k.model_lolos_target}/${k.model_dinilai} varian ≥10% lebih baik dari baseline`),
+function bacaan(label, nilai, sub) {
+  return `<div><div class="label">${esc(label)}</div><div class="nilai">${nilai}</div><div class="sub">${sub}</div></div>`;
+}
+
+function renderObservatorium(r, master, meta) {
+  const k = r.kpi;
+  const varian = r.varian;
+  const luar = varian.filter(diLuarPola);
+  const judul = document.getElementById("judul-utama");
+  judul.innerHTML = !varian.length
+    ? `Menunggu data harga <em>pertama</em>.`
+    : luar.length
+      ? `${luar.length} dari ${varian.length} varian <em>di luar pola normal</em>.`
+      : `Seluruh ${varian.length} varian <em>dalam pola normal</em>.`;
+
+  const terjauh = [...varian].filter((v) => v.deviasi_persen !== null)
+    .sort((a, b) => Math.abs(b.deviasi_persen) - Math.abs(a.deviasi_persen))[0];
+  document.getElementById("eyebrow").textContent = meta.tanggal_data_terakhir
+    ? `Pembacaan · ${tgl(meta.tanggal_data_terakhir, true)}` : "Observatorium siap · belum ada pembacaan";
+  const kalimat = [];
+  if (terjauh && Math.abs(terjauh.deviasi_persen) >= 1) {
+    kalimat.push(`Penyimpangan terbesar: ${esc(terjauh.nama)} ${persen(terjauh.deviasi_persen, 1, true)} ${terjauh.deviasi_persen > 0 ? "di atas" : "di bawah"} baseline 28 hari (${rp(terjauh.harga_terakhir)}/${esc(terjauh.satuan)}).`);
+  }
+  kalimat.push(k.sinyal_tinggi
+    ? `${angka(k.sinyal_tinggi)} sinyal prioritas menunggu verifikasi TPID.`
+    : "Tidak ada sinyal prioritas yang menunggu verifikasi.");
+  kalimat.push(`Dipantau: ${angka(k.jumlah_komoditas)} komoditas, ${angka(k.jumlah_varian)} varian, ${angka(k.pasar_target)} pasar target.`);
+  document.getElementById("dek").innerHTML = kalimat.join(" ");
+
+  document.getElementById("bacaan").innerHTML = [
+    bacaan("Sinyal aktif", angka(k.sinyal_aktif), `${angka(k.sinyal_tinggi)} prioritas tinggi`),
+    bacaan("Kelengkapan data · 30 hari", persen(k.kelengkapan_persen),
+      `ketepatan waktu ${persen(k.ketepatan_persen)} · target ${k.target_ketepatan_persen}%`),
+    bacaan("Perlu validasi", angka(k.perlu_validasi), `<a href="kualitas.html">antrean quality gate</a>`),
+    bacaan("Galat proyeksi", k.smape_median === null ? "–" : `${angka(k.smape_median, 2)}%`,
+      `sMAPE median · ${k.model_lolos_target}/${k.model_dinilai} varian unggul ≥10% dari naif`),
   ].join("");
+
+  const wadah = document.getElementById("iris");
+  // tanpa data: iris tetap digambar sebagai slot kosong ("menunggu data")
+  const slot = varian.length ? varian
+    : master.varian.filter((v) => v.aktif !== false).map((v) => ({ ...v, deviasi_persen: null, sinyal: null }));
+  document.getElementById("iris-legenda").innerHTML = legendaIris();
+  const gambar = () => gambarIris(wadah, slot, master.komoditas, AMBANG, {
+    diLuar: varian.length ? luar.length : null,
+    sinyalTinggi: k.sinyal_tinggi > 0,
+    saatPilih: (kode) => {
+      const s = document.getElementById("pilih-varian");
+      if (![...s.options].some((o) => o.value === kode)) return;
+      s.value = kode;
+      s.dispatchEvent(new Event("change"));
+      document.getElementById("judul-grafik").scrollIntoView({ behavior: "smooth", block: "center" });
+    },
+  });
+  gambar();
+  saatTemaBerubah(gambar);
 }
 
 function itemSinyal(s) {

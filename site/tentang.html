@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Metodologi Sistem</title>
+  <title>Metodologi Sistem · NETRA</title>
   <meta name="description" content="Metodologi, arsitektur pipeline, tata kelola, dan panduan operasional sistem pemantauan harga pangan berbasis AI dan Big Data.">
+  <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/app.css">
 </head>
@@ -67,6 +68,17 @@
       <li><strong>Validasi &amp; konteks:</strong> aturan quality gate dan konteks otomatis (cuaca, hari raya, wilayah pembanding, stok) untuk setiap sinyal.</li>
       <li><strong>Analitik:</strong> model statistik yang transparan dan dapat diaudit (naif, rerata bergerak, Holt damped trend, profil hari raya). Model hanya dipakai bila terbukti lebih baik dari baseline pada backtest.</li>
       <li><strong>Persetujuan manusia:</strong> sinyal dan rekomendasi tidak otomatis menjadi keputusan; status verifikasi dicatat.</li>
+    </ul>
+  </section>
+
+  <section class="kartu prosa" id="iris">
+    <h2>Membaca Iris Harga (beranda)</h2>
+    <ul>
+      <li><strong>Satu batang = satu varian</strong>, dikelompokkan per komoditas searah jarum jam. Panjang batang = selisih harga terakhir terhadap <strong>baseline</strong> (median 28 hari), skala linear 2 px per 1%.</li>
+      <li><strong>Lingkar tengah</strong> = baseline (0%). Batang ke luar berwarna merah = di atas baseline; ke dalam berwarna biru = di bawah baseline; abu-abu = selisih kurang dari 1%. Lingkar tipis = ±10%, ±20%, ±30%.</li>
+      <li><strong>Batang terang</strong> = melewati ambang kelompok (pokok & pabrikan 5%, protein 10%, volatil 15%) dan diberi angka. Selisih di atas ±30% dipotong dan ditandai dua garis melintang; angka tetap angka sebenarnya.</li>
+      <li><strong>Titik merah</strong> = sinyal prioritas tinggi. Angka di pupil = jumlah varian di luar pola normal. Klik atau tekan Enter pada batang untuk membuka grafiknya.</li>
+      <li>Nama <strong>NETRA</strong> (netra = mata) menegaskan peran sistem sebagai "mata" TPID: mengamati, bukan memutuskan.</li>
     </ul>
   </section>
 

@@ -61,6 +61,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
     base: warna("baseline"), grid: warna("grid"), muted: warna("muted"), ink2: warna("ink-2"),
     surface: warna("surface"), kritis: warna("critical"),
   };
+  const huruf = { family: warna("mono"), size: 10 };
   const garis = (lbl, data, warnaGaris, extra = {}) => ({
     label: lbl, data, borderColor: warnaGaris, backgroundColor: warnaGaris, borderWidth: 2, pointRadius: 0,
     pointHoverRadius: 4, tension: 0, spanGaps: true, borderCapStyle: "round", borderJoinStyle: "round", ...extra,
@@ -95,8 +96,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: c.surface, titleColor: warna("ink"), bodyColor: c.ink2, borderColor: warna("border"),
-          borderWidth: 1, padding: 10, boxPadding: 4, usePointStyle: true,
+          usePointStyle: true,
           filter: (item) => item.raw !== null && !item.dataset._interval,
           callbacks: {
             title: (items) => {
@@ -115,11 +115,11 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
       scales: {
         x: {
           grid: { display: false }, border: { color: c.grid },
-          ticks: { color: c.muted, maxRotation: 0, autoSkipPadding: 24, callback(v) { return tgl(this.getLabelForValue(v)); } },
+          ticks: { color: c.muted, font: huruf, maxRotation: 0, autoSkipPadding: 24, callback(v) { return tgl(this.getLabelForValue(v)); } },
         },
         y: {
           grid: { color: c.grid }, border: { display: false },
-          ticks: { color: c.muted, callback: (v) => rp(v) },
+          ticks: { color: c.muted, font: huruf, callback: (v) => rp(v) },
         },
       },
     },

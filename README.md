@@ -1,4 +1,6 @@
-# Pemantauan Harga Pangan Berbasis AI dan Big Data — BPS Kabupaten Bengkulu Tengah
+# NETRA — Observatorium Harga Pangan BPS Kabupaten Bengkulu Tengah
+
+Pemantauan harga pangan berbasis AI dan Big Data untuk TPID.
 
 Sistem pemantauan harga 10 komoditas / 21 varian pangan untuk TPID Kabupaten Bengkulu Tengah. Sistem ini adalah
 **pipeline data**, bukan hanya dashboard:
@@ -27,6 +29,9 @@ menjadi alur tindak lanjut sinyal.
 | Notifikasi | Sinyal prioritas & buletin mingguan ke Telegram dan/atau email, tanpa kiriman ganda (`pipeline/notifikasi.py`) |
 | Layanan publik | Pengaduan data & Survei Kepuasan Masyarakat (9 unsur PermenPANRB 14/2017) lewat GitHub Issue Forms (`pipeline/layanan.py`) |
 | Layanan | Dashboard GitHub Pages (`site/`), GitHub Issues, unduhan CSV, log uptime per jam (`.github/workflows/uptime.yml`) |
+
+Beranda menampilkan **Iris Harga**: satu batang per varian yang menunjukkan selisih harga terakhir terhadap baseline
+28 hari (panduan membaca di halaman *Metodologi*). Tema bawaan gelap; tombol *Terang* untuk tema kertas; cetak selalu terang.
 
 Halaman dashboard: **Dashboard**, **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
 **Sumber Data**, **Input Harga** (dapat dipakai tanpa sinyal/PWA), **Metodologi**.

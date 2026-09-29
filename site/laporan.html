@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Buletin & Laporan Harga</title>
+  <title>Buletin & Laporan Harga · NETRA</title>
   <meta name="description" content="Buletin harga pangan mingguan, analisis bulanan, dan bahan rapat TPID triwulanan Kabupaten Bengkulu Tengah.">
+  <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/app.css">
   <style>
-    .dokumen { max-width: 980px; margin: 0 auto; }
+    .dokumen { max-width: 980px; margin: 0 auto; padding: 34px 40px 38px; }
+    @media (max-width: 640px) { .dokumen { padding: 20px 16px 24px; } }
     .dokumen h2 { margin: 18px 0 8px; font-size: 1.02rem; border-bottom: 1px solid var(--grid); padding-bottom: 4px; }
     .kop { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 10px; }
     .kop .instansi { font-size: 0.82rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -55,7 +57,7 @@
     </div>
   </div>
 
-  <article class="kartu dokumen" id="dokumen" aria-live="polite"></article>
+  <article class="kartu dokumen kertas" id="dokumen" aria-live="polite"></article>
 </main>
 
 <script type="module">
