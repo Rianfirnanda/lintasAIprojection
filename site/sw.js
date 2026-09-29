@@ -1,8 +1,11 @@
 // Service worker: formulir input tetap berfungsi tanpa sinyal (wilayah blank spot).
-const CACHE = "harga-benteng-v1";
+const CACHE = "netra-v2";
 const ASET = [
   "input.html", "assets/app.css", "assets/app.js", "assets/ikon.svg", "manifest.webmanifest",
   "data/master.json", "data/meta.json",
+  ...["ibm-plex-sans-latin-400-normal", "ibm-plex-sans-latin-400-italic", "ibm-plex-sans-latin-500-normal",
+      "ibm-plex-sans-latin-600-normal", "ibm-plex-mono-latin-400-normal", "ibm-plex-mono-latin-500-normal",
+      "instrument-serif-latin-400-normal", "instrument-serif-latin-400-italic"].map((f) => `vendor/font/${f}.woff2`),
 ];
 
 self.addEventListener("install", (e) => {
