@@ -1,0 +1,31 @@
+kode_komoditas,komoditas,kode_varian,varian,satuan,kelompok,paket,aktif,batas_bawah,batas_atas
+BRS,Beras,BRS01,Beras Kualitas Bawah I,kg,pokok,RAP21,1,7000,25000
+BRS,Beras,BRS02,Beras Kualitas Bawah II,kg,pokok,RAP21,1,7000,25000
+BRS,Beras,BRS03,Beras Kualitas Medium I,kg,pokok,RAP21,1,8000,27000
+BRS,Beras,BRS04,Beras Kualitas Medium II,kg,pokok,RAP21,1,8000,27000
+BRS,Beras,BRS05,Beras Kualitas Super I,kg,pokok,RAP21,1,9000,30000
+BRS,Beras,BRS06,Beras Kualitas Super II,kg,pokok,RAP21,1,9000,30000
+DAY,Daging Ayam,DAY01,Daging Ayam Ras Segar,kg,protein,RAP21,1,20000,75000
+TLR,Telur Ayam,TLR01,Telur Ayam Ras Segar,kg,protein,RAP21,1,18000,50000
+DSP,Daging Sapi,DSP01,Daging Sapi Kualitas I,kg,protein,RAP21,1,90000,250000
+DSP,Daging Sapi,DSP02,Daging Sapi Kualitas II,kg,protein,RAP21,1,80000,230000
+BWM,Bawang Merah,BWM01,Bawang Merah Ukuran Sedang,kg,volatil,RAP21,1,12000,100000
+BWP,Bawang Putih,BWP01,Bawang Putih Ukuran Sedang/Bonggol,kg,volatil,RAP21,1,15000,90000
+CMR,Cabai Merah,CMR01,Cabai Merah Besar,kg,volatil,RAP21,1,8000,180000
+CMR,Cabai Merah,CMR02,Cabai Merah Keriting,kg,volatil,RAP21,1,8000,180000
+CRW,Cabai Rawit,CRW01,Cabai Rawit Hijau,kg,volatil,RAP21,1,8000,180000
+CRW,Cabai Rawit,CRW02,Cabai Rawit Merah,kg,volatil,RAP21,1,8000,200000
+MGR,Minyak Goreng,MGR01,Minyak Goreng Curah,liter,pokok,RAP21,1,10000,35000
+MGR,Minyak Goreng,MGR02,Minyak Goreng Kemasan Bermerek I,liter,pokok,RAP21,1,12000,40000
+MGR,Minyak Goreng,MGR03,Minyak Goreng Kemasan Bermerek II,liter,pokok,RAP21,1,12000,40000
+GLP,Gula Pasir,GLP01,Gula Pasir Lokal,kg,pokok,RAP21,1,10000,30000
+GLP,Gula Pasir,GLP02,Gula Pasir Kualitas Premium,kg,pokok,RAP21,1,12000,35000
+IKN,Ikan,IKN01,Ikan Kembung,kg,protein,KAJIAN,0,15000,90000
+IKN,Ikan,IKN02,Ikan Tongkol,kg,protein,KAJIAN,0,15000,90000
+TPG,Tepung Terigu,TPG01,Tepung Terigu,kg,pabrikan,KAJIAN,0,7000,25000
+KDL,Kedelai,KDL01,Kedelai Impor,kg,pabrikan,KAJIAN,0,8000,25000
+TMP,Tempe,TMP01,Tempe (Blok),blok,pabrikan,KAJIAN,0,2000,15000
+SKM,Susu Kental Manis,SKM01,Susu Kental Manis,kaleng,pabrikan,KAJIAN,0,6000,25000
+GRM,Garam,GRM01,Garam Halus,bungkus,pabrikan,KAJIAN,0,1500,10000
+MIE,Mie Instan,MIE01,Mie Instan,bungkus,pabrikan,KAJIAN,0,1500,8000
+MRG,Margarin,MRG01,Margarin (Sachet),sachet,pabrikan,KAJIAN,0,3000,15000

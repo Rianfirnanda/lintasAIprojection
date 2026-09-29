@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Metodologi Sistem</title>
+  <meta name="description" content="Metodologi, arsitektur pipeline, tata kelola, dan panduan operasional sistem pemantauan harga pangan berbasis AI dan Big Data.">
+  <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Metodologi &amp; tata kelola</h1>
+      <p>Sistem ini adalah pipeline data, bukan sekadar dashboard. Dashboard hanya lapisan layanan di ujung pipeline.</p>
+    </div>
+  </div>
+
+  <section class="kartu">
+    <h2>Alur kerja</h2>
+    <div class="alur" style="margin-top:10px">
+      <span class="langkah">Sumber data</span><span class="panah">→</span><span class="langkah">Pengambilan</span><span class="panah">→</span>
+      <span class="langkah">Integrasi</span><span class="panah">→</span><span class="langkah">Penyimpanan</span><span class="panah">→</span>
+      <span class="langkah">Quality gate</span><span class="panah">→</span><span class="langkah">Analisis AI</span><span class="panah">→</span>
+      <span class="langkah">Dashboard</span><span class="panah">→</span><span class="langkah">Keputusan TPID</span><span class="panah">→</span>
+      <span class="langkah">Umpan balik</span>
+    </div>
+  </section>
+
+  <div class="grid dua-sama">
+    <section class="kartu prosa">
+      <h2>Arsitektur (implementasi di GitHub)</h2>
+      <ul>
+        <li><strong>Sumber:</strong> BPS (survei harga), pasar/pedagang (formulir petugas luring-ke-daring), Pemda (harga/stok/distribusi), AI Data Finder (penemuan kandidat sumber), Big Data sah (cuaca Open-Meteo, kalender hari raya; kandidat PIHPS, Panel Harga Bapanas, BMKG).</li>
+        <li><strong>Integrasi:</strong> berkas CSV/Excel di <code>data/masuk/</code>, konektor API terjadwal (cuaca), standardisasi kode varian/pasar/wilayah/sumber dan satuan (ons/gram → kg).</li>
+        <li><strong>Penyimpanan:</strong> data mentah = berkas di repositori (tidak diubah); data terstruktur = keluaran JSON; metadata = checksum SHA-256 per berkas; audit trail &amp; versi = riwayat git; cadangan = setiap clone repositori.</li>
+        <li><strong>Quality gate:</strong> deduplikasi, data hilang, batas kewajaran, pencilan, rekonsiliasi antar-sumber, validasi manusia, ketepatan waktu.</li>
+        <li><strong>Analisis AI:</strong> baseline, proyeksi 14 hari, interval prediksi, deteksi anomali, rolling-origin backtesting, drift, konteks otomatis.</li>
+        <li><strong>Layanan:</strong> dashboard GitHub Pages, sinyal prioritas, GitHub Issues untuk tindak lanjut, unduhan CSV.</li>
+      </ul>
+    </section>
+    <section class="kartu prosa">
+      <h2>Jadwal otomatis</h2>
+      <ul>
+        <li>Pipeline berjalan setiap hari kerja sekitar pukul 11.45 dan 15.45 WIB, serta setiap kali ada berkas baru di <code>data/</code> atau <code>config/</code>.</li>
+        <li>Konektor cuaca diperbarui pada setiap jalannya pipeline terjadwal.</li>
+        <li>Sinyal anomali berkeparahan tinggi dibuatkan GitHub Issue (maks. 5 per jalan) untuk verifikasi dan tindak lanjut.</li>
+        <li>Mode pemantauan intensif: H-14 hingga H+3 hari raya.</li>
+      </ul>
+      <h2>Peran pengguna</h2>
+      <ul>
+        <li><strong>Petugas lapangan:</strong> mencatat harga di <a href="input.html">Input Harga</a>, mengekspor CSV.</li>
+        <li><strong>Operator data:</strong> mengunggah CSV ke <code>data/masuk/</code>, memantau hasil <em>periksa</em>.</li>
+        <li><strong>Analis/validator:</strong> memutuskan antrean <a href="kualitas.html">quality gate</a>, memverifikasi sinyal.</li>
+        <li><strong>TPID:</strong> membaca dashboard, menindaklanjuti sinyal lewat Issues, memberi status.</li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="kartu prosa" id="ai-data-finder">
+    <h2>Peran AI dalam sistem</h2>
+    <ul>
+      <li><strong>AI Data Finder (discovery):</strong> agen Claude dengan pencarian web mencari kandidat sumber sesuai komoditas, wilayah, dan periode; keluaran terstruktur (nama, URL, periode, satuan, frekuensi, metode akses, lisensi). URL yang tidak muncul di hasil pencarian ditandai. Semua kandidat wajib diverifikasi analis. Dijalankan manual dari tab <em>Actions → AI Data Finder</em> (butuh secret <code>ANTHROPIC_API_KEY</code>).</li>
+      <li><strong>Validasi &amp; konteks:</strong> aturan quality gate dan konteks otomatis (cuaca, hari raya, wilayah pembanding, stok) untuk setiap sinyal.</li>
+      <li><strong>Analitik:</strong> model statistik yang transparan dan dapat diaudit (naif, rerata bergerak, Holt damped trend, profil hari raya). Model hanya dipakai bila terbukti lebih baik dari baseline pada backtest.</li>
+      <li><strong>Persetujuan manusia:</strong> sinyal dan rekomendasi tidak otomatis menjadi keputusan; status verifikasi dicatat.</li>
+    </ul>
+  </section>
+
+  <section class="kartu prosa">
+    <h2>Wilayah</h2>
+    <p><strong>Kabupaten Bengkulu Tengah</strong> adalah satu-satunya target pemantauan. <strong>Kabupaten Kepahiang</strong> (sentra produksi) dan <strong>Kota Bengkulu</strong> (pusat konsumsi) hanya dipakai sebagai konteks rantai pasok dan pembanding, sesuai kajian: harga Bengkulu Tengah ≈ harga Kepahiang + biaya angkut + margin + premi risiko.</p>
+    <h2>Komoditas</h2>
+    <p>10 komoditas pangan utama dan 21 varian dominan konsumsi mengikuti Tabel 2 Rancangan Aksi Perubahan. Sembilan item tambahan dari kajian 21 Bapokting (ikan, terigu, kedelai, tempe, SKM, garam, mi instan, margarin) sudah tersedia di <code>config/komoditas.csv</code> dengan <code>aktif=0</code> dan dapat diaktifkan bila diputuskan.</p>
+    <h2>Privasi &amp; keamanan</h2>
+    <ul>
+      <li>Repositori dan situs bersifat publik: jangan pernah mengunggah nama, NIK, nomor HP, atau alamat pedagang. Berkas dengan kolom semacam itu ditolak otomatis.</li>
+      <li>Kunci API disimpan sebagai GitHub Secrets, tidak pernah di kode atau situs.</li>
+      <li>Hak ubah data dikendalikan lewat hak akses kolaborator repositori dan (disarankan) aturan perlindungan cabang <code>main</code>.</li>
+    </ul>
+    <h2>Hal yang masih perlu dikonfirmasi</h2>
+    <ul>
+      <li>Daftar komoditas final (10/21 Rancangan vs 21 Bapokting kajian).</li>
+      <li>Sumber Big Data eksternal final dan izin pengambilan otomatis (PIHPS, Panel Harga Bapanas).</li>
+      <li>Batas kewajaran harga per varian dan koordinat pasar (saat ini nilai awal/perkiraan).</li>
+      <li>Tanggal hari raya berstatus perkiraan (menunggu SKB 3 Menteri).</li>
+      <li>Kebijakan publikasi: apakah data per pasar dan diskusi tindak lanjut boleh publik.</li>
+    </ul>
+  </section>
+</main>
+<script type="module">
+import { pasangKerangka } from "./assets/app.js";
+await pasangKerangka("tentang.html");
+</script>
+</body>
+</html>

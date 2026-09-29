@@ -1,0 +1,97 @@
+name: Pipeline & Dashboard
+
+# Menjalankan pipeline (ambil data -> quality gate -> analisis -> publikasi) lalu menerbitkan dashboard ke GitHub Pages.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/**"
+      - "config/**"
+      - "pipeline/**"
+      - "site/**"
+      - "tests/**"
+      - "requirements.txt"
+      - ".github/workflows/pipeline.yml"
+  schedule:
+    # Hari kerja sekitar 11.47 dan 15.47 WIB (UTC+7), setelah pencatatan pagi/siang.
+    - cron: "47 4 * * 1-5"
+    - cron: "47 8 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      demo:
+        description: "Mode demo (otomatis = demo hanya bila belum ada data harga nyata)"
+        type: choice
+        options: [otomatis, ya, tidak]
+        default: otomatis
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+
+concurrency:
+  group: pipeline-pages
+  cancel-in-progress: false
+
+jobs:
+  bangun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Pasang dependensi
+        run: pip install -r requirements.txt
+
+      - name: Uji otomatis
+        run: python -m pytest -q
+
+      - name: Ambil data cuaca (konektor Big Data)
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: python -m pipeline ambil-cuaca
+
+      - name: Simpan data konektor ke repositori (jejak audit)
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/masuk/konteks
+          if git diff --cached --quiet; then
+            echo "Tidak ada data konektor baru."
+          else
+            git commit -m "data: perbarui cuaca Open-Meteo"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Jalankan pipeline
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODE_DEMO: ${{ inputs.demo || 'otomatis' }}
+        run: python -m pipeline jalankan --keluaran site/data --demo "$MODE_DEMO"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  terbitkan:
+    needs: bangun
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

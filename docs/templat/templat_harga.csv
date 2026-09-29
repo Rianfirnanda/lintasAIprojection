@@ -1,0 +1,4 @@
+tanggal,kode_pasar,kode_varian,harga,satuan,kode_sumber,petugas,responden,id_klien,waktu_input,catatan
+2026-10-09,PSR01,BRS03,13500,kg,PSR-ENUM,PTG01,R1,,2026-10-09T10:15,
+2026-10-09,PSR01,CRW02,45.000,kg,PSR-ENUM,PTG01,R1,,2026-10-09T10:15,
+2026-10-09,PSR01,BWM01,3500,ons,PSR-ENUM,PTG01,R1,,2026-10-09T10:15,harga per ons dikonversi otomatis ke kg

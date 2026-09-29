@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sinyal Harga Pangan</title>
+  <meta name="description" content="Daftar sinyal harga (anomali, proyeksi, hari raya, keterlambatan data, drift) dan status tindak lanjut TPID.">
+  <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Sinyal &amp; tindak lanjut</h1>
+      <p>Setiap sinyal adalah bahan verifikasi, bukan kesimpulan. Status diperbarui lewat GitHub Issues atau buku tindak lanjut.</p>
+    </div>
+  </div>
+
+  <section class="grid kpi-grid" id="kpi"></section>
+
+  <section class="kartu">
+    <div class="baris-kontrol" style="margin-bottom:12px">
+      <label class="sr-only" for="f-jenis">Jenis</label>
+      <select id="f-jenis"><option value="">Semua jenis</option></select>
+      <label class="sr-only" for="f-keparahan">Keparahan</label>
+      <select id="f-keparahan"><option value="">Semua keparahan</option><option value="tinggi">Tinggi</option><option value="sedang">Sedang</option><option value="rendah">Rendah</option></select>
+      <label class="sr-only" for="f-status">Status</label>
+      <select id="f-status"><option value="">Semua status</option></select>
+      <label class="sr-only" for="f-cari">Cari</label>
+      <input type="search" id="f-cari" placeholder="Cari komoditas/pasar…">
+      <label class="cek"><input type="checkbox" id="f-aktif" checked> Hanya yang aktif</label>
+    </div>
+    <ul class="daftar-sinyal" id="daftar"></ul>
+  </section>
+
+  <div class="grid dua-sama">
+    <section class="kartu">
+      <h2>Cara memperbarui status sinyal</h2>
+      <div class="prosa" style="margin-top:8px;font-size:0.9rem">
+        <ol>
+          <li><strong>Lewat GitHub Issues (disarankan).</strong> Sinyal anomali berkeparahan tinggi otomatis dibuatkan issue berlabel <code>sinyal-harga</code>. Pasang satu label status: <code>status: terverifikasi</code>, <code>status: false-alarm</code>, <code>status: ditindaklanjuti</code>, atau <code>status: selesai</code>. Menutup issue = selesai.</li>
+          <li><strong>Lewat buku tindak lanjut.</strong> Buat baris CSV dengan formulir di samping, lalu tambahkan ke berkas di <code>data/tindak_lanjut/</code> (unggah lewat GitHub).</li>
+        </ol>
+        <p>Label <em>terverifikasi</em> dan <em>false alarm</em> menjadi dasar pengukuran precision/recall deteksi anomali di halaman <a href="model.html">Mutu Model</a>.</p>
+      </div>
+    </section>
+    <section class="kartu">
+      <h2>Buat baris buku tindak lanjut</h2>
+      <form id="form-tl" class="form-grid" style="margin-top:10px">
+        <label>ID sinyal<input type="text" id="tl-id" placeholder="klik 'catat' pada sinyal" required></label>
+        <label>Status
+          <select id="tl-status">
+            <option value="perlu_verifikasi">Perlu verifikasi</option>
+            <option value="terverifikasi">Terverifikasi</option>
+            <option value="false_alarm">False alarm</option>
+            <option value="ditindaklanjuti">Ditindaklanjuti</option>
+            <option value="selesai">Selesai</option>
+            <option value="anomali_terlewat">Anomali terlewat (tidak terdeteksi)</option>
+          </select>
+        </label>
+        <label>Petugas/analis<input type="text" id="tl-petugas" required></label>
+        <label>Kode varian (khusus anomali terlewat)<input type="text" id="tl-varian" placeholder="mis. CRW02"></label>
+        <label>Tanggal kejadian (khusus anomali terlewat)<input type="date" id="tl-kejadian"></label>
+        <label style="grid-column:1/-1">Catatan temuan/tindakan<textarea id="tl-catatan" rows="2"></textarea></label>
+        <div style="grid-column:1/-1" class="baris-kontrol">
+          <button class="tombol utama-aksi" type="submit">Salin baris CSV</button>
+          <span class="meta-kecil" id="tl-hasil"></span>
+        </div>
+      </form>
+      <p class="meta-kecil" style="margin-top:8px">Header berkas: <code>id_sinyal,status,catatan,petugas,tanggal,kode_varian,tanggal_kejadian</code></p>
+    </section>
+  </div>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, lencanaKeparahan, lencanaStatus, JENIS_SINYAL, STATUS_SINYAL,
+         tampilkanGalat, keCSV } from "./assets/app.js";
+
+await pasangKerangka("sinyal.html");
+let data;
+try {
+  data = await muatJSON("sinyal.json");
+} catch (e) {
+  tampilkanGalat(document.querySelector("main"), e);
+  throw e;
+}
+const r = data.ringkasan;
+document.getElementById("kpi").innerHTML = [
+  ["Sinyal aktif", angka(r.aktif), `${r.per_keparahan.tinggi || 0} tinggi · ${r.per_keparahan.sedang || 0} sedang`],
+  ["Anomali (60 hari)", angka(r.per_jenis.anomali_harga || 0), `${(r.status_anomali.false_alarm || 0)} false alarm`],
+  ["Prioritas ditindaklanjuti", persen(r.prioritas_ditindaklanjuti_persen, 0), `target ≥ ${r.target_tindak_lanjut_persen}%`],
+  ["Sinkronisasi GitHub", "", esc(data.pesan_github)],
+].map(([l, n, s]) => `<div class="kartu kpi"><div class="label">${l}</div>${n ? `<div class="nilai">${n}</div>` : ""}<div class="sub">${s}</div></div>`).join("");
+
+const fJenis = document.getElementById("f-jenis");
+Object.entries(JENIS_SINYAL).forEach(([k, v]) => fJenis.insertAdjacentHTML("beforeend", `<option value="${k}">${v}</option>`));
+const fStatus = document.getElementById("f-status");
+Object.entries(STATUS_SINYAL).forEach(([k, v]) => fStatus.insertAdjacentHTML("beforeend", `<option value="${k}">${v}</option>`));
+
+const LABEL_KONTEKS = {
+  curah_hujan_7_hari_mm: "Curah hujan 7 hari (mm)", curah_hujan_7_hari_normal_mm: "Normal 7 hari (mm)",
+  psi: "PSI", p_psi: "p-value PSI", rasio_volatilitas: "Rasio volatilitas", p_volatilitas: "p-value volatilitas",
+  volatilitas_referensi: "Volatilitas acuan (%)", volatilitas_terkini: "Volatilitas terkini (%)",
+  penurunan_periode_terakhir_persen: "Penurunan sMAPE periode terakhir (%)",
+  penurunan_periode_sebelumnya_persen: "Penurunan sMAPE periode sebelumnya (%)", smape_acuan: "sMAPE acuan (%)",
+};
+
+function nilaiKonteks(v) {
+  if (v === null || v === undefined) return "–";
+  if (typeof v !== "object") return esc(v);
+  if (Array.isArray(v)) return v.map(nilaiKonteks).join(", ");
+  return Object.entries(v).map(([k, x]) => `${esc(LABEL_KONTEKS[k] || k.replace(/_/g, " "))}: ${nilaiKonteks(x)}`).join("; ");
+}
+
+function render() {
+  const cari = document.getElementById("f-cari").value.trim().toLowerCase();
+  const daftar = data.sinyal.filter((s) =>
+    (!fJenis.value || s.jenis === fJenis.value) &&
+    (!document.getElementById("f-keparahan").value || s.keparahan === document.getElementById("f-keparahan").value) &&
+    (!fStatus.value || s.status === fStatus.value) &&
+    (!document.getElementById("f-aktif").checked || s.aktif) &&
+    (!cari || `${s.judul} ${s.varian || ""} ${s.komoditas || ""} ${s.kode_pasar || ""}`.toLowerCase().includes(cari)));
+  document.getElementById("daftar").innerHTML = daftar.length ? daftar.map((s) => `
+    <li id="${esc(s.id)}">
+      <div class="atas">${lencanaKeparahan(s.keparahan)}<span class="lencana polos">${esc(JENIS_SINYAL[s.jenis] || s.jenis)}</span>
+        ${lencanaStatus(s.status)}${s.aktif ? "" : '<span class="lencana polos">tidak aktif</span>'}</div>
+      <div class="judul">${esc(s.judul)}</div>
+      ${s.nilai_aktual !== null && s.nilai_aktual !== undefined ? `<div class="narasi">Aktual ${rp(s.nilai_aktual)}${s.baseline ? ` · baseline ${rp(s.baseline)}` : ""}${s.deviasi_persen !== null ? ` · ${persen(s.deviasi_persen, 1, true)}` : ""}${s.z ? ` · z=${angka(s.z, 1)}` : ""}</div>` : ""}
+      ${s.narasi ? `<div class="narasi">${esc(s.narasi)}</div>` : ""}
+      <details style="margin-top:6px"><summary class="meta-kecil">Data konteks &amp; riwayat</summary>
+        <dl class="dl" style="margin-top:6px">${Object.entries(s.konteks || {}).map(([k, v]) => `<dt>${esc(LABEL_KONTEKS[k] || k.replace(/_/g, " "))}</dt><dd>${nilaiKonteks(v)}</dd>`).join("")}</dl>
+        ${(s.riwayat || []).length ? `<p class="meta-kecil" style="margin-top:6px">Riwayat: ${s.riwayat.map((h) => `${esc(h.tanggal)} ${esc(STATUS_SINYAL[h.status] || h.status)} (${esc(h.petugas)}) ${esc(h.catatan)}`).join(" → ")}</p>` : ""}
+      </details>
+      <div class="bawah"><span>${esc(tgl(s.tanggal_mulai))}${s.tanggal_terakhir !== s.tanggal_mulai ? " – " + esc(tgl(s.tanggal_terakhir)) : ""}</span>
+        <span>ID <code>${esc(s.id)}</code></span>
+        ${s.url_issue ? `<a href="${esc(s.url_issue)}">buka issue</a>` : ""}
+        <a href="#form-tl" data-catat="${esc(s.id)}">catat tindak lanjut</a></div>
+    </li>`).join("") : `<li class="kosong">Tidak ada sinyal yang cocok dengan filter.</li>`;
+  document.querySelectorAll("[data-catat]").forEach((a) => a.addEventListener("click", () => {
+    document.getElementById("tl-id").value = a.dataset.catat;
+  }));
+  if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView({ block: "center" });
+}
+["f-jenis", "f-keparahan", "f-status", "f-aktif"].forEach((id) => document.getElementById(id).addEventListener("change", render));
+document.getElementById("f-cari").addEventListener("input", render);
+if (location.hash) document.getElementById("f-aktif").checked = false;
+render();
+
+document.getElementById("tl-status").addEventListener("change", (e) => {
+  document.getElementById("tl-id").required = e.target.value !== "anomali_terlewat";
+});
+document.getElementById("form-tl").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const status = document.getElementById("tl-status").value;
+  const baris = {
+    id_sinyal: status === "anomali_terlewat" ? "" : document.getElementById("tl-id").value.trim(),
+    status, catatan: document.getElementById("tl-catatan").value.trim(),
+    petugas: document.getElementById("tl-petugas").value.trim(),
+    tanggal: new Date().toISOString().slice(0, 10),
+    kode_varian: document.getElementById("tl-varian").value.trim().toUpperCase(),
+    tanggal_kejadian: document.getElementById("tl-kejadian").value,
+  };
+  const csv = keCSV(Object.keys(baris), [baris]).split("\n")[1];
+  const hasil = document.getElementById("tl-hasil");
+  try {
+    await navigator.clipboard.writeText(csv);
+    hasil.textContent = "Tersalin: " + csv;
+  } catch {
+    hasil.textContent = csv;
+  }
+});
+</script>
+</body>
+</html>

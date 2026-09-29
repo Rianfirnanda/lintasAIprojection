@@ -1,0 +1,70 @@
+name: AI Data Finder
+
+# Agen AI (Claude + web search) mencari KANDIDAT sumber data. Hasil wajib diverifikasi analis.
+# Butuh secret repositori ANTHROPIC_API_KEY (Settings -> Secrets and variables -> Actions).
+on:
+  workflow_dispatch:
+    inputs:
+      komoditas:
+        description: "Komoditas/varian (mis. cabai rawit merah)"
+        required: true
+      periode:
+        description: "Periode data (mis. Oktober 2026)"
+        required: true
+      kebutuhan:
+        description: "Jenis data yang dicari"
+        default: "harga eceran harian"
+      wilayah:
+        description: "Wilayah"
+        default: "Kabupaten Bengkulu Tengah, Provinsi Bengkulu"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ai-data-finder
+  cancel-in-progress: false
+
+jobs:
+  cari:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements-ai.txt
+
+      - name: Cari kandidat sumber
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          KOMODITAS: ${{ inputs.komoditas }}
+          PERIODE: ${{ inputs.periode }}
+          KEBUTUHAN: ${{ inputs.kebutuhan }}
+          WILAYAH: ${{ inputs.wilayah }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::Secret ANTHROPIC_API_KEY belum diatur."
+            exit 1
+          fi
+          python -m pipeline cari-sumber --komoditas "$KOMODITAS" --periode "$PERIODE" \
+            --kebutuhan "$KEBUTUHAN" --wilayah "$WILAYAH"
+
+      - name: Simpan hasil
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sumber/kandidat_ai.json
+          git commit -m "sumber: kandidat AI Data Finder"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Perbarui dashboard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pipeline.yml --ref "${GITHUB_REF_NAME}"

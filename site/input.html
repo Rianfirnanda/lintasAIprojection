@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Input Harga Pasar</title>
+  <meta name="description" content="Formulir pencatatan harga pasar yang tetap berfungsi tanpa sinyal (luring-ke-daring) untuk petugas BPS di wilayah blank spot.">
+  <meta name="theme-color" content="#1c5cab">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Input harga pasar (luring-ke-daring)</h1>
+      <p>Formulir tetap bisa dipakai tanpa sinyal setelah halaman pernah dibuka sekali. Data tersimpan di perangkat sampai diekspor dan dikirim.</p>
+    </div>
+    <span class="status-koneksi" id="status-koneksi"></span>
+  </div>
+
+  <div class="pesan peringatan" style="margin-bottom:14px">
+    Jangan mencatat nama, NIK, nomor HP, atau alamat pedagang. Gunakan kode responden anonim (mis. R1, R2). Berkas yang memuat kolom data pribadi akan ditolak sistem.
+  </div>
+
+  <section class="kartu">
+    <form id="form-kepala" class="form-grid">
+      <label>Tanggal pencatatan<input type="date" id="tanggal" required></label>
+      <label>Pasar<select id="pasar" required></select></label>
+      <label>Kode petugas<input type="text" id="petugas" placeholder="mis. PTG01" required autocomplete="off"></label>
+      <label>Kode responden (anonim)<input type="text" id="responden" placeholder="mis. R1" autocomplete="off"></label>
+      <label>Sumber<select id="sumber"><option value="PSR-ENUM">PSR-ENUM — pencatatan petugas pasar</option><option value="BPS-HRG">BPS-HRG — survei harga BPS</option><option value="PMD-DISDAG">PMD-DISDAG — Dinas Perdagangan</option></select></label>
+    </form>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div><h2>Harga per varian</h2><p>Isi harga eceran per satuan. Kosongkan varian yang tidak tersedia. Peringatan muncul bila harga di luar batas kewajaran.</p></div>
+    </div>
+    <div class="gulir-tabel">
+      <table class="tabel-input" id="tabel-input"><thead><tr><th>Varian</th><th>Harga (Rp)</th><th>Satuan</th><th>Catatan</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="baris-kontrol" style="margin-top:12px">
+      <button class="tombol utama-aksi" id="simpan" type="button">Simpan ke antrean perangkat</button>
+      <button class="tombol" id="bersihkan" type="button">Kosongkan formulir</button>
+      <span class="meta-kecil" id="hasil-simpan" role="status"></span>
+    </div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div><h2>Antrean di perangkat ini</h2><p id="info-antrean"></p></div>
+      <div class="baris-kontrol">
+        <button class="tombol utama-aksi" id="unduh" type="button">Unduh CSV</button>
+        <button class="tombol" id="bagikan" type="button">Bagikan (WhatsApp/email)</button>
+        <button class="tombol" id="hapus-terkirim" type="button">Hapus yang sudah dikirim</button>
+      </div>
+    </div>
+    <div class="gulir-tabel" style="max-height:360px"><table id="tabel-antrean"><thead><tr><th>Tanggal</th><th>Pasar</th><th>Varian</th><th class="angka">Harga</th><th>Satuan</th><th>Dikirim</th></tr></thead><tbody></tbody></table></div>
+    <div class="prosa" style="margin-top:12px;font-size:0.88rem">
+      <h3>Cara mengirim ke sistem</h3>
+      <ol>
+        <li>Saat ada sinyal, tekan <strong>Unduh CSV</strong> (atau <strong>Bagikan</strong> ke operator).</li>
+        <li>Operator mengunggah berkas ke folder <code>data/masuk/harga/</code> di repositori: <a id="tautan-unggah" href="#">buka halaman unggah</a> → seret berkas → <em>Commit changes</em>.</li>
+        <li>Pipeline otomatis berjalan: berkas divalidasi, masuk quality gate, dan dashboard diperbarui dalam beberapa menit.</li>
+        <li>Tekan <strong>Hapus yang sudah dikirim</strong> setelah operator mengonfirmasi.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, rp, tgl, keCSV, unduhTeks } from "./assets/app.js";
+
+const KUNCI_ANTREAN = "antrean_harga_v1";
+const KUNCI_DRAF = "draf_input_v1";
+const SATUAN = { kg: ["kg", "ons", "gram"], liter: ["liter", "ml"] };
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+const meta = await pasangKerangka("input.html").catch(() => null);
+if (meta?.url_repo) document.getElementById("tautan-unggah").href = `${meta.url_repo}/upload/main/data/masuk/harga`;
+
+function baca(kunci, awal) {
+  try { return JSON.parse(localStorage.getItem(kunci)) ?? awal; } catch { return awal; }
+}
+function tulis(kunci, nilai) {
+  try { localStorage.setItem(kunci, JSON.stringify(nilai)); return true; } catch { return false; }
+}
+
+function statusKoneksi() {
+  document.getElementById("status-koneksi").innerHTML = navigator.onLine
+    ? '<span class="lencana baik">daring</span>' : '<span class="lencana rendah">luring — data tetap tersimpan di perangkat</span>';
+}
+window.addEventListener("online", statusKoneksi);
+window.addEventListener("offline", statusKoneksi);
+statusKoneksi();
+
+let master;
+try {
+  master = await muatJSON("master.json");
+} catch (e) {
+  document.querySelector("main").insertAdjacentHTML("afterbegin",
+    `<div class="pesan galat">Master data belum tersimpan di perangkat. Buka halaman ini sekali saat ada sinyal. (${esc(e.message)})</div>`);
+  throw e;
+}
+const varianAktif = master.varian.filter((v) => v.aktif);
+const namaPasar = Object.fromEntries(master.pasar.map((p) => [p.kode, p.nama]));
+const namaVarian = Object.fromEntries(master.varian.map((v) => [v.kode, v.nama]));
+
+const hariIni = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+document.getElementById("tanggal").value = hariIni();
+document.getElementById("tanggal").max = hariIni();
+document.getElementById("pasar").innerHTML = master.pasar.filter((p) => p.aktif).map((p) =>
+  `<option value="${esc(p.kode)}">${esc(p.nama)}${p.blank_spot ? " (blank spot)" : ""}</option>`).join("");
+
+const tbody = document.querySelector("#tabel-input tbody");
+tbody.innerHTML = varianAktif.map((v) => `<tr data-kode="${esc(v.kode)}">
+  <td>${esc(v.nama)}<div class="peringatan-harga" aria-live="polite"></div></td>
+  <td><input type="text" inputmode="numeric" aria-label="Harga ${esc(v.nama)}" autocomplete="off"></td>
+  <td><select aria-label="Satuan">${(SATUAN[v.satuan] || [v.satuan]).map((s) => `<option>${esc(s)}</option>`).join("")}</select></td>
+  <td><input type="text" aria-label="Catatan" style="width:160px;text-align:left" autocomplete="off"></td></tr>`).join("");
+
+const FAKTOR = { ons: 10, gram: 1000, ml: 1000 };
+function angkaHarga(teks) {
+  const t = String(teks).replace(/[^0-9]/g, "");
+  return t ? Number(t) : null;
+}
+function periksa(tr) {
+  const v = varianAktif.find((x) => x.kode === tr.dataset.kode);
+  const [inpHarga, sel] = [tr.querySelector("input"), tr.querySelector("select")];
+  const h = angkaHarga(inpHarga.value);
+  const pesan = tr.querySelector(".peringatan-harga");
+  if (h === null) { pesan.textContent = ""; return; }
+  const dasar = h * (FAKTOR[sel.value] || 1);
+  pesan.textContent = dasar < v.batas_bawah || dasar > v.batas_atas
+    ? `Di luar batas wajar (${rp(v.batas_bawah)}–${rp(v.batas_atas)}/${v.satuan}). Periksa kembali; tetap boleh disimpan.` : "";
+}
+function simpanDraf() {
+  const draf = { kepala: {}, harga: {} };
+  ["tanggal", "pasar", "petugas", "responden", "sumber"].forEach((id) => { draf.kepala[id] = document.getElementById(id).value; });
+  tbody.querySelectorAll("tr").forEach((tr) => {
+    const [h, c] = tr.querySelectorAll("input");
+    if (h.value || c.value) draf.harga[tr.dataset.kode] = { h: h.value, s: tr.querySelector("select").value, c: c.value };
+  });
+  tulis(KUNCI_DRAF, draf);
+}
+function pulihkanDraf() {
+  const draf = baca(KUNCI_DRAF, null);
+  if (!draf) return;
+  Object.entries(draf.kepala || {}).forEach(([id, v]) => { if (v && id !== "tanggal") document.getElementById(id).value = v; });
+  tbody.querySelectorAll("tr").forEach((tr) => {
+    const d = draf.harga?.[tr.dataset.kode];
+    if (!d) return;
+    const [h, c] = tr.querySelectorAll("input");
+    h.value = d.h; c.value = d.c; tr.querySelector("select").value = d.s;
+    periksa(tr);
+  });
+}
+tbody.addEventListener("input", (e) => { periksa(e.target.closest("tr")); simpanDraf(); });
+tbody.addEventListener("change", (e) => { periksa(e.target.closest("tr")); simpanDraf(); });
+document.getElementById("form-kepala").addEventListener("input", simpanDraf);
+pulihkanDraf();
+
+function waktuLokal() {
+  const d = new Date();
+  const off = -d.getTimezoneOffset();
+  const z = (n) => String(Math.floor(Math.abs(n))).padStart(2, "0");
+  return `${hariIni()}T${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}${off >= 0 ? "+" : "-"}${z(off / 60)}:${z(off % 60)}`;
+}
+function uuid() {
+  return crypto.randomUUID ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
+document.getElementById("simpan").addEventListener("click", () => {
+  const hasil = document.getElementById("hasil-simpan");
+  const kepala = Object.fromEntries(["tanggal", "pasar", "petugas", "responden", "sumber"].map((id) => [id, document.getElementById(id).value.trim()]));
+  if (!kepala.tanggal || !kepala.pasar || !kepala.petugas) {
+    hasil.textContent = "Lengkapi tanggal, pasar, dan kode petugas.";
+    return;
+  }
+  const baru = [];
+  tbody.querySelectorAll("tr").forEach((tr) => {
+    const [inpHarga, inpCatatan] = tr.querySelectorAll("input");
+    const h = angkaHarga(inpHarga.value);
+    if (h === null) return;
+    baru.push({
+      tanggal: kepala.tanggal, kode_pasar: kepala.pasar, kode_varian: tr.dataset.kode, harga: h,
+      satuan: tr.querySelector("select").value, kode_sumber: kepala.sumber, petugas: kepala.petugas.toUpperCase(),
+      responden: kepala.responden.toUpperCase(), id_klien: uuid(), waktu_input: waktuLokal(),
+      catatan: inpCatatan.value.trim(), _dikirim: false,
+    });
+  });
+  if (!baru.length) { hasil.textContent = "Belum ada harga yang diisi."; return; }
+  const antrean = baca(KUNCI_ANTREAN, []);
+  if (!tulis(KUNCI_ANTREAN, antrean.concat(baru))) {
+    hasil.textContent = "Gagal menyimpan di perangkat (penyimpanan penuh/diblokir). Segera unduh CSV.";
+    return;
+  }
+  hasil.textContent = `${baru.length} harga disimpan ke antrean.`;
+  tbody.querySelectorAll("input").forEach((i) => { i.value = ""; });
+  tbody.querySelectorAll(".peringatan-harga").forEach((p) => { p.textContent = ""; });
+  simpanDraf();
+  renderAntrean();
+});
+document.getElementById("bersihkan").addEventListener("click", () => {
+  tbody.querySelectorAll("input").forEach((i) => { i.value = ""; });
+  tbody.querySelectorAll(".peringatan-harga").forEach((p) => { p.textContent = ""; });
+  simpanDraf();
+});
+
+const KOLOM = ["tanggal", "kode_pasar", "kode_varian", "harga", "satuan", "kode_sumber", "petugas", "responden", "id_klien", "waktu_input", "catatan"];
+function berkasCSV() {
+  const belum = baca(KUNCI_ANTREAN, []).filter((b) => !b._dikirim);
+  const pasar = [...new Set(belum.map((b) => b.kode_pasar))].join("-") || "kosong";
+  const cap = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 12);
+  return { belum, nama: `harga_${pasar}_${cap}.csv`, isi: keCSV(KOLOM, belum) };
+}
+function tandaiTerkirim() {
+  tulis(KUNCI_ANTREAN, baca(KUNCI_ANTREAN, []).map((b) => ({ ...b, _dikirim: true })));
+  renderAntrean();
+}
+document.getElementById("unduh").addEventListener("click", () => {
+  const { belum, nama, isi } = berkasCSV();
+  if (!belum.length) return;
+  unduhTeks(nama, isi);
+  tandaiTerkirim();
+});
+document.getElementById("bagikan").addEventListener("click", async () => {
+  const { belum, nama, isi } = berkasCSV();
+  if (!belum.length) return;
+  const berkas = new File([isi], nama, { type: "text/csv" });
+  if (navigator.canShare?.({ files: [berkas] })) {
+    try {
+      await navigator.share({ files: [berkas], title: nama, text: "Data harga pasar untuk diunggah ke data/masuk/harga" });
+      tandaiTerkirim();
+    } catch { /* dibatalkan */ }
+  } else {
+    unduhTeks(nama, isi);
+    tandaiTerkirim();
+  }
+});
+document.getElementById("hapus-terkirim").addEventListener("click", () => {
+  tulis(KUNCI_ANTREAN, baca(KUNCI_ANTREAN, []).filter((b) => !b._dikirim));
+  renderAntrean();
+});
+
+function renderAntrean() {
+  const antrean = baca(KUNCI_ANTREAN, []);
+  const belum = antrean.filter((b) => !b._dikirim).length;
+  document.getElementById("info-antrean").textContent = `${antrean.length} baris tersimpan · ${belum} belum dikirim`;
+  document.querySelector("#tabel-antrean tbody").innerHTML = antrean.slice().reverse().slice(0, 200).map((b) => `<tr>
+    <td>${esc(tgl(b.tanggal))}</td><td>${esc(namaPasar[b.kode_pasar] || b.kode_pasar)}</td><td>${esc(namaVarian[b.kode_varian] || b.kode_varian)}</td>
+    <td class="angka">${rp(b.harga)}</td><td>${esc(b.satuan)}</td><td>${b._dikirim ? '<span class="lencana baik">ya</span>' : '<span class="lencana rendah">belum</span>'}</td></tr>`).join("")
+    || `<tr><td colspan="6" class="kosong">Antrean kosong.</td></tr>`;
+}
+renderAntrean();
+</script>
+</body>
+</html>
