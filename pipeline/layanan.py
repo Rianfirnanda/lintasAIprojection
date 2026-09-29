@@ -103,8 +103,8 @@ def ringkas_pengaduan(issue: list[dict]) -> dict:
 def kumpulkan(klien, hari_ini: date) -> dict:
     """Baca issue pengaduan & SKM. `klien` = KlienGitHub (atau tiruan untuk uji); None = tidak tersedia."""
     if klien is None:
-        return {"catatan_ikm": "Butuh GitHub Actions (token) untuk membaca survei.",
-                "catatan_pengaduan": "Butuh GitHub Actions (token) untuk membaca pengaduan."}
+        return {"catatan_ikm": "Hasil survei dibaca otomatis saat pipeline berjalan di GitHub Actions.",
+                "catatan_pengaduan": "Pengaduan dibaca otomatis saat pipeline berjalan di GitHub Actions."}
     try:
         skm = klien.daftar_issue(LABEL_SKM)
         pengaduan = klien.daftar_issue(LABEL_PENGADUAN)

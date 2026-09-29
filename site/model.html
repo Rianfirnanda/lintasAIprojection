@@ -15,7 +15,7 @@
   <div class="judul-halaman">
     <div>
       <h1>Mutu model</h1>
-      <p>Setiap varian diuji dengan rolling-origin backtesting. Model dipakai hanya bila unggul dari baseline naif; selain itu sistem kembali ke baseline.</p>
+      <p>Setiap model diuji dulu dengan data masa lalu (rolling-origin backtesting). Model hanya dipakai kalau hasilnya lebih baik dari metode naif; kalau tidak, sistem memakai metode naif.</p>
     </div>
   </div>
 
@@ -112,7 +112,7 @@ document.getElementById("evaluasi").innerHTML = `
     <dt>Titik dievaluasi</dt><dd>${angka(ev.titik_dievaluasi)} (varian × hari)</dd>
   </dl>
   ${ev.catatan ? `<p class="pesan" style="margin-top:10px">${esc(ev.catatan)}</p>` : ""}
-  <p class="meta-kecil" style="margin-top:10px">Pada data nyata, label berasal dari status tindak lanjut (terverifikasi vs false alarm) dan catatan "anomali terlewat" dari analis.</p>`;
+  <p class="meta-kecil" style="margin-top:10px">Dengan data asli, penilaian ini memakai status tindak lanjut (terverifikasi atau false alarm) dan catatan anomali terlewat dari analis.</p>`;
 
 const sm = (x) => (x ? angka(x.smape, 2) : "–");
 document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) => {
@@ -140,7 +140,7 @@ document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) =>
 const menunggu = m.per_varian.filter((v) => v.status_persetujuan === "menunggu_persetujuan").length;
 document.getElementById("info-persetujuan").textContent =
   `${m.per_varian.length - menunggu} dari ${m.per_varian.length} varian memakai model yang sudah disetujui atau baseline; ${menunggu} menunggu persetujuan.` +
-  (m.pengaturan.analisis.wajib_persetujuan_model ? " Persetujuan diwajibkan." : " Persetujuan belum diwajibkan (model rekomendasi tetap dipakai).");
+  (m.pengaturan.analisis.wajib_persetujuan_model ? " Persetujuan diwajibkan." : " Persetujuan belum diwajibkan, jadi model rekomendasi tetap dipakai.");
 document.getElementById("unduh-persetujuan").addEventListener("click", () => {
   const penyetuju = document.getElementById("penyetuju").value.trim();
   if (!penyetuju) { document.getElementById("penyetuju").focus(); return; }
@@ -154,8 +154,8 @@ document.getElementById("unduh-persetujuan").addEventListener("click", () => {
 
 const a = m.pengaturan.analisis, s = m.pengaturan.sinyal;
 document.getElementById("metodologi").innerHTML = [
-  `Deret harian Bengkulu Tengah = median observasi lolos quality gate dari sumber berprioritas tertinggi pada tanggal itu.`,
-  `Baseline = median bergulir ${a.jendela_baseline_hari} hari sebelumnya. Model kandidat: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
+  `Harga harian Bengkulu Tengah adalah median data yang lolos pemeriksaan dari sumber berprioritas tertinggi pada tanggal itu.`,
+  `Harga normal (baseline) adalah median ${a.jendela_baseline_hari} hari sebelumnya. Model yang diuji: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
   `Rolling-origin backtesting: ${a.jumlah_origin_backtest} titik asal berjarak ${a.jarak_origin_hari} hari, horizon ${a.horizon_hari} hari; minimal ${a.minimal_hari_riwayat} hari observasi.`,
   `Interval prediksi ${Math.round(a.tingkat_interval * 100)}%: kuantil konformal residu log(aktual/proyeksi) per horizon dari backtest.`,
   `Anomali: robust z-score (median/MAD ${a.jendela_baseline_hari} hari) ≥ ${s.z_ambang} dan deviasi ≥ ambang kelompok (${Object.entries(s.ambang_persen).map(([k, v]) => `${k} ${v}%`).join(", ")}). Hari anomali berurutan digabung menjadi satu episode.`,

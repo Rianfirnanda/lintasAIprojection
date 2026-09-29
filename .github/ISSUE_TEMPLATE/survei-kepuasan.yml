@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Nilai layanan informasi harga pangan BPS Kabupaten Bengkulu Tengah. Skala: **1** tidak baik,
-        **2** kurang baik, **3** baik, **4** sangat baik. **Laman ini publik** — jangan menuliskan data pribadi.
+        **2** kurang baik, **3** baik, **4** sangat baik. **Laman ini publik**, jadi jangan menuliskan data pribadi.
   - type: dropdown
     id: pengguna
     attributes:

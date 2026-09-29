@@ -15,7 +15,7 @@
   <div class="judul-halaman">
     <div>
       <h1>Metodologi &amp; tata kelola</h1>
-      <p>Sistem ini adalah pipeline data, bukan sekadar dashboard. Dashboard hanya lapisan layanan di ujung pipeline.</p>
+      <p>Dashboard ini hanya bagian paling ujung. Di belakangnya ada rangkaian proses yang mengumpulkan, memeriksa, dan menganalisis data harga setiap hari.</p>
     </div>
   </div>
 
@@ -36,7 +36,7 @@
       <ul>
         <li><strong>Sumber:</strong> BPS (survei harga), pasar/pedagang (formulir petugas luring-ke-daring), Pemda (harga/stok/distribusi), AI Data Finder (penemuan kandidat sumber), Big Data sah (cuaca Open-Meteo, kalender hari raya; kandidat PIHPS, Panel Harga Bapanas, BMKG).</li>
         <li><strong>Integrasi:</strong> berkas CSV/Excel di <code>data/masuk/</code>, konektor API terjadwal (cuaca), standardisasi kode varian/pasar/wilayah/sumber dan satuan (ons/gram → kg).</li>
-        <li><strong>Penyimpanan:</strong> data mentah = berkas di repositori (tidak diubah); data terstruktur = keluaran JSON; metadata = checksum SHA-256 per berkas; audit trail &amp; versi = riwayat git; cadangan = setiap clone repositori.</li>
+        <li><strong>Penyimpanan:</strong> data mentah disimpan apa adanya sebagai berkas di repositori, hasil olahan disimpan sebagai JSON, setiap berkas dicatat checksum SHA-256-nya, dan riwayat git menjadi jejak audit sekaligus cadangan.</li>
         <li><strong>Quality gate:</strong> deduplikasi, data hilang, batas kewajaran, pencilan, rekonsiliasi antar-sumber, validasi manusia, ketepatan waktu.</li>
         <li><strong>Analisis AI:</strong> baseline, proyeksi 14 hari, interval prediksi, deteksi anomali, rolling-origin backtesting, drift, konteks otomatis.</li>
         <li><strong>Layanan:</strong> dashboard GitHub Pages, sinyal prioritas, GitHub Issues untuk tindak lanjut, notifikasi Telegram/email, buletin mingguan/bulanan/triwulanan, indikator kinerja SMART, pengaduan &amp; survei kepuasan, unduhan CSV.</li>
@@ -65,7 +65,7 @@
   <section class="kartu prosa" id="ai-data-finder">
     <h2>Peran AI dalam sistem</h2>
     <ul>
-      <li><strong>AI Data Finder (discovery):</strong> agen AI gratis — Gemini dengan pencarian Google (secret <code>GEMINI_API_KEY</code>), cadangan GitHub Models tanpa pencarian web — mencari kandidat sumber sesuai komoditas, wilayah, dan periode; keluaran terstruktur (nama, URL, periode, satuan, frekuensi, metode akses, lisensi). Setiap URL dicek: apakah muncul di hasil pencarian dan apakah dapat dibuka. Semua kandidat wajib diverifikasi analis. Dijalankan manual dari tab <em>Actions → AI Data Finder</em>.</li>
+      <li><strong>AI Data Finder (discovery):</strong> agen AI gratis (Gemini dengan pencarian Google lewat secret <code>GEMINI_API_KEY</code>, atau GitHub Models tanpa pencarian web sebagai cadangan) mencari kandidat sumber sesuai komoditas, wilayah, dan periode; keluaran terstruktur (nama, URL, periode, satuan, frekuensi, metode akses, lisensi). Setiap URL dicek: apakah muncul di hasil pencarian dan apakah dapat dibuka. Semua kandidat wajib diverifikasi analis. Dijalankan manual dari tab <em>Actions → AI Data Finder</em>.</li>
       <li><strong>Validasi &amp; konteks:</strong> aturan quality gate dan konteks otomatis (cuaca, hari raya, wilayah pembanding, stok) untuk setiap sinyal.</li>
       <li><strong>Analitik:</strong> model statistik yang transparan dan dapat diaudit (naif, rerata bergerak, Holt damped trend, profil hari raya). Model hanya dipakai bila terbukti lebih baik dari baseline pada backtest.</li>
       <li><strong>Persetujuan manusia:</strong> sinyal dan rekomendasi tidak otomatis menjadi keputusan; status verifikasi dicatat.</li>
@@ -75,10 +75,10 @@
   <section class="kartu prosa" id="iris">
     <h2>Membaca Iris Harga (beranda)</h2>
     <ul>
-      <li><strong>Satu batang = satu varian</strong>, dikelompokkan per komoditas searah jarum jam. Panjang batang = selisih harga terakhir terhadap <strong>baseline</strong> (median 28 hari), skala linear 2 px per 1%.</li>
-      <li><strong>Lingkar tengah</strong> = baseline (0%). Batang ke luar berwarna merah = di atas baseline; ke dalam berwarna biru = di bawah baseline; abu-abu = selisih kurang dari 1%. Lingkar tipis = ±10%, ±20%, ±30%.</li>
-      <li><strong>Batang terang</strong> = melewati ambang kelompok (pokok & pabrikan 5%, protein 10%, volatil 15%) dan diberi angka. Selisih di atas ±30% dipotong dan ditandai dua garis melintang; angka tetap angka sebenarnya.</li>
-      <li><strong>Titik merah</strong> = sinyal prioritas tinggi. Angka di pupil = jumlah varian di luar pola normal. Klik atau tekan Enter pada batang untuk membuka grafiknya.</li>
+      <li><strong>Setiap batang mewakili satu varian</strong>, dikelompokkan per komoditas searah jarum jam. Panjang batang menunjukkan selisih harga terakhir dari harga normal (median 28 hari), dengan skala 2 px untuk setiap 1%.</li>
+      <li><strong>Lingkar tengah</strong> adalah harga normal. Batang merah yang mengarah ke luar berarti harga di atas normal, batang biru ke dalam berarti di bawah normal, dan abu-abu berarti selisihnya kurang dari 1%. Lingkar tipis menandai ±10%, ±20%, dan ±30%.</li>
+      <li><strong>Batang terang</strong> sudah melewati ambang kelompoknya (pokok dan pabrikan 5%, protein 10%, volatil 15%) dan diberi angka. Selisih lebih dari ±30% dipotong dan diberi dua garis melintang, tetapi angka yang tertulis tetap angka sebenarnya.</li>
+      <li><strong>Titik merah</strong> menandai sinyal prioritas tinggi. Angka di tengah lingkaran adalah jumlah varian yang sedang di luar pola normal. Klik atau tekan Enter pada batang untuk membuka grafiknya.</li>
     </ul>
   </section>
 
@@ -93,7 +93,7 @@
       <li>Kunci API disimpan sebagai GitHub Secrets, tidak pernah di kode atau situs.</li>
       <li>Hak ubah data dikendalikan lewat hak akses kolaborator repositori dan (disarankan) aturan perlindungan cabang <code>main</code>.</li>
     </ul>
-    <h2>Hal yang masih perlu dikonfirmasi</h2>
+    <h2>Yang masih perlu dipastikan</h2>
     <ul>
       <li>Daftar komoditas final (10/21 Rancangan vs 21 Bapokting kajian).</li>
       <li>Sumber Big Data eksternal final dan izin pengambilan otomatis (PIHPS, Panel Harga Bapanas).</li>

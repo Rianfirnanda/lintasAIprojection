@@ -50,7 +50,7 @@ SISTEM = """Anda adalah AI Data Finder untuk BPS Kabupaten Bengkulu Tengah (Prov
 dalam proyek pemantauan harga pangan untuk TPID.
 
 Tugas Anda: menemukan KANDIDAT sumber data yang relevan dan dapat diverifikasi. Anda tidak mengambil keputusan \
-apakah sumber dipakai — analis BPS yang memverifikasi.
+apakah sumber dipakai; analis BPS yang memverifikasi.
 
 Aturan wajib:
 - Jangan mengarang nama sumber, URL, angka, periode, atau frekuensi. Jika suatu atribut tidak diketahui, isi "tidak diketahui".
@@ -359,7 +359,7 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
             log.warning("penyedia %s tidak tersedia: %s", nama, e)
             galat.append(f"{nama}: {e}")
     if jawab is None:
-        raise RuntimeError("tidak ada penyedia AI yang dapat dipakai — " + "; ".join(galat))
+        raise RuntimeError("tidak ada penyedia AI yang dapat dipakai: " + "; ".join(galat))
 
     hasil = normalisasi_hasil(jawab["hasil"])
     for k in hasil["kandidat"]:

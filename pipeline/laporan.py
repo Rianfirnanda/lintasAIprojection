@@ -2,10 +2,10 @@
 
   mingguan   : buletin harga mingguan, sinyal dini, prioritas verifikasi lapangan
   bulanan    : analisis bulanan, proyeksi, kinerja model, rekomendasi pengendalian harga
-  triwulanan : bahan rapat TPID — pola, volatilitas, tindak lanjut sinyal, evaluasi model
+  triwulanan : bahan rapat TPID: pola, volatilitas, tindak lanjut sinyal, evaluasi model
 
 Semua angka dihitung dari deret harga yang lolos quality gate. "Indeks harga pangan sederhana" adalah rata-rata
-geometrik relatif harga antarperiode (tanpa bobot) — indikatif, BUKAN Indeks Harga Konsumen resmi BPS.
+geometrik relatif harga antarperiode (tanpa bobot), sifatnya indikatif, BUKAN Indeks Harga Konsumen resmi BPS.
 Rekomendasi disusun berbasis aturan sebagai bahan pertimbangan dan wajib ditelaah analis.
 """
 
@@ -104,26 +104,26 @@ def _rekomendasi(konf, jenis, baris_varian, sinyal_periode, kelengkapan, hari_ra
         s = next((s for s in sinyal_periode if s.get("kode_varian") == b["kode"] and s["jenis"] == "anomali_harga"), None)
         wp = (s or {}).get("konteks", {}).get("wilayah_pembanding", {})
         if wp:
-            pembanding = " Bandingkan dengan " + ", ".join(
+            pembanding = " Sebagai pembanding: " + ", ".join(
                 f"{v['wilayah']} (selisih {_a(v.get('selisih_persen', 0), 0, True)}%)" for v in wp.values()) + "."
-        rek.append(f"{b['nama']} naik {_a(b['vs_sebelumnya_persen'])}% dibanding periode sebelumnya: prioritaskan "
-                   f"verifikasi lapangan dan cek kelancaran pasokan/distribusi.{pembanding}")
+        rek.append(f"{b['nama']} naik {_a(b['vs_sebelumnya_persen'])}% dibanding periode sebelumnya. Perlu dicek langsung "
+                   f"ke lapangan, termasuk kelancaran pasokan dan distribusinya.{pembanding}")
     belum = [s for s in sinyal_periode if s["jenis"] == "anomali_harga" and s["keparahan"] == "tinggi"
              and s.get("status") in ("baru", "perlu_verifikasi")]
     if belum:
-        rek.append(f"{len(belum)} sinyal anomali prioritas belum diverifikasi: tetapkan penanggung jawab dan tenggat verifikasi.")
+        rek.append(f"Ada {len(belum)} sinyal prioritas yang belum diverifikasi. Tunjuk penanggung jawab dan sepakati tenggatnya.")
     kurang = [p for p in kelengkapan["per_pasar"]
               if p["kelengkapan_persen"] is not None and p["kelengkapan_persen"] < konf.pengaturan["target_kinerja"]["ketepatan_waktu_persen"]]
     for p in kurang:
-        rek.append(f"Kelengkapan data {p['nama_pasar']} {_a(p['kelengkapan_persen'], 0)}%: koordinasikan dengan petugas "
-                   "(gunakan formulir luring bila terkendala sinyal).")
+        rek.append(f"Data {p['nama_pasar']} baru lengkap {_a(p['kelengkapan_persen'], 0)}%. Koordinasikan dengan petugas; "
+                   "bila sinyal sulit, formulir luring bisa dipakai.")
     if hari_raya:
-        rek.append(f"{hari_raya['nama']} pada {hari_raya['tanggal']} (H-{hari_raya['h_minus']}): siapkan pemantauan "
-                   "intensif mulai H-14 dan koordinasi ketersediaan stok dengan Pemda/Bulog.")
+        rek.append(f"{hari_raya['nama']} jatuh pada {hari_raya['tanggal']} (H-{hari_raya['h_minus']}). Siapkan pemantauan "
+                   "harian mulai H-14 dan pastikan ketersediaan stok bersama Pemda dan Bulog.")
     if jenis != "mingguan" and drift:
-        rek.append("Evaluasi ulang/kalibrasi model proyeksi untuk: " + ", ".join(drift) + ".")
+        rek.append("Model proyeksi untuk " + ", ".join(drift) + " perlu dievaluasi ulang.")
     if not rek:
-        rek.append("Harga seluruh varian dalam pola normal; lanjutkan pemantauan rutin.")
+        rek.append("Harga semua varian masih dalam pola normal. Pemantauan rutin cukup dilanjutkan.")
     return rek
 
 
@@ -170,20 +170,20 @@ def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, m
     ringkasan = []
     if indeks is not None:
         arah = "naik" if indeks > 100 else "turun" if indeks < 100 else "stabil"
-        ringkasan.append(f"Indeks harga pangan sederhana {_a(indeks, 2)} (periode sebelumnya = 100), secara umum {arah} "
+        ringkasan.append(f"Indeks harga pangan sederhana berada di {_a(indeks, 2)}, artinya harga secara umum {arah} "
                          f"{_a(abs(indeks - 100), 2)}% dibanding {s_label}.")
     if teratas:
-        ringkasan.append(f"Kenaikan terbesar: {teratas[0]['nama']} ({_a(teratas[0]['vs_sebelumnya_persen'], 1, True)}%); "
-                         f"penurunan terbesar: {teratas[-1]['nama']} ({_a(teratas[-1]['vs_sebelumnya_persen'], 1, True)}%).")
+        ringkasan.append(f"Kenaikan terbesar terjadi pada {teratas[0]['nama']} ({_a(teratas[0]['vs_sebelumnya_persen'], 1, True)}%), "
+                         f"penurunan terbesar pada {teratas[-1]['nama']} ({_a(teratas[-1]['vs_sebelumnya_persen'], 1, True)}%).")
     status = Counter(s.get("status", "baru") for s in sinyal_periode if s["jenis"] == "anomali_harga")
     n_anomali = sum(status.values())
     if n_anomali:
-        ringkasan.append(f"{n_anomali} sinyal anomali harga pada periode ini "
-                         f"({status.get('ditindaklanjuti', 0) + status.get('selesai', 0)} sudah ditindaklanjuti).")
+        ringkasan.append(f"Ada {n_anomali} sinyal anomali harga pada periode ini, "
+                         f"{status.get('ditindaklanjuti', 0) + status.get('selesai', 0)} di antaranya sudah ditindaklanjuti.")
     else:
-        ringkasan.append("Tidak ada sinyal anomali harga pada periode ini.")
+        ringkasan.append("Tidak ada anomali harga pada periode ini.")
     if kelengkapan["rata_persen"] is not None:
-        ringkasan.append(f"Kelengkapan data pasar rata-rata {_a(kelengkapan['rata_persen'])}%.")
+        ringkasan.append(f"Rata-rata kelengkapan data pasar {_a(kelengkapan['rata_persen'])}%.")
 
     hasil = {
         "jenis": jenis, "judul": JUDUL[jenis], "label": label, "mulai": mulai.isoformat(), "akhir": akhir.isoformat(),

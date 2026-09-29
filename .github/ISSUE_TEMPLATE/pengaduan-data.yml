@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Terima kasih atas masukan Anda. **Laman ini bersifat publik** — jangan menuliskan nama, NIK, nomor HP,
+        Terima kasih atas masukan Anda. **Laman ini bersifat publik**, jadi jangan menuliskan nama, NIK, nomor HP,
         alamat, atau data pribadi lain (milik Anda maupun pedagang). Petugas BPS Kabupaten Bengkulu Tengah akan
         menanggapi di kolom komentar.
   - type: dropdown

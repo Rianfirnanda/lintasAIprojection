@@ -15,7 +15,7 @@
   <div class="judul-halaman">
     <div>
       <h1>Quality gate</h1>
-      <p>Data tidak langsung masuk analisis: setiap observasi diperiksa dahulu. Observasi yang ditandai menunggu keputusan validator.</p>
+      <p>Setiap data harga diperiksa dulu sebelum dianalisis. Data yang mencurigakan ditahan sampai validator memutuskan.</p>
     </div>
   </div>
 
@@ -35,7 +35,7 @@
     <div class="kartu-kepala">
       <div>
         <h2>Antrean validasi manusia</h2>
-        <p>Pilih keputusan per baris, lalu unduh berkas keputusan dan unggah ke <code>data/validasi/</code>. Pipeline berikutnya akan menerapkannya.</p>
+        <p>Pilih keputusan per baris, lalu unduh berkas keputusan dan unggah ke <code>data/validasi/</code>. Keputusan diterapkan pada proses berikutnya.</p>
       </div>
       <div class="baris-kontrol">
         <input type="text" id="validator" placeholder="Nama/kode validator" aria-label="Nama validator">
@@ -51,12 +51,12 @@
   <div class="grid dua-sama">
     <section class="kartu">
       <h2>Baris ditolak saat pengambilan</h2>
-      <p class="meta-kecil">Galat skema: kolom wajib kosong, kode tidak dikenal, satuan tak bisa dikonversi, tanggal di masa depan.</p>
+      <p class="meta-kecil">Baris ditolak bila kolom wajib kosong, kodenya tidak dikenal, satuannya tidak bisa dikonversi, atau tanggalnya di masa depan.</p>
       <div class="gulir-tabel" style="max-height:380px"><table id="tabel-tolak"><thead><tr><th>Berkas</th><th class="angka">Baris</th><th>Alasan</th></tr></thead><tbody></tbody></table></div>
     </section>
     <section class="kartu">
       <h2>Rekonsiliasi antar-sumber</h2>
-      <p class="meta-kecil">Median per sumber pada tanggal-varian yang sama. Nilai analisis memakai sumber berprioritas tertinggi.</p>
+      <p class="meta-kecil">Perbandingan harga dari beberapa sumber untuk varian dan tanggal yang sama. Analisis memakai sumber dengan prioritas tertinggi.</p>
       <div class="gulir-tabel" style="max-height:380px"><table id="tabel-rekon"><thead><tr><th>Tanggal</th><th>Varian</th><th>Median per sumber</th><th class="angka">Selisih</th><th>Dipakai</th></tr></thead><tbody></tbody></table></div>
     </section>
   </div>

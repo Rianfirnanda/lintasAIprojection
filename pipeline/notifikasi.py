@@ -75,7 +75,7 @@ def susun_pesan_sinyal(sinyal: list[dict], url: str, maks: int) -> str:
 
 
 def susun_pesan_buletin(periode: dict, url: str) -> str:
-    baris = [f"{periode['judul']} — {periode['label']}", ""]
+    baris = [f"{periode['judul']}, {periode['label']}", ""]
     baris += [f"• {r}" for r in periode["ringkasan"]]
     if periode.get("rekomendasi"):
         baris += ["", "Rekomendasi (bahan pertimbangan):"]
@@ -162,7 +162,7 @@ def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboa
     baru = pilih_sinyal(sinyal, status["sinyal"], cfg)
     if baru:
         teks = susun_pesan_sinyal(baru, url_dashboard, cfg["maks_sinyal_per_pesan"])
-        ok = _kirim(kanal, env, f"[Sinyal harga] {len(baru)} sinyal baru — Kab. Bengkulu Tengah", teks, pengirim)
+        ok = _kirim(kanal, env, f"[Sinyal harga] {len(baru)} sinyal baru di Kab. Bengkulu Tengah", teks, pengirim)
         if ok:
             for s in baru:
                 status["sinyal"][s["id"]] = konf.hari_ini.isoformat()
@@ -175,7 +175,7 @@ def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboa
     selesai = [p for p in laporan_mingguan if not p.get("periode_berjalan")]
     if cfg["buletin_mingguan"] and selesai and selesai[0]["label"] not in status["buletin"]:
         p = selesai[0]
-        ok = _kirim(kanal, env, f"{p['judul']} — {p['label']}", susun_pesan_buletin(p, url_dashboard), pengirim)
+        ok = _kirim(kanal, env, f"{p['judul']}, {p['label']}", susun_pesan_buletin(p, url_dashboard), pengirim)
         if ok:
             status["buletin"].append(p["label"])
             berubah = True
