@@ -1,0 +1,45 @@
+name: Pengaduan / koreksi data harga
+description: Laporkan harga yang tidak sesuai, data terlambat, atau masalah dashboard pemantauan harga pangan.
+title: "[Pengaduan] "
+labels: ["pengaduan-data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih atas masukan Anda. **Laman ini bersifat publik** — jangan menuliskan nama, NIK, nomor HP,
+        alamat, atau data pribadi lain (milik Anda maupun pedagang). Petugas BPS Kabupaten Bengkulu Tengah akan
+        menanggapi di kolom komentar.
+  - type: dropdown
+    id: jenis
+    attributes:
+      label: Jenis pengaduan
+      options:
+        - Harga tidak sesuai dengan kondisi pasar
+        - Data terlambat / tidak diperbarui
+        - Sinyal atau proyeksi keliru
+        - Tampilan / akses dashboard
+        - Lainnya
+    validations:
+      required: true
+  - type: input
+    id: varian
+    attributes:
+      label: Komoditas / varian (bila ada)
+      placeholder: mis. Cabai Rawit Merah
+  - type: input
+    id: pasar
+    attributes:
+      label: Pasar / lokasi (bila ada)
+      placeholder: mis. Pasar Taba Penanjung
+  - type: input
+    id: tanggal
+    attributes:
+      label: Tanggal kejadian
+      placeholder: mis. 2026-10-09
+  - type: textarea
+    id: uraian
+    attributes:
+      label: Uraian
+      description: Jelaskan apa yang tidak sesuai dan, bila ada, data pembanding yang Anda ketahui.
+    validations:
+      required: true

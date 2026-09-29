@@ -21,11 +21,15 @@ menjadi alur tindak lanjut sinyal.
 | Quality gate | Deduplikasi, data hilang, batas kewajaran, pencilan, konfirmasi silang/persistensi, rekonsiliasi antar-sumber, validasi manusia, ketepatan waktu (`pipeline/kualitas.py`) |
 | Analisis AI | Baseline, proyeksi 14 hari (naif, rata-rata 7 hari, Holt damped, profil hari raya), rolling-origin backtesting, interval konformal 90%, deteksi anomali, drift (`pipeline/analisis.py`) |
 | Sinyal & konteks | Anomali harga, proyeksi naik, risiko hari raya, data terlambat, drift + konteks cuaca/hari raya/pembanding/stok (`pipeline/sinyal.py`) |
-| AI Data Finder | Claude + web search, keluaran terstruktur, URL dicek silang dengan hasil pencarian (`pipeline/pencari_data.py`) |
-| Layanan | Dashboard GitHub Pages (`site/`), GitHub Issues, unduhan CSV |
+| AI Data Finder | **Gratis**: Gemini + pencarian Google (utama), GitHub Models (cadangan, tanpa pencarian); Claude opsional. URL dicek silang dengan hasil pencarian dan dicek dapat dibuka (`pipeline/pencari_data.py`) |
+| Buletin & laporan | Buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan — siap cetak/PDF (`pipeline/laporan.py`, `site/laporan.html`) |
+| Indikator kinerja | Indikator SMART Rancangan: ketepatan waktu, koreksi supervisor, kinerja model, stabilitas antar-segmen, uptime, waktu respons, IKM, persetujuan model (`pipeline/kinerja.py`, `site/kinerja.html`) |
+| Notifikasi | Sinyal prioritas & buletin mingguan ke Telegram dan/atau email, tanpa kiriman ganda (`pipeline/notifikasi.py`) |
+| Layanan publik | Pengaduan data & Survei Kepuasan Masyarakat (9 unsur PermenPANRB 14/2017) lewat GitHub Issue Forms (`pipeline/layanan.py`) |
+| Layanan | Dashboard GitHub Pages (`site/`), GitHub Issues, unduhan CSV, log uptime per jam (`.github/workflows/uptime.yml`) |
 
-Halaman dashboard: **Dashboard**, **Sinyal & Tindak Lanjut**, **Quality Gate**, **Mutu Model**, **Sumber Data**,
-**Input Harga** (dapat dipakai tanpa sinyal/PWA), **Metodologi**.
+Halaman dashboard: **Dashboard**, **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
+**Sumber Data**, **Input Harga** (dapat dipakai tanpa sinyal/PWA), **Metodologi**.
 
 ## Menerbitkan ke GitHub Pages (sekali saja)
 
@@ -33,8 +37,12 @@ Halaman dashboard: **Dashboard**, **Sinyal & Tindak Lanjut**, **Quality Gate**, 
 2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 3. **Actions → Pipeline & Dashboard → Run workflow** (atau tunggu jadwal). Setelah selesai, dashboard tersedia di
    `https://<pemilik>.github.io/<nama-repo>/`.
-4. (Opsional, untuk AI Data Finder) **Settings → Secrets and variables → Actions → New repository secret**:
-   `ANTHROPIC_API_KEY`.
+4. (Opsional) **Settings → Secrets and variables → Actions → New repository secret** — semua gratis:
+   - `GEMINI_API_KEY` — AI Data Finder dengan pencarian Google (kunci gratis dari https://aistudio.google.com/apikey).
+     Tanpa kunci ini AI Data Finder otomatis memakai GitHub Models (gratis, tanpa pencarian web).
+   - `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` — notifikasi ke grup Telegram TPID.
+   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_KE` (+ `EMAIL_DARI`) — notifikasi email (mis. Gmail + App Password).
+   - `ANTHROPIC_API_KEY` — hanya bila memilih Claude (berbayar).
 5. (Disarankan) **Settings → Branches**: lindungi `main` dan batasi kolaborator yang boleh mengunggah data.
 
 Selama `data/masuk/harga/` belum berisi berkas CSV/Excel, sistem berjalan dalam **mode demo** dengan data sintetis
@@ -53,12 +61,12 @@ Panduan lengkap per peran: [`docs/PANDUAN_OPERASIONAL.md`](docs/PANDUAN_OPERASIO
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q                                   # 66 uji otomatis
+python -m pytest -q                                   # 96 uji otomatis
 python -m pipeline periksa                            # validasi berkas di data/masuk
 python -m pipeline jalankan --keluaran site/data --tanpa-github
 python -m http.server -d site 8000                    # buka http://localhost:8000
 python -m pipeline ambil-cuaca                        # konektor cuaca (butuh internet)
-ANTHROPIC_API_KEY=... python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026"
+GEMINI_API_KEY=... python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026"
 ```
 
 ## Konfigurasi (`config/`)
@@ -70,7 +78,7 @@ ANTHROPIC_API_KEY=... python -m pipeline cari-sumber --komoditas "cabai rawit me
 | `pasar.csv` | Pasar, koordinat, status blank spot |
 | `sumber.csv` | Inventaris sumber data, metode akses, status, prioritas rekonsiliasi |
 | `kalender.csv` | Hari raya & libur (status `pasti`/`perkiraan`) |
-| `pengaturan.json` | Ambang quality gate, sinyal, model, target kinerja, privasi, tindak lanjut |
+| `pengaturan.json` | Ambang quality gate, sinyal, model, target kinerja, privasi, tindak lanjut, penyedia AI, notifikasi, layanan |
 
 ## Yang wajib dikonfirmasi sebelum dipakai sebagai dasar keputusan
 

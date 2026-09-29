@@ -3,4 +3,4 @@
 Alur: sumber → pengambilan → integrasi → penyimpanan → quality gate → analisis → publikasi dashboard.
 """
 
-VERSI = "1.0.0"
+VERSI = "1.1.0"

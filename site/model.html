@@ -41,7 +41,22 @@
     <div class="gulir-tabel"><table id="tabel-model"><thead><tr>
       <th>Varian</th><th class="angka">Naif</th><th class="angka">Rata 7</th><th class="angka">Holt</th><th class="angka">Hari raya</th>
       <th class="angka">Perbaikan vs naif</th><th class="angka">Bias</th><th class="angka">Cakupan 90%</th><th class="angka">MAE</th>
-      <th class="angka">Rasio volatilitas</th><th class="angka">Δ sMAPE 2 periode</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+      <th class="angka">Rasio volatilitas</th><th class="angka">Δ sMAPE 2 periode</th><th>Persetujuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div>
+        <h2>Persetujuan manusia atas model</h2>
+        <p id="info-persetujuan">Model rekomendasi hasil backtest perlu disetujui analis/pimpinan sebelum dipakai (Gambar 11: persetujuan manusia).</p>
+      </div>
+      <div class="baris-kontrol">
+        <input type="text" id="penyetuju" placeholder="Nama/jabatan penyetuju" aria-label="Penyetuju">
+        <button class="tombol utama-aksi" type="button" id="unduh-persetujuan">Unduh berkas persetujuan</button>
+      </div>
+    </div>
+    <p class="meta-kecil">Centang model yang disetujui pada tabel di atas, lalu unggah berkas hasil unduhan ke <code>data/persetujuan_model/</code>.
+      Bila <code>analisis.wajib_persetujuan_model</code> = <code>true</code> di <code>config/pengaturan.json</code>, model yang belum disetujui tidak dipakai (sistem kembali ke baseline naif).</p>
   </section>
 
   <section class="kartu prosa">
@@ -51,7 +66,7 @@
 </main>
 
 <script type="module">
-import { pasangKerangka, muatJSON, esc, persen, angka, rp, tampilkanGalat } from "./assets/app.js";
+import { pasangKerangka, muatJSON, esc, persen, angka, rp, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
 
 await pasangKerangka("model.html");
 let m;
@@ -114,8 +129,26 @@ document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) =>
     <td class="angka">${rp(mp.mae)}</td>
     <td class="angka">${d.rasio_volatilitas ?? "–"}</td>
     <td class="angka">${d.penurunan_periode_sebelumnya_persen ?? "–"}% → ${d.penurunan_periode_terakhir_persen ?? "–"}%</td>
+    <td>${v.status_persetujuan === "disetujui" ? `<span class="lencana baik">disetujui</span>${v.persetujuan?.penyetuju ? `<br><span class="meta-kecil">${esc(v.persetujuan.penyetuju)} ${esc(v.persetujuan.tanggal || "")}</span>` : ""}`
+      : v.status_persetujuan === "menunggu_persetujuan" ? `<label class="cek"><input type="checkbox" data-setuju="${esc(v.kode)}" data-model="${esc(v.model_rekomendasi)}"> setujui ${esc(v.model_rekomendasi)}</label>`
+      : '<span class="lencana polos">–</span>'}</td>
     <td class="meta-kecil">${esc((v.catatan || []).join(" "))}</td></tr>`;
-}).join("") || `<tr><td colspan="12" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
+}).join("") || `<tr><td colspan="13" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
+
+const menunggu = m.per_varian.filter((v) => v.status_persetujuan === "menunggu_persetujuan").length;
+document.getElementById("info-persetujuan").textContent =
+  `${m.per_varian.length - menunggu} dari ${m.per_varian.length} varian memakai model yang sudah disetujui atau baseline; ${menunggu} menunggu persetujuan.` +
+  (m.pengaturan.analisis.wajib_persetujuan_model ? " Persetujuan diwajibkan." : " Persetujuan belum diwajibkan (model rekomendasi tetap dipakai).");
+document.getElementById("unduh-persetujuan").addEventListener("click", () => {
+  const penyetuju = document.getElementById("penyetuju").value.trim();
+  if (!penyetuju) { document.getElementById("penyetuju").focus(); return; }
+  const hari = new Date().toISOString().slice(0, 10);
+  const baris = [...document.querySelectorAll("[data-setuju]:checked")].map((c) => ({
+    kode_varian: c.dataset.setuju, model: c.dataset.model, keputusan: "setuju", penyetuju, tanggal: hari, catatan: "",
+  }));
+  if (!baris.length) return;
+  unduhTeks(`persetujuan_${hari}.csv`, keCSV(["kode_varian", "model", "keputusan", "penyetuju", "tanggal", "catatan"], baris));
+});
 
 const a = m.pengaturan.analisis, s = m.pengaturan.sinyal;
 document.getElementById("metodologi").innerHTML = [

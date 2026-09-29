@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buletin & Laporan Harga</title>
+  <meta name="description" content="Buletin harga pangan mingguan, analisis bulanan, dan bahan rapat TPID triwulanan Kabupaten Bengkulu Tengah.">
+  <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/app.css">
+  <style>
+    .dokumen { max-width: 980px; margin: 0 auto; }
+    .dokumen h2 { margin: 18px 0 8px; font-size: 1.02rem; border-bottom: 1px solid var(--grid); padding-bottom: 4px; }
+    .kop { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 10px; }
+    .kop .instansi { font-size: 0.82rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
+    .kop h1 { font-size: 1.4rem; margin-top: 4px; }
+    .indeks { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .indeks .angka-besar { font-size: 2.4rem; font-weight: 650; }
+    ol.rekomendasi li, ul.ringkasan li { margin: 4px 0; }
+    .dokumen table { font-size: 0.8rem; }
+    .dokumen th, .dokumen td { padding: 6px 6px; }
+    .dokumen th { white-space: normal; }
+    .dokumen td:first-child { min-width: 170px; }
+    .dokumen td.rentang { white-space: normal; min-width: 90px; }
+    .kolom-dua { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 700px) { .kolom-dua { grid-template-columns: minmax(0, 1fr); } }
+    @media print {
+      .kepala, .banner-demo, .kontrol-laporan, .kaki { display: none !important; }
+      .utama { padding: 0; }
+      .kartu { border: 0; box-shadow: none; padding: 0; }
+      th { position: static; }
+      tr, li { break-inside: avoid; }
+      h2 { break-after: avoid; }
+      .dokumen { max-width: none; }
+      body { font-size: 11pt; }
+    }
+  </style>
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman kontrol-laporan">
+    <div>
+      <h1>Buletin &amp; laporan</h1>
+      <p>Disusun otomatis dari data yang lolos quality gate (Tabel 4 Rancangan Aksi Perubahan). Tekan <em>Cetak / Simpan PDF</em> untuk dibagikan.</p>
+    </div>
+    <div class="baris-kontrol">
+      <div class="segmen" role="group" aria-label="Jenis laporan" id="jenis">
+        <button type="button" data-jenis="mingguan" aria-pressed="true">Mingguan</button>
+        <button type="button" data-jenis="bulanan" aria-pressed="false">Bulanan</button>
+        <button type="button" data-jenis="triwulanan" aria-pressed="false">Triwulanan</button>
+      </div>
+      <label class="sr-only" for="periode">Periode</label>
+      <select id="periode"></select>
+      <button class="tombol" type="button" id="unduh-csv">Unduh tabel (CSV)</button>
+      <button class="tombol utama-aksi" type="button" id="cetak">Cetak / Simpan PDF</button>
+    </div>
+  </div>
+
+  <article class="kartu dokumen" id="dokumen" aria-live="polite"></article>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, waktu, lencanaKeparahan, lencanaStatus, kelasPerubahan,
+         JENIS_SINYAL, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
+
+const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
+const meta = await pasangKerangka("laporan.html");
+let data, master;
+try {
+  [data, master] = await Promise.all([muatJSON("laporan.json"), muatJSON("master.json")]);
+} catch (e) {
+  tampilkanGalat(document.querySelector("main"), e);
+  throw e;
+}
+const urutKomoditas = master.komoditas.map((k) => k.nama);
+let jenis = "mingguan";
+
+function isiPeriode() {
+  const sel = document.getElementById("periode");
+  sel.innerHTML = (data[jenis] || []).map((p, i) => `<option value="${i}">${esc(p.label)}${p.periode_berjalan ? " (berjalan)" : ""}</option>`).join("");
+  render();
+}
+
+function tabelVarian(p) {
+  const adaProyeksi = p.varian.some((v) => v.proyeksi_h7);
+  let html = `<div class="gulir-tabel"><table><thead><tr><th>Varian</th><th class="angka">Rata-rata</th><th class="angka">Min–maks</th>
+    <th class="angka">vs ${esc(p.pembanding.sebelumnya)}</th><th class="angka">vs ${esc(p.pembanding.tahun_lalu)}</th>
+    <th class="angka">Volatilitas harian</th>${adaProyeksi ? '<th class="angka">Proyeksi H+7</th>' : ""}</tr></thead><tbody>`;
+  for (const kom of urutKomoditas) {
+    const baris = p.varian.filter((v) => v.komoditas === kom);
+    if (!baris.length) continue;
+    html += `<tr class="grup"><td colspan="${adaProyeksi ? 7 : 6}">${esc(kom)}</td></tr>`;
+    for (const v of baris) {
+      html += `<tr><td>${esc(v.nama)} <span class="meta-kecil">/${esc(v.satuan)}</span></td>
+        <td class="angka">${rp(v.rata_rata)}</td><td class="angka meta-kecil rentang">${rp(v.minimum)}–<br>${rp(v.maksimum)}</td>
+        <td class="angka ${kelasPerubahan(v.vs_sebelumnya_persen, AMBANG[v.kelompok])}">${persen(v.vs_sebelumnya_persen, 1, true)}</td>
+        <td class="angka ${kelasPerubahan(v.vs_tahun_lalu_persen, AMBANG[v.kelompok])}">${persen(v.vs_tahun_lalu_persen, 1, true)}</td>
+        <td class="angka">${persen(v.volatilitas_harian_persen, 2)}</td>
+        ${adaProyeksi ? `<td class="angka">${v.proyeksi_h7 ? `${rp(v.proyeksi_h7.prediksi)}<br><span class="meta-kecil">${rp(v.proyeksi_h7.bawah)}–${rp(v.proyeksi_h7.atas)}</span>` : "–"}</td>` : ""}</tr>`;
+    }
+  }
+  return html + "</tbody></table></div>";
+}
+
+function daftarPerubahan(p, kode, judul) {
+  const nama = Object.fromEntries(p.varian.map((v) => [v.kode, v]));
+  if (!kode.length) return `<p class="kosong">${judul}: tidak ada.</p>`;
+  return `<h3 style="margin:8px 0 4px">${judul}</h3><ol>${kode.map((k) => `<li>${esc(nama[k].nama)} ${persen(nama[k].vs_sebelumnya_persen, 1, true)}</li>`).join("")}</ol>`;
+}
+
+function kinerjaModel(km) {
+  if (!km) return "";
+  const r = km.ringkasan, ev = km.evaluasi_anomali, t = km.target;
+  return `<h2>Kinerja model proyeksi &amp; deteksi anomali</h2>
+    <dl class="dl">
+      <dt>sMAPE median (horizon 1–14 hari)</dt><dd>${r.smape_median === null ? "–" : angka(r.smape_median, 2) + "%"}</dd>
+      <dt>Varian ≥${t.perbaikan_smape_persen}% lebih baik dari baseline</dt><dd>${r.lolos_smape}/${r.varian_dinilai}</dd>
+      <dt>Bias absolut ≤${t.bias_absolut_maks_persen}%</dt><dd>${r.lolos_bias}/${r.varian_dinilai}</dd>
+      <dt>Cakupan interval 90% dalam ${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%</dt><dd>${r.lolos_cakupan}/${r.varian_dinilai}</dd>
+      <dt>Deteksi anomali (precision / recall / F1)</dt><dd>${ev.precision ?? "–"} / ${ev.recall ?? "–"} / ${ev.f1 ?? "–"} <span class="meta-kecil">(${esc(ev.sumber_label)})</span></dd>
+    </dl>`;
+}
+
+const LABEL_STATUS = { memenuhi: ["baik", "Memenuhi"], belum_memenuhi: ["sedang", "Belum memenuhi"],
+                       belum_dapat_dinilai: ["polos", "Belum dapat dinilai"], diukur_manual: ["info", "Diukur manual"] };
+function indikatorSmart(daftar) {
+  if (!daftar) return "";
+  return `<h2>Capaian indikator kinerja (SMART)</h2><div class="gulir-tabel"><table><thead><tr><th>Sasaran</th><th>Indikator</th>
+    <th class="angka">Capaian</th><th class="angka">Target</th><th>Status</th></tr></thead><tbody>` +
+    daftar.map((i) => `<tr><td class="meta-kecil">${esc(i.sasaran)}</td><td>${esc(i.indikator)}</td>
+      <td class="angka">${i.nilai === null ? "–" : esc(String(i.nilai).replace(".", ",")) + (i.satuan === "%" && typeof i.nilai === "number" ? "%" : "")}</td>
+      <td class="angka">${esc(String(i.target).replace(".", ","))}${i.satuan === "%" && typeof i.target === "number" ? "%" : ""}</td>
+      <td><span class="lencana ${LABEL_STATUS[i.status][0]}">${LABEL_STATUS[i.status][1]}</span></td></tr>`).join("") +
+    `</tbody></table></div>`;
+}
+
+function render() {
+  const el = document.getElementById("dokumen");
+  const p = (data[jenis] || [])[Number(document.getElementById("periode").value || 0)];
+  if (!p) {
+    el.innerHTML = `<div class="pesan">Belum ada data untuk laporan ${esc(jenis)}.</div>`;
+    return;
+  }
+  const s = p.status_sinyal || {};
+  el.innerHTML = `
+    <header class="kop">
+      <div>
+        <div class="instansi">Badan Pusat Statistik Kabupaten Bengkulu Tengah · untuk TPID</div>
+        <h1>${esc(p.judul)}</h1>
+        <div>${esc(p.label)} · ${esc(tgl(p.mulai, true))} – ${esc(tgl(p.akhir, true))}</div>
+      </div>
+      <div class="meta-kecil" style="text-align:right">
+        Disusun otomatis ${esc(waktu(meta?.dibuat))} WIB<br>Data terakhir ${esc(tgl(meta?.tanggal_data_terakhir))}
+        ${meta?.mode_demo ? '<br><span class="lencana tinggi">DATA DEMO — bukan angka resmi</span>' : ""}
+      </div>
+    </header>
+    ${p.periode_berjalan ? '<div class="pesan peringatan">Periode masih berjalan; angka dapat berubah sampai periode berakhir.</div>' : ""}
+
+    <h2>Ringkasan</h2>
+    <ul class="ringkasan">${p.ringkasan.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>
+    <div class="indeks"><span class="angka-besar">${p.indeks_sederhana === null ? "–" : angka(p.indeks_sederhana, 2)}</span>
+      <span class="meta-kecil">Indeks harga pangan sederhana (${esc(p.pembanding.sebelumnya)} = 100). Rata-rata geometrik relatif harga ${p.varian.length} varian tanpa bobot — indikatif, bukan IHK resmi BPS.</span></div>
+
+    <h2>Harga rata-rata per varian — Kabupaten Bengkulu Tengah</h2>
+    ${tabelVarian(p)}
+
+    <div class="kolom-dua">
+      <section>${daftarPerubahan(p, p.kenaikan_teratas, "Kenaikan terbesar")}</section>
+      <section>${daftarPerubahan(p, p.penurunan_teratas, "Penurunan terbesar")}</section>
+    </div>
+
+    <h2>Sinyal dan tindak lanjut</h2>
+    ${p.sinyal.length ? `<div class="gulir-tabel"><table><thead><tr><th>Sinyal</th><th>Jenis</th><th>Keparahan</th><th>Periode</th><th>Status</th></tr></thead><tbody>
+      ${p.sinyal.map((x) => `<tr><td>${esc(x.judul)}${x.url_issue ? ` · <a href="${esc(x.url_issue)}">issue</a>` : ""}</td><td>${esc(JENIS_SINYAL[x.jenis] || x.jenis)}</td>
+        <td>${lencanaKeparahan(x.keparahan)}</td><td class="meta-kecil">${esc(tgl(x.tanggal_mulai))} – ${esc(tgl(x.tanggal_terakhir))}</td>
+        <td>${lencanaStatus(x.status || "baru")}</td></tr>`).join("")}</tbody></table></div>
+      <p class="meta-kecil">Anomali: ${angka(Object.values(s).reduce((a, b) => a + b, 0))} sinyal · ditindaklanjuti/selesai ${angka((s.ditindaklanjuti || 0) + (s.selesai || 0))} · false alarm ${angka(s.false_alarm || 0)}</p>`
+      : '<p class="kosong">Tidak ada sinyal pada periode ini.</p>'}
+
+    <h2>Kualitas data</h2>
+    <p>Hari pencatatan wajib: ${angka(p.kelengkapan.hari_wajib)} · kelengkapan rata-rata ${persen(p.kelengkapan.rata_persen)}</p>
+    <ul>${p.kelengkapan.per_pasar.map((x) => `<li>${esc(x.nama_pasar)}: ${persen(x.kelengkapan_persen)}</li>`).join("")}</ul>
+
+    ${p.hari_raya ? `<h2>Menjelang hari raya</h2><p>${esc(p.hari_raya.nama)} — ${esc(tgl(p.hari_raya.tanggal, true))} (H-${p.hari_raya.h_minus} dari akhir periode).</p>` : ""}
+
+    ${kinerjaModel(p.kinerja_model)}
+    ${p.waktu_respons ? `<h2>Waktu respons tindak lanjut</h2><p>Median ${p.waktu_respons.median_hari_terkini ?? p.waktu_respons.median_hari_semua ?? "–"} hari
+      ${p.waktu_respons.perbaikan_persen !== null && p.waktu_respons.perbaikan_persen !== undefined ? `· perbaikan ${persen(p.waktu_respons.perbaikan_persen)} dari acuan (target ≥20%)` : ""}
+      ${p.waktu_respons.catatan ? `<br><span class="meta-kecil">${esc(p.waktu_respons.catatan)}</span>` : ""}</p>` : ""}
+    ${indikatorSmart(p.indikator)}
+
+    <h2>Rekomendasi</h2>
+    <p class="meta-kecil">Disusun otomatis berbasis aturan sebagai bahan pertimbangan; wajib ditelaah analis sebelum disampaikan ke TPID.</p>
+    <ol class="rekomendasi">${p.rekomendasi.map((r) => `<li>${esc(r)}</li>`).join("")}</ol>
+
+    <h2>Catatan metodologi</h2>
+    <p class="meta-kecil">Harga harian Bengkulu Tengah = median observasi lolos quality gate dari sumber berprioritas tertinggi.
+      Rata-rata periode = rerata harga harian yang tersedia. Volatilitas = simpangan baku perubahan log harga harian.
+      Proyeksi H+7 memakai model terbaik hasil rolling-origin backtesting dengan interval 90%.
+      Sumber: pencatatan harga pasar BPS Kabupaten Bengkulu Tengah; cuaca © Open-Meteo. Angka bukan rilis resmi BPS.</p>`;
+}
+
+document.querySelectorAll("#jenis button").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll("#jenis button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  jenis = b.dataset.jenis;
+  isiPeriode();
+}));
+document.getElementById("periode").addEventListener("change", render);
+document.getElementById("cetak").addEventListener("click", () => window.print());
+document.getElementById("unduh-csv").addEventListener("click", () => {
+  const p = (data[jenis] || [])[Number(document.getElementById("periode").value || 0)];
+  if (!p) return;
+  const kolom = ["kode", "nama", "komoditas", "satuan", "rata_rata", "minimum", "maksimum", "vs_sebelumnya_persen",
+                 "vs_tahun_lalu_persen", "volatilitas_harian_persen", "hari_data"];
+  unduhTeks(`laporan_${jenis}_${p.mulai}.csv`, keCSV(kolom, p.varian));
+});
+isiPeriode();
+</script>
+</body>
+</html>

@@ -74,11 +74,44 @@ jobs:
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
 
+      - name: Ambil log uptime (cabang log-uptime)
+        continue-on-error: true
+        run: |
+          if git ls-remote --exit-code --heads origin log-uptime >/dev/null; then
+            git fetch -q origin log-uptime
+            git show origin/log-uptime:uptime.csv > data/uptime.csv
+          else
+            echo "Log uptime belum ada."
+          fi
+
       - name: Jalankan pipeline
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE_DEMO: ${{ inputs.demo || 'otomatis' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_KE: ${{ secrets.EMAIL_KE }}
+          EMAIL_DARI: ${{ secrets.EMAIL_DARI }}
         run: python -m pipeline jalankan --keluaran site/data --demo "$MODE_DEMO"
+
+      - name: Simpan status notifikasi (agar tidak terkirim dua kali)
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ ! -d data/notifikasi ]; then echo "Belum ada notifikasi terkirim."; exit 0; fi
+          git add data/notifikasi
+          if git diff --cached --quiet; then
+            echo "Tidak ada perubahan status notifikasi."
+          else
+            git commit -m "notifikasi: catat sinyal/buletin terkirim"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
 
       - uses: actions/configure-pages@v5
 

@@ -8,3 +8,5 @@ site/data/
 # berkas sementara Excel
 ~$*
 .DS_Store
+# log uptime diambil dari cabang log-uptime saat pipeline berjalan
+data/uptime.csv

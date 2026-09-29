@@ -58,16 +58,46 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 4. Bila ada gejolak nyata yang **tidak** terdeteksi, catat `anomali_terlewat` agar recall model terukur.
 5. Target Rancangan: ≥ 75% sinyal prioritas tervalidasi ditindaklanjuti; forum TPID minimal triwulanan.
 
-## 5. AI Data Finder
+## 5. AI Data Finder (gratis)
 
-1. Pastikan secret `ANTHROPIC_API_KEY` sudah diatur.
-2. **Actions → AI Data Finder → Run workflow**, isi komoditas, periode, jenis data, dan wilayah.
-3. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**. Kolom
-   *URL di hasil pencarian?* = "tidak" berarti URL tidak muncul di hasil pencarian — periksa dengan saksama.
-4. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv` dengan status
-   `aktif` dan tentukan metode aksesnya. Kandidat tidak pernah otomatis menjadi sumber data.
+1. (Disarankan) Buat kunci gratis Gemini di https://aistudio.google.com/apikey lalu simpan sebagai secret
+   `GEMINI_API_KEY` (**Settings → Secrets and variables → Actions → New repository secret**). Kuota gratis dapat
+   berubah; cek ketentuan terbaru Google AI Studio.
+2. **Actions → AI Data Finder → Run workflow**, isi komoditas, periode, jenis data, wilayah, dan penyedia
+   (`otomatis` = Gemini, lalu GitHub Models bila Gemini belum diatur/kuota habis).
+3. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**:
+   - *URL di hasil pencarian?* "tidak" = URL tidak muncul di hasil pencarian Google — periksa dengan saksama.
+   - *URL dapat dibuka?* "tidak" = alamat tidak bisa dibuka (kemungkinan dikarang/berubah).
+   - Hasil GitHub Models ditandai **tanpa pencarian web**: semua URL wajib dicek manual.
+4. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
+   Kandidat tidak pernah otomatis menjadi sumber data.
 
-## 6. Admin
+## 6. Buletin, laporan, dan notifikasi
+
+- Halaman **Laporan**: buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan. Pilih periode lalu
+  **Cetak / Simpan PDF**. Rekomendasi di dalamnya disusun otomatis dan wajib ditelaah analis.
+- **Notifikasi Telegram** (gratis): buat bot lewat @BotFather → salin token → tambahkan bot ke grup TPID →
+  dapatkan `chat_id` grup (mis. kirim pesan di grup lalu buka `https://api.telegram.org/bot<TOKEN>/getUpdates`).
+  Simpan sebagai secret `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID`.
+- **Notifikasi email** (gratis, mis. Gmail): aktifkan verifikasi 2 langkah → buat *App Password* → secret
+  `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=465`, `SMTP_USER`, `SMTP_PASSWORD` (App Password), `EMAIL_KE`.
+- Yang dikirim: sinyal aktif keparahan ≥ sedang yang belum pernah dikirim, dan buletin mingguan setelah minggu
+  berakhir. Catatan kiriman di `data/notifikasi/terkirim.json`. Mode demo tidak mengirim notifikasi.
+
+## 7. Indikator kinerja, persetujuan model, dan layanan publik
+
+- Halaman **Kinerja** menampilkan capaian indikator SMART Rancangan (ketepatan waktu, koreksi supervisor, model,
+  uptime, waktu respons, IKM, dll.). Indikator yang belum dapat dihitung ditandai jelas beserta alasannya.
+- **Persetujuan model**: di halaman **Mutu Model** centang model rekomendasi yang disetujui → isi nama penyetuju →
+  *Unduh berkas persetujuan* → unggah ke `data/persetujuan_model/`. Untuk mewajibkan persetujuan, ubah
+  `analisis.wajib_persetujuan_model` menjadi `true` di `config/pengaturan.json`.
+- **Uptime**: workflow **Uptime** memeriksa dashboard setiap jam; log di cabang `log-uptime` (jangan dihapus).
+- **Pengaduan & SKM**: tautan di kaki setiap halaman membuka formulir GitHub (butuh akun GitHub; bersifat publik).
+  Untuk responden tanpa akun GitHub, isi `layanan.url_pengaduan_eksternal` (mis. tautan WhatsApp/PST) dan
+  `layanan.url_survei_eksternal` (mis. Google Form) di `config/pengaturan.json`. Tanggapi pengaduan di kolom komentar
+  issue lalu tutup issue bila selesai.
+
+## 8. Admin
 
 - **Menambah pasar**: tambahkan baris di `config/pasar.csv` (isi koordinat dari peta, `koordinat_terverifikasi=1`,
   `blank_spot=1` bila perlu).
@@ -78,13 +108,14 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
   pada repo publik yang tidak ada aktivitas selama 60 hari — commit data rutin mencegah hal ini.
 - **Mode demo**: `mode_demo` di `pengaturan.json` (`otomatis` / `ya` / `tidak`) atau input saat *Run workflow*.
 
-## 7. Pemecahan masalah
+## 9. Pemecahan masalah
 
 | Gejala | Penyebab umum | Tindakan |
 |---|---|---|
 | Dashboard masih "DATA DEMO" | Belum ada CSV/Excel di `data/masuk/harga/` | Unggah berkas harga pertama |
 | Berkas "GAGAL" di Quality Gate | Kolom wajib hilang / kolom data pribadi | Perbaiki header sesuai templat |
 | Banyak baris ditolak | Kode pasar/varian salah, tanggal masa depan, satuan tak dikenal | Lihat alasan per baris di Quality Gate |
+| Notifikasi tidak terkirim | Secret belum diatur, mode demo, atau kanal menolak | Lihat `pesan_notifikasi` di `site/data/meta.json` / log Actions |
 | Issue tidak dibuat | Mode demo, keparahan < tinggi, atau `github_issues=false` | Periksa `pengaturan.json` dan pesan sinkronisasi di halaman Sinyal |
 | Workflow deploy gagal "Pages not enabled" | Pages belum diaktifkan | Settings → Pages → Source: GitHub Actions |
 | Cuaca tidak bertambah | API Open-Meteo tidak terjangkau | Langkah konektor bersifat `continue-on-error`; cek log Actions |

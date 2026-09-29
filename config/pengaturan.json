@@ -12,7 +12,8 @@
     "jarak_origin_hari": 7,
     "jendela_baseline_hari": 28,
     "tingkat_interval": 0.9,
-    "maks_celah_isi_hari": 7
+    "maks_celah_isi_hari": 7,
+    "wajib_persetujuan_model": false
   },
   "kualitas": {
     "ambang_perubahan_harian_persen": {"volatil": 30, "protein": 15, "pokok": 10, "pabrikan": 10},
@@ -30,6 +31,25 @@
     "alfa_uji_drift": 0.01,
     "jendela_publikasi_hari": 60
   },
+  "ai": {
+    "penyedia": "otomatis",
+    "urutan_otomatis": ["gemini", "github_models"],
+    "model_gemini": "gemini-flash-latest",
+    "model_github": "openai/gpt-4.1-mini",
+    "model_anthropic": "claude-opus-5-5"
+  },
+  "notifikasi": {
+    "aktif": true,
+    "keparahan_minimal": "sedang",
+    "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat"],
+    "maks_sinyal_per_pesan": 10,
+    "buletin_mingguan": true,
+    "kirim_saat_demo": false
+  },
+  "layanan": {
+    "url_pengaduan_eksternal": "",
+    "url_survei_eksternal": ""
+  },
   "tindak_lanjut": {
     "github_issues": true,
     "keparahan_minimal_issue": "tinggi",
@@ -39,6 +59,7 @@
     "kolom_terlarang": ["nama_pedagang", "nama_responden", "nama", "nik", "telepon", "no_telepon", "no_hp", "hp", "whatsapp", "alamat", "email"],
     "min_observasi_publikasi_pasar": 1
   },
+  "kinerja": {"jumlah_acuan_respons": 10, "hari_uptime": 30},
   "target_kinerja": {
     "ketepatan_waktu_persen": 95,
     "perbaikan_smape_persen": 10,

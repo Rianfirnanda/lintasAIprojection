@@ -17,7 +17,8 @@ from zoneinfo import ZoneInfo
 
 import numpy as np
 
-from . import VERSI, agregasi, analisis, demo, kualitas, masukan, sinyal as modul_sinyal, tindak_lanjut
+from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, layanan, masukan, notifikasi,
+               sinyal as modul_sinyal, tindak_lanjut)
 from .konfigurasi import Konfigurasi
 
 log = logging.getLogger(__name__)
@@ -57,7 +58,8 @@ def tentukan_mode_demo(konf: Konfigurasi, folder_masuk: Path, paksa: str | None)
     return not masukan.ada_data_harga(folder_masuk)
 
 
-def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, sinkron_github: bool = True) -> dict:
+def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, sinkron_github: bool = True,
+             kirim_notifikasi: bool = True) -> dict:
     akar = konf.akar
     folder_masuk = akar / "data" / "masuk"
     pakai_demo = tentukan_mode_demo(konf, folder_masuk, mode_demo)
@@ -89,7 +91,9 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     tanggal_target = [t for (w, _), per in harian.items() if w == target for t in per]
     tanggal_data = max(tanggal_target) if tanggal_target else None
 
-    # Analisis per varian
+    # Analisis per varian (dengan persetujuan manusia atas model, bila diwajibkan)
+    persetujuan = kinerja.baca_persetujuan(akar / "data" / "persetujuan_model")
+    wajib_setuju = konf.pengaturan["analisis"].get("wajib_persetujuan_model", False)
     hasil_varian: dict[str, analisis.HasilVarian] = {}
     seri_pembanding: dict[str, dict[str, analisis.SeriHarian]] = defaultdict(dict)
     for v in konf.varian_aktif:
@@ -97,7 +101,9 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
         if not data:
             continue
         seri = analisis.bentuk_seri(data, akhir=tanggal_data)
-        hasil_varian[v.kode] = analisis.analisis_varian(seri, v.kelompok, konf.hari_raya(), konf.pengaturan)
+        hasil_varian[v.kode] = analisis.analisis_varian(
+            seri, v.kelompok, konf.hari_raya(), konf.pengaturan,
+            model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju)
         for w in konf.wilayah:
             if w != target and harian.get((w, v.kode)):
                 seri_pembanding[v.kode][w] = analisis.bentuk_seri(harian[(w, v.kode)], akhir=tanggal_data)
@@ -131,20 +137,43 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
         evaluasi = modul_sinyal.evaluasi_deteksi(daftar_sinyal, {s["id"]: s["status"] for s in daftar_sinyal}, terlewat, titik)
     evaluasi["titik_dievaluasi"] = titik
 
+    token = os.environ.get("GITHUB_TOKEN")
+    klien_gh = tindak_lanjut.KlienGitHub(token, repo) if sinkron_github and token and repo else None
+    cfg_kinerja = konf.pengaturan.get("kinerja", {})
+    data_kinerja = {
+        "layanan": layanan.kumpulkan(klien_gh, konf.hari_ini),
+        "koreksi": kinerja.koreksi_supervisor(hasil_qc.observasi, konf.hari_ini),
+        "respons": kinerja.waktu_respons(daftar_sinyal, buku, status_issue, konf.hari_ini,
+                                         cfg_kinerja.get("jumlah_acuan_respons", 10)),
+        "stabilitas": kinerja.stabilitas_segmen(hasil_varian, konf.varian),
+        "uptime": kinerja.ringkas_uptime(akar / "data" / "uptime.csv", konf.hari_ini, cfg_kinerja.get("hari_uptime", 30)),
+        "persetujuan": persetujuan,
+    }
+
     # Publikasi
     if keluaran.exists():
         for sub in ("seri", "unduh"):
             shutil.rmtree(keluaran / sub, ignore_errors=True)
     keluaran.mkdir(parents=True, exist_ok=True)
     ringkas = publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, harian_pasar, hasil_varian,
-                           seri_pembanding, daftar_sinyal, evaluasi, tanggal_data, pesan_github)
+                           seri_pembanding, daftar_sinyal, evaluasi, tanggal_data, pesan_github, data_kinerja)
+
+    # Notifikasi (Telegram/email) — setelah publikasi agar tautan dashboard & buletin sudah tersedia.
+    laporan_mingguan = json.loads((keluaran / "laporan.json").read_text(encoding="utf-8")).get("mingguan", [])
+    pesan_notifikasi = notifikasi.jalankan(konf, daftar_sinyal, laporan_mingguan, url_dashboard, pakai_demo) \
+        if kirim_notifikasi else "notifikasi dilewati"
+    meta = json.loads((keluaran / "meta.json").read_text(encoding="utf-8"))
+    meta["pesan_notifikasi"] = pesan_notifikasi
+    _tulis_json(keluaran / "meta.json", meta)
+    ringkas["notifikasi"] = pesan_notifikasi
     if tmp:
         shutil.rmtree(tmp, ignore_errors=True)
     return ringkas
 
 
 def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, harian_pasar, hasil_varian,
-                 seri_pembanding, daftar_sinyal, evaluasi, tanggal_data, pesan_github) -> dict:
+                 seri_pembanding, daftar_sinyal, evaluasi, tanggal_data, pesan_github, data_kinerja=None) -> dict:
+    data_kinerja = data_kinerja or {}
     target = konf.wilayah_target
     tk = konf.pengaturan["target_kinerja"]
     zona = ZoneInfo(konf.pengaturan.get("zona_waktu", "Asia/Jakarta"))
@@ -267,6 +296,9 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "perbaikan_vs_naif_persen": hv.perbaikan_vs_naif_persen,
             "cakupan_interval_persen": hv.cakupan_interval_persen, "drift": hv.drift, "catatan": hv.catatan,
             "profil_hari_raya": hv.profil_hari_raya,
+            "model_rekomendasi": hv.model_rekomendasi, "status_persetujuan": hv.status_persetujuan,
+            "persetujuan": {k: v for k, v in data_kinerja.get("persetujuan", {}).get(kode, {}).items() if k != "riwayat"},
+            "segmen": hv.segmen,
         }
         if m:
             dinilai += 1
@@ -292,6 +324,36 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "target": tk, "nama_model": analisis.NAMA_MODEL,
         "pengaturan": {"analisis": konf.pengaturan["analisis"], "sinyal": konf.pengaturan["sinyal"]},
     })
+
+    # ---------- kinerja.json (indikator SMART Rancangan Aksi Perubahan)
+    status_persetujuan = {kode: hv.status_persetujuan for kode, hv in hasil_varian.items()}
+    indikator = kinerja.indikator_smart(
+        konf, hasil_qc, hasil_masuk, ringkasan_model, evaluasi, daftar_sinyal, data_kinerja.get("respons", {}),
+        data_kinerja.get("koreksi", {}), data_kinerja.get("stabilitas", {}), data_kinerja.get("uptime", {}),
+        status_persetujuan, data_kinerja.get("layanan"))
+    _tulis_json(keluaran / "kinerja.json", {
+        "indikator": indikator,
+        "koreksi_supervisor": data_kinerja.get("koreksi", {}),
+        "waktu_respons": data_kinerja.get("respons", {}),
+        "stabilitas_segmen": data_kinerja.get("stabilitas", {}),
+        "uptime": data_kinerja.get("uptime", {}),
+        "persetujuan_model": {
+            "wajib": konf.pengaturan["analisis"].get("wajib_persetujuan_model", False),
+            "status": status_persetujuan,
+        },
+        "layanan": data_kinerja.get("layanan") or {},
+    })
+
+    # ---------- laporan.json (buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan)
+    kinerja_model = {"ringkasan": ringkasan_model, "evaluasi_anomali": evaluasi, "target": tk}
+    _tulis_json(keluaran / "laporan.json", laporan.bentuk_semua(
+        konf, {kode: per for (w, kode), per in harian.items() if w == target}, hasil_varian, daftar_sinyal,
+        hasil_qc.observasi, tanggal_data,
+        ekstra={
+            "bulanan": {"kinerja_model": kinerja_model},
+            "triwulanan": {"kinerja_model": kinerja_model, "waktu_respons": data_kinerja.get("respons", {}),
+                           "stabilitas_segmen": data_kinerja.get("stabilitas", {}), "indikator": indikator},
+        }))
 
     # ---------- pasar.json
     pasar_out = []
@@ -388,6 +450,11 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "duplikat": hasil_qc.jumlah_duplikat, "berkas": len(hasil_masuk.batch),
         },
         "pesan_github": pesan_github,
+        "layanan": {
+            "url_pengaduan": f"{server}/{repo}/issues/new?template=pengaduan-data.yml" if repo else None,
+            "url_survei": f"{server}/{repo}/issues/new?template=survei-kepuasan.yml" if repo else None,
+            **{k: v for k, v in konf.pengaturan.get("layanan", {}).items() if v},
+        },
     }
     _tulis_json(keluaran / "meta.json", meta)
     return {"meta": meta, "kpi": ringkasan["kpi"], "evaluasi_anomali": evaluasi, "ringkasan_model": ringkasan_model}

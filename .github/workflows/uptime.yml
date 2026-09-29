@@ -1,0 +1,58 @@
+name: Uptime
+
+# Memeriksa dashboard setiap jam dan mencatat hasilnya (log uptime, Tabel 1 Rancangan: target 99,5%).
+# Log disimpan di cabang terpisah "log-uptime" agar riwayat cabang main tidak dipenuhi commit per jam.
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  cek:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Periksa dashboard
+        env:
+          URL_DASHBOARD: ${{ vars.URL_DASHBOARD }}
+          PEMILIK: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          URL="${URL_DASHBOARD:-https://${PEMILIK,,}.github.io/${REPO}/}"
+          WAKTU=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          HALAMAN=$(curl -s -o /dev/null -w '%{http_code} %{time_total}' --max-time 30 "$URL" || echo "000 0")
+          KODE_HALAMAN=${HALAMAN%% *}
+          LATENSI_MS=$(python3 -c "print(round(float('${HALAMAN##* }') * 1000))")
+          KODE_DATA=$(curl -s -o meta.json -w '%{http_code}' --max-time 30 "${URL}data/meta.json" || echo "000")
+          DIBUAT=$(python3 -c "import json; print(json.load(open('meta.json')).get('dibuat', ''))" 2>/dev/null || echo "")
+          echo "$WAKTU,$KODE_HALAMAN,$KODE_DATA,$LATENSI_MS,$DIBUAT" > baris.csv
+          echo "Hasil: $(cat baris.csv) ($URL)"
+
+      - name: Simpan ke cabang log-uptime
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp baris.csv /tmp/baris.csv
+          if git ls-remote --exit-code --heads origin log-uptime >/dev/null; then
+            git fetch origin log-uptime
+            git checkout -B log-uptime origin/log-uptime
+          else
+            git checkout --orphan log-uptime
+            git rm -rq --cached . && git clean -fdq
+            echo "waktu_utc,http_halaman,http_data,latensi_ms,data_dibuat" > uptime.csv
+          fi
+          cat /tmp/baris.csv >> uptime.csv
+          git add uptime.csv
+          git commit -qm "uptime: $(cut -d, -f1 /tmp/baris.csv)"
+          git push origin log-uptime
