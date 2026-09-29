@@ -3,7 +3,7 @@
   python -m pipeline jalankan [--keluaran site/data] [--demo otomatis|ya|tidak] [--tanpa-github]
   python -m pipeline periksa                 # validasi berkas di data/masuk tanpa publikasi (untuk PR data)
   python -m pipeline ambil-cuaca [--hari 30] # konektor Big Data cuaca (Open-Meteo)
-  python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026"
+  python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
 """
 
 from __future__ import annotations
@@ -46,6 +46,7 @@ def main(argv: list[str] | None = None) -> int:
     j.add_argument("--keluaran", type=Path, default=Path("site/data"))
     j.add_argument("--demo", choices=["otomatis", "ya", "tidak"], default=None)
     j.add_argument("--tanpa-github", action="store_true", help="lewati sinkronisasi GitHub Issues")
+    j.add_argument("--tanpa-notifikasi", action="store_true", help="jangan kirim notifikasi Telegram/email")
 
     sub.add_parser("periksa", help="validasi berkas masukan tanpa publikasi")
 
@@ -53,11 +54,13 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--hari", type=int, default=30)
     c.add_argument("--riwayat", type=int, default=400)
 
-    f = sub.add_parser("cari-sumber", help="AI Data Finder (butuh ANTHROPIC_API_KEY)")
+    f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini gratis / GitHub Models / Claude)")
     f.add_argument("--komoditas", required=True)
     f.add_argument("--periode", required=True)
     f.add_argument("--kebutuhan", default="harga eceran harian")
     f.add_argument("--wilayah", default="Kabupaten Bengkulu Tengah, Provinsi Bengkulu")
+    f.add_argument("--penyedia", choices=["otomatis", "gemini", "github_models", "anthropic"], default=None,
+                   help="bawaan: ai.penyedia di config/pengaturan.json")
 
     a = p.parse_args(argv)
     konf = konfigurasi.muat(a.akar)
@@ -66,7 +69,8 @@ def main(argv: list[str] | None = None) -> int:
         from . import proses
 
         keluaran = a.keluaran if a.keluaran.is_absolute() else konf.akar / a.keluaran
-        ringkas = proses.jalankan(konf, keluaran, a.demo, sinkron_github=not a.tanpa_github)
+        ringkas = proses.jalankan(konf, keluaran, a.demo, sinkron_github=not a.tanpa_github,
+                                  kirim_notifikasi=not a.tanpa_notifikasi)
         print(json.dumps(ringkas, ensure_ascii=False, indent=2, default=str))
         return 0
     if a.perintah == "periksa":
@@ -80,9 +84,10 @@ def main(argv: list[str] | None = None) -> int:
     if a.perintah == "cari-sumber":
         from . import pencari_data
 
-        catatan = pencari_data.cari(konf, a.komoditas, a.periode, a.kebutuhan, a.wilayah)
+        catatan = pencari_data.cari(konf, a.komoditas, a.periode, a.kebutuhan, a.wilayah, penyedia=a.penyedia)
         path = pencari_data.simpan(konf, catatan)
         n = len(catatan["hasil"].get("kandidat", []))
+        print(f"Penyedia: {catatan['penyedia']} ({catatan['model']}); dilewati: {catatan['penyedia_dilewati'] or '-'}")
         print(f"{n} kandidat sumber disimpan ke {path} (status: kandidat, wajib diverifikasi analis)")
         return 0
     return 2

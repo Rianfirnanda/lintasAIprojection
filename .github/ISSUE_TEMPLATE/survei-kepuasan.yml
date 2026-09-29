@@ -1,0 +1,84 @@
+name: Survei kepuasan pengguna data (SKM)
+description: Survei Kepuasan Masyarakat atas layanan informasi harga pangan (9 unsur PermenPANRB No. 14 Tahun 2017).
+title: "[SKM] Survei kepuasan"
+labels: ["skm"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Nilai layanan informasi harga pangan BPS Kabupaten Bengkulu Tengah. Skala: **1** tidak baik,
+        **2** kurang baik, **3** baik, **4** sangat baik. **Laman ini publik** — jangan menuliskan data pribadi.
+  - type: dropdown
+    id: pengguna
+    attributes:
+      label: Jenis pengguna
+      options: [TPID / Pemerintah Daerah, Internal BPS, Pedagang / pelaku usaha, Akademisi / peneliti, Masyarakat umum, Lainnya]
+    validations:
+      required: true
+  - type: dropdown
+    id: u1
+    attributes:
+      label: "U1. Persyaratan: kemudahan memperoleh informasi harga"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u2
+    attributes:
+      label: "U2. Sistem, mekanisme, dan prosedur: kemudahan alur memperoleh data"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u3
+    attributes:
+      label: "U3. Waktu penyelesaian: ketepatan waktu pembaruan data"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u4
+    attributes:
+      label: "U4. Biaya/tarif: kesesuaian biaya (layanan ini gratis)"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u5
+    attributes:
+      label: "U5. Produk spesifikasi jenis pelayanan: kelengkapan dan kegunaan informasi"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u6
+    attributes:
+      label: "U6. Kompetensi pelaksana: kemampuan petugas menjelaskan data"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u7
+    attributes:
+      label: "U7. Perilaku pelaksana: kesopanan dan keramahan petugas"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u8
+    attributes:
+      label: "U8. Penanganan pengaduan, saran, dan masukan"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: dropdown
+    id: u9
+    attributes:
+      label: "U9. Sarana dan prasarana: kualitas dashboard dan kanal layanan"
+      options: ["1", "2", "3", "4"]
+    validations:
+      required: true
+  - type: textarea
+    id: saran
+    attributes:
+      label: Saran perbaikan

@@ -7,4 +7,4 @@ BD-KALENDER,Kalender hari besar keagamaan dan libur nasional,BIGDATA,file,tahuna
 BD-BMKG,Prakiraan cuaca BMKG,BIGDATA,api,harian,https://data.bmkg.go.id/,Wajib mencantumkan BMKG sebagai sumber,kandidat,9,Kandidat pengganti/pelengkap Open-Meteo; perlu kode wilayah adm4
 BD-PIHPS,PIHPS Nasional (Bank Indonesia),BIGDATA,web,harian,https://www.bi.go.id/hargapangan,Perlu konfirmasi izin pengambilan otomatis,kandidat,4,Pembanding harga tingkat provinsi
 BD-BAPANAS,Panel Harga Pangan Badan Pangan Nasional,BIGDATA,web,harian,https://panelharga.badanpangan.go.id/,Perlu konfirmasi izin pengambilan otomatis,kandidat,4,Pembanding harga tingkat kabupaten/provinsi
-AI-FINDER,AI Data Finder (Claude + pencarian web),AI_FINDER,api,sesuai_permintaan,,Hasil wajib diverifikasi manusia,aktif,9,Workflow manual: .github/workflows/ai-data-finder.yml
+AI-FINDER,AI Data Finder (Gemini gratis + pencarian Google; cadangan GitHub Models),AI_FINDER,api,sesuai_permintaan,,Hasil wajib diverifikasi manusia,aktif,9,Workflow manual: .github/workflows/ai-data-finder.yml

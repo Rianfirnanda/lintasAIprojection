@@ -8,7 +8,8 @@ import pytest
 from pipeline import proses
 from tests.conftest import tulis_csv
 
-BERKAS = ["meta.json", "master.json", "ringkasan.json", "sinyal.json", "kualitas.json", "model.json", "pasar.json", "sumber.json"]
+BERKAS = ["meta.json", "master.json", "ringkasan.json", "sinyal.json", "kualitas.json", "model.json", "pasar.json", "sumber.json",
+          "kinerja.json", "laporan.json"]
 
 
 @pytest.fixture(scope="module")
@@ -100,3 +101,20 @@ def test_mode_nyata_dengan_berkas_kecil(konf, akar_sementara):
     kual = baca(keluaran, "kualitas.json")
     assert kual["ringkasan"]["baris_ditolak_skema"] == 0
     assert kual["ketepatan"]["per_pasar"][0]["ketepatan_persen"] == 100.0
+
+
+def test_demo_kinerja_dan_laporan(keluaran_demo):
+    keluaran, ringkas = keluaran_demo
+    k = baca(keluaran, "kinerja.json")
+    kode = {i["kode"] for i in k["indikator"]}
+    assert {"M1", "M2", "A1", "A3", "A6", "L1", "K1", "T1", "T2", "I1", "I2"} <= kode
+    assert all(i["status"] in ("memenuhi", "belum_memenuhi", "belum_dapat_dinilai", "diukur_manual") for i in k["indikator"])
+    assert k["koreksi_supervisor"]["acuan"] is not None
+    lap = baca(keluaran, "laporan.json")
+    assert [len(lap[j]) for j in ("mingguan", "bulanan", "triwulanan")] == [8, 6, 4]
+    assert lap["bulanan"][0]["kinerja_model"]["ringkasan"]["varian_dinilai"] == 21
+    assert "indikator" in lap["triwulanan"][0] and lap["mingguan"][0]["rekomendasi"]
+    meta = baca(keluaran, "meta.json")
+    assert meta["pesan_notifikasi"] == "notifikasi tidak dikirim dalam mode demo"
+    m = baca(keluaran, "model.json")
+    assert all(v["status_persetujuan"] in ("disetujui", "menunggu_persetujuan") for v in m["per_varian"])

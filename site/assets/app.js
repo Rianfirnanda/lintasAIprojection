@@ -6,6 +6,8 @@ const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "
 export const HALAMAN = [
   ["index.html", "Dashboard"],
   ["sinyal.html", "Sinyal & Tindak Lanjut"],
+  ["laporan.html", "Laporan"],
+  ["kinerja.html", "Kinerja"],
   ["kualitas.html", "Quality Gate"],
   ["model.html", "Mutu Model"],
   ["sumber.html", "Sumber Data"],
@@ -170,8 +172,19 @@ export async function pasangKerangka(aktif) {
   kaki.innerHTML = `
     <p>Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
     <p>Sinyal dan proyeksi adalah alat bantu analisis dan wajib diverifikasi manusia sebelum menjadi dasar keputusan. Angka pada dashboard ini bukan rilis resmi BPS.</p>
-    <p>Sumber: BPS Kabupaten Bengkulu Tengah (pencatatan harga pasar), Pemda (bila tersedia), cuaca © Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>`;
+    <p>Sumber: BPS Kabupaten Bengkulu Tengah (pencatatan harga pasar), Pemda (bila tersedia), cuaca © Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
+    ${tautanLayanan(meta.layanan)}`;
   return meta;
+}
+
+function tautanLayanan(l) {
+  if (!l) return "";
+  const t = [];
+  if (l.url_pengaduan_eksternal) t.push(`<a href="${esc(l.url_pengaduan_eksternal)}">Pengaduan (WhatsApp/PST)</a>`);
+  if (l.url_pengaduan) t.push(`<a href="${esc(l.url_pengaduan)}">Laporkan data tidak sesuai</a>`);
+  if (l.url_survei_eksternal) t.push(`<a href="${esc(l.url_survei_eksternal)}">Survei kepuasan</a>`);
+  else if (l.url_survei) t.push(`<a href="${esc(l.url_survei)}">Survei kepuasan</a>`);
+  return t.length ? `<p>Layanan: ${t.join(" · ")}</p>` : "";
 }
 
 export function tampilkanGalat(wadah, e) {

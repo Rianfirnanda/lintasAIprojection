@@ -1,7 +1,10 @@
 name: AI Data Finder
 
-# Agen AI (Claude + web search) mencari KANDIDAT sumber data. Hasil wajib diverifikasi analis.
-# Butuh secret repositori ANTHROPIC_API_KEY (Settings -> Secrets and variables -> Actions).
+# Agen AI mencari KANDIDAT sumber data. Hasil wajib diverifikasi analis.
+# Penyedia gratis:
+#   - Gemini (utama, dengan pencarian Google): isi secret GEMINI_API_KEY (gratis dari Google AI Studio).
+#   - GitHub Models (cadangan, tanpa pencarian web): memakai GITHUB_TOKEN bawaan, tidak perlu secret.
+# Opsional berbayar: Claude (secret ANTHROPIC_API_KEY, pilih penyedia "anthropic").
 on:
   workflow_dispatch:
     inputs:
@@ -17,10 +20,16 @@ on:
       wilayah:
         description: "Wilayah"
         default: "Kabupaten Bengkulu Tengah, Provinsi Bengkulu"
+      penyedia:
+        description: "Penyedia AI (otomatis = Gemini, lalu GitHub Models bila Gemini tidak tersedia)"
+        type: choice
+        options: [otomatis, gemini, github_models, anthropic]
+        default: otomatis
 
 permissions:
   contents: write
   actions: write
+  models: read
 
 concurrency:
   group: ai-data-finder
@@ -42,18 +51,17 @@ jobs:
 
       - name: Cari kandidat sumber
         env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KOMODITAS: ${{ inputs.komoditas }}
           PERIODE: ${{ inputs.periode }}
           KEBUTUHAN: ${{ inputs.kebutuhan }}
           WILAYAH: ${{ inputs.wilayah }}
+          PENYEDIA: ${{ inputs.penyedia }}
         run: |
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::error::Secret ANTHROPIC_API_KEY belum diatur."
-            exit 1
-          fi
           python -m pipeline cari-sumber --komoditas "$KOMODITAS" --periode "$PERIODE" \
-            --kebutuhan "$KEBUTUHAN" --wilayah "$WILAYAH"
+            --kebutuhan "$KEBUTUHAN" --wilayah "$WILAYAH" --penyedia "$PENYEDIA"
 
       - name: Simpan hasil
         run: |

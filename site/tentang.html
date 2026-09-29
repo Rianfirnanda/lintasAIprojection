@@ -37,7 +37,7 @@
         <li><strong>Penyimpanan:</strong> data mentah = berkas di repositori (tidak diubah); data terstruktur = keluaran JSON; metadata = checksum SHA-256 per berkas; audit trail &amp; versi = riwayat git; cadangan = setiap clone repositori.</li>
         <li><strong>Quality gate:</strong> deduplikasi, data hilang, batas kewajaran, pencilan, rekonsiliasi antar-sumber, validasi manusia, ketepatan waktu.</li>
         <li><strong>Analisis AI:</strong> baseline, proyeksi 14 hari, interval prediksi, deteksi anomali, rolling-origin backtesting, drift, konteks otomatis.</li>
-        <li><strong>Layanan:</strong> dashboard GitHub Pages, sinyal prioritas, GitHub Issues untuk tindak lanjut, unduhan CSV.</li>
+        <li><strong>Layanan:</strong> dashboard GitHub Pages, sinyal prioritas, GitHub Issues untuk tindak lanjut, notifikasi Telegram/email, buletin mingguan/bulanan/triwulanan, indikator kinerja SMART, pengaduan &amp; survei kepuasan, unduhan CSV.</li>
       </ul>
     </section>
     <section class="kartu prosa">
@@ -47,6 +47,8 @@
         <li>Konektor cuaca diperbarui pada setiap jalannya pipeline terjadwal.</li>
         <li>Sinyal anomali berkeparahan tinggi dibuatkan GitHub Issue (maks. 5 per jalan) untuk verifikasi dan tindak lanjut.</li>
         <li>Mode pemantauan intensif: H-14 hingga H+3 hari raya.</li>
+        <li>Notifikasi sinyal prioritas dan buletin mingguan ke Telegram/email (bila secret diatur).</li>
+        <li>Pemeriksaan uptime dashboard setiap jam (workflow Uptime).</li>
       </ul>
       <h2>Peran pengguna</h2>
       <ul>
@@ -61,7 +63,7 @@
   <section class="kartu prosa" id="ai-data-finder">
     <h2>Peran AI dalam sistem</h2>
     <ul>
-      <li><strong>AI Data Finder (discovery):</strong> agen Claude dengan pencarian web mencari kandidat sumber sesuai komoditas, wilayah, dan periode; keluaran terstruktur (nama, URL, periode, satuan, frekuensi, metode akses, lisensi). URL yang tidak muncul di hasil pencarian ditandai. Semua kandidat wajib diverifikasi analis. Dijalankan manual dari tab <em>Actions → AI Data Finder</em> (butuh secret <code>ANTHROPIC_API_KEY</code>).</li>
+      <li><strong>AI Data Finder (discovery):</strong> agen AI gratis — Gemini dengan pencarian Google (secret <code>GEMINI_API_KEY</code>), cadangan GitHub Models tanpa pencarian web — mencari kandidat sumber sesuai komoditas, wilayah, dan periode; keluaran terstruktur (nama, URL, periode, satuan, frekuensi, metode akses, lisensi). Setiap URL dicek: apakah muncul di hasil pencarian dan apakah dapat dibuka. Semua kandidat wajib diverifikasi analis. Dijalankan manual dari tab <em>Actions → AI Data Finder</em>.</li>
       <li><strong>Validasi &amp; konteks:</strong> aturan quality gate dan konteks otomatis (cuaca, hari raya, wilayah pembanding, stok) untuk setiap sinyal.</li>
       <li><strong>Analitik:</strong> model statistik yang transparan dan dapat diaudit (naif, rerata bergerak, Holt damped trend, profil hari raya). Model hanya dipakai bila terbukti lebih baik dari baseline pada backtest.</li>
       <li><strong>Persetujuan manusia:</strong> sinyal dan rekomendasi tidak otomatis menjadi keputusan; status verifikasi dicatat.</li>

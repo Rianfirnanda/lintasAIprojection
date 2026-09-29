@@ -48,11 +48,13 @@ def test_sinkronisasi_github_membaca_dan_membuat(monkeypatch):
     monkeypatch.setattr(tindak_lanjut.KlienGitHub, "daftar_issue", daftar)
     monkeypatch.setattr(tindak_lanjut.KlienGitHub, "buat_issue", buat)
     monkeypatch.setattr(tindak_lanjut.KlienGitHub, "pastikan_label", lambda self: None)
+    monkeypatch.setattr(tindak_lanjut.KlienGitHub, "event_issue", lambda self, n: [
+        {"event": "labeled", "label": {"name": "status: terverifikasi"}, "created_at": "2026-09-02T00:00:00Z"}])
     peng = {"tindak_lanjut": {"github_issues": True, "keparahan_minimal_issue": "tinggi", "maks_issue_baru_per_jalan": 2}}
     daftar_sinyal = [_sinyal("aaa111"), _sinyal("bbb222"), _sinyal("ccc333"), _sinyal("ddd444"),
                      _sinyal("eee555", keparahan="sedang"), _sinyal("fff666", jenis="drift"), _sinyal("ggg777", aktif=False)]
     peta, pesan = tindak_lanjut.sinkronisasi_github(daftar_sinyal, peng, "token", "o/r", boleh_buat=True, url_dashboard="https://x")
-    assert peta["aaa111"]["status"] == "terverifikasi"
+    assert peta["aaa111"]["status"] == "terverifikasi" and peta["aaa111"]["direspons"] == "2026-09-02T00:00:00Z"
     assert len(dibuat) == 2  # dibatasi maks_issue_baru_per_jalan
     assert set(peta) == {"aaa111", "bbb222", "ccc333"}
     assert "<!-- id_sinyal: bbb222 -->" in dibuat[0][1] and "sinyal-harga" in dibuat[0][2]

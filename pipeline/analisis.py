@@ -183,6 +183,7 @@ class HasilBacktest:
     aktual: np.ndarray
     horizon: np.ndarray
     origin: np.ndarray
+    tanggal: list[date] = field(default_factory=list)  # tanggal target tiap pasangan
     metrik: dict = field(default_factory=dict)
 
 
@@ -190,7 +191,7 @@ def backtest(seri: SeriHarian, terisi: np.ndarray, nama_model: str, konteks: dic
              horizon: int, jumlah_origin: int, jarak: int, minimal: int) -> HasilBacktest | None:
     fungsi = MODEL[nama_model]
     akhir = seri.n - 1
-    f_all, a_all, h_all, o_all = [], [], [], []
+    f_all, a_all, h_all, o_all, t_all = [], [], [], [], []
     for j in range(jumlah_origin):
         o = akhir - horizon - j * jarak
         if o < minimal:
@@ -206,9 +207,10 @@ def backtest(seri: SeriHarian, terisi: np.ndarray, nama_model: str, konteks: dic
                 a_all.append(a)
                 h_all.append(h)
                 o_all.append(j)
+                t_all.append(seri.tanggal[o + h])
     if not a_all:
         return None
-    hasil = HasilBacktest(nama_model, np.array(f_all), np.array(a_all), np.array(h_all), np.array(o_all))
+    hasil = HasilBacktest(nama_model, np.array(f_all), np.array(a_all), np.array(h_all), np.array(o_all), t_all)
     hasil.metrik = metrik(hasil.prediksi, hasil.aktual)
     hasil.metrik["jumlah_origin"] = int(len(set(o_all)))
     return hasil
@@ -446,9 +448,22 @@ class HasilVarian:
     drift: dict
     profil_hari_raya: dict[int, float] | None
     catatan: list[str]
+    model_rekomendasi: str | None = None
+    status_persetujuan: str = "tidak_ada_model"
+    segmen: dict = field(default_factory=dict)
 
 
-def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengaturan: dict) -> HasilVarian:
+def smape_segmen(bt: HasilBacktest, acara: list[Acara], sebelum: int, sesudah: int) -> dict:
+    """sMAPE backtest dipisah: periode hari raya (H-sebelum..H+sesudah) vs normal (untuk uji stabilitas antar-segmen)."""
+    hr = np.array([offset_hari_raya(t, acara, sebelum, sesudah) is not None for t in bt.tanggal], dtype=bool)
+    hasil = {}
+    for nama, pilih in (("normal", ~hr), ("hari_raya", hr)):
+        hasil[nama] = round(smape(bt.prediksi[pilih], bt.aktual[pilih]), 3) if pilih.sum() >= 5 else None
+    return hasil
+
+
+def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengaturan: dict,
+                    model_disetujui: str | None = None, wajib_persetujuan: bool = False) -> HasilVarian:
     a = pengaturan["analisis"]
     s = pengaturan["sinyal"]
     jhr = pengaturan["jendela_hari_raya"]
@@ -479,16 +494,32 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
             "proyeksi memakai model naif tanpa evaluasi backtest."
         )
 
+    rekomendasi = min(hasil_bt, key=lambda m: hasil_bt[m].metrik["smape"]) if hasil_bt else ("naif" if len(y_akhir) else None)
+    # Persetujuan manusia: model baseline (naif) selalu boleh; model lain perlu disetujui bila diwajibkan.
+    if rekomendasi is None:
+        status = "tidak_ada_model"
+    elif rekomendasi == "naif" or model_disetujui == rekomendasi:
+        status = "disetujui"
+    else:
+        status = "menunggu_persetujuan"
+    terpilih = rekomendasi
+    if wajib_persetujuan and status == "menunggu_persetujuan":
+        terpilih = model_disetujui if model_disetujui in hasil_bt else "naif"
+        catatan.append(f"Model rekomendasi '{rekomendasi}' belum disetujui; proyeksi memakai '{terpilih}'.")
+
+    segmen: dict = {}
     if hasil_bt:
-        terpilih = min(hasil_bt, key=lambda m: hasil_bt[m].metrik["smape"])
         naif = hasil_bt.get("naif")
         perbaikan = None
         if naif and naif.metrik["smape"] > 0:
             perbaikan = round((naif.metrik["smape"] - hasil_bt[terpilih].metrik["smape"]) / naif.metrik["smape"] * 100, 2)
         cakupan = cakupan_interval(hasil_bt[terpilih], a["tingkat_interval"])
         info_drift_model = penurunan_metrik(hasil_bt[terpilih])
+        segmen = {"terpilih": smape_segmen(hasil_bt[terpilih], acara, jhr["sebelum"], jhr["sesudah"])}
+        if naif:
+            segmen["naif"] = smape_segmen(naif, acara, jhr["sebelum"], jhr["sesudah"])
     else:
-        terpilih, perbaikan, cakupan = ("naif" if len(y_akhir) else None), None, None
+        perbaikan, cakupan = None, None
         info_drift_model = {}
 
     proyeksi: list[dict] = []
@@ -518,4 +549,5 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         perbaikan_vs_naif_persen=perbaikan, cakupan_interval_persen=cakupan,
         proyeksi=proyeksi, anomali=anomali, titik_dievaluasi=dievaluasi,
         perubahan=perubahan(seri), drift={**drift(seri), **info_drift_model}, profil_hari_raya=profil, catatan=catatan,
+        model_rekomendasi=rekomendasi, status_persetujuan=status, segmen=segmen,
     )

@@ -79,13 +79,18 @@ HASIL_JSON = {
 }
 
 
-def test_pencari_data_menandai_url_dan_melanjutkan_pause_turn(konf):
+def cek_palsu(url):
+    return (url.startswith("https://panelharga"), "HTTP 200" if url.startswith("https://panelharga") else "HTTP 404")
+
+
+def test_pencari_data_claude_menandai_url_dan_melanjutkan_pause_turn(konf):
     hasil_cari = blok("web_search_tool_result", content=[SimpleNamespace(url="https://panelharga.badanpangan.go.id/")])
     r1 = SimpleNamespace(stop_reason="pause_turn", content=[blok("server_tool_use"), hasil_cari], model="claude-opus-5-5")
     r2 = SimpleNamespace(stop_reason="end_turn", content=[blok("text", text=json.dumps(HASIL_JSON))], model="claude-opus-5-5",
                          _request_id="req_1")
     klien = KlienPalsu([r1, r2])
-    catatan = pencari_data.cari(konf, "cabai rawit merah", "September 2026", klien=klien)
+    catatan = pencari_data.cari(konf, "cabai rawit merah", "September 2026", penyedia="anthropic",
+                                klien={"anthropic": klien}, pemeriksa_url=cek_palsu)
     assert len(klien.panggilan) == 2
     assert klien.panggilan[1]["messages"][1]["role"] == "assistant"
     p = klien.panggilan[0]
@@ -94,12 +99,96 @@ def test_pencari_data_menandai_url_dan_melanjutkan_pause_turn(konf):
     assert p["tools"][0]["type"] == "web_search_20260209"
     k = catatan["hasil"]["kandidat"]
     assert k[0]["url_ada_di_hasil_pencarian"] is True and k[1]["url_ada_di_hasil_pencarian"] is False
+    assert k[0]["url_dapat_diakses"] is True and k[1]["url_dapat_diakses"] is False
     assert all(x["status_verifikasi"] == "kandidat" for x in k)
+    assert catatan["penyedia"] == "anthropic"
     path = pencari_data.simpan(konf, catatan)
     assert json.loads(path.read_text())["pencarian"][0]["request_id"] == "req_1"
 
 
-def test_pencari_data_penolakan_model(konf):
+def test_pencari_data_claude_penolakan_model(konf):
     r = SimpleNamespace(stop_reason="refusal", content=[], stop_details=SimpleNamespace(explanation="kebijakan"))
     with pytest.raises(RuntimeError, match="ditolak"):
-        pencari_data.cari(konf, "x", "y", klien=KlienPalsu([r]))
+        pencari_data.cari(konf, "x", "y", penyedia="anthropic", klien={"anthropic": KlienPalsu([r])}, pemeriksa_url=None)
+
+
+def test_pencari_data_gemini_grounding(konf):
+    dikirim = []
+
+    def kirim(url, header, isi):
+        dikirim.append((url, isi))
+        teks = "Berikut hasilnya:\n```json\n" + json.dumps(HASIL_JSON) + "\n```"
+        return {
+            "candidates": [{"content": {"parts": [{"text": teks}]},
+                            "groundingMetadata": {"groundingChunks": [
+                                {"web": {"uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/abc",
+                                         "title": "badanpangan.go.id"}}]}}],
+            "modelVersion": "gemini-flash-latest", "responseId": "resp-1",
+        }
+
+    catatan = pencari_data.cari(konf, "cabai rawit merah", "September 2026", penyedia="gemini",
+                                klien={"gemini": kirim}, pemeriksa_url=cek_palsu)
+    url, isi = dikirim[0]
+    assert "gemini-flash-latest:generateContent" in url
+    assert isi["tools"] == [{"google_search": {}}]
+    k = catatan["hasil"]["kandidat"]
+    assert k[0]["url_ada_di_hasil_pencarian"] is True  # subdomain dari domain rujukan grounding
+    assert k[1]["url_ada_di_hasil_pencarian"] is False
+    assert catatan["penyedia"] == "gemini" and catatan["punya_pencarian_web"] is True
+
+
+def test_pencari_data_otomatis_jatuh_ke_github_models(konf, monkeypatch):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+
+    def kirim_github(url, header, isi):
+        assert url == pencari_data.URL_GITHUB_MODELS and isi["model"] == "openai/gpt-4.1-mini"
+        assert "TIDAK memiliki akses internet" in isi["messages"][0]["content"]
+        return {"choices": [{"message": {"content": json.dumps({"kandidat": [HASIL_JSON["kandidat"][0]]})}}], "id": "gh-1"}
+
+    catatan = pencari_data.cari(konf, "cabai", "Oktober 2026", klien={"github_models": kirim_github}, pemeriksa_url=cek_palsu)
+    assert catatan["penyedia"] == "github_models"
+    assert catatan["penyedia_dilewati"][0].startswith("gemini")
+    k = catatan["hasil"]["kandidat"][0]
+    assert k["url_ada_di_hasil_pencarian"] is None and k["url_dapat_diakses"] is True
+    assert catatan["hasil"]["tidak_ditemukan"] == [] and catatan["hasil"]["catatan"] == ""
+
+
+def test_pencari_data_kuota_habis_lanjut_penyedia_berikutnya(konf):
+    def gemini_habis(url, header, isi):
+        raise pencari_data.PenyediaTidakTersedia("HTTP 429: kuota habis")
+
+    def github_ok(url, header, isi):
+        return {"choices": [{"message": {"content": json.dumps({"kandidat": []})}}]}
+
+    catatan = pencari_data.cari(konf, "x", "y", klien={"gemini": gemini_habis, "github_models": github_ok}, pemeriksa_url=None)
+    assert catatan["penyedia"] == "github_models" and "429" in catatan["penyedia_dilewati"][0]
+
+
+def test_pencari_data_semua_penyedia_gagal(konf, monkeypatch):
+    for kunci in ("GEMINI_API_KEY", "GITHUB_TOKEN"):
+        monkeypatch.delenv(kunci, raising=False)
+    with pytest.raises(RuntimeError, match="tidak ada penyedia AI"):
+        pencari_data.cari(konf, "x", "y", pemeriksa_url=None)
+
+
+def test_ambil_json_dan_normalisasi():
+    assert pencari_data.ambil_json_dari_teks('ok {"a": 1} selesai') == {"a": 1}
+    assert pencari_data.ambil_json_dari_teks('```json\n{"a": [1]}\n```') == {"a": [1]}
+    with pytest.raises(RuntimeError):
+        pencari_data.ambil_json_dari_teks("tidak ada json")
+    h = pencari_data.normalisasi_hasil({"kandidat": [{"nama_sumber": "BPS", "url": "https://bps.go.id"}, "x", {"url": "y"}],
+                                        "tidak_ditemukan": "tidak ada"})
+    assert len(h["kandidat"]) == 1 and h["kandidat"][0]["metode_akses"] == "tidak diketahui"
+    assert h["kandidat"][0]["perlu_izin"] is True and h["tidak_ditemukan"] == ["tidak ada"]
+
+
+def test_cek_url_tidak_valid():
+    assert pencari_data.cek_url("bukan-url")[0] is False
+    assert pencari_data.cek_url("")[0] is False
+
+
+def test_urutan_penyedia(konf):
+    assert pencari_data.urutan_penyedia(konf) == ["gemini", "github_models"]
+    assert pencari_data.urutan_penyedia(konf, "anthropic") == ["anthropic"]
+    with pytest.raises(ValueError):
+        pencari_data.urutan_penyedia(konf, "entah")

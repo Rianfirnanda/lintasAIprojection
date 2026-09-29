@@ -117,6 +117,12 @@ class KlienGitHub:
                 return hasil
             halaman += 1
 
+    def event_issue(self, nomor: int) -> list[dict]:
+        kode, data, _ = self._minta("GET", f"/repos/{self.repo}/issues/{nomor}/events?per_page=100")
+        if kode != 200:
+            raise RuntimeError(f"gagal membaca event issue #{nomor} (HTTP {kode})")
+        return data
+
     def pastikan_label(self) -> None:
         for nama, warna in WARNA_LABEL.items():
             kode, _, _ = self._minta("POST", f"/repos/{self.repo}/labels", {"name": nama, "color": warna})
@@ -128,6 +134,20 @@ class KlienGitHub:
         if kode != 201:
             raise RuntimeError(f"gagal membuat issue (HTTP {kode}): {data}")
         return data
+
+
+def waktu_respons_issue(issue: dict, event: list[dict]) -> str | None:
+    """Waktu pertama issue mendapat status tanggapan (label status selain perlu-verifikasi, atau ditutup)."""
+    kandidat = [
+        e.get("created_at") for e in event
+        if (e.get("event") == "labeled" and (e.get("label") or {}).get("name") in LABEL_STATUS
+            and LABEL_STATUS[e["label"]["name"]] != "perlu_verifikasi")
+        or e.get("event") == "closed"
+    ]
+    kandidat = [k for k in kandidat if k]
+    if not kandidat and issue.get("closed_at"):
+        kandidat = [issue["closed_at"]]
+    return min(kandidat) if kandidat else None
 
 
 def status_dari_issue(issue: dict) -> str:
@@ -181,9 +201,17 @@ def sinkronisasi_github(sinyal: list[dict], pengaturan: dict, token: str | None,
         for issue in klien.daftar_issue(LABEL_SINYAL):
             m = _PENANDA.search(issue.get("body") or "")
             if m:
+                status = status_dari_issue(issue)
+                direspons = None
+                if status != "perlu_verifikasi":
+                    try:
+                        direspons = waktu_respons_issue(issue, klien.event_issue(issue["number"]))
+                    except RuntimeError as e:
+                        log.warning("%s", e)
                 peta[m.group(1)] = {
-                    "status": status_dari_issue(issue), "url": issue["html_url"], "nomor": issue["number"],
-                    "diperbarui": issue.get("updated_at", ""),
+                    "status": status, "url": issue["html_url"], "nomor": issue["number"],
+                    "diperbarui": issue.get("updated_at", ""), "dibuat": issue.get("created_at", ""),
+                    "direspons": direspons,
                 }
         if not boleh_buat:
             return peta, f"{len(peta)} issue terbaca; pembuatan issue dilewati (mode demo)"
@@ -201,7 +229,8 @@ def sinkronisasi_github(sinyal: list[dict], pengaturan: dict, token: str | None,
             issue = klien.buat_issue(f"[Sinyal harga] {s['judul']}", isi_issue(s, url_dashboard),
                                      [LABEL_SINYAL, "status: perlu-verifikasi"])
             peta[s["id"]] = {"status": "perlu_verifikasi", "url": issue["html_url"], "nomor": issue["number"],
-                             "diperbarui": issue.get("created_at", "")}
+                             "diperbarui": issue.get("created_at", ""), "dibuat": issue.get("created_at", ""),
+                             "direspons": None}
             dibuat += 1
         return peta, f"{len(peta)} issue tersinkron; {dibuat} issue baru dibuat"
     except Exception as e:  # jaringan/izin: catat, jangan gagalkan publikasi dashboard
