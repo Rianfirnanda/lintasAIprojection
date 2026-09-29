@@ -1,4 +1,4 @@
-# NETRA — Observatorium Harga Pangan BPS Kabupaten Bengkulu Tengah
+# Lintas AI Projection — Pemantauan Harga Pangan BPS Kabupaten Bengkulu Tengah
 
 Pemantauan harga pangan berbasis AI dan Big Data untuk TPID.
 

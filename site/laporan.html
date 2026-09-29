@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Buletin & Laporan Harga · NETRA</title>
+  <title>Buletin & Laporan Harga · Lintas AI Projection</title>
   <meta name="description" content="Buletin harga pangan mingguan, analisis bulanan, dan bahan rapat TPID triwulanan Kabupaten Bengkulu Tengah.">
   <meta name="theme-color" content="#0e1114">
-  <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
   <style>
     .dokumen { max-width: 980px; margin: 0 auto; padding: 34px 40px 38px; }
@@ -15,6 +16,8 @@
     .kop { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 10px; }
     .kop .instansi { font-size: 0.82rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
     .kop h1 { font-size: 1.4rem; margin-top: 4px; }
+    .kop-kiri { display: flex; gap: 14px; align-items: center; }
+    .kop-logo { width: 58px; height: auto; flex: none; }
     .indeks { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
     .indeks .angka-besar { font-size: 2.4rem; font-weight: 650; }
     ol.rekomendasi li, ul.ringkasan li { margin: 4px 0; }
@@ -145,10 +148,13 @@ function render() {
   const s = p.status_sinyal || {};
   el.innerHTML = `
     <header class="kop">
-      <div>
+      <div class="kop-kiri">
+        <img class="kop-logo" src="assets/logo-bps.png" alt="Logo BPS" width="58" height="45">
+        <div>
         <div class="instansi">Badan Pusat Statistik Kabupaten Bengkulu Tengah · untuk TPID</div>
         <h1>${esc(p.judul)}</h1>
         <div>${esc(p.label)} · ${esc(tgl(p.mulai, true))} – ${esc(tgl(p.akhir, true))}</div>
+        </div>
       </div>
       <div class="meta-kecil" style="text-align:right">
         Disusun otomatis ${esc(waktu(meta?.dibuat))} WIB<br>Data terakhir ${esc(tgl(meta?.tanggal_data_terakhir))}

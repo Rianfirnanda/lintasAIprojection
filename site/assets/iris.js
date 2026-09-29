@@ -201,7 +201,7 @@ export function gambarIris(wadah, varian, komoditas, ambang, opsi = {}) {
     el("circle", { cx: C, cy: C, r: R_PUPIL + 6, fill: "none", stroke: w.kritis, "stroke-width": 1.2, class: "iris-pupil-denyut" }, akar);
   }
   const t0 = el("text", { x: C, y: C - 42, "text-anchor": "middle", ...huruf, "font-size": 8.5, "letter-spacing": 2.6, fill: w.brass }, akar);
-  t0.textContent = "NETRA";
+  t0.textContent = "LINTAS AI";
   const angkaBesar = el("text", { x: C, y: C + 18, "text-anchor": "middle", "font-family": "Instrument Serif, serif",
     "font-size": 76, fill: w.ink }, akar);
   angkaBesar.textContent = opsi.diLuar === null || opsi.diLuar === undefined ? "–" : String(opsi.diLuar);
