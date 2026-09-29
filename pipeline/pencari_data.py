@@ -111,9 +111,10 @@ def _cocok(url: str, daftar: list[str]) -> bool:
 
 def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harga eceran harian",
          wilayah: str = "Kabupaten Bengkulu Tengah, Provinsi Bengkulu", klien=None) -> dict:
-    import anthropic
+    if klien is None:
+        import anthropic  # hanya dibutuhkan workflow AI Data Finder (requirements-ai.txt)
 
-    klien = klien or anthropic.Anthropic()
+        klien = anthropic.Anthropic()
     teks = susun_permintaan(komoditas, periode, kebutuhan, wilayah)
     pesan = [{"role": "user", "content": teks}]
     semua_konten = []
