@@ -1,4 +1,4 @@
-/* NETRA — Observatorium Harga Pangan · BPS Kabupaten Bengkulu Tengah
+/* Lintas AI Projection — Pemantauan Harga Pangan · BPS Kabupaten Bengkulu Tengah
    Sistem desain: observatorium gelap (bawaan) dan kertas terang (cetak/siang).
    Satu aksen kuningan untuk bingkai & navigasi; warna data mengikuti palet tervalidasi. */
 
@@ -135,9 +135,9 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-2)
 }
 .merek { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; color: var(--ink); text-decoration: none; }
 .merek:hover { color: var(--ink); }
-.merek-ikon { width: 44px; height: 26px; color: var(--brass); flex: none; display: block; }
+.merek-ikon { width: 42px; height: auto; flex: none; display: block; }
 .merek-teks { display: flex; flex-direction: column; line-height: 1.15; }
-.merek-nama { font-family: var(--mono); font-weight: 500; font-size: 0.95rem; letter-spacing: 0.34em; }
+.merek-nama { font-family: var(--mono); font-weight: 500; font-size: 0.92rem; letter-spacing: 0.16em; text-transform: uppercase; }
 .merek-sub { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.02em; }
 .kepala-kanan { display: flex; align-items: flex-end; gap: 10px; min-width: 0; max-width: 100%; }
 .navigasi { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; max-width: 100%; }

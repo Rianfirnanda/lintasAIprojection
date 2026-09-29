@@ -1,5 +1,5 @@
 {
-  "name": "NETRA · Input Harga Pasar — BPS Bengkulu Tengah",
+  "name": "Lintas AI Projection · Input Harga Pasar — BPS Bengkulu Tengah",
   "short_name": "Input Harga",
   "description": "Pencatatan harga pasar luring-ke-daring untuk pemantauan harga pangan TPID Kabupaten Bengkulu Tengah.",
   "start_url": "input.html",
@@ -8,5 +8,8 @@
   "background_color": "#0a0c0e",
   "theme_color": "#0e1114",
   "lang": "id",
-  "icons": [{ "src": "assets/ikon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+  "icons": [
+    { "src": "assets/ikon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/ikon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
 }

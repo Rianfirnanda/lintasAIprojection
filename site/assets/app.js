@@ -137,16 +137,9 @@ function aturGayaGrafik() {
 aturGayaGrafik();
 
 // ---------- kerangka halaman
-export const NAMA_SISTEM = "NETRA";
-const IKON = `<svg class="merek-ikon" viewBox="0 0 44 26" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-  <path d="M1.5 13C9 2.6 35 2.6 42.5 13 35 23.4 9 23.4 1.5 13Z"/>
-  <circle cx="22" cy="13" r="7.2"/>
-  <circle cx="22" cy="13" r="2.7" fill="currentColor" stroke="none"/>
-  <g stroke-width="0.9">${Array.from({ length: 16 }, (_, i) => {
-    const a = (i / 16) * Math.PI * 2;
-    const r1 = 4.3, r2 = i % 4 === 0 ? 6.2 : 5.4;
-    return `<line x1="${(22 + Math.cos(a) * r1).toFixed(2)}" y1="${(13 + Math.sin(a) * r1).toFixed(2)}" x2="${(22 + Math.cos(a) * r2).toFixed(2)}" y2="${(13 + Math.sin(a) * r2).toFixed(2)}"/>`;
-  }).join("")}</g></svg>`;
+export const NAMA_SISTEM = "Lintas AI Projection";
+// Logo resmi BPS (diambil dari dokumen BPS Kabupaten Bengkulu Tengah).
+const IKON = `<img class="merek-ikon" src="assets/logo-bps.png" alt="" width="42" height="33">`;
 
 export async function pasangKerangka(aktif) {
   const kepala = document.createElement("header");
@@ -155,7 +148,7 @@ export async function pasangKerangka(aktif) {
     <div class="kepala-dalam">
       <a class="merek" href="index.html" aria-label="${NAMA_SISTEM} — beranda">
         ${IKON}
-        <span class="merek-teks"><span class="merek-nama">${NAMA_SISTEM}</span><span class="merek-sub">Observatorium Harga Pangan · BPS Kabupaten Bengkulu Tengah</span></span>
+        <span class="merek-teks"><span class="merek-nama">${NAMA_SISTEM}</span><span class="merek-sub">Pemantauan Harga Pangan · BPS Kabupaten Bengkulu Tengah</span></span>
       </a>
       <div class="kepala-kanan">
         <nav class="navigasi" aria-label="Navigasi utama">
@@ -214,7 +207,7 @@ export async function pasangKerangka(aktif) {
   const tautanRun = meta.url_run ? ` · <a href="${esc(meta.url_run)}">log proses</a>` : "";
   const tautanRepo = meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">repositori</a>` : "";
   kaki.innerHTML = `
-    <p><span class="mono" style="letter-spacing:.2em;color:var(--ink-2)">${NAMA_SISTEM}</span> · Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
+    <p><span class="mono" style="letter-spacing:.12em;color:var(--ink-2)">${NAMA_SISTEM.toUpperCase()}</span> · BPS Kabupaten Bengkulu Tengah · Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
     <p>Sinyal dan proyeksi adalah alat bantu analisis dan wajib diverifikasi manusia sebelum menjadi dasar keputusan. Angka pada dashboard ini bukan rilis resmi BPS.</p>
     <p>Sumber: BPS Kabupaten Bengkulu Tengah (pencatatan harga pasar), Pemda (bila tersedia), cuaca © Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
     ${tautanLayanan(meta.layanan)}`;
