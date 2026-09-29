@@ -61,7 +61,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
     base: warna("baseline"), grid: warna("grid"), muted: warna("muted"), ink2: warna("ink-2"),
     surface: warna("surface"), kritis: warna("critical"),
   };
-  const huruf = { family: warna("mono"), size: 10 };
+  const huruf = { family: warna("sans"), size: 11 };
   const garis = (lbl, data, warnaGaris, extra = {}) => ({
     label: lbl, data, borderColor: warnaGaris, backgroundColor: warnaGaris, borderWidth: 2, pointRadius: 0,
     pointHoverRadius: 4, tension: 0, spanGaps: true, borderCapStyle: "round", borderJoinStyle: "round", ...extra,

@@ -98,18 +98,18 @@ export function kelasPerubahan(x, ambang = 5) {
   return "";
 }
 
-// ---------- tema (bawaan: observatorium gelap; "light" = kertas)
+// ---------- tema (bawaan: terang; "dark" = mode gelap pilihan pengguna)
+const KUNCI_TEMA = "tema-tampilan";
 function temaTersimpan() {
-  try { return localStorage.getItem("tema"); } catch { return null; }
+  try { return localStorage.getItem(KUNCI_TEMA); } catch { return null; }
 }
 function simpanTema(t) {
-  try { localStorage.setItem("tema", t); } catch { /* abaikan */ }
+  try { localStorage.setItem(KUNCI_TEMA, t); } catch { /* abaikan */ }
 }
-const t0 = temaTersimpan();
-if (t0 === "light") document.documentElement.dataset.theme = "light";
+if (temaTersimpan() === "dark") document.documentElement.dataset.theme = "dark";
 
 export function temaGelap() {
-  return document.documentElement.dataset.theme !== "light";
+  return document.documentElement.dataset.theme === "dark";
 }
 
 const pendengarTema = new Set();
@@ -130,8 +130,8 @@ function aturGayaGrafik() {
   const tip = C.defaults.plugins.tooltip;
   Object.assign(tip, {
     backgroundColor: warna("surface-2"), titleColor: warna("ink"), bodyColor: warna("ink-2"),
-    borderColor: warna("rule-2"), borderWidth: 1, cornerRadius: 2, padding: 10, boxPadding: 4,
-    titleFont: { family: warna("mono"), size: 11, weight: "500" }, bodyFont: { family: warna("sans"), size: 12 },
+    borderColor: warna("rule-2"), borderWidth: 1, cornerRadius: 8, padding: 10, boxPadding: 4,
+    titleFont: { family: warna("sans"), size: 12, weight: "600" }, bodyFont: { family: warna("sans"), size: 12 },
   });
 }
 aturGayaGrafik();
@@ -154,7 +154,7 @@ export async function pasangKerangka(aktif) {
         <nav class="navigasi" aria-label="Navigasi utama">
           ${HALAMAN.map(([h, n]) => `<a href="${h}"${h === aktif ? ' aria-current="page"' : ""}>${n}</a>`).join("")}
         </nav>
-        <button class="tombol tombol-tema" type="button" aria-label="Ganti tema terang/gelap">${temaGelap() ? "Terang" : "Gelap"}</button>
+        <button class="tombol tombol-tema" type="button" aria-label="Ganti tampilan terang atau gelap">${temaGelap() ? "Mode terang" : "Mode gelap"}</button>
       </div>
     </div>`;
   document.body.prepend(kepala);
@@ -164,10 +164,10 @@ export async function pasangKerangka(aktif) {
   const tombolTema = kepala.querySelector(".tombol-tema");
   tombolTema.addEventListener("click", () => {
     const baru = temaGelap() ? "light" : "dark";
-    if (baru === "light") document.documentElement.dataset.theme = "light";
+    if (baru === "dark") document.documentElement.dataset.theme = "dark";
     else delete document.documentElement.dataset.theme;
     simpanTema(baru);
-    tombolTema.textContent = temaGelap() ? "Terang" : "Gelap";
+    tombolTema.textContent = temaGelap() ? "Mode terang" : "Mode gelap";
     aturGayaGrafik();
     pendengarTema.forEach((f) => f());
   });
@@ -194,24 +194,24 @@ export async function pasangKerangka(aktif) {
     <span class="opsional">Observasi <b>${angka(meta.jumlah?.observasi_dipakai)}</b></span>
     <span class="opsional">Wilayah <b>${esc(meta.wilayah_target?.nama || "")}</b></span>
     <span class="opsional">Pipeline <b>v${esc(meta.versi)}</b></span>
-    ${meta.mode_demo ? "<span><b style=\"color:var(--aksen-2)\">Mode demo</b></span>" : ""}
+    ${meta.mode_demo ? "<span><b style=\"color:var(--demo-ink)\">Mode demo</b></span>" : ""}
   </div>`;
   kepala.after(telemetri);
   if (meta.mode_demo) {
     const b = document.createElement("div");
     b.className = "banner-demo";
     b.setAttribute("role", "status");
-    b.innerHTML = `<div><strong>MODE DEMO.</strong> Angka di halaman ini masih data contoh untuk menguji sistem, bukan angka resmi. Begitu berkas harga pertama masuk ke <code>data/masuk/harga</code>, data asli langsung menggantikannya.</div>`;
+    b.innerHTML = `<div><strong>Mode demo.</strong> Angka di halaman ini masih data contoh untuk menguji sistem, bukan angka resmi. Begitu berkas harga pertama masuk ke <code>data/masuk/harga</code>, data asli langsung menggantikannya.</div>`;
     telemetri.after(b);
   }
   const tautanRun = meta.url_run ? ` · <a href="${esc(meta.url_run)}">log proses</a>` : "";
   const tautanRepo = meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">repositori</a>` : "";
   kaki.innerHTML = `
-    <p><span class="mono" style="letter-spacing:.12em;color:var(--ink-2)">${NAMA_SISTEM.toUpperCase()}</span> · BPS Kabupaten Bengkulu Tengah · Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
+    <p><strong style="color:var(--ink-2)">${NAMA_SISTEM}</strong> · BPS Kabupaten Bengkulu Tengah · Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
     <p>Sinyal dan proyeksi di sini membantu analisis, tetapi tetap perlu dicek petugas sebelum dipakai untuk mengambil keputusan. Angka di dashboard ini bukan rilis resmi BPS.</p>
     <p>Sumber: BPS Kabupaten Bengkulu Tengah (pencatatan harga pasar), Pemda (bila tersedia), cuaca © Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
     ${tautanLayanan(meta.layanan)}`;
-  // Kanvas grafik & SVG iris baru memakai huruf Plex setelah berkasnya termuat.
+  // Grafik kanvas baru memakai huruf Plex setelah berkasnya termuat.
   try { await document.fonts?.ready; } catch { /* abaikan */ }
   return meta;
 }

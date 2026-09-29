@@ -30,8 +30,7 @@ menjadi alur tindak lanjut sinyal.
 | Layanan publik | Pengaduan data & Survei Kepuasan Masyarakat (9 unsur PermenPANRB 14/2017) lewat GitHub Issue Forms (`pipeline/layanan.py`) |
 | Layanan | Dashboard GitHub Pages (`site/`), GitHub Issues, unduhan CSV, log uptime per jam (`.github/workflows/uptime.yml`) |
 
-Beranda menampilkan **Iris Harga**: satu batang per varian yang menunjukkan selisih harga terakhir terhadap baseline
-28 hari (panduan membaca di halaman *Metodologi*). Tema bawaan gelap; tombol *Terang* untuk tema kertas; cetak selalu terang.
+Tampilan bawaan terang; tombol *Mode gelap* tersedia di kepala halaman. Hasil cetak selalu terang.
 
 Halaman dashboard: **Dashboard**, **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
 **Sumber Data**, **Input Harga** (dapat dipakai tanpa sinyal/PWA), **Metodologi**.
