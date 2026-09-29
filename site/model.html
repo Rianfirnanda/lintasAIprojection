@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mutu Model AI</title>
+  <meta name="description" content="Evaluasi model proyeksi harga (rolling-origin backtesting), interval prediksi, deteksi anomali, dan drift terhadap target Rancangan Aksi Perubahan.">
+  <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Mutu model</h1>
+      <p>Setiap varian diuji dengan rolling-origin backtesting. Model dipakai hanya bila unggul dari baseline naif; selain itu sistem kembali ke baseline.</p>
+    </div>
+  </div>
+
+  <section class="grid kpi-grid" id="kpi"></section>
+
+  <div class="grid dua-sama">
+    <section class="kartu">
+      <h2>Capaian terhadap target</h2>
+      <p class="meta-kecil" style="margin-bottom:8px">Ambang dari Tabel 5 Rancangan Aksi Perubahan (target berbasis baseline pilot).</p>
+      <div class="gulir-tabel"><table id="tabel-target"><thead><tr><th>Indikator</th><th>Target</th><th>Capaian</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+    </section>
+    <section class="kartu">
+      <h2>Evaluasi deteksi anomali</h2>
+      <div id="evaluasi" style="margin-top:8px"></div>
+    </section>
+  </div>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div>
+        <h2>Hasil backtest per varian</h2>
+        <p>sMAPE (%) tiap model kandidat pada horizon 1–14 hari; model terpilih ditebalkan. Cakupan = proporsi aktual di dalam interval 90% (uji leave-one-origin-out).</p>
+      </div>
+    </div>
+    <div class="gulir-tabel"><table id="tabel-model"><thead><tr>
+      <th>Varian</th><th class="angka">Naif</th><th class="angka">Rata 7</th><th class="angka">Holt</th><th class="angka">Hari raya</th>
+      <th class="angka">Perbaikan vs naif</th><th class="angka">Bias</th><th class="angka">Cakupan 90%</th><th class="angka">MAE</th>
+      <th class="angka">Rasio volatilitas</th><th class="angka">Δ sMAPE 2 periode</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="kartu prosa">
+    <h2>Metodologi singkat</h2>
+    <ul id="metodologi"></ul>
+  </section>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, persen, angka, rp, tampilkanGalat } from "./assets/app.js";
+
+await pasangKerangka("model.html");
+let m;
+try {
+  m = await muatJSON("model.json");
+} catch (e) {
+  tampilkanGalat(document.querySelector("main"), e);
+  throw e;
+}
+const r = m.ringkasan, t = m.target, ev = m.evaluasi_anomali;
+document.getElementById("kpi").innerHTML = [
+  ["Varian dinilai", angka(r.varian_dinilai), "dengan riwayat ≥ minimal"],
+  ["sMAPE median", r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, "model terpilih, horizon 1–14 hari"],
+  ["Unggul ≥10% dari naif", `${r.lolos_smape}/${r.varian_dinilai}`, "varian"],
+  ["Model dipakai", Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(k.replace("_", " "))}`).join(" · ") || "–", ""],
+].map(([l, n, s]) => `<div class="kartu kpi"><div class="label">${l}</div><div class="nilai" style="font-size:${n.length > 12 ? "1rem" : ""}">${n}</div><div class="sub">${s}</div></div>`).join("");
+
+const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum dapat dinilai</span>'
+  : ok ? '<span class="lencana baik">memenuhi</span>' : '<span class="lencana sedang">belum memenuhi</span>';
+const n = r.varian_dinilai || 0;
+const baris = [
+  ["Galat proyeksi (sMAPE)", `≥ ${t.perbaikan_smape_persen}% lebih rendah dari baseline`, `${r.lolos_smape}/${n} varian`, n ? r.lolos_smape === n : null],
+  ["Bias proyeksi", `|bias| ≤ ${t.bias_absolut_maks_persen}%`, `${r.lolos_bias}/${n} varian`, n ? r.lolos_bias === n : null],
+  ["Cakupan interval 90%", `${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%`, `${r.lolos_cakupan}/${n} varian`, n ? r.lolos_cakupan === n : null],
+  ["F1 deteksi anomali", `≥ ${t.f1_min}`, ev.f1 ?? "–", ev.f1 === undefined || ev.f1 === null ? null : ev.f1 >= t.f1_min],
+  ["Recall anomali", `≥ ${t.recall_min}`, ev.recall ?? "–", ev.recall === undefined || ev.recall === null ? null : ev.recall >= t.recall_min],
+  ["False positive rate", `≤ ${t.fpr_maks}`, ev.false_positive_rate ?? "–", ev.false_positive_rate === undefined || ev.false_positive_rate === null ? null : ev.false_positive_rate <= t.fpr_maks],
+];
+document.querySelector("#tabel-target tbody").innerHTML = baris.map(([a, b, c, ok]) =>
+  `<tr><td>${a}</td><td>${esc(b)}</td><td>${esc(c)}</td><td>${status(ok)}</td></tr>`).join("");
+
+document.getElementById("evaluasi").innerHTML = `
+  <dl class="dl">
+    <dt>Sumber label</dt><dd>${esc(ev.sumber_label)}</dd>
+    <dt>Episode terdeteksi</dt><dd>${angka(ev.sinyal_total)}${ev.kebenaran_total !== undefined ? ` · kebenaran ${angka(ev.kebenaran_total)}` : ""}</dd>
+    <dt>TP / FP / FN</dt><dd>${angka(ev.tp)} / ${angka(ev.fp)} / ${angka(ev.fn)}</dd>
+    <dt>Precision</dt><dd>${ev.precision ?? "–"}</dd>
+    <dt>Recall</dt><dd>${ev.recall ?? "–"}</dd>
+    <dt>F1</dt><dd>${ev.f1 ?? "–"}</dd>
+    <dt>False positive rate</dt><dd>${ev.false_positive_rate ?? "–"}</dd>
+    <dt>Titik dievaluasi</dt><dd>${angka(ev.titik_dievaluasi)} (varian × hari)</dd>
+  </dl>
+  ${ev.catatan ? `<p class="pesan" style="margin-top:10px">${esc(ev.catatan)}</p>` : ""}
+  <p class="meta-kecil" style="margin-top:10px">Pada data nyata, label berasal dari status tindak lanjut (terverifikasi vs false alarm) dan catatan "anomali terlewat" dari analis.</p>`;
+
+const sm = (x) => (x ? angka(x.smape, 2) : "–");
+document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) => {
+  const mt = v.metrik || {};
+  const pilih = v.model_terpilih;
+  const kolom = ["naif", "rata7", "holt_redam", "hari_raya"].map((k) =>
+    `<td class="angka">${k === pilih ? `<strong>${sm(mt[k])}</strong>` : sm(mt[k])}</td>`).join("");
+  const mp = mt[pilih] || {};
+  const d = v.drift || {};
+  const ok = v.lolos || {};
+  const tanda = (x) => (x === false ? ' <span class="lencana sedang polos" style="padding:0 6px">✕</span>' : "");
+  return `<tr><td>${esc(v.nama)}</td>${kolom}
+    <td class="angka">${persen(v.perbaikan_vs_naif_persen, 1, true)}${tanda(ok.smape)}</td>
+    <td class="angka">${persen(mp.bias_persen, 2, true)}${tanda(ok.bias)}</td>
+    <td class="angka">${persen(v.cakupan_interval_persen)}${tanda(ok.cakupan)}</td>
+    <td class="angka">${rp(mp.mae)}</td>
+    <td class="angka">${d.rasio_volatilitas ?? "–"}</td>
+    <td class="angka">${d.penurunan_periode_sebelumnya_persen ?? "–"}% → ${d.penurunan_periode_terakhir_persen ?? "–"}%</td>
+    <td class="meta-kecil">${esc((v.catatan || []).join(" "))}</td></tr>`;
+}).join("") || `<tr><td colspan="12" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
+
+const a = m.pengaturan.analisis, s = m.pengaturan.sinyal;
+document.getElementById("metodologi").innerHTML = [
+  `Deret harian Bengkulu Tengah = median observasi lolos quality gate dari sumber berprioritas tertinggi pada tanggal itu.`,
+  `Baseline = median bergulir ${a.jendela_baseline_hari} hari sebelumnya. Model kandidat: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
+  `Rolling-origin backtesting: ${a.jumlah_origin_backtest} titik asal berjarak ${a.jarak_origin_hari} hari, horizon ${a.horizon_hari} hari; minimal ${a.minimal_hari_riwayat} hari observasi.`,
+  `Interval prediksi ${Math.round(a.tingkat_interval * 100)}%: kuantil konformal residu log(aktual/proyeksi) per horizon dari backtest.`,
+  `Anomali: robust z-score (median/MAD ${a.jendela_baseline_hari} hari) ≥ ${s.z_ambang} dan deviasi ≥ ambang kelompok (${Object.entries(s.ambang_persen).map(([k, v]) => `${k} ${v}%`).join(", ")}). Hari anomali berurutan digabung menjadi satu episode.`,
+  `Drift data: PSI log-return (bin tetap) ≥ ${s.psi_ambang} atau rasio volatilitas di luar ${s.rasio_volatilitas_batas.join("–")}, keduanya dengan uji permutasi p < ${s.alfa_uji_drift}. Drift model: sMAPE dua periode 4-mingguan terakhir memburuk > ${t.penurunan_metrik_drift_maks_persen}% dari periode acuan.`,
+].map((x) => `<li>${x}</li>`).join("");
+</script>
+</body>
+</html>

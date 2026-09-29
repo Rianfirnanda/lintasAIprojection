@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+# keluaran pipeline dibangun ulang oleh GitHub Actions setiap kali deploy
+site/data/
+# berkas sementara Excel
+~$*
+.DS_Store

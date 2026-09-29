@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventaris Sumber Data</title>
+  <meta name="description" content="Inventaris sumber data (BPS, pasar/pedagang, Pemda, AI Data Finder, Big Data) beserta metode akses, status, dan kandidat hasil AI Data Finder.">
+  <link rel="icon" href="assets/ikon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Sumber data</h1>
+      <p>Big Data di proyek ini = integrasi data yang beragam dan relevan dari banyak sumber, bukan sekadar data yang banyak.</p>
+    </div>
+  </div>
+
+  <section class="kartu">
+    <h2>Urutan kerja pengambilan data</h2>
+    <div class="alur" style="margin-top:10px" aria-label="Alur pengambilan data">
+      <span class="langkah">Tentukan kebutuhan</span><span class="panah">→</span>
+      <span class="langkah">Cari sumber (AI Data Finder)</span><span class="panah">→</span>
+      <span class="langkah">Cek izin &amp; kualitas</span><span class="panah">→</span>
+      <span class="langkah">Pilih metode akses</span><span class="panah">→</span>
+      <span class="langkah">Ambil data</span><span class="panah">→</span>
+      <span class="langkah">Catat metadata</span><span class="panah">→</span>
+      <span class="langkah">Standardisasi</span><span class="panah">→</span>
+      <span class="langkah">Integrasikan</span>
+    </div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div><h2>Inventaris sumber (config/sumber.csv)</h2><p>Prioritas rekonsiliasi: angka lebih kecil = lebih dipercaya bila dua sumber berbeda.</p></div>
+    </div>
+    <div class="gulir-tabel"><table id="tabel-sumber"><thead><tr>
+      <th>Kode</th><th>Nama</th><th>Kelompok</th><th>Metode akses</th><th>Frekuensi</th><th>Status</th>
+      <th class="angka">Prioritas</th><th class="angka">Observasi</th><th>Lisensi/ketentuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div>
+        <h2>AI Data Finder — kandidat sumber</h2>
+        <p>Agen AI (Claude + pencarian web) mencari kandidat sumber. Hasil berstatus <em>kandidat</em> dan wajib diverifikasi analis sebelum ditambahkan ke inventaris.</p>
+      </div>
+      <a class="tombol" id="tautan-finder" href="#">Jalankan pencarian</a>
+    </div>
+    <div id="kandidat"></div>
+  </section>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, angka, waktu, tampilkanGalat } from "./assets/app.js";
+
+const meta = await pasangKerangka("sumber.html");
+let data;
+try {
+  data = await muatJSON("sumber.json");
+} catch (e) {
+  tampilkanGalat(document.querySelector("main"), e);
+  throw e;
+}
+const KELAS_STATUS = { aktif: "baik", kandidat: "info", menunggu_konfirmasi: "rendah", ditolak: "polos" };
+document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) => `<tr>
+  <td><code>${esc(s.kode)}</code></td><td>${s.url ? `<a href="${esc(s.url)}" rel="noopener">${esc(s.nama)}</a>` : esc(s.nama)}</td>
+  <td>${esc(s.kelompok)}</td><td>${esc(s.metode_akses.replace(/_/g, " "))}</td><td>${esc(s.frekuensi.replace(/_/g, " "))}</td>
+  <td><span class="lencana ${KELAS_STATUS[s.status] || "polos"}">${esc(s.status.replace(/_/g, " "))}</span></td>
+  <td class="angka">${s.prioritas}</td><td class="angka">${angka(s.jumlah_observasi)}</td>
+  <td class="meta-kecil">${esc(s.lisensi)}</td><td class="meta-kecil">${esc(s.catatan)}</td></tr>`).join("");
+
+const finder = document.getElementById("tautan-finder");
+if (meta?.url_repo) finder.href = `${meta.url_repo}/actions/workflows/ai-data-finder.yml`;
+else finder.href = "tentang.html#ai-data-finder";
+
+const pencarian = data.kandidat_ai?.pencarian || [];
+const wadah = document.getElementById("kandidat");
+if (!pencarian.length) {
+  wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan workflow <strong>AI Data Finder</strong> di tab Actions GitHub
+    (butuh secret <code>ANTHROPIC_API_KEY</code>), isi komoditas dan periode. Hasil tersimpan di <code>data/sumber/kandidat_ai.json</code>.</div>`;
+} else {
+  wadah.innerHTML = pencarian.slice(0, 10).map((p) => {
+    const h = p.hasil || {};
+    const kandidat = h.kandidat || [];
+    return `<details ${p === pencarian[0] ? "open" : ""} style="margin-bottom:12px">
+      <summary><strong>${esc(p.permintaan.komoditas)}</strong> · ${esc(p.permintaan.periode)} · ${esc(waktu(p.waktu))} · ${kandidat.length} kandidat</summary>
+      <p class="meta-kecil" style="margin:6px 0">Prompt: ${esc(p.permintaan.prompt)}</p>
+      <div class="gulir-tabel"><table><thead><tr><th>Sumber</th><th>Wilayah</th><th>Periode</th><th>Komoditas/satuan</th><th>Frekuensi</th>
+        <th>Akses</th><th>URL di hasil pencarian?</th><th>Perlu izin?</th><th>Catatan</th></tr></thead><tbody>
+      ${kandidat.map((k) => `<tr>
+        <td>${k.url ? `<a href="${esc(k.url)}" rel="noopener nofollow">${esc(k.nama_sumber)}</a>` : esc(k.nama_sumber)}<br><span class="meta-kecil">${esc(k.penyedia)}</span></td>
+        <td>${esc(k.wilayah)}<br><span class="meta-kecil">${esc(k.peran_wilayah)}</span></td><td>${esc(k.periode_data)}</td>
+        <td>${esc(k.komoditas_varian)}<br><span class="meta-kecil">${esc(k.satuan)}</span></td><td>${esc(k.frekuensi_pembaruan)}</td>
+        <td>${esc(k.metode_akses)}</td>
+        <td>${k.url_ada_di_hasil_pencarian ? '<span class="lencana baik">ya</span>' : '<span class="lencana tinggi">tidak — periksa</span>'}</td>
+        <td>${k.perlu_izin ? '<span class="lencana rendah">ya</span>' : "tidak"}</td>
+        <td class="meta-kecil">${esc(k.relevansi)} ${esc(k.catatan_keandalan)} ${esc(k.lisensi_atau_ketentuan)}</td></tr>`).join("")
+        || `<tr><td colspan="9" class="kosong">Tidak ada kandidat.</td></tr>`}
+      </tbody></table></div>
+      ${(h.tidak_ditemukan || []).length ? `<p class="meta-kecil">Tidak ditemukan: ${h.tidak_ditemukan.map(esc).join("; ")}</p>` : ""}
+      ${h.catatan ? `<p class="meta-kecil">Catatan AI: ${esc(h.catatan)}</p>` : ""}
+    </details>`;
+  }).join("");
+}
+</script>
+</body>
+</html>

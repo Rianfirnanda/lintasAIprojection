@@ -1,0 +1,4 @@
+tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
+2026-10-09,1709,stok_beras_ton,850,ton,BRS03,PMD-DISDAG
+2026-10-09,1709,pasokan_cabai_ton,18,ton,CRW02,PMD-DISDAG
+2026-10-09,1709,biaya_angkut_kepahiang_rp_per_kg,5000,Rp/kg,CRW02,PMD-DISDAG

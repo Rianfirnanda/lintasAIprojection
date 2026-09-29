@@ -1,0 +1,34 @@
+name: Periksa data & kode
+
+# Dijalankan untuk pull request: memastikan berkas data baru terbaca dan kode lolos uji sebelum digabung ke main.
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - "config/**"
+      - "pipeline/**"
+      - "site/**"
+      - "tests/**"
+      - "requirements*.txt"
+      - ".github/workflows/**"
+
+permissions:
+  contents: read
+
+jobs:
+  periksa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Uji otomatis
+        run: python -m pytest -q
+      - name: Validasi berkas masukan
+        run: python -m pipeline periksa
+      - name: Uji pipeline lengkap (tanpa publikasi)
+        run: python -m pipeline jalankan --keluaran site/data --tanpa-github

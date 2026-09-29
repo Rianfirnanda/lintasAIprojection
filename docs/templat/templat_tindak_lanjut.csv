@@ -1,0 +1,3 @@
+id_sinyal,status,catatan,petugas,tanggal,kode_varian,tanggal_kejadian
+0123456789,terverifikasi,pasokan dari Kepahiang tersendat longsor Liku Sembilan,ANL01,2026-10-09,,
+,anomali_terlewat,lonjakan bawang merah tidak terdeteksi sistem,ANL01,2026-10-09,BWM01,2026-10-07

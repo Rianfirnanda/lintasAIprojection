@@ -1,0 +1,5 @@
+kode_pasar,nama_pasar,kode_wilayah,kecamatan,lat,lon,blank_spot,koordinat_terverifikasi,aktif
+PSR01,Pasar Taba Penanjung,1709,Taba Penanjung,-3.705,102.515,0,0,1
+PSR02,Pasar Karang Tinggi,1709,Karang Tinggi,-3.735,102.425,0,0,1
+PSR91,Pasar Kepahiang (pembanding),1708,Kepahiang,-3.645,102.578,0,0,1
+PSR92,Pasar Panorama (pembanding),1771,Singaran Pati,-3.815,102.300,0,0,1

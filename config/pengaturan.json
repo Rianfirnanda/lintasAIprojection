@@ -1,0 +1,54 @@
+{
+  "zona_waktu": "Asia/Jakarta",
+  "wilayah_target": "1709",
+  "mode_demo": "otomatis",
+  "hari_pencatatan": [0, 1, 2, 3, 4],
+  "jam_batas_tepat_waktu": 14,
+  "jendela_hari_raya": {"sebelum": 14, "sesudah": 3},
+  "analisis": {
+    "horizon_hari": 14,
+    "minimal_hari_riwayat": 60,
+    "jumlah_origin_backtest": 12,
+    "jarak_origin_hari": 7,
+    "jendela_baseline_hari": 28,
+    "tingkat_interval": 0.9,
+    "maks_celah_isi_hari": 7
+  },
+  "kualitas": {
+    "ambang_perubahan_harian_persen": {"volatil": 30, "protein": 15, "pokok": 10, "pabrikan": 10},
+    "z_pencilan": 5.0,
+    "toleransi_konfirmasi_persen": 10,
+    "selisih_rekonsiliasi_persen": 15,
+    "jendela_evaluasi_ketepatan_hari": 30
+  },
+  "sinyal": {
+    "z_ambang": 3.5,
+    "ambang_persen": {"volatil": 15, "protein": 10, "pokok": 5, "pabrikan": 5},
+    "hari_kerja_terlambat": 3,
+    "psi_ambang": 0.25,
+    "rasio_volatilitas_batas": [0.5, 2.0],
+    "alfa_uji_drift": 0.01,
+    "jendela_publikasi_hari": 60
+  },
+  "tindak_lanjut": {
+    "github_issues": true,
+    "keparahan_minimal_issue": "tinggi",
+    "maks_issue_baru_per_jalan": 5
+  },
+  "privasi": {
+    "kolom_terlarang": ["nama_pedagang", "nama_responden", "nama", "nik", "telepon", "no_telepon", "no_hp", "hp", "whatsapp", "alamat", "email"],
+    "min_observasi_publikasi_pasar": 1
+  },
+  "target_kinerja": {
+    "ketepatan_waktu_persen": 95,
+    "perbaikan_smape_persen": 10,
+    "bias_absolut_maks_persen": 5,
+    "cakupan_interval_min_persen": 85,
+    "cakupan_interval_maks_persen": 95,
+    "f1_min": 0.80,
+    "recall_min": 0.85,
+    "fpr_maks": 0.10,
+    "tindak_lanjut_sinyal_persen": 75,
+    "penurunan_metrik_drift_maks_persen": 10
+  }
+}
