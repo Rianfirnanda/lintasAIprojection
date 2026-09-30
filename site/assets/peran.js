@@ -209,6 +209,18 @@ async function berandaAdmin(el, meta) {
   const repoBerkas = (nama) => (repo ? `${repo}/blob/main/config/${nama}` : "");
   const aksi = tombol("pengguna.html", "Pengguna dan peran", true) + tombol("index.html?tampilan=tpid", "Dashboard TPID") +
     (meta.url_run ? tombol(meta.url_run, "Log proses", false, ' target="_blank" rel="noopener"') : "");
+  const ubinStatis = `        ${ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: `${master.varian.filter((v) => v.aktif !== false).length} varian aktif`, href: repoBerkas("komoditas.csv") })}
+        ${ind({ i: "toko", label: "Pasar", nilai: master.pasar.length, sub: `${master.pasar.filter((x) => x.blank_spot).length} blank spot`, href: repoBerkas("pasar.csv") })}
+        ${ind({ i: "peta", label: "Wilayah", nilai: master.wilayah.length, sub: "target dan pembanding", href: repoBerkas("wilayah.csv") })}
+        ${ind({ i: "database", label: "Sumber data", nilai: sumber ? sumber.sumber.length : "–", sub: sumber ? `${sumber.sumber.filter((x) => x.status === "aktif").length} aktif` : "belum ada", href: repoBerkas("sumber.csv") })}
+        ${ind({ i: "kalender", label: "Hari raya", nilai: master.kalender.length, sub: "tanggal terjadwal", href: repoBerkas("kalender.csv") })}
+        ${ind({ i: "orang", label: "Akun", nilai: jumlahAkun, sub: meta.login === "firebase" ? "diatur di Firebase" : "akun contoh", href: "pengguna.html" })}`;
+  const ubinDinamis = `        ${ind({ i: "kalender", label: "Harga terakhir", nilai: tgl(meta.tanggal_data_terakhir), sub: jamLalu })}
+        ${ind({ i: "database", label: "Observasi dipakai", nilai: angka(meta.jumlah.observasi_dipakai), sub: `dari ${angka(meta.jumlah.observasi_total)} masuk`, meter: meta.jumlah.observasi_dipakai / Math.max(1, meta.jumlah.observasi_total) * 100 })}
+        ${ind({ i: "dokumen", label: "Berkas masuk", nilai: angka(meta.jumlah.berkas), sub: "sejak awal" })}
+        ${ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(ringkasan.kpi.sinyal_aktif), sub: `${ringkasan.kpi.sinyal_tinggi} prioritas tinggi`, href: "sinyal.html" })}
+        ${ind({ i: "peringatan", warna: "merah", label: "Antrean validasi", nilai: angka(kualitas.jumlah_perlu_validasi), sub: "menunggu keputusan", href: "kualitas.html" })}
+        ${ind({ i: "centang", warna: "hijau", label: "Kelengkapan", nilai: persen(ringkasan.kpi.kelengkapan_persen, 0), sub: "30 hari terakhir", meter: ringkasan.kpi.kelengkapan_persen, meterWarna: "hijau" })}`;
   kosongkan(el, `${salam("admin", PERAN.admin.judulBeranda, `Data ${tgl(meta.tanggal_data_terakhir, true)}`, aksi)}
     <div class="ind-baris">
       ${ind({ i: "sinkron", warna: umur < 36 ? "hijau" : "merah", label: "Pembaruan terakhir", nilai: waktu(meta.dibuat).replace(":", ".").split(" ").pop(), kecil: "WIB", sub: `${tgl(meta.dibuat)} · ${jamLalu}`, warnaNilai: umur < 36 ? "" : "merah" })}
@@ -216,24 +228,7 @@ async function berandaAdmin(el, meta) {
       ${ind({ i: "jam", warna: "hijau", label: "Uptime", nilai: uptime === null ? "–" : persen(uptime, 1), sub: uptime === null ? "belum ada log" : "target 99,5%", meter: uptime === null ? null : uptime, meterWarna: "hijau", href: "kinerja.html" })}
       ${ind({ i: "database", label: "Berkas masuk", nilai: angka(meta.jumlah.berkas), sub: `${angka(meta.jumlah.observasi_dipakai)} data dipakai` })}
     </div>
-    <section class="kartu"><div class="kartu-kepala"><div><h2>Data statis</h2><p>Acuan yang jarang berubah. Diatur lewat berkas di <code>config/</code>.</p></div></div>
-      <div class="ind-baris">
-        ${ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: `${master.varian.filter((v) => v.aktif !== false).length} varian aktif`, href: repoBerkas("komoditas.csv") })}
-        ${ind({ i: "toko", label: "Pasar", nilai: master.pasar.length, sub: `${master.pasar.filter((x) => x.blank_spot).length} blank spot`, href: repoBerkas("pasar.csv") })}
-        ${ind({ i: "peta", label: "Wilayah", nilai: master.wilayah.length, sub: "target dan pembanding", href: repoBerkas("wilayah.csv") })}
-        ${ind({ i: "database", label: "Sumber data", nilai: sumber ? sumber.sumber.length : "–", sub: sumber ? `${sumber.sumber.filter((x) => x.status === "aktif").length} aktif` : "belum ada", href: repoBerkas("sumber.csv") })}
-        ${ind({ i: "kalender", label: "Hari raya", nilai: master.kalender.length, sub: "tanggal terjadwal", href: repoBerkas("kalender.csv") })}
-        ${ind({ i: "orang", label: "Akun", nilai: jumlahAkun, sub: meta.login === "firebase" ? "diatur di Firebase" : "akun contoh", href: "pengguna.html" })}
-      </div></section>
-    <section class="kartu"><div class="kartu-kepala"><div><h2>Data dinamis</h2><p>Berubah tiap kali data masuk dan sistem diperbarui.</p></div></div>
-      <div class="ind-baris">
-        ${ind({ i: "kalender", label: "Harga terakhir", nilai: tgl(meta.tanggal_data_terakhir), sub: jamLalu })}
-        ${ind({ i: "database", label: "Observasi dipakai", nilai: angka(meta.jumlah.observasi_dipakai), sub: `dari ${angka(meta.jumlah.observasi_total)} masuk`, meter: meta.jumlah.observasi_dipakai / Math.max(1, meta.jumlah.observasi_total) * 100 })}
-        ${ind({ i: "dokumen", label: "Berkas masuk", nilai: angka(meta.jumlah.berkas), sub: "sejak awal" })}
-        ${ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(ringkasan.kpi.sinyal_aktif), sub: `${ringkasan.kpi.sinyal_tinggi} prioritas tinggi`, href: "sinyal.html" })}
-        ${ind({ i: "peringatan", warna: "merah", label: "Antrean validasi", nilai: angka(kualitas.jumlah_perlu_validasi), sub: "menunggu keputusan", href: "kualitas.html" })}
-        ${ind({ i: "centang", warna: "hijau", label: "Kelengkapan", nilai: persen(ringkasan.kpi.kelengkapan_persen, 0), sub: "30 hari terakhir", meter: ringkasan.kpi.kelengkapan_persen, meterWarna: "hijau" })}
-      </div></section>
+    <section class="kartu" id="panel-data"></section>
     <div class="grid dua-kolom">
       <section class="kartu"><div class="kartu-kepala"><div><h2>Pemeriksaan sistem</h2></div></div>
         ${cek.map(([baik, nama, ket]) => `<div class="baris-info"><span class="titik-status ${baik ? "hijau" : "oranye"}"></span><div class="nama" style="font-weight:500">${nama}</div><div class="kanan sub">${ket}</div></div>`).join("")}
@@ -248,6 +243,60 @@ async function berandaAdmin(el, meta) {
         </div>
       </section>
     </div>`);
+  pasangPanelData(el.querySelector("#panel-data"), { ubinStatis, ubinDinamis, master, sumber, ringkasan, sinyal, kualitas });
+}
+
+
+/* ---------- panel data statis dan dinamis (admin) */
+function tabel(kolom, baris, kosongTeks = "Belum ada data.") {
+  if (!baris.length) return `<p class="kosong">${kosongTeks}</p>`;
+  return `<div class="gulir-tabel" style="max-height:380px"><table><thead><tr>${kolom.map(([h, , angka]) => `<th${angka ? ' class="angka"' : ""}>${h}</th>`).join("")}</tr></thead>
+    <tbody>${baris.map((b) => `<tr>${kolom.map(([, f, angka]) => `<td${angka ? ' class="angka"' : ""}>${f(b)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+
+function pasangPanelData(el, { ubinStatis, ubinDinamis, master, sumber, ringkasan, sinyal, kualitas }) {
+  const namaVarian = Object.fromEntries(master.varian.map((v) => [v.kode, v.nama]));
+  const pctSel = (x) => (x === null || x === undefined ? "–" : `<span class="${x > 0.5 ? "naik" : x < -0.5 ? "turun" : ""}">${persen(x, 1, true)}</span>`);
+  const SET = {
+    statis: {
+      ubin: ubinStatis, judul: "Data statis", ket: "Acuan yang jarang berubah. Diatur lewat berkas di config/.",
+      tabel: {
+        komoditas: ["Komoditas", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Komoditas", (x) => esc(x.nama)], ["Jumlah varian", (x) => x.varian.length, true]], master.komoditas)],
+        varian: ["Varian", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Varian", (x) => esc(x.nama)], ["Satuan", (x) => esc(x.satuan)], ["Kelompok", (x) => esc(x.kelompok)],
+          ["Batas wajar", (x) => `${rp(x.batas_bawah)} sampai ${rp(x.batas_atas)}`, true], ["Aktif", (x) => (x.aktif ? "Ya" : "Tidak")]], master.varian)],
+        pasar: ["Pasar", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Pasar", (x) => esc(x.nama)], ["Kecamatan", (x) => esc(x.kecamatan || "–")],
+          ["Blank spot", (x) => (x.blank_spot ? "Ya" : "Tidak")], ["Koordinat", (x) => (x.koordinat_terverifikasi ? "Terverifikasi" : "Perkiraan")]], master.pasar)],
+        wilayah: ["Wilayah", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Wilayah", (x) => esc(x.nama)], ["Peran", (x) => (x.peran === "target" ? "Sasaran" : "Pembanding")]], master.wilayah)],
+        sumber: ["Sumber", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Sumber", (x) => esc(x.nama)], ["Status", (x) => esc(String(x.status).replace(/_/g, " "))], ["Prioritas", (x) => x.prioritas, true]], sumber?.sumber || [])],
+        hariraya: ["Hari raya", () => tabel([["Tanggal", (x) => esc(tgl(x.tanggal))], ["Nama", (x) => esc(x.nama)], ["Status", (x) => esc(x.status)]], master.kalender)],
+      },
+    },
+    dinamis: {
+      ubin: ubinDinamis, judul: "Data dinamis", ket: "Berubah tiap kali data masuk dan sistem diperbarui.",
+      tabel: {
+        harga: ["Harga terakhir", () => tabel([["Varian", (x) => esc(x.nama)], ["Harga", (x) => `${rp(x.harga_terakhir)}/${esc(x.satuan)}`, true], ["Harian", (x) => pctSel(x.perubahan?.harian), true],
+          ["Mingguan", (x) => pctSel(x.perubahan?.mingguan), true], ["Bulanan", (x) => pctSel(x.perubahan?.bulanan), true]], ringkasan.varian)],
+        peringatan: ["Peringatan", () => tabel([["Peringatan", (x) => esc(x.judul)], ["Tingkat", (x) => esc(x.keparahan)], ["Status", (x) => esc(String(x.status).replace(/_/g, " "))], ["Sejak", (x) => esc(tgl(x.tanggal_mulai))]],
+          sinyal.sinyal.filter((x) => x.aktif), "Tidak ada peringatan aktif.")],
+        antrean: ["Antrean validasi", () => tabel([["Tanggal", (x) => esc(tgl(x.tanggal))], ["Varian", (x) => esc(namaVarian[x.kode_varian] || x.kode_varian)], ["Pasar", (x) => esc(x.kode_pasar)],
+          ["Harga", (x) => rp(x.harga), true], ["Tanda", (x) => esc((x.tanda || []).join(", ").replace(/_/g, " "))]], kualitas.perlu_validasi.slice(0, 100), "Antrean kosong.")],
+        berkas: ["Berkas masuk", () => tabel([["Berkas", (x) => `<span style="word-break:break-all">${esc(String(x.berkas).split("/").pop())}</span>`], ["Jenis", (x) => esc(x.jenis)],
+          ["Diterima", (x) => angka(x.diterima), true], ["Ditolak", (x) => angka(x.ditolak), true]], [...kualitas.batch].reverse().slice(0, 100))],
+      },
+    },
+  };
+  let mode = "statis", isi = { statis: "komoditas", dinamis: "harga" };
+  function gambar() {
+    const d = SET[mode];
+    el.innerHTML = `<div class="kartu-kepala"><div><h2>${d.judul}</h2><p>${d.ket}</p></div>
+      <div class="segmen" role="group" aria-label="Jenis data">${Object.entries(SET).map(([k, v]) => `<button type="button" data-mode="${k}" aria-pressed="${k === mode}">${v.judul}</button>`).join("")}</div></div>
+      <div class="ind-baris">${d.ubin}</div>
+      <div class="segmen" role="group" aria-label="Pilih tabel" style="margin-bottom:12px">${Object.entries(d.tabel).map(([k, v]) => `<button type="button" data-tabel="${k}" aria-pressed="${k === isi[mode]}">${v[0]}</button>`).join("")}</div>
+      <div>${d.tabel[isi[mode]][1]()}</div>`;
+    el.querySelectorAll("[data-mode]").forEach((b) => b.addEventListener("click", () => { mode = b.dataset.mode; gambar(); }));
+    el.querySelectorAll("[data-tabel]").forEach((b) => b.addEventListener("click", () => { isi[mode] = b.dataset.tabel; gambar(); }));
+  }
+  gambar();
 }
 
 const PETA = { masyarakat: berandaMasyarakat, petugas: berandaPetugas, operator: berandaOperator, analis: berandaAnalis, admin: berandaAdmin };

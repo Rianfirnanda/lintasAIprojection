@@ -52,6 +52,11 @@
         <div class="dash-kontrol">
           <label class="sr-only" for="pilih-varian">Pilih varian</label>
           <select id="pilih-varian"></select>
+          <div class="segmen" role="group" aria-label="Jenis grafik" id="tipe-grafik">
+            <button type="button" data-tipe="garis" aria-pressed="true">Garis</button>
+            <button type="button" data-tipe="area" aria-pressed="false">Area</button>
+            <button type="button" data-tipe="batang" aria-pressed="false">Batang</button>
+          </div>
           <div class="segmen" role="group" aria-label="Rentang waktu" id="rentang">
             <button type="button" data-hari="30" aria-pressed="true">30 hari</button>
             <button type="button" data-hari="90" aria-pressed="false">90 hari</button>
@@ -323,7 +328,7 @@ function siapkanGrafik(varian, master, model) {
   const prioritas = varian.find((v) => v.sinyal === "tinggi") || varian.find((v) => v.sinyal) || varian[0];
   pilih.value = varian.some((v) => v.kode === dariHash()) ? dariHash() : prioritas.kode;
   document.getElementById("legenda-harga").innerHTML = legendaDashboard();
-  let hari = 30, chart = null;
+  let hari = 30, tipeGrafik = "garis", chart = null;
   const cache = {};
   const modelPer = Object.fromEntries(model.per_varian.map((m) => [m.kode, m]));
 
@@ -335,7 +340,7 @@ function siapkanGrafik(varian, master, model) {
     cache[kode] ||= await muatJSON(`seri/${kode}.json`);
     const seri = potongSeri(cache[kode], hari);
     chart?.destroy();
-    chart = gambarGrafikHarga(kanvas, seri, { gaya: "dashboard" });
+    chart = gambarGrafikHarga(kanvas, seri, { gaya: "dashboard", tipe: tipeGrafik });
     kanvas.style.opacity = "1";
     document.getElementById("judul-grafik").textContent = `Pergerakan Harga ${seri.nama}`;
     const terakhir = seri.tanggal[seri.tanggal.length - 1];
@@ -353,6 +358,11 @@ function siapkanGrafik(varian, master, model) {
     gambar();
     document.getElementById("judul-grafik").scrollIntoView({ behavior: "smooth", block: "center" });
   });
+  document.querySelectorAll("#tipe-grafik button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("#tipe-grafik button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    tipeGrafik = b.dataset.tipe;
+    gambar();
+  }));
   document.querySelectorAll("#rentang button").forEach((b) => b.addEventListener("click", () => {
     document.querySelectorAll("#rentang button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
     hari = Number(b.dataset.hari);
