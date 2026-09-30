@@ -456,5 +456,10 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             **{k: v for k, v in konf.pengaturan.get("layanan", {}).items() if v},
         },
     }
+    # Batas wilayah (GeoJSON dari BPS) opsional: bila ada di config/, ikut diterbitkan untuk peta beranda.
+    batas = konf.akar / "config" / "batas_wilayah.geojson"
+    meta["batas_wilayah"] = batas.exists()
+    if batas.exists():
+        shutil.copyfile(batas, keluaran / "batas_wilayah.geojson")
     _tulis_json(keluaran / "meta.json", meta)
     return {"meta": meta, "kpi": ringkasan["kpi"], "evaluasi_anomali": evaluasi, "ringkasan_model": ringkasan_model}

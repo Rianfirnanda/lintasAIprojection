@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harga per Varian · Lintas AI Projection</title>
+  <meta name="description" content="Rincian harga terakhir dan perubahan harga 21 varian pangan di Kabupaten Bengkulu Tengah.">
+  <meta name="theme-color" content="#1f5fae">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Harga per varian</h1>
+      <p>Harga terakhir dibanding sehari, seminggu, sebulan, tiga bulan, enam bulan, dan setahun sebelumnya. Klik baris untuk membuka grafiknya di dashboard.</p>
+    </div>
+    <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh harga harian (CSV)</a>
+  </div>
+
+  <section class="kartu" aria-labelledby="judul-tabel">
+    <div class="kartu-kepala">
+      <div><h2 id="judul-tabel">Perbandingan perubahan harga</h2></div>
+      <div class="legenda" style="margin:0">
+        <span><span class="kunci-pita" style="background:var(--up-wash-strong)"></span>Naik ≥ 2× ambang</span>
+        <span><span class="kunci-pita" style="background:var(--up-wash)"></span>Naik ≥ ambang</span>
+        <span><span class="kunci-pita" style="background:var(--down-wash)"></span>Turun ≥ ambang</span>
+      </div>
+    </div>
+    <div class="gulir-tabel">
+      <table id="tabel-perubahan">
+        <thead>
+          <tr>
+            <th>Varian</th><th class="angka">Harga terakhir</th><th class="angka">vs harga normal</th>
+            <th class="angka">Harian</th><th class="angka">Mingguan</th><th class="angka">Bulanan</th>
+            <th class="angka">Triwulanan</th><th class="angka">Semesteran</th><th class="angka">Tahunan</th>
+            <th class="angka">Proyeksi H+7</th><th>Sinyal</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, rp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat } from "./assets/app.js";
+
+const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
+await pasangKerangka("harga.html");
+const utama = document.querySelector("main");
+
+function sel(x, kelompok) {
+  return `<td class="angka ${kelasPerubahan(x, AMBANG[kelompok])}">${persen(x, 1, true)}</td>`;
+}
+
+try {
+  const [ringkasan, master] = await Promise.all([muatJSON("ringkasan.json"), muatJSON("master.json")]);
+  const varian = ringkasan.varian;
+  const tbody = document.querySelector("#tabel-perubahan tbody");
+  let html = "";
+  for (const k of master.komoditas) {
+    html += `<tr class="grup"><td colspan="11">${esc(k.nama)}</td></tr>`;
+    for (const kode of k.varian) {
+      const v = varian.find((x) => x.kode === kode);
+      if (!v) {
+        html += `<tr><td>${esc(master.varian.find((x) => x.kode === kode)?.nama || kode)}</td><td colspan="10" class="kosong">belum ada data</td></tr>`;
+        continue;
+      }
+      const p = v.perubahan || {};
+      const h7 = v.proyeksi_h7;
+      html += `<tr class="bisa-klik" data-kode="${esc(v.kode)}" tabindex="0">
+        <td>${esc(v.nama)} <span class="meta-kecil">/${esc(v.satuan)}</span></td>
+        <td class="angka">${rp(v.harga_terakhir)}</td>${sel(v.deviasi_persen, v.kelompok)}
+        ${sel(p.harian, v.kelompok)}${sel(p.mingguan, v.kelompok)}${sel(p.bulanan, v.kelompok)}
+        ${sel(p.triwulanan, v.kelompok)}${sel(p.semesteran, v.kelompok)}${sel(p.tahunan, v.kelompok)}
+        <td class="angka">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rp(h7.bawah)}–${rp(h7.atas)}</span>` : "–"}</td>
+        <td>${lencanaKeparahan(v.sinyal) || '<span class="kosong">–</span>'}</td></tr>`;
+    }
+  }
+  tbody.innerHTML = html;
+  const buka = (tr) => { location.href = `index.html#varian=${encodeURIComponent(tr.dataset.kode)}`; };
+  tbody.querySelectorAll("tr.bisa-klik").forEach((tr) => {
+    tr.addEventListener("click", () => buka(tr));
+    tr.addEventListener("keydown", (e) => { if (e.key === "Enter") buka(tr); });
+  });
+} catch (e) {
+  console.error(e);
+  tampilkanGalat(utama, e);
+}
+</script>
+</body>
+</html>

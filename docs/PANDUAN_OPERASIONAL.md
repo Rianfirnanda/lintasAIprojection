@@ -102,6 +102,8 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 - **Menambah pasar**: tambahkan baris di `config/pasar.csv` (isi koordinat dari peta, `koordinat_terverifikasi=1`,
   `blank_spot=1` bila perlu).
 - **Mengaktifkan item kajian Bapokting**: ubah `aktif` menjadi `1` di `config/komoditas.csv`.
+- **Batas wilayah di peta**: letakkan berkas GeoJSON batas kecamatan/kabupaten (dari BPS) di `config/batas_wilayah.geojson`. Setelah pipeline berjalan, batasnya tampil di peta beranda.
+- **Blank spot**: isi `blank_spot=1` pada `config/pasar.csv` untuk wilayah yang dimaksud. Jumlahnya tampil di kartu "Wilayah blank spot" beranda (target 8).
 - **Mengubah ambang**: `config/pengaturan.json` (setiap perubahan tercatat di git, jadi tulis alasan di pesan commit).
 - **Tanggal hari raya**: perbarui `config/kalender.csv` setelah SKB 3 Menteri terbit (`status=pasti`).
 - **Jadwal**: `.github/workflows/pipeline.yml` (cron dalam UTC; WIB = UTC+7). GitHub menonaktifkan workflow terjadwal

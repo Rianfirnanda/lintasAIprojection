@@ -32,7 +32,8 @@ export function potongSeri(seri, hari) {
 }
 
 export function gambarGrafikHarga(canvas, seri, opsi = {}) {
-  const tampilPembanding = opsi.pembanding ?? true;
+  const dash = opsi.gaya === "dashboard";
+  const tampilPembanding = dash ? false : (opsi.pembanding ?? true);
   const tanggalProyeksi = (seri.proyeksi || []).map((p) => p.tanggal);
   const label = [...seri.tanggal, ...tanggalProyeksi];
   const n = seri.tanggal.length;
@@ -70,10 +71,14 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
   const datasets = [
     garis("Batas bawah interval", bawah, "transparent", { borderWidth: 0, pointHoverRadius: 0, _interval: true }),
     garis("Interval proyeksi 90%", atas, "transparent", {
-      borderWidth: 0, pointHoverRadius: 0, fill: "-1", backgroundColor: c.s2 + "22", _interval: true,
+      borderWidth: 0, pointHoverRadius: 0, fill: "-1", backgroundColor: dash ? "rgba(128,138,152,0.24)" : c.s2 + "22", _interval: true,
     }),
-    garis("Baseline (median 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.base, { borderWidth: 1.5 }),
-    garis("Proyeksi", proyeksi, c.s2, { borderDash: [6, 4] }),
+    dash
+      ? garis("Baseline (median 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.s1, { borderWidth: 1.6, borderDash: [5, 4] })
+      : garis("Baseline (median 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.base, { borderWidth: 1.5 }),
+    dash
+      ? garis("Proyeksi", proyeksi, c.s2, { borderDash: [5, 4], borderWidth: 2, pointRadius: 2, pointBackgroundColor: c.s2 })
+      : garis("Proyeksi", proyeksi, c.s2, { borderDash: [6, 4] }),
   ];
   const warnaPembanding = [c.s3, c.s4];
   if (tampilPembanding) {
@@ -81,7 +86,8 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
       datasets.push(garis(p.nama, [...p.nilai, ...kosong(tanggalProyeksi.length)], warnaPembanding[i % 2], { borderWidth: 1.5 }));
     });
   }
-  datasets.push(garis("Bengkulu Tengah (aktual)", [...seri.aktual, ...kosong(tanggalProyeksi.length)], c.s1));
+  datasets.push(garis(dash ? "Harga aktual" : "Bengkulu Tengah (aktual)", [...seri.aktual, ...kosong(tanggalProyeksi.length)], c.s1,
+    dash ? { borderWidth: 2.4, pointRadius: n > 45 ? 0 : 3, pointBackgroundColor: c.s1 } : {}));
   datasets.push({
     label: "Anomali terdeteksi", data: anomali, showLine: false, pointRadius: 5, pointHoverRadius: 7,
     pointBackgroundColor: c.kritis, pointBorderColor: c.surface, pointBorderWidth: 2, borderColor: c.kritis,
@@ -118,8 +124,8 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
           ticks: { color: c.muted, font: huruf, maxRotation: 0, autoSkipPadding: 24, callback(v) { return tgl(this.getLabelForValue(v)); } },
         },
         y: {
-          grid: { color: c.grid }, border: { display: false },
-          ticks: { color: c.muted, font: huruf, callback: (v) => rp(v) },
+          grid: { color: c.grid }, border: { display: false }, beginAtZero: dash,
+          ticks: { color: c.muted, font: huruf, callback: (v) => (dash ? new Intl.NumberFormat("id-ID").format(v) : rp(v)) },
         },
       },
     },
@@ -141,4 +147,14 @@ export function legendaHarga(seri, tampilPembanding = true) {
     Object.values(seri.pembanding || {}).forEach((p, i) => item.push([`<span class="kunci-garis" style="border-color:${w[i % 2]}"></span>`, `${esc(p.nama)} (pembanding)`]));
   }
   return item.map(([k, t]) => `<span>${k}${t}</span>`).join("");
+}
+
+export function legendaDashboard() {
+  return [
+    ['<span class="kunci-garis" style="border-color:var(--series-1)"></span>', "Harga aktual"],
+    ['<span class="kunci-garis putus" style="border-color:var(--series-1)"></span>', "Baseline"],
+    ['<span class="kunci-garis putus" style="border-color:var(--series-2)"></span>', "Proyeksi"],
+    ['<span class="kunci-pita" style="background:rgba(128,138,152,0.32)"></span>', "Interval prediksi"],
+    ['<span class="kunci-titik" style="background:var(--critical)"></span>', "Anomali"],
+  ].map(([k, t]) => `<span>${k}${t}</span>`).join("");
 }
