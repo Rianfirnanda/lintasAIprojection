@@ -1,21 +1,9 @@
 // Utilitas bersama dashboard (ES module, tanpa build step).
+import { PERAN, menuPeran, peranAktif, sesi, periksaAkses, keluar } from "./akses.js";
 
 const BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-export const HALAMAN = [
-  ["index.html", "Dashboard"],
-  ["harga.html", "Harga"],
-  ["alur.html", "Alur"],
-  ["sinyal.html", "Sinyal"],
-  ["laporan.html", "Laporan"],
-  ["kinerja.html", "Kinerja"],
-  ["kualitas.html", "Quality Gate"],
-  ["model.html", "Mutu Model"],
-  ["sumber.html", "Sumber Data"],
-  ["input.html", "Input Harga"],
-  ["tentang.html", "Metodologi"],
-];
 
 export const JENIS_SINYAL = {
   anomali_harga: "Anomali harga",
@@ -100,15 +88,18 @@ export function kelasPerubahan(x, ambang = 5) {
   return "";
 }
 
-// ---------- tema (bawaan: terang; "dark" = mode gelap pilihan pengguna)
+// ---------- tema: "light" (bawaan), "dark", atau "auto" (mengikuti perangkat)
 const KUNCI_TEMA = "tema-tampilan";
-function temaTersimpan() {
-  try { return localStorage.getItem(KUNCI_TEMA); } catch { return null; }
+export function modeTema() {
+  try { const t = localStorage.getItem(KUNCI_TEMA); return ["light", "dark", "auto"].includes(t) ? t : "light"; } catch { return "light"; }
 }
-function simpanTema(t) {
-  try { localStorage.setItem(KUNCI_TEMA, t); } catch { /* abaikan */ }
+const gelapPerangkat = () => matchMedia("(prefers-color-scheme: dark)").matches;
+function terapkanTema() {
+  const m = modeTema();
+  if (m === "dark" || (m === "auto" && gelapPerangkat())) document.documentElement.dataset.theme = "dark";
+  else delete document.documentElement.dataset.theme;
 }
-if (temaTersimpan() === "dark") document.documentElement.dataset.theme = "dark";
+terapkanTema();
 
 export function temaGelap() {
   return document.documentElement.dataset.theme === "dark";
@@ -131,102 +122,153 @@ function aturGayaGrafik() {
   C.defaults.borderColor = warna("grid");
   const tip = C.defaults.plugins.tooltip;
   Object.assign(tip, {
-    backgroundColor: warna("surface-2"), titleColor: warna("ink"), bodyColor: warna("ink-2"),
-    borderColor: warna("rule-2"), borderWidth: 1, cornerRadius: 8, padding: 10, boxPadding: 4,
+    backgroundColor: warna("kaca-atas"), titleColor: warna("ink"), bodyColor: warna("ink-2"),
+    borderColor: warna("rule-2"), borderWidth: 1, cornerRadius: 10, padding: 10, boxPadding: 4,
     titleFont: { family: warna("sans"), size: 12, weight: "600" }, bodyFont: { family: warna("sans"), size: 12 },
   });
 }
 aturGayaGrafik();
 
+export function setTema(mode) {
+  try { localStorage.setItem(KUNCI_TEMA, mode); } catch { /* abaikan */ }
+  terapkanTema();
+  aturGayaGrafik();
+  pendengarTema.forEach((f) => f());
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+  if (modeTema() === "auto") setTema("auto");
+});
+
 // ---------- kerangka halaman
 export const NAMA_SISTEM = "Lintas AI Projection";
 // Logo resmi BPS (diambil dari dokumen BPS Kabupaten Bengkulu Tengah).
-const IKON = `<img class="merek-ikon" src="assets/logo-bps.png" alt="" width="42" height="33">`;
+const LOGO = `<img class="merek-ikon" src="assets/logo-bps.png" alt="" width="38" height="30">`;
+const tundaSelamanya = () => new Promise(() => {});
 
+async function ikonUI(nama, ukuran) {
+  const { ikon } = await import("./dashboard.js");
+  return ikon(nama, ukuran);
+}
+
+/** Memasang bilah atas dan kaki halaman, memeriksa hak akses, lalu mengembalikan data meta. */
 export async function pasangKerangka(aktif) {
+  const izin = periksaAkses(aktif);
+  if (izin === "masuk") {
+    location.replace(`masuk.html?lanjut=${encodeURIComponent(aktif)}`);
+    return tundaSelamanya();
+  }
+  const peran = peranAktif();
+  const pengguna = sesi();
+  const { utama: menuUtama, lainnya } = menuPeran(peran);
+  const tautan = (m) => `<a href="${m.href}"${m.href === aktif ? ' aria-current="page"' : ""}>${m.label}</a>`;
+
   const kepala = document.createElement("header");
   kepala.className = "kepala";
   kepala.innerHTML = `
     <div class="kepala-dalam">
       <a class="merek" href="index.html" aria-label="${NAMA_SISTEM}, beranda">
-        ${IKON}
-        <span class="merek-teks"><span class="merek-nama">${NAMA_SISTEM}</span><span class="merek-sub">Pemantauan Harga Pangan · BPS Kabupaten Bengkulu Tengah</span></span>
+        ${LOGO}
+        <span class="merek-teks"><span class="merek-nama">${NAMA_SISTEM}</span><span class="merek-sub">BPS Kabupaten Bengkulu Tengah</span></span>
       </a>
+      <nav class="navigasi" aria-label="Menu utama">
+        ${menuUtama.map(tautan).join("")}
+        ${lainnya.length ? `<div class="lainnya"><button class="lainnya-tombol" type="button" aria-expanded="false" aria-haspopup="true">Lainnya ▾</button>
+          <div class="menu-jatuh lainnya-menu" hidden>${lainnya.map(tautan).join("")}</div></div>` : ""}
+      </nav>
       <div class="kepala-kanan">
-        <nav class="navigasi" aria-label="Navigasi utama">
-          ${HALAMAN.map(([h, n]) => `<a href="${h}"${h === aktif ? ' aria-current="page"' : ""}>${n}</a>`).join("")}
-        </nav>
-        <button class="tombol tombol-tema" type="button" aria-label="Ganti tampilan terang atau gelap">${temaGelap() ? "Mode terang" : "Mode gelap"}</button>
+        <span class="status-mini" id="status-mini" hidden><i></i><span></span></span>
+        ${pengguna ? `<div class="akun"><button class="akun-tombol" type="button" aria-expanded="false" aria-haspopup="true">
+            <span class="avatar">${esc((pengguna.nama || "?").trim().charAt(0).toUpperCase())}</span>
+            <span class="akun-nama">${esc(pengguna.nama)}<small>${esc(PERAN[peran].nama)}</small></span></button>
+          <div class="menu-jatuh" hidden>
+            <div class="kepala-menu"><b>${esc(pengguna.nama)}</b><span>${esc(PERAN[peran].nama)}</span></div>
+            <button type="button" data-keluar>Keluar</button>
+          </div></div>`
+        : `<a class="tombol utama-aksi tombol-masuk" href="masuk.html?lanjut=${encodeURIComponent(aktif)}">Masuk</a>`}
       </div>
     </div>`;
   document.body.prepend(kepala);
-  // di layar sempit navigasi dapat digulir: pastikan halaman aktif terlihat
+
+  // menu tarik-turun: buka/tutup, tutup saat klik di luar atau tekan Esc
+  const pasangMenu = (tombol) => {
+    const menu = tombol.nextElementSibling;
+    tombol.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const buka = menu.hidden;
+      document.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; });
+      menu.hidden = !buka;
+      tombol.setAttribute("aria-expanded", String(buka));
+    });
+  };
+  kepala.querySelectorAll(".akun-tombol, .lainnya-tombol").forEach(pasangMenu);
+  document.addEventListener("click", () => kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }); });
+  kepala.querySelector("[data-keluar]")?.addEventListener("click", async () => { await keluar(); location.href = "index.html"; });
   const navAktif = kepala.querySelector('.navigasi [aria-current="page"]');
   const navEl = navAktif?.parentElement;
   if (navEl && navAktif.offsetLeft + navAktif.offsetWidth > navEl.clientWidth) navEl.scrollLeft = Math.max(0, navAktif.offsetLeft - 16);
-  const tombolTema = kepala.querySelector(".tombol-tema");
-  tombolTema.addEventListener("click", () => {
-    const baru = temaGelap() ? "light" : "dark";
-    if (baru === "dark") document.documentElement.dataset.theme = "dark";
-    else delete document.documentElement.dataset.theme;
-    simpanTema(baru);
-    tombolTema.textContent = temaGelap() ? "Mode terang" : "Mode gelap";
-    aturGayaGrafik();
-    pendengarTema.forEach((f) => f());
-  });
 
   const kaki = document.createElement("footer");
   kaki.className = "kaki";
   document.body.append(kaki);
+  const pasangTema = () => {
+    kaki.querySelectorAll("[data-tema]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tema === modeTema())));
+  };
+
+  if (izin === "tolak") {
+    document.querySelector("main")?.replaceChildren();
+    const ikonKunci = await ikonUI("gembokPerisai", 26);
+    document.querySelector("main").innerHTML = `<section class="kartu tolak"><span class="ind-ikon merah">${ikonKunci}</span>
+      <h1>Halaman ini bukan untuk peran Anda</h1><p>Anda masuk sebagai ${esc(PERAN[peran].nama)}. Gunakan menu di atas.</p>
+      <a class="tombol utama-aksi" href="index.html">Ke beranda saya</a></section>`;
+  }
 
   let meta = null;
   try {
     meta = await muatMeta();
   } catch (e) {
-    kaki.innerHTML = `<p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline (GitHub Actions) terlebih dahulu.</p>`;
-    return null;
+    kaki.innerHTML = `<p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline di GitHub Actions terlebih dahulu.</p>`;
+    document.body.classList.add("siap");
+    return izin === "tolak" ? tundaSelamanya() : null;
   }
   const umurJam = (Date.now() - new Date(meta.dibuat).getTime()) / 3.6e6;
-  const telemetri = document.createElement("div");
-  telemetri.className = "telemetri";
-  telemetri.setAttribute("aria-label", "Status sistem");
-  telemetri.innerHTML = `<div>
-    <span class="${umurJam < 36 ? "hidup" : ""}">${umurJam < 36 ? "Sistem aktif" : `<b style="color:var(--serious)">Belum diperbarui ${Math.round(umurJam / 24)} hari</b>`}</span>
-    <span>Data <b>${esc(tgl(meta.tanggal_data_terakhir))}</b></span>
-    <span>Diperbarui <b>${esc(waktu(meta.dibuat))} WIB</b></span>
-    <span class="opsional">Observasi <b>${angka(meta.jumlah?.observasi_dipakai)}</b></span>
-    <span class="opsional">Wilayah <b>${esc(meta.wilayah_target?.nama || "")}</b></span>
-    <span class="opsional">Pipeline <b>v${esc(meta.versi)}</b></span>
-    ${meta.mode_demo ? "<span><b style=\"color:var(--demo-ink)\">Mode demo</b></span>" : ""}
-  </div>`;
-  kepala.after(telemetri);
+  const status = kepala.querySelector("#status-mini");
+  status.hidden = false;
+  status.classList.toggle("tua", umurJam >= 36);
+  status.title = `Data terakhir ${tgl(meta.tanggal_data_terakhir)} · versi ${meta.versi}`;
+  status.lastElementChild.textContent = umurJam < 36 ? `Diperbarui ${waktu(meta.dibuat)}` : `Belum diperbarui ${Math.round(umurJam / 24)} hari`;
   if (meta.mode_demo) {
     const b = document.createElement("div");
-    b.className = "banner-demo";
+    b.className = "pita-contoh";
     b.setAttribute("role", "status");
-    b.innerHTML = `<div><strong>Mode demo.</strong> Angka di halaman ini masih data contoh untuk menguji sistem, bukan angka resmi. Begitu berkas harga pertama masuk ke <code>data/masuk/harga</code>, data asli langsung menggantikannya.</div>`;
-    telemetri.after(b);
+    b.innerHTML = `<b>Data contoh.</b> Angka di sini masih untuk uji coba, bukan angka resmi.`;
+    kepala.after(b);
   }
-  const tautanRun = meta.url_run ? ` · <a href="${esc(meta.url_run)}">log proses</a>` : "";
-  const tautanRepo = meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">repositori</a>` : "";
   kaki.innerHTML = `
-    <p><strong style="color:var(--ink-2)">${NAMA_SISTEM}</strong> · BPS Kabupaten Bengkulu Tengah · Diperbarui ${esc(waktu(meta.dibuat))} WIB · data terakhir ${esc(tgl(meta.tanggal_data_terakhir))} · versi pipeline ${esc(meta.versi)}${meta.commit ? " · commit " + esc(meta.commit.slice(0, 7)) : ""}${tautanRun}${tautanRepo}</p>
-    <p>Sinyal dan proyeksi di sini membantu analisis, tetapi tetap perlu dicek petugas sebelum dipakai untuk mengambil keputusan. Angka di dashboard ini bukan rilis resmi BPS.</p>
-    <p>Sumber: BPS Kabupaten Bengkulu Tengah (pencatatan harga pasar), Pemda (bila tersedia), cuaca © Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
-    ${tautanLayanan(meta.layanan)}`;
+    <div class="kaki-teks">
+      <p><strong>${NAMA_SISTEM}</strong> · BPS Kabupaten Bengkulu Tengah${meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">Repositori</a>` : ""}</p>
+      <p>Angka di sini membantu analisis dan bukan rilis resmi BPS. ${tautanLayanan(meta.layanan)}</p>
+      <p>Sumber: BPS, Pemda, cuaca Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
+    </div>
+    <div class="pilih-tema"><span>Tampilan</span><div class="segmen" role="group" aria-label="Tampilan terang atau gelap">
+      <button type="button" data-tema="auto">Otomatis</button><button type="button" data-tema="light">Terang</button><button type="button" data-tema="dark">Gelap</button>
+    </div></div>`;
+  kaki.querySelectorAll("[data-tema]").forEach((b) => b.addEventListener("click", () => { setTema(b.dataset.tema); pasangTema(); }));
+  pasangTema();
   // Grafik kanvas baru memakai huruf Plex setelah berkasnya termuat.
   try { await document.fonts?.ready; } catch { /* abaikan */ }
-  return meta;
+  document.body.classList.add("siap");
+  return izin === "tolak" ? tundaSelamanya() : meta;
 }
 
 function tautanLayanan(l) {
   if (!l) return "";
   const t = [];
-  if (l.url_pengaduan_eksternal) t.push(`<a href="${esc(l.url_pengaduan_eksternal)}">Pengaduan (WhatsApp/PST)</a>`);
-  if (l.url_pengaduan) t.push(`<a href="${esc(l.url_pengaduan)}">Laporkan data tidak sesuai</a>`);
+  if (l.url_pengaduan_eksternal) t.push(`<a href="${esc(l.url_pengaduan_eksternal)}">Pengaduan</a>`);
+  else if (l.url_pengaduan) t.push(`<a href="${esc(l.url_pengaduan)}">Laporkan data</a>`);
   if (l.url_survei_eksternal) t.push(`<a href="${esc(l.url_survei_eksternal)}">Survei kepuasan</a>`);
   else if (l.url_survei) t.push(`<a href="${esc(l.url_survei)}">Survei kepuasan</a>`);
-  return t.length ? `<p>Layanan: ${t.join(" · ")}</p>` : "";
+  return t.join(" · ");
 }
 
 export function tampilkanGalat(wadah, e) {

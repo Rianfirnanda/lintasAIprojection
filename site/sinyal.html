@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sinyal Harga Pangan · Lintas AI Projection</title>
+  <title>Peringatan Harga · Lintas AI Projection</title>
   <meta name="description" content="Daftar sinyal harga (anomali, proyeksi, hari raya, keterlambatan data, drift) dan status tindak lanjut TPID.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -14,12 +14,12 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Sinyal &amp; tindak lanjut</h1>
-      <p>Sinyal di sini adalah petunjuk awal yang masih perlu dicek di lapangan. Statusnya diperbarui lewat GitHub Issues atau buku tindak lanjut.</p>
+      <h1>Peringatan Harga</h1>
+      <p>Harga yang perlu dicek di lapangan.</p>
     </div>
   </div>
 
-  <section class="grid kpi-grid" id="kpi"></section>
+  <div class="ind-baris" id="kpi"></div>
 
   <section class="kartu">
     <div class="baris-kontrol" style="margin-bottom:12px">
@@ -36,46 +36,44 @@
     <ul class="daftar-sinyal" id="daftar"></ul>
   </section>
 
-  <div class="grid dua-sama">
-    <section class="kartu">
-      <h2>Cara memperbarui status sinyal</h2>
+  <section class="kartu" id="catat">
+    <div class="kartu-kepala"><div><h2>Catat tindak lanjut</h2><p>Klik "catat tindak lanjut" pada peringatan, lalu isi di sini.</p></div></div>
+    <form id="form-tl" class="form-grid">
+      <label>ID peringatan<input type="text" id="tl-id" placeholder="klik 'catat' pada peringatan" required></label>
+      <label>Status
+        <select id="tl-status">
+          <option value="perlu_verifikasi">Perlu verifikasi</option>
+          <option value="terverifikasi">Terverifikasi</option>
+          <option value="false_alarm">False alarm</option>
+          <option value="ditindaklanjuti">Ditindaklanjuti</option>
+          <option value="selesai">Selesai</option>
+          <option value="anomali_terlewat">Anomali terlewat (tidak terdeteksi)</option>
+        </select>
+      </label>
+      <label>Nama petugas atau analis<input type="text" id="tl-petugas" required></label>
+      <label>Kode varian (hanya anomali terlewat)<input type="text" id="tl-varian" placeholder="mis. CRW02"></label>
+      <label>Tanggal kejadian (hanya anomali terlewat)<input type="date" id="tl-kejadian"></label>
+      <label style="grid-column:1/-1">Catatan temuan atau tindakan<textarea id="tl-catatan" rows="2"></textarea></label>
+      <div style="grid-column:1/-1" class="baris-kontrol">
+        <button class="tombol utama-aksi" type="submit">Salin baris CSV</button>
+        <span class="meta-kecil" id="tl-hasil"></span>
+      </div>
+    </form>
+    <details style="margin-top:14px"><summary>Cara memperbarui status</summary>
       <div class="prosa" style="margin-top:8px;font-size:0.9rem">
         <ol>
-          <li><strong>Lewat GitHub Issues (disarankan).</strong> Sinyal anomali berkeparahan tinggi otomatis dibuatkan issue berlabel <code>sinyal-harga</code>. Pasang satu label status: <code>status: terverifikasi</code>, <code>status: false-alarm</code>, <code>status: ditindaklanjuti</code>, atau <code>status: selesai</code>. Menutup issue = selesai.</li>
-          <li><strong>Lewat buku tindak lanjut.</strong> Buat baris CSV dengan formulir di samping, lalu tambahkan ke berkas di <code>data/tindak_lanjut/</code> (unggah lewat GitHub).</li>
+          <li><strong>Lewat GitHub Issues (disarankan).</strong> Peringatan tinggi otomatis dibuatkan issue berlabel <code>sinyal-harga</code>. Pasang satu label status: <code>status: terverifikasi</code>, <code>status: false-alarm</code>, <code>status: ditindaklanjuti</code>, atau <code>status: selesai</code>. Menutup issue berarti selesai.</li>
+          <li><strong>Lewat buku tindak lanjut.</strong> Buat baris CSV dengan formulir di atas, lalu tambahkan ke berkas di <code>data/tindak_lanjut/</code>.</li>
         </ol>
-        <p>Label <em>terverifikasi</em> dan <em>false alarm</em> menjadi dasar pengukuran precision/recall deteksi anomali di halaman <a href="model.html">Mutu Model</a>.</p>
+        <p>Label <em>terverifikasi</em> dan <em>false alarm</em> dipakai untuk menghitung precision dan recall di halaman <a href="model.html">Akurasi</a>.</p>
+        <p class="meta-kecil">Header berkas: <code>id_sinyal,status,catatan,petugas,tanggal,kode_varian,tanggal_kejadian</code></p>
       </div>
-    </section>
-    <section class="kartu">
-      <h2>Buat baris buku tindak lanjut</h2>
-      <form id="form-tl" class="form-grid" style="margin-top:10px">
-        <label>ID sinyal<input type="text" id="tl-id" placeholder="klik 'catat' pada sinyal" required></label>
-        <label>Status
-          <select id="tl-status">
-            <option value="perlu_verifikasi">Perlu verifikasi</option>
-            <option value="terverifikasi">Terverifikasi</option>
-            <option value="false_alarm">False alarm</option>
-            <option value="ditindaklanjuti">Ditindaklanjuti</option>
-            <option value="selesai">Selesai</option>
-            <option value="anomali_terlewat">Anomali terlewat (tidak terdeteksi)</option>
-          </select>
-        </label>
-        <label>Petugas/analis<input type="text" id="tl-petugas" required></label>
-        <label>Kode varian (khusus anomali terlewat)<input type="text" id="tl-varian" placeholder="mis. CRW02"></label>
-        <label>Tanggal kejadian (khusus anomali terlewat)<input type="date" id="tl-kejadian"></label>
-        <label style="grid-column:1/-1">Catatan temuan/tindakan<textarea id="tl-catatan" rows="2"></textarea></label>
-        <div style="grid-column:1/-1" class="baris-kontrol">
-          <button class="tombol utama-aksi" type="submit">Salin baris CSV</button>
-          <span class="meta-kecil" id="tl-hasil"></span>
-        </div>
-      </form>
-      <p class="meta-kecil" style="margin-top:8px">Header berkas: <code>id_sinyal,status,catatan,petugas,tanggal,kode_varian,tanggal_kejadian</code></p>
-    </section>
-  </div>
+    </details>
+  </section>
 </main>
 
 <script type="module">
+import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, lencanaKeparahan, lencanaStatus, JENIS_SINYAL, STATUS_SINYAL,
          tampilkanGalat, keCSV } from "./assets/app.js";
 
@@ -88,12 +86,13 @@ try {
   throw e;
 }
 const r = data.ringkasan;
+const pesanGithub = /nonaktif|dilewati/.test(data.pesan_github || "");
 document.getElementById("kpi").innerHTML = [
-  ["Sinyal aktif", angka(r.aktif), `${r.per_keparahan.tinggi || 0} tinggi · ${r.per_keparahan.sedang || 0} sedang`],
-  ["Anomali (60 hari)", angka(r.per_jenis.anomali_harga || 0), `${(r.status_anomali.false_alarm || 0)} false alarm`],
-  ["Prioritas ditindaklanjuti", persen(r.prioritas_ditindaklanjuti_persen, 0), `target ≥ ${r.target_tindak_lanjut_persen}%`],
-  ["Sinkronisasi GitHub", "", esc(data.pesan_github)],
-].map(([l, n, s]) => `<div class="kartu kpi"><div class="label">${l}</div>${n ? `<div class="nilai">${n}</div>` : ""}<div class="sub">${s}</div></div>`).join("");
+  ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(r.aktif), sub: `${r.per_keparahan.tinggi || 0} tinggi · ${r.per_keparahan.sedang || 0} sedang` }),
+  ind({ i: "peringatan", warna: "merah", label: "Harga janggal", nilai: angka(r.per_jenis.anomali_harga || 0), sub: `60 hari · ${r.status_anomali.false_alarm || 0} false alarm` }),
+  ind({ i: "centang", warna: "hijau", label: "Sudah ditindaklanjuti", nilai: persen(r.prioritas_ditindaklanjuti_persen, 0), sub: `target ${r.target_tindak_lanjut_persen}%`, meter: r.prioritas_ditindaklanjuti_persen ?? 0, meterWarna: "hijau" }),
+  ind({ i: "sinkron", warna: pesanGithub ? "abu" : "hijau", label: "GitHub", nilai: pesanGithub ? "Mati" : "Aktif", sub: pesanGithub ? "belum tersambung" : "issue ikut diperbarui" }),
+].join("");
 
 const fJenis = document.getElementById("f-jenis");
 Object.entries(JENIS_SINYAL).forEach(([k, v]) => fJenis.insertAdjacentHTML("beforeend", `<option value="${k}">${v}</option>`));

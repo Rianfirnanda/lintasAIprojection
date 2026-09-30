@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mutu Model AI · Lintas AI Projection</title>
+  <title>Akurasi Prakiraan · Lintas AI Projection</title>
   <meta name="description" content="Evaluasi model proyeksi harga (rolling-origin backtesting), interval prediksi, deteksi anomali, dan drift terhadap target Rancangan Aksi Perubahan.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -14,12 +14,12 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Mutu model</h1>
-      <p>Setiap model diuji dulu dengan data masa lalu (rolling-origin backtesting). Model hanya dipakai kalau hasilnya lebih baik dari metode naif; kalau tidak, sistem memakai metode naif.</p>
+      <h1>Akurasi Prakiraan</h1>
+      <p>Seberapa tepat prakiraan harga saat diuji dengan data lama (Mutu Model). Kalau tidak lebih baik dari cara sederhana, cara sederhana yang dipakai.</p>
     </div>
   </div>
 
-  <section class="grid kpi-grid" id="kpi"></section>
+  <div class="ind-baris" id="kpi"></div>
 
   <div class="grid dua-sama">
     <section class="kartu">
@@ -68,6 +68,7 @@
 </main>
 
 <script type="module">
+import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, persen, angka, rp, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
 
 await pasangKerangka("model.html");
@@ -79,12 +80,13 @@ try {
   throw e;
 }
 const r = m.ringkasan, t = m.target, ev = m.evaluasi_anomali;
+const dipakai = Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(k.replace("_", " "))}`).join(" · ") || "–";
 document.getElementById("kpi").innerHTML = [
-  ["Varian dinilai", angka(r.varian_dinilai), "dengan riwayat ≥ minimal"],
-  ["sMAPE median", r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, "model terpilih, horizon 1–14 hari"],
-  ["Unggul ≥10% dari naif", `${r.lolos_smape}/${r.varian_dinilai}`, "varian"],
-  ["Model dipakai", Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(k.replace("_", " "))}`).join(" · ") || "–", ""],
-].map(([l, n, s]) => `<div class="kartu kpi"><div class="label">${l}</div><div class="nilai" style="font-size:${n.length > 12 ? "1rem" : ""}">${n}</div><div class="sub">${s}</div></div>`).join("");
+  ind({ i: "kubus", label: "Varian diuji", nilai: angka(r.varian_dinilai), sub: "punya riwayat cukup" }),
+  ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: "sMAPE, 1 sampai 14 hari" }),
+  ind({ i: "tren", warna: "hijau", label: "Lebih baik dari cara sederhana", nilai: `${r.lolos_smape}/${r.varian_dinilai}`, sub: "unggul minimal 10%", meter: r.varian_dinilai ? r.lolos_smape / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
+  ind({ i: "otak", label: "Model dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${dipakai}</span>`, sub: "per varian" }),
+].join("");
 
 const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum dapat dinilai</span>'
   : ok ? '<span class="lencana baik">memenuhi</span>' : '<span class="lencana sedang">belum memenuhi</span>';

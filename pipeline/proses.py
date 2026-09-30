@@ -17,7 +17,7 @@ from zoneinfo import ZoneInfo
 
 import numpy as np
 
-from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, layanan, masukan, notifikasi,
+from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, layanan, masukan, notifikasi, pengguna,
                sinyal as modul_sinyal, tindak_lanjut)
 from .konfigurasi import Konfigurasi
 
@@ -462,5 +462,16 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     meta["batas_wilayah"] = batas.exists()
     if batas.exists():
         shutil.copyfile(batas, keluaran / "batas_wilayah.geojson")
+    # Login per peran: Firebase bila config/firebase.json terisi, jika tidak akun contoh dari config/pengguna.json.
+    fb = pengguna.muat(konf.akar / "config" / "firebase.json")
+    akun = pengguna.muat(konf.akar / "config" / "pengguna.json")
+    if pengguna.firebase_aktif(fb):
+        meta["login"] = "firebase"
+        _tulis_json(keluaran / "firebase.json", {"konfigurasi": fb["konfigurasi"]})
+    elif akun and not pengguna.periksa(akun):
+        meta["login"] = "contoh"
+        _tulis_json(keluaran / "pengguna.json", {"garam": akun["garam"], "akun": akun["akun"]})
+    else:
+        meta["login"] = "tanpa"
     _tulis_json(keluaran / "meta.json", meta)
     return {"meta": meta, "kpi": ringkasan["kpi"], "evaluasi_anomali": evaluasi, "ringkasan_model": ringkasan_model}

@@ -1,0 +1,9 @@
+{
+  "catatan": "Salin berkas ini menjadi firebase.json setelah proyek Firebase dibuat, lalu isi konfigurasi web dari Firebase Console. Login otomatis berpindah dari akun contoh ke Firebase Authentication. Peran tiap pengguna disimpan di Firestore: koleksi 'pengguna', dokumen berisi uid, dengan kolom 'peran' dan 'nama'.",
+  "konfigurasi": {
+    "apiKey": "",
+    "authDomain": "",
+    "projectId": "",
+    "appId": ""
+  }
+}

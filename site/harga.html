@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Harga per Varian · Lintas AI Projection</title>
+  <title>Harga Bahan Pokok · Lintas AI Projection</title>
   <meta name="description" content="Rincian harga terakhir dan perubahan harga 21 varian pangan di Kabupaten Bengkulu Tengah.">
   <meta name="theme-color" content="#1f5fae">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -14,19 +14,21 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Harga per varian</h1>
-      <p>Harga terakhir dibanding sehari, seminggu, sebulan, tiga bulan, enam bulan, dan setahun sebelumnya. Klik baris untuk membuka grafiknya di dashboard.</p>
+      <h1>Harga Bahan Pokok</h1>
+      <p>Perubahan harga dari hari ke tahun. Ketuk baris untuk melihat grafiknya.</p>
     </div>
-    <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh harga harian (CSV)</a>
+    <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh CSV</a>
   </div>
+
+  <div class="ind-baris" id="kpi"></div>
 
   <section class="kartu" aria-labelledby="judul-tabel">
     <div class="kartu-kepala">
-      <div><h2 id="judul-tabel">Perbandingan perubahan harga</h2></div>
+      <div><h2 id="judul-tabel">Semua varian</h2></div>
       <div class="legenda" style="margin:0">
-        <span><span class="kunci-pita" style="background:var(--up-wash-strong)"></span>Naik ≥ 2× ambang</span>
-        <span><span class="kunci-pita" style="background:var(--up-wash)"></span>Naik ≥ ambang</span>
-        <span><span class="kunci-pita" style="background:var(--down-wash)"></span>Turun ≥ ambang</span>
+        <span><span class="kunci-pita" style="background:var(--up-wash-strong)"></span>Naik tajam</span>
+        <span><span class="kunci-pita" style="background:var(--up-wash)"></span>Naik</span>
+        <span><span class="kunci-pita" style="background:var(--down-wash)"></span>Turun</span>
       </div>
     </div>
     <div class="gulir-tabel">
@@ -46,6 +48,7 @@
 </main>
 
 <script type="module">
+import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat } from "./assets/app.js";
 
 const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
@@ -59,6 +62,15 @@ function sel(x, kelompok) {
 try {
   const [ringkasan, master] = await Promise.all([muatJSON("ringkasan.json"), muatJSON("master.json")]);
   const varian = ringkasan.varian;
+  const arah = (v) => { const b = v.perubahan?.bulanan; return b === null || b === undefined ? "datar" : b > 0.5 ? "naik" : b < -0.5 ? "turun" : "datar"; };
+  const nNaik = varian.filter((v) => arah(v) === "naik").length, nTurun = varian.filter((v) => arah(v) === "turun").length;
+  const total = varian.length || 1;
+  document.getElementById("kpi").innerHTML = [
+    ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: nNaik, kecil: "varian", sub: "dibanding bulan lalu", meter: nNaik / total * 100, meterWarna: "merah", warnaNilai: "merah" }),
+    ind({ i: "tren", warna: "hijau", label: "Harga turun", nilai: nTurun, kecil: "varian", sub: "dibanding bulan lalu", meter: nTurun / total * 100, meterWarna: "hijau", warnaNilai: "hijau" }),
+    ind({ i: "kubus", label: "Harga stabil", nilai: varian.length - nNaik - nTurun, kecil: "varian", sub: "perubahan kecil", meter: (varian.length - nNaik - nTurun) / total * 100 }),
+    ind({ i: "peringatan", warna: "oranye", label: "Diwaspadai", nilai: varian.filter((v) => v.sinyal).length, kecil: "varian", sub: "ada peringatan aktif", href: "sinyal.html" }),
+  ].join("");
   const tbody = document.querySelector("#tabel-perubahan tbody");
   let html = "";
   for (const k of master.komoditas) {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Input Harga Pasar · Lintas AI Projection</title>
+  <title>Catat Harga · Lintas AI Projection</title>
   <meta name="description" content="Formulir pencatatan harga pasar yang tetap berfungsi tanpa sinyal (luring-ke-daring) untuk petugas BPS di wilayah blank spot.">
   <meta name="theme-color" content="#0e1114">
   <link rel="manifest" href="manifest.webmanifest">
@@ -15,35 +15,37 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Input harga pasar (luring-ke-daring)</h1>
-      <p>Cukup buka halaman ini sekali saat ada sinyal, setelah itu formulir tetap bisa dipakai tanpa internet. Data tersimpan di perangkat sampai Anda kirim.</p>
+      <h1>Catat Harga</h1>
+      <p>Bisa dipakai tanpa internet. Data tersimpan di perangkat sampai Anda kirim.</p>
     </div>
     <span class="status-koneksi" id="status-koneksi"></span>
   </div>
 
   <div class="pesan peringatan" style="margin-bottom:14px">
-    Jangan mencatat nama, NIK, nomor HP, atau alamat pedagang. Gunakan kode responden anonim (mis. R1, R2). Berkas yang memuat kolom data pribadi akan ditolak sistem.
+    Jangan catat nama, NIK, nomor HP, atau alamat pedagang. Pakai kode anonim seperti R1 atau R2.
   </div>
+
+  <div class="ind-baris" id="kpi"></div>
 
   <section class="kartu">
     <form id="form-kepala" class="form-grid">
       <label>Tanggal pencatatan<input type="date" id="tanggal" required></label>
       <label>Pasar<select id="pasar" required></select></label>
       <label>Kode petugas<input type="text" id="petugas" placeholder="mis. PTG01" required autocomplete="off"></label>
-      <label>Kode responden (anonim)<input type="text" id="responden" placeholder="mis. R1" autocomplete="off"></label>
+      <label>Kode pedagang (anonim)<input type="text" id="responden" placeholder="mis. R1" autocomplete="off"></label>
       <label>Sumber<select id="sumber"><option value="PSR-ENUM">PSR-ENUM: pencatatan petugas pasar</option><option value="BPS-HRG">BPS-HRG: survei harga BPS</option><option value="PMD-DISDAG">PMD-DISDAG: Dinas Perdagangan</option></select></label>
     </form>
   </section>
 
   <section class="kartu">
     <div class="kartu-kepala">
-      <div><h2>Harga per varian</h2><p>Isi harga eceran per satuan. Kosongkan varian yang tidak tersedia. Peringatan muncul bila harga di luar batas kewajaran.</p></div>
+      <div><h2>Harga hari ini</h2><p>Isi harga eceran. Kosongkan yang tidak dijual. Kami beri tanda kalau harganya tidak wajar.</p></div>
     </div>
     <div class="gulir-tabel">
       <table class="tabel-input" id="tabel-input"><thead><tr><th>Varian</th><th>Harga (Rp)</th><th>Satuan</th><th>Catatan</th></tr></thead><tbody></tbody></table>
     </div>
     <div class="baris-kontrol" style="margin-top:12px">
-      <button class="tombol utama-aksi" id="simpan" type="button">Simpan ke antrean perangkat</button>
+      <button class="tombol utama-aksi" id="simpan" type="button">Simpan</button>
       <button class="tombol" id="bersihkan" type="button">Kosongkan formulir</button>
       <span class="meta-kecil" id="hasil-simpan" role="status"></span>
     </div>
@@ -51,27 +53,27 @@
 
   <section class="kartu">
     <div class="kartu-kepala">
-      <div><h2>Antrean di perangkat ini</h2><p id="info-antrean"></p></div>
+      <div><h2>Menunggu dikirim</h2><p id="info-antrean"></p></div>
       <div class="baris-kontrol">
         <button class="tombol utama-aksi" id="unduh" type="button">Unduh CSV</button>
-        <button class="tombol" id="bagikan" type="button">Bagikan (WhatsApp/email)</button>
-        <button class="tombol" id="hapus-terkirim" type="button">Hapus yang sudah dikirim</button>
+        <button class="tombol" id="bagikan" type="button">Bagikan</button>
+        <button class="tombol" id="hapus-terkirim" type="button">Bersihkan yang terkirim</button>
       </div>
     </div>
     <div class="gulir-tabel" style="max-height:360px"><table id="tabel-antrean"><thead><tr><th>Tanggal</th><th>Pasar</th><th>Varian</th><th class="angka">Harga</th><th>Satuan</th><th>Dikirim</th></tr></thead><tbody></tbody></table></div>
-    <div class="prosa" style="margin-top:12px;font-size:0.88rem">
-      <h3>Cara mengirim ke sistem</h3>
-      <ol>
-        <li>Saat ada sinyal, tekan <strong>Unduh CSV</strong> (atau <strong>Bagikan</strong> ke operator).</li>
-        <li>Operator mengunggah berkas ke folder <code>data/masuk/harga/</code> di repositori: <a id="tautan-unggah" href="#">buka halaman unggah</a> → seret berkas → <em>Commit changes</em>.</li>
-        <li>Pipeline otomatis berjalan: berkas divalidasi, masuk quality gate, dan dashboard diperbarui dalam beberapa menit.</li>
-        <li>Tekan <strong>Hapus yang sudah dikirim</strong> setelah operator mengonfirmasi.</li>
+    <details style="margin-top:12px"><summary>Cara mengirim ke sistem</summary>
+      <ol class="langkah-daftar">
+        <li>Tekan <strong>Unduh CSV</strong>, atau <strong>Bagikan</strong> ke operator lewat WhatsApp atau email.</li>
+        <li>Operator mengunggah berkasnya di <a id="tautan-unggah" href="#">halaman unggah</a>, lalu menekan <em>Commit changes</em>.</li>
+        <li>Sistem memeriksa data dan memperbarui dashboard dalam beberapa menit.</li>
+        <li>Setelah operator memastikan data masuk, tekan <strong>Bersihkan yang terkirim</strong>.</li>
       </ol>
-    </div>
+    </details>
   </section>
 </main>
 
 <script type="module">
+import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, tgl, keCSV, unduhTeks } from "./assets/app.js";
 
 const KUNCI_ANTREAN = "antrean_harga_v1";
@@ -93,7 +95,7 @@ function tulis(kunci, nilai) {
 
 function statusKoneksi() {
   document.getElementById("status-koneksi").innerHTML = navigator.onLine
-    ? '<span class="lencana baik">daring</span>' : '<span class="lencana rendah">luring, data tetap tersimpan di perangkat</span>';
+    ? '<span class="lencana baik">Ada internet</span>' : '<span class="lencana rendah">Tanpa internet, data tetap aman di perangkat</span>';
 }
 window.addEventListener("online", statusKoneksi);
 window.addEventListener("offline", statusKoneksi);
@@ -254,10 +256,26 @@ document.getElementById("hapus-terkirim").addEventListener("click", () => {
   renderAntrean();
 });
 
+function renderIndikator() {
+  const antrean = baca(KUNCI_ANTREAN, []);
+  const belum = antrean.filter((b) => !b._dikirim).length;
+  const terisi = [...tbody.querySelectorAll("tr")].filter((tr) => tr.querySelector("input").value.trim()).length;
+  const total = tbody.querySelectorAll("tr").length;
+  document.getElementById("kpi").innerHTML = [
+    ind({ i: "ponsel", warna: belum ? "oranye" : "hijau", label: "Belum terkirim", nilai: belum, kecil: "harga", sub: belum ? "tersimpan di perangkat ini" : "semua sudah dikirim", warnaNilai: belum ? "oranye" : "hijau" }),
+    ind({ i: "toko", label: "Terisi hari ini", nilai: `${terisi}/${total}`, sub: "varian", meter: total ? terisi / total * 100 : 0 }),
+    ind({ i: "awan", warna: navigator.onLine ? "hijau" : "oranye", label: "Sambungan", nilai: navigator.onLine ? "Online" : "Offline", sub: navigator.onLine ? "siap kirim" : "tetap bisa mencatat" }),
+  ].join("");
+}
+tbody.addEventListener("input", renderIndikator);
+window.addEventListener("online", renderIndikator);
+window.addEventListener("offline", renderIndikator);
+
 function renderAntrean() {
   const antrean = baca(KUNCI_ANTREAN, []);
   const belum = antrean.filter((b) => !b._dikirim).length;
   document.getElementById("info-antrean").textContent = `${antrean.length} baris tersimpan · ${belum} belum dikirim`;
+  renderIndikator();
   document.querySelector("#tabel-antrean tbody").innerHTML = antrean.slice().reverse().slice(0, 200).map((b) => `<tr>
     <td>${esc(tgl(b.tanggal))}</td><td>${esc(namaPasar[b.kode_pasar] || b.kode_pasar)}</td><td>${esc(namaVarian[b.kode_varian] || b.kode_varian)}</td>
     <td class="angka">${rp(b.harga)}</td><td>${esc(b.satuan)}</td><td>${b._dikirim ? '<span class="lencana baik">ya</span>' : '<span class="lencana rendah">belum</span>'}</td></tr>`).join("")
