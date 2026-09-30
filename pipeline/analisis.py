@@ -151,10 +151,10 @@ MODEL: dict[str, Callable] = {
 }
 
 NAMA_MODEL = {
-    "naif": "Naif (harga terakhir, sebagai pembanding)",
-    "rata7": "Rerata bergerak 7 hari",
-    "holt_redam": "Holt damped trend (log harga)",
-    "hari_raya": "Naif + profil hari raya historis",
+    "naif": "Harga terakhir (cara paling sederhana, jadi pembanding)",
+    "rata7": "Rata-rata 7 hari terakhir",
+    "holt_redam": "Tren yang makin melandai",
+    "hari_raya": "Harga terakhir ditambah pola hari raya sebelumnya",
 }
 
 

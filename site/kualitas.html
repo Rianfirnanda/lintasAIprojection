@@ -23,48 +23,48 @@
 
   <section class="kartu">
     <div class="kartu-kepala">
-      <div><h2>Kelengkapan &amp; ketepatan waktu per pasar</h2><p id="periode-ketepatan"></p></div>
+      <div><h2>Kelengkapan dan ketepatan waktu tiap pasar</h2><p id="periode-ketepatan"></p></div>
     </div>
     <div class="gulir-tabel"><table id="tabel-ketepatan"><thead><tr>
-      <th>Pasar</th><th class="angka">Diharapkan</th><th class="angka">Diterima</th><th class="angka">Kelengkapan</th>
+      <th>Pasar</th><th class="angka">Seharusnya masuk</th><th class="angka">Sudah masuk</th><th class="angka">Kelengkapan</th>
       <th class="angka">Tepat waktu*</th><th>Data terakhir</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
-    <p class="meta-kecil" style="margin-top:6px">*Dihitung dari observasi yang memiliki <code>waktu_input</code> (otomatis terisi bila memakai formulir Input Harga). Batas tepat waktu: pukul <span id="jam-batas"></span> WIB pada hari pencatatan.</p>
+    <p class="meta-kecil" style="margin-top:6px">*Dihitung dari data yang punya catatan waktu pengisian (otomatis ada kalau memakai halaman Catat Harga). Dianggap tepat waktu kalau masuk sebelum pukul <span id="jam-batas"></span> WIB di hari pencatatan.</p>
   </section>
 
   <section class="kartu">
     <div class="kartu-kepala">
       <div>
-        <h2>Antrean validasi manusia</h2>
-        <p>Pilih keputusan per baris, lalu unduh berkas keputusan dan unggah ke <code>data/validasi/</code>. Keputusan diterapkan pada proses berikutnya.</p>
+        <h2>Menunggu keputusan</h2>
+        <p>Pilih terima atau tolak di tiap baris, lalu unduh berkasnya dan unggah ke <code>data/validasi/</code>. Keputusan dipakai pada pembaruan berikutnya.</p>
       </div>
       <div class="baris-kontrol">
-        <input type="text" id="validator" placeholder="Nama/kode validator" aria-label="Nama validator">
+        <input type="text" id="validator" placeholder="Nama atau kode pemeriksa" aria-label="Nama validator">
         <button class="tombol utama-aksi" id="unduh-keputusan" type="button" disabled>Unduh berkas keputusan</button>
       </div>
     </div>
     <div class="gulir-tabel" style="max-height:520px"><table id="tabel-validasi"><thead><tr>
-      <th>Tanggal</th><th>Pasar</th><th>Varian</th><th class="angka">Harga (satuan dasar)</th><th class="angka">Asli</th><th>Tanda</th>
+      <th>Tanggal</th><th>Pasar</th><th>Varian</th><th class="angka">Harga per kg atau liter</th><th class="angka">Harga yang ditulis</th><th>Alasan ditahan</th>
       <th>Berkas</th><th>Keputusan</th><th>Alasan</th></tr></thead><tbody></tbody></table></div>
     <p class="meta-kecil" id="info-validasi" style="margin-top:6px"></p>
   </section>
 
   <div class="grid dua-sama">
     <section class="kartu">
-      <h2>Baris ditolak saat pengambilan</h2>
-      <p class="meta-kecil">Baris ditolak bila kolom wajib kosong, kodenya tidak dikenal, satuannya tidak bisa dikonversi, atau tanggalnya di masa depan.</p>
+      <h2>Baris yang ditolak</h2>
+      <p class="meta-kecil">Baris ditolak kalau ada kolom wajib yang kosong, kodenya tidak dikenal, satuannya tidak bisa diubah, atau tanggalnya belum tiba.</p>
       <div class="gulir-tabel" style="max-height:380px"><table id="tabel-tolak"><thead><tr><th>Berkas</th><th class="angka">Baris</th><th>Alasan</th></tr></thead><tbody></tbody></table></div>
     </section>
     <section class="kartu">
-      <h2>Rekonsiliasi antar-sumber</h2>
-      <p class="meta-kecil">Perbandingan harga dari beberapa sumber untuk varian dan tanggal yang sama. Analisis memakai sumber dengan prioritas tertinggi.</p>
-      <div class="gulir-tabel" style="max-height:380px"><table id="tabel-rekon"><thead><tr><th>Tanggal</th><th>Varian</th><th>Median per sumber</th><th class="angka">Selisih</th><th>Dipakai</th></tr></thead><tbody></tbody></table></div>
+      <h2>Beda angka antar sumber</h2>
+      <p class="meta-kecil">Harga dari beberapa sumber untuk varian dan hari yang sama. Yang dipakai adalah sumber dengan prioritas tertinggi.</p>
+      <div class="gulir-tabel" style="max-height:380px"><table id="tabel-rekon"><thead><tr><th>Tanggal</th><th>Varian</th><th>Harga tiap sumber</th><th class="angka">Selisih</th><th>Dipakai</th></tr></thead><tbody></tbody></table></div>
     </section>
   </div>
 
   <section class="kartu">
-    <h2>Metadata berkas masukan (jejak audit)</h2>
-    <p class="meta-kecil">Setiap berkas dicatat checksum SHA-256-nya; riwayat perubahan tersimpan di git.</p>
-    <div class="gulir-tabel" style="max-height:420px"><table id="tabel-batch"><thead><tr><th>Berkas</th><th>Jenis</th><th class="angka">Baris</th><th class="angka">Diterima</th><th class="angka">Ditolak</th><th>SHA-256</th><th>Galat berkas</th></tr></thead><tbody></tbody></table></div>
+    <h2>Riwayat berkas masuk</h2>
+    <p class="meta-kecil">Setiap berkas punya sidik digital supaya bisa dilacak. Riwayat perubahannya tersimpan di git.</p>
+    <div class="gulir-tabel" style="max-height:420px"><table id="tabel-batch"><thead><tr><th>Berkas</th><th>Jenis</th><th class="angka">Baris</th><th class="angka">Diterima</th><th class="angka">Ditolak</th><th>Sidik digital</th><th>Masalah pada berkas</th></tr></thead><tbody></tbody></table></div>
   </section>
 </main>
 
@@ -86,12 +86,12 @@ const r = q.ringkasan;
 const ps = r.per_status || {};
 const lolosN = (ps.lolos || 0) + (ps.divalidasi || 0);
 document.getElementById("kpi").innerHTML = [
-  ind({ i: "dokumen", label: "Berkas diperiksa", nilai: angka(r.berkas), sub: "harga dan konteks" }),
-  ind({ i: "centang", warna: "hijau", label: "Baris lolos", nilai: angka(lolosN), sub: `${angka(ps.divalidasi || 0)} lewat validasi manusia`, warnaNilai: "hijau" }),
-  ind({ i: "peringatan", warna: "merah", label: "Perlu diputuskan", nilai: angka(q.jumlah_perlu_validasi), sub: "menunggu validator", warnaNilai: q.jumlah_perlu_validasi ? "merah" : "" }),
-  ind({ i: "kurang", warna: "oranye", label: "Baris ditolak", nilai: angka(r.baris_ditolak_skema), sub: `${angka(ps.ditolak_validator || 0)} ditolak validator`, warnaNilai: r.baris_ditolak_skema ? "oranye" : "" }),
+  ind({ i: "dokumen", label: "Berkas diperiksa", nilai: angka(r.berkas), sub: "harga dan data pendukung" }),
+  ind({ i: "centang", warna: "hijau", label: "Baris lolos", nilai: angka(lolosN), sub: `${angka(ps.divalidasi || 0)} lewat pemeriksaan manusia`, warnaNilai: "hijau" }),
+  ind({ i: "peringatan", warna: "merah", label: "Menunggu keputusan", nilai: angka(q.jumlah_perlu_validasi), sub: "menunggu pemeriksa", warnaNilai: q.jumlah_perlu_validasi ? "merah" : "" }),
+  ind({ i: "kurang", warna: "oranye", label: "Baris ditolak", nilai: angka(r.baris_ditolak_skema), sub: `${angka(ps.ditolak_validator || 0)} ditolak pemeriksa`, warnaNilai: r.baris_ditolak_skema ? "oranye" : "" }),
   ind({ i: "database", label: "Data ganda dibuang", nilai: angka(r.duplikat_dibuang), sub: "salinan atau kiriman ulang" }),
-  ind({ i: "tukar", label: "Beda antar-sumber", nilai: angka(r.rekonsiliasi_melebihi_batas), sub: "melebihi batas selisih" }),
+  ind({ i: "tukar", label: "Beda antar sumber", nilai: angka(r.rekonsiliasi_melebihi_batas), sub: "selisihnya terlalu besar" }),
 ].join("");
 
 const kt = q.ketepatan || {};
@@ -105,17 +105,18 @@ document.querySelector("#tabel-ketepatan tbody").innerHTML = (kt.per_pasar || []
   <td>${esc(tgl(p.tanggal_terakhir))}</td><td>${p.blank_spot ? '<span class="lencana rendah">blank spot</span>' : ""}</td></tr>`).join("")
   || `<tr><td colspan="7" class="kosong">Belum ada pasar target.</td></tr>`;
 
+const TANDA = { duplikat_konflik: "harga ganda beda", di_luar_batas_wajar: "di luar batas wajar", perubahan_ekstrem: "berubah terlalu jauh", pencilan_statistik: "jauh dari kebiasaan" };
 const tbodyV = document.querySelector("#tabel-validasi tbody");
 tbodyV.innerHTML = q.perlu_validasi.map((o) => `<tr data-id="${esc(o.id)}">
   <td>${esc(tgl(o.tanggal))}</td><td>${esc(namaPasar[o.kode_pasar] || o.kode_pasar)}</td><td>${esc(namaVarian[o.kode_varian] || o.kode_varian)}</td>
   <td class="angka">${rp(o.harga)}</td><td class="angka">${angka(o.harga_asli)} /${esc(o.satuan_asli)}</td>
-  <td>${o.tanda.map((t) => `<span class="lencana sedang" title="${esc(q.keterangan_tanda[t] || "")}">${esc(t.replace(/_/g, " "))}</span>`).join(" ")}</td>
+  <td>${o.tanda.map((t) => `<span class="lencana sedang" title="${esc(q.keterangan_tanda[t] || "")}">${esc(TANDA[t] || t.replace(/_/g, " "))}</span>`).join(" ")}</td>
   <td class="meta-kecil">${esc(o.berkas)}:${o.baris}</td>
   <td><select aria-label="Keputusan"><option value="">–</option><option value="terima">Terima</option><option value="tolak">Tolak</option></select></td>
   <td><input type="text" aria-label="Alasan" placeholder="alasan singkat"></td></tr>`).join("")
-  || `<tr><td colspan="9" class="kosong">Tidak ada observasi yang menunggu validasi.</td></tr>`;
+  || `<tr><td colspan="9" class="kosong">Tidak ada data yang menunggu keputusan.</td></tr>`;
 document.getElementById("info-validasi").textContent = q.jumlah_perlu_validasi > q.perlu_validasi.length
-  ? `Menampilkan ${q.perlu_validasi.length} dari ${q.jumlah_perlu_validasi} observasi (terbaru dahulu).` : "";
+  ? `Menampilkan ${q.perlu_validasi.length} dari ${q.jumlah_perlu_validasi} data (yang terbaru dulu).` : "";
 const tombol = document.getElementById("unduh-keputusan");
 tbodyV.addEventListener("change", () => {
   tombol.disabled = ![...tbodyV.querySelectorAll("select")].some((s) => s.value);
@@ -134,7 +135,7 @@ tombol.addEventListener("click", () => {
 
 document.querySelector("#tabel-tolak tbody").innerHTML = q.penolakan.slice().reverse().map((p) =>
   `<tr><td class="meta-kecil">${esc(p.berkas)}</td><td class="angka">${p.baris}</td><td>${esc(p.alasan)}</td></tr>`).join("")
-  || `<tr><td colspan="3" class="kosong">Tidak ada baris ditolak.</td></tr>`;
+  || `<tr><td colspan="3" class="kosong">Tidak ada baris yang ditolak.</td></tr>`;
 
 document.querySelector("#tabel-rekon tbody").innerHTML = q.rekonsiliasi.map((x) => `<tr>
   <td>${esc(tgl(x.tanggal))}</td><td>${esc(namaVarian[x.kode_varian] || x.kode_varian)}</td>

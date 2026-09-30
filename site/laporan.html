@@ -89,9 +89,9 @@ function isiPeriode() {
 
 function tabelVarian(p) {
   const adaProyeksi = p.varian.some((v) => v.proyeksi_h7);
-  let html = `<div class="gulir-tabel"><table><thead><tr><th>Varian</th><th class="angka">Rata-rata</th><th class="angka">Min–maks</th>
+  let html = `<div class="gulir-tabel"><table><thead><tr><th>Varian</th><th class="angka">Rata-rata</th><th class="angka">Terendah sampai tertinggi</th>
     <th class="angka">vs ${esc(p.pembanding.sebelumnya)}</th><th class="angka">vs ${esc(p.pembanding.tahun_lalu)}</th>
-    <th class="angka">Volatilitas harian</th>${adaProyeksi ? '<th class="angka">Proyeksi H+7</th>' : ""}</tr></thead><tbody>`;
+    <th class="angka">Naik-turun harian</th>${adaProyeksi ? '<th class="angka">Perkiraan 7 hari lagi</th>' : ""}</tr></thead><tbody>`;
   for (const kom of urutKomoditas) {
     const baris = p.varian.filter((v) => v.komoditas === kom);
     if (!baris.length) continue;
@@ -117,13 +117,13 @@ function daftarPerubahan(p, kode, judul) {
 function kinerjaModel(km) {
   if (!km) return "";
   const r = km.ringkasan, ev = km.evaluasi_anomali, t = km.target;
-  return `<h2>Kinerja model proyeksi &amp; deteksi anomali</h2>
+  return `<h2>Ketepatan prakiraan dan peringatan harga janggal</h2>
     <dl class="dl">
-      <dt>sMAPE median (horizon 1–14 hari)</dt><dd>${r.smape_median === null ? "–" : angka(r.smape_median, 2) + "%"}</dd>
-      <dt>Varian ≥${t.perbaikan_smape_persen}% lebih baik dari baseline</dt><dd>${r.lolos_smape}/${r.varian_dinilai}</dd>
+      <dt>Rata-rata meleset (prakiraan 1 sampai 14 hari)</dt><dd>${r.smape_median === null ? "–" : angka(r.smape_median, 2) + "%"}</dd>
+      <dt>Varian yang minimal ${t.perbaikan_smape_persen}% lebih tepat dari cara sederhana</dt><dd>${r.lolos_smape}/${r.varian_dinilai}</dd>
       <dt>Bias absolut ≤${t.bias_absolut_maks_persen}%</dt><dd>${r.lolos_bias}/${r.varian_dinilai}</dd>
       <dt>Cakupan interval 90% dalam ${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%</dt><dd>${r.lolos_cakupan}/${r.varian_dinilai}</dd>
-      <dt>Deteksi anomali (precision / recall / F1)</dt><dd>${ev.precision ?? "–"} / ${ev.recall ?? "–"} / ${ev.f1 ?? "–"} <span class="meta-kecil">(${esc(ev.sumber_label)})</span></dd>
+      <dt>Ketepatan peringatan (benar / tertangkap / gabungan)</dt><dd>${ev.precision ?? "–"} / ${ev.recall ?? "–"} / ${ev.f1 ?? "–"} <span class="meta-kecil">(${esc(ev.sumber_label)})</span></dd>
     </dl>`;
 }
 
@@ -131,7 +131,7 @@ const LABEL_STATUS = { memenuhi: ["baik", "Memenuhi"], belum_memenuhi: ["sedang"
                        belum_dapat_dinilai: ["polos", "Belum dapat dinilai"], diukur_manual: ["info", "Diukur manual"] };
 function indikatorSmart(daftar) {
   if (!daftar) return "";
-  return `<h2>Capaian indikator kinerja (SMART)</h2><div class="gulir-tabel"><table><thead><tr><th>Sasaran</th><th>Indikator</th>
+  return `<h2>Capaian target kinerja</h2><div class="gulir-tabel"><table><thead><tr><th>Sasaran</th><th>Indikator</th>
     <th class="angka">Capaian</th><th class="angka">Target</th><th>Status</th></tr></thead><tbody>` +
     daftar.map((i) => `<tr><td class="meta-kecil">${esc(i.sasaran)}</td><td>${esc(i.indikator)}</td>
       <td class="angka">${i.nilai === null ? "–" : esc(String(i.nilai).replace(".", ",")) + (i.satuan === "%" && typeof i.nilai === "number" ? "%" : "")}</td>
@@ -178,13 +178,13 @@ function render() {
       <section>${daftarPerubahan(p, p.penurunan_teratas, "Penurunan terbesar")}</section>
     </div>
 
-    <h2>Sinyal dan tindak lanjut</h2>
-    ${p.sinyal.length ? `<div class="gulir-tabel"><table><thead><tr><th>Sinyal</th><th>Jenis</th><th>Keparahan</th><th>Periode</th><th>Status</th></tr></thead><tbody>
+    <h2>Peringatan dan tindak lanjut</h2>
+    ${p.sinyal.length ? `<div class="gulir-tabel"><table><thead><tr><th>Peringatan</th><th>Jenis</th><th>Tingkat</th><th>Periode</th><th>Status</th></tr></thead><tbody>
       ${p.sinyal.map((x) => `<tr><td>${esc(x.judul)}${x.url_issue ? ` · <a href="${esc(x.url_issue)}">issue</a>` : ""}</td><td>${esc(JENIS_SINYAL[x.jenis] || x.jenis)}</td>
         <td>${lencanaKeparahan(x.keparahan)}</td><td class="meta-kecil">${esc(tgl(x.tanggal_mulai))} – ${esc(tgl(x.tanggal_terakhir))}</td>
         <td>${lencanaStatus(x.status || "baru")}</td></tr>`).join("")}</tbody></table></div>
       <p class="meta-kecil">Anomali: ${angka(Object.values(s).reduce((a, b) => a + b, 0))} sinyal · ditindaklanjuti/selesai ${angka((s.ditindaklanjuti || 0) + (s.selesai || 0))} · false alarm ${angka(s.false_alarm || 0)}</p>`
-      : '<p class="kosong">Tidak ada sinyal pada periode ini.</p>'}
+      : '<p class="kosong">Tidak ada peringatan pada periode ini.</p>'}
 
     <h2>Kualitas data</h2>
     <p>Hari pencatatan wajib: ${angka(p.kelengkapan.hari_wajib)} · kelengkapan rata-rata ${persen(p.kelengkapan.rata_persen)}</p>

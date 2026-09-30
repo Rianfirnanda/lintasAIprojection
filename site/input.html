@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catat Harga · Lintas Benteng Projection</title>
-  <meta name="description" content="Formulir pencatatan harga pasar yang tetap berfungsi tanpa sinyal (luring-ke-daring) untuk petugas BPS di wilayah blank spot.">
+  <meta name="description" content="Catat harga pasar, tetap bisa dipakai tanpa internet, untuk petugas BPS di wilayah yang sulit sinyal.">
   <meta name="theme-color" content="#0e1114">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -106,7 +106,7 @@ try {
   master = await muatJSON("master.json");
 } catch (e) {
   document.querySelector("main").insertAdjacentHTML("afterbegin",
-    `<div class="pesan galat">Master data belum tersimpan di perangkat. Buka halaman ini sekali saat ada sinyal. (${esc(e.message)})</div>`);
+    `<div class="pesan galat">Data pasar dan varian belum tersimpan di perangkat ini. Buka halaman ini sekali saat ada internet. (${esc(e.message)})</div>`);
   throw e;
 }
 const varianAktif = master.varian.filter((v) => v.aktif);

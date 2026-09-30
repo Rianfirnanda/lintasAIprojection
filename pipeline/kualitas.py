@@ -24,10 +24,10 @@ from .masukan import Observasi
 DIPAKAI = ("lolos", "divalidasi")
 
 KETERANGAN_TANDA = {
-    "duplikat_konflik": "Kunci observasi sama (tanggal, pasar, varian, sumber, responden) tetapi harga berbeda",
-    "di_luar_batas_wajar": "Harga di luar batas kewajaran varian (config/komoditas.csv)",
-    "perubahan_ekstrem": "Perubahan dibanding observasi sebelumnya di pasar yang sama melebihi ambang harian",
-    "pencilan_statistik": "Menyimpang jauh dari median 28 hari wilayah (robust z-score)",
+    "duplikat_konflik": "Ada dua catatan untuk hari, pasar, varian, dan sumber yang sama, tetapi harganya berbeda",
+    "di_luar_batas_wajar": "Harganya di luar batas wajar untuk varian ini (config/komoditas.csv)",
+    "perubahan_ekstrem": "Harganya berubah terlalu jauh dari catatan sebelumnya di pasar yang sama",
+    "pencilan_statistik": "Harganya jauh berbeda dari kebiasaan 28 hari terakhir di wilayah ini",
 }
 
 

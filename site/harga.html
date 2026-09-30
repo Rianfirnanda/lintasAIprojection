@@ -35,10 +35,10 @@
       <table id="tabel-perubahan">
         <thead>
           <tr>
-            <th>Varian</th><th class="angka">Harga terakhir</th><th class="angka">vs harga normal</th>
+            <th>Varian</th><th class="angka">Harga terakhir</th><th class="angka">Dibanding harga normal</th>
             <th class="angka">Harian</th><th class="angka">Mingguan</th><th class="angka">Bulanan</th>
             <th class="angka">Triwulanan</th><th class="angka">Semesteran</th><th class="angka">Tahunan</th>
-            <th class="angka">Proyeksi H+7</th><th>Sinyal</th>
+            <th class="angka">Perkiraan 7 hari lagi</th><th>Peringatan</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -69,7 +69,7 @@ try {
     ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: nNaik, kecil: "varian", sub: "dibanding bulan lalu", meter: nNaik / total * 100, meterWarna: "merah", warnaNilai: "merah" }),
     ind({ i: "tren", warna: "hijau", label: "Harga turun", nilai: nTurun, kecil: "varian", sub: "dibanding bulan lalu", meter: nTurun / total * 100, meterWarna: "hijau", warnaNilai: "hijau" }),
     ind({ i: "kubus", label: "Harga stabil", nilai: varian.length - nNaik - nTurun, kecil: "varian", sub: "perubahan kecil", meter: (varian.length - nNaik - nTurun) / total * 100 }),
-    ind({ i: "peringatan", warna: "oranye", label: "Diwaspadai", nilai: varian.filter((v) => v.sinyal).length, kecil: "varian", sub: "ada peringatan aktif", href: "sinyal.html" }),
+    ind({ i: "peringatan", warna: "oranye", label: "Diwaspadai", nilai: varian.filter((v) => v.sinyal).length, kecil: "varian", sub: "ada peringatan", href: "sinyal.html" }),
   ].join("");
   const tbody = document.querySelector("#tabel-perubahan tbody");
   let html = "";

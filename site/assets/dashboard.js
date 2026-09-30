@@ -115,18 +115,18 @@ export function hitungMutu(m, daftarSinyal) {
   const kosong = ["Belum ada data", "netral"];
   const ok = (lolos, tulisan = "Baik") => (lolos ? [tulisan, "baik"] : ["Perhatian", "perhatian"]);
   return [
-    { ikon: "target", nama: "sMAPE", nilai: ada(r.smape_median) ? `${angka(r.smape_median, 1)}%` : "–", status: n ? ok(r.lolos_smape === n) : kosong,
-      catatan: `${r.lolos_smape} dari ${n} varian unggul minimal ${t.perbaikan_smape_persen}% dari metode naif` },
-    { ikon: "timbangan", nama: "Bias", nilai: ada(bias) ? `${angka(bias, 1)}%` : "–", status: n ? ok(r.lolos_bias === n) : kosong,
-      catatan: `Target bias absolut maksimal ${t.bias_absolut_maks_persen}%` },
-    { ikon: "simpul", nama: "F1-score", nilai: ada(e?.f1) ? angka(e.f1, 2) : "–", status: ada(e?.f1) ? ok(e.f1 >= t.f1_min) : kosong,
-      catatan: `Target minimal ${angka(t.f1_min, 2)}${e?.sumber_label ? ` (${e.sumber_label})` : ""}` },
-    { ikon: "batang", nama: "Recall", nilai: ada(e?.recall) ? angka(e.recall, 2) : "–", status: ada(e?.recall) ? ok(e.recall >= t.recall_min) : kosong,
-      catatan: `Target minimal ${angka(t.recall_min, 2)}` },
-    { ikon: "lonceng", nama: "False alarm", nilai: ada(e?.false_positive_rate) ? `${angka(e.false_positive_rate * 100, 1)}%` : "–",
-      status: ada(e?.false_positive_rate) ? ok(e.false_positive_rate <= t.fpr_maks, "Terkendali") : kosong, catatan: `Target maksimal ${t.fpr_maks * 100}%` },
-    { ikon: "denyut", nama: "Drift data", nilai: drift ? `${drift} varian` : "Normal", status: drift ? ["Waspada", "perhatian"] : ["Stabil", "baik"],
-      catatan: "Perubahan pola data atau penurunan kinerja model" },
+    { ikon: "target", nama: "sMAPE", arti: "Rata-rata meleset", nilai: ada(r.smape_median) ? `${angka(r.smape_median, 1)}%` : "–", status: n ? ok(r.lolos_smape === n) : kosong,
+      catatan: `Rata-rata meleset prakiraan. ${r.lolos_smape} dari ${n} varian lebih tepat minimal ${t.perbaikan_smape_persen}% dibanding cara sederhana` },
+    { ikon: "timbangan", nama: "Bias", arti: "Condong tinggi atau rendah", nilai: ada(bias) ? `${angka(bias, 1)}%` : "–", status: n ? ok(r.lolos_bias === n) : kosong,
+      catatan: `Condong terlalu tinggi atau rendah. Target paling besar ${t.bias_absolut_maks_persen}%` },
+    { ikon: "simpul", nama: "F1-score", arti: "Nilai gabungan", nilai: ada(e?.f1) ? angka(e.f1, 2) : "–", status: ada(e?.f1) ? ok(e.f1 >= t.f1_min) : kosong,
+      catatan: `Nilai gabungan ketepatan peringatan. Target minimal ${angka(t.f1_min, 2)}${e?.sumber_label ? ` (${e.sumber_label})` : ""}` },
+    { ikon: "batang", nama: "Recall", arti: "Lonjakan tertangkap", nilai: ada(e?.recall) ? angka(e.recall, 2) : "–", status: ada(e?.recall) ? ok(e.recall >= t.recall_min) : kosong,
+      catatan: `Lonjakan harga yang berhasil tertangkap. Target minimal ${angka(t.recall_min, 2)}` },
+    { ikon: "lonceng", nama: "False alarm", arti: "Peringatan yang salah", nilai: ada(e?.false_positive_rate) ? `${angka(e.false_positive_rate * 100, 1)}%` : "–",
+      status: ada(e?.false_positive_rate) ? ok(e.false_positive_rate <= t.fpr_maks, "Terkendali") : kosong, catatan: `Peringatan yang ternyata salah. Target paling besar ${t.fpr_maks * 100}%` },
+    { ikon: "denyut", nama: "Drift data", arti: "Pola berubah", nilai: drift ? `${drift} varian` : "Normal", status: drift ? ["Waspada", "perhatian"] : ["Stabil", "baik"],
+      catatan: "Pola harga berubah dari biasanya, atau prakiraan mulai meleset" },
   ];
 }
 

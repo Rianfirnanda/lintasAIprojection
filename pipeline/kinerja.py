@@ -63,7 +63,7 @@ def koreksi_supervisor(observasi: list, hari_ini: date) -> dict:
     lengkap = [s for s in seri if s["bulan"] < hari_ini.strftime("%Y-%m") and s["observasi"] >= 50]
     if len(lengkap) < 2:
         return {"per_bulan": seri, "acuan": None, "terkini": None, "perubahan_persen": None,
-                "catatan": "Perlu data minimal dua bulan penuh agar bisa dibandingkan."}
+                "catatan": "Butuh data minimal dua bulan penuh supaya bisa dibandingkan."}
     acuan, terkini = lengkap[0], lengkap[-1]
     perubahan = round((terkini["persen"] / acuan["persen"] - 1) * 100, 1) if acuan["persen"] else None
     return {"per_bulan": seri, "acuan": acuan, "terkini": terkini, "perubahan_persen": perubahan}
@@ -101,8 +101,8 @@ def waktu_respons(sinyal: list[dict], buku: dict, status_issue: dict, hari_ini: 
     catatan.sort()
     hasil = {"jumlah_respons": len(catatan), "median_hari_semua": round(median(c[1] for c in catatan), 2) if catatan else None}
     if len(catatan) < jumlah_acuan + 3:
-        hasil["catatan"] = (f"Perlu minimal {jumlah_acuan + 3} sinyal yang sudah ditanggapi untuk membandingkan periode acuan "
-                            f"({jumlah_acuan} tanggapan pertama) dengan periode terkini.")
+        hasil["catatan"] = (f"Butuh minimal {jumlah_acuan + 3} peringatan yang sudah ditanggapi supaya bisa dibandingkan "
+                            f"({jumlah_acuan} tanggapan pertama dibanding yang terbaru).")
         hasil.update({"median_hari_acuan": None, "median_hari_terkini": None, "perbaikan_persen": None})
         return hasil
     acuan = catatan[:jumlah_acuan]
@@ -139,7 +139,7 @@ def stabilitas_segmen(hasil_varian: dict, varian: dict) -> dict:
     segmen.update({f"kondisi:{k}": round(mean(v), 3) for k, v in kondisi.items() if v})
     if not segmen:
         return {"rasio_vs_naif": {}, "gap_persen": None, "lebih_buruk_dari_baseline": [],
-                "catatan": "Belum ada varian dengan backtest."}
+                "catatan": "Belum ada varian yang sudah diuji."}
     nilai = list(segmen.values())
     return {
         "rasio_vs_naif": segmen,
@@ -153,7 +153,7 @@ def stabilitas_segmen(hasil_varian: dict, varian: dict) -> dict:
 def ringkas_uptime(path: Path, hari_ini: date, hari: int = 30) -> dict:
     """Ringkas log uptime (dibuat workflow uptime.yml di cabang log-uptime)."""
     if not path.exists():
-        return {"catatan": "Log uptime belum ada. Isinya muncul setelah workflow Uptime berjalan."}
+        return {"catatan": "Catatan pemeriksaan dashboard belum ada. Isinya muncul setelah pemeriksaan otomatis berjalan."}
     with path.open(newline="", encoding="utf-8") as f:
         baris = list(csv.DictReader(f))
     batas = hari_ini - timedelta(days=hari)
@@ -166,7 +166,7 @@ def ringkas_uptime(path: Path, hari_ini: date, hari: int = 30) -> dict:
         lat = float(b["latensi_ms"]) if (b.get("latensi_ms") or "").replace(".", "", 1).isdigit() else None
         cek.append((t, ok, lat))
     if not cek:
-        return {"catatan": f"Belum ada pemeriksaan uptime dalam {hari} hari terakhir."}
+        return {"catatan": f"Belum ada pemeriksaan dashboard dalam {hari} hari terakhir."}
     insiden, gagal_sebelum = 0, False
     for _, ok, _ in cek:
         if not ok and not gagal_sebelum:
@@ -217,58 +217,58 @@ def indikator_smart(konf, hasil_qc, hasil_masuk, ringkasan_model: dict, evaluasi
 
     persen = lambda a, b: round(a / b * 100, 1) if b else None  # noqa: E731
     daftar = [
-        i("S1", "Standardisasi & baseline", "Varian aktif dengan definisi, satuan, dan batas kewajaran",
+        i("S1", "Data baku dan harga normal", "Varian yang sudah punya definisi, satuan, dan batas harga wajar",
           persen(lengkap, len(aktif)), 100, _status(persen(lengkap, len(aktif)), 100, ">="), "config/komoditas.csv"),
-        i("S2", "Standardisasi & baseline", "Berkas masukan tercatat metadata (checksum SHA-256)",
+        i("S2", "Data baku dan harga normal", "Berkas masuk yang sudah tercatat dan bisa dilacak",
           persen(sum(1 for b in batch if b.sha256), len(batch)), 100,
-          _status(persen(sum(1 for b in batch if b.sha256), len(batch)), 100, ">="), "Halaman Quality Gate"),
-        i("M1", "Mutu & ketepatan waktu", "Ketepatan waktu pengiriman data (30 hari)",
+          _status(persen(sum(1 for b in batch if b.sha256), len(batch)), 100, ">="), "Halaman Cek Data"),
+        i("M1", "Mutu dan ketepatan waktu", "Data dikirim tepat waktu (30 hari terakhir)",
           hasil_qc.ketepatan.get("ketepatan_persen"), tk["ketepatan_waktu_persen"],
-          _status(hasil_qc.ketepatan.get("ketepatan_persen"), tk["ketepatan_waktu_persen"], ">="), "waktu_input formulir"),
-        i("M2", "Mutu & ketepatan waktu", "Perubahan tingkat koreksi supervisor (bulan terkini vs acuan)",
+          _status(hasil_qc.ketepatan.get("ketepatan_persen"), tk["ketepatan_waktu_persen"], ">="), "Waktu pengisian di formulir Catat Harga"),
+        i("M2", "Mutu dan ketepatan waktu", "Perubahan jumlah koreksi dari supervisor (bulan ini dibanding awal)",
           koreksi.get("perubahan_persen"), -30, _status(koreksi.get("perubahan_persen"), -30, "<="),
-          "Keputusan validator & antrean quality gate", koreksi.get("catatan", "")),
-        i("B1", "Konektivitas blank spot", "Pasar blank spot yang memiliki bukti pengiriman data",
+          "Keputusan validator dan antrean Cek Data", koreksi.get("catatan", "")),
+        i("B1", "Jangkauan wilayah blank spot", "Pasar blank spot yang sudah mengirim data",
           f"{sum(1 for p in blank_spot if p.kode in ada_data)}/{len(blank_spot)}" if blank_spot else None, "8/8",
           ("memenuhi" if blank_spot and all(p.kode in ada_data for p in blank_spot) and len(blank_spot) >= 8 else
            "belum_dapat_dinilai" if not blank_spot else "belum_memenuhi"),
           "config/pasar.csv (kolom blank_spot)",
           "" if blank_spot else "Delapan wilayah blank spot belum ditandai di config/pasar.csv.", satuan=""),
-        i("A1", "Kinerja model AI", "Varian dengan sMAPE ≥10% lebih baik dari baseline",
+        i("A1", "Kinerja prakiraan AI", "Varian yang prakiraannya minimal 10% lebih tepat dari cara sederhana",
           persen(ringkasan_model.get("lolos_smape", 0), dinilai), 100,
-          _status(persen(ringkasan_model.get("lolos_smape", 0), dinilai), 100, ">="), "Halaman Mutu Model"),
-        i("A2", "Kinerja model AI", "Varian dengan bias absolut ≤5%", persen(ringkasan_model.get("lolos_bias", 0), dinilai),
-          100, _status(persen(ringkasan_model.get("lolos_bias", 0), dinilai), 100, ">="), "Halaman Mutu Model"),
-        i("A3", "Kinerja model AI", "F1-score deteksi anomali", evaluasi.get("f1"), tk["f1_min"],
+          _status(persen(ringkasan_model.get("lolos_smape", 0), dinilai), 100, ">="), "Halaman Akurasi"),
+        i("A2", "Kinerja prakiraan AI", "Varian yang prakiraannya tidak condong lebih dari 5%", persen(ringkasan_model.get("lolos_bias", 0), dinilai),
+          100, _status(persen(ringkasan_model.get("lolos_bias", 0), dinilai), 100, ">="), "Halaman Akurasi"),
+        i("A3", "Kinerja prakiraan AI", "Nilai gabungan peringatan harga janggal (F1)", evaluasi.get("f1"), tk["f1_min"],
           _status(evaluasi.get("f1"), tk["f1_min"], ">="), evaluasi.get("sumber_label", ""), satuan=""),
-        i("A4", "Kinerja model AI", "Recall anomali prioritas", evaluasi.get("recall"), tk["recall_min"],
+        i("A4", "Kinerja prakiraan AI", "Lonjakan harga penting yang tertangkap (recall)", evaluasi.get("recall"), tk["recall_min"],
           _status(evaluasi.get("recall"), tk["recall_min"], ">="), evaluasi.get("sumber_label", ""), satuan=""),
-        i("A5", "Kinerja model AI", "False positive rate", evaluasi.get("false_positive_rate"), tk["fpr_maks"],
+        i("A5", "Kinerja prakiraan AI", "Peringatan yang salah (false alarm)", evaluasi.get("false_positive_rate"), tk["fpr_maks"],
           _status(evaluasi.get("false_positive_rate"), tk["fpr_maks"], "<="), evaluasi.get("sumber_label", ""), satuan=""),
-        i("A6", "Kinerja model AI", "Selisih kinerja antarsegmen (maks.)", stabilitas.get("gap_persen"), 20,
+        i("A6", "Kinerja prakiraan AI", "Selisih ketepatan antar kelompok komoditas (paling besar)", stabilitas.get("gap_persen"), 20,
           ("belum_memenuhi" if stabilitas.get("lebih_buruk_dari_baseline") else
-           _status(stabilitas.get("gap_persen"), 20, "<=")), "Backtest per kelompok & kondisi hari raya",
-          ("Segmen lebih buruk dari baseline: " + ", ".join(stabilitas["lebih_buruk_dari_baseline"]))
+           _status(stabilitas.get("gap_persen"), 20, "<=")), "Uji data lama per kelompok dan masa hari raya",
+          ("Kelompok yang lebih buruk dari cara sederhana: " + ", ".join(stabilitas["lebih_buruk_dari_baseline"]))
           if stabilitas.get("lebih_buruk_dari_baseline") else stabilitas.get("catatan", "")),
-        i("L1", "Keandalan layanan", "Uptime dashboard (30 hari)", uptime.get("uptime_persen"), 99.5,
-          _status(uptime.get("uptime_persen"), 99.5, ">="), "Workflow Uptime (cabang log-uptime)", uptime.get("catatan", "")),
-        i("D1", "Adopsi perubahan", "Tingkat adopsi SOP/dashboard", None, "35% → 95%", "diukur_manual",
-          "Log penggunaan, survei kesiapan",
-          "GitHub Pages tidak mencatat kunjungan, jadi indikator ini diukur lewat survei kesiapan dan berita acara evaluasi."),
-        i("K1", "Komunikasi & partisipasi", "Kepuasan pengguna (Indeks Kepuasan Masyarakat)", layanan.get("ikm"), 76.61,
+        i("L1", "Keandalan layanan", "Dashboard bisa dibuka (30 hari terakhir)", uptime.get("uptime_persen"), 99.5,
+          _status(uptime.get("uptime_persen"), 99.5, ">="), "Pemeriksaan otomatis tiap jam", uptime.get("catatan", "")),
+        i("D1", "Pemakaian di lapangan", "Seberapa banyak SOP dan dashboard dipakai", None, "35% → 95%", "diukur_manual",
+          "Catatan pemakaian, survei kesiapan",
+          "Situs ini tidak mencatat jumlah kunjungan, jadi diukur lewat survei kesiapan dan berita acara evaluasi."),
+        i("K1", "Komunikasi dan partisipasi", "Kepuasan pengguna (Indeks Kepuasan Masyarakat)", layanan.get("ikm"), 76.61,
           _status(layanan.get("ikm"), 76.61, ">="), "Survei kepuasan (Issue Forms)", layanan.get("catatan_ikm", ""), satuan=""),
-        i("K2", "Komunikasi & partisipasi", "Pengaduan data yang sudah ditanggapi", layanan.get("pengaduan_ditanggapi_persen"),
+        i("K2", "Komunikasi dan partisipasi", "Pengaduan data yang sudah ditanggapi", layanan.get("pengaduan_ditanggapi_persen"),
           100, _status(layanan.get("pengaduan_ditanggapi_persen"), 100, ">="), "Pengaduan (Issue Forms)",
           layanan.get("catatan_pengaduan", "")),
-        i("T1", "Pemanfaatan oleh TPID", "Sinyal prioritas ditindaklanjuti", persen(ditindak, len(anomali_tinggi)),
+        i("T1", "Dipakai oleh TPID", "Peringatan penting yang sudah ditindaklanjuti", persen(ditindak, len(anomali_tinggi)),
           tk["tindak_lanjut_sinyal_persen"], _status(persen(ditindak, len(anomali_tinggi)), tk["tindak_lanjut_sinyal_persen"], ">="),
-          "GitHub Issues / buku tindak lanjut"),
-        i("T2", "Pemanfaatan oleh TPID", "Perbaikan waktu respons tindak lanjut vs acuan", respons.get("perbaikan_persen"), 20,
-          _status(respons.get("perbaikan_persen"), 20, ">="), "Riwayat status sinyal", respons.get("catatan", "")),
-        i("I1", "Integritas & pengawasan", "Sinyal berisiko tinggi yang sudah diverifikasi manusia",
+          "GitHub Issues atau buku tindak lanjut"),
+        i("T2", "Dipakai oleh TPID", "Respons tindak lanjut makin cepat dibanding awal", respons.get("perbaikan_persen"), 20,
+          _status(respons.get("perbaikan_persen"), 20, ">="), "Riwayat status peringatan", respons.get("catatan", "")),
+        i("I1", "Keandalan dan pengawasan", "Peringatan berisiko tinggi yang sudah dicek manusia",
           persen(ditanggapi, len(anomali_tinggi)), 100, _status(persen(ditanggapi, len(anomali_tinggi)), 100, ">="),
-          "Status sinyal"),
-        i("I2", "Integritas & pengawasan", "Model proyeksi yang dipakai sudah disetujui manusia",
+          "Status peringatan"),
+        i("I2", "Keandalan dan pengawasan", "Cara prakiraan yang dipakai sudah disetujui manusia",
           persen(sum(1 for s in persetujuan.values() if s == "disetujui"), len(persetujuan)), 100,
           _status(persen(sum(1 for s in persetujuan.values() if s == "disetujui"), len(persetujuan)), 100, ">="),
           "data/persetujuan_model/"),

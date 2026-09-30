@@ -805,3 +805,4 @@ a.ind:hover { transform: translateY(-2px); color: var(--ink); }
 .langkah-daftar { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); font-size: 0.88rem; }
 .langkah-daftar li + li { margin-top: 4px; }
 td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d-hijau); font-weight: 600; }
+#beranda-tpid { scroll-margin-top: 90px; }

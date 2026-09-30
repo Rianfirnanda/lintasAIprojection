@@ -6,19 +6,19 @@ const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "
 
 
 export const JENIS_SINYAL = {
-  anomali_harga: "Anomali harga",
-  proyeksi_naik: "Proyeksi naik",
+  anomali_harga: "Harga janggal",
+  proyeksi_naik: "Diperkirakan naik",
   risiko_hari_raya: "Risiko hari raya",
   data_terlambat: "Data terlambat",
-  drift: "Drift model/data",
+  drift: "Pola berubah",
 };
 
 export const STATUS_SINYAL = {
   baru: "Baru",
-  perlu_verifikasi: "Perlu verifikasi",
-  terverifikasi: "Terverifikasi",
-  false_alarm: "False alarm",
-  ditindaklanjuti: "Ditindaklanjuti",
+  perlu_verifikasi: "Perlu dicek",
+  terverifikasi: "Sudah dicek, benar",
+  false_alarm: "Salah peringatan",
+  ditindaklanjuti: "Sedang ditangani",
   selesai: "Selesai",
 };
 
@@ -258,7 +258,7 @@ export async function pasangKerangka(aktif) {
   kaki.innerHTML = `
     <div class="kaki-teks">
       <p><strong>${NAMA_SISTEM}</strong> · BPS Kabupaten Bengkulu Tengah${meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">Repositori</a>` : ""}</p>
-      <p>Angka di sini membantu analisis dan bukan rilis resmi BPS. ${tautanLayanan(meta.layanan)}</p>
+      <p>Angka di sini membantu analisis, bukan angka resmi BPS. ${tautanLayanan(meta.layanan)}</p>
       <p>Sumber: BPS, Pemda, cuaca Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
     </div>
     <button type="button" class="tema-ikon" data-tema-ganti></button>`;
