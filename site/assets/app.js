@@ -140,7 +140,7 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
 });
 
 // ---------- kerangka halaman
-export const NAMA_SISTEM = "Lintas AI Projection";
+export const NAMA_SISTEM = "Lintas Benteng Projection";
 // Logo resmi BPS (diambil dari dokumen BPS Kabupaten Bengkulu Tengah).
 const LOGO = `<img class="merek-ikon" src="assets/logo-bps.png" alt="" width="38" height="30">`;
 const tundaSelamanya = () => new Promise(() => {});

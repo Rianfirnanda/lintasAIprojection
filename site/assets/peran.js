@@ -189,7 +189,8 @@ async function berandaAnalis(el, meta) {
 
 /* ---------- administrator */
 async function berandaAdmin(el, meta) {
-  const [ringkasan, kualitas, sinyal, kinerja] = await Promise.all([muatJSON("ringkasan.json"), muatJSON("kualitas.json"), muatJSON("sinyal.json"), muatJSON("kinerja.json").catch(() => null)]);
+  const [ringkasan, kualitas, sinyal, kinerja, master, sumber] = await Promise.all([muatJSON("ringkasan.json"), muatJSON("kualitas.json"), muatJSON("sinyal.json"), muatJSON("kinerja.json").catch(() => null),
+    muatJSON("master.json"), muatJSON("sumber.json").catch(() => null)]);
   let jumlahAkun = "–";
   if (meta.login === "contoh") { try { jumlahAkun = (await (await fetch("data/pengguna.json")).json()).akun.length; } catch { /* abaikan */ } }
   const umur = (Date.now() - new Date(meta.dibuat).getTime()) / 3.6e6;
@@ -205,6 +206,7 @@ async function berandaAdmin(el, meta) {
     [!meta.mode_demo, "Data asli", meta.mode_demo ? "masih data contoh" : "sudah dipakai"],
   ];
   const repo = meta.url_repo;
+  const repoBerkas = (nama) => (repo ? `${repo}/blob/main/config/${nama}` : "");
   const aksi = tombol("pengguna.html", "Pengguna dan peran", true) + tombol("index.html?tampilan=tpid", "Dashboard TPID") +
     (meta.url_run ? tombol(meta.url_run, "Log proses", false, ' target="_blank" rel="noopener"') : "");
   kosongkan(el, `${salam("admin", PERAN.admin.judulBeranda, `Data ${tgl(meta.tanggal_data_terakhir, true)}`, aksi)}
@@ -213,9 +215,25 @@ async function berandaAdmin(el, meta) {
       ${ind({ i: "roda", label: "Versi sistem", nilai: `v${esc(meta.versi)}`, sub: meta.commit ? `commit ${esc(meta.commit.slice(0, 7))}` : "lokal" })}
       ${ind({ i: "jam", warna: "hijau", label: "Uptime", nilai: uptime === null ? "–" : persen(uptime, 1), sub: uptime === null ? "belum ada log" : "target 99,5%", meter: uptime === null ? null : uptime, meterWarna: "hijau", href: "kinerja.html" })}
       ${ind({ i: "database", label: "Berkas masuk", nilai: angka(meta.jumlah.berkas), sub: `${angka(meta.jumlah.observasi_dipakai)} data dipakai` })}
-      ${ind({ i: "peringatan", warna: "oranye", label: "Peringatan aktif", nilai: angka(ringkasan.kpi.sinyal_aktif), sub: `${ringkasan.kpi.sinyal_tinggi} prioritas tinggi`, href: "sinyal.html" })}
-      ${ind({ i: "orang", label: "Akun", nilai: jumlahAkun, sub: meta.login === "firebase" ? "diatur di Firebase" : "akun contoh", href: "pengguna.html" })}
     </div>
+    <section class="kartu"><div class="kartu-kepala"><div><h2>Data statis</h2><p>Acuan yang jarang berubah. Diatur lewat berkas di <code>config/</code>.</p></div></div>
+      <div class="ind-baris">
+        ${ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: `${master.varian.filter((v) => v.aktif !== false).length} varian aktif`, href: repoBerkas("komoditas.csv") })}
+        ${ind({ i: "toko", label: "Pasar", nilai: master.pasar.length, sub: `${master.pasar.filter((x) => x.blank_spot).length} blank spot`, href: repoBerkas("pasar.csv") })}
+        ${ind({ i: "peta", label: "Wilayah", nilai: master.wilayah.length, sub: "target dan pembanding", href: repoBerkas("wilayah.csv") })}
+        ${ind({ i: "database", label: "Sumber data", nilai: sumber ? sumber.sumber.length : "–", sub: sumber ? `${sumber.sumber.filter((x) => x.status === "aktif").length} aktif` : "belum ada", href: repoBerkas("sumber.csv") })}
+        ${ind({ i: "kalender", label: "Hari raya", nilai: master.kalender.length, sub: "tanggal terjadwal", href: repoBerkas("kalender.csv") })}
+        ${ind({ i: "orang", label: "Akun", nilai: jumlahAkun, sub: meta.login === "firebase" ? "diatur di Firebase" : "akun contoh", href: "pengguna.html" })}
+      </div></section>
+    <section class="kartu"><div class="kartu-kepala"><div><h2>Data dinamis</h2><p>Berubah tiap kali data masuk dan sistem diperbarui.</p></div></div>
+      <div class="ind-baris">
+        ${ind({ i: "kalender", label: "Harga terakhir", nilai: tgl(meta.tanggal_data_terakhir), sub: jamLalu })}
+        ${ind({ i: "database", label: "Observasi dipakai", nilai: angka(meta.jumlah.observasi_dipakai), sub: `dari ${angka(meta.jumlah.observasi_total)} masuk`, meter: meta.jumlah.observasi_dipakai / Math.max(1, meta.jumlah.observasi_total) * 100 })}
+        ${ind({ i: "dokumen", label: "Berkas masuk", nilai: angka(meta.jumlah.berkas), sub: "sejak awal" })}
+        ${ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(ringkasan.kpi.sinyal_aktif), sub: `${ringkasan.kpi.sinyal_tinggi} prioritas tinggi`, href: "sinyal.html" })}
+        ${ind({ i: "peringatan", warna: "merah", label: "Antrean validasi", nilai: angka(kualitas.jumlah_perlu_validasi), sub: "menunggu keputusan", href: "kualitas.html" })}
+        ${ind({ i: "centang", warna: "hijau", label: "Kelengkapan", nilai: persen(ringkasan.kpi.kelengkapan_persen, 0), sub: "30 hari terakhir", meter: ringkasan.kpi.kelengkapan_persen, meterWarna: "hijau" })}
+      </div></section>
     <div class="grid dua-kolom">
       <section class="kartu"><div class="kartu-kepala"><div><h2>Pemeriksaan sistem</h2></div></div>
         ${cek.map(([baik, nama, ket]) => `<div class="baris-info"><span class="titik-status ${baik ? "hijau" : "oranye"}"></span><div class="nama" style="font-weight:500">${nama}</div><div class="kanan sub">${ket}</div></div>`).join("")}
