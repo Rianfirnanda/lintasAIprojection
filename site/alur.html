@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alur Kerja dan Arsitektur · Lintas AI Projection</title>
+  <meta name="description" content="Alur kerja pemantauan harga berbasis AI dan Big Data serta arsitektur database dan mekanisme analisis AI, sesuai rancangan aksi perubahan BPS Kabupaten Bengkulu Tengah.">
+  <meta name="theme-color" content="#1f5fae">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/alur.css">
+</head>
+<body class="halaman-dash">
+<main class="utama" id="isi">
+
+  <section class="alur-kertas" id="gambar10" aria-labelledby="j10">
+    <div class="alur-kepala">
+      <div>
+        <h2 id="j10">Alur Kerja Pemantauan Harga Berbasis AI dan Big Data</h2>
+        <p class="alur-motto">Data akurat · Analisis cerdas · Keputusan tepat · Bengkulu Tengah lebih sejahtera</p>
+      </div>
+      <div class="alur-sasaran">Harga Terkendali<br>Masyarakat Sejahtera<br>Daerah Maju</div>
+    </div>
+    <div class="alur-kontrol">
+      <label class="cek"><input type="checkbox" id="cek-status" checked> Tampilkan status di sistem</label>
+      <span class="status"><i class="ada"></i>Sudah ada</span>
+      <span class="status"><i class="sebagian"></i>Sebagian</span>
+      <span class="status"><i class="belum"></i>Belum ada</span>
+    </div>
+    <div class="tahap-baris" id="tahap"></div>
+    <div class="parameter-kunci" id="parameter"></div>
+    <div class="spanduk">
+      <svg viewBox="0 0 800 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 100V58l60-22 70 20 80-30 90 26 80-20 90 24 90-28 90 26 80-18 70 22V100z" fill="#7ea3c9" opacity=".45"/>
+        <path d="M0 100V72l70-14 80 12 90-16 80 14 90-10 90 14 80-12 90 12 130-8V100z" fill="#5f8a54" opacity=".55"/>
+        <path d="M560 100V64h34V50l14-10 14 10v14h30v36zM640 100V72h44v28z" fill="#3f6fa3" opacity=".55"/>
+      </svg>
+      <p>Bersama data, wujudkan Bengkulu Tengah yang lebih baik</p>
+      <span class="pil-spanduk">Harga stabil · Ekonomi kuat · Masyarakat sejahtera</span>
+    </div>
+    <p class="alur-catatan" id="catatan10"></p>
+  </section>
+
+  <section class="alur-kertas" id="gambar11" aria-labelledby="j11">
+    <div class="alur-kepala" style="justify-content:center;text-align:center">
+      <div>
+        <h2 id="j11">ARSITEKTUR DATABASE DAN MEKANISME ANALISIS AI</h2>
+        <p class="alur-motto" style="letter-spacing:0;text-transform:none;font-size:0.95rem;font-weight:600;color:var(--ink-2)">Rancangan Aksi Perubahan BPS Kabupaten Bengkulu Tengah</p>
+      </div>
+    </div>
+    <div class="arsitektur">
+      <div class="lapis-daftar" id="lapisan"></div>
+      <aside class="tata-kelola" aria-label="Tata kelola berlaku di semua lapisan">
+        <span id="ikon-gembok"></span>
+        <strong>Tata kelola</strong><hr>
+        <strong>Keamanan</strong><hr>
+        <strong>Hak akses</strong><hr>
+        <strong>Dokumentasi versi</strong>
+      </aside>
+    </div>
+    <p class="alur-catatan" id="catatan11"></p>
+  </section>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, persen, angka, tampilkanGalat } from "./assets/app.js";
+import { ikon, hitungMutu, ringkasSinyalPrioritas, nilaiUptime } from "./assets/dashboard.js";
+
+const meta = await pasangKerangka("alur.html");
+const utama = document.getElementById("isi");
+document.getElementById("ikon-gembok").innerHTML = ikon("gembokPerisai", 44);
+
+const NAMA_STATUS = { ada: "Sudah ada di sistem", sebagian: "Sebagian sudah ada", belum: "Belum ada" };
+const titik = (st, ket) => `<i class="titik ${st}" title="${esc(NAMA_STATUS[st] + (ket ? ": " + ket : ""))}"></i>`;
+const butir = ([ik, judul, teks, st, ket]) =>
+  `<div class="butir"><span class="ikon-biru">${ikon(ik, 26)}</span><div><strong>${judul}</strong><small>${teks}</small></div>${titik(st, ket)}</div>`;
+
+/* ---------- Gambar 10 */
+const PETA_MINI = `<svg class="ilustrasi" viewBox="0 0 200 110" aria-hidden="true">
+  <path d="M18 62l22-26 34-8 30 10 38-12 32 14 8 30-22 22-40 4-34-8-44 2z" fill="#cbd5e1"/>
+  <g fill="#1f70d2"><path d="M52 44a6 6 0 1112 0c0 5-6 12-6 12s-6-7-6-12z"/><path d="M84 58a6 6 0 1112 0c0 5-6 12-6 12s-6-7-6-12z"/>
+  <path d="M112 38a6 6 0 1112 0c0 5-6 12-6 12s-6-7-6-12z"/><path d="M138 62a6 6 0 1112 0c0 5-6 12-6 12s-6-7-6-12z"/><path d="M70 74a6 6 0 1112 0c0 5-6 12-6 12s-6-7-6-12z"/></g>
+  <g fill="#fff"><circle cx="58" cy="44" r="2.3"/><circle cx="90" cy="58" r="2.3"/><circle cx="118" cy="38" r="2.3"/><circle cx="144" cy="62" r="2.3"/><circle cx="76" cy="74" r="2.3"/></g></svg>`;
+
+const LAPTOP = `<svg class="ilustrasi" viewBox="0 0 200 130" aria-hidden="true">
+  <rect x="20" y="6" width="160" height="104" rx="7" fill="#1b3f78"/><rect x="26" y="12" width="148" height="92" rx="3" fill="#f3f7fc"/>
+  <rect x="26" y="12" width="14" height="92" fill="#1f5fae"/>
+  <g stroke="#9fc0ea" stroke-width="2"><path d="M30 24h6M30 34h6M30 44h6M30 54h6M30 64h6"/></g>
+  <path d="M52 30l14-6 16 10-4 20-14 12-12-8z" fill="#8fb8e8"/><path d="M60 46l10-6 8 8-10 8z" fill="#5c96d8"/>
+  <polyline points="110,70 124,58 136,64 152,42 166,36" fill="none" stroke="#1f70d2" stroke-width="3" stroke-linejoin="round"/>
+  <g fill="#f08a24"><rect x="112" y="86" width="9" height="12"/><rect x="126" y="80" width="9" height="18"/><rect x="140" y="74" width="9" height="24"/><rect x="154" y="68" width="9" height="30"/></g>
+  <path d="M6 114h188l-10 10H16z" fill="#c4d2e4"/></svg>`;
+
+function tahapBiasa(no, judul, sub, daftar, kaki, kakiHijau = false) {
+  return `<article class="tahap"><header class="tahap-kepala"><h3>${no}. ${judul}</h3><p>${sub}</p></header>
+    <div class="tahap-isi">${daftar.map(butir).join("")}</div>
+    <div class="tahap-kaki ${kakiHijau ? "hijau" : ""}">${kakiHijau ? ikon("centang", 30) : ""}<span>${kaki}</span></div></article>`;
+}
+
+function renderGambar10(k, prio, jumlahBlank) {
+  const t = [];
+  t.push(tahapBiasa(1, "Sumber Data", "Beragam sumber, satu tujuan: harga yang lebih akurat.", [
+    ["gedung", "Data BPS", "Survei harga, data resmi, statistik terkait", "ada", "Berkas harga BPS diunggah ke data/masuk/harga"],
+    ["toko", "Pasar / Pedagang", "Harga harian dari pasar dan pedagang", "ada", "Formulir Input Harga untuk petugas pasar"],
+    ["pemda", "Data Sektoral Pemda", "Pertanian, perikanan, transportasi, dll.", "ada", "Berkas konteks (stok, pasokan, biaya angkut) di data/masuk/konteks"],
+    ["ai", "AI Data Finder", "Pengambilan data otomatis dari sumber terpercaya", "ada", "Mencari kandidat sumber; keputusan memakai tetap di analis"],
+    ["database", "Big Data (Sah)", "E-commerce, berita, cuaca, logistik, dan sumber terbuka lainnya", "sebagian", "Baru cuaca (Open-Meteo) dan kalender hari raya; PIHPS, Panel Harga Bapanas, dan BMKG masih kandidat"],
+  ], "Kolaborasi data untuk gambaran harga yang lebih lengkap"));
+  t.push(`<article class="tahap"><header class="tahap-kepala"><h3>2. Pengiriman Data</h3><p>Fleksibel dan inklusif, hingga ke wilayah blank spot.</p></header>
+    <div class="tahap-isi">
+      ${butir(["menara", "Online (real-time)", "Melalui aplikasi, web dan API terintegrasi", "sebagian", "Unggah berkas dan formulir web sudah ada; API real-time belum"])}
+      ${butir(["ponsel", "Offline-to-Online untuk 8 wilayah blank spot", "Pengumpulan data offline melalui aplikasi mobile, kemudian dikirim saat tersedia jaringan", "sebagian", `Formulir luring (PWA) sudah jalan; daftar 8 wilayah belum diisi (saat ini ${jumlahBlank} tertandai)`])}
+      <div class="peta-mini">${PETA_MINI}<span class="label">8 wilayah blank spot</span></div>
+    </div>
+    <div class="tahap-kaki">Tidak ada wilayah yang tertinggal dalam pemantauan harga</div></article>`);
+  t.push(tahapBiasa(3, "Integrasi dan Quality Gate", "Data bersih, seragam, dan terpercaya.", [
+    ["dokumenCentang", "Standardisasi", "10 komoditas dan 21 varian", "ada", "Kode, satuan, dan batas kewajaran di config/komoditas.csv"],
+    ["roda", "Metadata", "Pelabelan sumber, waktu, lokasi, dan atribut data", "ada", "Checksum SHA-256 setiap berkas masukan"],
+    ["database", "Deduplikasi", "Menghapus data ganda", "ada", ""],
+    ["sinkron", "Rekonsiliasi", "Pencocokan antar sumber", "ada", ""],
+    ["orang", "Validasi Manusia", "Pemeriksaan oleh petugas/validator", "ada", "Halaman Quality Gate"],
+  ], "Data siap dianalisis: valid, konsisten, dan terstandar", true));
+  t.push(tahapBiasa(4, "Analisis AI", "Mengubah data menjadi insight yang dapat ditindaklanjuti.", [
+    ["tren", "Deteksi Anomali", "Mengidentifikasi perubahan harga yang tidak wajar", "ada", ""],
+    ["batang", "Baseline", "Membandingkan dengan pola historis dan musiman", "ada", ""],
+    ["otak", "Proyeksi", "Prediksi pergerakan harga jangka pendek", "ada", "Proyeksi 14 hari dengan interval 90%"],
+    ["simpul", "Drift Detection", "Memantau perubahan pola dan risiko baru", "ada", ""],
+  ], "AI membantu mendeteksi lebih cepat, lebih luas, dan lebih akurat"));
+  t.push(`<article class="tahap"><header class="tahap-kepala"><h3>5. Dashboard TPID</h3><p>Informasi real-time untuk pengambilan keputusan.</p></header>
+    <div class="tahap-isi">${LAPTOP}
+      <div class="kotak-status">
+        <div class="merah"><b>${prio.total}</b><span>Sinyal Prioritas</span></div>
+        <div class="oranye"><b>${prio.diverifikasi}</b><span>Diverifikasi</span></div>
+        <div class="kuning"><b>${prio.ditindaklanjuti}</b><span>Ditindaklanjuti</span></div>
+        <div class="hijau"><b>${prio.selesai}</b><span>Selesai</span></div>
+      </div></div>
+    <div class="tahap-kaki">Satu dashboard, untuk pengendalian inflasi yang lebih responsif</div></article>`);
+  t.push(tahapBiasa(6, "Keputusan dan Intervensi", "Dari insight menuju aksi nyata.", [
+    ["dokumen", "Rapat/Telaah TPID", "Pembahasan sinyal prioritas", "ada", "Bahan rapat tersedia di halaman Laporan"],
+    ["lampu", "Penetapan Intervensi", "Operasi pasar, distribusi, koordinasi lintas sektor, atau kebijakan lain", "ada", "Dicatat sebagai status tindak lanjut sinyal"],
+    ["tim", "Pelaksanaan", "Oleh perangkat daerah dan stakeholder terkait", "ada", "Dicatat di GitHub Issues sinyal"],
+    ["papan", "Monitoring", "Memastikan intervensi berjalan sesuai rencana", "ada", ""],
+  ], "Keputusan cepat, langkah tepat, dampak nyata"));
+  t.push(tahapBiasa(7, "Umpan Balik", "Pembelajaran berkelanjutan untuk hasil yang lebih baik.", [
+    ["batang", "Evaluasi Dampak", "Melihat perubahan harga setelah intervensi", "sebagian", "Status tindak lanjut dan waktu respons sudah diukur; dampak harga belum dianalisis otomatis"],
+    ["sinkron", "Penyempurnaan Model AI", "Menggunakan hasil nyata sebagai data pembelajaran", "ada", "Label terverifikasi dan false alarm dipakai menilai model"],
+    ["database", "Peningkatan Kualitas Data", "Masukan dari daerah dan petugas lapangan", "ada", "Kanal pengaduan data di kaki halaman"],
+    ["tim", "Skalabilitas", "Meluaskan cakupan dan penguatan kolaborasi", "ada", "Komoditas tambahan bisa diaktifkan di config/komoditas.csv"],
+  ], "Siklus berkelanjutan untuk pemantauan harga yang semakin cerdas", true));
+  document.getElementById("tahap").innerHTML = t.join("");
+
+  const ket = k.ketepatan_persen;
+  document.getElementById("parameter").innerHTML = `
+    <div class="label">PARAMETER KUNCI<small>(dari data sistem)</small></div>
+    <div class="pk"><span class="lingkar biru">${ikon("jam", 24)}</span><div><b class="biru">${ket === null ? "–" : persen(ket, 0)}</b><strong>Ketepatan Waktu</strong><small>Data diterima sesuai SLA</small></div></div>
+    <div class="pk"><span class="lingkar merah">${ikon("peringatan", 24)}</span><div><b class="merah">${prio.total}</b><strong>Sinyal Prioritas</strong><small>Terdeteksi oleh AI</small></div></div>
+    <div class="pk"><span class="lingkar oranye">${ikon("cari", 24)}</span><div><b class="oranye">${prio.diverifikasi}</b><strong>Diverifikasi</strong><small>Oleh validator manusia</small></div></div>
+    <div class="pk"><span class="lingkar kuning">${ikon("roda", 24)}</span><div><b class="kuning">${prio.ditindaklanjuti}</b><strong>Ditindaklanjuti</strong><small>Melalui intervensi TPID</small></div></div>
+    <div class="pk"><span class="lingkar hijau">${ikon("centang", 24)}</span><div><b class="hijau">${prio.selesai}</b><strong>Selesai</strong><small>Harga kembali terkendali</small></div></div>`;
+}
+
+/* ---------- Gambar 11 */
+const PANAH = `<div class="panah-naik" aria-hidden="true"><svg viewBox="0 0 26 16"><path d="M13 1l11 12h-7v3H9v-3H2z" fill="currentColor"/></svg></div>`;
+const it = (ik, teks, st, ket, ekstra = "") =>
+  `<div class="lapis-butir">${ikon(ik, 34)}<span>${teks}</span>${ekstra}${st ? titik(st, ket) : ""}</div>`;
+
+function renderGambar11(k, prio, uptime, mutu) {
+  const ket = k.ketepatan_persen;
+  const L = {};
+  L[6] = [
+    it("awan", "API", "belum", "Belum ada API publik; data tersedia sebagai berkas JSON dan CSV"),
+    it("layar", "Dashboard<br>TPID", "ada", ""),
+    it("lonceng", "Notifikasi", "ada", "Telegram dan email, aktif setelah kunci diatur"),
+    it("dokumen", "Laporan", "ada", ""),
+    `<div class="lapis-butir">${ikon("batang", 34)}<span>${prio.total} Sinyal<br>Prioritas</span>${titik("ada", "")}</div>`,
+    `<div class="lapis-butir"><span class="angka-lingkar">${uptime === null ? "–" : persen(uptime, 1)}</span><span>Uptime<br>${uptime === null ? "belum ada log" : persen(uptime, 1)}</span>${titik("ada", "Diukur tiap jam oleh workflow Uptime")}</div>`,
+  ];
+  L[5] = [
+    it("tren", "Baseline", "ada", ""), it("batang", "Proyeksi", "ada", ""), it("cari", "Deteksi<br>Anomali", "ada", ""),
+    it("sinkron", "Rolling-Origin<br>Backtesting", "ada", ""), it("tim", "Persetujuan<br>Manusia", "ada", "Opsional, dapat diwajibkan lewat config/pengaturan.json"),
+    `<div class="lapis-ukuran">${mutu.map((u) => `<div title="${esc(u.catatan)}"><small>${u.nama}</small><b>${u.nilai}</b></div>`).join("")}</div>`,
+  ];
+  L[4] = [
+    it("dokumen", "Deduplikasi", "ada", ""), it("kurang", "Data Hilang", "ada", "Kelengkapan data per pasar"), it("pencilan", "Pencilan", "ada", ""),
+    it("tukar", "Rekonsiliasi", "ada", ""), it("orang", "Validasi<br>Manusia", "ada", ""),
+    it("jam", `Ketepatan<br>Waktu ${ket === null ? "–" : persen(ket, 0)}`, "ada", ""),
+  ];
+  L[3] = [
+    it("database", "Raw Data", "ada", "Berkas mentah tidak diubah dan tersimpan di repositori"),
+    it("gudang", "Data Warehouse<br><small>10 Komoditas/21 Varian</small>", "sebagian", "Hasil terstruktur disimpan sebagai JSON dan CSV, belum berupa basis data"),
+    it("dokumen", "Metadata", "ada", ""), it("perisai", "Audit Trail", "ada", "Riwayat git mencatat setiap perubahan"),
+    it("awan", "Cadangan", "ada", "Setiap salinan repositori adalah cadangan"),
+  ];
+  L[2] = [
+    it("roda", "API", "sebagian", "Konektor cuaca sudah ada; konektor sumber lain belum"),
+    it("sinkron", "Proses Berkala", "ada", "GitHub Actions setiap hari kerja dan saat ada berkas baru"),
+    it("streaming", "Streaming", "belum", "Pembaruan berkala dua kali sehari, belum berupa aliran data"),
+    it("dokumen", "Standardisasi", "ada", ""),
+    it("tautan", "Offline-to-Online<br><small>untuk 8 wilayah blank spot</small>", "sebagian", "Formulir luring sudah ada; 8 wilayah belum didaftarkan"),
+  ];
+  L[1] = [
+    it("database", "Data Resmi<br>BPS", "ada", ""), it("keranjangBelanja", "Harga Pasar", "ada", ""),
+    it("kubus", "Stok/Distribusi<br>Pemda", "ada", ""), it("cari", "AI Data<br>Finder", "ada", ""),
+    it("database", "Big Data<br>Sah", "sebagian", "Baru cuaca dan kalender hari raya"),
+    it("kalender", "Kalender Hari Raya<br>&amp; Cuaca", "ada", ""),
+  ];
+  const nama = { 6: "Layanan", 5: "Analisis AI", 4: "Quality Gate", 3: "Penyimpanan", 2: "Integrasi", 1: "Sumber Data" };
+  document.getElementById("lapisan").innerHTML = [6, 5, 4, 3, 2, 1].map((n, i) =>
+    `<div class="lapis l${n}"><div class="lapis-label"><b>${n}</b><span>${nama[n]}</span></div><div class="lapis-isi">${L[n].join("")}</div></div>${n > 1 ? PANAH.replace("panah-naik", "panah-naik l" + n) : ""}`
+  ).join("");
+}
+
+try {
+  const [ringkasan, sinyal, pasar, model, kinerja] = await Promise.all([
+    muatJSON("ringkasan.json"), muatJSON("sinyal.json"), muatJSON("pasar.json"), muatJSON("model.json"), muatJSON("kinerja.json").catch(() => null),
+  ]);
+  const k = ringkasan.kpi;
+  const prio = ringkasSinyalPrioritas(sinyal.sinyal);
+  const jumlahBlank = pasar.pasar.filter((p) => p.blank_spot).length;
+  renderGambar10(k, prio, jumlahBlank);
+  renderGambar11(k, prio, nilaiUptime(kinerja), hitungMutu(model, sinyal.sinyal));
+  const catatan = meta?.mode_demo
+    ? "Semua angka pada gambar ini berasal dari data demo sistem, bukan angka resmi."
+    : "Angka pada gambar ini diambil langsung dari data sistem.";
+  document.getElementById("catatan10").textContent = `${catatan} Titik berwarna di tiap kotak menunjukkan sejauh mana komponen itu sudah ada di sistem; arahkan kursor untuk melihat penjelasannya.`;
+  document.getElementById("catatan11").textContent = `${catatan} Tata kelola, keamanan, hak akses, dan dokumentasi versi berlaku di semua lapisan.`;
+} catch (e) {
+  console.error(e);
+  tampilkanGalat(utama, e);
+}
+
+document.getElementById("cek-status").addEventListener("change", (e) => {
+  utama.classList.toggle("sembunyi-status", !e.target.checked);
+});
+</script>
+</body>
+</html>

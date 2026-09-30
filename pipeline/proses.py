@@ -344,15 +344,16 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "layanan": data_kinerja.get("layanan") or {},
     })
 
-    # ---------- laporan.json (buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan)
+    # ---------- laporan.json (mingguan, bulanan, triwulanan, semesteran, tahunan)
     kinerja_model = {"ringkasan": ringkasan_model, "evaluasi_anomali": evaluasi, "target": tk}
     _tulis_json(keluaran / "laporan.json", laporan.bentuk_semua(
         konf, {kode: per for (w, kode), per in harian.items() if w == target}, hasil_varian, daftar_sinyal,
         hasil_qc.observasi, tanggal_data,
         ekstra={
             "bulanan": {"kinerja_model": kinerja_model},
-            "triwulanan": {"kinerja_model": kinerja_model, "waktu_respons": data_kinerja.get("respons", {}),
-                           "stabilitas_segmen": data_kinerja.get("stabilitas", {}), "indikator": indikator},
+            **{jenis: {"kinerja_model": kinerja_model, "waktu_respons": data_kinerja.get("respons", {}),
+                       "stabilitas_segmen": data_kinerja.get("stabilitas", {}), "indikator": indikator}
+               for jenis in ("triwulanan", "semesteran", "tahunan")},
         }))
 
     # ---------- pasar.json

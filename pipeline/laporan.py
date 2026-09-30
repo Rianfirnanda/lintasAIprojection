@@ -3,6 +3,8 @@
   mingguan   : buletin harga mingguan, sinyal dini, prioritas verifikasi lapangan
   bulanan    : analisis bulanan, proyeksi, kinerja model, rekomendasi pengendalian harga
   triwulanan : bahan rapat TPID: pola, volatilitas, tindak lanjut sinyal, evaluasi model
+  semesteran : evaluasi tengah tahun: stabilitas model, kualitas layanan, cakupan wilayah, kalibrasi ulang
+  tahunan    : laporan tahunan: mutu data, akurasi proyeksi, manfaat kebijakan, keputusan lanjut atau henti model
 
 Semua angka dihitung dari deret harga yang lolos quality gate. "Indeks harga pangan sederhana" adalah rata-rata
 geometrik relatif harga antarperiode (tanpa bobot), sifatnya indikatif, BUKAN Indeks Harga Konsumen resmi BPS.
@@ -18,11 +20,13 @@ from statistics import mean, pstdev
 
 from .kualitas import hari_wajib
 
-JUMLAH_PERIODE = {"mingguan": 8, "bulanan": 6, "triwulanan": 4}
+JUMLAH_PERIODE = {"mingguan": 8, "bulanan": 6, "triwulanan": 4, "semesteran": 3, "tahunan": 2}
 JUDUL = {
     "mingguan": "Buletin Harga Pangan Mingguan",
     "bulanan": "Analisis Harga Pangan Bulanan",
     "triwulanan": "Bahan Rapat TPID Triwulanan",
+    "semesteran": "Evaluasi Harga Pangan Semesteran",
+    "tahunan": "Laporan Tahunan Harga Pangan",
 }
 BULAN = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober",
          "November", "Desember"]
@@ -44,6 +48,13 @@ def _periode(jenis: str, tgl: date) -> tuple[date, date, str]:
         mulai = tgl.replace(day=1)
         akhir = (mulai + timedelta(days=32)).replace(day=1) - timedelta(days=1)
         return mulai, akhir, f"{BULAN[tgl.month - 1]} {tgl.year}"
+    if jenis == "semesteran":
+        smt = 0 if tgl.month <= 6 else 1
+        mulai = date(tgl.year, smt * 6 + 1, 1)
+        akhir = date(tgl.year, 6, 30) if smt == 0 else date(tgl.year, 12, 31)
+        return mulai, akhir, f"Semester {['I', 'II'][smt]} {tgl.year}"
+    if jenis == "tahunan":
+        return date(tgl.year, 1, 1), date(tgl.year, 12, 31), f"Tahun {tgl.year}"
     tw = (tgl.month - 1) // 3
     mulai = date(tgl.year, tw * 3 + 1, 1)
     akhir = (date(tgl.year + (tw == 3), (tw * 3 + 3) % 12 + 1, 1)) - timedelta(days=1)
@@ -122,6 +133,12 @@ def _rekomendasi(konf, jenis, baris_varian, sinyal_periode, kelengkapan, hari_ra
                    "harian mulai H-14 dan pastikan ketersediaan stok bersama Pemda dan Bulog.")
     if jenis != "mingguan" and drift:
         rek.append("Model proyeksi untuk " + ", ".join(drift) + " perlu dievaluasi ulang.")
+    if jenis == "semesteran":
+        rek.append("Lakukan audit model, sumber data, hak akses, dan jejak perubahan untuk evaluasi tengah tahun, "
+                   "lalu kalibrasi ulang model yang kinerjanya menurun.")
+    if jenis == "tahunan":
+        rek.append("Putuskan lanjut atau hentikan tiap model berdasarkan uji independen dan persetujuan tata kelola, "
+                   "lalu susun rencana pengembangan tahun berikutnya.")
     if not rek:
         rek.append("Harga semua varian masih dalam pola normal. Pemantauan rutin cukup dilanjutkan.")
     return rek
@@ -204,7 +221,7 @@ def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, m
 
 def bentuk_semua(konf, harian_target: dict, hasil_varian: dict, sinyal: list[dict], observasi: list,
                  tanggal_data: date | None, ekstra: dict | None = None) -> dict:
-    """Kembalikan {jenis: [periode terbaru dahulu]} untuk mingguan, bulanan, triwulanan."""
+    """Kembalikan {jenis: [periode terbaru dahulu]} untuk mingguan, bulanan, triwulanan, semesteran, tahunan."""
     if tanggal_data is None:
         return {j: [] for j in JUMLAH_PERIODE}
     ekstra = ekstra or {}

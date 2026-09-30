@@ -74,7 +74,7 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 
 ## 6. Buletin, laporan, dan notifikasi
 
-- Halaman **Laporan**: buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan. Pilih periode lalu
+- Halaman **Laporan**: buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan, evaluasi semesteran, dan laporan tahunan. Pilih periode lalu
   **Cetak / Simpan PDF**. Rekomendasi di dalamnya disusun otomatis dan wajib ditelaah analis.
 - **Notifikasi Telegram** (gratis): buat bot lewat @BotFather → salin token → tambahkan bot ke grup TPID →
   dapatkan `chat_id` grup (mis. kirim pesan di grup lalu buka `https://api.telegram.org/bot<TOKEN>/getUpdates`).
