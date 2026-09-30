@@ -1,4 +1,4 @@
-# Lintas AI Projection: Pemantauan Harga Pangan BPS Kabupaten Bengkulu Tengah
+# Lintas Benteng Projection: Pemantauan Harga Pangan BPS Kabupaten Bengkulu Tengah
 
 Pemantauan harga pangan berbasis AI dan Big Data untuk TPID.
 
@@ -43,7 +43,7 @@ Tiap peran punya menu dan beranda sendiri. Pengunjung tanpa login dianggap **Mas
 | Operator Data | Kondisi Data | Beranda, Cek Data, Sumber, Harga, Tentang |
 | Analis | Meja Analis | Beranda, Peringatan, Cek Data, Akurasi, Laporan, Harga, Tentang |
 | TPID | Dashboard TPID (tata letak Gambar 12) | Beranda, Peringatan, Laporan, Capaian, Harga, Alur, Tentang |
-| Administrator | Kondisi Sistem | semua menu, termasuk Pengguna |
+| Administrator | Kondisi Sistem (ada bagian Data statis dan Data dinamis) | semua menu, termasuk Pengguna |
 
 Halaman: **Beranda** (berbeda per peran), **Harga**, **Peringatan**, **Laporan**, **Capaian**, **Cek Data** (Quality Gate), **Akurasi** (Mutu Model), **Sumber**, **Catat Harga** (dapat dipakai tanpa sinyal/PWA), **Alur** (tiruan Gambar 10 dan 11), **Pengguna**, **Tentang** (Tabel 4 dan 13).
 
