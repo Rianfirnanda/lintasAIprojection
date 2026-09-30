@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Capaian Kinerja · Lintas Benteng Projection</title>
-  <meta name="description" content="Capaian indikator kinerja SMART Rancangan Aksi Perubahan: mutu data, model AI, layanan, pemanfaatan TPID, dan integritas.">
+  <meta name="description" content="Sejauh mana target tercapai: mutu data, prakiraan AI, layanan, dan pemakaian oleh TPID.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
@@ -23,33 +23,33 @@
   <div class="ind-baris" id="kpi"></div>
 
   <section class="kartu">
-    <div class="kartu-kepala"><div><h2>Indikator SMART</h2><p>Dihitung otomatis setiap pipeline berjalan.</p></div></div>
-    <div class="gulir-tabel"><table id="tabel-smart"><thead><tr><th>Kode</th><th>Indikator</th><th class="angka">Capaian</th>
-      <th class="angka">Target</th><th>Status</th><th>Sumber bukti / catatan</th></tr></thead><tbody></tbody></table></div>
+    <div class="kartu-kepala"><div><h2>Daftar target</h2><p>Dihitung otomatis setiap sistem diperbarui.</p></div></div>
+    <div class="gulir-tabel"><table id="tabel-smart"><thead><tr><th>Kode</th><th>Target</th><th class="angka">Hasil</th>
+      <th class="angka">Sasaran</th><th>Status</th><th>Bukti dan catatan</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <div class="grid dua-sama">
     <section class="kartu">
-      <h2>Koreksi supervisor per bulan</h2>
+      <h2>Koreksi dari supervisor tiap bulan</h2>
       <p class="meta-kecil" id="info-koreksi" style="margin:4px 0 10px"></p>
       <div class="wadah-grafik kecil"><canvas id="grafik-koreksi" role="img" aria-label="Tingkat koreksi supervisor per bulan"></canvas></div>
     </section>
     <section class="kartu">
-      <h2>Waktu respons tindak lanjut sinyal</h2>
+      <h2>Kecepatan menanggapi peringatan</h2>
       <div id="respons" style="margin-top:8px"></div>
-      <h2 style="margin-top:16px">Stabilitas antar-segmen</h2>
-      <p class="meta-kecil" style="margin:4px 0 8px">Rasio sMAPE model terpilih terhadap baseline naif (&lt; 1 = lebih baik dari baseline).</p>
+      <h2 style="margin-top:16px">Ketepatan tiap kelompok</h2>
+      <p class="meta-kecil" style="margin:4px 0 8px">Perbandingan meleset prakiraan kami dengan cara sederhana. Di bawah 1 berarti lebih baik dari cara sederhana.</p>
       <div id="stabilitas"></div>
     </section>
   </div>
 
   <div class="grid dua-sama">
     <section class="kartu">
-      <h2>Keandalan layanan (uptime)</h2>
+      <h2>Dashboard bisa dibuka</h2>
       <div id="uptime" style="margin-top:8px"></div>
     </section>
     <section class="kartu">
-      <h2>Survei kepuasan &amp; pengaduan</h2>
+      <h2>Kepuasan dan pengaduan</h2>
       <div id="layanan" style="margin-top:8px"></div>
     </section>
   </div>
@@ -97,7 +97,7 @@ document.querySelector("#tabel-smart tbody").innerHTML = k.indikator.map((i) => 
 // Koreksi supervisor
 const ks = k.koreksi_supervisor || {};
 document.getElementById("info-koreksi").textContent = ks.acuan
-  ? `Acuan ${ks.acuan.bulan}: ${angka(ks.acuan.persen, 2)}% · terkini ${ks.terkini.bulan}: ${angka(ks.terkini.persen, 2)}% · perubahan ${persen(ks.perubahan_persen, 1, true)} (target turun ≥30%)`
+  ? `Acuan ${ks.acuan.bulan}: ${angka(ks.acuan.persen, 2)}% · terkini ${ks.terkini.bulan}: ${angka(ks.terkini.persen, 2)}% · perubahan ${persen(ks.perubahan_persen, 1, true)} (target turun minimal 30%)`
   : (ks.catatan || "");
 let grafik = null;
 function gambarKoreksi() {
@@ -109,7 +109,7 @@ function gambarKoreksi() {
     data: { labels: seri.map((s) => s.bulan), datasets: [{ label: "Koreksi supervisor (%)", data: seri.map((s) => s.persen),
       borderColor: warna("series-1"), backgroundColor: warna("series-1"), borderWidth: 2, pointRadius: 3, tension: 0 }] },
     options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${angka(c.raw, 2)}% dari ${angka(seri[c.dataIndex].observasi)} observasi` } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${angka(c.raw, 2)}% dari ${angka(seri[c.dataIndex].observasi)} data` } } },
       scales: { x: { grid: { display: false }, ticks: { color: warna("muted"), maxRotation: 0, autoSkipPadding: 16 } },
                 y: { grid: { color: warna("grid") }, border: { display: false }, beginAtZero: true, ticks: { color: warna("muted"), callback: (v) => v + "%" } } } },
   });
@@ -120,11 +120,11 @@ saatTemaBerubah(gambarKoreksi);
 // Waktu respons
 const r = k.waktu_respons || {};
 document.getElementById("respons").innerHTML = `<dl class="dl">
-  <dt>Sinyal yang sudah ditanggapi</dt><dd>${angka(r.jumlah_respons || 0)}</dd>
-  <dt>Median (semua)</dt><dd>${r.median_hari_semua ?? "–"} hari</dd>
-  <dt>Median periode acuan</dt><dd>${r.median_hari_acuan ?? "–"} hari</dd>
-  <dt>Median periode terkini</dt><dd>${r.median_hari_terkini ?? "–"} hari</dd>
-  <dt>Perbaikan</dt><dd>${persen(r.perbaikan_persen)} (target ≥20%)</dd></dl>
+  <dt>Peringatan yang sudah ditanggapi</dt><dd>${angka(r.jumlah_respons || 0)}</dd>
+  <dt>Rata-rata waktu (semua)</dt><dd>${r.median_hari_semua ?? "–"} hari</dd>
+  <dt>Rata-rata waktu di awal</dt><dd>${r.median_hari_acuan ?? "–"} hari</dd>
+  <dt>Rata-rata waktu terbaru</dt><dd>${r.median_hari_terkini ?? "–"} hari</dd>
+  <dt>Makin cepat</dt><dd>${persen(r.perbaikan_persen)} (target minimal 20%)</dd></dl>
   ${r.catatan ? `<p class="pesan" style="margin-top:8px">${esc(r.catatan)}</p>` : ""}`;
 
 // Stabilitas
@@ -134,17 +134,17 @@ document.getElementById("stabilitas").innerHTML = segmen.length ? `<div class="c
   <div class="baris"><span>${esc(n.replace("kelompok:", "").replace("kondisi:", "kondisi ").replace("_", " "))}</span>
     <div class="batang"><span style="width:${Math.min(v, 1.5) / 1.5 * 100}%;${v > 1 ? "background:var(--critical)" : ""}"></span></div>
     <span class="n">${angka(v, 2)}</span></div>`).join("") + `</div>
-  <p class="meta-kecil" style="margin-top:8px">Selisih antarsegmen: ${persen(st.gap_persen)} (target ≤20%)${st.lebih_buruk_dari_baseline?.length ? " · lebih buruk dari baseline: " + st.lebih_buruk_dari_baseline.map(esc).join(", ") : ""}</p>`
+  <p class="meta-kecil" style="margin-top:8px">Selisih antar kelompok: ${persen(st.gap_persen)} (target paling besar 20%)${st.lebih_buruk_dari_baseline?.length ? " · lebih buruk dari cara sederhana: " + st.lebih_buruk_dari_baseline.map(esc).join(", ") : ""}</p>`
   : `<p class="kosong">${esc(st.catatan || "Belum ada data.")}</p>`;
 
 // Uptime
 const u = k.uptime || {};
 document.getElementById("uptime").innerHTML = u.jumlah_cek ? `<dl class="dl">
-  <dt>Uptime ${u.periode_hari} hari</dt><dd><strong>${persen(u.uptime_persen, 2)}</strong> (target 99,5%)</dd>
-  <dt>Pemeriksaan</dt><dd>${angka(u.berhasil)}/${angka(u.jumlah_cek)} berhasil · ${angka(u.insiden)} insiden</dd>
-  <dt>Latensi median</dt><dd>${u.latensi_median_ms ?? "–"} ms</dd>
+  <dt>Bisa dibuka (${u.periode_hari} hari)</dt><dd><strong>${persen(u.uptime_persen, 2)}</strong> (target 99,5%)</dd>
+  <dt>Pemeriksaan</dt><dd>${angka(u.berhasil)} dari ${angka(u.jumlah_cek)} berhasil · ${angka(u.insiden)} gangguan</dd>
+  <dt>Waktu buka rata-rata</dt><dd>${u.latensi_median_ms ?? "–"} milidetik</dd>
   <dt>Cek terakhir</dt><dd>${esc(waktu(u.cek_terakhir))} ${u.terakhir_ok ? '<span class="lencana baik">normal</span>' : '<span class="lencana tinggi">gangguan</span>'}</dd></dl>`
-  : `<p class="pesan">${esc(u.catatan || "Belum ada data uptime.")} Workflow <strong>Uptime</strong> memeriksa dashboard setiap jam.</p>`;
+  : `<p class="pesan">${esc(u.catatan || "Belum ada catatan pemeriksaan.")} Dashboard diperiksa otomatis setiap jam.</p>`;
 
 // Layanan
 const skm = L.skm || {};
@@ -153,16 +153,16 @@ const tautan = meta?.layanan || {};
 document.getElementById("layanan").innerHTML = `
   <p><a class="tombol" href="${esc(tautan.url_survei_eksternal || tautan.url_survei || "#")}">Isi survei kepuasan</a>
      <a class="tombol" href="${esc(tautan.url_pengaduan_eksternal || tautan.url_pengaduan || "#")}">Sampaikan pengaduan</a></p>
-  ${skm.ikm ? `<p style="margin-top:10px"><strong>IKM ${angka(skm.ikm, 2)}</strong>, mutu ${esc(skm.mutu)} (${esc(skm.kinerja)}), ${skm.responden} responden.
-     Unsur terendah: ${esc(skm.unsur_terendah)}.</p>
-     <div class="gulir-tabel"><table><thead><tr><th>Unsur</th><th class="angka">Nilai rata-rata (1–4)</th></tr></thead><tbody>
+  ${skm.ikm ? `<p style="margin-top:10px"><strong>Nilai kepuasan ${angka(skm.ikm, 2)}</strong>, mutu ${esc(skm.mutu)} (${esc(skm.kinerja)}), ${skm.responden} responden.
+     Yang paling rendah: ${esc(skm.unsur_terendah)}.</p>
+     <div class="gulir-tabel"><table><thead><tr><th>Yang dinilai</th><th class="angka">Nilai rata-rata (1 sampai 4)</th></tr></thead><tbody>
      ${skm.nrr_per_unsur.map((x) => `<tr><td>${esc(x.kode)}. ${esc(x.unsur)}</td><td class="angka">${angka(x.nrr, 2)}</td></tr>`).join("")}</tbody></table></div>`
     : `<p class="kosong" style="margin-top:10px">${esc(L.catatan_ikm || "Belum ada responden survei.")}</p>`}
   <h3 style="margin-top:14px">Pengaduan</h3>
-  ${p.total ? `<p>${p.total} pengaduan · ${p.terbuka} terbuka · ditanggapi ${persen(p.ditanggapi_persen, 0)} · median selesai ${p.median_hari_selesai ?? "–"} hari</p>
+  ${p.total ? `<p>${p.total} pengaduan · ${p.terbuka} masih terbuka · ${persen(p.ditanggapi_persen, 0)} sudah ditanggapi · rata-rata selesai ${p.median_hari_selesai ?? "–"} hari</p>
      <ul>${p.terbaru.map((x) => `<li><a href="${esc(x.url)}">${esc(x.judul)}</a> <span class="meta-kecil">${esc(tgl(x.dibuat))} · ${x.status === "open" ? "terbuka" : "selesai"}</span></li>`).join("")}</ul>`
     : `<p class="kosong">${esc(L.catatan_pengaduan || "Belum ada pengaduan.")}</p>`}
-  <p class="meta-kecil">IKM dihitung sesuai PermenPANRB No. 14 Tahun 2017 (9 unsur, bobot sama, konversi ×25). Survei dan pengaduan lewat GitHub bersifat publik.</p>`;
+  <p class="meta-kecil">Nilai kepuasan (IKM) dihitung sesuai PermenPANRB No. 14 Tahun 2017. Survei dan pengaduan lewat GitHub bisa dilihat publik.</p>`;
 </script>
 </body>
 </html>

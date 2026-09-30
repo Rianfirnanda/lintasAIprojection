@@ -26,12 +26,12 @@
     <div class="alur" style="margin-top:10px" aria-label="Alur pengambilan data">
       <span class="langkah">Tentukan kebutuhan</span><span class="panah">→</span>
       <span class="langkah">Cari sumber (AI Data Finder)</span><span class="panah">→</span>
-      <span class="langkah">Cek izin &amp; kualitas</span><span class="panah">→</span>
+      <span class="langkah">Cek izin dan mutu</span><span class="panah">→</span>
       <span class="langkah">Pilih metode akses</span><span class="panah">→</span>
       <span class="langkah">Ambil data</span><span class="panah">→</span>
-      <span class="langkah">Catat metadata</span><span class="panah">→</span>
-      <span class="langkah">Standardisasi</span><span class="panah">→</span>
-      <span class="langkah">Integrasikan</span>
+      <span class="langkah">Catat keterangan sumber</span><span class="panah">→</span>
+      <span class="langkah">Samakan format</span><span class="panah">→</span>
+      <span class="langkah">Gabungkan</span>
     </div>
     </details>
   </section>
@@ -42,7 +42,7 @@
     </div>
     <div class="gulir-tabel"><table id="tabel-sumber"><thead><tr>
       <th>Kode</th><th>Nama</th><th>Kelompok</th><th>Metode akses</th><th>Frekuensi</th><th>Status</th>
-      <th class="angka">Prioritas</th><th class="angka">Observasi</th><th>Lisensi/ketentuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+      <th class="angka">Prioritas</th><th class="angka">Jumlah data</th><th>Izin pemakaian</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section class="kartu">
@@ -74,7 +74,7 @@ document.getElementById("kpi").innerHTML = [
   ind({ i: "database", label: "Sumber", nilai: data.sumber.length, sub: "terdaftar" }),
   ind({ i: "centang", warna: "hijau", label: "Sumber aktif", nilai: nAktif, sub: "sedang dipakai", warnaNilai: "hijau", meter: data.sumber.length ? nAktif / data.sumber.length * 100 : 0, meterWarna: "hijau" }),
   ind({ i: "lampu", warna: "oranye", label: "Masih kandidat", nilai: data.sumber.filter((x) => x.status !== "aktif" && x.status !== "ditolak").length, sub: "menunggu dicek" }),
-  ind({ i: "dokumen", label: "Data terkumpul", nilai: angka(data.sumber.reduce((a, x) => a + (x.jumlah_observasi || 0), 0)), sub: "baris observasi" }),
+  ind({ i: "dokumen", label: "Data terkumpul", nilai: angka(data.sumber.reduce((a, x) => a + (x.jumlah_observasi || 0), 0)), sub: "baris data" }),
 ].join("");
 const KELAS_STATUS = { aktif: "baik", kandidat: "info", menunggu_konfirmasi: "rendah", ditolak: "polos" };
 document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) => `<tr>

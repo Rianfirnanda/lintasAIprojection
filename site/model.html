@@ -23,12 +23,11 @@
 
   <div class="grid dua-sama">
     <section class="kartu">
-      <h2>Capaian terhadap target</h2>
-      <p class="meta-kecil" style="margin-bottom:8px">Ambang dari Tabel 5 Rancangan Aksi Perubahan (target berbasis baseline pilot).</p>
-      <div class="gulir-tabel"><table id="tabel-target"><thead><tr><th>Indikator</th><th>Target</th><th>Capaian</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      <div class="kartu-kepala"><div><h2>Sudah sesuai target?</h2><p>Target ini disusun bersama dalam rancangan proyek.</p></div></div>
+      <div class="gulir-tabel"><table id="tabel-target"><thead><tr><th>Yang dinilai</th><th>Target</th><th>Hasil</th><th>Status</th></tr></thead><tbody></tbody></table></div>
     </section>
     <section class="kartu">
-      <h2>Evaluasi deteksi anomali</h2>
+      <div class="kartu-kepala"><div><h2>Ketepatan peringatan harga janggal</h2><p>Seberapa baik sistem menangkap lonjakan harga.</p></div></div>
       <div id="evaluasi" style="margin-top:8px"></div>
     </section>
   </div>
@@ -36,34 +35,36 @@
   <section class="kartu">
     <div class="kartu-kepala">
       <div>
-        <h2>Hasil backtest per varian</h2>
-        <p>sMAPE (%) tiap model kandidat pada horizon 1–14 hari; model terpilih ditebalkan. Cakupan = proporsi aktual di dalam interval 90% (uji leave-one-origin-out).</p>
+        <h2>Hasil uji tiap varian</h2>
+        <p>Angka di kolom cara prakiraan adalah rata-rata meleset dalam persen, makin kecil makin baik. Cara terbaik ditebalkan.</p>
       </div>
     </div>
     <div class="gulir-tabel"><table id="tabel-model"><thead><tr>
-      <th>Varian</th><th class="angka">Naif</th><th class="angka">Rata 7</th><th class="angka">Holt</th><th class="angka">Hari raya</th>
-      <th class="angka">Perbaikan vs naif</th><th class="angka">Bias</th><th class="angka">Cakupan 90%</th><th class="angka">MAE</th>
-      <th class="angka">Rasio volatilitas</th><th class="angka">Δ sMAPE 2 periode</th><th>Persetujuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+      <th>Varian</th><th class="angka" title="Pakai harga terakhir">Harga terakhir</th><th class="angka" title="Rata-rata 7 hari terakhir">Rata-rata 7 hari</th><th class="angka" title="Tren yang melandai">Tren</th><th class="angka" title="Pola dari hari raya sebelumnya">Hari raya</th>
+      <th class="angka" title="Seberapa lebih baik dari cara sederhana">Lebih baik dari harga terakhir</th><th class="angka" title="Cenderung terlalu tinggi atau terlalu rendah">Condong</th><th class="angka" title="Berapa kali harga sebenarnya jatuh di dalam rentang prakiraan">Tepat dalam rentang</th><th class="angka" title="Rata-rata meleset dalam rupiah">Meleset (Rp)</th>
+      <th class="angka" title="Perbandingan naik-turun harga sekarang dengan biasanya">Naik-turun harga</th><th class="angka" title="Rata-rata meleset dua periode terakhir">Meleset, 2 periode</th><th>Persetujuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section class="kartu">
     <div class="kartu-kepala">
       <div>
-        <h2>Persetujuan manusia atas model</h2>
-        <p id="info-persetujuan">Model rekomendasi hasil backtest perlu disetujui analis/pimpinan sebelum dipakai (Gambar 11: persetujuan manusia).</p>
+        <h2>Persetujuan cara prakiraan</h2>
+        <p id="info-persetujuan">Cara prakiraan yang disarankan perlu disetujui analis atau pimpinan sebelum dipakai.</p>
       </div>
       <div class="baris-kontrol">
-        <input type="text" id="penyetuju" placeholder="Nama/jabatan penyetuju" aria-label="Penyetuju">
+        <input type="text" id="penyetuju" placeholder="Nama atau jabatan penyetuju" aria-label="Penyetuju">
         <button class="tombol utama-aksi" type="button" id="unduh-persetujuan">Unduh berkas persetujuan</button>
       </div>
     </div>
-    <p class="meta-kecil">Centang model yang disetujui pada tabel di atas, lalu unggah berkas hasil unduhan ke <code>data/persetujuan_model/</code>.
-      Bila <code>analisis.wajib_persetujuan_model</code> = <code>true</code> di <code>config/pengaturan.json</code>, model yang belum disetujui tidak dipakai (sistem kembali ke baseline naif).</p>
+    <details><summary>Cara menyetujui</summary>
+      <p class="meta-kecil" style="margin-top:8px">Centang varian yang disetujui di tabel atas, lalu unggah berkas hasil unduhan ke <code>data/persetujuan_model/</code>.
+      Kalau <code>analisis.wajib_persetujuan_model</code> di <code>config/pengaturan.json</code> diisi <code>true</code>, varian yang belum disetujui memakai cara sederhana.</p>
+    </details>
   </section>
 
   <section class="kartu prosa">
-    <h2>Metodologi singkat</h2>
-    <ul id="metodologi"></ul>
+    <details><summary><b>Cara kami menghitung</b></summary>
+    <ul id="metodologi" style="margin-top:8px"></ul></details>
   </section>
 </main>
 
@@ -80,41 +81,42 @@ try {
   throw e;
 }
 const r = m.ringkasan, t = m.target, ev = m.evaluasi_anomali;
-const dipakai = Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(k.replace("_", " "))}`).join(" · ") || "–";
+const NAMA_CARA = { naif: "harga terakhir", rata7: "rata-rata 7 hari", holt_redam: "tren melandai", hari_raya: "pola hari raya" };
+const dipakai = Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(NAMA_CARA[k] || k.replace("_", " "))}`).join(" · ") || "–";
 document.getElementById("kpi").innerHTML = [
-  ind({ i: "kubus", label: "Varian diuji", nilai: angka(r.varian_dinilai), sub: "punya riwayat cukup" }),
-  ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: "sMAPE, 1 sampai 14 hari" }),
-  ind({ i: "tren", warna: "hijau", label: "Lebih baik dari cara sederhana", nilai: `${r.lolos_smape}/${r.varian_dinilai}`, sub: "unggul minimal 10%", meter: r.varian_dinilai ? r.lolos_smape / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
-  ind({ i: "otak", label: "Model dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${dipakai}</span>`, sub: "per varian" }),
+  ind({ i: "kubus", label: "Varian diuji", nilai: angka(r.varian_dinilai), sub: "riwayat harganya cukup" }),
+  ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: "prakiraan 1 sampai 14 hari" }),
+  ind({ i: "tren", warna: "hijau", label: "Lebih baik dari harga terakhir", nilai: `${r.lolos_smape}/${r.varian_dinilai}`, sub: "unggul minimal 10%", meter: r.varian_dinilai ? r.lolos_smape / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
+  ind({ i: "otak", label: "Cara prakiraan dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${dipakai}</span>`, sub: "jumlah varian per cara" }),
 ].join("");
 
-const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum dapat dinilai</span>'
-  : ok ? '<span class="lencana baik">memenuhi</span>' : '<span class="lencana sedang">belum memenuhi</span>';
+const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum bisa dinilai</span>'
+  : ok ? '<span class="lencana baik">tercapai</span>' : '<span class="lencana sedang">belum tercapai</span>';
 const n = r.varian_dinilai || 0;
 const baris = [
-  ["Galat proyeksi (sMAPE)", `≥ ${t.perbaikan_smape_persen}% lebih rendah dari baseline`, `${r.lolos_smape}/${n} varian`, n ? r.lolos_smape === n : null],
-  ["Bias proyeksi", `|bias| ≤ ${t.bias_absolut_maks_persen}%`, `${r.lolos_bias}/${n} varian`, n ? r.lolos_bias === n : null],
-  ["Cakupan interval 90%", `${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%`, `${r.lolos_cakupan}/${n} varian`, n ? r.lolos_cakupan === n : null],
-  ["F1 deteksi anomali", `≥ ${t.f1_min}`, ev.f1 ?? "–", ev.f1 === undefined || ev.f1 === null ? null : ev.f1 >= t.f1_min],
-  ["Recall anomali", `≥ ${t.recall_min}`, ev.recall ?? "–", ev.recall === undefined || ev.recall === null ? null : ev.recall >= t.recall_min],
-  ["False positive rate", `≤ ${t.fpr_maks}`, ev.false_positive_rate ?? "–", ev.false_positive_rate === undefined || ev.false_positive_rate === null ? null : ev.false_positive_rate <= t.fpr_maks],
+  ["Rata-rata meleset", `minimal ${t.perbaikan_smape_persen}% lebih kecil dari cara sederhana`, `${r.lolos_smape}/${n} varian`, n ? r.lolos_smape === n : null],
+  ["Condong terlalu tinggi atau rendah", `paling banyak ${t.bias_absolut_maks_persen}%`, `${r.lolos_bias}/${n} varian`, n ? r.lolos_bias === n : null],
+  ["Harga sebenarnya masuk rentang prakiraan", `${t.cakupan_interval_min_persen} sampai ${t.cakupan_interval_maks_persen}%`, `${r.lolos_cakupan}/${n} varian`, n ? r.lolos_cakupan === n : null],
+  ["Nilai gabungan peringatan (F1)", `minimal ${t.f1_min}`, ev.f1 ?? "–", ev.f1 === undefined || ev.f1 === null ? null : ev.f1 >= t.f1_min],
+  ["Lonjakan yang tertangkap (recall)", `minimal ${t.recall_min}`, ev.recall ?? "–", ev.recall === undefined || ev.recall === null ? null : ev.recall >= t.recall_min],
+  ["Peringatan yang salah (false alarm)", `paling banyak ${t.fpr_maks}`, ev.false_positive_rate ?? "–", ev.false_positive_rate === undefined || ev.false_positive_rate === null ? null : ev.false_positive_rate <= t.fpr_maks],
 ];
 document.querySelector("#tabel-target tbody").innerHTML = baris.map(([a, b, c, ok]) =>
   `<tr><td>${a}</td><td>${esc(b)}</td><td>${esc(c)}</td><td>${status(ok)}</td></tr>`).join("");
 
 document.getElementById("evaluasi").innerHTML = `
   <dl class="dl">
-    <dt>Sumber label</dt><dd>${esc(ev.sumber_label)}</dd>
-    <dt>Episode terdeteksi</dt><dd>${angka(ev.sinyal_total)}${ev.kebenaran_total !== undefined ? ` · kebenaran ${angka(ev.kebenaran_total)}` : ""}</dd>
-    <dt>TP / FP / FN</dt><dd>${angka(ev.tp)} / ${angka(ev.fp)} / ${angka(ev.fn)}</dd>
-    <dt>Precision</dt><dd>${ev.precision ?? "–"}</dd>
-    <dt>Recall</dt><dd>${ev.recall ?? "–"}</dd>
-    <dt>F1</dt><dd>${ev.f1 ?? "–"}</dd>
-    <dt>False positive rate</dt><dd>${ev.false_positive_rate ?? "–"}</dd>
-    <dt>Titik dievaluasi</dt><dd>${angka(ev.titik_dievaluasi)} (varian × hari)</dd>
+    <dt>Acuan penilaian</dt><dd>${esc(ev.sumber_label)}</dd>
+    <dt>Lonjakan yang ditemukan</dt><dd>${angka(ev.sinyal_total)}${ev.kebenaran_total !== undefined ? ` dari ${angka(ev.kebenaran_total)} lonjakan sebenarnya` : ""}</dd>
+    <dt>Benar / salah / terlewat</dt><dd>${angka(ev.tp)} / ${angka(ev.fp)} / ${angka(ev.fn)}</dd>
+    <dt>Peringatan yang benar</dt><dd>${ev.precision ?? "–"}</dd>
+    <dt>Lonjakan yang tertangkap</dt><dd>${ev.recall ?? "–"}</dd>
+    <dt>Nilai gabungan</dt><dd>${ev.f1 ?? "–"}</dd>
+    <dt>Peringatan yang salah</dt><dd>${ev.false_positive_rate ?? "–"}</dd>
+    <dt>Hari yang diperiksa</dt><dd>${angka(ev.titik_dievaluasi)} (varian × hari)</dd>
   </dl>
   ${ev.catatan ? `<p class="pesan" style="margin-top:10px">${esc(ev.catatan)}</p>` : ""}
-  <p class="meta-kecil" style="margin-top:10px">Dengan data asli, penilaian ini memakai status tindak lanjut (terverifikasi atau false alarm) dan catatan anomali terlewat dari analis.</p>`;
+  <p class="meta-kecil" style="margin-top:10px">Kalau sudah memakai data asli, penilaian ini memakai status tindak lanjut (terverifikasi atau false alarm) dan catatan lonjakan yang terlewat dari analis.</p>`;
 
 const sm = (x) => (x ? angka(x.smape, 2) : "–");
 document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) => {
@@ -134,15 +136,15 @@ document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) =>
     <td class="angka">${d.rasio_volatilitas ?? "–"}</td>
     <td class="angka">${d.penurunan_periode_sebelumnya_persen ?? "–"}% → ${d.penurunan_periode_terakhir_persen ?? "–"}%</td>
     <td>${v.status_persetujuan === "disetujui" ? `<span class="lencana baik">disetujui</span>${v.persetujuan?.penyetuju ? `<br><span class="meta-kecil">${esc(v.persetujuan.penyetuju)} ${esc(v.persetujuan.tanggal || "")}</span>` : ""}`
-      : v.status_persetujuan === "menunggu_persetujuan" ? `<label class="cek"><input type="checkbox" data-setuju="${esc(v.kode)}" data-model="${esc(v.model_rekomendasi)}"> setujui ${esc(v.model_rekomendasi)}</label>`
+      : v.status_persetujuan === "menunggu_persetujuan" ? `<label class="cek"><input type="checkbox" data-setuju="${esc(v.kode)}" data-model="${esc(v.model_rekomendasi)}"> setujui ${esc(NAMA_CARA[v.model_rekomendasi] || v.model_rekomendasi)}</label>`
       : '<span class="lencana polos">–</span>'}</td>
     <td class="meta-kecil">${esc((v.catatan || []).join(" "))}</td></tr>`;
 }).join("") || `<tr><td colspan="13" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
 
 const menunggu = m.per_varian.filter((v) => v.status_persetujuan === "menunggu_persetujuan").length;
 document.getElementById("info-persetujuan").textContent =
-  `${m.per_varian.length - menunggu} dari ${m.per_varian.length} varian memakai model yang sudah disetujui atau baseline; ${menunggu} menunggu persetujuan.` +
-  (m.pengaturan.analisis.wajib_persetujuan_model ? " Persetujuan diwajibkan." : " Persetujuan belum diwajibkan, jadi model rekomendasi tetap dipakai.");
+  `${m.per_varian.length - menunggu} dari ${m.per_varian.length} varian sudah memakai cara yang disetujui atau cara sederhana. ${menunggu} menunggu persetujuan.` +
+  (m.pengaturan.analisis.wajib_persetujuan_model ? " Persetujuan wajib." : " Persetujuan belum wajib, jadi cara yang disarankan tetap dipakai.");
 document.getElementById("unduh-persetujuan").addEventListener("click", () => {
   const penyetuju = document.getElementById("penyetuju").value.trim();
   if (!penyetuju) { document.getElementById("penyetuju").focus(); return; }
@@ -156,12 +158,12 @@ document.getElementById("unduh-persetujuan").addEventListener("click", () => {
 
 const a = m.pengaturan.analisis, s = m.pengaturan.sinyal;
 document.getElementById("metodologi").innerHTML = [
-  `Harga harian Bengkulu Tengah adalah median data yang lolos pemeriksaan dari sumber berprioritas tertinggi pada tanggal itu.`,
-  `Harga normal (baseline) adalah median ${a.jendela_baseline_hari} hari sebelumnya. Model yang diuji: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
-  `Rolling-origin backtesting: ${a.jumlah_origin_backtest} titik asal berjarak ${a.jarak_origin_hari} hari, horizon ${a.horizon_hari} hari; minimal ${a.minimal_hari_riwayat} hari observasi.`,
-  `Interval prediksi ${Math.round(a.tingkat_interval * 100)}%: kuantil konformal residu log(aktual/proyeksi) per horizon dari backtest.`,
-  `Anomali: robust z-score (median/MAD ${a.jendela_baseline_hari} hari) ≥ ${s.z_ambang} dan deviasi ≥ ambang kelompok (${Object.entries(s.ambang_persen).map(([k, v]) => `${k} ${v}%`).join(", ")}). Hari anomali berurutan digabung menjadi satu episode.`,
-  `Drift data: PSI log-return (bin tetap) ≥ ${s.psi_ambang} atau rasio volatilitas di luar ${s.rasio_volatilitas_batas.join("–")}, keduanya dengan uji permutasi p < ${s.alfa_uji_drift}. Drift model: sMAPE dua periode 4-mingguan terakhir memburuk > ${t.penurunan_metrik_drift_maks_persen}% dari periode acuan.`,
+  `Harga harian Bengkulu Tengah diambil dari nilai tengah data yang lolos pemeriksaan, dari sumber yang paling diprioritaskan pada hari itu.`,
+  `Harga normal adalah nilai tengah ${a.jendela_baseline_hari} hari sebelumnya. Cara prakiraan yang dicoba: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
+  `Ujinya memakai data lama: ${a.jumlah_origin_backtest} titik awal yang berjarak ${a.jarak_origin_hari} hari, prakiraan sejauh ${a.horizon_hari} hari, dan butuh minimal ${a.minimal_hari_riwayat} hari data.`,
+  `Rentang prakiraan ${Math.round(a.tingkat_interval * 100)}%: dihitung dari selisih harga sebenarnya dan prakiraan pada uji data lama.`,
+  `Harga janggal: harga menyimpang jauh dari kebiasaan ${a.jendela_baseline_hari} hari terakhir (skor ${s.z_ambang} atau lebih) dan selisihnya melewati batas tiap kelompok (${Object.entries(s.ambang_persen).map(([k, v]) => `${k} ${v}%`).join(", ")}). Hari janggal berturut-turut dihitung satu kejadian.`,
+  `Pola berubah: cara naik-turun harga sekarang jauh beda dari biasanya (skor ${s.psi_ambang} atau lebih, atau naik-turun harian di luar ${s.rasio_volatilitas_batas.join(" sampai ")}), dan lolos uji acak p < ${s.alfa_uji_drift}. Untuk prakiraan, tandanya meleset yang memburuk lebih dari ${t.penurunan_metrik_drift_maks_persen}% dibanding periode acuan.`,
 ].map((x) => `<li>${x}</li>`).join("");
 </script>
 </body>

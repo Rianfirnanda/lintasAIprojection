@@ -119,11 +119,15 @@ import { peranAktif } from "./assets/akses.js";
 import { renderBerandaPeran } from "./assets/peran.js";
 
 const meta = await pasangKerangka("index.html");
-// Dashboard TPID (Gambar 12) untuk peran TPID. Administrator dan analis membukanya lewat ?tampilan=tpid.
+// Dashboard TPID (Gambar 12) tampil langsung di halaman ini untuk TPID, analis, dan administrator.
+// Analis dan administrator melihat ringkasan peran masing-masing di atasnya.
 const peran = peranAktif();
-const tampilanTpid = peran === "tpid" || (["admin", "analis"].includes(peran) && new URLSearchParams(location.search).get("tampilan") === "tpid");
+const tampilanTpid = ["tpid", "admin", "analis"].includes(peran);
+const tampilanPeran = peran !== "tpid";
+const utamaPeran = document.getElementById("beranda-peran");
 const utama = document.getElementById(tampilanTpid ? "beranda-tpid" : "beranda-peran");
-utama.hidden = false;
+utamaPeran.hidden = !tampilanPeran;
+document.getElementById("beranda-tpid").hidden = !tampilanTpid;
 if (!tampilanTpid) document.body.classList.remove("halaman-dash");
 document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 26));
@@ -179,7 +183,7 @@ function renderPrioritas(varian) {
 function renderMutu(m, daftarSinyal) {
   document.getElementById("mutu").innerHTML = hitungMutu(m, daftarSinyal).map((u) => `
     <div class="ubin" title="${esc(u.catatan)}"><span class="ubin-ikon">${ikon(u.ikon, 24)}</span>
-      <div class="ubin-nama">${u.nama}</div><div class="ubin-nilai">${u.nilai}</div><span class="pil ${u.status[1]}">${u.status[0]}</span></div>`).join("");
+      <div class="ubin-nama">${u.nama}</div><div class="ubin-kecil">${u.arti}</div><div class="ubin-nilai">${u.nilai}</div><span class="pil ${u.status[1]}">${u.status[0]}</span></div>`).join("");
 }
 
 /* ---------- perbandingan perubahan harga (rata-rata per komoditas) */
@@ -230,7 +234,7 @@ const KETERANGAN = {
   proyeksi_naik: "Pantau harga 7 hari ke depan",
   risiko_hari_raya: "Siapkan pemantauan intensif",
   data_terlambat: "Hubungi petugas pencatat",
-  drift: "Evaluasi ulang model proyeksi",
+  drift: "Cek ulang cara prakiraan",
 };
 const WARNA_STATUS = { baru: "oranye", perlu_verifikasi: "oranye", terverifikasi: "oranye", ditindaklanjuti: "merah", selesai: "hijau", false_alarm: "abu" };
 
@@ -246,7 +250,7 @@ function renderTindakLanjut(daftar, daftarPasar) {
     const komoditas = s.varian || (pasar ? pasar.nama : "Semua varian");
     return `<tr><td>${i + 1}</td><td>${esc(komoditas)}</td><td>${esc(s.judul)}</td>
       <td><span class="titik-status ${WARNA_STATUS[s.status] || "abu"}"></span>${esc(STATUS_SINYAL[s.status] || s.status)}</td>
-      <td>${esc(KETERANGAN[s.jenis] || "Perlu ditelaah analis")}</td></tr>`;
+      <td>${esc(KETERANGAN[s.jenis] || "Perlu dicek analis")}</td></tr>`;
   }).join("");
 }
 
@@ -373,14 +377,15 @@ function siapkanGrafik(varian, master, model) {
 }
 
 /* ---------- muat data (dijalankan setelah semua definisi di atas) */
-if (!tampilanTpid) {
+if (tampilanPeran) {
   try {
-    await renderBerandaPeran(peran, meta, utama);
+    await renderBerandaPeran(peran, meta, utamaPeran);
   } catch (e) {
     console.error(e);
-    tampilkanGalat(utama, e);
+    tampilkanGalat(utamaPeran, e);
   }
-} else try {
+}
+if (tampilanTpid) try {
   const [ringkasan, sinyal, pasar, master, model, kinerja] = await Promise.all([
     muatJSON("ringkasan.json"), muatJSON("sinyal.json"), muatJSON("pasar.json"), muatJSON("master.json"), muatJSON("model.json"),
     muatJSON("kinerja.json").catch(() => null),

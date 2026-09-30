@@ -122,22 +122,22 @@ def _rekomendasi(konf, jenis, baris_varian, sinyal_periode, kelengkapan, hari_ra
     belum = [s for s in sinyal_periode if s["jenis"] == "anomali_harga" and s["keparahan"] == "tinggi"
              and s.get("status") in ("baru", "perlu_verifikasi")]
     if belum:
-        rek.append(f"Ada {len(belum)} sinyal prioritas yang belum diverifikasi. Tunjuk penanggung jawab dan sepakati tenggatnya.")
+        rek.append(f"Ada {len(belum)} peringatan penting yang belum diverifikasi. Tunjuk penanggung jawab dan sepakati tenggatnya.")
     kurang = [p for p in kelengkapan["per_pasar"]
               if p["kelengkapan_persen"] is not None and p["kelengkapan_persen"] < konf.pengaturan["target_kinerja"]["ketepatan_waktu_persen"]]
     for p in kurang:
         rek.append(f"Data {p['nama_pasar']} baru lengkap {_a(p['kelengkapan_persen'], 0)}%. Koordinasikan dengan petugas; "
-                   "bila sinyal sulit, formulir luring bisa dipakai.")
+                   "kalau sinyal sulit, halaman Catat Harga bisa dipakai tanpa internet.")
     if hari_raya:
         rek.append(f"{hari_raya['nama']} jatuh pada {hari_raya['tanggal']} (H-{hari_raya['h_minus']}). Siapkan pemantauan "
                    "harian mulai H-14 dan pastikan ketersediaan stok bersama Pemda dan Bulog.")
     if jenis != "mingguan" and drift:
-        rek.append("Model proyeksi untuk " + ", ".join(drift) + " perlu dievaluasi ulang.")
+        rek.append("Prakiraan untuk " + ", ".join(drift) + " perlu dicek ulang.")
     if jenis == "semesteran":
-        rek.append("Lakukan audit model, sumber data, hak akses, dan jejak perubahan untuk evaluasi tengah tahun, "
-                   "lalu kalibrasi ulang model yang kinerjanya menurun.")
+        rek.append("Periksa cara prakiraan, sumber data, hak akses, dan riwayat perubahan untuk evaluasi tengah tahun, "
+                   "lalu sesuaikan ulang prakiraan yang mulai kurang tepat.")
     if jenis == "tahunan":
-        rek.append("Putuskan lanjut atau hentikan tiap model berdasarkan uji independen dan persetujuan tata kelola, "
+        rek.append("Putuskan lanjut atau hentikan tiap cara prakiraan berdasarkan uji independen dan persetujuan tata kelola, "
                    "lalu susun rencana pengembangan tahun berikutnya.")
     if not rek:
         rek.append("Harga semua varian masih dalam pola normal. Pemantauan rutin cukup dilanjutkan.")
@@ -195,10 +195,10 @@ def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, m
     status = Counter(s.get("status", "baru") for s in sinyal_periode if s["jenis"] == "anomali_harga")
     n_anomali = sum(status.values())
     if n_anomali:
-        ringkasan.append(f"Ada {n_anomali} sinyal anomali harga pada periode ini, "
+        ringkasan.append(f"Ada {n_anomali} peringatan harga janggal pada periode ini, "
                          f"{status.get('ditindaklanjuti', 0) + status.get('selesai', 0)} di antaranya sudah ditindaklanjuti.")
     else:
-        ringkasan.append("Tidak ada anomali harga pada periode ini.")
+        ringkasan.append("Tidak ada harga janggal pada periode ini.")
     if kelengkapan["rata_persen"] is not None:
         ringkasan.append(f"Rata-rata kelengkapan data pasar {_a(kelengkapan['rata_persen'])}%.")
 

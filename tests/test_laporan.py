@@ -41,7 +41,7 @@ def test_bentuk_semua(konf):
     assert [len(hasil[j]) for j in ("mingguan", "bulanan", "triwulanan")] == [8, 6, 4]
     assert list(hasil) == ["mingguan", "bulanan", "triwulanan", "semesteran", "tahunan"]
     assert hasil["semesteran"][0]["label"] == "Semester II 2026" and hasil["tahunan"][0]["label"] == "Tahun 2026"
-    assert any("audit model" in r for r in hasil["semesteran"][0]["rekomendasi"])
+    assert any("Periksa cara prakiraan" in r for r in hasil["semesteran"][0]["rekomendasi"])
     assert any("lanjut atau hentikan" in r for r in hasil["tahunan"][0]["rekomendasi"])
     m = hasil["mingguan"][0]
     assert m["label"] == "Minggu ke-39 2026"

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Peringatan Harga · Lintas Benteng Projection</title>
-  <meta name="description" content="Daftar sinyal harga (anomali, proyeksi, hari raya, keterlambatan data, drift) dan status tindak lanjut TPID.">
+  <meta name="description" content="Daftar harga yang perlu dicek: harga janggal, perkiraan naik, risiko hari raya, dan data terlambat, lengkap dengan status penanganannya.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
@@ -26,11 +26,11 @@
       <label class="sr-only" for="f-jenis">Jenis</label>
       <select id="f-jenis"><option value="">Semua jenis</option></select>
       <label class="sr-only" for="f-keparahan">Keparahan</label>
-      <select id="f-keparahan"><option value="">Semua keparahan</option><option value="tinggi">Tinggi</option><option value="sedang">Sedang</option><option value="rendah">Rendah</option></select>
+      <select id="f-keparahan"><option value="">Semua tingkat</option><option value="tinggi">Tinggi</option><option value="sedang">Sedang</option><option value="rendah">Rendah</option></select>
       <label class="sr-only" for="f-status">Status</label>
       <select id="f-status"><option value="">Semua status</option></select>
       <label class="sr-only" for="f-cari">Cari</label>
-      <input type="search" id="f-cari" placeholder="Cari komoditas/pasar…">
+      <input type="search" id="f-cari" placeholder="Cari komoditas atau pasar">
       <label class="cek"><input type="checkbox" id="f-aktif" checked> Hanya yang aktif</label>
     </div>
     <ul class="daftar-sinyal" id="daftar"></ul>
@@ -42,17 +42,17 @@
       <label>ID peringatan<input type="text" id="tl-id" placeholder="klik 'catat' pada peringatan" required></label>
       <label>Status
         <select id="tl-status">
-          <option value="perlu_verifikasi">Perlu verifikasi</option>
-          <option value="terverifikasi">Terverifikasi</option>
-          <option value="false_alarm">False alarm</option>
-          <option value="ditindaklanjuti">Ditindaklanjuti</option>
+          <option value="perlu_verifikasi">Perlu dicek</option>
+          <option value="terverifikasi">Sudah dicek, benar</option>
+          <option value="false_alarm">Salah peringatan</option>
+          <option value="ditindaklanjuti">Sedang ditangani</option>
           <option value="selesai">Selesai</option>
-          <option value="anomali_terlewat">Anomali terlewat (tidak terdeteksi)</option>
+          <option value="anomali_terlewat">Lonjakan yang terlewat (tidak terdeteksi)</option>
         </select>
       </label>
       <label>Nama petugas atau analis<input type="text" id="tl-petugas" required></label>
-      <label>Kode varian (hanya anomali terlewat)<input type="text" id="tl-varian" placeholder="mis. CRW02"></label>
-      <label>Tanggal kejadian (hanya anomali terlewat)<input type="date" id="tl-kejadian"></label>
+      <label>Kode varian (hanya untuk lonjakan terlewat)<input type="text" id="tl-varian" placeholder="mis. CRW02"></label>
+      <label>Tanggal kejadian (hanya untuk lonjakan terlewat)<input type="date" id="tl-kejadian"></label>
       <label style="grid-column:1/-1">Catatan temuan atau tindakan<textarea id="tl-catatan" rows="2"></textarea></label>
       <div style="grid-column:1/-1" class="baris-kontrol">
         <button class="tombol utama-aksi" type="submit">Salin baris CSV</button>
@@ -62,10 +62,10 @@
     <details style="margin-top:14px"><summary>Cara memperbarui status</summary>
       <div class="prosa" style="margin-top:8px;font-size:0.9rem">
         <ol>
-          <li><strong>Lewat GitHub Issues (disarankan).</strong> Peringatan tinggi otomatis dibuatkan issue berlabel <code>sinyal-harga</code>. Pasang satu label status: <code>status: terverifikasi</code>, <code>status: false-alarm</code>, <code>status: ditindaklanjuti</code>, atau <code>status: selesai</code>. Menutup issue berarti selesai.</li>
+          <li><strong>Lewat GitHub Issues (disarankan).</strong> Peringatan tinggi otomatis dibuatkan issue berlabel <code>sinyal-harga</code>. Pasang satu label status: <code>status: terverifikasi</code>, <code>status: false-alarm</code>, <code>status: ditindaklanjuti</code>, atau <code>status: selesai</code>. Kalau issue ditutup, berarti sudah selesai.</li>
           <li><strong>Lewat buku tindak lanjut.</strong> Buat baris CSV dengan formulir di atas, lalu tambahkan ke berkas di <code>data/tindak_lanjut/</code>.</li>
         </ol>
-        <p>Label <em>terverifikasi</em> dan <em>false alarm</em> dipakai untuk menghitung precision dan recall di halaman <a href="model.html">Akurasi</a>.</p>
+        <p>Label <em>terverifikasi</em> dan <em>false alarm</em> dipakai untuk menilai seberapa tepat peringatan kami di halaman <a href="model.html">Akurasi</a>.</p>
         <p class="meta-kecil">Header berkas: <code>id_sinyal,status,catatan,petugas,tanggal,kode_varian,tanggal_kejadian</code></p>
       </div>
     </details>
@@ -88,10 +88,10 @@ try {
 const r = data.ringkasan;
 const pesanGithub = /nonaktif|dilewati/.test(data.pesan_github || "");
 document.getElementById("kpi").innerHTML = [
-  ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(r.aktif), sub: `${r.per_keparahan.tinggi || 0} tinggi · ${r.per_keparahan.sedang || 0} sedang` }),
-  ind({ i: "peringatan", warna: "merah", label: "Harga janggal", nilai: angka(r.per_jenis.anomali_harga || 0), sub: `60 hari · ${r.status_anomali.false_alarm || 0} false alarm` }),
-  ind({ i: "centang", warna: "hijau", label: "Sudah ditindaklanjuti", nilai: persen(r.prioritas_ditindaklanjuti_persen, 0), sub: `target ${r.target_tindak_lanjut_persen}%`, meter: r.prioritas_ditindaklanjuti_persen ?? 0, meterWarna: "hijau" }),
-  ind({ i: "sinkron", warna: pesanGithub ? "abu" : "hijau", label: "GitHub", nilai: pesanGithub ? "Mati" : "Aktif", sub: pesanGithub ? "belum tersambung" : "issue ikut diperbarui" }),
+  ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(r.aktif), sub: `${r.per_keparahan.tinggi || 0} penting · ${r.per_keparahan.sedang || 0} sedang` }),
+  ind({ i: "peringatan", warna: "merah", label: "Harga janggal", nilai: angka(r.per_jenis.anomali_harga || 0), sub: `60 hari · ${r.status_anomali.false_alarm || 0} salah peringatan` }),
+  ind({ i: "centang", warna: "hijau", label: "Sudah ditangani", nilai: persen(r.prioritas_ditindaklanjuti_persen, 0), sub: `target ${r.target_tindak_lanjut_persen}%`, meter: r.prioritas_ditindaklanjuti_persen ?? 0, meterWarna: "hijau" }),
+  ind({ i: "sinkron", warna: pesanGithub ? "abu" : "hijau", label: "GitHub", nilai: pesanGithub ? "Mati" : "Aktif", sub: pesanGithub ? "belum tersambung" : "catatan ikut diperbarui" }),
 ].join("");
 
 const fJenis = document.getElementById("f-jenis");
@@ -101,10 +101,10 @@ Object.entries(STATUS_SINYAL).forEach(([k, v]) => fStatus.insertAdjacentHTML("be
 
 const LABEL_KONTEKS = {
   curah_hujan_7_hari_mm: "Curah hujan 7 hari (mm)", curah_hujan_7_hari_normal_mm: "Normal 7 hari (mm)",
-  psi: "PSI", p_psi: "p-value PSI", rasio_volatilitas: "Rasio volatilitas", p_volatilitas: "p-value volatilitas",
-  volatilitas_referensi: "Volatilitas acuan (%)", volatilitas_terkini: "Volatilitas terkini (%)",
-  penurunan_periode_terakhir_persen: "Penurunan sMAPE periode terakhir (%)",
-  penurunan_periode_sebelumnya_persen: "Penurunan sMAPE periode sebelumnya (%)", smape_acuan: "sMAPE acuan (%)",
+  psi: "Skor perubahan pola", p_psi: "Tingkat keyakinan (pola)", rasio_volatilitas: "Perbandingan naik-turun harga", p_volatilitas: "Tingkat keyakinan (naik-turun)",
+  volatilitas_referensi: "Naik-turun harga biasanya (%)", volatilitas_terkini: "Naik-turun harga sekarang (%)",
+  penurunan_periode_terakhir_persen: "Prakiraan makin meleset, periode terakhir (%)",
+  penurunan_periode_sebelumnya_persen: "Prakiraan makin meleset, periode sebelumnya (%)", smape_acuan: "Meleset pada periode acuan (%)",
 };
 
 function nilaiKonteks(v) {
@@ -127,9 +127,9 @@ function render() {
       <div class="atas">${lencanaKeparahan(s.keparahan)}<span class="lencana polos">${esc(JENIS_SINYAL[s.jenis] || s.jenis)}</span>
         ${lencanaStatus(s.status)}${s.aktif ? "" : '<span class="lencana polos">tidak aktif</span>'}</div>
       <div class="judul">${esc(s.judul)}</div>
-      ${s.nilai_aktual !== null && s.nilai_aktual !== undefined ? `<div class="narasi">Aktual ${rp(s.nilai_aktual)}${s.baseline ? ` · baseline ${rp(s.baseline)}` : ""}${s.deviasi_persen !== null ? ` · ${persen(s.deviasi_persen, 1, true)}` : ""}${s.z ? ` · z=${angka(s.z, 1)}` : ""}</div>` : ""}
+      ${s.nilai_aktual !== null && s.nilai_aktual !== undefined ? `<div class="narasi">Harga kini ${rp(s.nilai_aktual)}${s.baseline ? ` · harga normal ${rp(s.baseline)}` : ""}${s.deviasi_persen !== null ? ` · ${persen(s.deviasi_persen, 1, true)}` : ""}</div>` : ""}
       ${s.narasi ? `<div class="narasi">${esc(s.narasi)}</div>` : ""}
-      <details style="margin-top:6px"><summary class="meta-kecil">Data konteks &amp; riwayat</summary>
+      <details style="margin-top:6px"><summary class="meta-kecil">Rincian dan riwayat</summary>
         <dl class="dl" style="margin-top:6px">${Object.entries(s.konteks || {}).map(([k, v]) => `<dt>${esc(LABEL_KONTEKS[k] || k.replace(/_/g, " "))}</dt><dd>${nilaiKonteks(v)}</dd>`).join("")}</dl>
         ${(s.riwayat || []).length ? `<p class="meta-kecil" style="margin-top:6px">Riwayat: ${s.riwayat.map((h) => `${esc(h.tanggal)} ${esc(STATUS_SINYAL[h.status] || h.status)} (${esc(h.petugas)}) ${esc(h.catatan)}`).join(" → ")}</p>` : ""}
       </details>
@@ -137,7 +137,7 @@ function render() {
         <span>ID <code>${esc(s.id)}</code></span>
         ${s.url_issue ? `<a href="${esc(s.url_issue)}">buka issue</a>` : ""}
         <a href="#form-tl" data-catat="${esc(s.id)}">catat tindak lanjut</a></div>
-    </li>`).join("") : `<li class="kosong">Tidak ada sinyal yang cocok dengan filter.</li>`;
+    </li>`).join("") : `<li class="kosong">Tidak ada peringatan yang cocok dengan pilihan Anda.</li>`;
   document.querySelectorAll("[data-catat]").forEach((a) => a.addEventListener("click", () => {
     document.getElementById("tl-id").value = a.dataset.catat;
   }));

@@ -183,7 +183,7 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
             sinyal.append({
                 "id": id_sinyal("proyeksi_naik", kode, wil, f"{iso.year}-W{iso.week:02d}"),
                 "jenis": "proyeksi_naik", **dasar,
-                "judul": f"Proyeksi {v.nama} naik {naik:.0f}% dalam 7 hari",
+                "judul": f"Harga {v.nama} diperkirakan naik {naik:.0f}% dalam 7 hari",
                 "tanggal_mulai": tanggal_data.isoformat(), "tanggal_terakhir": tanggal_data.isoformat(),
                 "keparahan": "tinggi" if naik >= 2 * ambang else "sedang", "arah": "naik", "aktif": True,
                 "nilai_aktual": round(terakhir), "baseline": None, "deviasi_persen": round(naik, 2),
@@ -203,7 +203,7 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
                 sinyal.append({
                     "id": id_sinyal("risiko_hari_raya", kode, wil, acara.tanggal.isoformat()),
                     "jenis": "risiko_hari_raya", **dasar,
-                    "judul": f"Pola historis: {v.nama} berpotensi naik {potensi:.0f}% menjelang {acara.nama}",
+                    "judul": f"{v.nama} berpotensi naik {potensi:.0f}% menjelang {acara.nama}",
                     "tanggal_mulai": konf.hari_ini.isoformat(), "tanggal_terakhir": konf.hari_ini.isoformat(),
                     "keparahan": "tinggi" if potensi >= 2 * ambang else "sedang", "arah": "naik", "aktif": True,
                     "nilai_aktual": round(terakhir) if terakhir else None, "baseline": None,
@@ -219,11 +219,11 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
             sinyal.append({
                 "id": id_sinyal("drift", kode, wil, tanggal_data.strftime("%Y-%m")),
                 "jenis": "drift", **dasar,
-                "judul": f"Pola harga {v.nama} berubah, model proyeksi perlu dicek",
+                "judul": f"Pola harga {v.nama} berubah, prakiraannya perlu dicek",
                 "tanggal_mulai": tanggal_data.isoformat(), "tanggal_terakhir": tanggal_data.isoformat(),
                 "keparahan": "rendah", "arah": None, "aktif": True, "nilai_aktual": None, "baseline": None,
                 "deviasi_persen": None, "konteks": hv.drift,
-                "narasi": " ".join(alasan) + " Sebaiknya model dievaluasi ulang sebelum proyeksinya dipakai.",
+                "narasi": " ".join(alasan) + " Sebaiknya cara prakiraannya dievaluasi ulang sebelum dipakai.",
             })
 
     # 5. Data terlambat per pasar wilayah target.
@@ -255,14 +255,14 @@ def alasan_drift(d: dict, s_cfg: dict, batas_penurunan: float) -> list[str]:
     alasan = []
     alfa = s_cfg.get("alfa_uji_drift", 0.01)
     if d.get("psi") is not None and d["psi"] >= s_cfg["psi_ambang"] and (d.get("p_psi") or 1) < alfa:
-        alasan.append(f"Pola perubahan harga harian 30 hari terakhir bergeser (PSI {d['psi']:.2f}, p={d['p_psi']:.3f}).")
+        alasan.append("Pola naik-turun harga harian dalam 30 hari terakhir bergeser dari biasanya.")
     lo, hi = s_cfg.get("rasio_volatilitas_batas", [0.5, 2.0])
     r = d.get("rasio_volatilitas")
     if r is not None and not (lo <= r <= hi) and (d.get("p_volatilitas") or 1) < alfa:
-        alasan.append(f"Gejolak harga 30 hari terakhir {r:.1f} kali lipat dibanding 4 bulan sebelumnya (p={d['p_volatilitas']:.3f}).")
+        alasan.append(f"Harga 30 hari terakhir naik-turun {r:.1f} kali lipat dibanding 4 bulan sebelumnya.")
     p0, p1 = d.get("penurunan_periode_terakhir_persen"), d.get("penurunan_periode_sebelumnya_persen")
     if p0 is not None and p1 is not None and p0 > batas_penurunan and p1 > batas_penurunan:
-        alasan.append(f"Kesalahan proyeksi (sMAPE) membesar {p1:.0f}% lalu {p0:.0f}% dalam dua periode terakhir.")
+        alasan.append(f"Prakiraan makin sering meleset: memburuk {p1:.0f}% lalu {p0:.0f}% dalam dua periode terakhir.")
     return alasan
 
 
