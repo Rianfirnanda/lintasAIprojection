@@ -255,9 +255,8 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .kaki a { color: var(--ink-2); }
 .kaki-teks { display: grid; gap: 3px; }
 .kaki-teks strong { color: var(--ink-2); font-weight: 600; }
-.pilih-tema { display: inline-flex; align-items: center; gap: 8px; }
-.pilih-tema > span { font-size: 0.78rem; }
-.pilih-tema .segmen button { font-size: 0.78rem; padding: 5px 11px; }
+.tema-ikon { width: 30px; height: 30px; padding: 0; display: inline-grid; place-items: center; border-radius: 50%; border: 1px solid var(--rule-2); background: var(--surface-3); color: var(--ink-2); cursor: pointer; flex: none; }
+.tema-ikon:hover { color: var(--ink); background: var(--surface); }
 
 /* ---------- judul halaman */
 .judul-halaman {
