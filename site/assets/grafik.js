@@ -33,6 +33,7 @@ export function potongSeri(seri, hari) {
 
 export function gambarGrafikHarga(canvas, seri, opsi = {}) {
   const dash = opsi.gaya === "dashboard";
+  const tipe = opsi.tipe || "garis"; // "garis", "area", atau "batang"
   const tampilPembanding = dash ? false : (opsi.pembanding ?? true);
   const tanggalProyeksi = (seri.proyeksi || []).map((p) => p.tanggal);
   const label = [...seri.tanggal, ...tanggalProyeksi];
@@ -88,6 +89,20 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
   }
   datasets.push(garis(dash ? "Harga aktual" : "Bengkulu Tengah (aktual)", [...seri.aktual, ...kosong(tanggalProyeksi.length)], c.s1,
     dash ? { borderWidth: 2.4, pointRadius: n > 45 ? 0 : 3, pointBackgroundColor: c.s1 } : {}));
+  if (tipe !== "garis") {
+    const aktualDs = datasets[datasets.length - 1];
+    const proyDs = datasets.find((d) => d.label === "Proyeksi");
+    if (tipe === "area") {
+      Object.assign(aktualDs, { fill: "origin", backgroundColor: c.s1 + "26", pointRadius: 0 });
+      Object.assign(proyDs, { fill: "origin", backgroundColor: c.s2 + "1f" });
+    } else {
+      Object.assign(aktualDs, { type: "bar", backgroundColor: c.s1 + "cc", borderWidth: 0, borderRadius: 3, maxBarThickness: 18, order: 5 });
+      Object.assign(proyDs, {
+        type: "bar", data: proyeksi.map((v, i) => (i < n ? null : v)), backgroundColor: c.s2 + "99", borderWidth: 0,
+        borderRadius: 3, maxBarThickness: 18, order: 5,
+      });
+    }
+  }
   datasets.push({
     label: "Anomali terdeteksi", data: anomali, showLine: false, pointRadius: 5, pointHoverRadius: 7,
     pointBackgroundColor: c.kritis, pointBorderColor: c.surface, pointBorderWidth: 2, borderColor: c.kritis,
