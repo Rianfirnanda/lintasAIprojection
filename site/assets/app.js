@@ -211,8 +211,19 @@ export async function pasangKerangka(aktif) {
   const kaki = document.createElement("footer");
   kaki.className = "kaki";
   document.body.append(kaki);
+  const IKON_TEMA = {
+    auto: '<circle cx="12" cy="12" r="8"/><path d="M12 4v16" /><path d="M12 4a8 8 0 010 16z" fill="currentColor"/>',
+    light: '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>',
+    dark: '<path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/>',
+  };
+  const NAMA_TEMA = { auto: "Otomatis", light: "Terang", dark: "Gelap" };
+  const URUT_TEMA = ["auto", "light", "dark"];
   const pasangTema = () => {
-    kaki.querySelectorAll("[data-tema]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tema === modeTema())));
+    const tombol = kaki.querySelector("[data-tema-ganti]");
+    const m = modeTema();
+    tombol.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IKON_TEMA[m]}</svg>`;
+    tombol.title = `Tampilan: ${NAMA_TEMA[m]}. Klik untuk ganti.`;
+    tombol.setAttribute("aria-label", tombol.title);
   };
 
   if (izin === "tolak") {
@@ -250,10 +261,11 @@ export async function pasangKerangka(aktif) {
       <p>Angka di sini membantu analisis dan bukan rilis resmi BPS. ${tautanLayanan(meta.layanan)}</p>
       <p>Sumber: BPS, Pemda, cuaca Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
     </div>
-    <div class="pilih-tema"><span>Tampilan</span><div class="segmen" role="group" aria-label="Tampilan terang atau gelap">
-      <button type="button" data-tema="auto">Otomatis</button><button type="button" data-tema="light">Terang</button><button type="button" data-tema="dark">Gelap</button>
-    </div></div>`;
-  kaki.querySelectorAll("[data-tema]").forEach((b) => b.addEventListener("click", () => { setTema(b.dataset.tema); pasangTema(); }));
+    <button type="button" class="tema-ikon" data-tema-ganti></button>`;
+  kaki.querySelector("[data-tema-ganti]").addEventListener("click", () => {
+    setTema(URUT_TEMA[(URUT_TEMA.indexOf(modeTema()) + 1) % URUT_TEMA.length]);
+    pasangTema();
+  });
   pasangTema();
   // Grafik kanvas baru memakai huruf Plex setelah berkasnya termuat.
   try { await document.fonts?.ready; } catch { /* abaikan */ }

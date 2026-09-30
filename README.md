@@ -30,7 +30,7 @@ menjadi alur tindak lanjut sinyal.
 | Layanan publik | Pengaduan data & Survei Kepuasan Masyarakat (9 unsur PermenPANRB 14/2017) lewat GitHub Issue Forms (`pipeline/layanan.py`) |
 | Layanan | Dashboard GitHub Pages (`site/`), GitHub Issues, unduhan CSV, log uptime per jam (`.github/workflows/uptime.yml`) |
 
-Desain memakai gaya kaca (*glassmorphism*) dengan warna logo BPS. Tampilan bawaan terang. Pilihan Otomatis, Terang, dan Gelap ada di bagian bawah halaman, bukan di navbar. Hasil cetak selalu terang.
+Desain memakai gaya kaca (*glassmorphism*) dengan warna logo BPS. Tampilan bawaan terang. Ikon kecil di bagian bawah halaman (bukan di navbar) mengganti tampilan secara bergantian: Otomatis, Terang, Gelap. Hasil cetak selalu terang.
 
 ### Peran dan menu
 
