@@ -5,6 +5,7 @@ const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "
 
 export const HALAMAN = [
   ["index.html", "Dashboard"],
+  ["harga.html", "Harga per Varian"],
   ["sinyal.html", "Sinyal & Tindak Lanjut"],
   ["laporan.html", "Laporan"],
   ["kinerja.html", "Kinerja"],

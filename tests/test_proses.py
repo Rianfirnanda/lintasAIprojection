@@ -118,3 +118,15 @@ def test_demo_kinerja_dan_laporan(keluaran_demo):
     assert meta["pesan_notifikasi"] == "notifikasi tidak dikirim dalam mode demo"
     m = baca(keluaran, "model.json")
     assert all(v["status_persetujuan"] in ("disetujui", "menunggu_persetujuan") for v in m["per_varian"])
+
+
+def test_batas_wilayah_opsional_diterbitkan(konf, akar_sementara):
+    keluaran = akar_sementara / "site/data"
+    proses.jalankan(konf, keluaran, sinkron_github=False)
+    assert baca(keluaran, "meta.json")["batas_wilayah"] is False
+    assert not (keluaran / "batas_wilayah.geojson").exists()
+
+    (akar_sementara / "config/batas_wilayah.geojson").write_text('{"type":"FeatureCollection","features":[]}', encoding="utf-8")
+    proses.jalankan(konf, keluaran, sinkron_github=False)
+    assert baca(keluaran, "meta.json")["batas_wilayah"] is True
+    assert (keluaran / "batas_wilayah.geojson").exists()

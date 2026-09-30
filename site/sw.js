@@ -1,5 +1,5 @@
 // Service worker: formulir input tetap berfungsi tanpa sinyal (wilayah blank spot).
-const CACHE = "lintas-ai-v5";
+const CACHE = "lintas-ai-v6";
 const ASET = [
   "input.html", "assets/app.css", "assets/app.js", "assets/logo-bps.png", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
   "data/master.json", "data/meta.json",

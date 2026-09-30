@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lintas AI Projection · BPS Kabupaten Bengkulu Tengah</title>
+  <title>Dashboard Pemantauan Harga Pangan TPID · Lintas AI Projection</title>
   <meta name="description" content="Dashboard pemantauan harga pangan berbasis AI dan Big Data dari BPS Kabupaten Bengkulu Tengah untuk TPID.">
-  <meta name="theme-color" content="#0e1114">
+  <meta name="theme-color" content="#1f5fae">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
@@ -13,300 +13,298 @@
   <script src="vendor/chart.umd.js"></script>
   <script src="vendor/leaflet/leaflet.js"></script>
 </head>
-<body>
-<main class="utama">
-  <section class="sambutan" aria-labelledby="judul-utama">
-    <div>
-      <span class="eyebrow" id="eyebrow">Ringkasan harga pangan</span>
-      <h1 id="judul-utama">Memuat data…</h1>
-      <p class="dek" id="dek"></p>
-    </div>
-    <div class="sambutan-aksi">
-      <a class="tombol utama-aksi" href="sinyal.html">Lihat sinyal</a>
-      <a class="tombol" href="laporan.html">Buletin</a>
-      <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh CSV</a>
-    </div>
-  </section>
+<body class="halaman-dash">
+<main class="utama dash">
 
-  <section class="grid kpi-grid" id="bacaan" aria-label="Indikator utama"></section>
+  <header class="dash-banner">
+    <svg class="dash-siluet" viewBox="0 0 600 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <path d="M0 120V78l40-22 50 26 60-40 55 34 45-28 70 44 60-30 55 22 65-30v60z"/>
+      <path d="M330 120V54l6-16 6 16v66zM322 120V70h28v50z"/>
+    </svg>
+    <div class="dash-banner-teks">
+      <h1>Dashboard Pemantauan Harga Pangan TPID</h1>
+      <p class="dash-wilayah">Kabupaten Bengkulu Tengah</p>
+      <p class="dash-dek">Data untuk pengendalian inflasi daerah yang lebih cepat, tepat, dan kolaboratif</p>
+    </div>
+    <div class="dash-banner-kanan">
+      <div class="dash-periode" id="dash-ikon-kalender"><div><small>Periode Data</small><strong id="periode">memuat…</strong></div></div>
+      <p class="dash-slogan">Pangan Stabil, Masyarakat Sejahtera<br>Bersama Mengawal Ketahanan Pangan Daerah</p>
+    </div>
+  </header>
 
-  <div class="grid dua-kolom">
-    <section class="kartu" aria-labelledby="judul-grafik">
-      <div class="kartu-kepala">
-        <div>
-          <h2 id="judul-grafik">Pergerakan harga</h2>
-          <p id="info-model">Harga aktual, harga normal, dan proyeksi 14 hari ke depan</p>
-        </div>
-        <div class="baris-kontrol">
-          <label class="sr-only" for="pilih-varian">Varian</label>
+  <section class="dash-kpi" id="kpi" aria-label="Indikator utama"></section>
+
+  <div class="dash-baris dash-baris-1">
+    <section class="dash-panel" aria-labelledby="judul-peta">
+      <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="peta"></span>
+        <div><h2 id="judul-peta">Peta Pemantauan Harga</h2><p>Kabupaten Bengkulu Tengah</p></div></div>
+      <div class="peta-bungkus">
+        <div id="peta" aria-label="Peta lokasi pasar"></div>
+        <div class="peta-utara" aria-hidden="true"><svg viewBox="0 0 16 24" width="14" height="22"><path d="M8 1l6 16-6-4-6 4z" fill="currentColor"/></svg><span>U</span></div>
+        <div class="peta-legenda" id="peta-legenda"></div>
+      </div>
+    </section>
+
+    <section class="dash-panel" aria-labelledby="judul-grafik">
+      <div class="dash-judul dash-judul-lebar"><span class="dash-judul-ikon" data-ikon="tren"></span>
+        <div><h2 id="judul-grafik">Pergerakan Harga</h2><p id="sub-grafik"></p></div>
+        <div class="dash-kontrol">
+          <label class="sr-only" for="pilih-varian">Pilih varian</label>
           <select id="pilih-varian"></select>
           <div class="segmen" role="group" aria-label="Rentang waktu" id="rentang">
-            <button type="button" data-hari="90" aria-pressed="true">90 hari</button>
-            <button type="button" data-hari="180" aria-pressed="false">180 hari</button>
-            <button type="button" data-hari="0" aria-pressed="false">Semua</button>
+            <button type="button" data-hari="30" aria-pressed="true">30 hari</button>
+            <button type="button" data-hari="90" aria-pressed="false">90 hari</button>
           </div>
-          <label class="cek"><input type="checkbox" id="cek-pembanding" checked> Wilayah pembanding</label>
         </div>
       </div>
-      <div class="wadah-grafik"><canvas id="grafik-harga" role="img" aria-label="Grafik pergerakan harga"></canvas></div>
-      <div class="legenda" id="legenda-harga"></div>
-      <p class="meta-kecil" id="catatan-seri" style="margin-top:8px"></p>
+      <div class="wadah-grafik dash-grafik"><canvas id="grafik-harga" role="img" aria-label="Grafik pergerakan harga"></canvas></div>
+      <div class="legenda dash-legenda" id="legenda-harga"></div>
+      <p class="meta-kecil" id="info-model"></p>
     </section>
 
-    <section class="kartu" aria-labelledby="judul-prioritas">
-      <div class="kartu-kepala">
-        <div><h2 id="judul-prioritas">Komoditas prioritas</h2><p>Sinyal aktif yang perlu dicek</p></div>
-        <a class="tombol" href="sinyal.html">Semua sinyal</a>
-      </div>
-      <ul class="daftar-sinyal" id="daftar-prioritas"></ul>
+    <section class="dash-panel" aria-labelledby="judul-prioritas">
+      <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="bendera"></span>
+        <div><h2 id="judul-prioritas">Komoditas Prioritas <small>(Berdasarkan sinyal &amp; kenaikan harga)</small></h2></div></div>
+      <div class="kartu-prioritas" id="prioritas"></div>
     </section>
   </div>
 
-  <div class="grid tiga-kolom">
-    <section class="kartu" aria-labelledby="judul-peta">
-      <div class="kartu-kepala"><div><h2 id="judul-peta">Peta pemantauan harga</h2><p>Pasar target dan pasar pembanding</p></div></div>
-      <div id="peta" aria-label="Peta lokasi pasar"></div>
-      <p class="meta-kecil" id="catatan-peta" style="margin-top:8px"></p>
+  <div class="dash-baris dash-baris-2">
+    <section class="dash-panel" aria-labelledby="judul-mutu">
+      <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="target"></span>
+        <div><h2 id="judul-mutu">Mutu Model Peramalan</h2></div>
+        <a class="dash-tautan" href="model.html">Rincian</a></div>
+      <div class="ubin-baris" id="mutu"></div>
     </section>
 
-    <section class="kartu" aria-labelledby="judul-hariraya">
-      <div class="kartu-kepala"><div><h2 id="judul-hariraya">Situasi menjelang hari raya</h2><p>Seberapa tinggi harga naik pada hari raya sebelumnya</p></div></div>
-      <div id="hari-raya"></div>
-    </section>
-
-    <section class="kartu" aria-labelledby="judul-tl">
-      <div class="kartu-kepala"><div><h2 id="judul-tl">Tindak lanjut sinyal harga</h2><p>Status sinyal anomali dari TPID</p></div></div>
-      <div id="tindak-lanjut"></div>
+    <section class="dash-panel" aria-labelledby="judul-banding">
+      <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="kalender"></span>
+        <div><h2 id="judul-banding">Perbandingan Perubahan Harga</h2><p>Rata-rata 10 komoditas utama</p></div>
+        <a class="dash-tautan" href="harga.html">Rincian 21 varian</a></div>
+      <div class="ubin-baris" id="banding"></div>
     </section>
   </div>
 
-  <section class="kartu" aria-labelledby="judul-tabel">
-    <div class="kartu-kepala">
-      <div>
-        <h2 id="judul-tabel">Perbandingan perubahan harga</h2>
-        <p>Harga terakhir dibanding sehari, seminggu, sebulan, tiga bulan, enam bulan, dan setahun sebelumnya. Klik baris untuk membuka grafiknya.</p>
-      </div>
-      <div class="legenda" style="margin:0">
-        <span><span class="kunci-pita" style="background:var(--up-wash-strong)"></span>Naik ≥ 2× ambang</span>
-        <span><span class="kunci-pita" style="background:var(--up-wash)"></span>Naik ≥ ambang</span>
-        <span><span class="kunci-pita" style="background:var(--down-wash)"></span>Turun ≥ ambang</span>
-      </div>
-    </div>
-    <div class="gulir-tabel">
-      <table id="tabel-perubahan">
-        <thead>
-          <tr>
-            <th>Varian</th><th class="angka">Harga terakhir</th><th class="angka">vs harga normal</th>
-            <th class="angka">Harian</th><th class="angka">Mingguan</th><th class="angka">Bulanan</th>
-            <th class="angka">Triwulanan</th><th class="angka">Semesteran</th><th class="angka">Tahunan</th>
-            <th class="angka">Proyeksi H+7</th><th>Sinyal</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
+  <div class="dash-baris dash-baris-3">
+    <section class="dash-panel" aria-labelledby="judul-hariraya">
+      <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="kalender"></span>
+        <div><h2 id="judul-hariraya">Situasi Menjelang Hari Raya (H-14)</h2></div></div>
+      <div class="hariraya" id="hariraya"></div>
+    </section>
+
+    <section class="dash-panel" aria-labelledby="judul-tl">
+      <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="dokumen"></span>
+        <div><h2 id="judul-tl">Tindak Lanjut Sinyal Harga</h2></div>
+        <a class="dash-tautan" href="sinyal.html">Semua sinyal</a></div>
+      <div class="gulir-tabel"><table class="tabel-tl" id="tabel-tl">
+        <thead><tr><th>No</th><th>Komoditas</th><th>Temuan / Sinyal</th><th>Status</th><th>Keterangan</th></tr></thead>
+        <tbody></tbody></table></div>
+    </section>
+  </div>
+
+  <footer class="dash-kaki" id="dash-kaki"></footer>
 </main>
 
 <script type="module">
-import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, lencanaKeparahan, kelasPerubahan, saatTemaBerubah,
-         JENIS_SINYAL, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
-import { gambarGrafikHarga, legendaHarga, potongSeri } from "./assets/grafik.js";
+import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
+import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./assets/grafik.js";
+import { ikon, gambarKomoditas, bulanTahun } from "./assets/dashboard.js";
 
-const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
 const meta = await pasangKerangka("index.html");
 const utama = document.querySelector("main");
+document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
+document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 26));
 
-try {
-  const [ringkasan, sinyal, pasar, master, model] = await Promise.all([
-    muatJSON("ringkasan.json"), muatJSON("sinyal.json"), muatJSON("pasar.json"), muatJSON("master.json"), muatJSON("model.json"),
-  ]);
-  renderObservatorium(ringkasan, master, meta);
-  renderPrioritas(sinyal.sinyal);
-  renderHariRaya(ringkasan.hari_raya);
-  renderTindakLanjut(sinyal.ringkasan);
-  renderTabel(ringkasan.varian, master);
-  renderPeta(pasar.pasar, master);
-  siapkanGrafik(ringkasan.varian, master, model);
-} catch (e) {
-  console.error(e);
-  tampilkanGalat(utama, e);
+/* ---------- indikator utama */
+function kartuKpi(ikonNama, warna, angkaHtml, label, sub) {
+  return `<div class="dash-kpi-kartu"><span class="kpi-lingkar ${warna}">${ikon(ikonNama, 26)}</span>
+    <div><div class="kpi-angka ${warna}">${angkaHtml}</div><div class="kpi-label">${label}</div><div class="kpi-sub">${sub}</div></div></div>`;
 }
 
-function diLuarPola(v) {
-  return v.deviasi_persen !== null && v.deviasi_persen !== undefined && Math.abs(v.deviasi_persen) >= (AMBANG[v.kelompok] ?? 10);
-}
-
-function bacaan(label, nilai, sub, meter = null) {
-  const bar = meter === null ? "" :
-    `<div class="meter" aria-hidden="true"><span style="width:${Math.max(0, Math.min(100, meter))}%"></span></div>`;
-  return `<div class="kartu kpi"><div class="label">${esc(label)}</div><div class="nilai">${nilai}</div><div class="sub">${sub}</div>${bar}</div>`;
-}
-
-function renderObservatorium(r, master, meta) {
-  const k = r.kpi;
-  const varian = r.varian;
-  const luar = varian.filter(diLuarPola);
-  document.getElementById("eyebrow").textContent = meta.tanggal_data_terakhir
-    ? `Data per ${tgl(meta.tanggal_data_terakhir, true)}` : "Belum ada data harga";
-  document.getElementById("judul-utama").innerHTML = !varian.length
-    ? "Menunggu data harga pertama"
-    : luar.length
-      ? `${luar.length} dari ${varian.length} varian <em>perlu perhatian</em>`
-      : `Semua ${varian.length} varian <em>dalam kondisi normal</em>`;
-
-  const terjauh = [...varian].filter((v) => v.deviasi_persen !== null)
-    .sort((a, b) => Math.abs(b.deviasi_persen) - Math.abs(a.deviasi_persen))[0];
-  const kalimat = [];
-  if (terjauh && Math.abs(terjauh.deviasi_persen) >= 1) {
-    kalimat.push(`Perubahan terbesar ada pada ${esc(terjauh.nama)}: ${rp(terjauh.harga_terakhir)}/${esc(terjauh.satuan)}, atau ${persen(Math.abs(terjauh.deviasi_persen), 1)} ${terjauh.deviasi_persen > 0 ? "di atas" : "di bawah"} harga normal.`);
-  }
-  kalimat.push(k.sinyal_tinggi
-    ? `${angka(k.sinyal_tinggi)} sinyal prioritas sedang menunggu dicek TPID.`
-    : "Belum ada sinyal prioritas yang perlu dicek.");
-  document.getElementById("dek").innerHTML = kalimat.join(" ");
-
-  document.getElementById("bacaan").innerHTML = [
-    bacaan("Cakupan pemantauan", `${angka(k.jumlah_komoditas)} / ${angka(k.jumlah_varian)}`,
-      `komoditas / varian di ${angka(k.pasar_target)} pasar`),
-    bacaan("Sinyal aktif", angka(k.sinyal_aktif), `${angka(k.sinyal_tinggi)} prioritas tinggi`),
-    bacaan("Kelengkapan data", persen(k.kelengkapan_persen),
-      `30 hari terakhir · tepat waktu ${persen(k.ketepatan_persen)}`, k.kelengkapan_persen),
-    bacaan("Menunggu validasi", angka(k.perlu_validasi), `<a href="kualitas.html">Buka antrean</a>`),
-    bacaan("Akurasi proyeksi", k.smape_median === null ? "–" : `${angka(k.smape_median, 2)}%`,
-      `rata-rata meleset (sMAPE)`),
+function renderKPI(k, daftarPasar, kinerja) {
+  const blankSpot = daftarPasar.filter((p) => p.blank_spot).length;
+  const uptime = kinerja?.indikator?.find((i) => i.kode === "L1")?.capaian;
+  const adaUptime = uptime !== null && uptime !== undefined;
+  document.getElementById("kpi").innerHTML = [
+    kartuKpi("keranjang", "biru", angka(k.jumlah_komoditas), "Komoditas", "dipantau"),
+    kartuKpi("kubus", "biru", angka(k.jumlah_varian), "Varian", "(jenis/ukuran)"),
+    kartuKpi("pin", "oranye", angka(blankSpot), "Wilayah", blankSpot < 8 ? "<i>blank spot</i> (target 8)" : "<i>blank spot</i>"),
+    kartuKpi("jam", "biru", k.ketepatan_persen === null ? "–" : persen(k.ketepatan_persen, 0), "Ketepatan waktu", "pelaporan"),
+    kartuKpi("peringatan", "merah", angka(k.sinyal_tinggi), "Sinyal", "prioritas"),
+    kartuKpi("roda", "hijau", adaUptime ? persen(uptime, 1) : "–", "Uptime", adaUptime ? "sistem" : "belum ada log"),
   ].join("");
 }
 
-function itemSinyal(s) {
-  const tautan = s.url_issue ? `<a href="${esc(s.url_issue)}">issue</a>` : `<a href="sinyal.html#${esc(s.id)}">detail</a>`;
-  return `<li>
-    <div class="atas">${lencanaKeparahan(s.keparahan)}<span class="lencana polos">${esc(JENIS_SINYAL[s.jenis] || s.jenis)}</span>
-      <span class="lencana polos">${esc(STATUS_SINYAL[s.status] || s.status)}</span></div>
-    <div class="judul">${esc(s.judul)}</div>
-    ${s.narasi ? `<div class="narasi">${esc(s.narasi)}</div>` : ""}
-    <div class="bawah"><span>${esc(tgl(s.tanggal_mulai))}${s.tanggal_terakhir !== s.tanggal_mulai ? " – " + esc(tgl(s.tanggal_terakhir)) : ""}</span>${tautan}</div>
-  </li>`;
+/* ---------- komoditas prioritas */
+function renderPrioritas(varian) {
+  const tingkat = { tinggi: 2, sedang: 1 };
+  const bulanan = (v) => v.perubahan?.bulanan ?? -Infinity;
+  const bersinyal = varian.filter((v) => tingkat[v.sinyal])
+    .sort((a, b) => tingkat[b.sinyal] - tingkat[a.sinyal] || Math.abs(b.deviasi_persen ?? 0) - Math.abs(a.deviasi_persen ?? 0));
+  const lain = varian.filter((v) => !tingkat[v.sinyal]).sort((a, b) => bulanan(b) - bulanan(a));
+  const pilih = [...bersinyal, ...lain].slice(0, 3);
+  const el = document.getElementById("prioritas");
+  if (!pilih.length) { el.innerHTML = `<p class="kosong">Belum ada data harga.</p>`; return; }
+  el.innerHTML = pilih.map((v) => {
+    const kelas = v.sinyal === "tinggi" ? "tinggi" : v.sinyal === "sedang" ? "sedang" : "pantau";
+    const label = v.sinyal === "tinggi" ? "Prioritas Tinggi" : v.sinyal === "sedang" ? "Prioritas Sedang" : "Dipantau";
+    const b = v.perubahan?.bulanan;
+    const ada = b !== null && b !== undefined;
+    const naik = ada && b >= 0;
+    return `<a class="prio ${kelas}" href="#varian=${encodeURIComponent(v.kode)}">
+      ${gambarKomoditas(v.kode_komoditas)}
+      <strong class="prio-nama">${esc(v.nama)}</strong>
+      <span class="prio-kecil">Harga kini</span>
+      <span class="prio-harga">${rp(v.harga_terakhir)}/${esc(v.satuan)}</span>
+      <span class="prio-ubah ${naik ? "naik" : "turun"}"><span class="segitiga">${ada ? (naik ? "▲" : "▼") : ""}</span>${ada ? persen(b, 1, true) : "–"}</span>
+      <span class="prio-kecil">(m-to-m)</span>
+      <span class="prio-label">${label}</span></a>`;
+  }).join("");
 }
 
-function renderPrioritas(daftar) {
-  const aktif = daftar.filter((s) => s.aktif && s.jenis !== "drift").slice(0, 6);
-  document.getElementById("daftar-prioritas").innerHTML = aktif.length ? aktif.map(itemSinyal).join("")
-    : `<li class="kosong">Tidak ada sinyal aktif. Harga semua varian masih normal.</li>`;
+/* ---------- mutu model */
+function median(a) {
+  const s = a.filter((x) => x !== null && x !== undefined && !Number.isNaN(x)).sort((x, y) => x - y);
+  if (!s.length) return null;
+  const t = Math.floor(s.length / 2);
+  return s.length % 2 ? s[t] : (s[t - 1] + s[t]) / 2;
 }
 
-function renderHariRaya(h) {
-  const el = document.getElementById("hari-raya");
-  let html = "";
-  if (h.berikutnya) {
-    const b = h.berikutnya;
-    html += `<p><strong>${esc(b.nama)}</strong> · ${esc(tgl(b.tanggal, true))}${b.status !== "pasti" ? " (perkiraan)" : ""}<br>
-      <span class="meta-kecil">${b.hari_menuju === 0 ? "hari ini" : `H-${b.hari_menuju}`}</span></p>`;
-  }
-  html += h.mode_intensif
-    ? `<div class="pesan peringatan" style="margin-bottom:10px"><strong>Pemantauan intensif sedang berjalan</strong> (${esc(h.posisi.acara)}, H${h.posisi.hari >= 0 ? "+" : ""}${h.posisi.hari}). Sinyal sebaiknya dicek setiap hari.</div>`
-    : `<p class="meta-kecil">Pemantauan intensif berjalan dari H-${h.jendela.sebelum} sampai H+${h.jendela.sesudah}.</p>`;
-  if (h.profil_top?.length) {
-    const maks = Math.max(...h.profil_top.map((p) => p.kenaikan_puncak_persen), 1);
-    html += `<div class="corong" aria-label="Kenaikan puncak historis">` + h.profil_top.map((p) => `
-      <div class="baris"><span>${esc(p.nama)}</span><div class="batang"><span style="width:${Math.max(0, p.kenaikan_puncak_persen) / maks * 100}%"></span></div>
-      <span class="n">${persen(p.kenaikan_puncak_persen, 0, true)}</span></div>`).join("") + `</div>
-      <p class="meta-kecil" style="margin-top:8px">Rata-rata kenaikan tertinggi antara H-14 dan H+3 pada hari raya sebelumnya, dibanding harga normal.</p>`;
-  } else {
-    html += `<p class="kosong">Data historis belum mencakup hari raya sebelumnya.</p>`;
-  }
-  el.innerHTML = html;
+function ubinMutu(ikonNama, nama, nilai, [status, kelas], catatan) {
+  return `<div class="ubin" title="${esc(catatan)}"><span class="ubin-ikon">${ikon(ikonNama, 24)}</span>
+    <div class="ubin-nama">${nama}</div><div class="ubin-nilai">${nilai}</div><span class="pil ${kelas}">${status}</span></div>`;
 }
 
-function renderTindakLanjut(r) {
-  const s = r.status_anomali || {};
-  const baris = [
-    ["Baru / perlu verifikasi", (s.baru || 0) + (s.perlu_verifikasi || 0)],
-    ["Terverifikasi", s.terverifikasi || 0],
-    ["Ditindaklanjuti", s.ditindaklanjuti || 0],
-    ["Selesai", s.selesai || 0],
-    ["False alarm", s.false_alarm || 0],
-  ];
-  const maks = Math.max(1, ...baris.map((b) => b[1]));
-  document.getElementById("tindak-lanjut").innerHTML = `<div class="corong">` + baris.map(([l, n]) => `
-    <div class="baris"><span>${l}</span><div class="batang"><span style="width:${n / maks * 100}%"></span></div><span class="n">${n}</span></div>`).join("") +
-    `</div><p class="meta-kecil" style="margin-top:10px">Sinyal prioritas yang sudah ditindaklanjuti: <strong>${persen(r.prioritas_ditindaklanjuti_persen, 0)}</strong> (target ${r.target_tindak_lanjut_persen}%).
-     Status diambil dari GitHub Issues dan buku tindak lanjut.</p>`;
+function renderMutu(m, daftarSinyal) {
+  const r = m.ringkasan, e = m.evaluasi_anomali, t = m.target;
+  const n = r.varian_dinilai;
+  const ada = (x) => x !== null && x !== undefined;
+  const bias = median(m.per_varian.map((v) => { const x = v.metrik?.[v.model_terpilih]; return x ? Math.abs(x.bias_persen) : null; }));
+  const drift = daftarSinyal.filter((s) => s.jenis === "drift" && s.aktif).length;
+  const kosong = ["Belum ada data", "netral"];
+  const nilaiOk = (ok, tulisanOk = "Baik") => (ok ? [tulisanOk, "baik"] : ["Perhatian", "perhatian"]);
+  document.getElementById("mutu").innerHTML = [
+    ubinMutu("target", "sMAPE", ada(r.smape_median) ? `${angka(r.smape_median, 1)}%` : "–", n ? nilaiOk(r.lolos_smape === n) : kosong,
+      `${r.lolos_smape} dari ${n} varian unggul minimal ${t.perbaikan_smape_persen}% dari metode naif`),
+    ubinMutu("timbangan", "Bias", ada(bias) ? `${angka(bias, 1)}%` : "–", n ? nilaiOk(r.lolos_bias === n) : kosong,
+      `Target bias absolut maksimal ${t.bias_absolut_maks_persen}%`),
+    ubinMutu("simpul", "F1-score", ada(e?.f1) ? angka(e.f1, 2) : "–", ada(e?.f1) ? nilaiOk(e.f1 >= t.f1_min) : kosong,
+      `Target minimal ${angka(t.f1_min, 2)}${e?.sumber_label ? ` (${e.sumber_label})` : ""}`),
+    ubinMutu("batang", "Recall", ada(e?.recall) ? angka(e.recall, 2) : "–", ada(e?.recall) ? nilaiOk(e.recall >= t.recall_min) : kosong,
+      `Target minimal ${angka(t.recall_min, 2)}`),
+    ubinMutu("lonceng", "False alarm", ada(e?.false_positive_rate) ? `${angka(e.false_positive_rate * 100, 1)}%` : "–",
+      ada(e?.false_positive_rate) ? nilaiOk(e.false_positive_rate <= t.fpr_maks, "Terkendali") : kosong, `Target maksimal ${t.fpr_maks * 100}%`),
+    ubinMutu("denyut", "Drift data", drift ? `${drift} varian` : "Normal", drift ? ["Waspada", "perhatian"] : ["Stabil", "baik"],
+      "Perubahan pola data atau penurunan kinerja model"),
+  ].join("");
 }
 
-function sel(x, kelompok) {
-  return `<td class="angka ${kelasPerubahan(x, AMBANG[kelompok])}">${persen(x, 1, true)}</td>`;
-}
-
-function renderTabel(varian, master) {
-  const tbody = document.querySelector("#tabel-perubahan tbody");
-  let html = "";
-  for (const k of master.komoditas) {
-    html += `<tr class="grup"><td colspan="11">${esc(k.nama)}</td></tr>`;
-    for (const kode of k.varian) {
-      const v = varian.find((x) => x.kode === kode);
-      if (!v) {
-        html += `<tr><td>${esc(master.varian.find((x) => x.kode === kode)?.nama || kode)}</td><td colspan="10" class="kosong">belum ada data</td></tr>`;
-        continue;
-      }
-      const p = v.perubahan || {};
-      const h7 = v.proyeksi_h7;
-      html += `<tr class="bisa-klik" data-kode="${esc(v.kode)}" tabindex="0">
-        <td>${esc(v.nama)} <span class="meta-kecil">/${esc(v.satuan)}</span></td>
-        <td class="angka">${rp(v.harga_terakhir)}</td>${sel(v.deviasi_persen, v.kelompok)}
-        ${sel(p.harian, v.kelompok)}${sel(p.mingguan, v.kelompok)}${sel(p.bulanan, v.kelompok)}
-        ${sel(p.triwulanan, v.kelompok)}${sel(p.semesteran, v.kelompok)}${sel(p.tahunan, v.kelompok)}
-        <td class="angka">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rp(h7.bawah)}–${rp(h7.atas)}</span>` : "–"}</td>
-        <td>${lencanaKeparahan(v.sinyal) || '<span class="kosong">–</span>'}</td></tr>`;
+/* ---------- perbandingan perubahan harga (rata-rata per komoditas) */
+function renderBanding(varian, master) {
+  const periode = [["harian", "Harian", "d-d"], ["mingguan", "Mingguan", "w-w"], ["bulanan", "Bulanan", "m-m"],
+    ["triwulanan", "Triwulanan", "q-q"], ["semesteran", "Semesteran", "s-s"], ["tahunan", "Tahunan", "y-y"]];
+  const rata = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null);
+  document.getElementById("banding").innerHTML = periode.map(([kunci, nama, singkat]) => {
+    const perKomoditas = master.komoditas.map((k) => rata(k.varian
+      .map((kode) => varian.find((v) => v.kode === kode)?.perubahan?.[kunci])
+      .filter((x) => x !== null && x !== undefined))).filter((x) => x !== null);
+    const nilai = rata(perKomoditas);
+    if (nilai === null) {
+      return `<div class="ubin"><div class="ubin-nama">${nama}</div><div class="ubin-nilai">–</div><div class="ubin-kecil">(${singkat})</div><span class="pil netral">Belum ada data</span></div>`;
     }
-  }
-  tbody.innerHTML = html;
-  const pilih = (tr) => {
-    const s = document.getElementById("pilih-varian");
-    s.value = tr.dataset.kode;
-    s.dispatchEvent(new Event("change"));
-    document.getElementById("judul-grafik").scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-  tbody.querySelectorAll("tr.bisa-klik").forEach((tr) => {
-    tr.addEventListener("click", () => pilih(tr));
-    tr.addEventListener("keydown", (e) => { if (e.key === "Enter") pilih(tr); });
-  });
+    const arah = nilai > 0.5 ? "naik" : nilai < -0.5 ? "turun" : "datar";
+    const tanda = arah === "naik" ? "▲" : arah === "turun" ? "▼" : "▬";
+    const pil = arah === "naik" ? ["Perhatian", "perhatian"] : arah === "turun" ? ["Membaik", "baik"] : ["Stabil", "netral"];
+    return `<div class="ubin"><div class="ubin-nama">${nama}</div>
+      <div class="ubin-nilai ${arah}"><span class="segitiga">${tanda}</span>${persen(nilai, 1, true)}</div>
+      <div class="ubin-kecil">(${singkat})</div><span class="pil ${pil[1]}">${pil[0]}</span></div>`;
+  }).join("");
 }
 
+/* ---------- situasi hari raya */
+function renderHariRaya(h) {
+  const el = document.getElementById("hariraya");
+  const b = h.berikutnya;
+  const kiri = b
+    ? `<div class="hr-kotak"><strong>${h.mode_intensif && h.posisi ? `H${h.posisi.hari >= 0 ? "+" : ""}${h.posisi.hari}` : `H-${b.hari_menuju}`}</strong>
+       <span>${esc(b.nama)}</span><small>${esc(tgl(b.tanggal, true))}${b.status !== "pasti" ? " (perkiraan)" : ""}</small></div>`
+    : `<div class="hr-kotak"><strong>–</strong><span>Hari raya</span><small>belum terjadwal</small></div>`;
+  const daftar = h.profil_top?.length
+    ? `<ul>${h.profil_top.slice(0, 5).map((p) => `<li>${esc(p.nama)} <span class="hr-kecil">${persen(p.kenaikan_puncak_persen, 0, true)}</span></li>`).join("")}</ul>`
+    : `<p class="kosong">Data historis belum mencakup hari raya sebelumnya.</p>`;
+  el.innerHTML = `${kiri}
+    <div class="hr-tengah"><p>Potensi peningkatan permintaan pada komoditas strategis:</p>${daftar}
+      <p class="hr-catatan">Angka di samping nama adalah kenaikan puncak pada hari raya sebelumnya.${h.mode_intensif ? " Pemantauan intensif sedang berjalan." : ""}</p></div>
+    <div class="hr-risiko"><strong>Risiko</strong><ul>
+      <li>Kenaikan harga 1 sampai 3 minggu menjelang hari raya</li>
+      <li>Gangguan pasokan dari luar daerah</li>
+      <li>Peningkatan permintaan rumah tangga</li></ul></div>`;
+}
+
+/* ---------- tindak lanjut sinyal */
+const KETERANGAN = {
+  anomali_harga: "Cek pasokan dan distribusi di pasar",
+  proyeksi_naik: "Pantau harga 7 hari ke depan",
+  risiko_hari_raya: "Siapkan pemantauan intensif",
+  data_terlambat: "Hubungi petugas pencatat",
+  drift: "Evaluasi ulang model proyeksi",
+};
+const WARNA_STATUS = { baru: "oranye", perlu_verifikasi: "oranye", terverifikasi: "oranye", ditindaklanjuti: "merah", selesai: "hijau", false_alarm: "abu" };
+
+function renderTindakLanjut(daftar, daftarPasar) {
+  const tbody = document.querySelector("#tabel-tl tbody");
+  const aktif = daftar.filter((s) => s.aktif).slice(0, 4);
+  if (!aktif.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="kosong">Belum ada sinyal aktif. Semua varian masih dalam pola normal.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = aktif.map((s, i) => {
+    const pasar = daftarPasar.find((p) => p.kode === s.kode_pasar);
+    const komoditas = s.varian || (pasar ? pasar.nama : "Semua varian");
+    return `<tr><td>${i + 1}</td><td>${esc(komoditas)}</td><td>${esc(s.judul)}</td>
+      <td><span class="titik-status ${WARNA_STATUS[s.status] || "abu"}"></span>${esc(STATUS_SINYAL[s.status] || s.status)}</td>
+      <td>${esc(KETERANGAN[s.jenis] || "Perlu ditelaah analis")}</td></tr>`;
+  }).join("");
+}
+
+function renderKaki(m) {
+  document.getElementById("dash-kaki").innerHTML = `
+    <span><strong>Sumber:</strong> Pemantauan harga pasar, diolah untuk mendukung pengendalian inflasi daerah.</span>
+    <strong class="dash-kaki-tengah">${m.mode_demo ? "DATA DEMO, BUKAN ANGKA RESMI" : `DATA PER ${esc(tgl(m.tanggal_data_terakhir, true)).toUpperCase()}`}</strong>
+    <span>Lebih cepat, lebih tepat, untuk Bengkulu Tengah yang lebih baik.</span>`;
+}
+
+/* ---------- peta */
 function renderPeta(daftar, master) {
   const namaVarian = Object.fromEntries(master.varian.map((v) => [v.kode, v.nama]));
   const ada = daftar.filter((p) => p.lat !== null && p.lon !== null);
+  const legenda = document.getElementById("peta-legenda");
   if (!ada.length || !window.L) {
     document.getElementById("peta").innerHTML = `<div class="pesan">Koordinat pasar belum diisi di config/pasar.csv.</div>`;
     return;
   }
+  const HIJAU = "#1e9e5a", ORANYE = "#f08a24", ABU = "#6f7c8f";
   const peta = L.map("peta", { scrollWheelZoom: false, attributionControl: true });
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 18, attribution: "© kontributor OpenStreetMap",
-  }).addTo(peta);
-  const gaya = getComputedStyle(document.documentElement);
-  const warnaTarget = gaya.getPropertyValue("--series-1").trim();
-  const warnaBanding = gaya.getPropertyValue("--series-3").trim();
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© kontributor OpenStreetMap" }).addTo(peta);
+  L.control.scale({ metric: true, imperial: false, position: "bottomright" }).addTo(peta);
   const batas = [];
   for (const p of ada) {
     const target = p.peran === "target";
-    const m = L.circleMarker([p.lat, p.lon], {
-      radius: target ? 9 : 7, color: gaya.getPropertyValue("--surface").trim(), weight: 2,
-      fillColor: target ? warnaTarget : warnaBanding, fillOpacity: 0.95,
-    }).addTo(peta);
-    const kt = p.ketepatan;
+    const warna = p.blank_spot ? ORANYE : target ? HIJAU : ABU;
+    const m = L.circleMarker([p.lat, p.lon], { radius: target ? 8 : 6, color: "#ffffff", weight: 2, fillColor: warna, fillOpacity: 0.95 }).addTo(peta);
     const isi = document.createElement("div");
     const judul = document.createElement("strong");
     judul.textContent = p.nama;
     isi.append(judul);
     const sub = document.createElement("div");
     sub.style.fontSize = "12px";
+    const kt = p.ketepatan;
     sub.textContent = `${p.wilayah} · ${target ? "pasar target" : "pembanding"}${p.blank_spot ? " · blank spot" : ""}` +
       (kt ? ` · kelengkapan 30 hari ${kt.kelengkapan_persen ?? "–"}%` : "");
     isi.append(sub);
     const ul = document.createElement("ul");
     ul.style.cssText = "margin:6px 0 0;padding-left:16px;font-size:12px";
-    p.terkini.slice(0, 8).forEach((t) => {
+    p.terkini.slice(0, 6).forEach((t) => {
       const li = document.createElement("li");
       li.textContent = `${namaVarian[t.kode_varian] || t.kode_varian}: ${rp(t.harga)} (${tgl(t.tanggal)})`;
       ul.append(li);
@@ -315,13 +313,22 @@ function renderPeta(daftar, master) {
     m.bindPopup(isi);
     batas.push([p.lat, p.lon]);
   }
-  peta.fitBounds(batas, { padding: [30, 30] });
-  const belum = ada.filter((p) => !p.koordinat_terverifikasi).length;
-  document.getElementById("catatan-peta").innerHTML =
-    `<span class="kunci-titik" style="background:var(--series-1)"></span> pasar target &nbsp; <span class="kunci-titik" style="background:var(--series-3)"></span> pasar pembanding` +
-    (belum ? ` · ${belum} koordinat masih perkiraan, perlu dicek di config/pasar.csv` : "");
+  peta.fitBounds(batas, { padding: [34, 34], maxZoom: 12 });
+  const butir = [[HIJAU, "Pasar (aktif)"]];
+  if (ada.some((p) => p.blank_spot)) butir.push([ORANYE, "Blank spot"]);
+  if (ada.some((p) => p.peran !== "target")) butir.push([ABU, "Pasar pembanding"]);
+  legenda.innerHTML = `<strong>Keterangan</strong>` + butir.map(([w, t]) => `<div><i style="background:${w}"></i>${t}</div>`).join("");
+  setTimeout(() => peta.invalidateSize(), 200);
+  // Batas kecamatan dan kabupaten tampil bila berkas GeoJSON dari BPS diletakkan di config/batas_wilayah.geojson.
+  if (!meta.batas_wilayah) return;
+  fetch("data/batas_wilayah.geojson").then((r) => (r.ok ? r.json() : null)).then((g) => {
+    if (!g) return;
+    L.geoJSON(g, { style: { color: "#2f6db5", weight: 1.4, fillColor: "#2f6db5", fillOpacity: 0.05 } }).addTo(peta);
+    legenda.insertAdjacentHTML("beforeend", `<div><i class="garis"></i>Batas wilayah</div>`);
+  }).catch(() => {});
 }
 
+/* ---------- grafik pergerakan harga */
 function siapkanGrafik(varian, master, model) {
   const pilih = document.getElementById("pilih-varian");
   if (!varian.length) {
@@ -334,10 +341,11 @@ function siapkanGrafik(varian, master, model) {
     k.varian.filter((kode) => varian.some((v) => v.kode === kode))
       .map((kode) => `<option value="${esc(kode)}">${esc(master.varian.find((v) => v.kode === kode).nama)}</option>`).join("") +
     `</optgroup>`).join("");
+  const dariHash = () => decodeURIComponent((location.hash.match(/varian=([^&]+)/) || [])[1] || "");
   const prioritas = varian.find((v) => v.sinyal === "tinggi") || varian.find((v) => v.sinyal) || varian[0];
-  if (prioritas) pilih.value = prioritas.kode;
-  let hari = 90;
-  let chart = null;
+  pilih.value = varian.some((v) => v.kode === dariHash()) ? dariHash() : prioritas.kode;
+  document.getElementById("legenda-harga").innerHTML = legendaDashboard();
+  let hari = 30, chart = null;
   const cache = {};
   const modelPer = Object.fromEntries(model.per_varian.map((m) => [m.kode, m]));
 
@@ -348,21 +356,25 @@ function siapkanGrafik(varian, master, model) {
     kanvas.style.opacity = "0.5";
     cache[kode] ||= await muatJSON(`seri/${kode}.json`);
     const seri = potongSeri(cache[kode], hari);
-    const pembanding = document.getElementById("cek-pembanding").checked;
     chart?.destroy();
-    chart = gambarGrafikHarga(kanvas, seri, { pembanding });
+    chart = gambarGrafikHarga(kanvas, seri, { gaya: "dashboard" });
     kanvas.style.opacity = "1";
-    document.getElementById("legenda-harga").innerHTML = legendaHarga(seri, pembanding);
+    document.getElementById("judul-grafik").textContent = `Pergerakan Harga ${seri.nama}`;
+    const terakhir = seri.tanggal[seri.tanggal.length - 1];
+    document.getElementById("sub-grafik").textContent = `${bulanTahun(terakhir)} (Rp/${seri.satuan})`;
     const m = modelPer[kode];
-    document.getElementById("judul-grafik").textContent = `Pergerakan harga ${seri.nama} (${seri.satuan})`;
     const metrik = m?.metrik?.[m.model_terpilih];
     document.getElementById("info-model").textContent = m
-      ? `Model ${m.nama_model}${metrik ? `, rata-rata meleset ${angka(metrik.smape, 2)}% saat diuji` : ""}${m.perbaikan_vs_naif_persen !== null ? ` (${persen(m.perbaikan_vs_naif_persen, 1, true)} dibanding metode naif)` : ""}`
+      ? `Model ${m.nama_model}${metrik ? `, rata-rata meleset ${angka(metrik.smape, 2)}% saat diuji` : ""}${m.perbaikan_vs_naif_persen !== null ? ` (${persen(m.perbaikan_vs_naif_persen, 1, true)} dibanding metode naif)` : ""}. ${(seri.catatan || []).join(" ")}`
       : "";
-    document.getElementById("catatan-seri").textContent = (seri.catatan || []).join(" ");
   }
   pilih.addEventListener("change", gambar);
-  document.getElementById("cek-pembanding").addEventListener("change", gambar);
+  window.addEventListener("hashchange", () => {
+    if (!varian.some((v) => v.kode === dariHash())) return;
+    pilih.value = dariHash();
+    gambar();
+    document.getElementById("judul-grafik").scrollIntoView({ behavior: "smooth", block: "center" });
+  });
   document.querySelectorAll("#rentang button").forEach((b) => b.addEventListener("click", () => {
     document.querySelectorAll("#rentang button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
     hari = Number(b.dataset.hari);
@@ -370,6 +382,27 @@ function siapkanGrafik(varian, master, model) {
   }));
   saatTemaBerubah(gambar);
   gambar();
+}
+
+/* ---------- muat data (dijalankan setelah semua definisi di atas) */
+try {
+  const [ringkasan, sinyal, pasar, master, model, kinerja] = await Promise.all([
+    muatJSON("ringkasan.json"), muatJSON("sinyal.json"), muatJSON("pasar.json"), muatJSON("master.json"), muatJSON("model.json"),
+    muatJSON("kinerja.json").catch(() => null),
+  ]);
+  document.getElementById("periode").textContent = bulanTahun(meta.tanggal_data_terakhir);
+  renderKPI(ringkasan.kpi, pasar.pasar, kinerja);
+  renderPrioritas(ringkasan.varian, master);
+  renderMutu(model, sinyal.sinyal);
+  renderBanding(ringkasan.varian, master);
+  renderHariRaya(ringkasan.hari_raya);
+  renderTindakLanjut(sinyal.sinyal, pasar.pasar);
+  renderKaki(meta);
+  renderPeta(pasar.pasar, master);
+  siapkanGrafik(ringkasan.varian, master, model);
+} catch (e) {
+  console.error(e);
+  tampilkanGalat(utama, e);
 }
 </script>
 </body>

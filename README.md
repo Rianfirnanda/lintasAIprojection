@@ -32,7 +32,7 @@ menjadi alur tindak lanjut sinyal.
 
 Tampilan bawaan terang; tombol *Mode gelap* tersedia di kepala halaman. Hasil cetak selalu terang.
 
-Halaman dashboard: **Dashboard**, **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
+Halaman dashboard: **Dashboard** (tata letak mengikuti Gambar 12 Pedoman Pemahaman Proyek), **Harga per Varian**, **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
 **Sumber Data**, **Input Harga** (dapat dipakai tanpa sinyal/PWA), **Metodologi**.
 
 ## Menerbitkan ke GitHub Pages (sekali saja)
@@ -82,6 +82,7 @@ GEMINI_API_KEY=... python -m pipeline cari-sumber --komoditas "cabai rawit merah
 | `pasar.csv` | Pasar, koordinat, status blank spot |
 | `sumber.csv` | Inventaris sumber data, metode akses, status, prioritas rekonsiliasi |
 | `kalender.csv` | Hari raya & libur (status `pasti`/`perkiraan`) |
+| `batas_wilayah.geojson` | (Opsional) batas kecamatan/kabupaten dari BPS. Bila ada, otomatis tampil di peta beranda |
 | `pengaturan.json` | Ambang quality gate, sinyal, model, target kinerja, privasi, tindak lanjut, penyedia AI, notifikasi, layanan |
 
 ## Yang wajib dikonfirmasi sebelum dipakai sebagai dasar keputusan
