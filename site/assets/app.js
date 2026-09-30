@@ -5,8 +5,9 @@ const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "
 
 export const HALAMAN = [
   ["index.html", "Dashboard"],
-  ["harga.html", "Harga per Varian"],
-  ["sinyal.html", "Sinyal & Tindak Lanjut"],
+  ["harga.html", "Harga"],
+  ["alur.html", "Alur"],
+  ["sinyal.html", "Sinyal"],
   ["laporan.html", "Laporan"],
   ["kinerja.html", "Kinerja"],
   ["kualitas.html", "Quality Gate"],
@@ -161,7 +162,8 @@ export async function pasangKerangka(aktif) {
   document.body.prepend(kepala);
   // di layar sempit navigasi dapat digulir: pastikan halaman aktif terlihat
   const navAktif = kepala.querySelector('.navigasi [aria-current="page"]');
-  if (navAktif) navAktif.parentElement.scrollLeft = Math.max(0, navAktif.offsetLeft - 16);
+  const navEl = navAktif?.parentElement;
+  if (navEl && navAktif.offsetLeft + navAktif.offsetWidth > navEl.clientWidth) navEl.scrollLeft = Math.max(0, navAktif.offsetLeft - 16);
   const tombolTema = kepala.querySelector(".tombol-tema");
   tombolTema.addEventListener("click", () => {
     const baru = temaGelap() ? "light" : "dark";

@@ -108,7 +108,7 @@
 <script type="module">
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./assets/grafik.js";
-import { ikon, gambarKomoditas, bulanTahun } from "./assets/dashboard.js";
+import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime } from "./assets/dashboard.js";
 
 const meta = await pasangKerangka("index.html");
 const utama = document.querySelector("main");
@@ -123,8 +123,8 @@ function kartuKpi(ikonNama, warna, angkaHtml, label, sub) {
 
 function renderKPI(k, daftarPasar, kinerja) {
   const blankSpot = daftarPasar.filter((p) => p.blank_spot).length;
-  const uptime = kinerja?.indikator?.find((i) => i.kode === "L1")?.capaian;
-  const adaUptime = uptime !== null && uptime !== undefined;
+  const uptime = nilaiUptime(kinerja);
+  const adaUptime = uptime !== null;
   document.getElementById("kpi").innerHTML = [
     kartuKpi("keranjang", "biru", angka(k.jumlah_komoditas), "Komoditas", "dipantau"),
     kartuKpi("kubus", "biru", angka(k.jumlah_varian), "Varian", "(jenis/ukuran)"),
@@ -163,40 +163,10 @@ function renderPrioritas(varian) {
 }
 
 /* ---------- mutu model */
-function median(a) {
-  const s = a.filter((x) => x !== null && x !== undefined && !Number.isNaN(x)).sort((x, y) => x - y);
-  if (!s.length) return null;
-  const t = Math.floor(s.length / 2);
-  return s.length % 2 ? s[t] : (s[t - 1] + s[t]) / 2;
-}
-
-function ubinMutu(ikonNama, nama, nilai, [status, kelas], catatan) {
-  return `<div class="ubin" title="${esc(catatan)}"><span class="ubin-ikon">${ikon(ikonNama, 24)}</span>
-    <div class="ubin-nama">${nama}</div><div class="ubin-nilai">${nilai}</div><span class="pil ${kelas}">${status}</span></div>`;
-}
-
 function renderMutu(m, daftarSinyal) {
-  const r = m.ringkasan, e = m.evaluasi_anomali, t = m.target;
-  const n = r.varian_dinilai;
-  const ada = (x) => x !== null && x !== undefined;
-  const bias = median(m.per_varian.map((v) => { const x = v.metrik?.[v.model_terpilih]; return x ? Math.abs(x.bias_persen) : null; }));
-  const drift = daftarSinyal.filter((s) => s.jenis === "drift" && s.aktif).length;
-  const kosong = ["Belum ada data", "netral"];
-  const nilaiOk = (ok, tulisanOk = "Baik") => (ok ? [tulisanOk, "baik"] : ["Perhatian", "perhatian"]);
-  document.getElementById("mutu").innerHTML = [
-    ubinMutu("target", "sMAPE", ada(r.smape_median) ? `${angka(r.smape_median, 1)}%` : "–", n ? nilaiOk(r.lolos_smape === n) : kosong,
-      `${r.lolos_smape} dari ${n} varian unggul minimal ${t.perbaikan_smape_persen}% dari metode naif`),
-    ubinMutu("timbangan", "Bias", ada(bias) ? `${angka(bias, 1)}%` : "–", n ? nilaiOk(r.lolos_bias === n) : kosong,
-      `Target bias absolut maksimal ${t.bias_absolut_maks_persen}%`),
-    ubinMutu("simpul", "F1-score", ada(e?.f1) ? angka(e.f1, 2) : "–", ada(e?.f1) ? nilaiOk(e.f1 >= t.f1_min) : kosong,
-      `Target minimal ${angka(t.f1_min, 2)}${e?.sumber_label ? ` (${e.sumber_label})` : ""}`),
-    ubinMutu("batang", "Recall", ada(e?.recall) ? angka(e.recall, 2) : "–", ada(e?.recall) ? nilaiOk(e.recall >= t.recall_min) : kosong,
-      `Target minimal ${angka(t.recall_min, 2)}`),
-    ubinMutu("lonceng", "False alarm", ada(e?.false_positive_rate) ? `${angka(e.false_positive_rate * 100, 1)}%` : "–",
-      ada(e?.false_positive_rate) ? nilaiOk(e.false_positive_rate <= t.fpr_maks, "Terkendali") : kosong, `Target maksimal ${t.fpr_maks * 100}%`),
-    ubinMutu("denyut", "Drift data", drift ? `${drift} varian` : "Normal", drift ? ["Waspada", "perhatian"] : ["Stabil", "baik"],
-      "Perubahan pola data atau penurunan kinerja model"),
-  ].join("");
+  document.getElementById("mutu").innerHTML = hitungMutu(m, daftarSinyal).map((u) => `
+    <div class="ubin" title="${esc(u.catatan)}"><span class="ubin-ikon">${ikon(u.ikon, 24)}</span>
+      <div class="ubin-nama">${u.nama}</div><div class="ubin-nilai">${u.nilai}</div><span class="pil ${u.status[1]}">${u.status[0]}</span></div>`).join("");
 }
 
 /* ---------- perbandingan perubahan harga (rata-rata per komoditas) */

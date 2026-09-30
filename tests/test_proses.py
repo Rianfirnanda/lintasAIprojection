@@ -112,6 +112,7 @@ def test_demo_kinerja_dan_laporan(keluaran_demo):
     assert k["koreksi_supervisor"]["acuan"] is not None
     lap = baca(keluaran, "laporan.json")
     assert [len(lap[j]) for j in ("mingguan", "bulanan", "triwulanan")] == [8, 6, 4]
+    assert lap["semesteran"] and lap["tahunan"] and "indikator" in lap["tahunan"][0]
     assert lap["bulanan"][0]["kinerja_model"]["ringkasan"]["varian_dinilai"] == 21
     assert "indikator" in lap["triwulanan"][0] and lap["mingguan"][0]["rekomendasi"]
     meta = baca(keluaran, "meta.json")

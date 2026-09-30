@@ -24,7 +24,7 @@ menjadi alur tindak lanjut sinyal.
 | Analisis AI | Baseline, proyeksi 14 hari (naif, rata-rata 7 hari, Holt damped, profil hari raya), rolling-origin backtesting, interval konformal 90%, deteksi anomali, drift (`pipeline/analisis.py`) |
 | Sinyal & konteks | Anomali harga, proyeksi naik, risiko hari raya, data terlambat, drift + konteks cuaca/hari raya/pembanding/stok (`pipeline/sinyal.py`) |
 | AI Data Finder | **Gratis**: Gemini + pencarian Google (utama), GitHub Models (cadangan, tanpa pencarian); Claude opsional. URL dicek silang dengan hasil pencarian dan dicek dapat dibuka (`pipeline/pencari_data.py`) |
-| Buletin & laporan | Buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan, siap cetak/PDF (`pipeline/laporan.py`, `site/laporan.html`) |
+| Buletin & laporan | Buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan, evaluasi semesteran, laporan tahunan, siap cetak/PDF (`pipeline/laporan.py`, `site/laporan.html`) |
 | Indikator kinerja | Indikator SMART Rancangan: ketepatan waktu, koreksi supervisor, kinerja model, stabilitas antar-segmen, uptime, waktu respons, IKM, persetujuan model (`pipeline/kinerja.py`, `site/kinerja.html`) |
 | Notifikasi | Sinyal prioritas & buletin mingguan ke Telegram dan/atau email, tanpa kiriman ganda (`pipeline/notifikasi.py`) |
 | Layanan publik | Pengaduan data & Survei Kepuasan Masyarakat (9 unsur PermenPANRB 14/2017) lewat GitHub Issue Forms (`pipeline/layanan.py`) |
@@ -32,7 +32,7 @@ menjadi alur tindak lanjut sinyal.
 
 Tampilan bawaan terang; tombol *Mode gelap* tersedia di kepala halaman. Hasil cetak selalu terang.
 
-Halaman dashboard: **Dashboard** (tata letak mengikuti Gambar 12 Pedoman Pemahaman Proyek), **Harga per Varian**, **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
+Halaman dashboard: **Dashboard** (tata letak mengikuti Gambar 12 Pedoman Pemahaman Proyek), **Harga per Varian**, **Alur & Arsitektur** (tiruan Gambar 10 dan 11 dokumen rancangan, lengkap dengan status komponen di sistem), **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
 **Sumber Data**, **Input Harga** (dapat dipakai tanpa sinyal/PWA), **Metodologi**.
 
 ## Menerbitkan ke GitHub Pages (sekali saja)

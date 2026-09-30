@@ -217,7 +217,7 @@ select, input[type="text"], input[type="date"], input[type="number"], input[type
 }
 select:focus, input:focus, textarea:focus { outline: 2px solid var(--aksen); outline-offset: 0; border-color: var(--aksen); }
 .tombol:focus-visible, a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--aksen); outline-offset: 2px; }
-.segmen { display: inline-flex; background: var(--surface-3); border-radius: var(--radius-kecil); padding: 3px; gap: 2px; }
+.segmen { display: inline-flex; flex-wrap: wrap; max-width: 100%; background: var(--surface-3); border-radius: var(--radius-kecil); padding: 3px; gap: 2px; }
 .segmen button {
   font: 500 0.82rem var(--sans); border: 0; background: transparent; color: var(--ink-2);
   padding: 6px 11px; border-radius: 6px; cursor: pointer;
@@ -332,6 +332,10 @@ tr.bisa-klik { cursor: pointer; }
 .dl dt { color: var(--muted); }
 .dl dd { margin: 0; }
 
+.tabel-doc td, .tabel-doc th { font-size: 0.8rem; vertical-align: top; }
+.tabel-doc th { white-space: normal; }
+.tabel-doc td { min-width: 130px; }
+.tabel-doc td .meta-kecil { display: inline-block; margin-top: 4px; }
 .alur { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.84rem; }
 .alur span.langkah { background: var(--aksen-lembut); color: var(--aksen); padding: 6px 12px; border-radius: 99px; font-weight: 500; }
 .alur span.panah { color: var(--muted); }

@@ -10,6 +10,9 @@ from pipeline import laporan
     ("bulanan", date(2026, 2, 10), date(2026, 2, 1), date(2026, 2, 28), "Februari 2026"),
     ("triwulanan", date(2026, 11, 5), date(2026, 10, 1), date(2026, 12, 31), "Triwulan IV 2026"),
     ("triwulanan", date(2026, 1, 5), date(2026, 1, 1), date(2026, 3, 31), "Triwulan I 2026"),
+    ("semesteran", date(2026, 3, 15), date(2026, 1, 1), date(2026, 6, 30), "Semester I 2026"),
+    ("semesteran", date(2026, 9, 30), date(2026, 7, 1), date(2026, 12, 31), "Semester II 2026"),
+    ("tahunan", date(2026, 9, 30), date(2026, 1, 1), date(2026, 12, 31), "Tahun 2026"),
 ])
 def test_periode(jenis, tgl, mulai, akhir, label):
     assert laporan._periode(jenis, tgl) == (mulai, akhir, label)
@@ -18,6 +21,9 @@ def test_periode(jenis, tgl, mulai, akhir, label):
 def test_sebelumnya_dan_tahun_lalu():
     assert laporan._sebelumnya("triwulanan", date(2026, 1, 1))[2] == "Triwulan IV 2025"
     assert laporan._tahun_lalu("bulanan", date(2026, 9, 1))[2] == "September 2025"
+    assert laporan._sebelumnya("semesteran", date(2026, 1, 1))[2] == "Semester II 2025"
+    assert laporan._tahun_lalu("semesteran", date(2026, 7, 1))[2] == "Semester II 2025"
+    assert laporan._sebelumnya("tahunan", date(2026, 1, 1))[2] == "Tahun 2025"
 
 
 def test_bentuk_semua(konf):
@@ -33,6 +39,10 @@ def test_bentuk_semua(konf):
                "konteks": {"wilayah_pembanding": {"1708": {"wilayah": "Kabupaten Kepahiang", "selisih_persen": 18.0}}}}]
     hasil = laporan.bentuk_semua(konf, harian, {}, sinyal, [], akhir)
     assert [len(hasil[j]) for j in ("mingguan", "bulanan", "triwulanan")] == [8, 6, 4]
+    assert list(hasil) == ["mingguan", "bulanan", "triwulanan", "semesteran", "tahunan"]
+    assert hasil["semesteran"][0]["label"] == "Semester II 2026" and hasil["tahunan"][0]["label"] == "Tahun 2026"
+    assert any("audit model" in r for r in hasil["semesteran"][0]["rekomendasi"])
+    assert any("lanjut atau hentikan" in r for r in hasil["tahunan"][0]["rekomendasi"])
     m = hasil["mingguan"][0]
     assert m["label"] == "Minggu ke-39 2026"
     crw = next(v for v in m["varian"] if v["kode"] == "CRW02")
@@ -42,4 +52,4 @@ def test_bentuk_semua(konf):
     assert any("Cabai Rawit Merah naik 20,0%" in r and "Kepahiang" in r for r in m["rekomendasi"])
     assert any("belum diverifikasi" in r for r in m["rekomendasi"])
     assert "," in m["ringkasan"][0]  # format angka Indonesia
-    assert laporan.bentuk_semua(konf, {}, {}, [], [], None) == {"mingguan": [], "bulanan": [], "triwulanan": []}
+    assert laporan.bentuk_semua(konf, {}, {}, [], [], None) == {j: [] for j in ("mingguan", "bulanan", "triwulanan", "semesteran", "tahunan")}
