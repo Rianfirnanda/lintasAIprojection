@@ -1,7 +1,7 @@
 // Service worker: formulir input tetap berfungsi tanpa sinyal (wilayah blank spot).
-const CACHE = "lintas-ai-v8";
+const CACHE = "lintas-ai-v9";
 const ASET = [
-  "input.html", "assets/app.css", "assets/app.js", "assets/logo-bps.png", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
+  "input.html", "masuk.html", "assets/app.css", "assets/app.js", "assets/akses.js", "assets/peran.js", "assets/dashboard.js", "assets/logo-bps.png", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
   "data/master.json", "data/meta.json",
   ...["ibm-plex-sans-latin-400-normal", "ibm-plex-sans-latin-400-italic", "ibm-plex-sans-latin-500-normal",
       "ibm-plex-sans-latin-600-normal", "ibm-plex-mono-latin-400-normal", "ibm-plex-mono-latin-500-normal"].map((f) => `vendor/font/${f}.woff2`),

@@ -4,6 +4,7 @@
   python -m pipeline periksa                 # validasi berkas di data/masuk tanpa publikasi (untuk PR data)
   python -m pipeline ambil-cuaca [--hari 30] # konektor Big Data cuaca (Open-Meteo)
   python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
+  python -m pipeline sandi ID SANDI [--nama "Nama"] [--peran petugas]   # cetak entri akun untuk config/pengguna.json
 """
 
 from __future__ import annotations
@@ -14,7 +15,7 @@ import logging
 import sys
 from pathlib import Path
 
-from . import konfigurasi, kualitas, masukan
+from . import konfigurasi, kualitas, masukan, pengguna
 
 
 def _periksa(konf) -> int:
@@ -62,7 +63,18 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--penyedia", choices=["otomatis", "gemini", "github_models", "anthropic"], default=None,
                    help="bawaan: ai.penyedia di config/pengaturan.json")
 
+    w = sub.add_parser("sandi", help="buat entri akun (sandi berhash) untuk config/pengguna.json")
+    w.add_argument("id")
+    w.add_argument("sandi")
+    w.add_argument("--nama", default=None)
+    w.add_argument("--peran", choices=pengguna.PERAN, default="petugas")
+
     a = p.parse_args(argv)
+    if a.perintah == "sandi":
+        data = pengguna.muat((a.akar or konfigurasi.AKAR) / "config" / "pengguna.json") or {}
+        garam = data.get("garam") or "lintas-ai-bengkulu-tengah"
+        print(json.dumps(pengguna.entri_akun(garam, a.id, a.nama or a.id, a.peran, a.sandi), ensure_ascii=False, indent=2))
+        return 0
     konf = konfigurasi.muat(a.akar)
 
     if a.perintah == "jalankan":

@@ -14,7 +14,8 @@
   <script src="vendor/leaflet/leaflet.js"></script>
 </head>
 <body class="halaman-dash">
-<main class="utama dash">
+<main class="utama" id="beranda-peran" hidden></main>
+<main class="utama dash" id="beranda-tpid" hidden>
 
   <header class="dash-banner">
     <svg class="dash-siluet" viewBox="0 0 600 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
@@ -109,9 +110,16 @@
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./assets/grafik.js";
 import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime } from "./assets/dashboard.js";
+import { peranAktif } from "./assets/akses.js";
+import { renderBerandaPeran } from "./assets/peran.js";
 
 const meta = await pasangKerangka("index.html");
-const utama = document.querySelector("main");
+// Dashboard TPID (Gambar 12) untuk peran TPID. Administrator dan analis membukanya lewat ?tampilan=tpid.
+const peran = peranAktif();
+const tampilanTpid = peran === "tpid" || (["admin", "analis"].includes(peran) && new URLSearchParams(location.search).get("tampilan") === "tpid");
+const utama = document.getElementById(tampilanTpid ? "beranda-tpid" : "beranda-peran");
+utama.hidden = false;
+if (!tampilanTpid) document.body.classList.remove("halaman-dash");
 document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 26));
 
@@ -355,7 +363,14 @@ function siapkanGrafik(varian, master, model) {
 }
 
 /* ---------- muat data (dijalankan setelah semua definisi di atas) */
-try {
+if (!tampilanTpid) {
+  try {
+    await renderBerandaPeran(peran, meta, utama);
+  } catch (e) {
+    console.error(e);
+    tampilkanGalat(utama, e);
+  }
+} else try {
   const [ringkasan, sinyal, pasar, master, model, kinerja] = await Promise.all([
     muatJSON("ringkasan.json"), muatJSON("sinyal.json"), muatJSON("pasar.json"), muatJSON("master.json"), muatJSON("model.json"),
     muatJSON("kinerja.json").catch(() => null),

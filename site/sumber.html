@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inventaris Sumber Data · Lintas AI Projection</title>
+  <title>Sumber Data · Lintas AI Projection</title>
   <meta name="description" content="Inventaris sumber data (BPS, pasar/pedagang, Pemda, AI Data Finder, Big Data) beserta metode akses, status, dan kandidat hasil AI Data Finder.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -14,13 +14,15 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Sumber data</h1>
-      <p>Big Data di proyek ini berarti menggabungkan data yang beragam dan relevan dari banyak sumber, tidak hanya soal jumlahnya.</p>
+      <h1>Sumber Data</h1>
+      <p>Dari mana angka harga berasal.</p>
     </div>
   </div>
 
+  <div class="ind-baris" id="kpi"></div>
+
   <section class="kartu">
-    <h2>Urutan kerja pengambilan data</h2>
+    <details><summary><b>Urutan kerja pengambilan data</b></summary>
     <div class="alur" style="margin-top:10px" aria-label="Alur pengambilan data">
       <span class="langkah">Tentukan kebutuhan</span><span class="panah">→</span>
       <span class="langkah">Cari sumber (AI Data Finder)</span><span class="panah">→</span>
@@ -31,11 +33,12 @@
       <span class="langkah">Standardisasi</span><span class="panah">→</span>
       <span class="langkah">Integrasikan</span>
     </div>
+    </details>
   </section>
 
   <section class="kartu">
     <div class="kartu-kepala">
-      <div><h2>Inventaris sumber (config/sumber.csv)</h2><p>Kalau dua sumber berbeda angka, sumber dengan nomor prioritas lebih kecil yang dipakai.</p></div>
+      <div><h2>Daftar sumber</h2><p>Kalau dua sumber beda angka, yang nomor prioritasnya lebih kecil dipakai.</p></div>
     </div>
     <div class="gulir-tabel"><table id="tabel-sumber"><thead><tr>
       <th>Kode</th><th>Nama</th><th>Kelompok</th><th>Metode akses</th><th>Frekuensi</th><th>Status</th>
@@ -45,16 +48,17 @@
   <section class="kartu">
     <div class="kartu-kepala">
       <div>
-        <h2>AI Data Finder: kandidat sumber</h2>
-        <p>Agen AI gratis (Gemini + pencarian Google; cadangan GitHub Models) mencari kandidat sumber. Hasil berstatus <em>kandidat</em> dan wajib diverifikasi analis sebelum ditambahkan ke inventaris.</p>
+        <h2>Kandidat sumber dari AI</h2>
+        <p>AI mencarikan sumber data baru. Hasilnya harus dicek analis dulu (AI Data Finder).</p>
       </div>
-      <a class="tombol" id="tautan-finder" href="#">Jalankan pencarian</a>
+      <a class="tombol" id="tautan-finder" href="#">Cari sumber baru</a>
     </div>
     <div id="kandidat"></div>
   </section>
 </main>
 
 <script type="module">
+import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, angka, waktu, tampilkanGalat } from "./assets/app.js";
 
 const meta = await pasangKerangka("sumber.html");
@@ -65,6 +69,13 @@ try {
   tampilkanGalat(document.querySelector("main"), e);
   throw e;
 }
+const nAktif = data.sumber.filter((x) => x.status === "aktif").length;
+document.getElementById("kpi").innerHTML = [
+  ind({ i: "database", label: "Sumber", nilai: data.sumber.length, sub: "terdaftar" }),
+  ind({ i: "centang", warna: "hijau", label: "Sumber aktif", nilai: nAktif, sub: "sedang dipakai", warnaNilai: "hijau", meter: data.sumber.length ? nAktif / data.sumber.length * 100 : 0, meterWarna: "hijau" }),
+  ind({ i: "lampu", warna: "oranye", label: "Masih kandidat", nilai: data.sumber.filter((x) => x.status !== "aktif" && x.status !== "ditolak").length, sub: "menunggu dicek" }),
+  ind({ i: "dokumen", label: "Data terkumpul", nilai: angka(data.sumber.reduce((a, x) => a + (x.jumlah_observasi || 0), 0)), sub: "baris observasi" }),
+].join("");
 const KELAS_STATUS = { aktif: "baik", kandidat: "info", menunggu_konfirmasi: "rendah", ditolak: "polos" };
 document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) => `<tr>
   <td><code>${esc(s.kode)}</code></td><td>${s.url ? `<a href="${esc(s.url)}" rel="noopener">${esc(s.nama)}</a>` : esc(s.nama)}</td>
@@ -80,9 +91,9 @@ else finder.href = "tentang.html#ai-data-finder";
 const pencarian = data.kandidat_ai?.pencarian || [];
 const wadah = document.getElementById("kandidat");
 if (!pencarian.length) {
-  wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan workflow <strong>AI Data Finder</strong> di tab Actions GitHub,
-    isi komoditas dan periode. Penyedia gratis: Gemini (isi secret <code>GEMINI_API_KEY</code> dari Google AI Studio) atau GitHub Models
-    (tanpa kunci, tanpa pencarian web). Hasil tersimpan di <code>data/sumber/kandidat_ai.json</code>.</div>`;
+  wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan <strong>AI Data Finder</strong> dari tab Actions di GitHub, lalu isi komoditas dan periode.
+    <details style="margin-top:8px"><summary>Detail penyedia AI</summary>Gratis lewat Gemini (secret <code>GEMINI_API_KEY</code> dari Google AI Studio) atau GitHub Models
+    (tanpa kunci dan tanpa pencarian web). Hasil tersimpan di <code>data/sumber/kandidat_ai.json</code>.</details></div>`;
 } else {
   wadah.innerHTML = pencarian.slice(0, 10).map((p) => {
     const h = p.hasil || {};

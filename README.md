@@ -30,10 +30,31 @@ menjadi alur tindak lanjut sinyal.
 | Layanan publik | Pengaduan data & Survei Kepuasan Masyarakat (9 unsur PermenPANRB 14/2017) lewat GitHub Issue Forms (`pipeline/layanan.py`) |
 | Layanan | Dashboard GitHub Pages (`site/`), GitHub Issues, unduhan CSV, log uptime per jam (`.github/workflows/uptime.yml`) |
 
-Tampilan bawaan terang; tombol *Mode gelap* tersedia di kepala halaman. Hasil cetak selalu terang.
+Desain memakai gaya kaca (*glassmorphism*) dengan warna logo BPS. Tampilan bawaan terang. Pilihan Otomatis, Terang, dan Gelap ada di bagian bawah halaman, bukan di navbar. Hasil cetak selalu terang.
 
-Halaman dashboard: **Dashboard** (tata letak mengikuti Gambar 12 Pedoman Pemahaman Proyek), **Harga per Varian**, **Alur & Arsitektur** (tiruan Gambar 10 dan 11 dokumen rancangan, lengkap dengan status komponen di sistem), **Sinyal & Tindak Lanjut**, **Laporan**, **Kinerja**, **Quality Gate**, **Mutu Model**,
-**Sumber Data**, **Input Harga** (dapat dipakai tanpa sinyal/PWA), **Metodologi**.
+### Peran dan menu
+
+Tiap peran punya menu dan beranda sendiri. Pengunjung tanpa login dianggap **Masyarakat**.
+
+| Peran | Beranda | Menu |
+|---|---|---|
+| Masyarakat (tanpa login) | Harga Hari Ini | Beranda, Harga, Laporan, Tentang |
+| Petugas Lapangan | Tugas Hari Ini | Beranda, Catat Harga, Harga, Tentang |
+| Operator Data | Kondisi Data | Beranda, Cek Data, Sumber, Harga, Tentang |
+| Analis | Meja Analis | Beranda, Peringatan, Cek Data, Akurasi, Laporan, Harga, Tentang |
+| TPID | Dashboard TPID (tata letak Gambar 12) | Beranda, Peringatan, Laporan, Capaian, Harga, Alur, Tentang |
+| Administrator | Kondisi Sistem | semua menu, termasuk Pengguna |
+
+Halaman: **Beranda** (berbeda per peran), **Harga**, **Peringatan**, **Laporan**, **Capaian**, **Cek Data** (Quality Gate), **Akurasi** (Mutu Model), **Sumber**, **Catat Harga** (dapat dipakai tanpa sinyal/PWA), **Alur** (tiruan Gambar 10 dan 11), **Pengguna**, **Tentang** (Tabel 4 dan 13).
+
+### Login
+
+Ada dua cara masuk, dipilih otomatis oleh pipeline (`meta.login`):
+
+1. **Akun contoh** (bawaan). Akun ada di `config/pengguna.json` dengan kata sandi yang di-*hash* (SHA-256 berkaram). Lima akun peragaan tersedia: `petugas`, `operator`, `analis`, `tpid`, `admin`, semuanya berkata sandi `lintas2026`. Tambah akun dengan `python -m pipeline sandi NAMA "kata sandi" --nama "Nama Lengkap" --peran analis`, lalu salin hasilnya ke `config/pengguna.json`. **Ganti atau hapus akun contoh sebelum dipakai sungguhan**, karena kata sandinya tertulis di dokumen ini.
+2. **Firebase Authentication** (belum diuji dengan proyek Firebase sungguhan). Salin `config/firebase.contoh.json` menjadi `config/firebase.json` dan isi konfigurasi web Firebase (kunci ini memang publik, keamanannya ada di aturan Firestore). Peran tiap pengguna diambil dari dokumen Firestore `pengguna/{uid}` berisi `peran` dan `nama`. Bila `config/firebase.json` terisi, akun contoh tidak dipakai lagi.
+
+**Batas yang perlu dipahami:** situs ini statis, jadi login hanya mengatur *tampilan* (menu dan beranda). Berkas di `data/` tetap dapat dibuka siapa pun yang tahu alamatnya. Pembatasan sungguhan membutuhkan Firebase Authentication dengan aturan Firestore, dan data sensitif disimpan di tempat yang tertutup.
 
 ## Menerbitkan ke GitHub Pages (sekali saja)
 
@@ -56,16 +77,16 @@ berlabel jelas. Mode demo otomatis mati saat berkas harga nyata pertama diunggah
 
 Panduan lengkap per peran: [`docs/PANDUAN_OPERASIONAL.md`](docs/PANDUAN_OPERASIONAL.md).
 
-1. **Petugas** mencatat harga di halaman *Input Harga* → *Unduh CSV* / *Bagikan*.
+1. **Petugas** masuk, lalu mencatat harga di halaman *Catat Harga* → *Unduh CSV* / *Bagikan*.
 2. **Operator** mengunggah CSV ke `data/masuk/harga/` → pipeline berjalan otomatis → dashboard diperbarui.
-3. **Validator** memutuskan antrean di halaman *Quality Gate* → unggah berkas keputusan ke `data/validasi/`.
+3. **Validator** memutuskan antrean di halaman *Cek Data* → unggah berkas keputusan ke `data/validasi/`.
 4. **Analis/TPID** memverifikasi sinyal lewat GitHub Issues berlabel `sinyal-harga` (label `status: …`).
 
 ## Menjalankan secara lokal
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q                                   # 96 uji otomatis
+python -m pytest -q                                   # 106 uji otomatis
 python -m pipeline periksa                            # validasi berkas di data/masuk
 python -m pipeline jalankan --keluaran site/data --tanpa-github
 python -m http.server -d site 8000                    # buka http://localhost:8000
@@ -83,6 +104,8 @@ GEMINI_API_KEY=... python -m pipeline cari-sumber --komoditas "cabai rawit merah
 | `sumber.csv` | Inventaris sumber data, metode akses, status, prioritas rekonsiliasi |
 | `kalender.csv` | Hari raya & libur (status `pasti`/`perkiraan`) |
 | `batas_wilayah.geojson` | (Opsional) batas kecamatan/kabupaten dari BPS. Bila ada, otomatis tampil di peta beranda |
+| `pengguna.json` | Akun contoh untuk login per peran (kata sandi di-*hash*). Diterbitkan ke `site/data/pengguna.json` |
+| `firebase.json` | (Opsional, salin dari `firebase.contoh.json`) Konfigurasi web Firebase untuk login sungguhan |
 | `pengaturan.json` | Ambang quality gate, sinyal, model, target kinerja, privasi, tindak lanjut, penyedia AI, notifikasi, layanan |
 
 ## Yang wajib dikonfirmasi sebelum dipakai sebagai dasar keputusan

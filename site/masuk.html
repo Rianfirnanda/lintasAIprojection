@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masuk · Lintas AI Projection</title>
+  <meta name="description" content="Masuk sesuai peran untuk melihat menu dan dashboard yang cocok.">
+  <meta name="theme-color" content="#0a62ad">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="masuk-wadah">
+    <section class="masuk-kartu" aria-labelledby="judul-masuk">
+      <div class="masuk-logo"><img src="assets/logo-bps.png" alt="" width="46" height="36"><div><b>Lintas AI Projection</b><span>BPS Kabupaten Bengkulu Tengah</span></div></div>
+      <div id="isi-masuk"></div>
+    </section>
+  </div>
+</main>
+
+<script type="module">
+import { pasangKerangka, esc } from "./assets/app.js";
+import { ikon } from "./assets/dashboard.js";
+import { PERAN, SEMUA_HALAMAN, bolehAkses, masuk, keluar, sesi } from "./assets/akses.js";
+
+const meta = await pasangKerangka("masuk.html");
+const isi = document.getElementById("isi-masuk");
+const SANDI_CONTOH = "lintas2026";
+
+function tujuan(peran) {
+  const l = new URLSearchParams(location.search).get("lanjut");
+  return l && SEMUA_HALAMAN.includes(l) && bolehAkses(peran, l) ? l : "index.html";
+}
+
+function tampilkanSudahMasuk(s) {
+  isi.innerHTML = `<h1 id="judul-masuk">Halo, ${esc(s.nama)}</h1>
+    <p>Anda masuk sebagai ${esc(PERAN[s.peran].nama)}.</p>
+    <a class="tombol utama-aksi lebar" href="${tujuan(s.peran)}">Lanjut ke ${esc(PERAN[s.peran].judulBeranda)}</a>
+    <button class="tombol lebar" type="button" id="btn-keluar" style="margin-top:10px">Ganti akun</button>`;
+  document.getElementById("btn-keluar").addEventListener("click", async () => { await keluar(); location.reload(); });
+}
+
+async function tampilkanForm() {
+  const firebase = meta?.login === "firebase";
+  isi.innerHTML = `<h1 id="judul-masuk">Masuk</h1>
+    <p>Pilih akun sesuai peran Anda.</p>
+    <form id="form-masuk" novalidate>
+      <div class="medan"><label for="pengguna">${firebase ? "Email" : "Nama pengguna"}</label>
+        <input id="pengguna" name="pengguna" type="${firebase ? "email" : "text"}" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
+      <div class="medan"><label for="sandi">Kata sandi</label>
+        <input id="sandi" name="sandi" type="password" autocomplete="current-password" required></div>
+      <div class="masuk-galat" id="galat" role="alert" hidden></div>
+      <button class="tombol utama-aksi lebar" type="submit" id="kirim">Masuk</button>
+    </form>
+    <a class="tautan-tamu" href="index.html">Lanjut tanpa masuk (sebagai masyarakat)</a>
+    <div id="contoh"></div>`;
+  const form = document.getElementById("form-masuk");
+  const inputId = document.getElementById("pengguna");
+  const inputSandi = document.getElementById("sandi");
+  const galat = document.getElementById("galat");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const kirim = document.getElementById("kirim");
+    kirim.disabled = true; kirim.textContent = "Memeriksa…"; galat.hidden = true;
+    const hasil = await masuk(meta, inputId.value, inputSandi.value);
+    if (hasil.ok) { location.href = tujuan(hasil.peran); return; }
+    galat.textContent = hasil.galat; galat.hidden = false;
+    kirim.disabled = false; kirim.textContent = "Masuk";
+  });
+
+  if (meta?.login === "contoh") {
+    try {
+      const { akun } = await (await fetch("data/pengguna.json", { cache: "no-cache" })).json();
+      document.getElementById("contoh").innerHTML = `<div class="contoh-akun"><h2>Akun contoh</h2>
+        <div class="chip-akun">${akun.map((a) => `<button type="button" data-id="${esc(a.id)}">${ikon(PERAN[a.peran].ikon, 16)}${esc(PERAN[a.peran].nama)}</button>`).join("")}</div>
+        <span class="meta-kecil">Sandi semua akun contoh: <b>${SANDI_CONTOH}</b>. Untuk peragaan tampilan per peran; data tetap terbuka untuk umum.</span></div>`;
+      document.querySelectorAll(".chip-akun button").forEach((b) => b.addEventListener("click", () => {
+        inputId.value = b.dataset.id; inputSandi.value = SANDI_CONTOH; inputSandi.focus();
+      }));
+    } catch { /* daftar akun contoh tidak tersedia */ }
+  }
+}
+
+const s = sesi();
+if (s) tampilkanSudahMasuk(s); else await tampilkanForm();
+</script>
+</body>
+</html>

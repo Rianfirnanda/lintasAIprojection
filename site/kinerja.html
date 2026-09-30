@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Indikator Kinerja · Lintas AI Projection</title>
+  <title>Capaian Kinerja · Lintas AI Projection</title>
   <meta name="description" content="Capaian indikator kinerja SMART Rancangan Aksi Perubahan: mutu data, model AI, layanan, pemanfaatan TPID, dan integritas.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -15,12 +15,12 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Indikator kinerja</h1>
-      <p>Capaian indikator SMART dari Rancangan Aksi Perubahan (Tabel 1 dan 5). Yang belum tercapai tetap ditampilkan apa adanya.</p>
+      <h1>Capaian Kinerja</h1>
+      <p>Sejauh mana target tercapai. Yang belum tercapai tetap ditampilkan.</p>
     </div>
   </div>
 
-  <section class="grid kpi-grid" id="kpi"></section>
+  <div class="ind-baris" id="kpi"></div>
 
   <section class="kartu">
     <div class="kartu-kepala"><div><h2>Indikator SMART</h2><p>Dihitung otomatis setiap pipeline berjalan.</p></div></div>
@@ -56,6 +56,7 @@
 </main>
 
 <script type="module">
+import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, persen, angka, tgl, waktu, warna, saatTemaBerubah, tampilkanGalat } from "./assets/app.js";
 
 const meta = await pasangKerangka("kinerja.html");
@@ -74,12 +75,14 @@ const fmt = (v, satuan) => v === null || v === undefined ? "–"
 
 const hitung = Object.fromEntries(Object.keys(STATUS).map((s) => [s, k.indikator.filter((i) => i.status === s).length]));
 const L = k.layanan || {};
+const totalInd = k.indikator.length;
+const upt = k.uptime.uptime_persen;
 document.getElementById("kpi").innerHTML = [
-  ["Indikator memenuhi", `${hitung.memenuhi}/${k.indikator.length}`, `${hitung.belum_memenuhi} belum memenuhi · ${hitung.belum_dapat_dinilai} belum dapat dinilai`],
-  ["Uptime 30 hari", k.uptime.uptime_persen !== undefined ? persen(k.uptime.uptime_persen, 2) : "–", "target 99,5%"],
-  ["Indeks Kepuasan (IKM)", L.skm?.ikm ? angka(L.skm.ikm, 2) : "–", L.skm?.ikm ? `mutu ${esc(L.skm.mutu)} (${esc(L.skm.kinerja)}) · ${L.skm.responden} responden` : "belum ada responden"],
-  ["Pengaduan ditanggapi", L.pengaduan?.total ? persen(L.pengaduan.ditanggapi_persen, 0) : "–", L.pengaduan?.total ? `${L.pengaduan.total} pengaduan` : "belum ada pengaduan"],
-].map(([l, n, s]) => `<div class="kartu kpi"><div class="label">${l}</div><div class="nilai">${n}</div><div class="sub">${s}</div></div>`).join("");
+  ind({ i: "centang", warna: "hijau", label: "Target tercapai", nilai: `${hitung.memenuhi}/${totalInd}`, sub: `${hitung.belum_memenuhi} belum tercapai · ${hitung.belum_dapat_dinilai} belum bisa dinilai`, meter: hitung.memenuhi / totalInd * 100, meterWarna: "hijau" }),
+  ind({ i: "jam", label: "Dashboard aktif (30 hari)", nilai: upt !== undefined ? persen(upt, 2) : "–", sub: "target 99,5%", meter: upt !== undefined ? upt : null, meterWarna: "hijau" }),
+  ind({ i: "tim", warna: "oranye", label: "Kepuasan pengguna", nilai: L.skm?.ikm ? angka(L.skm.ikm, 2) : "–", sub: L.skm?.ikm ? `${esc(L.skm.mutu)} · ${L.skm.responden} responden` : "belum ada responden" }),
+  ind({ i: "dokumenCentang", label: "Pengaduan ditanggapi", nilai: L.pengaduan?.total ? persen(L.pengaduan.ditanggapi_persen, 0) : "–", sub: L.pengaduan?.total ? `${L.pengaduan.total} pengaduan` : "belum ada pengaduan", meter: L.pengaduan?.total ? L.pengaduan.ditanggapi_persen : null }),
+].join("");
 
 let sasaranSebelum = "";
 document.querySelector("#tabel-smart tbody").innerHTML = k.indikator.map((i) => {

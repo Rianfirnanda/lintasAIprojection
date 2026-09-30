@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quality Gate Data · Lintas AI Projection</title>
+  <title>Cek Data · Lintas AI Projection</title>
   <meta name="description" content="Pemeriksaan kualitas data harga: deduplikasi, data hilang, pencilan, rekonsiliasi, validasi manusia, dan ketepatan waktu.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -14,12 +14,12 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Quality gate</h1>
-      <p>Setiap data harga diperiksa dulu sebelum dianalisis. Data yang mencurigakan ditahan sampai validator memutuskan.</p>
+      <h1>Cek Data</h1>
+      <p>Data diperiksa dulu sebelum dipakai (Quality Gate). Yang mencurigakan ditahan sampai ada keputusan.</p>
     </div>
   </div>
 
-  <section class="grid kpi-grid" id="kpi"></section>
+  <div class="ind-baris" id="kpi"></div>
 
   <section class="kartu">
     <div class="kartu-kepala">
@@ -69,6 +69,7 @@
 </main>
 
 <script type="module">
+import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
 
 await pasangKerangka("kualitas.html");
@@ -83,14 +84,15 @@ const namaVarian = Object.fromEntries(master.varian.map((v) => [v.kode, v.nama])
 const namaPasar = Object.fromEntries(master.pasar.map((p) => [p.kode, p.nama]));
 const r = q.ringkasan;
 const ps = r.per_status || {};
+const lolosN = (ps.lolos || 0) + (ps.divalidasi || 0);
 document.getElementById("kpi").innerHTML = [
-  ["Berkas diproses", angka(r.berkas), "harga & konteks"],
-  ["Lolos", angka((ps.lolos || 0) + (ps.divalidasi || 0)), `${angka(ps.divalidasi || 0)} setelah validasi manusia`],
-  ["Perlu validasi", angka(q.jumlah_perlu_validasi), "menunggu keputusan"],
-  ["Ditolak skema", angka(r.baris_ditolak_skema), `${angka(ps.ditolak_validator || 0)} ditolak validator`],
-  ["Duplikat dibuang", angka(r.duplikat_dibuang), "salinan identik / kiriman ulang"],
-  ["Selisih antar-sumber", angka(r.rekonsiliasi_melebihi_batas), "melebihi batas rekonsiliasi"],
-].map(([l, n, s]) => `<div class="kartu kpi"><div class="label">${l}</div><div class="nilai">${n}</div><div class="sub">${s}</div></div>`).join("");
+  ind({ i: "dokumen", label: "Berkas diperiksa", nilai: angka(r.berkas), sub: "harga dan konteks" }),
+  ind({ i: "centang", warna: "hijau", label: "Baris lolos", nilai: angka(lolosN), sub: `${angka(ps.divalidasi || 0)} lewat validasi manusia`, warnaNilai: "hijau" }),
+  ind({ i: "peringatan", warna: "merah", label: "Perlu diputuskan", nilai: angka(q.jumlah_perlu_validasi), sub: "menunggu validator", warnaNilai: q.jumlah_perlu_validasi ? "merah" : "" }),
+  ind({ i: "kurang", warna: "oranye", label: "Baris ditolak", nilai: angka(r.baris_ditolak_skema), sub: `${angka(ps.ditolak_validator || 0)} ditolak validator`, warnaNilai: r.baris_ditolak_skema ? "oranye" : "" }),
+  ind({ i: "database", label: "Data ganda dibuang", nilai: angka(r.duplikat_dibuang), sub: "salinan atau kiriman ulang" }),
+  ind({ i: "tukar", label: "Beda antar-sumber", nilai: angka(r.rekonsiliasi_melebihi_batas), sub: "melebihi batas selisih" }),
+].join("");
 
 const kt = q.ketepatan || {};
 document.getElementById("periode-ketepatan").textContent = kt.periode

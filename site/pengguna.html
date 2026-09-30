@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pengguna dan Peran · Lintas AI Projection</title>
+  <meta name="description" content="Daftar peran, menu tiap peran, dan akun yang bisa masuk ke Lintas AI Projection.">
+  <meta name="theme-color" content="#0a62ad">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Pengguna dan peran</h1>
+      <p>Siapa boleh membuka apa.</p>
+    </div>
+  </div>
+
+  <div class="ind-baris" id="ringkas"></div>
+
+  <section class="kartu">
+    <div class="kartu-kepala"><div><h2>Peran</h2><p>Tiap peran punya menu dan beranda sendiri.</p></div></div>
+    <div class="grid-peran" id="peran"></div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala"><div><h2>Hak akses</h2><p>Halaman apa saja yang terbuka untuk tiap peran.</p></div></div>
+    <div class="gulir-tabel"><table class="matriks" id="matriks"></table></div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala"><div><h2>Akun</h2><p id="ket-akun"></p></div></div>
+    <div id="akun"></div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala"><div><h2>Perlu diketahui</h2></div></div>
+    <div class="pesan peringatan">Situs ini berupa halaman statis, jadi peran hanya mengatur <b>tampilan</b>: menu dan beranda yang muncul.
+      Berkas data tetap terbuka bagi siapa saja yang tahu alamatnya. Untuk pembatasan yang sungguh-sungguh, pakai Firebase Authentication
+      dan simpan data yang perlu dilindungi di tempat yang tertutup.</div>
+    <details style="margin-top:12px"><summary>Cara menambah akun contoh</summary>
+      <ol class="langkah-daftar">
+        <li>Jalankan <code>python -m pipeline sandi nama.pengguna "Kata sandi" --nama "Nama Lengkap" --peran analis</code>.</li>
+        <li>Salin hasilnya ke daftar <code>akun</code> di <code>config/pengguna.json</code>.</li>
+        <li>Simpan perubahan. Akun aktif setelah proses otomatis berikutnya selesai.</li>
+      </ol>
+    </details>
+    <details style="margin-top:8px"><summary>Cara memakai Firebase</summary>
+      <ol class="langkah-daftar">
+        <li>Buat proyek di Firebase, aktifkan Authentication (email dan sandi) dan Firestore.</li>
+        <li>Salin <code>config/firebase.contoh.json</code> menjadi <code>config/firebase.json</code>, lalu isi konfigurasi web dari Firebase.</li>
+        <li>Untuk tiap pengguna, buat dokumen <code>pengguna/{uid}</code> di Firestore dengan isian <code>peran</code> dan <code>nama</code>.</li>
+        <li>Setelah itu daftar akun contoh tidak dipakai lagi.</li>
+      </ol>
+    </details>
+  </section>
+</main>
+
+<script type="module">
+import { pasangKerangka, muatJSON, esc, angka } from "./assets/app.js";
+import { ikon } from "./assets/dashboard.js";
+import { PERAN, URUT_PERAN, DAFTAR_HALAMAN, bolehAkses, menuPeran } from "./assets/akses.js";
+import { ind } from "./assets/peran.js";
+
+const meta = await pasangKerangka("pengguna.html");
+let akun = [];
+if (meta?.login === "contoh") {
+  try { akun = (await (await fetch("data/pengguna.json", { cache: "no-cache" })).json()).akun; } catch { /* daftar tidak tersedia */ }
+}
+const cara = { contoh: "Akun contoh", firebase: "Firebase", tanpa: "Belum ada" }[meta?.login] || "Belum ada";
+
+document.getElementById("ringkas").innerHTML = [
+  ind({ i: "tim", label: "Peran", nilai: URUT_PERAN.length, sub: "masyarakat sampai admin" }),
+  ind({ i: "orang", warna: "hijau", label: "Akun", nilai: meta?.login === "firebase" ? "–" : angka(akun.length), sub: meta?.login === "firebase" ? "diatur di Firebase" : "dapat masuk" }),
+  ind({ i: "gembokPerisai", warna: meta?.login === "firebase" ? "hijau" : "oranye", label: "Cara masuk", nilai: cara, sub: meta?.login === "firebase" ? "Firebase Authentication" : "untuk peragaan tampilan" }),
+  ind({ i: "dokumen", label: "Halaman", nilai: DAFTAR_HALAMAN.length + 1, sub: "termasuk halaman masuk" }),
+].join("");
+
+document.getElementById("peran").innerHTML = URUT_PERAN.map((k) => {
+  const p = PERAN[k], m = menuPeran(k);
+  return `<div class="peran-kartu"><span class="ind-ikon biru">${ikon(p.ikon, 20)}</span><h3>${esc(p.nama)}</h3><p>${esc(p.ringkas)}</p>
+    <div class="menu-mini">${[...m.utama, ...m.lainnya].map((x) => `<span>${esc(x.label)}</span>`).join("")}</div></div>`;
+}).join("");
+
+document.getElementById("matriks").innerHTML = `<thead><tr><th>Halaman</th>${URUT_PERAN.map((k) => `<th>${esc(PERAN[k].nama)}</th>`).join("")}</tr></thead>
+  <tbody>${DAFTAR_HALAMAN.map((h) => `<tr><td>${esc(h.label)}</td>${URUT_PERAN.map((k) =>
+    bolehAkses(k, h.href) ? `<td class="ya" aria-label="boleh">✓</td>` : `<td class="tidak" aria-label="tidak boleh">–</td>`).join("")}</tr>`).join("")}</tbody>`;
+
+const wadah = document.getElementById("akun");
+if (meta?.login === "firebase") {
+  document.getElementById("ket-akun").textContent = "Akun dikelola di Firebase.";
+  wadah.innerHTML = `<p class="kosong">Daftar akun ada di Firebase Console, bukan di halaman ini.</p>`;
+} else if (akun.length) {
+  document.getElementById("ket-akun").textContent = "Akun contoh untuk peragaan.";
+  wadah.innerHTML = `<div class="gulir-tabel"><table><thead><tr><th>Nama</th><th>Nama pengguna</th><th>Peran</th></tr></thead><tbody>
+    ${akun.map((a) => `<tr><td>${esc(a.nama)}</td><td><code>${esc(a.id)}</code></td><td>${esc(PERAN[a.peran]?.nama || a.peran)}</td></tr>`).join("")}</tbody></table></div>`;
+} else {
+  document.getElementById("ket-akun").textContent = "Belum ada akun.";
+  wadah.innerHTML = `<p class="kosong">Isi <code>config/pengguna.json</code> atau <code>config/firebase.json</code> agar orang bisa masuk.</p>`;
+}
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Metodologi Sistem · Lintas AI Projection</title>
+  <title>Tentang Sistem · Lintas AI Projection</title>
   <meta name="description" content="Metodologi, arsitektur pipeline, tata kelola, dan panduan operasional sistem pemantauan harga pangan berbasis AI dan Big Data.">
   <meta name="theme-color" content="#0e1114">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
@@ -14,18 +14,19 @@
 <main class="utama">
   <div class="judul-halaman">
     <div>
-      <h1>Metodologi &amp; tata kelola</h1>
-      <p>Dashboard ini hanya bagian paling ujung. Di belakangnya ada rangkaian proses yang mengumpulkan, memeriksa, dan menganalisis data harga setiap hari.</p>
+      <h1>Tentang Sistem</h1>
+      <p>Cara sistem ini bekerja, dari data mentah sampai keputusan.</p>
     </div>
   </div>
 
+  <div class="ind-baris" id="kpi"></div>
+
   <section class="kartu">
-    <h2>Alur kerja</h2>
-    <p class="meta-kecil">Diagram lengkap ada di halaman <a href="alur.html">Alur &amp; Arsitektur</a>.</p>
-    <div class="alur" style="margin-top:10px">
+    <div class="kartu-kepala"><div><h2>Alur kerja</h2></div><a class="dash-tautan" href="alur.html">Lihat diagram</a></div>
+    <div class="alur">
       <span class="langkah">Sumber data</span><span class="panah">→</span><span class="langkah">Pengambilan</span><span class="panah">→</span>
       <span class="langkah">Integrasi</span><span class="panah">→</span><span class="langkah">Penyimpanan</span><span class="panah">→</span>
-      <span class="langkah">Quality gate</span><span class="panah">→</span><span class="langkah">Analisis AI</span><span class="panah">→</span>
+      <span class="langkah">Cek data</span><span class="panah">→</span><span class="langkah">Analisis AI</span><span class="panah">→</span>
       <span class="langkah">Dashboard</span><span class="panah">→</span><span class="langkah">Keputusan TPID</span><span class="panah">→</span>
       <span class="langkah">Umpan balik</span>
     </div>
@@ -33,43 +34,36 @@
 
   <div class="grid dua-sama">
     <section class="kartu prosa">
-      <h2>Arsitektur (implementasi di GitHub)</h2>
+      <h2>Bagian-bagian sistem</h2>
       <ul>
-        <li><strong>Sumber:</strong> BPS (survei harga), pasar/pedagang (formulir petugas luring-ke-daring), Pemda (harga/stok/distribusi), AI Data Finder (penemuan kandidat sumber), Big Data sah (cuaca Open-Meteo, kalender hari raya; kandidat PIHPS, Panel Harga Bapanas, BMKG).</li>
-        <li><strong>Integrasi:</strong> berkas CSV/Excel di <code>data/masuk/</code>, konektor API terjadwal (cuaca), standardisasi kode varian/pasar/wilayah/sumber dan satuan (ons/gram → kg).</li>
-        <li><strong>Penyimpanan:</strong> data mentah disimpan apa adanya sebagai berkas di repositori, hasil olahan disimpan sebagai JSON, setiap berkas dicatat checksum SHA-256-nya, dan riwayat git menjadi jejak audit sekaligus cadangan.</li>
-        <li><strong>Quality gate:</strong> deduplikasi, data hilang, batas kewajaran, pencilan, rekonsiliasi antar-sumber, validasi manusia, ketepatan waktu.</li>
-        <li><strong>Analisis AI:</strong> baseline, proyeksi 14 hari, interval prediksi, deteksi anomali, rolling-origin backtesting, drift, konteks otomatis.</li>
-        <li><strong>Layanan:</strong> dashboard GitHub Pages, sinyal prioritas, GitHub Issues untuk tindak lanjut, notifikasi Telegram/email, buletin mingguan/bulanan/triwulanan, indikator kinerja SMART, pengaduan &amp; survei kepuasan, unduhan CSV.</li>
+        <li><strong>Sumber:</strong> BPS, petugas pasar, Pemda, dan data pendukung seperti cuaca dan kalender hari raya.</li>
+        <li><strong>Integrasi:</strong> berkas CSV atau Excel, ditambah cuaca otomatis. Kode, satuan, dan wilayah diseragamkan.</li>
+        <li><strong>Penyimpanan:</strong> data mentah dan hasil olahan disimpan sebagai berkas. Riwayat perubahan tercatat di git.</li>
+        <li><strong>Cek data (Quality Gate):</strong> membuang data ganda, menandai harga tidak wajar, dan membandingkan antar-sumber.</li>
+        <li><strong>Analisis AI:</strong> prakiraan 14 hari, deteksi harga janggal, uji akurasi, dan konteks otomatis.</li>
+        <li><strong>Layanan:</strong> dashboard, peringatan, notifikasi Telegram atau email, laporan, serta pengaduan dan survei.</li>
       </ul>
     </section>
     <section class="kartu prosa">
       <h2>Jadwal otomatis</h2>
       <ul>
-        <li>Pipeline berjalan setiap hari kerja sekitar pukul 11.45 dan 15.45 WIB, serta setiap kali ada berkas baru di <code>data/</code> atau <code>config/</code>.</li>
-        <li>Konektor cuaca diperbarui pada setiap jalannya pipeline terjadwal.</li>
-        <li>Sinyal anomali berkeparahan tinggi dibuatkan GitHub Issue (maks. 5 per jalan) untuk verifikasi dan tindak lanjut.</li>
-        <li>Mode pemantauan intensif: H-14 hingga H+3 hari raya.</li>
-        <li>Notifikasi sinyal prioritas dan buletin mingguan ke Telegram/email (bila secret diatur).</li>
-        <li>Pemeriksaan uptime dashboard setiap jam (workflow Uptime).</li>
+        <li>Berjalan tiap hari kerja sekitar pukul 11.45 dan 15.45 WIB, dan setiap ada berkas baru.</li>
+        <li>Peringatan tinggi dibuatkan GitHub Issue (paling banyak 5 sekali jalan).</li>
+        <li>Pemantauan intensif berlaku dari H-14 sampai H+3 hari raya.</li>
+        <li>Notifikasi dan laporan mingguan dikirim ke Telegram atau email bila sudah diatur.</li>
+        <li>Dashboard dicek tiap jam untuk memastikan tetap aktif.</li>
       </ul>
       <h2>Peran pengguna</h2>
-      <ul>
-        <li><strong>Petugas lapangan:</strong> mencatat harga di <a href="input.html">Input Harga</a>, mengekspor CSV.</li>
-        <li><strong>Operator data:</strong> mengunggah CSV ke <code>data/masuk/</code>, memantau hasil <em>periksa</em>.</li>
-        <li><strong>Analis/validator:</strong> memutuskan antrean <a href="kualitas.html">quality gate</a>, memverifikasi sinyal.</li>
-        <li><strong>TPID:</strong> membaca dashboard, menindaklanjuti sinyal lewat Issues, memberi status.</li>
-      </ul>
+      <ul id="daftar-peran"></ul>
     </section>
   </div>
 
   <section class="kartu prosa" id="ai-data-finder">
-    <h2>Peran AI dalam sistem</h2>
+    <h2>Peran AI</h2>
     <ul>
-      <li><strong>AI Data Finder (discovery):</strong> agen AI gratis (Gemini dengan pencarian Google lewat secret <code>GEMINI_API_KEY</code>, atau GitHub Models tanpa pencarian web sebagai cadangan) mencari kandidat sumber sesuai komoditas, wilayah, dan periode; keluaran terstruktur (nama, URL, periode, satuan, frekuensi, metode akses, lisensi). Setiap URL dicek: apakah muncul di hasil pencarian dan apakah dapat dibuka. Semua kandidat wajib diverifikasi analis. Dijalankan manual dari tab <em>Actions → AI Data Finder</em>.</li>
-      <li><strong>Validasi &amp; konteks:</strong> aturan quality gate dan konteks otomatis (cuaca, hari raya, wilayah pembanding, stok) untuk setiap sinyal.</li>
-      <li><strong>Analitik:</strong> model statistik yang transparan dan dapat diaudit (naif, rerata bergerak, Holt damped trend, profil hari raya). Model hanya dipakai bila terbukti lebih baik dari baseline pada backtest.</li>
-      <li><strong>Persetujuan manusia:</strong> sinyal dan rekomendasi tidak otomatis menjadi keputusan; status verifikasi dicatat.</li>
+      <li><strong>Mencari sumber data (AI Data Finder):</strong> AI gratis (Gemini dengan pencarian Google, cadangan GitHub Models) mencarikan kandidat sumber. Tiap alamat dicek dan semua kandidat harus diperiksa analis. Dijalankan manual lewat <em>Actions → AI Data Finder</em>.</li>
+      <li><strong>Menganalisis harga:</strong> model statistik yang bisa ditelusuri (naif, rata-rata bergerak, Holt, pola hari raya). Model baru dipakai bila terbukti lebih baik dari cara sederhana.</li>
+      <li><strong>Keputusan tetap di manusia:</strong> peringatan dan rekomendasi tidak otomatis jadi keputusan. Status verifikasinya dicatat.</li>
     </ul>
   </section>
 
@@ -130,8 +124,20 @@
   </section>
 </main>
 <script type="module">
-import { pasangKerangka } from "./assets/app.js";
+import { pasangKerangka, muatJSON, esc } from "./assets/app.js";
+import { PERAN, URUT_PERAN } from "./assets/akses.js";
+import { ind } from "./assets/peran.js";
 await pasangKerangka("tentang.html");
+document.getElementById("daftar-peran").innerHTML = URUT_PERAN.map((k) => `<li><strong>${esc(PERAN[k].nama)}:</strong> ${esc(PERAN[k].ringkas.toLowerCase())}.</li>`).join("");
+try {
+  const r = (await muatJSON("ringkasan.json")).kpi;
+  document.getElementById("kpi").innerHTML = [
+    ind({ i: "keranjang", label: "Komoditas", nilai: r.jumlah_komoditas, sub: `${r.jumlah_varian} varian dipantau` }),
+    ind({ i: "sinkron", warna: "hijau", label: "Pembaruan", nilai: "2", kecil: "kali sehari", sub: "hari kerja, pagi dan sore" }),
+    ind({ i: "tim", label: "Peran pengguna", nilai: URUT_PERAN.length, sub: "menu dan beranda sendiri" }),
+    ind({ i: "otak", warna: "oranye", label: "Prakiraan", nilai: "14", kecil: "hari", sub: "ke depan, dengan rentang" }),
+  ].join("");
+} catch { document.getElementById("kpi").remove(); }
 </script>
 </body>
 </html>

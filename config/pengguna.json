@@ -1,0 +1,36 @@
+{
+  "catatan": "Akun contoh untuk peragaan tampilan per peran. Berkas ini terbit ke situs publik, jadi jangan dipakai untuk data rahasia. Ganti sandi dengan: python -m pipeline sandi ID SANDI. Untuk pembatasan akses sungguhan, isi config/firebase.json.",
+  "garam": "lintas-ai-bengkulu-tengah",
+  "akun": [
+    {
+      "id": "petugas",
+      "nama": "Petugas Pasar",
+      "peran": "petugas",
+      "sandi_hash": "46b46c50c72df349105c5b5bfa5e1c35bb13cb8b2789280937108dc6074c9d11"
+    },
+    {
+      "id": "operator",
+      "nama": "Operator BPS",
+      "peran": "operator",
+      "sandi_hash": "af743974464f3586032e6d02c6af226cba44647450a9d63408c579da0c531df8"
+    },
+    {
+      "id": "analis",
+      "nama": "Analis BPS",
+      "peran": "analis",
+      "sandi_hash": "88de7a4c0b8379a2937498b48c485c201b59a97f543b80a958c97271f6c0d4eb"
+    },
+    {
+      "id": "tpid",
+      "nama": "Anggota TPID",
+      "peran": "tpid",
+      "sandi_hash": "a4f3df1a32417253d1539513eecf3a1d3224872b79b8d1e4406e1e8b1b8121ab"
+    },
+    {
+      "id": "admin",
+      "nama": "Admin Sistem",
+      "peran": "admin",
+      "sandi_hash": "d97076ef2e2f4c3792a5e77702245d4d9c15baf43057bfc125d1de4f664dd817"
+    }
+  ]
+}

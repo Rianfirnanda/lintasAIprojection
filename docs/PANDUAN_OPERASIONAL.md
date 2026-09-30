@@ -2,16 +2,32 @@
 
 Panduan per peran untuk sistem pemantauan harga pangan BPS Kabupaten Bengkulu Tengah.
 
+## 0. Masuk sesuai peran
+
+Buka halaman **Masuk** (tombol di kanan atas). Setiap peran melihat menu dan beranda yang berbeda. Tanpa login, Anda melihat tampilan **Masyarakat**.
+
+| Peran | Akun contoh | Untuk apa |
+|---|---|---|
+| Petugas Lapangan | `petugas` | Mencatat harga di pasar |
+| Operator Data | `operator` | Mengunggah berkas dan memantau mutu data |
+| Analis | `analis` | Memeriksa data, peringatan, dan model |
+| TPID | `tpid` | Memantau dashboard dan mengambil keputusan |
+| Administrator | `admin` | Mengelola sistem dan pengguna |
+
+Kata sandi semua akun contoh: `lintas2026`. Akun ini hanya untuk peragaan. Untuk pemakaian sungguhan, ganti akun di `config/pengguna.json` (buat entri baru dengan `python -m pipeline sandi ...`) atau pakai Firebase Authentication (lihat README, bagian Login).
+
+Ingat: login hanya mengatur tampilan. Berkas data tetap terbuka bagi umum.
+
 ## 1. Petugas lapangan (pencatat harga)
 
-1. Buka halaman **Input Harga** di dashboard satu kali saat ada sinyal (halaman tersimpan untuk dipakai luring).
+1. Masuk sebagai petugas, lalu buka halaman **Catat Harga** di dashboard satu kali saat ada sinyal (halaman tersimpan untuk dipakai luring).
    Di ponsel Android/iOS dapat dipasang ke layar utama ("Tambahkan ke layar utama").
 2. Isi tanggal, pasar, kode petugas, dan kode responden anonim (R1, R2, …). **Jangan** menulis nama/NIK/HP pedagang.
 3. Isi harga per varian. Satuan dapat diubah (mis. ons); sistem mengonversi otomatis ke kg/liter.
    Peringatan merah berarti harga di luar batas kewajaran. Periksa ulang, tetapi data tetap boleh disimpan.
-4. Tekan **Simpan ke antrean perangkat**. Data tetap tersimpan walau tidak ada sinyal (wilayah blank spot).
+4. Tekan **Simpan**. Data tetap tersimpan walau tidak ada sinyal (wilayah blank spot).
 5. Saat ada sinyal, tekan **Unduh CSV** atau **Bagikan** (WhatsApp/email) ke operator.
-6. Setelah operator mengonfirmasi, tekan **Hapus yang sudah dikirim**.
+6. Setelah operator mengonfirmasi, tekan **Bersihkan yang terkirim**.
 
 Batas tepat waktu: data hari pencatatan diinput paling lambat pukul 14.00 WIB (`jam_batas_tepat_waktu`).
 
@@ -35,7 +51,7 @@ Batas tepat waktu: data hari pencatatan diinput paling lambat pukul 14.00 WIB (`
 
 ## 3. Validator (quality gate)
 
-1. Buka halaman **Quality Gate**. Bagian *Antrean validasi manusia* berisi observasi yang ditahan beserta tandanya:
+1. Buka halaman **Cek Data** (Quality Gate). Bagian *Antrean validasi manusia* berisi observasi yang ditahan beserta tandanya:
    - `di_luar_batas_wajar`: kemungkinan salah ketik/satuan.
    - `perubahan_ekstrem` / `pencilan_statistik`: lonjakan yang tidak didukung pasar/responden lain.
    - `duplikat_konflik`: kunci sama, harga berbeda.
@@ -48,7 +64,7 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 
 ## 4. Analis & TPID (tindak lanjut sinyal)
 
-1. Dashboard → **Komoditas prioritas** dan halaman **Sinyal & Tindak Lanjut**.
+1. Dashboard → **Komoditas prioritas** dan halaman **Peringatan**.
 2. Sinyal anomali berkeparahan tinggi (data nyata) otomatis dibuatkan **GitHub Issue** berlabel `sinyal-harga`
    (maks. 5 per jalan). Di issue:
    - verifikasi ke lapangan/sumber pendukung (konteks otomatis tercantum di issue),
@@ -88,7 +104,7 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 
 - Halaman **Kinerja** menampilkan capaian indikator SMART Rancangan (ketepatan waktu, koreksi supervisor, model,
   uptime, waktu respons, IKM, dll.). Indikator yang belum dapat dihitung ditandai jelas beserta alasannya.
-- **Persetujuan model**: di halaman **Mutu Model** centang model rekomendasi yang disetujui → isi nama penyetuju →
+- **Persetujuan model**: di halaman **Akurasi** centang model rekomendasi yang disetujui → isi nama penyetuju →
   *Unduh berkas persetujuan* → unggah ke `data/persetujuan_model/`. Untuk mewajibkan persetujuan, ubah
   `analisis.wajib_persetujuan_model` menjadi `true` di `config/pengaturan.json`.
 - **Uptime**: workflow **Uptime** memeriksa dashboard setiap jam; log di cabang `log-uptime` (jangan dihapus).
