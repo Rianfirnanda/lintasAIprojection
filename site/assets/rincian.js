@@ -211,3 +211,56 @@ export function isiUptime({ kinerja, peran }) {
     <p class="rincian-kosong">${ikon("roda", 20)}<span>${esc(l1?.catatan || "Catatan pemeriksaan belum ada.")}</span></p>
     ${aksi(tautan(peran, "kinerja.html", "Lihat semua capaian"))}`;
 }
+
+/* ---------- 6. daftar varian di balik kotak "Harga naik/turun/stabil/perlu diwaspadai" */
+const NAMA_PERIODE = { mingguan: "minggu lalu", bulanan: "sebulan lalu" };
+
+/** Daftar varian beserta harga sekarang, harga pembanding, dan selisihnya. `waspada` menampilkan selisih dari harga biasanya. */
+export function isiDaftarVarian({ varian, periode = "mingguan", pengantar, kosong, waspada = false, peran }) {
+  const baris = varian.map((v) => {
+    const s = waspada
+      ? (v.baseline && v.harga_terakhir ? { lalu: v.baseline, selisih: v.harga_terakhir - v.baseline, persen: v.deviasi_persen ?? null } : null)
+      : selisihHarga(v, periode);
+    const labelLalu = waspada ? "Harga biasanya" : `${NAMA_PERIODE[periode] || "sebelumnya"}${s?.tanggal ? `, ${tglPendek(s.tanggal)}` : ""}`;
+    return `<li>${gambarKomoditas(v.kode)}
+      <div class="rv-teks"><b>${esc(v.nama)}</b>
+        <span>Sekarang <b>${rp(v.harga_terakhir)}</b>/${esc(v.satuan)}</span><span>${esc(labelLalu.charAt(0).toUpperCase() + labelLalu.slice(1))}: ${s ? rp(s.lalu) : "–"}</span></div>
+      <div class="rv-ubah">${htmlSelisih(s)}</div></li>`;
+  }).join("");
+  return `<p class="rincian-pengantar">${pengantar}</p>
+    ${baris ? `<ul class="rincian-varian">${baris}</ul>` : `<p class="rincian-kosong">${ikon("centang", 20)}<span>${kosong}</span></p>`}
+    ${aksi(tautan(peran, "harga.html", "Lihat semua harga"))}`;
+}
+
+/** Menyambungkan kotak ber-data-rincian di dalam `wadah` ke jendela rincian. `isi` memetakan nama ke fungsi pembuat isi. */
+export function pasangKlikRincian(wadah, isi) {
+  wadah.addEventListener("click", (e) => {
+    const t = e.target.closest("[data-rincian]");
+    if (t && isi[t.dataset.rincian]) bukaRincian(isi[t.dataset.rincian]());
+  });
+}
+
+/** Isi keempat kotak arah harga (naik, turun, stabil, perlu diwaspadai). `arah` mengembalikan "naik", "turun", atau "datar". */
+export function rincianArahHarga({ varian, periode, arah, peran }) {
+  const kata = NAMA_PERIODE[periode] || "sebelumnya";
+  const urut = (fn) => [...varian].sort(fn);
+  const ubah = (v) => v.perubahan?.[periode] ?? 0;
+  return {
+    naik: () => ({ judul: "Harga naik", sub: `Dibanding ${kata}`, ikonNama: "tren", warna: "merah",
+      isi: isiDaftarVarian({ varian: urut((a, b) => ubah(b) - ubah(a)).filter((v) => arah(v) === "naik"), periode, peran,
+        pengantar: `Barang yang harganya sekarang lebih mahal lebih dari 0,5% dibanding ${kata}. Urutan dari kenaikan terbesar.`,
+        kosong: `Tidak ada barang yang harganya naik dibanding ${kata}.` }) }),
+    turun: () => ({ judul: "Harga turun", sub: `Dibanding ${kata}`, ikonNama: "trenTurun", warna: "hijau",
+      isi: isiDaftarVarian({ varian: urut((a, b) => ubah(a) - ubah(b)).filter((v) => arah(v) === "turun"), periode, peran,
+        pengantar: `Barang yang harganya sekarang lebih murah lebih dari 0,5% dibanding ${kata}. Urutan dari penurunan terbesar.`,
+        kosong: `Tidak ada barang yang harganya turun dibanding ${kata}.` }) }),
+    stabil: () => ({ judul: "Harga stabil", sub: `Dibanding ${kata}`, ikonNama: "kubus",
+      isi: isiDaftarVarian({ varian: varian.filter((v) => arah(v) === "datar"), periode, peran,
+        pengantar: `Barang yang harganya hampir tidak berubah, naik atau turun tidak lebih dari 0,5% dibanding ${kata}.`,
+        kosong: "Tidak ada barang yang harganya stabil saat ini." }) }),
+    waspada: () => ({ judul: "Perlu diwaspadai", sub: "Harga di luar kebiasaan", ikonNama: "peringatan", warna: "oranye",
+      isi: isiDaftarVarian({ varian: urut((a, b) => Math.abs(b.deviasi_persen ?? 0) - Math.abs(a.deviasi_persen ?? 0)).filter((v) => v.sinyal), waspada: true, peran,
+        pengantar: "Barang yang harganya jauh dari harga biasanya, jadi sedang diperiksa petugas. Ini tanda untuk berhati-hati, bukan berarti harganya pasti terus naik.",
+        kosong: "Tidak ada barang yang perlu diwaspadai. Semua harga masih dalam batas wajar." }) }),
+  };
+}

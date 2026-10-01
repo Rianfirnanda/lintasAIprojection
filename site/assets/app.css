@@ -796,6 +796,22 @@ dialog.rincian::backdrop { background: rgba(6, 14, 28, 0.5); -webkit-backdrop-fi
   color: var(--ink); text-decoration: none; transition: transform 0.15s ease;
 }
 a.ind:hover { transform: translateY(-2px); color: var(--ink); }
+button.ind { font: inherit; text-align: left; cursor: pointer; width: 100%; }
+button.ind:hover { transform: translateY(-2px); border-color: var(--aksen); }
+button.ind:focus-visible { outline: 2px solid var(--aksen); outline-offset: 2px; }
+button.ind:hover .kpi-buka { opacity: 1; color: var(--aksen); transform: translateX(2px); }
+.ind-klik .ind-atas { padding-right: 18px; }
+.petunjuk-klik { margin: 0 0 8px; font-size: 0.84rem; color: var(--muted); }
+.rincian-varian { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.rincian-varian li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--rule); }
+.rincian-varian .gambar-komoditas { width: 48px; height: 36px; margin: 0; }
+.rv-teks { min-width: 0; display: grid; gap: 2px; }
+.rv-teks > b { font-size: 0.9rem; }
+.rv-teks span { font-size: 0.78rem; color: var(--muted); }
+.rv-teks span b { color: var(--ink); font-weight: 600; }
+.rv-ubah { text-align: right; font-size: 0.84rem; }
+.rv-ubah .selisih { display: inline-block; white-space: nowrap; }
+.rv-ubah .selisih small { display: block; }
 .ind-atas { display: flex; align-items: center; gap: 10px; }
 .ind-ikon { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; flex: none; background: var(--d-lingkar-biru); color: var(--aksen); }
 .ind-ikon.oranye { background: var(--d-lingkar-oranye); color: var(--d-oranye); }
