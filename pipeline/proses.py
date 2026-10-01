@@ -240,7 +240,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "tanggal_terakhir": seri.tanggal[idx[-1]].isoformat() if len(idx) else None,
             "baseline": round(base) if base else None,
             "deviasi_persen": round((terakhir / base - 1) * 100, 2) if terakhir and base else None,
-            "perubahan": hv.perubahan, "proyeksi_h7": h7, "model": hv.model_terpilih,
+            "perubahan": hv.perubahan, "harga_acuan": hv.harga_acuan, "proyeksi_h7": h7, "model": hv.model_terpilih,
             "sinyal": sinyal_aktif_per_varian.get(kode),
         })
 

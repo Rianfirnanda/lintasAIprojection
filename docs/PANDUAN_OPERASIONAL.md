@@ -64,7 +64,10 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 
 ## 4. Analis & TPID (tindak lanjut sinyal)
 
-1. Dashboard → **Komoditas prioritas** dan halaman **Peringatan**.
+1. Dashboard → **Komoditas prioritas** dan halaman **Peringatan**. Klik kotak **Sinyal prioritas** di bagian atas
+   untuk melihat komoditas mana yang sedang jadi prioritas, harganya dibanding harga biasa, sejak kapan, statusnya,
+   dan langkah berikutnya. Kotak lain (ketepatan waktu, *blank spot*, dan seterusnya) juga bisa diklik.
+   Kartu komoditas menampilkan harga sekarang, harga sebulan lalu, dan kenaikannya dalam rupiah.
 2. Sinyal anomali berkeparahan tinggi (data nyata) otomatis dibuatkan **GitHub Issue** berlabel `sinyal-harga`
    (maks. 5 per jalan). Di issue:
    - verifikasi ke lapangan/sumber pendukung (konteks otomatis tercantum di issue),

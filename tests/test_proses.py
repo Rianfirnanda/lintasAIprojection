@@ -62,6 +62,17 @@ def test_demo_sinyal_aktif_gejolak_cabai(keluaran_demo):
     assert all(x["status"] == "baru" for x in s)
 
 
+def test_ringkasan_memuat_harga_pembanding(keluaran_demo):
+    keluaran, _ = keluaran_demo
+    varian = baca(keluaran, "ringkasan.json")["varian"]
+    for v in varian:
+        acuan = v["harga_acuan"]["bulanan"]
+        assert acuan and acuan["harga"] > 0, v["kode"]
+        assert date.fromisoformat(acuan["tanggal"]) <= date.fromisoformat(v["tanggal_terakhir"]) - timedelta(days=30)
+        # Persen perubahan dihitung dari harga yang sama dengan yang ditampilkan sebagai "sebulan lalu".
+        assert abs((v["harga_terakhir"] / acuan["harga"] - 1) * 100 - v["perubahan"]["bulanan"]) < 0.1, v["kode"]
+
+
 def test_json_tidak_mengandung_nan(keluaran_demo):
     keluaran, _ = keluaran_demo
     for p in keluaran.rglob("*.json"):

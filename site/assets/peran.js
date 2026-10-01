@@ -1,6 +1,6 @@
 // Beranda khusus tiap peran. Dashboard TPID (Gambar 12) tetap berada di index.html.
 import { muatJSON, esc, rp, persen, angka, tgl, waktu } from "./app.js";
-import { ikon, hitungMutu, ringkasSinyalPrioritas, nilaiUptime, bulanTahun } from "./dashboard.js";
+import { ikon, hitungMutu, ringkasSinyalPrioritas, nilaiUptime, bulanTahun, gambarKomoditas, selisihHarga, teksSelisih } from "./dashboard.js";
 import { PERAN, sesi } from "./akses.js";
 
 const jepit = (x) => Math.max(0, Math.min(100, x));
@@ -49,9 +49,13 @@ async function berandaMasyarakat(el, meta) {
   const teratas = urut((a, b) => b.perubahan.bulanan - a.perubahan.bulanan).filter((x) => x.perubahan.bulanan > 0);
   const terbawah = urut((a, b) => a.perubahan.bulanan - b.perubahan.bulanan).filter((x) => x.perubahan.bulanan < 0);
   const maksNaik = Math.max(1, ...teratas.map((x) => x.perubahan.bulanan)), maksTurun = Math.max(1, ...terbawah.map((x) => -x.perubahan.bulanan));
-  const baris = (x, maks, kelas) => `<div class="baris-info"><div><div class="nama">${esc(x.nama)}</div><div class="sub">${rp(x.harga_terakhir)}/${esc(x.satuan)}</div></div>
+  const baris = (x, maks, kelas) => {
+    const s = selisihHarga(x);
+    return `<div class="baris-info"><div><div class="nama">${esc(x.nama)}</div>
+      <div class="sub">${rp(x.harga_terakhir)}/${esc(x.satuan)}${s ? `, sebulan lalu ${rp(s.lalu)}` : ""}</div></div>
     <div class="batang-mini"><span style="width:${Math.abs(x.perubahan.bulanan) / maks * 100}%;background:var(--${kelas})"></span></div>
-    <div class="kanan"><b>${persen(x.perubahan.bulanan, 1, true)}</b></div></div>`;
+    <div class="kanan"><b>${s ? teksSelisih(s.selisih) : ""}</b><div class="sub">${persen(x.perubahan.bulanan, 1, true)}</div></div></div>`;
+  };
   const lay = meta?.layanan || {};
   const aksi = tombol("harga.html", "Semua harga", true) + tombol("laporan.html", "Buletin mingguan") +
     (lay.url_pengaduan_eksternal || lay.url_pengaduan ? tombol(lay.url_pengaduan_eksternal || lay.url_pengaduan, "Lapor data") : "");
@@ -65,10 +69,11 @@ async function berandaMasyarakat(el, meta) {
     </div>
     <section class="kartu"><div class="kartu-kepala"><div><h2>Harga bahan pokok</h2><p>Perubahan dibanding minggu lalu</p></div></div>
       <div class="grid-komoditas">${wakil.map((x, n) => {
-        const a = arah(mingguan(x)), s = seri[n];
-        return `<a class="komo" href="harga.html" style="text-decoration:none;color:inherit"><span class="komo-nama">${esc(x.nama)}</span>
+        const a = arah(mingguan(x)), s = seri[n], beda = selisihHarga(x, "mingguan");
+        return `<a class="komo" href="harga.html" style="text-decoration:none;color:inherit"><span class="komo-atas">${gambarKomoditas(x.kode)}<span class="komo-nama">${esc(x.nama)}</span></span>
           <span class="komo-harga">${rp(x.harga_terakhir)}<small>/${esc(x.satuan)}</small></span>
-          <span class="komo-ubah ${a}">${tanda[a]} ${persen(mingguan(x), 1, true)}</span>
+          <span class="komo-ubah ${a}"><span>${tanda[a]} ${a === "datar" ? "Hampir tetap" : beda ? teksSelisih(beda.selisih) : ""}</span><small>${persen(mingguan(x), 1, true)}</small></span>
+          ${beda ? `<span class="komo-lalu">Minggu lalu ${rp(beda.lalu)}</span>` : ""}
           ${s ? sparkline(s.aktual.filter((y) => y !== null).slice(-30), a) : ""}</a>`;
       }).join("")}</div></section>
     <div class="grid dua-sama" style="margin-top:14px">

@@ -35,7 +35,8 @@
       <table id="tabel-perubahan">
         <thead>
           <tr>
-            <th>Varian</th><th class="angka">Harga terakhir</th><th class="angka">Dibanding harga normal</th>
+            <th>Varian</th><th class="angka">Harga terakhir</th><th class="angka">Sebulan lalu</th><th class="angka">Selisih sebulan</th>
+            <th class="angka">Dibanding harga normal</th>
             <th class="angka">Harian</th><th class="angka">Mingguan</th><th class="angka">Bulanan</th>
             <th class="angka">Triwulanan</th><th class="angka">Semesteran</th><th class="angka">Tahunan</th>
             <th class="angka">Perkiraan 7 hari lagi</th><th>Peringatan</th>
@@ -50,6 +51,7 @@
 <script type="module">
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat } from "./assets/app.js";
+import { selisihHarga, htmlSelisih, tglPendek } from "./assets/dashboard.js";
 
 const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
 await pasangKerangka("harga.html");
@@ -74,18 +76,21 @@ try {
   const tbody = document.querySelector("#tabel-perubahan tbody");
   let html = "";
   for (const k of master.komoditas) {
-    html += `<tr class="grup"><td colspan="11">${esc(k.nama)}</td></tr>`;
+    html += `<tr class="grup"><td colspan="13">${esc(k.nama)}</td></tr>`;
     for (const kode of k.varian) {
       const v = varian.find((x) => x.kode === kode);
       if (!v) {
-        html += `<tr><td>${esc(master.varian.find((x) => x.kode === kode)?.nama || kode)}</td><td colspan="10" class="kosong">belum ada data</td></tr>`;
+        html += `<tr><td>${esc(master.varian.find((x) => x.kode === kode)?.nama || kode)}</td><td colspan="12" class="kosong">belum ada data</td></tr>`;
         continue;
       }
       const p = v.perubahan || {};
       const h7 = v.proyeksi_h7;
+      const b = selisihHarga(v);
       html += `<tr class="bisa-klik" data-kode="${esc(v.kode)}" tabindex="0">
         <td>${esc(v.nama)} <span class="meta-kecil">/${esc(v.satuan)}</span></td>
-        <td class="angka">${rp(v.harga_terakhir)}</td>${sel(v.deviasi_persen, v.kelompok)}
+        <td class="angka">${rp(v.harga_terakhir)}</td>
+        <td class="angka">${b ? `${rp(b.lalu)}<br><span class="meta-kecil">${esc(tglPendek(b.tanggal))}</span>` : "–"}</td>
+        <td class="angka">${b ? htmlSelisih(b) : "–"}</td>${sel(v.deviasi_persen, v.kelompok)}
         ${sel(p.harian, v.kelompok)}${sel(p.mingguan, v.kelompok)}${sel(p.bulanan, v.kelompok)}
         ${sel(p.triwulanan, v.kelompok)}${sel(p.semesteran, v.kelompok)}${sel(p.tahunan, v.kelompok)}
         <td class="angka">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rp(h7.bawah)}–${rp(h7.atas)}</span>` : "–"}</td>

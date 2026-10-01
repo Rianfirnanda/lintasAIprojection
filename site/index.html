@@ -114,7 +114,8 @@
 <script type="module">
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./assets/grafik.js";
-import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime } from "./assets/dashboard.js";
+import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime, selisihHarga, htmlSelisih, tglPendek, LANGKAH_SINYAL } from "./assets/dashboard.js";
+import { bukaRincian, isiSinyal, isiKomoditas, isiBlankSpot, isiKetepatan, isiUptime } from "./assets/rincian.js";
 import { peranAktif } from "./assets/akses.js";
 import { renderBerandaPeran } from "./assets/peran.js";
 
@@ -132,10 +133,12 @@ if (!tampilanTpid) document.body.classList.remove("halaman-dash");
 document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 26));
 
-/* ---------- indikator utama */
-function kartuKpi(ikonNama, warna, angkaHtml, label, sub) {
-  return `<div class="dash-kpi-kartu"><span class="kpi-lingkar ${warna}">${ikon(ikonNama, 26)}</span>
-    <div><div class="kpi-angka ${warna}">${angkaHtml}</div><div class="kpi-label">${label}</div><div class="kpi-sub">${sub}</div></div></div>`;
+/* ---------- indikator utama (tiap kotak bisa diklik untuk melihat rinciannya) */
+function kartuKpi(jenis, ikonNama, warna, angkaHtml, label, sub) {
+  return `<button type="button" class="dash-kpi-kartu" data-rincian="${jenis}" aria-haspopup="dialog">
+    <span class="kpi-lingkar ${warna}">${ikon(ikonNama, 26)}</span>
+    <span class="kpi-teks"><span class="kpi-angka ${warna}">${angkaHtml}</span><span class="kpi-label">${label}</span><span class="kpi-sub">${sub}</span></span>
+    <span class="kpi-buka" aria-hidden="true">${ikon("kanan", 16)}</span></button>`;
 }
 
 function renderKPI(k, daftarPasar, kinerja) {
@@ -143,13 +146,36 @@ function renderKPI(k, daftarPasar, kinerja) {
   const uptime = nilaiUptime(kinerja);
   const adaUptime = uptime !== null;
   document.getElementById("kpi").innerHTML = [
-    kartuKpi("keranjang", "biru", angka(k.jumlah_komoditas), "Komoditas", "dipantau"),
-    kartuKpi("kubus", "biru", angka(k.jumlah_varian), "Varian", "(jenis/ukuran)"),
-    kartuKpi("pin", "oranye", angka(blankSpot), "Wilayah", blankSpot < 8 ? "<i>blank spot</i> (target 8)" : "<i>blank spot</i>"),
-    kartuKpi("jam", "biru", k.ketepatan_persen === null ? "–" : persen(k.ketepatan_persen, 0), "Ketepatan waktu", "pelaporan"),
-    kartuKpi("peringatan", "merah", angka(k.sinyal_tinggi), "Sinyal", "prioritas"),
-    kartuKpi("roda", "hijau", adaUptime ? persen(uptime, 1) : "–", "Uptime", adaUptime ? "sistem" : "belum ada log"),
+    kartuKpi("komoditas", "keranjang", "biru", angka(k.jumlah_komoditas), "Komoditas", "dipantau"),
+    kartuKpi("varian", "kubus", "biru", angka(k.jumlah_varian), "Varian", "(jenis/ukuran)"),
+    kartuKpi("blankspot", "pin", "oranye", angka(blankSpot), "Wilayah", blankSpot < 8 ? "<i>blank spot</i> (target 8)" : "<i>blank spot</i>"),
+    kartuKpi("ketepatan", "jam", "biru", k.ketepatan_persen === null ? "–" : persen(k.ketepatan_persen, 0), "Ketepatan waktu", "pelaporan"),
+    kartuKpi("sinyal", "peringatan", "merah", angka(k.sinyal_tinggi), "Sinyal", "prioritas"),
+    kartuKpi("uptime", "roda", "hijau", adaUptime ? persen(uptime, 1) : "–", "Uptime", adaUptime ? "sistem" : "belum ada log"),
   ].join("");
+}
+
+function pasangRincianKPI(data) {
+  const { ringkasan, sinyal, pasar, master, kinerja } = data;
+  const k = ringkasan.kpi;
+  const isi = {
+    komoditas: () => ({ judul: `${angka(k.jumlah_komoditas)} komoditas dipantau`, sub: `${angka(k.jumlah_varian)} varian (jenis atau ukuran)`, ikonNama: "keranjang",
+      isi: isiKomoditas({ ringkasan, master }) }),
+    varian: () => ({ judul: `${angka(k.jumlah_varian)} varian dipantau`, sub: "Varian adalah jenis atau ukuran dari satu komoditas", ikonNama: "kubus",
+      isi: isiKomoditas({ ringkasan, master }) }),
+    blankspot: () => ({ judul: "Wilayah blank spot", sub: "Wilayah sulit sinyal yang dipantau khusus", ikonNama: "pin", warna: "oranye",
+      isi: isiBlankSpot({ pasar: pasar.pasar, peran }) }),
+    ketepatan: () => ({ judul: "Ketepatan waktu pelaporan", sub: "Seberapa tepat waktu harga dikirim dari pasar", ikonNama: "jam",
+      isi: () => isiKetepatan({ kpi: k, pasar: pasar.pasar, peran }) }),
+    sinyal: () => ({ judul: `${angka(k.sinyal_tinggi)} sinyal prioritas`, sub: "Peringatan yang perlu segera dicek", ikonNama: "peringatan", warna: "merah",
+      isi: isiSinyal({ sinyal: sinyal.sinyal, ringkasan, pasar: pasar.pasar, peran }) }),
+    uptime: () => ({ judul: "Uptime sistem", sub: "Seberapa sering dashboard bisa dibuka", ikonNama: "roda", warna: "hijau",
+      isi: isiUptime({ kinerja, peran }) }),
+  };
+  document.getElementById("kpi").addEventListener("click", (e) => {
+    const tombol = e.target.closest("[data-rincian]");
+    if (tombol && isi[tombol.dataset.rincian]) bukaRincian(isi[tombol.dataset.rincian]());
+  });
 }
 
 /* ---------- komoditas prioritas */
@@ -165,16 +191,15 @@ function renderPrioritas(varian) {
   el.innerHTML = pilih.map((v) => {
     const kelas = v.sinyal === "tinggi" ? "tinggi" : v.sinyal === "sedang" ? "sedang" : "pantau";
     const label = v.sinyal === "tinggi" ? "Prioritas Tinggi" : v.sinyal === "sedang" ? "Prioritas Sedang" : "Dipantau";
-    const b = v.perubahan?.bulanan;
-    const ada = b !== null && b !== undefined;
-    const naik = ada && b >= 0;
-    return `<a class="prio ${kelas}" href="#varian=${encodeURIComponent(v.kode)}">
-      ${gambarKomoditas(v.kode_komoditas)}
+    const s = selisihHarga(v);
+    return `<a class="prio ${kelas}" href="#varian=${encodeURIComponent(v.kode)}" aria-label="${esc(v.nama)}: lihat grafik harga">
+      <span class="prio-gambar">${gambarKomoditas(v.kode)}</span>
       <strong class="prio-nama">${esc(v.nama)}</strong>
-      <span class="prio-kecil">Harga kini</span>
-      <span class="prio-harga">${rp(v.harga_terakhir)}/${esc(v.satuan)}</span>
-      <span class="prio-ubah ${naik ? "naik" : "turun"}"><span class="segitiga">${ada ? (naik ? "▲" : "▼") : ""}</span>${ada ? persen(b, 1, true) : "–"}</span>
-      <span class="prio-kecil">(m-to-m)</span>
+      <span class="prio-harga-dua">
+        <span class="prio-kini"><small>Sekarang</small><b>${rp(v.harga_terakhir)}<i>/${esc(v.satuan)}</i></b></span>
+        <span class="prio-lalu"><small>${s ? `Sebulan lalu, ${tglPendek(s.tanggal)}` : "Sebulan lalu"}</small><b>${s ? `${rp(s.lalu)}<i>/${esc(v.satuan)}</i>` : "–"}</b></span>
+      </span>
+      ${htmlSelisih(s, { kelas: "prio-ubah" })}
       <span class="prio-label">${label}</span></a>`;
   }).join("");
 }
@@ -229,13 +254,6 @@ function renderHariRaya(h) {
 }
 
 /* ---------- tindak lanjut sinyal */
-const KETERANGAN = {
-  anomali_harga: "Cek pasokan dan distribusi di pasar",
-  proyeksi_naik: "Pantau harga 7 hari ke depan",
-  risiko_hari_raya: "Siapkan pemantauan intensif",
-  data_terlambat: "Hubungi petugas pencatat",
-  drift: "Cek ulang cara prakiraan",
-};
 const WARNA_STATUS = { baru: "oranye", perlu_verifikasi: "oranye", terverifikasi: "oranye", ditindaklanjuti: "merah", selesai: "hijau", false_alarm: "abu" };
 
 function renderTindakLanjut(daftar, daftarPasar) {
@@ -250,7 +268,7 @@ function renderTindakLanjut(daftar, daftarPasar) {
     const komoditas = s.varian || (pasar ? pasar.nama : "Semua varian");
     return `<tr><td>${i + 1}</td><td>${esc(komoditas)}</td><td>${esc(s.judul)}</td>
       <td><span class="titik-status ${WARNA_STATUS[s.status] || "abu"}"></span>${esc(STATUS_SINYAL[s.status] || s.status)}</td>
-      <td>${esc(KETERANGAN[s.jenis] || "Perlu dicek analis")}</td></tr>`;
+      <td>${esc(LANGKAH_SINYAL[s.jenis] || "Perlu dicek analis")}</td></tr>`;
   }).join("");
 }
 
@@ -392,6 +410,7 @@ if (tampilanTpid) try {
   ]);
   document.getElementById("periode").textContent = bulanTahun(meta.tanggal_data_terakhir);
   renderKPI(ringkasan.kpi, pasar.pasar, kinerja);
+  pasangRincianKPI({ ringkasan, sinyal, pasar, master, kinerja });
   renderPrioritas(ringkasan.varian, master);
   renderMutu(model, sinyal.sinyal);
   renderBanding(ringkasan.varian, master);

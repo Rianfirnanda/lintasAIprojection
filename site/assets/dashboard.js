@@ -1,4 +1,4 @@
-// Ikon garis dan ilustrasi komoditas untuk beranda dashboard (SVG inline, tanpa berkas gambar).
+// Ikon garis dan fungsi bersama untuk beranda dashboard (SVG inline, tanpa berkas gambar).
 
 const GARIS = {
   keranjang: '<path d="M3 9.5h18l-2 10H5l-2-10z"/><path d="M8 9.5l3-5.5M16 9.5l-3-5.5M9 13v3.5M12 13v3.5M15 13v3.5"/>',
@@ -46,47 +46,16 @@ const GARIS = {
   tukar: '<path d="M4 8h14M14 4l4 4-4 4M20 16H6M10 12l-4 4 4 4"/>',
   keranjangBelanja: '<path d="M3 4h3l2.5 11h9.5l2-8H7M9.5 20h.01M17 20h.01"/>',
   gunung: '<path d="M2 20l6-9 4 5 3-4 7 8H2z"/>',
+  silang: '<path d="M6 6l12 12M18 6L6 18"/>',
+  kanan: '<path d="M9.5 6l6 6-6 6"/>',
 };
 
 export function ikon(nama, ukuran = 20) {
   return `<svg class="ikon" width="${ukuran}" height="${ukuran}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GARIS[nama] || ""}</svg>`;
 }
 
-// Ilustrasi datar sederhana per komoditas (kode_komoditas dari master.json).
-const TUJUAN = {
-  CRW: `<path d="M8 38C22 37 38 30 54 14" stroke="#c9281c" stroke-width="7" stroke-linecap="round" fill="none"/>
-        <path d="M10 36C24 35 38 29 52 15" stroke="#f0644d" stroke-width="2" stroke-linecap="round" fill="none"/>
-        <path d="M6 28C18 28 30 22 42 10" stroke="#dc3a2b" stroke-width="6" stroke-linecap="round" fill="none"/>
-        <path d="M54 14l4-5M42 10l3-5" stroke="#3f8f3a" stroke-width="3" stroke-linecap="round"/>`,
-  CMR: `<path d="M6 36C22 36 42 28 56 12" stroke="#b81f17" stroke-width="8" stroke-linecap="round" fill="none"/>
-        <path d="M9 34C24 34 42 27 54 13" stroke="#ea5443" stroke-width="2.4" stroke-linecap="round" fill="none"/>
-        <path d="M56 12l4-6" stroke="#3f8f3a" stroke-width="3.4" stroke-linecap="round"/>`,
-  BWM: `<path d="M32 5c2 6 13 10 13 22a13 13 0 01-26 0c0-12 11-16 13-22z" fill="#8c3d8e"/>
-        <path d="M32 5v9M26 18c-3 6-3 14 0 20M38 18c3 6 3 14 0 20" stroke="#c98bc6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-        <path d="M32 40v4" stroke="#cbb9a0" stroke-width="2" stroke-linecap="round"/>`,
-  BWP: `<path d="M32 6c3 5 14 8 14 22 0 9-6 14-14 14S18 37 18 28C18 14 29 11 32 6z" fill="#f4ecdb" stroke="#d3c19b" stroke-width="1.4"/>
-        <path d="M32 10v30M25 15c-3 8-3 18 0 24M39 15c3 8 3 18 0 24" stroke="#d3c19b" stroke-width="1.4" fill="none" stroke-linecap="round"/>`,
-  BRS: `<path d="M6 27h52a26 19 0 01-52 0z" fill="#c69a5d"/>
-        <path d="M10 27c3-15 41-15 44 0z" fill="#fbfbf8" stroke="#e3e3dc" stroke-width="1.2"/>
-        <path d="M22 20l3 1M32 16l3 1M40 21l3 1M28 23l3 1" stroke="#d5d5cb" stroke-width="1.6" stroke-linecap="round"/>`,
-  TLR: `<ellipse cx="23" cy="29" rx="12" ry="15" fill="#f6e3bb"/><ellipse cx="42" cy="31" rx="11" ry="14" fill="#efd39b"/>
-        <path d="M17 22c1-4 4-7 8-7" stroke="#fff6df" stroke-width="2.4" stroke-linecap="round" fill="none"/>`,
-  DAY: `<path d="M14 35c-4-11 3-23 15-25 10-1 17 8 12 17-4 8-14 6-19 13-3 3-6 2-8-5z" fill="#d98a3d"/>
-        <path d="M20 40l-7 7" stroke="#f3efe6" stroke-width="4.5" stroke-linecap="round"/><circle cx="11" cy="46" r="2.6" fill="#f3efe6"/>
-        <path d="M24 18c4-3 9-2 12 1" stroke="#efb572" stroke-width="2.4" stroke-linecap="round" fill="none"/>`,
-  DSP: `<path d="M7 25c0-11 15-17 30-15 13 2 21 9 19 19-2 11-17 13-31 11C13 38 7 33 7 25z" fill="#c23a3a"/>
-        <path d="M17 21c7 2 11 0 16 4M25 32c7-2 13 0 20-5M38 15c3 3 6 3 10 2" stroke="#f0c2c2" stroke-width="2.4" stroke-linecap="round" fill="none"/>`,
-  MGR: `<rect x="24" y="15" width="17" height="28" rx="4.5" fill="#f2c230"/><rect x="28" y="7" width="9" height="9" rx="2" fill="#d9a21a"/>
-        <rect x="27" y="22" width="11" height="12" rx="2" fill="#fffaf0"/><path d="M29 26h7M29 30h5" stroke="#d9a21a" stroke-width="1.6" stroke-linecap="round"/>`,
-  GLP: `<rect x="10" y="22" width="20" height="20" rx="3" fill="#faf9f5" stroke="#d3cfc2" stroke-width="1.4"/>
-        <rect x="32" y="24" width="20" height="18" rx="3" fill="#f3f1ea" stroke="#d3cfc2" stroke-width="1.4"/>
-        <rect x="20" y="8" width="20" height="20" rx="3" fill="#ffffff" stroke="#d3cfc2" stroke-width="1.4"/>`,
-};
-
-export function gambarKomoditas(kodeKomoditas) {
-  const isi = TUJUAN[kodeKomoditas] || TUJUAN.BRS;
-  return `<svg class="gambar-komoditas" viewBox="0 0 64 48" aria-hidden="true">${isi}</svg>`;
-}
+// Ilustrasi komoditas ada di gambar-komoditas.js (per varian, mis. cabai rawit hijau berwarna hijau).
+export { gambarKomoditas } from "./gambar-komoditas.js";
 
 const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 export function bulanTahun(iso) {
@@ -141,3 +110,15 @@ export function nilaiUptime(kinerja) {
   const u = kinerja?.indikator?.find((i) => i.kode === "L1")?.capaian;
   return u === null || u === undefined ? null : u;
 }
+
+/** Langkah berikutnya yang disarankan untuk tiap jenis sinyal. */
+export const LANGKAH_SINYAL = {
+  anomali_harga: "Cek pasokan dan distribusi di pasar",
+  proyeksi_naik: "Pantau harga 7 hari ke depan",
+  risiko_hari_raya: "Siapkan pemantauan intensif",
+  data_terlambat: "Hubungi petugas pencatat",
+  drift: "Cek ulang cara prakiraan",
+};
+
+/* ---------- selisih harga dalam rupiah (logika murni ada di selisih.js supaya bisa diuji di Node) */
+export { tglPendek, selisihHarga, teksSelisih, arahSelisih, TANDA_ARAH, htmlSelisih } from "./selisih.js";

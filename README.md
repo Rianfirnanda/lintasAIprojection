@@ -45,6 +45,8 @@ Tiap peran punya menu dan beranda sendiri. Pengunjung tanpa login dianggap **Mas
 | TPID | Dashboard TPID (tata letak Gambar 12) | Beranda, Peringatan, Laporan, Capaian, Harga, Alur, Tentang |
 | Administrator | Kondisi Sistem (ada bagian Data statis dan Data dinamis, lalu dashboard TPID di bawahnya) | semua menu, termasuk Pengaturan dan Pengguna |
 
+Di dashboard TPID, keenam kotak indikator di atas (komoditas, varian, wilayah *blank spot*, ketepatan waktu, sinyal prioritas, uptime) bisa diklik untuk melihat rinciannya, misalnya komoditas apa yang sedang jadi sinyal prioritas, berapa harganya, dan langkah berikutnya. Kartu **Komoditas Prioritas** menampilkan harga sekarang, harga sebulan lalu, dan kenaikannya dalam rupiah. Gambar komoditas dibuat per varian (`site/assets/gambar-komoditas.js`), jadi cabai rawit hijau tampil hijau dan cabai keriting berbeda dari cabai besar.
+
 Halaman: **Beranda** (berbeda per peran), **Harga**, **Peringatan**, **Laporan**, **Capaian**, **Cek Data** (Quality Gate), **Akurasi** (Mutu Model), **Sumber**, **Catat Harga** (dapat dipakai tanpa sinyal/PWA), **Alur** (tiruan Gambar 10 dan 11), **Pengguna**, **Tentang** (Tabel 4 dan 13).
 
 ### Login
@@ -114,8 +116,8 @@ Panduan lengkap per peran: [`docs/PANDUAN_OPERASIONAL.md`](docs/PANDUAN_OPERASIO
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q                                   # 124 uji otomatis (termasuk uji JavaScript panel admin bila Node.js 20+ terpasang)
-node --test tests_js/*.test.mjs                       # hanya uji JavaScript (enkripsi kunci, klien GitHub, validasi)
+python -m pytest -q                                   # 127 uji otomatis (termasuk uji JavaScript bila Node.js 20+ terpasang)
+node --test tests_js/*.test.mjs                       # hanya uji JavaScript (enkripsi kunci, klien GitHub, validasi, gambar komoditas, selisih harga)
 python -m pipeline periksa                            # validasi berkas di data/masuk
 python -m pipeline jalankan --keluaran site/data --tanpa-github
 python -m http.server -d site 8000                    # buka http://localhost:8000
