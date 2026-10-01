@@ -25,6 +25,11 @@ import { pasangKerangka, esc } from "./assets/app.js";
 import { ikon } from "./assets/dashboard.js";
 import { PERAN, SEMUA_HALAMAN, bolehAkses, masuk, keluar, sesi } from "./assets/akses.js";
 
+if (new URLSearchParams(location.search).get("keluar")) {
+  await keluar();
+  location.replace("index.html");
+  await new Promise(() => {}); // berhenti di sini sampai halaman berpindah
+}
 const meta = await pasangKerangka("masuk.html");
 const isi = document.getElementById("isi-masuk");
 const SANDI_CONTOH = "lintas2026";

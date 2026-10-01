@@ -207,7 +207,7 @@ async function berandaAdmin(el, meta) {
   ];
   const repo = meta.url_repo;
   const repoBerkas = (nama) => (repo ? `${repo}/blob/main/config/${nama}` : "");
-  const aksi = tombol("pengguna.html", "Pengguna dan peran", true) + tombol("#beranda-tpid", "Ke dashboard TPID") +
+  const aksi = tombol("pengaturan.html", "Pengaturan", true) + tombol("pengguna.html", "Pengguna dan peran") + tombol("#beranda-tpid", "Ke dashboard TPID") +
     (meta.url_run ? tombol(meta.url_run, "Log proses", false, ' target="_blank" rel="noopener"') : "");
   const ubinStatis = `        ${ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: `${master.varian.filter((v) => v.aktif !== false).length} varian aktif`, href: repoBerkas("komoditas.csv") })}
         ${ind({ i: "toko", label: "Pasar", nilai: master.pasar.length, sub: `${master.pasar.filter((x) => x.blank_spot).length} blank spot`, href: repoBerkas("pasar.csv") })}
@@ -236,7 +236,7 @@ async function berandaAdmin(el, meta) {
       <section class="kartu"><div class="kartu-kepala"><div><h2>Akses cepat</h2></div></div>
         <div class="aksi-cepat" style="flex-direction:column;align-items:stretch">
           ${tombol("pengguna.html", "Kelola pengguna dan peran")}
-          ${repo ? tombol(`${repo}/blob/main/config/pengaturan.json`, "Ubah pengaturan", false, ' target="_blank" rel="noopener"') : ""}
+          ${tombol("pengaturan.html", "Pengaturan AI, kunci, dan fungsi")}
           ${repo ? tombol(`${repo}/actions`, "Lihat proses otomatis", false, ' target="_blank" rel="noopener"') : ""}
           ${tombol("alur.html", "Alur dan arsitektur")}
           ${tombol("sumber.html", "Sumber data")}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Halaman ini memegang token GitHub admin, jadi dibatasi: hanya skrip dari situs ini, dan hanya boleh berhubungan dengan situs ini dan api.github.com. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Pengaturan · Lintas Benteng Projection</title>
+  <meta name="description" content="Atur AI, kunci API, notifikasi, dan fungsi sistem di satu tempat.">
+  <meta name="theme-color" content="#0a62ad">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/pengaturan.css">
+</head>
+<body>
+<main class="utama" id="panel">
+  <div class="judul-halaman">
+    <div>
+      <h1>Pengaturan</h1>
+      <p>Atur AI, kunci, dan fungsi sistem di satu tempat.</p>
+    </div>
+  </div>
+
+  <div class="ind-baris" id="ringkas"></div>
+
+  <section class="kartu" id="kartu-sambungan" aria-labelledby="j-sambungan"></section>
+
+  <section class="kartu" id="kartu-pengaturan" aria-labelledby="j-pengaturan">
+    <div class="kartu-kepala"><div><h2 id="j-pengaturan">Isian pengaturan</h2><p id="ket-simpan"></p></div></div>
+    <div class="segmen tab-pengaturan" role="group" aria-label="Kelompok pengaturan" id="tab"></div>
+    <div id="panel-isi"></div>
+    <div class="bilah-simpan" id="bilah-simpan" hidden></div>
+  </section>
+</main>
+
+<script type="module" src="assets/pengaturan.js"></script>
+</body>
+</html>

@@ -15,7 +15,7 @@ import logging
 import sys
 from pathlib import Path
 
-from . import konfigurasi, kualitas, masukan, pengguna
+from . import konfigurasi, kualitas, masukan, pengaturan, pengguna
 
 
 def _periksa(konf) -> int:
@@ -75,7 +75,11 @@ def main(argv: list[str] | None = None) -> int:
         garam = data.get("garam") or "lintas-ai-bengkulu-tengah"
         print(json.dumps(pengguna.entri_akun(garam, a.id, a.nama or a.id, a.peran, a.sandi), ensure_ascii=False, indent=2))
         return 0
-    konf = konfigurasi.muat(a.akar)
+    try:
+        konf = konfigurasi.muat(a.akar)
+    except ValueError as e:  # pengaturan salah: tampilkan pesan yang jelas, bukan jejak kesalahan panjang
+        print(f"GAGAL: {e}", file=sys.stderr)
+        return 2
 
     if a.perintah == "jalankan":
         from . import proses

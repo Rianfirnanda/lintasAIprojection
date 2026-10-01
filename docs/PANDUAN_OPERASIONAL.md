@@ -115,12 +115,39 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 
 ## 8. Admin
 
+### Panel Pengaturan (AI, kunci, dan fungsi)
+
+Menu **Pengaturan** mengumpulkan semua yang perlu diatur. Langkahnya:
+
+1. **Buat token GitHub** (sekali, lalu diganti berkala). Buka https://github.com/settings/personal-access-tokens/new, pilih *Only select repositories* lalu repositori ini, atur *Repository permissions*: **Contents**, **Secrets**, dan **Actions** = *Read and write*. Pilih masa berlaku pendek (misalnya 30 hari), klik *Generate token*, dan salin.
+2. Buka **Pengaturan**, tempel token di kolom *Token GitHub*, lalu **Sambungkan**. Token hanya tersimpan di tab itu dan hilang saat tab ditutup.
+3. **Isi kunci AI**: tab *AI*, isi *Kunci Gemini* (gratis dari https://aistudio.google.com/apikey), klik **Simpan kunci yang diisi**. Kunci dienkripsi di browser dan disimpan di GitHub Secrets. Setelah tersimpan, kolomnya kosong lagi dan statusnya "sudah diisi". Nilainya memang tidak bisa dilihat, hanya bisa diganti atau dihapus.
+4. **Pilih AI dan modelnya** di tab yang sama, lalu klik **Simpan perubahan** di bilah bawah. Perubahan tercatat sebagai commit dan dashboard diperbarui otomatis 2 sampai 3 menit kemudian.
+5. **Coba AI**: tab *Jalankan* → *Cari sumber data dengan AI* → isi komoditas dan periode → *Jalankan sekarang*. Statusnya tampil di sebelah tombol.
+6. **Notifikasi**: tab *Notifikasi* untuk kunci Telegram (token bot dari @BotFather dan ID obrolan) dan email (server SMTP, pengguna, kata sandi aplikasi, penerima), serta kapan pesan dikirim.
+
+Kalau muncul masalah:
+
+| Pesan | Artinya | Yang dilakukan |
+|---|---|---|
+| Token ditolak | Salah salin, kedaluwarsa, atau dicabut | Buat token baru |
+| Token belum punya izin ... | Izin token kurang | Tambahkan izin yang disebut, buat token baru |
+| Tidak ditemukan | Nama repositori salah atau token belum diberi akses ke repositori ini | Periksa nama dan akses token |
+| Berkasnya baru saja berubah / sudah diubah orang lain | Ada perubahan lain di GitHub | Klik *Muat ulang dari GitHub*, ulangi perubahan |
+| Cabang ini dilindungi | `main` hanya menerima pull request | Izinkan akun admin mengubah langsung, atau ubah `config/pengaturan.json` lewat pull request |
+| Tidak bisa menghubungi GitHub | Internet terputus, atau VPN dan pemblokir iklan menghalangi `api.github.com` | Matikan penghalang lalu coba lagi |
+
+Yang tidak diatur lewat panel: jadwal otomatis, daftar kolom terlarang privasi, wilayah target, zona waktu, dan akun login.
+Di repositori publik, panel hanya bisa mengubah sesuatu bila token valid, jadi jangan bagikan token dan cabut setelah selesai.
+
+### Pengaturan lain lewat berkas
+
 - **Menambah pasar**: tambahkan baris di `config/pasar.csv` (isi koordinat dari peta, `koordinat_terverifikasi=1`,
   `blank_spot=1` bila perlu).
 - **Mengaktifkan item kajian Bapokting**: ubah `aktif` menjadi `1` di `config/komoditas.csv`.
 - **Batas wilayah di peta**: letakkan berkas GeoJSON batas kecamatan/kabupaten (dari BPS) di `config/batas_wilayah.geojson`. Setelah pipeline berjalan, batasnya tampil di peta beranda.
 - **Blank spot**: isi `blank_spot=1` pada `config/pasar.csv` untuk wilayah yang dimaksud. Jumlahnya tampil di kartu "Wilayah blank spot" beranda (target 8).
-- **Mengubah ambang**: `config/pengaturan.json` (setiap perubahan tercatat di git, jadi tulis alasan di pesan commit).
+- **Mengubah ambang**: lewat panel **Pengaturan**, atau langsung di `config/pengaturan.json` (setiap perubahan tercatat di git). Nilai di luar rentang ditolak pipeline dengan pesan yang jelas.
 - **Tanggal hari raya**: perbarui `config/kalender.csv` setelah SKB 3 Menteri terbit (`status=pasti`).
 - **Jadwal**: `.github/workflows/pipeline.yml` (cron dalam UTC; WIB = UTC+7). GitHub menonaktifkan workflow terjadwal
   pada repo publik yang tidak ada aktivitas selama 60 hari. Commit data rutin mencegah hal ini.

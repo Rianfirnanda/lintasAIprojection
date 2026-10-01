@@ -17,7 +17,7 @@
   },
   "kualitas": {
     "ambang_perubahan_harian_persen": {"volatil": 30, "protein": 15, "pokok": 10, "pabrikan": 10},
-    "z_pencilan": 5.0,
+    "z_pencilan": 5,
     "toleransi_konfirmasi_persen": 10,
     "selisih_rekonsiliasi_persen": 15,
     "jendela_evaluasi_ketepatan_hari": 30
@@ -27,7 +27,7 @@
     "ambang_persen": {"volatil": 15, "protein": 10, "pokok": 5, "pabrikan": 5},
     "hari_kerja_terlambat": 3,
     "psi_ambang": 0.25,
-    "rasio_volatilitas_batas": [0.5, 2.0],
+    "rasio_volatilitas_batas": [0.5, 2],
     "alfa_uji_drift": 0.01,
     "jendela_publikasi_hari": 60
   },
@@ -46,10 +46,7 @@
     "buletin_mingguan": true,
     "kirim_saat_demo": false
   },
-  "layanan": {
-    "url_pengaduan_eksternal": "",
-    "url_survei_eksternal": ""
-  },
+  "layanan": {"url_pengaduan_eksternal": "", "url_survei_eksternal": ""},
   "tindak_lanjut": {
     "github_issues": true,
     "keparahan_minimal_issue": "tinggi",
@@ -66,9 +63,9 @@
     "bias_absolut_maks_persen": 5,
     "cakupan_interval_min_persen": 85,
     "cakupan_interval_maks_persen": 95,
-    "f1_min": 0.80,
+    "f1_min": 0.8,
     "recall_min": 0.85,
-    "fpr_maks": 0.10,
+    "fpr_maks": 0.1,
     "tindak_lanjut_sinyal_persen": 75,
     "penurunan_metrik_drift_maks_persen": 10
   }
