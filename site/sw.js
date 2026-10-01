@@ -1,5 +1,5 @@
 // Service worker: formulir input tetap berfungsi tanpa sinyal (wilayah blank spot).
-const CACHE = "lintas-benteng-v12";
+const CACHE = "lintas-benteng-v13";
 const ASET = [
   "input.html", "masuk.html", "assets/app.css", "assets/app.js", "assets/akses.js", "assets/peran.js", "assets/dashboard.js", "assets/gambar-komoditas.js", "assets/selisih.js", "assets/rincian.js", "assets/logo-bps.png", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
   "data/master.json", "data/meta.json",
@@ -19,12 +19,14 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Jaringan dahulu (agar data selalu terbaru), cadangan dari cache saat luring.
+// Jaringan dahulu (agar tampilan dan data selalu terbaru), cadangan dari cache saat luring.
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
+  // cache: "no-cache" = selalu tanya server dulu apakah ada versi baru (bukan memakai simpanan browser sampai 10 menit).
+  const segar = req.mode === "navigate" ? fetch(req.url, { cache: "no-cache", credentials: "same-origin" }) : fetch(req, { cache: "no-cache" });
   e.respondWith(
-    fetch(req)
+    segar
       .then((res) => {
         if (res.ok) {
           const salinan = res.clone();

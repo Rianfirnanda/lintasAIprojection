@@ -966,3 +966,12 @@ button.ind:hover .kpi-buka { opacity: 1; color: var(--aksen); transform: transla
 .langkah-daftar li + li { margin-top: 4px; }
 td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d-hijau-teks); font-weight: 600; }
 #beranda-tpid { scroll-margin-top: 90px; }
+
+/* tawaran muat ulang saat situs diperbarui */
+.pita-baru {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 1200; display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px 10px 16px; border-radius: 14px; background: var(--kaca-atas); border: 1px solid var(--kaca-garis);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25); color: var(--ink); font-size: 0.88rem; width: max-content; max-width: calc(100vw - 32px);
+  -webkit-backdrop-filter: blur(var(--kabur)); backdrop-filter: blur(var(--kabur));
+}
+.pita-baru .tombol { flex: none; }

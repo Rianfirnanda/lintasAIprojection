@@ -271,7 +271,39 @@ export async function pasangKerangka(aktif) {
   // Grafik kanvas baru memakai huruf Plex setelah berkasnya termuat.
   try { await document.fonts?.ready; } catch { /* abaikan */ }
   document.body.classList.add("siap");
+  pasangPembaruan(meta);
   return izin === "tolak" ? tundaSelamanya() : meta;
+}
+
+/* ---------- pembaruan situs
+ * GitHub Pages mengizinkan browser menyimpan berkas sampai 10 menit, jadi perangkat lain bisa sempat melihat versi lama.
+ * Service worker memaksa browser selalu menanyakan versi terbaru ke server (murah, cukup dicek tanda versinya),
+ * dan halaman yang sedang terbuka memeriksa meta.json berkala lalu menawarkan muat ulang bila ada versi baru. */
+const tandaVersi = (m) => `${m?.commit || ""}|${m?.dibuat || ""}`;
+function pasangPembaruan(meta) {
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
+  if (!meta) return;
+  const awal = tandaVersi(meta);
+  let sudahDitawarkan = false;
+  const periksa = async () => {
+    if (sudahDitawarkan || document.visibilityState !== "visible") return;
+    try {
+      const r = await fetch(`data/meta.json?t=${Date.now()}`, { cache: "no-store" });
+      if (!r.ok) return;
+      if (tandaVersi(await r.json()) === awal) return;
+    } catch { return; }
+    sudahDitawarkan = true;
+    const p = document.createElement("div");
+    p.className = "pita-baru";
+    p.setAttribute("role", "status");
+    p.innerHTML = `<span>Ada versi terbaru dari situs ini.</span><button type="button" class="tombol utama-aksi">Muat ulang</button>`;
+    p.querySelector("button").addEventListener("click", () => location.reload());
+    document.body.append(p);
+  };
+  setInterval(periksa, 3 * 60 * 1000);
+  document.addEventListener("visibilitychange", periksa);
 }
 
 function tautanLayanan(l) {
