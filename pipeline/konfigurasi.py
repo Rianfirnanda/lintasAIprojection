@@ -9,6 +9,8 @@ from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from . import pengaturan as modul_pengaturan
+
 AKAR = Path(__file__).resolve().parent.parent
 
 
@@ -131,6 +133,7 @@ def muat(akar: Path | str | None = None, hari_ini: date | None = None) -> Konfig
     akar = Path(akar) if akar else AKAR
     folder = akar / "config"
     pengaturan = json.loads((folder / "pengaturan.json").read_text(encoding="utf-8"))
+    modul_pengaturan.pastikan_sah(pengaturan, modul_pengaturan.muat_skema(folder))
 
     varian = {}
     for b in _baca_csv(folder / "komoditas.csv"):

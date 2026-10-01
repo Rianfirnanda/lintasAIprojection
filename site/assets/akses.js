@@ -16,6 +16,7 @@ const M = {
   catat: ["input.html", "Catat Harga"],
   alur: ["alur.html", "Alur"],
   pengguna: ["pengguna.html", "Pengguna"],
+  pengaturan: ["pengaturan.html", "Pengaturan"],
   tentang: ["tentang.html", "Tentang"],
 };
 
@@ -42,8 +43,8 @@ export const PERAN = {
   },
   admin: {
     nama: "Administrator", ikon: "gembokPerisai", ringkas: "Kelola seluruh sistem", judulBeranda: "Kondisi Sistem",
-    menu: ["beranda", "peringatan", "laporan", "cek", "akurasi", "pengguna"],
-    lainnya: ["harga", "capaian", "sumber", "catat", "alur", "tentang"],
+    menu: ["beranda", "pengaturan", "pengguna", "peringatan", "laporan", "cek"],
+    lainnya: ["akurasi", "harga", "capaian", "sumber", "catat", "alur", "tentang"],
   },
 };
 

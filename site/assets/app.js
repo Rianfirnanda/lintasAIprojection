@@ -203,7 +203,8 @@ export async function pasangKerangka(aktif) {
   kepala.querySelectorAll(".akun-tombol, .lainnya-tombol").forEach(pasangMenu);
   document.addEventListener("click", () => kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }); });
-  kepala.querySelector("[data-keluar]")?.addEventListener("click", async () => { await keluar(); location.href = "index.html"; });
+  // Keluar lewat halaman Masuk (yang membersihkan sesi lalu kembali ke beranda), supaya halaman dengan CSP ketat tidak perlu memuat pustaka pihak lain.
+  kepala.querySelector("[data-keluar]")?.addEventListener("click", () => { location.href = "masuk.html?keluar=1"; });
   const navAktif = kepala.querySelector('.navigasi [aria-current="page"]');
   const navEl = navAktif?.parentElement;
   if (navEl && navAktif.offsetLeft + navAktif.offsetWidth > navEl.clientWidth) navEl.scrollLeft = Math.max(0, navAktif.offsetLeft - 16);

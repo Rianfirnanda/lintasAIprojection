@@ -1,0 +1,9 @@
+{
+  "name": "lintas-benteng-projection",
+  "private": true,
+  "type": "module",
+  "description": "Hanya untuk menjalankan uji JavaScript panel admin (npm test). Situs sendiri tidak memakai build.",
+  "scripts": {
+    "test": "node --test tests_js/*.test.mjs"
+  }
+}

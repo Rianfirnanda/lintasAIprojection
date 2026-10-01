@@ -462,6 +462,12 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     meta["batas_wilayah"] = batas.exists()
     if batas.exists():
         shutil.copyfile(batas, keluaran / "batas_wilayah.geojson")
+    # Pengaturan dan skemanya diterbitkan agar panel admin bisa menampilkan nilai yang berlaku tanpa token GitHub.
+    # Isinya tidak rahasia: kunci API hanya ada di GitHub Secrets.
+    skema_pengaturan = konf.akar / "config" / "skema_pengaturan.json"
+    if skema_pengaturan.exists():
+        shutil.copyfile(skema_pengaturan, keluaran / "skema_pengaturan.json")
+        _tulis_json(keluaran / "pengaturan.json", konf.pengaturan)
     # Login per peran: Firebase bila config/firebase.json terisi, jika tidak akun contoh dari config/pengguna.json.
     fb = pengguna.muat(konf.akar / "config" / "firebase.json")
     akun = pengguna.muat(konf.akar / "config" / "pengguna.json")
