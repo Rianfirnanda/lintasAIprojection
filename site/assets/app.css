@@ -975,3 +975,39 @@ td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d
   -webkit-backdrop-filter: blur(var(--kabur)); backdrop-filter: blur(var(--kabur));
 }
 .pita-baru .tombol { flex: none; }
+
+/* ============================================================
+   Animasi: kartu muncul bertahap, angka menghitung naik, batang terisi, jendela rincian.
+   Semua dimatikan bila perangkat meminta gerak dikurangi.
+   ============================================================ */
+@keyframes muncul { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes pudar { from { opacity: 0; } to { opacity: 1; } }
+@keyframes isi-batang { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes naik-jendela { from { opacity: 0; transform: translateY(24px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes denyut-lingkar { 0% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0.35); } 70% { box-shadow: 0 0 0 12px rgba(217, 48, 37, 0); } 100% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* "backwards": gaya awal hanya berlaku sebelum animasi mulai, jadi efek hover tetap jalan setelahnya */
+  .dash-banner, .dash-kpi-kartu, .dash-panel, .ind, .kartu, .prio, .komo, .peran-kartu, .salam {
+    animation: muncul 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+  .dash-kpi > :nth-child(2), .ind-baris > :nth-child(2), .kartu-prioritas > :nth-child(2), .grid-komoditas > :nth-child(2) { animation-delay: 0.06s; }
+  .dash-kpi > :nth-child(3), .ind-baris > :nth-child(3), .kartu-prioritas > :nth-child(3), .grid-komoditas > :nth-child(3) { animation-delay: 0.12s; }
+  .dash-kpi > :nth-child(4), .ind-baris > :nth-child(4), .grid-komoditas > :nth-child(4) { animation-delay: 0.18s; }
+  .dash-kpi > :nth-child(5), .ind-baris > :nth-child(5), .grid-komoditas > :nth-child(5) { animation-delay: 0.24s; }
+  .dash-kpi > :nth-child(6), .ind-baris > :nth-child(6), .grid-komoditas > :nth-child(6) { animation-delay: 0.3s; }
+  .dash-kpi > :nth-child(n+7), .ind-baris > :nth-child(n+7), .grid-komoditas > :nth-child(n+7) { animation-delay: 0.36s; }
+  .dash-baris > :nth-child(2) { animation-delay: 0.1s; }
+  .dash-baris > :nth-child(3) { animation-delay: 0.2s; }
+
+  .ind-meter span, .rincian-meter > span, .batang-mini span { transform-origin: left center; animation: isi-batang 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s backwards; }
+  .spark { animation: pudar 0.8s ease 0.3s backwards; }
+
+  /* lingkar sinyal prioritas berdenyut pelan bila ada sinyal */
+  [data-rincian="sinyal"][data-ada] .kpi-lingkar { animation: denyut-lingkar 2.4s ease-out 1s 3; }
+
+  dialog.rincian[open] .rincian-kotak { animation: naik-jendela 0.28s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  dialog.rincian[open]::backdrop { animation: pudar 0.25s ease; }
+  .rincian-isi > * { animation: muncul 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s backwards; }
+  .pita-baru { animation: pudar 0.3s ease; }
+}

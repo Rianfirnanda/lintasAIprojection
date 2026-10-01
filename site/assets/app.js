@@ -272,7 +272,41 @@ export async function pasangKerangka(aktif) {
   try { await document.fonts?.ready; } catch { /* abaikan */ }
   document.body.classList.add("siap");
   pasangPembaruan(meta);
+  pasangHitungNaik();
   return izin === "tolak" ? tundaSelamanya() : meta;
+}
+
+/* ---------- angka indikator menghitung naik saat muncul (mis. 0 → 92%) */
+const POLA_ANGKA = /^(\d{1,3}(?:\.\d{3})*|\d+)(?:,(\d+))?(%?)$/;
+function hitungNaik(el) {
+  const teks = [...el.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+  const m = teks?.textContent.trim().match(POLA_ANGKA);
+  if (!m) return;
+  const desimal = m[2] ? m[2].length : 0;
+  const tujuan = Number(`${m[1].replace(/\./g, "")}.${m[2] || 0}`);
+  if (!(tujuan > 0)) return;
+  const tulis = (x) => `${x.toLocaleString("id-ID", { minimumFractionDigits: desimal, maximumFractionDigits: desimal })}${m[3]}`;
+  const akhir = teks.textContent;
+  const mulai = performance.now(), lama = 900;
+  const langkah = (kini) => {
+    const t = Math.min(1, (kini - mulai) / lama);
+    const nilai = tujuan * (1 - Math.pow(1 - t, 3));
+    teks.textContent = t < 1 ? tulis(desimal ? nilai : Math.round(nilai)) : akhir;
+    if (t < 1) requestAnimationFrame(langkah);
+  };
+  requestAnimationFrame(langkah);
+}
+function pasangHitungNaik() {
+  if (!window.matchMedia || matchMedia("(prefers-reduced-motion: reduce)").matches || !("MutationObserver" in window)) return;
+  const sudah = new WeakSet();
+  const pindai = (akar) => akar.querySelectorAll?.(".kpi-angka, .ind-nilai").forEach((el) => {
+    if (sudah.has(el)) return;
+    sudah.add(el);
+    hitungNaik(el);
+  });
+  pindai(document);
+  new MutationObserver((daftar) => daftar.forEach((d) => d.addedNodes.forEach((n) => { if (n.nodeType === 1) pindai(n.parentElement || n); })))
+    .observe(document.body, { childList: true, subtree: true });
 }
 
 /* ---------- pembaruan situs

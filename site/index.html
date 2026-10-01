@@ -134,8 +134,8 @@ document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.d
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 26));
 
 /* ---------- indikator utama (tiap kotak bisa diklik untuk melihat rinciannya) */
-function kartuKpi(jenis, ikonNama, warna, angkaHtml, label, sub) {
-  return `<button type="button" class="dash-kpi-kartu" data-rincian="${jenis}" aria-haspopup="dialog">
+function kartuKpi(jenis, ikonNama, warna, angkaHtml, label, sub, ada = false) {
+  return `<button type="button" class="dash-kpi-kartu" data-rincian="${jenis}"${ada ? " data-ada" : ""} aria-haspopup="dialog">
     <span class="kpi-lingkar ${warna}">${ikon(ikonNama, 26)}</span>
     <span class="kpi-teks"><span class="kpi-angka ${warna}">${angkaHtml}</span><span class="kpi-label">${label}</span><span class="kpi-sub">${sub}</span></span>
     <span class="kpi-buka" aria-hidden="true">${ikon("kanan", 16)}</span></button>`;
@@ -150,7 +150,7 @@ function renderKPI(k, daftarPasar, kinerja) {
     kartuKpi("varian", "kubus", "biru", angka(k.jumlah_varian), "Varian", "(jenis/ukuran)"),
     kartuKpi("blankspot", "pin", "oranye", angka(blankSpot), "Wilayah", blankSpot < 8 ? "<i>blank spot</i> (target 8)" : "<i>blank spot</i>"),
     kartuKpi("ketepatan", "jam", "biru", k.ketepatan_persen === null ? "–" : persen(k.ketepatan_persen, 0), "Ketepatan waktu", "pelaporan"),
-    kartuKpi("sinyal", "peringatan", "merah", angka(k.sinyal_tinggi), "Sinyal", "prioritas"),
+    kartuKpi("sinyal", "peringatan", "merah", angka(k.sinyal_tinggi), "Sinyal", "prioritas", k.sinyal_tinggi > 0),
     kartuKpi("uptime", "roda", "hijau", adaUptime ? persen(uptime, 1) : "–", "Uptime", adaUptime ? "sistem" : "belum ada log"),
   ].join("");
 }
