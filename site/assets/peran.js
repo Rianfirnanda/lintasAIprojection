@@ -2,12 +2,15 @@
 import { muatJSON, esc, rp, persen, angka, tgl, waktu } from "./app.js";
 import { ikon, hitungMutu, ringkasSinyalPrioritas, nilaiUptime, bulanTahun, gambarKomoditas, selisihHarga, teksSelisih } from "./dashboard.js";
 import { PERAN, sesi } from "./akses.js";
+import { pasangKlikRincian, rincianArahHarga } from "./rincian.js";
 
 const jepit = (x) => Math.max(0, Math.min(100, x));
 
-export function ind({ i = "database", warna = "biru", label, nilai, kecil = "", sub = "", meter = null, meterWarna = "", href = "", warnaNilai = "" }) {
-  const tag = href ? "a" : "div";
-  return `<${tag} class="ind"${href ? ` href="${esc(href)}"` : ""}>
+export function ind({ i = "database", warna = "biru", label, nilai, kecil = "", sub = "", meter = null, meterWarna = "", href = "", warnaNilai = "", rincian = "" }) {
+  // rincian: kotak berupa tombol yang membuka jendela rincian (lihat rincian.js).
+  const tag = rincian ? "button" : href ? "a" : "div";
+  const atribut = rincian ? ` type="button" data-rincian="${esc(rincian)}" aria-haspopup="dialog"` : href ? ` href="${esc(href)}"` : "";
+  return `<${tag} class="ind${rincian ? " ind-klik" : ""}"${atribut}>${rincian ? `<span class="kpi-buka" aria-hidden="true">${ikon("kanan", 16)}</span>` : ""}
     <div class="ind-atas"><span class="ind-ikon ${warna}">${ikon(i, 20)}</span><span class="ind-label">${label}</span></div>
     <div class="ind-nilai ${warnaNilai}">${nilai}${kecil ? `<small>${kecil}</small>` : ""}</div>
     ${sub ? `<div class="ind-sub">${sub}</div>` : ""}
@@ -60,11 +63,12 @@ async function berandaMasyarakat(el, meta) {
   const aksi = tombol("harga.html", "Semua harga", true) + tombol("laporan.html", "Buletin mingguan") +
     (lay.url_pengaduan_eksternal || lay.url_pengaduan ? tombol(lay.url_pengaduan_eksternal || lay.url_pengaduan, "Lapor data") : "");
   kosongkan(el, `${salam("masyarakat", PERAN.masyarakat.judulBeranda, `Data ${tgl(meta.tanggal_data_terakhir, true)}`, aksi)}
-    <div class="ind-baris">
-      ${ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: naik.length, kecil: "varian", sub: "dibanding minggu lalu", meter: naik.length / v.length * 100, meterWarna: "merah", warnaNilai: "merah" })}
-      ${ind({ i: "tren", warna: "hijau", label: "Harga turun", nilai: turun.length, kecil: "varian", sub: "dibanding minggu lalu", meter: turun.length / v.length * 100, meterWarna: "hijau", warnaNilai: "hijau" })}
-      ${ind({ i: "kubus", label: "Harga stabil", nilai: stabil, kecil: "varian", sub: "perubahan kecil", meter: stabil / v.length * 100 })}
-      ${ind({ i: "peringatan", warna: "oranye", label: "Perlu diwaspadai", nilai: waspada, kecil: "varian", sub: "harga di luar kebiasaan", meter: waspada / v.length * 100, meterWarna: "oranye" })}
+    <p class="petunjuk-klik">Klik kotak di bawah untuk melihat barang apa saja yang naik, turun, stabil, atau perlu diwaspadai.</p>
+    <div class="ind-baris" id="kotak-arah">
+      ${ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: naik.length, kecil: "varian", sub: "dibanding minggu lalu", meter: naik.length / v.length * 100, meterWarna: "merah", warnaNilai: "merah", rincian: "naik" })}
+      ${ind({ i: "trenTurun", warna: "hijau", label: "Harga turun", nilai: turun.length, kecil: "varian", sub: "dibanding minggu lalu", meter: turun.length / v.length * 100, meterWarna: "hijau", warnaNilai: "hijau", rincian: "turun" })}
+      ${ind({ i: "kubus", label: "Harga stabil", nilai: stabil, kecil: "varian", sub: "naik atau turun sedikit sekali", meter: stabil / v.length * 100, rincian: "stabil" })}
+      ${ind({ i: "peringatan", warna: "oranye", label: "Perlu diwaspadai", nilai: waspada, kecil: "varian", sub: "harga jauh dari biasanya", meter: waspada / v.length * 100, meterWarna: "oranye", rincian: "waspada" })}
       ${ind({ i: "kalender", label: h.berikutnya ? esc(h.berikutnya.nama) : "Hari raya", nilai: h.berikutnya ? `H-${h.berikutnya.hari_menuju}` : "–", sub: h.berikutnya ? tgl(h.berikutnya.tanggal, true) : "belum terjadwal" })}
     </div>
     <section class="kartu"><div class="kartu-kepala"><div><h2>Harga bahan pokok</h2><p>Perubahan dibanding minggu lalu</p></div></div>
@@ -80,6 +84,7 @@ async function berandaMasyarakat(el, meta) {
       <section class="kartu"><div class="kartu-kepala"><div><h2>Naik paling tinggi</h2><p>Dalam sebulan terakhir</p></div></div>${teratas.map((x) => baris(x, maksNaik, "d-merah")).join("") || '<p class="kosong">Tidak ada kenaikan berarti.</p>'}</section>
       <section class="kartu"><div class="kartu-kepala"><div><h2>Turun paling banyak</h2><p>Dalam sebulan terakhir</p></div></div>${terbawah.map((x) => baris(x, maksTurun, "d-hijau")).join("") || '<p class="kosong">Tidak ada penurunan berarti.</p>'}</section>
     </div>`);
+  pasangKlikRincian(el.querySelector("#kotak-arah"), rincianArahHarga({ varian: v, periode: "mingguan", arah: (x) => arah(mingguan(x)), peran: "masyarakat" }));
 }
 
 /* ---------- petugas lapangan */

@@ -52,6 +52,8 @@
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat } from "./assets/app.js";
 import { selisihHarga, htmlSelisih, tglPendek } from "./assets/dashboard.js";
+import { pasangKlikRincian, rincianArahHarga } from "./assets/rincian.js";
+import { peranAktif } from "./assets/akses.js";
 
 const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
 await pasangKerangka("harga.html");
@@ -68,11 +70,12 @@ try {
   const nNaik = varian.filter((v) => arah(v) === "naik").length, nTurun = varian.filter((v) => arah(v) === "turun").length;
   const total = varian.length || 1;
   document.getElementById("kpi").innerHTML = [
-    ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: nNaik, kecil: "varian", sub: "dibanding bulan lalu", meter: nNaik / total * 100, meterWarna: "merah", warnaNilai: "merah" }),
-    ind({ i: "tren", warna: "hijau", label: "Harga turun", nilai: nTurun, kecil: "varian", sub: "dibanding bulan lalu", meter: nTurun / total * 100, meterWarna: "hijau", warnaNilai: "hijau" }),
-    ind({ i: "kubus", label: "Harga stabil", nilai: varian.length - nNaik - nTurun, kecil: "varian", sub: "perubahan kecil", meter: (varian.length - nNaik - nTurun) / total * 100 }),
-    ind({ i: "peringatan", warna: "oranye", label: "Diwaspadai", nilai: varian.filter((v) => v.sinyal).length, kecil: "varian", sub: "ada peringatan", href: "sinyal.html" }),
+    ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: nNaik, kecil: "varian", sub: "dibanding sebulan lalu", meter: nNaik / total * 100, meterWarna: "merah", warnaNilai: "merah", rincian: "naik" }),
+    ind({ i: "trenTurun", warna: "hijau", label: "Harga turun", nilai: nTurun, kecil: "varian", sub: "dibanding sebulan lalu", meter: nTurun / total * 100, meterWarna: "hijau", warnaNilai: "hijau", rincian: "turun" }),
+    ind({ i: "kubus", label: "Harga stabil", nilai: varian.length - nNaik - nTurun, kecil: "varian", sub: "naik atau turun sedikit sekali", meter: (varian.length - nNaik - nTurun) / total * 100, rincian: "stabil" }),
+    ind({ i: "peringatan", warna: "oranye", label: "Perlu diwaspadai", nilai: varian.filter((v) => v.sinyal).length, kecil: "varian", sub: "harga jauh dari biasanya", rincian: "waspada" }),
   ].join("");
+  pasangKlikRincian(document.getElementById("kpi"), rincianArahHarga({ varian, periode: "bulanan", arah, peran: peranAktif() }));
   const tbody = document.querySelector("#tabel-perubahan tbody");
   let html = "";
   for (const k of master.komoditas) {
