@@ -334,22 +334,36 @@ def episode_anomali(anomali: list[Anomali], celah_maks: int = 3) -> list[list[An
 PERIODE_PERUBAHAN = {"harian": 1, "mingguan": 7, "bulanan": 30, "triwulanan": 91, "semesteran": 182, "tahunan": 365}
 
 
-def perubahan(seri: SeriHarian) -> dict[str, float | None]:
+def _indeks_acuan(seri: SeriHarian) -> tuple[int | None, dict[str, int | None]]:
+    """Indeks harga terakhir dan indeks titik pembanding untuk tiap periode perubahan."""
     idx = np.where(~np.isnan(seri.nilai))[0]
     if not len(idx):
-        return {k: None for k in PERIODE_PERUBAHAN}
+        return None, {k: None for k in PERIODE_PERUBAHAN}
     i = idx[-1]
-    kini = seri.nilai[i]
-    hasil = {}
+    acuan = {}
     for nama, hari in PERIODE_PERUBAHAN.items():
         if nama == "harian":
             sebelum = idx[idx < i]
-            j = sebelum[-1] if len(sebelum) and i - sebelum[-1] <= 7 else None
+            acuan[nama] = int(sebelum[-1]) if len(sebelum) and i - sebelum[-1] <= 7 else None
         else:
             kandidat = idx[(idx <= i - hari) & (idx >= i - hari - 7)]
-            j = kandidat[-1] if len(kandidat) else None
-        hasil[nama] = round(float((kini / seri.nilai[j] - 1) * 100), 2) if j is not None else None
-    return hasil
+            acuan[nama] = int(kandidat[-1]) if len(kandidat) else None
+    return int(i), acuan
+
+
+def perubahan(seri: SeriHarian) -> dict[str, float | None]:
+    i, acuan = _indeks_acuan(seri)
+    if i is None:
+        return {k: None for k in PERIODE_PERUBAHAN}
+    kini = seri.nilai[i]
+    return {nama: round(float((kini / seri.nilai[j] - 1) * 100), 2) if j is not None else None for nama, j in acuan.items()}
+
+
+def harga_acuan(seri: SeriHarian) -> dict[str, dict | None]:
+    """Harga pembanding yang dipakai `perubahan` (mis. harga sebulan lalu) beserta tanggalnya, untuk ditampilkan."""
+    _, acuan = _indeks_acuan(seri)
+    return {nama: {"harga": round(float(seri.nilai[j])), "tanggal": seri.tanggal[j].isoformat()} if j is not None else None
+            for nama, j in acuan.items()}
 
 
 TEPI_PSI = np.array([-np.inf, -0.05, -0.02, -0.005, 0.005, 0.02, 0.05, np.inf])
@@ -451,6 +465,7 @@ class HasilVarian:
     model_rekomendasi: str | None = None
     status_persetujuan: str = "tidak_ada_model"
     segmen: dict = field(default_factory=dict)
+    harga_acuan: dict = field(default_factory=dict)
 
 
 def smape_segmen(bt: HasilBacktest, acara: list[Acara], sebelum: int, sesudah: int) -> dict:
@@ -549,5 +564,5 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         perbaikan_vs_naif_persen=perbaikan, cakupan_interval_persen=cakupan,
         proyeksi=proyeksi, anomali=anomali, titik_dievaluasi=dievaluasi,
         perubahan=perubahan(seri), drift={**drift(seri), **info_drift_model}, profil_hari_raya=profil, catatan=catatan,
-        model_rekomendasi=rekomendasi, status_persetujuan=status, segmen=segmen,
+        model_rekomendasi=rekomendasi, status_persetujuan=status, segmen=segmen, harga_acuan=harga_acuan(seri),
     )

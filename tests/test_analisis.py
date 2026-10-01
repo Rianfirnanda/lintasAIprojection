@@ -83,6 +83,29 @@ def test_perubahan_periode():
     assert p["harian"] == 10.0 and p["tahunan"] == 10.0 and p["mingguan"] == 10.0
 
 
+def test_harga_acuan_sama_dengan_dasar_perubahan():
+    rng = np.random.default_rng(5)
+    nilai = list(40000 * (1 + rng.normal(0, 0.02, 400)))
+    for j in (369, 398):  # lubang data: pembanding mundur ke hari terdekat sebelumnya
+        nilai[j] = None
+    s = seri_dari(nilai)
+    p, a = analisis.perubahan(s), analisis.harga_acuan(s)
+    assert set(a) == set(p)
+    for periode, acuan in a.items():
+        assert acuan is not None
+        j = s.tanggal.index(date.fromisoformat(acuan["tanggal"]))
+        assert acuan["harga"] == round(s.nilai[j])
+        assert round((s.nilai[-1] / s.nilai[j] - 1) * 100, 2) == p[periode]
+    assert a["bulanan"]["tanggal"] == (s.tanggal[-1] - timedelta(days=31)).isoformat()
+    assert a["harian"]["tanggal"] == (s.tanggal[-1] - timedelta(days=2)).isoformat()
+
+
+def test_harga_acuan_kosong_bila_tidak_ada_pembanding():
+    s = seri_dari([100.0] * 20)
+    a = analisis.harga_acuan(s)
+    assert a["harian"]["harga"] == 100 and a["bulanan"] is None and a["tahunan"] is None
+
+
 def test_drift_uji_permutasi():
     rng = np.random.default_rng(4)
     sama = seri_dari(list(np.exp(np.cumsum(rng.normal(0, 0.01, 200))) * 1000))
