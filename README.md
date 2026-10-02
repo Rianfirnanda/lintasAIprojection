@@ -1,1 +1,1 @@
-Gugugaga
+lintasAIprojection
