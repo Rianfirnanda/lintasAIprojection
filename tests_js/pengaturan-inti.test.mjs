@@ -133,3 +133,18 @@ test("bentuk kunci rahasia diperiksa dengan wajar", () => {
   assert.equal(periksaRahasia(r("SMTP_HOST"), "smtp.gmail.com"), null);
   assert.equal(periksaRahasia(r("GEMINI_API_KEY"), ""), "belum diisi");
 });
+
+test("isian Firebase di panel menerima salinan dari Firebase Console dan menolak isian yang salah", () => {
+  const r = (nama) => skema.rahasia.find((x) => x.nama === nama);
+  const sah = (nama, nilai) => periksaRahasia(r(nama), nilai) === null;
+  assert.ok(sah("FIREBASE_WEB_CONFIG", 'const firebaseConfig = {  apiKey: "AIza",  authDomain: "x.firebaseapp.com",  projectId: "x",  appId: "1"};'));
+  assert.ok(!sah("FIREBASE_WEB_CONFIG", "halo"));
+  assert.ok(sah("FIREBASE_SERVICE_ACCOUNT", '{  "type": "service_account",  "project_id": "x" }'));
+  assert.ok(!sah("FIREBASE_SERVICE_ACCOUNT", '{"type":"authorized_user"}'));
+  assert.ok(sah("FIREBASE_HOSTING_SITE", "lintas-benteng-proyeksi"));
+  assert.ok(!sah("FIREBASE_HOSTING_SITE", "Lintas Benteng"));
+  assert.ok(sah("FIREBASE_ADMIN_AWAL", "a@contoh.go.id, b@contoh.go.id"));
+  assert.ok(!sah("FIREBASE_ADMIN_AWAL", "bukan email"));
+  assert.ok(sah("FIREBASE_TERBITKAN_ATURAN", "ya") && sah("FIREBASE_TERBITKAN_ATURAN", "tidak"));
+  assert.ok(!sah("FIREBASE_TERBITKAN_ATURAN", "mungkin"));
+});

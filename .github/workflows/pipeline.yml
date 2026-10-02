@@ -1,6 +1,7 @@
 name: Pipeline & Dashboard
 
-# Menjalankan pipeline (ambil data -> quality gate -> analisis -> publikasi) lalu menerbitkan dashboard ke GitHub Pages.
+# Menjalankan pipeline (ambil data -> quality gate -> analisis -> publikasi) lalu menerbitkan dashboard ke GitHub Pages,
+# dan juga ke Firebase Hosting bila Secret Firebase sudah diisi (lihat docs/FIREBASE.md).
 on:
   push:
     branches: [main]
@@ -12,6 +13,8 @@ on:
       - "tests/**"
       - "requirements.txt"
       - ".github/workflows/pipeline.yml"
+      - "firebase.json"
+      - "firestore.rules"
   schedule:
     # Hari kerja sekitar 11.47 dan 15.47 WIB (UTC+7), setelah pencatatan pagi/siang.
     - cron: "47 4 * * 1-5"
@@ -96,6 +99,7 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           EMAIL_KE: ${{ secrets.EMAIL_KE }}
           EMAIL_DARI: ${{ secrets.EMAIL_DARI }}
+          FIREBASE_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG }}
         run: python -m pipeline jalankan --keluaran site/data --demo "$MODE_DEMO"
 
       - name: Simpan status notifikasi (agar tidak terkirim dua kali)
@@ -119,6 +123,13 @@ jobs:
         with:
           path: site
 
+      - name: Simpan hasil bangun untuk Firebase Hosting
+        uses: actions/upload-artifact@v4
+        with:
+          name: situs
+          path: site
+          retention-days: 3
+
   terbitkan:
     needs: bangun
     runs-on: ubuntu-latest
@@ -128,3 +139,75 @@ jobs:
     steps:
       - id: deploy
         uses: actions/deploy-pages@v4
+
+  # Terbit ke Firebase Hosting (dan aturan Firestore bila diizinkan). Dilewati bila Secret Firebase belum diisi.
+  terbitkan-firebase:
+    needs: bangun
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      FIREBASE_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG }}
+      FIREBASE_HOSTING_SITE: ${{ secrets.FIREBASE_HOSTING_SITE }}
+      FIREBASE_ADMIN_AWAL: ${{ secrets.FIREBASE_ADMIN_AWAL }}
+      FIREBASE_TERBITKAN_ATURAN: ${{ secrets.FIREBASE_TERBITKAN_ATURAN }}
+      FIREBASE_TOOLS: firebase-tools@14.27.0
+    steps:
+      - name: Periksa pengaturan Firebase
+        id: cek
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ] || [ -z "$FIREBASE_WEB_CONFIG" ] || [ -z "$FIREBASE_HOSTING_SITE" ]; then
+            echo "::notice::Firebase belum diatur. Isi FIREBASE_WEB_CONFIG, FIREBASE_HOSTING_SITE, dan FIREBASE_SERVICE_ACCOUNT lewat panel Pengaturan. Situs tetap terbit ke GitHub Pages."
+            echo "siap=tidak" >> "$GITHUB_OUTPUT"
+          else
+            echo "siap=ya" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.cek.outputs.siap == 'ya'
+
+      - uses: actions/download-artifact@v4
+        if: steps.cek.outputs.siap == 'ya'
+        with:
+          name: situs
+          path: site
+
+      - uses: actions/setup-python@v5
+        if: steps.cek.outputs.siap == 'ya'
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        if: steps.cek.outputs.siap == 'ya'
+        with:
+          node-version: "20"
+
+      - name: Siapkan kredensial dan proyek
+        if: steps.cek.outputs.siap == 'ya'
+        run: |
+          pip install -q -r requirements.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-layanan.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/akun-layanan.json" >> "$GITHUB_ENV"
+          PROYEK=$(python -c "from pathlib import Path; from pipeline import firebase; print(firebase.konfigurasi_web(Path('.'))['projectId'])")
+          echo "Proyek Firebase: $PROYEK, situs Hosting: $FIREBASE_HOSTING_SITE"
+          echo "FIREBASE_PROYEK=$PROYEK" >> "$GITHUB_ENV"
+
+      - name: Terbitkan ke Firebase Hosting
+        if: steps.cek.outputs.siap == 'ya'
+        run: |
+          npx --yes "$FIREBASE_TOOLS" target:apply hosting lbp "$FIREBASE_HOSTING_SITE" --project "$FIREBASE_PROYEK"
+          npx --yes "$FIREBASE_TOOLS" deploy --only hosting:lbp --project "$FIREBASE_PROYEK" --non-interactive --message "commit ${GITHUB_SHA::7}"
+
+      - name: Terbitkan aturan Firestore
+        if: steps.cek.outputs.siap == 'ya' && env.FIREBASE_TERBITKAN_ATURAN == 'ya'
+        run: |
+          python -m pipeline aturan-firebase --keluaran firestore.rules
+          npx --yes "$FIREBASE_TOOLS" deploy --only firestore:rules --project "$FIREBASE_PROYEK" --non-interactive
+
+      - name: Hapus kredensial
+        if: always()
+        run: rm -f "$RUNNER_TEMP/akun-layanan.json"

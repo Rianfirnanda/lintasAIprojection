@@ -31,14 +31,19 @@
     <div class="gulir-tabel"><table class="matriks" id="matriks"></table></div>
   </section>
 
-  <section class="kartu">
+  <section class="kartu" id="kartu-akun">
     <div class="kartu-kepala"><div><h2>Akun</h2><p id="ket-akun"></p></div></div>
     <div id="akun"></div>
   </section>
 
+  <section class="kartu" id="kartu-jejak" hidden>
+    <div class="kartu-kepala"><div><h2>Jejak tindakan admin</h2><p>30 tindakan terakhir. Tidak bisa diubah atau dihapus.</p></div></div>
+    <div id="jejak"></div>
+  </section>
+
   <section class="kartu">
     <div class="kartu-kepala"><div><h2>Perlu diketahui</h2></div></div>
-    <div class="pesan peringatan">Situs ini berupa halaman statis, jadi peran hanya mengatur <b>tampilan</b>: menu dan beranda yang muncul.
+    <div class="pesan peringatan" id="catatan-keamanan">Situs ini berupa halaman statis, jadi peran hanya mengatur <b>tampilan</b>: menu dan beranda yang muncul.
       Berkas data tetap terbuka bagi siapa saja yang tahu alamatnya. Untuk pembatasan yang sungguh-sungguh, pakai Firebase Authentication
       dan simpan data yang perlu dilindungi di tempat yang tertutup.</div>
     <details style="margin-top:12px"><summary>Cara menambah akun contoh</summary>
@@ -50,10 +55,9 @@
     </details>
     <details style="margin-top:8px"><summary>Cara memakai Firebase</summary>
       <ol class="langkah-daftar">
-        <li>Buat proyek di Firebase, aktifkan Authentication (email dan sandi) dan Firestore.</li>
-        <li>Salin <code>config/firebase.contoh.json</code> menjadi <code>config/firebase.json</code>, lalu isi konfigurasi web dari Firebase.</li>
-        <li>Untuk tiap pengguna, buat dokumen <code>pengguna/{uid}</code> di Firestore dengan isian <code>peran</code> dan <code>nama</code>.</li>
-        <li>Setelah itu daftar akun contoh tidak dipakai lagi.</li>
+        <li>Ikuti langkah di <code>docs/FIREBASE.md</code>: aktifkan login Google, buat Firestore, lalu isi GitHub Secret <code>FIREBASE_WEB_CONFIG</code> dan <code>FIREBASE_ADMIN_AWAL</code>.</li>
+        <li>Setelah proses otomatis berikutnya, halaman Masuk berganti menjadi tombol <b>Masuk dengan Google</b>.</li>
+        <li>Admin pertama masuk dengan email yang terdaftar di <code>FIREBASE_ADMIN_AWAL</code>. Akun lain menunggu persetujuan di halaman ini.</li>
       </ol>
     </details>
   </section>
@@ -91,8 +95,15 @@ document.getElementById("matriks").innerHTML = `<thead><tr><th>Halaman</th>${URU
 
 const wadah = document.getElementById("akun");
 if (meta?.login === "firebase") {
-  document.getElementById("ket-akun").textContent = "Akun dikelola di Firebase.";
-  wadah.innerHTML = `<p class="kosong">Daftar akun ada di Firebase Console, bukan di halaman ini.</p>`;
+  // Persetujuan akun paling sering dipakai admin, jadi diletakkan paling atas.
+  document.getElementById("ringkas").after(document.getElementById("kartu-akun"), document.getElementById("kartu-jejak"));
+  document.getElementById("catatan-keamanan").innerHTML = `Masuk memakai akun Google. Akun baru, peran, dan izin halaman
+    dijaga aturan keamanan Firestore, jadi orang yang belum disetujui tidak bisa memberi dirinya hak apa pun.
+    Namun berkas data dashboard (harga, peringatan, laporan) masih berupa berkas terbuka di hosting. Data yang perlu
+    dirahasiakan sebaiknya dipindah ke Firestore pada tahap berikutnya.`;
+  const { pasangPanelAkun } = await import("./assets/panel-akun.js");
+  await pasangPanelAkun({ wadah, ket: document.getElementById("ket-akun"), ringkas: document.getElementById("ringkas"),
+    jejak: document.getElementById("jejak"), kartuJejak: document.getElementById("kartu-jejak") });
 } else if (akun.length) {
   document.getElementById("ket-akun").textContent = "Akun contoh untuk peragaan.";
   wadah.innerHTML = `<div class="gulir-tabel"><table><thead><tr><th>Nama</th><th>Nama pengguna</th><th>Peran</th></tr></thead><tbody>

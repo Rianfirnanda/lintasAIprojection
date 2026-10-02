@@ -10,3 +10,9 @@ site/data/
 .DS_Store
 # log uptime diambil dari cabang log-uptime saat pipeline berjalan
 data/uptime.csv
+
+# alat uji Firebase (npm install) dan berkas sementara emulator
+node_modules/
+.firebase/
+.firebaserc
+*-debug.log

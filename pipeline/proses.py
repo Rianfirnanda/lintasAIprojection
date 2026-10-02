@@ -20,6 +20,7 @@ import numpy as np
 from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, layanan, masukan, notifikasi, pengguna,
                sinyal as modul_sinyal, tindak_lanjut)
 from .konfigurasi import Konfigurasi
+from . import firebase as modul_firebase
 
 log = logging.getLogger(__name__)
 HARI_SERI_PUBLIKASI = 400
@@ -468,12 +469,16 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     if skema_pengaturan.exists():
         shutil.copyfile(skema_pengaturan, keluaran / "skema_pengaturan.json")
         _tulis_json(keluaran / "pengaturan.json", konf.pengaturan)
-    # Login per peran: Firebase bila config/firebase.json terisi, jika tidak akun contoh dari config/pengguna.json.
-    fb = pengguna.muat(konf.akar / "config" / "firebase.json")
+    # Login per peran: Firebase (akun Google) bila konfigurasinya terisi lewat Secret FIREBASE_WEB_CONFIG atau
+    # config/firebase.json; jika tidak, akun contoh dari config/pengguna.json. Berkas cara masuk yang tidak dipakai
+    # dihapus supaya akun contoh tidak tetap terbuka saat Firebase sudah aktif.
+    fb = modul_firebase.konfigurasi_web(konf.akar)
     akun = pengguna.muat(konf.akar / "config" / "pengguna.json")
-    if pengguna.firebase_aktif(fb):
+    for lama in ("firebase.json", "pengguna.json"):
+        (keluaran / lama).unlink(missing_ok=True)
+    if fb:
         meta["login"] = "firebase"
-        _tulis_json(keluaran / "firebase.json", {"konfigurasi": fb["konfigurasi"]})
+        _tulis_json(keluaran / "firebase.json", {"konfigurasi": fb})
     elif akun and not pengguna.periksa(akun):
         meta["login"] = "contoh"
         _tulis_json(keluaran / "pengguna.json", {"garam": akun["garam"], "akun": akun["akun"]})

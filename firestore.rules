@@ -1,0 +1,98 @@
+rules_version = '2';
+
+// Aturan Firestore untuk Lintas Benteng Projection.
+//
+// Semua koleksi berawalan "lbp_" supaya tidak bercampur dengan koleksi aplikasi lain di proyek Firebase
+// yang sama (proyek "lintas benteng"). PENTING: aturan Firestore hanya ada satu per database. Kalau aplikasi lain
+// di proyek ini sudah punya aturan, gabungkan blok "match /lbp_..." di bawah ke aturan itu, jangan ditimpa.
+//
+// Alur akun:
+//   1. Orang masuk dengan Google, lalu membuat dokumen lbp_pengguna/{uid} miliknya sendiri berstatus "menunggu",
+//      tanpa peran dan tanpa izin halaman.
+//   2. Admin aktif menyetujui (status "aktif" + peran + izin halaman), menolak, atau menonaktifkan akun.
+//   3. Admin pertama: email yang terdaftar di daftarAdminAwal() boleh mengangkat dirinya sendiri menjadi admin.
+//      Daftar ini diisi otomatis saat terbit dari GitHub Secret FIREBASE_ADMIN_AWAL, bukan ditulis di repositori.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function masuk() { return request.auth != null; }
+    function akun(uid) { return /databases/$(database)/documents/lbp_pengguna/$(uid); }
+    function adminAktif() {
+      return masuk() && exists(akun(request.auth.uid))
+        && get(akun(request.auth.uid)).data.status == 'aktif'
+        && get(akun(request.auth.uid)).data.peran == 'admin';
+    }
+    function daftarAdminAwal() { return /*ADMIN_AWAL*/[]; }
+    function adminAwal() {
+      return masuk() && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in daftarAdminAwal();
+    }
+
+    function peranSah(p) { return p in ['masyarakat', 'petugas', 'operator', 'analis', 'tpid', 'admin']; }
+    function statusSah(s) { return s in ['menunggu', 'aktif', 'ditolak', 'nonaktif']; }
+    function teksPendek(x, maks) { return x is string && x.size() <= maks; }
+    function halamanSah(h) { return h == null || (h is list && h.size() <= 30); }
+    function kolomSah(d) {
+      return d.keys().hasOnly(['email', 'nama', 'foto', 'status', 'peran', 'halaman', 'dibuat', 'diperbarui',
+                               'diputus_oleh', 'diputus_pada', 'catatan']);
+    }
+
+    match /lbp_pengguna/{uid} {
+      // Pemilik boleh membaca akunnya sendiri; admin aktif boleh membaca dan mendaftar semua akun.
+      allow read: if (masuk() && request.auth.uid == uid) || adminAktif();
+
+      // Pendaftaran: hanya untuk diri sendiri, selalu "menunggu", tanpa peran dan tanpa izin.
+      allow create: if masuk() && request.auth.uid == uid
+        && kolomSah(request.resource.data)
+        && request.resource.data.status == 'menunggu'
+        && request.resource.data.peran == null
+        && request.resource.data.halaman == null
+        && request.resource.data.email == request.auth.token.email
+        && teksPendek(request.resource.data.nama, 120)
+        && request.resource.data.dibuat == request.time;
+
+      // Admin pertama mengangkat dirinya sendiri (hanya email di daftarAdminAwal()).
+      allow create: if adminAwal() && request.auth.uid == uid
+        && kolomSah(request.resource.data)
+        && request.resource.data.status == 'aktif'
+        && request.resource.data.peran == 'admin'
+        && request.resource.data.halaman == null
+        && request.resource.data.email == request.auth.token.email
+        && teksPendek(request.resource.data.nama, 120);
+      allow update: if adminAwal() && request.auth.uid == uid
+        && request.resource.data.status == 'aktif'
+        && request.resource.data.peran == 'admin'
+        && request.resource.data.halaman == null
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['status', 'peran', 'halaman', 'diperbarui', 'diputus_oleh', 'diputus_pada']);
+
+      // Pemilik hanya boleh memperbarui nama dan foto, tidak bisa mengubah status, peran, atau izinnya sendiri.
+      allow update: if masuk() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nama', 'foto', 'diperbarui'])
+        && teksPendek(request.resource.data.nama, 120);
+
+      // Admin aktif mengatur akun orang lain. Admin tidak bisa mencabut hak adminnya sendiri (supaya tidak terkunci).
+      allow update: if adminAktif()
+        && kolomSah(request.resource.data)
+        && request.resource.data.email == resource.data.email
+        && statusSah(request.resource.data.status)
+        && (request.resource.data.peran == null || peranSah(request.resource.data.peran))
+        && (request.resource.data.status != 'aktif' || request.resource.data.peran != null)
+        && halamanSah(request.resource.data.halaman)
+        && (uid != request.auth.uid
+            || (request.resource.data.status == 'aktif' && request.resource.data.peran == 'admin'));
+      allow delete: if adminAktif() && uid != request.auth.uid;
+    }
+
+    // Jejak tindakan admin (siapa menyetujui, mengubah peran, menolak, menghapus). Tidak bisa diubah atau dihapus.
+    match /lbp_jejak/{id} {
+      allow read: if adminAktif();
+      allow create: if adminAktif()
+        && request.resource.data.keys().hasOnly(['aksi', 'oleh', 'oleh_email', 'sasaran', 'sasaran_email', 'rincian', 'waktu'])
+        && request.resource.data.oleh == request.auth.uid
+        && request.resource.data.waktu == request.time
+        && teksPendek(request.resource.data.aksi, 40);
+    }
+  }
+}

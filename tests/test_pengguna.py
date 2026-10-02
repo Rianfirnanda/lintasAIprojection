@@ -51,7 +51,13 @@ def test_pipeline_menerbitkan_login_contoh_lalu_firebase(konf, akar_sementara):
     assert (keluaran / "pengguna.json").exists() and not (keluaran / "firebase.json").exists()
 
     (akar_sementara / "config" / "firebase.json").write_text(
-        json.dumps({"konfigurasi": {"apiKey": "k", "projectId": "p", "authDomain": "p.firebaseapp.com"}}), encoding="utf-8")
+        json.dumps({"konfigurasi": {"apiKey": "k", "projectId": "p", "authDomain": "p.firebaseapp.com", "appId": "1:2:web:3"}}), encoding="utf-8")
     proses.jalankan(konf, keluaran, sinkron_github=False)
     assert json.loads((keluaran / "meta.json").read_text())["login"] == "firebase"
     assert (keluaran / "firebase.json").exists()
+    assert not (keluaran / "pengguna.json").exists(), "akun contoh tidak boleh tetap terbit saat Firebase aktif"
+
+    (akar_sementara / "config" / "firebase.json").unlink()
+    proses.jalankan(konf, keluaran, sinkron_github=False)
+    assert json.loads((keluaran / "meta.json").read_text())["login"] == "contoh"
+    assert not (keluaran / "firebase.json").exists()
