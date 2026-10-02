@@ -1,11 +1,11 @@
 {
-  "aktif_30_hari": 0,
-  "akun_aktif": 1,
+  "aktif_30_hari": 1,
+  "akun_aktif": 2,
   "mulai": "2026-10-02",
   "per_peran": {
     "admin": {
-      "aktif_30_hari": 0,
-      "akun": 1
+      "aktif_30_hari": 1,
+      "akun": 2
     }
   },
   "periode_hari": 30
