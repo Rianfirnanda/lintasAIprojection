@@ -121,13 +121,16 @@ Di panel Pengaturan, tekan **Perbarui data dan dashboard sekarang**, atau tunggu
 | Operator | Cek Data | **Unggah berkas harga** (CSV dari Excel) dan **Simpan keputusan** terima/tolak. |
 | Analis, TPID | Peringatan | Isi formulir tindak lanjut, tekan **Simpan catatan**. |
 | Analis | Akurasi | Centang cara prakiraan, tekan **Simpan persetujuan**. |
+| Petugas | Catat Harga | Pedagang menolak atau kios tutup: tekan **Catat kunjungan**, untuk mengukur respons pedagang. |
+| TPID, analis | Kebijakan | **Setujui** atau **Tolak** rekomendasi langkah, **Catat kebijakan** yang dijalankan, dan **Catat rapat** TPID. Dampak kebijakan dinilai otomatis: berpengaruh, tidak berpengaruh, atau netral. |
 | Admin | Pengaturan | Ubah isian, isi kunci AI dan notifikasi, tekan **Jalankan sekarang**. Tanpa token GitHub. |
 | Admin | Pengguna | Setujui akun, atur peran dan izin. |
 
 Cara kerjanya:
 
 1. Situs menyimpan kiriman langsung ke Firestore (`lbp_harga`, `lbp_validasi`, `lbp_tindak_lanjut`,
-   `lbp_persetujuan_model`, `lbp_pengaturan`, `lbp_rahasia`, `lbp_perintah`). Aturan Firestore memeriksa siapa yang
+   `lbp_persetujuan_model`, `lbp_kunjungan`, `lbp_kebijakan`, `lbp_rapat`, `lbp_keputusan_rekomendasi`,
+   `lbp_pengaturan`, `lbp_rahasia`, `lbp_perintah`). Aturan Firestore memeriksa siapa yang
    boleh mengirim apa, dan isinya harus wajar.
 2. Pemeriksa otomatis (`.github/workflows/antrean.yml`) melihat Firestore setiap 15 menit, Senin sampai Jumat pukul
    07.00 sampai 18.00 WIB. Bila ada yang baru, pipeline dijalankan.

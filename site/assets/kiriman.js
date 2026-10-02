@@ -105,6 +105,60 @@ export async function kirimPersetujuan(daftar) {
   })));
 }
 
+/**
+ * Kunjungan ke pedagang yang tidak menghasilkan harga (menolak, tidak ada, kios tutup). ID = id_klien, jadi aman
+ * dikirim ulang dari HP yang sempat luring.
+ */
+export async function kirimKunjungan(daftar) {
+  const { fb, db, user } = await siap();
+  return kirimBertahap(daftar, async (k) => {
+    const ref = fb.doc(db, "lbp_kunjungan", k.id_klien);
+    try {
+      await denganBatasWaktu(fb.setDoc(ref, {
+        tanggal: k.tanggal, kode_pasar: teks(k.kode_pasar, 30), responden: teks(k.responden, 60), status: k.status,
+        alasan: teks(k.alasan, 60), petugas: teks(k.petugas, 60), waktu_input: teks(k.waktu_input, 40),
+        oleh_uid: user.uid, diperbarui: fb.serverTimestamp(),
+      }));
+    } catch (e) {
+      if (!izinDitolak(e)) throw e;
+      const ada = await denganBatasWaktu(fb.getDoc(ref)).catch(() => null);
+      if (!ada?.exists()) throw e;
+    }
+  });
+}
+
+/** Catat kebijakan atau intervensi TPID. `id` diisi bila mengubah catatan yang sudah ada. */
+export async function simpanKebijakan(k, id = null) {
+  const { fb, db, user } = await siap();
+  const data = {
+    tanggal_mulai: k.tanggal_mulai, tanggal_selesai: k.tanggal_selesai || "", jenis: k.jenis, tujuan: k.tujuan,
+    kode_varian: k.kode_varian.map((x) => teks(x, 30).toUpperCase()).slice(0, 30), uraian: teks(k.uraian, 500),
+    id_rekomendasi: teks(k.id_rekomendasi, 80), pencatat: teks(k.pencatat, 120), oleh_uid: user.uid, diperbarui: fb.serverTimestamp(),
+  };
+  if (id) await denganBatasWaktu(fb.setDoc(fb.doc(db, "lbp_kebijakan", id), data));
+  else await denganBatasWaktu(fb.addDoc(fb.collection(db, "lbp_kebijakan"), data));
+}
+
+/** Catat rapat atau forum TPID. */
+export async function simpanRapat(r) {
+  const { fb, db, user } = await siap();
+  await denganBatasWaktu(fb.addDoc(fb.collection(db, "lbp_rapat"), {
+    tanggal: r.tanggal, jenis: r.jenis, agenda: teks(r.agenda, 300), keputusan: teks(r.keputusan, 1000),
+    jumlah_sinyal: Math.max(0, Math.min(500, Math.round(Number(r.jumlah_sinyal) || 0))), peserta: teks(r.peserta, 300),
+    tautan_notulen: /^https:\/\//.test(r.tautan_notulen || "") ? teks(r.tautan_notulen, 300) : "",
+    pencatat: teks(r.pencatat, 120), oleh_uid: user.uid, diperbarui: fb.serverTimestamp(),
+  }));
+}
+
+/** Setujui atau tolak rekomendasi langkah. Keputusan terbaru yang berlaku. */
+export async function putuskanRekomendasi(id, keputusan, { catatan = "", penyetuju = "" } = {}) {
+  const { fb, db, user } = await siap();
+  await denganBatasWaktu(fb.setDoc(fb.doc(db, "lbp_keputusan_rekomendasi", id), {
+    id_rekomendasi: id, keputusan, catatan: teks(catatan, 300), penyetuju: teks(penyetuju, 120),
+    tanggal: new Date().toISOString().slice(0, 10), oleh_uid: user.uid, diperbarui: fb.serverTimestamp(),
+  }));
+}
+
 /** Pantau status proses pembaruan terakhir (lbp_status/pipeline). Mengembalikan fungsi berhenti. */
 export async function pantauProses(saatBerubah) {
   const { fb, db } = await siap();

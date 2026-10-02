@@ -1,12 +1,13 @@
 """Indikator kinerja (SMART, Tabel 1 & 5 Rancangan Aksi Perubahan) yang dapat dihitung otomatis dari data sistem.
 
-Indikator yang tidak dapat diukur dari data sistem (mis. adopsi/log penggunaan di GitHub Pages) tetap ditampilkan
-dengan status "diukur_manual" agar kekurangannya terlihat, bukan disembunyikan.
+Indikator yang tidak dapat diukur dari data sistem tetap ditampilkan dengan status "diukur_manual" agar kekurangannya
+terlihat, bukan disembunyikan. Dengan login Google (Firebase), pemakaian sistem diukur dari akun yang aktif.
 """
 
 from __future__ import annotations
 
 import csv
+import json
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -186,6 +187,66 @@ def ringkas_uptime(path: Path, hari_ini: date, hari: int = 30) -> dict:
     }
 
 
+# ---------------------------------------------------------------- respons pedagang dan adopsi
+
+STATUS_TIDAK_BERHASIL = ("menolak", "tidak_ada", "tutup")
+TARGET_ADOPSI = ((3, 35), (6, 60), (12, 80), (10 ** 6, 95))  # (sampai bulan ke-, target %) Tabel 23
+
+
+def baca_kunjungan(folder: Path) -> list[dict]:
+    """data/kunjungan/*.csv: kunjungan ke pedagang yang tidak menghasilkan harga (menolak, tidak ada, tutup)."""
+    hasil = {}
+    for p in sorted(folder.rglob("*.csv")) if folder.is_dir() else []:
+        with p.open(newline="", encoding="utf-8-sig") as f:
+            for b in csv.DictReader(f):
+                b = {k.strip(): (v or "").strip() for k, v in b.items() if k}
+                if b.get("id") and b.get("status") in STATUS_TIDAK_BERHASIL and _ke_tanggal(b.get("tanggal")):
+                    hasil[b["id"]] = b
+    return list(hasil.values())
+
+
+def respons_pedagang(observasi: list, kunjungan: list[dict], hari_ini: date, hari: int = 30) -> dict:
+    """Tabel 25: respons pedagang = wawancara berhasil / seluruh kunjungan; penolakan = menolak / seluruh kunjungan.
+
+    Wawancara berhasil dihitung dari harga yang dicatat petugas di pasar (sumber PSR-ENUM): satu pedagang per pasar per
+    hari. Kunjungan yang gagal dicatat petugas di halaman Catat Harga.
+    """
+    mulai = hari_ini - timedelta(days=hari - 1)
+    berhasil = {(o.tanggal, o.kode_pasar, o.responden or o.petugas or "-") for o in observasi
+                if o.kode_sumber == "PSR-ENUM" and mulai <= o.tanggal <= hari_ini}
+    gagal = [k for k in kunjungan if mulai <= _ke_tanggal(k["tanggal"]).date() <= hari_ini]
+    total = len(berhasil) + len(gagal)
+    alasan: dict[str, int] = defaultdict(int)
+    for k in gagal:
+        if k["status"] == "menolak":
+            alasan[k.get("alasan") or "tidak disebut"] += 1
+    return {
+        "periode_hari": hari, "berhasil": len(berhasil), "menolak": sum(1 for k in gagal if k["status"] == "menolak"),
+        "tidak_ada": sum(1 for k in gagal if k["status"] in ("tidak_ada", "tutup")), "total": total,
+        "respons_persen": round(len(berhasil) / total * 100, 1) if total else None,
+        "penolakan_persen": round(sum(1 for k in gagal if k["status"] == "menolak") / total * 100, 1) if total else None,
+        "alasan_penolakan": dict(sorted(alasan.items(), key=lambda x: -x[1])),
+        "catatan": "" if total else "Belum ada kunjungan pedagang yang tercatat.",
+    }
+
+
+def adopsi(path: Path, hari_ini: date) -> dict:
+    """Tabel 23: akun aktif yang memakai sistem dalam 30 hari terakhir dibanding akun yang disetujui.
+
+    data/adopsi.json ditulis mesin dari daftar akun Firestore (hanya angka ringkas, tanpa nama atau email).
+    """
+    try:
+        d = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"persen": None, "catatan": "Belum ada data pemakaian. Terisi otomatis bila situs memakai login Google."}
+    akun, aktif = d.get("akun_aktif") or 0, d.get("aktif_30_hari") or 0
+    mulai = _ke_tanggal(d.get("mulai"))
+    bulan = ((hari_ini - mulai.date()).days // 30 + 1) if mulai else 1
+    target = next(tg for batas, tg in TARGET_ADOPSI if bulan <= batas)
+    return {**d, "persen": round(aktif / akun * 100, 1) if akun else None, "bulan_ke": bulan, "target_persen": target,
+            "catatan": f"Bulan ke-{bulan} sejak akun pertama disetujui; target tahap ini {target}%."}
+
+
 # ---------------------------------------------------------------- rangkuman SMART
 
 def _status(nilai, target, arah: str) -> str:
@@ -198,7 +259,7 @@ def _status(nilai, target, arah: str) -> str:
 
 def indikator_smart(konf, hasil_qc, hasil_masuk, ringkasan_model: dict, evaluasi: dict, sinyal: list[dict],
                     respons: dict, koreksi: dict, stabilitas: dict, uptime: dict, persetujuan: dict,
-                    layanan: dict | None = None) -> list[dict]:
+                    layanan: dict | None = None, tambahan: dict | None = None) -> list[dict]:
     tk = konf.pengaturan["target_kinerja"]
     aktif = konf.varian_aktif
     lengkap = sum(1 for v in aktif if v.satuan and v.batas_bawah and v.batas_atas and v.kode_komoditas)
@@ -210,6 +271,10 @@ def indikator_smart(konf, hasil_qc, hasil_masuk, ringkasan_model: dict, evaluasi
     ditindak = sum(1 for s in anomali_tinggi if s["status"] in ("ditindaklanjuti", "selesai"))
     dinilai = ringkasan_model.get("varian_dinilai") or 0
     layanan = layanan or {}
+    tambahan = tambahan or {}
+    pedagang = tambahan.get("respons_pedagang") or {}
+    pakai = tambahan.get("adopsi") or {}
+    kbj = tambahan.get("kebijakan") or {}
 
     def i(kode, sasaran, indikator, nilai, target, status, bukti, catatan="", satuan="%"):
         return {"kode": kode, "sasaran": sasaran, "indikator": indikator, "nilai": nilai, "target": target,
@@ -252,19 +317,31 @@ def indikator_smart(konf, hasil_qc, hasil_masuk, ringkasan_model: dict, evaluasi
           if stabilitas.get("lebih_buruk_dari_baseline") else stabilitas.get("catatan", "")),
         i("L1", "Keandalan layanan", "Dashboard bisa dibuka (30 hari terakhir)", uptime.get("uptime_persen"), 99.5,
           _status(uptime.get("uptime_persen"), 99.5, ">="), "Pemeriksaan otomatis tiap jam", uptime.get("catatan", "")),
-        i("D1", "Pemakaian di lapangan", "Seberapa banyak SOP dan dashboard dipakai", None, "35% → 95%", "diukur_manual",
-          "Catatan pemakaian, survei kesiapan",
-          "Situs ini tidak mencatat jumlah kunjungan, jadi diukur lewat survei kesiapan dan berita acara evaluasi."),
+        (i("D1", "Pemakaian di lapangan", "Akun yang memakai sistem dalam 30 hari terakhir", pakai["persen"],
+           pakai["target_persen"], _status(pakai["persen"], pakai["target_persen"], ">="), "Catatan akun aktif (login Google)",
+           pakai.get("catatan", "")) if pakai.get("persen") is not None else
+         i("D1", "Pemakaian di lapangan", "Seberapa banyak SOP dan dashboard dipakai", None, "35% → 95%", "diukur_manual",
+           "Catatan pemakaian, survei kesiapan", pakai.get("catatan") or
+           "Diukur lewat survei kesiapan dan berita acara evaluasi.")),
         i("K1", "Komunikasi dan partisipasi", "Kepuasan pengguna (Indeks Kepuasan Masyarakat)", layanan.get("ikm"), 76.61,
           _status(layanan.get("ikm"), 76.61, ">="), "Survei kepuasan (Issue Forms)", layanan.get("catatan_ikm", ""), satuan=""),
         i("K2", "Komunikasi dan partisipasi", "Pengaduan data yang sudah ditanggapi", layanan.get("pengaduan_ditanggapi_persen"),
           100, _status(layanan.get("pengaduan_ditanggapi_persen"), 100, ">="), "Pengaduan (Issue Forms)",
           layanan.get("catatan_pengaduan", "")),
+        i("K3", "Komunikasi dan partisipasi", "Pedagang yang bersedia diwawancarai (30 hari terakhir)",
+          pedagang.get("respons_persen"), 85, _status(pedagang.get("respons_persen"), 85, ">="),
+          "Catat Harga: harga tercatat dan kunjungan yang gagal", pedagang.get("catatan", "")),
+        i("K4", "Komunikasi dan partisipasi", "Pedagang yang menolak diwawancarai (30 hari terakhir)",
+          pedagang.get("penolakan_persen"), 10, _status(pedagang.get("penolakan_persen"), 10, "<="),
+          "Catat Harga: kunjungan yang gagal", pedagang.get("catatan", "")),
         i("T1", "Dipakai oleh TPID", "Peringatan penting yang sudah ditindaklanjuti", persen(ditindak, len(anomali_tinggi)),
           tk["tindak_lanjut_sinyal_persen"], _status(persen(ditindak, len(anomali_tinggi)), tk["tindak_lanjut_sinyal_persen"], ">="),
           "GitHub Issues atau buku tindak lanjut"),
         i("T2", "Dipakai oleh TPID", "Respons tindak lanjut makin cepat dibanding awal", respons.get("perbaikan_persen"), 20,
           _status(respons.get("perbaikan_persen"), 20, ">="), "Riwayat status peringatan", respons.get("catatan", "")),
+        i("T3", "Dipakai oleh TPID", "Rapat TPID yang membahas data, triwulan ini", kbj.get("rapat_triwulan_ini"), 1,
+          _status(kbj.get("rapat_triwulan_ini"), 1, ">=") if kbj else "belum_dapat_dinilai", "Halaman Kebijakan: catatan rapat",
+          "" if kbj.get("rapat_triwulan_ini") else "Catat rapat TPID di halaman Kebijakan.", satuan=" rapat"),
         i("I1", "Keandalan dan pengawasan", "Peringatan berisiko tinggi yang sudah dicek manusia",
           persen(ditanggapi, len(anomali_tinggi)), 100, _status(persen(ditanggapi, len(anomali_tinggi)), 100, ">="),
           "Status peringatan"),
@@ -272,5 +349,10 @@ def indikator_smart(konf, hasil_qc, hasil_masuk, ringkasan_model: dict, evaluasi
           persen(sum(1 for s in persetujuan.values() if s == "disetujui"), len(persetujuan)), 100,
           _status(persen(sum(1 for s in persetujuan.values() if s == "disetujui"), len(persetujuan)), 100, ">="),
           "data/persetujuan_model/"),
+        i("I3", "Keandalan dan pengawasan", "Rekomendasi berisiko tinggi yang sudah diputuskan manusia",
+          persen(kbj.get("rekomendasi_tinggi_diputuskan", 0), kbj.get("rekomendasi_tinggi", 0)), 100,
+          _status(persen(kbj.get("rekomendasi_tinggi_diputuskan", 0), kbj.get("rekomendasi_tinggi", 0)), 100, ">="),
+          "Halaman Kebijakan: persetujuan rekomendasi",
+          "" if kbj.get("rekomendasi_tinggi") else "Belum ada rekomendasi berisiko tinggi."),
     ]
     return daftar
