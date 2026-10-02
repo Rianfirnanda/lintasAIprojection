@@ -1,7 +1,7 @@
 // Beranda khusus tiap peran. Dashboard TPID (Gambar 12) tetap berada di index.html.
 import { muatJSON, esc, rp, persen, angka, tgl, waktu } from "./app.js";
 import { ikon, hitungMutu, ringkasSinyalPrioritas, nilaiUptime, bulanTahun, gambarKomoditas, selisihHarga, teksSelisih } from "./dashboard.js";
-import { PERAN, sesi } from "./akses.js";
+import { PERAN, sesi, bolehAkses } from "./akses.js";
 import { pasangKlikRincian, rincianArahHarga } from "./rincian.js";
 
 const jepit = (x) => Math.max(0, Math.min(100, x));
@@ -334,4 +334,6 @@ const PETA = { masyarakat: berandaMasyarakat, petugas: berandaPetugas, operator:
 export async function renderBerandaPeran(peran, meta, el) {
   const f = PETA[peran] || berandaMasyarakat;
   await f(el, meta);
+  // Orang yang diberi halaman Pengguna (bukan peran Administrator) juga diingatkan bila ada akun menunggu.
+  if (peran !== "admin" && meta?.login === "firebase" && bolehAkses(peran, "pengguna.html")) pengingatPersetujuan(el);
 }

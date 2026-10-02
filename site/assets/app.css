@@ -277,7 +277,7 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .meta-kecil { color: var(--muted); font-size: 0.8rem; }
 
 /* ---------- tombol & kontrol */
-.tombol[hidden] { display: none; }
+.tombol[hidden], .baris-kontrol[hidden] { display: none; }
 .tombol {
   font: 500 0.86rem/1 var(--sans);
   border: 1px solid var(--rule-2); background: var(--surface); color: var(--ink);

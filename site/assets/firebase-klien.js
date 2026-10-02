@@ -6,6 +6,7 @@
 
 export const KOLEKSI_PENGGUNA = "lbp_pengguna";
 export const KOLEKSI_JEJAK = "lbp_jejak";
+export const DOK_AKSES = ["lbp_akses", "peran"];
 
 let siap = null;
 let modeEmulator = false;
@@ -115,15 +116,47 @@ export async function pantauAkunSendiri(uid, saatBerubah) {
   return fb.onSnapshot(fb.doc(db, KOLEKSI_PENGGUNA, uid), (d) => saatBerubah(d.exists() ? { uid, ...d.data() } : null), () => {});
 }
 
-/** Isi sesi lokal dari data akun Firestore. */
-export function sesiDariAkun(akun) {
-  return { id: akun.email, nama: akun.nama || akun.email, peran: akun.peran, halaman: Array.isArray(akun.halaman) ? akun.halaman : null,
+/**
+ * Isi sesi lokal dari data akun Firestore. Halaman yang boleh dibuka: izin pribadi akun (bila diatur), lalu tabel hak
+ * akses per peran dari halaman Pengguna, lalu bawaan peran (null). Urutan ini sama dengan aturan Firestore.
+ */
+export function sesiDariAkun(akun, tabel = null) {
+  const halaman = Array.isArray(akun.halaman) ? akun.halaman
+    : akun.peran !== "admin" && Array.isArray(tabel?.[akun.peran]) ? tabel[akun.peran] : null;
+  return { id: akun.email, nama: akun.nama || akun.email, peran: akun.peran, halaman,
     foto: akun.foto || null, uid: akun.uid, sumber: "firebase" };
+}
+
+/** Tabel hak akses per peran ({ peran: [halaman] }), atau null bila admin belum pernah mengubahnya. */
+export async function muatTabelAkses() {
+  const { fb, db } = await firebaseSiap();
+  try {
+    const d = await fb.getDoc(fb.doc(db, ...DOK_AKSES));
+    return d.exists() ? d.data().halaman || null : null;
+  } catch { return null; }
+}
+
+/** Sesi lengkap untuk akun aktif (memuat tabel hak akses dulu). */
+export async function sesiAkun(akun) {
+  return sesiDariAkun(akun, await muatTabelAkses());
+}
+
+/** Pantau tabel hak akses (halaman Pengguna). */
+export async function pantauTabelAkses(saatBerubah) {
+  const { fb, db } = await firebaseSiap();
+  return fb.onSnapshot(fb.doc(db, ...DOK_AKSES), (d) => saatBerubah(d.exists() ? d.data() : null), () => saatBerubah(null));
+}
+
+/** Simpan tabel hak akses (hanya peran Administrator) dan catat jejaknya. */
+export async function simpanTabelAkses(halaman, rincian = "") {
+  const { fb, db, auth } = await firebaseSiap();
+  await fb.setDoc(fb.doc(db, ...DOK_AKSES), { halaman, diubah_oleh: auth.currentUser.email, diubah_pada: fb.serverTimestamp() });
+  await catatJejak("hak_akses", { uid: "", email: "" }, rincian);
 }
 
 /* ---------- untuk panel admin */
 
-/** Pantau semua akun (hanya berhasil untuk admin aktif). */
+/** Pantau semua akun (hanya berhasil untuk pengelola akun). */
 export async function pantauSemuaAkun(saatBerubah, saatGalat) {
   const { fb, db } = await firebaseSiap();
   const q = fb.query(fb.collection(db, KOLEKSI_PENGGUNA), fb.orderBy("dibuat", "desc"));

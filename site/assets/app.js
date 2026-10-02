@@ -294,7 +294,7 @@ async function segarkanSesiFirebase(lama) {
       location.replace(`masuk.html?status=${encodeURIComponent(akun?.status || (user ? "hilang" : "keluar"))}`);
       return;
     }
-    const baru = fk.sesiDariAkun(akun);
+    const baru = await fk.sesiAkun(akun);
     const beda = baru.peran !== lama.peran || JSON.stringify(baru.halaman) !== JSON.stringify(lama.halaman ?? null) || baru.nama !== lama.nama;
     if (beda) {
       simpanSesiFirebase(baru);

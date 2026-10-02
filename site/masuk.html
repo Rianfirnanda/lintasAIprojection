@@ -60,7 +60,7 @@ async function lanjutkanAkun(fk, user) {
   isi.innerHTML = `<h1 id="judul-masuk">Masuk</h1><p>Memeriksa akun…</p>`;
   const akun = await fk.pastikanAkun(user);
   if (akun.status === "aktif" && PERAN[akun.peran]) {
-    const s = fk.sesiDariAkun(akun);
+    const s = await fk.sesiAkun(akun);
     simpanSesiFirebase(s);
     location.href = tujuan(s.peran, s.halaman);
     return;
@@ -83,9 +83,9 @@ function tampilkanStatusAkun(fk, akun) {
     <a class="tautan-tamu" href="index.html">Lanjut tanpa masuk (sebagai masyarakat)</a>`;
   document.getElementById("btn-ganti").addEventListener("click", async () => { await keluar(); await fk.keluarFirebase(); location.replace("masuk.html"); });
   if (menunggu) {
-    fk.pantauAkunSendiri(akun.uid, (a) => {
+    fk.pantauAkunSendiri(akun.uid, async (a) => {
       if (a && a.status === "aktif" && PERAN[a.peran]) {
-        const s = fk.sesiDariAkun(a);
+        const s = await fk.sesiAkun(a);
         simpanSesiFirebase(s);
         location.href = tujuan(s.peran, s.halaman);
       } else if (a && a.status !== "menunggu") tampilkanStatusAkun(fk, a);

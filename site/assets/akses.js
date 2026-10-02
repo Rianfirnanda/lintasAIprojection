@@ -56,17 +56,21 @@ export const DAFTAR_HALAMAN = Object.values(M).map(([href, label]) => ({ href, l
 
 const ubah = (kunci) => kunci.map((k) => ({ href: M[k][0], label: M[k][1] }));
 const KUNCI_DARI_HREF = Object.fromEntries(Object.entries(M).map(([k, [href]]) => [href, k]));
-/** Halaman yang hanya boleh dibuka administrator, apa pun izin yang diberikan. */
+/**
+ * Halaman yang memberi hak admin: Pengaturan (sistem, kunci, jalankan proses) dan Pengguna (akun dan peran).
+ * Bawaannya hanya untuk peran Administrator, tapi admin bisa memberikannya ke orang lain lewat izin pribadi atau
+ * tabel hak akses. Aturan Firestore yang menjaga: hanya peran Administrator yang bisa memberi hak ini.
+ */
 export const HALAMAN_ADMIN = ["pengaturan.html", "pengguna.html"];
 
 /**
- * Menu untuk peran tertentu. `izin` (daftar href, dari akun Firebase) membatasi atau menambah halaman:
+ * Menu untuk peran tertentu. `izin` (daftar href: izin pribadi akun atau tabel hak akses) menggantikan bawaan peran;
  * null berarti memakai bawaan peran.
  */
 export function menuPeran(peran, izin = null) {
   const p = PERAN[peran] || PERAN.masyarakat;
-  if (!Array.isArray(izin)) return { utama: ubah(p.menu), lainnya: ubah(p.lainnya) };
-  const boleh = new Set(izin.filter((h) => KUNCI_DARI_HREF[h] && (peran === "admin" || !HALAMAN_ADMIN.includes(h))));
+  if (!Array.isArray(izin) || peran === "admin") return { utama: ubah(p.menu), lainnya: ubah(p.lainnya) };
+  const boleh = new Set(izin.filter((h) => KUNCI_DARI_HREF[h]));
   boleh.add("index.html");
   const utama = p.menu.filter((k) => boleh.has(M[k][0]));
   const sisa = Object.keys(M).filter((k) => boleh.has(M[k][0]) && !utama.includes(k));
