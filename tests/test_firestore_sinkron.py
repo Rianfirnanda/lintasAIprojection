@@ -309,6 +309,10 @@ def test_dengan_emulator_firestore(akar, monkeypatch):
     assert fs.perlu_jalan(akar, db)[0] is True
     assert fs.tarik(akar, "u", db=db)["berkas"] == {"data/masuk/harga/situs/situs_2026-09.csv": 1}
     fs.lapor("success", "u", db=db)
+    # jam dinding sungguhan: lewat 08.00 WIB AI harian jatuh tempo sampai dicatat sudah jalan hari ini
+    hari_ini = datetime.now(timezone.utc).astimezone(fs.WIB).date().isoformat()
+    fs.catat_ai_harian(db, hari_ini, 0, ["cabai rawit merah"])
+    assert fs.ai_harian_jatuh_tempo(akar, db, datetime.now(timezone.utc)) is False
     jalan, alasan = fs.perlu_jalan(akar, db)
     assert not jalan, alasan
     db.collection("lbp_harga").document("e2").set(_harga("e2", firestore.SERVER_TIMESTAMP))
