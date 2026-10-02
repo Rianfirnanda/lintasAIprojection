@@ -1,0 +1,124 @@
+{
+  "pencarian": [
+    {
+      "waktu": "2026-10-02T17:31:27+07:00",
+      "permintaan": {
+        "komoditas": "Cabai Rawit merah",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Cabai Rawit merah, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Harga Cabai Rawit Merah di Pasar Tradisional Periode Maret 2025-2026\nURL: https://databoks.katadata.co.id/ekonomi-makro/statistik/f488e8cc078d246/harga-cabai-rawit-merah-harian-di-pasar-tradisional-provinsi-bengkulu\nCuplikan: Sedangkan harga cabai rawit merah harian di pasar tradisional dalam tiga bulan terakhir di Bengkulu telah mengalami kenaikan sebesar 79,52% dari sebelumnya yang tercatat di harga Rp26,85 ribu. Rekor kenaikan harga cabai rawit merah harian di pasar tradisional di provinsi ini, sebelumnya pernah dicatatkan pada Agustus 2023 dengan kenaikan sebesar 81,22% dan penurunan terendah pernah dicatatkan pada Agustus 2023 dengan penurunan -43,6%. [...] Melansir dashboard Pusat Informasi Harga Pangan Strategis Nasional pukul 14:44 WIB, harga cabai rawit merah harian di pasar tradisional provinsi Bengkulu t\n\n[2] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Kedelai Impor | 1 kg | Rp 11.800,- | Rp 11.800,- Rp 11.800,- | Rp 11.800,- Rp 11.800,- | Rp 11.800,- | Cabai | Merah Keriting | 1 kg | Rp 66.667,- | Rp 76.667,- | Rp 10.000,- | Rp 75.000,- | Rp 75.000,- Rp 55.000,- | Rp 55.000,- | Merah Besar | 1 kg | Rp 35.000,- | Rp 35.000,- Rp 50.000,- | Rp 50.000,- Rp 30.000,- | Rp 30.000,- | Rawit Merah | 1 kg | Rp 86.667,- | Rp 86.667,- Rp 83.333,- | Rp 83.333,- Rp 70.000,- | Rp 70.000,- [...] | Rawit Hijau | 1 kg | Rp 68.333,- | Rp 75.000,- | Rp 6.667,- | Rp 61.667,- | Rp 61.667,- Rp 55.000,- | Rp 55.000,- | Bawang | Bawang Merah | 1 kg | Rp 45.000,- \n\n[3] SP2KP\nURL: https://sp2kp.kemendag.go.id\nCuplikan: Cabai Merah Keriting, kg, Rp 59.112, Rp 60.983, 3.17 %. Cabai Rawit Merah, kg, Rp 79.482, Rp 80.420, 1.18 %. Cabai Merah Besar, kg, Rp 51.861, Rp 53.703, 3.55 %.\n\n[4] Harga cabai di Pasar Tradisional Modern atau PTM Kota ...\nURL: https://www.instagram.com/reel/Dd0rd8KPVHC\nCuplikan: Harga cabai di Pasar Tradisional Modern atau PTM Kota Bengkulu kini mencapai 70 ribu rupiah per kilogram. Kenaikan terjadi dalam beberapa\n\n[5] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[6] SISKAPERBAPO\nURL: https://siskaperbapo.jatimprov.go.id/harga/tabel\nCuplikan: SISKAPERBAPO Tabel + Harga Konsumen (per Area) + Harga Konsumen (per Komoditas) + Harga Produsen Grafik + Harga Konsumen + Harga Produsen Tren Informasi Profil Pasar Display Panduan Login 1. Home 2. Harga 3. Tabel Tabel Harga Konsumen #### Please Wait #### QR Code © 2011 - 2026 . dikelola Disperindag Jatim, Hak Cipta dilindungi\n\n[7] november 2024 - BKPerdag - Kementerian Perdagangan\nURL: https://bkperdag.kemendag.go.id/storage/publikasi/120-221-file_kajian_analisis_harga_pangan_pokok_20241209142155q4woe39fvr.pdf\nCuplikan: • Harga domestik cabai rawit merah berfluktuasi pada tingkat harga Rp 47.456,-/kg pada November 2024. Harga cabai rawit merah pada November 2024 turun 8,51% terhadap Oktober 2024. [...] Perkembangan Harga Eceran Domestik Cabai Merah Besar Perkembangan KK Antar Waktu Cabai Merah Besar 3,90% Nov 2024 / Okt 2024 Rp 38.600,-/kg 1,38 poin 1.04 % Perkembangan Harga Cabai Merah Besar 2022 – 2024 Perkembangan Harga Cabai Rawit Merah 2022 – 2024 • Harga domestik cabai merah besar berfluktuasi pada tingkat harga Rp 38.600,-/kg pada November 2024. Harga cabai merah besar pada November 2024 turun 3,90% te\n\n[8] tim penyusun\nURL: https://data.badanpangan.go.id/nfs_storage/public/publication/documents/1779588677.pdf\nCuplikan: Sumber : Direktorat Stabilisasi Pasokan dan Harga Pangan diolah oleh Pusat data dan Informasi Pangan Rp. 6.715 HPP Rp. 6.500 GKP Tk. Petani Rp. 24.823 HAP Rp. 22.000 -29.600 Cabai Merah Keriting Rp. 25.153 HPP -Cabai Merah Besar Rp. 14.367 HPP -Beras Premium Tk.Penggilingan Rp. 5.635 HAP Rp. 5.500 Jagung Pipilan Kering Rp. 10.372 HAP Rp. 10.775 Kedelai Biji Kering Rp. 25.007 HAP Rp. 25.000 Ayam Ras Rp. 58.548 HAP Rp. 25.000 – 31.500 Cabai Rawit Merah Rp. 24.642 HAP Rp. 25.000 – 30.000 Bawang [...] Pasokan dan Harga Pangan diolah oleh Pusat data dan Informasi Pangan Rp. 12.441 HET Rp. 12.500 -1\n\n[9] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id/faq\nCuplikan: 8. Kedelai Biji Kering (Lokal), harga di Petani (Rp/Kg) 9. Bawang Merah, harga di Petani (Rp/Kg) 10. Cabai Merah Keriting, harga di Petani (Rp/Kg) 11. Cabai Rawit Merah, harga di Petani (Rp/Kg) 12. Sapi (Hidup), harga di Peternak (Rp/Kg Berat Hidup) 13. Ayam Ras Pedaging (Hidup), harga di Peternak (Rp/Kg Berat Hidup) 14. Telur Ayam ras, harga di Peternak (Rp/Kg) 15. Stok GKG Tingkat Penggilingan, stok dalam satuan Kwintal [...] 1. Beras Premium, harga di Pedagang Eceran (Rp/Kg) 2. Beras Medium, harga di Pedagang Eceran (Rp/Kg) 3. Kedelai Biji Kering (Impor), harga di Pedagang Eceran (Rp/Kg) 4.\n\n[10] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id\nCuplikan: # Harga Rata Rata Nasional Jenis Data Panel Tanggal \\ Disclaimer: Lokasi pemantauan harga tingkat produsen (provinsi/kabupaten kota) merupakan wilayah sentra produksi yang ditetapkan berdasarkan sebaran tingkat produksi 3 tahun terakhir yang dirilis oleh BPS Memuat data nasional. # Perkembangan Harga Pangan Pokok Strategis Jenis Data Panel Memuat harga historis. # Harga Rata-Rata Provinsi Jenis Data Panel Komoditas Tanggal Maps Histogram Alternative content for the map [...] Memuat data provinsi. Memuat data nasional. Memuat detail harga provinsi. Panel Harga Pangan - Badan Pangan Nasional / N\n\n[11] - PIHPS\nURL: https://www.bi.go.id/hargapangan\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional ### Informasi Harga Pangan Antar Daerah ### Harga Rata-Rata dan Perubahan 25 September 2026\n\n[12] SIMPANG | DKP3 Kota Medan\nURL: https://simpang.medan.go.id?menu=harga\nCuplikan: | No | Komoditas | Harga Terendah | Harga Tertinggi | Harga Rata-Rata | --- --- | 1 | Bawang Merah | Rp.25,000 | Rp.35,000 | Rp.30,000 | | 2 | Bawang Putih | Rp.25,000 | Rp.38,000 | Rp.31,500 | | 3 | Beras | Rp.15,000 | Rp.17,000 | Rp.16,000 | | 4 | Cabai Merah | Rp.40,000 | Rp.60,000 | Rp.50,000 | | 5 | Cabai Rawit | Rp.45,000 | Rp.70,000 | Rp.57,500 | | 6 | Daging Ayam Ras | Rp.43,000 | Rp.48,000 | Rp.45,500 | | 7 | Daging Sapi | Rp.130,000 | Rp.150,000 | Rp.140,000 | [...] user-img Untuk Mendukung Keamanan Pangan Produkmu,Silahkan Daftar ke Sistem Perizinan Berusaha Terintegrasi Secara Elek\n\n[13] Informasi Bahan Pokok\nURL: https://inbok.disperindag.kepriprov.go.id\nCuplikan: Logo Informasi Bahan Pokok Provinsi Kepulauan Riau Tabel Harga Per Komoditas Per Kabupaten/Kota Data Makro Ekonomi Data Produksi Light Dark Pertumbuhan Ekonomi (%, YOY) - Triwulan II Tahun 2026 Inflasi Kepulauan Riau (%, YOY) - Bulan Agustus Tahun 2026 | Kabupaten/Kota | Harga Kemarin | Harga Saat Ini | (%) | --- --- | # Harga Rata-rata dan Perubahan Chart Harian Chart Bulanan Statistik Harian Statistik Bulanan Tahun\n\n[14] Gate Riwayat Harga: Unduh GT Data Historis | CoinGecko\nURL: https://www.coingecko.com/id/coins/gatetoken/historical_data\nCuplikan: | 2026-09-23 | $1.180.585.467 | $2.078.102 | $10,62 | | 2026-09-22 | $1.182.896.894 | $7.084.937 | $11,07 | | 2026-09-21 | $1.112.694.943 | $1.652.723 | $11,09 | | 2026-09-20 | $1.105.764.789 | $2.244.821 | $10,43 | | 2026-09-19 | $1.060.474.144 | $4.768.384 | $10,37 | | 2026-09-18 | $996.201.032 | $2.541.732 | $9,95 | | 2026-09-17 | $1.000.532.562 | $3.576.641 | $9,34 | | 2026-09-16 | $963.391.457 | $4.734.404 | $9,38 | | 2026-09-15 | $990.207.450 | $3.476.826 | $9,03 | [...] | 2026-09-14 | $972.852.228 | $1.963.560 | $9,29 | | 2026-09-13 | $998.392.169 | $1.900.132 | $9,12 | | 2026-09-12 | $"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 14 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": "9Ie_aoySJo3Vz7IP2ciD8QM",
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "Databoks Katadata - Harga Cabai Rawit Merah Harian di Pasar Tradisional Provinsi Bengkulu",
+            "penyedia": "Katadata / Pusat Informasi Harga Pangan Strategis Nasional (PIHPS)",
+            "url": "https://databoks.katadata.co.id/ekonomi-makro/statistik/f488e8cc078d246/harga-cabai-rawit-merah-harian-di-pasar-tradisional-provinsi-bengkulu",
+            "wilayah": "Provinsi Bengkulu",
+            "peran_wilayah": "provinsi",
+            "periode_data": "Maret 2025-2026",
+            "komoditas_varian": "Cabai Rawit Merah",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan data harga cabai rawit merah harian di tingkat Provinsi Bengkulu, tetapi tidak secara spesifik merinci tingkat Kabupaten Bengkulu Tengah untuk Oktober 2026.",
+            "catatan_keandalan": "Bersumber dari dashboard PIHPS, namun pada hasil pencarian tidak secara eksplisit menampilkan data spesifik bulan Oktober 2026.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "status_verifikasi": "kandidat"
+          },
+          {
+            "nama_sumber": "Sistem Informasi Harga Bahan Pokok (SIGAHADA) Kota Bengkulu",
+            "penyedia": "Pemerintah Kota Bengkulu",
+            "url": "https://sigahada.bengkulukota.go.id",
+            "wilayah": "Kota Bengkulu",
+            "peran_wilayah": "pembanding",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Rawit Merah",
+            "satuan": "1 kg",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Hanya mencakup wilayah Kota Bengkulu sebagai pembanding rantai pasok, bukan Kabupaten Bengkulu Tengah.",
+            "catatan_keandalan": "Menampilkan data harga riil untuk varian Rawit Merah (Rp 86.667/kg), namun terbatas untuk wilayah Kota Bengkulu.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": null,
+            "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
+            "status_verifikasi": "kandidat"
+          },
+          {
+            "nama_sumber": "Sistem Pemantauan Pasar dan Kebutuhan Pokok (SP2KP) Kementerian Perdagangan",
+            "penyedia": "Kementerian Perdagangan Republik Indonesia",
+            "url": "https://sp2kp.kemendag.go.id",
+            "wilayah": "Nasional / Regional",
+            "peran_wilayah": "nasional",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Cabai Rawit Merah",
+            "satuan": "kg",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Sumber resmi nasional untuk harga rata-rata cabai rawit merah, namun rincian tingkat Kabupaten Bengkulu Tengah tidak terlihat langsung pada cuplikan data.",
+            "catatan_keandalan": "Sangat kredibel secara nasional, tetapi memerlukan pengecekan lebih lanjut untuk filter tingkat kabupaten.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "status_verifikasi": "kandidat"
+          },
+          {
+            "nama_sumber": "Pusat Informasi Harga Pangan Strategis Nasional (PIHPS) Bank Indonesia - Berdasarkan Daerah",
+            "penyedia": "Bank Indonesia",
+            "url": "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+            "wilayah": "Nasional / Provinsi / Kabupaten-Kota",
+            "peran_wilayah": "provinsi",
+            "periode_data": "September 2026",
+            "komoditas_varian": "Cabai Rawit Merah",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan tabel harga berdasarkan daerah, namun cuplikan spesifik untuk Kabupaten Bengkulu Tengah pada Oktober 2026 belum dimuat dalam hasil pencarian.",
+            "catatan_keandalan": "Sangat tinggi untuk pemantauan harga pangan harian di pasar tradisional.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "status_verifikasi": "kandidat"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Sumber data resmi spesifik tingkat Kabupaten Bengkulu Tengah yang mencakup harga eceran harian komoditas Cabai Rawit Merah untuk periode bulan Oktober 2026 secara lengkap dan terstruktur tidak ditemukan dalam hasil pencarian web."
+        ],
+        "catatan": "Hasil pencarian web memberikan data tingkat provinsi (Bengkulu), Kota Bengkulu (sebagai pembanding), dan data nasional dari PIHPS serta Kemendag. Data spesifik untuk Kabupaten Bengkulu Tengah pada Oktober 2026 belum tersedia secara langsung di cuplikan sumber web yang ada."
+      },
+      "url_hasil_pencarian": [
+        "https://bkperdag.kemendag.go.id/storage/publikasi/120-221-file_kajian_analisis_harga_pangan_pokok_20241209142155q4woe39fvr.pdf",
+        "https://data.badanpangan.go.id/nfs_storage/public/publication/documents/1779588677.pdf",
+        "https://databoks.katadata.co.id/ekonomi-makro/statistik/f488e8cc078d246/harga-cabai-rawit-merah-harian-di-pasar-tradisional-provinsi-bengkulu",
+        "https://dev-panelharga.badanpangan.go.id",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://inbok.disperindag.kepriprov.go.id",
+        "https://sigahada.bengkulukota.go.id",
+        "https://simpang.medan.go.id?menu=harga",
+        "https://siskaperbapo.jatimprov.go.id/harga/tabel",
+        "https://sp2kp.kemendag.go.id",
+        "https://www.bi.go.id/hargapangan",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+        "https://www.coingecko.com/id/coins/gatetoken/historical_data",
+        "https://www.instagram.com/reel/Dd0rd8KPVHC"
+      ]
+    }
+  ]
+}
