@@ -229,6 +229,9 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(hasil, ensure_ascii=False))
         return 0
     if a.perintah == "cari-sumber":
+        from . import firestore_sinkron
+
+        firestore_sinkron.pasang_rahasia_dari_firestore(konf.akar)  # kunci yang diisi lewat situs
         catatan = pencari_data.cari(konf, a.komoditas, a.periode, a.kebutuhan, a.wilayah, penyedia=a.penyedia)
         path = pencari_data.simpan(konf, catatan)
         n = len(catatan["hasil"].get("kandidat", []))

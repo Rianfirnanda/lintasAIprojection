@@ -8,7 +8,7 @@ name: AI Data Finder
 #   - GitHub Models (cadangan terakhir, tanpa pencarian web): memakai GITHUB_TOKEN bawaan, tidak perlu secret.
 # Pencarian web gratis: secret TAVILY_API_KEY (1.000 kredit per bulan); hasilnya diberikan ke AI mana pun.
 # Opsional berbayar: Claude (secret ANTHROPIC_API_KEY, pilih penyedia "anthropic").
-# Kunci yang diisi lewat situs (Firestore) tidak dipakai di sini; dari situs, pakai tombol di panel Pengaturan.
+# Kunci yang diisi lewat situs (Firestore) juga dipakai di sini, menggantikan GitHub Secret yang sama.
 on:
   workflow_dispatch:
     inputs:
@@ -53,6 +53,17 @@ jobs:
           cache: pip
       - run: pip install -r requirements-ai.txt
 
+      # Kunci yang diisi lewat situs (Pengaturan -> AI) tersimpan di Firestore; mesin membacanya dengan akun layanan.
+      - name: Sambungkan ke Firestore (kunci dari situs)
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then echo "Firebase belum diatur, hanya GitHub Secrets yang dipakai."; exit 0; fi
+          pip install -q -r requirements-firebase.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-layanan.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/akun-layanan.json" >> "$GITHUB_ENV"
+
       - name: Cari kandidat sumber
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -85,3 +96,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run pipeline.yml --ref "${GITHUB_REF_NAME}"
+
+      - name: Hapus kredensial
+        if: always()
+        run: rm -f "$RUNNER_TEMP/akun-layanan.json"

@@ -194,7 +194,12 @@ def _post_json(url: str, header: dict, isi: dict, batas_waktu: int = 180) -> dic
     # menjawab HTTP 400 untuk kunci yang salah.
     try:
         with urllib.request.urlopen(req, timeout=batas_waktu) as r:
-            return json.loads(r.read())
+            badan = r.read()
+        try:
+            return json.loads(badan)
+        except ValueError as e:
+            cuplik = " ".join(badan.decode(errors="replace").split())[:200]
+            raise PenyediaTidakTersedia(f"jawaban layanan bukan JSON: {cuplik or '(kosong)'}") from e
     except urllib.error.HTTPError as e:
         badan = " ".join(e.read().decode(errors="replace").split())[:300]
         arti = ARTI_KODE.get(e.code) or ("layanan sedang bermasalah" if e.code >= 500 else "")
@@ -203,8 +208,6 @@ def _post_json(url: str, header: dict, isi: dict, batas_waktu: int = 180) -> dic
         raise PenyediaTidakTersedia(f"jaringan: {e.reason}") from e
     except OSError as e:  # batas waktu habis saat membaca jawaban
         raise PenyediaTidakTersedia(f"jaringan: {e.__class__.__name__}") from e
-    except ValueError as e:
-        raise PenyediaTidakTersedia("jawaban layanan bukan JSON") from e
 
 
 def kueri_web(komoditas: str, periode: str, kebutuhan: str, wilayah: str) -> list[tuple[str, list[str] | None]]:
