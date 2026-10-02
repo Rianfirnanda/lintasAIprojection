@@ -168,14 +168,14 @@ export async function pantauProses(saatBerubah) {
 const jam = (t) => (t?.toDate ? t.toDate() : t ? new Date(t) : null);
 
 /**
- * Kalimat singkat tentang kapan kiriman muncul di dashboard. Pemeriksa otomatis (antrean.yml) melihat kiriman baru
- * tiap 5 menit pada jam kerja, lalu langsung mengolahnya.
+ * Kalimat singkat tentang kapan kiriman muncul di dashboard. Penjaga antrean (antrean.yml) melihat kiriman baru
+ * tiap menit pada jam kerja (tiap 10 menit di luar itu), lalu langsung mengolahnya.
  */
 export function teksProses(st, { harga = false } = {}) {
   const fmt = (d) => d.toLocaleString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const dasar = harga
-    ? "Harga yang terkirim langsung terlihat di Beranda sebagai harga masuk, lalu diolah otomatis dalam 5 sampai 10 menit pada jam kerja (Senin sampai Jumat, 07.00 sampai 18.00 WIB)."
-    : "Kiriman diproses otomatis, biasanya dalam 5 sampai 10 menit pada jam kerja (Senin sampai Jumat, 07.00 sampai 18.00 WIB). Halaman memperbarui diri sendiri.";
+    ? "Harga yang terkirim langsung terlihat di Beranda sebagai harga masuk, lalu diolah otomatis dalam 4 sampai 7 menit (di luar jam kerja bisa sampai 15 menit)."
+    : "Kiriman diproses otomatis, biasanya dalam 4 sampai 7 menit (di luar jam kerja bisa sampai 15 menit). Halaman memperbarui diri sendiri.";
   if (!st) return dasar;
   if (st.status === "berjalan") return `Pembaruan sedang berjalan sejak ${fmt(jam(st.mulai))}. ${dasar}`;
   const selesai = jam(st.selesai);

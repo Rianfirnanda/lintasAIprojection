@@ -8,6 +8,7 @@
   python -m pipeline aturan-firebase --keluaran build/firestore.rules     # aturan Firestore + admin pertama (FIREBASE_ADMIN_AWAL)
   python -m pipeline firestore-tarik [--url URL]   # ambil kiriman dari situs (harga, keputusan, pengaturan, perintah)
   python -m pipeline firestore-cek                 # adakah yang perlu diproses? (untuk pemeriksa berkala)
+  python -m pipeline firestore-jaga --menit 340 [--lanjutkan]   # penjaga antrean (antrean.yml)
   python -m pipeline firestore-lapor --hasil success|failure [--url URL]
   python -m pipeline firestore-terbit --folder site/data [--sembunyikan]   # data dashboard ke Firestore (lbp_data)
 """
@@ -61,6 +62,15 @@ def _firestore(a) -> int:
         jalan, alasan = firestore_sinkron.perlu_jalan(akar)
         print(f"{'JALANKAN' if jalan else 'LEWATI'}: {alasan}")
         _keluaran_github(jalankan="ya" if jalan else "tidak")
+        return 0
+    if a.perintah == "firestore-jaga":
+        from . import penjaga
+
+        n = penjaga.jaga(akar, a.menit)
+        print(f"Penjaga selesai: {n} kali menjalankan pengolahan.")
+        if a.lanjutkan:
+            penjaga.jalankan_alur("antrean.yml")
+            print("Penjaga berikutnya dijalankan.")
         return 0
     if a.perintah == "firestore-terbit":
         h = firestore_sinkron.terbit_data(a.folder, hapus_berkas=a.sembunyikan)
@@ -157,6 +167,9 @@ def main(argv: list[str] | None = None) -> int:
     t = sub.add_parser("firestore-tarik", help="ambil kiriman dari situs (Firestore) ke berkas di repositori")
     t.add_argument("--url", default="", help="alamat proses GitHub Actions, untuk ditampilkan di situs")
     sub.add_parser("firestore-cek", help="periksa apakah ada kiriman atau perintah baru di Firestore")
+    jg = sub.add_parser("firestore-jaga", help="periksa Firestore terus-menerus dan jalankan pengolahan bila ada kiriman")
+    jg.add_argument("--menit", type=float, default=340)
+    jg.add_argument("--lanjutkan", action="store_true", help="jalankan penjaga berikutnya saat waktu habis")
     tb = sub.add_parser("firestore-terbit", help="tulis data dashboard ke Firestore supaya situs membacanya langsung")
     tb.add_argument("--folder", type=Path, default=Path("site/data"))
     tb.add_argument("--sembunyikan", action="store_true", help="hapus berkas data non-publik dari folder setelah tertulis")
