@@ -33,8 +33,12 @@
   },
   "ai": {
     "penyedia": "otomatis",
-    "urutan_otomatis": ["gemini", "github_models"],
+    "urutan_otomatis": ["gemini", "groq", "cerebras", "openrouter", "mistral", "github_models"],
     "model_gemini": "gemini-flash-latest",
+    "model_groq": "openai/gpt-oss-120b",
+    "model_cerebras": "gpt-oss-120b",
+    "model_openrouter": "openrouter/free",
+    "model_mistral": "mistral-small-latest",
     "model_github": "openai/gpt-4.1-mini",
     "model_anthropic": "claude-opus-5-5"
   },

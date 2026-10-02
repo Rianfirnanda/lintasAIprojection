@@ -1,10 +1,13 @@
 name: AI Data Finder
 
 # Agen AI mencari KANDIDAT sumber data. Hasil wajib diverifikasi analis.
-# Penyedia gratis:
-#   - Gemini (utama, dengan pencarian Google): isi secret GEMINI_API_KEY (gratis dari Google AI Studio).
-#   - GitHub Models (cadangan, tanpa pencarian web): memakai GITHUB_TOKEN bawaan, tidak perlu secret.
+# Penyedia gratis (mode otomatis mencoba semuanya bergantian; yang kuncinya belum diisi dilewati):
+#   - Gemini (utama, dengan pencarian Google): secret GEMINI_API_KEY (gratis dari Google AI Studio).
+#   - Groq, Cerebras, OpenRouter, Mistral (tanpa pencarian web): secret GROQ_API_KEY, CEREBRAS_API_KEY,
+#     OPENROUTER_API_KEY, MISTRAL_API_KEY. Semuanya punya kuota gratis.
+#   - GitHub Models (cadangan terakhir, tanpa pencarian web): memakai GITHUB_TOKEN bawaan, tidak perlu secret.
 # Opsional berbayar: Claude (secret ANTHROPIC_API_KEY, pilih penyedia "anthropic").
+# Kunci yang diisi lewat situs (Firestore) tidak dipakai di sini; dari situs, pakai tombol di panel Pengaturan.
 on:
   workflow_dispatch:
     inputs:
@@ -21,9 +24,9 @@ on:
         description: "Wilayah"
         default: "Kabupaten Bengkulu Tengah, Provinsi Bengkulu"
       penyedia:
-        description: "Penyedia AI (otomatis = Gemini, lalu GitHub Models bila Gemini tidak tersedia)"
+        description: "Penyedia AI (otomatis = coba semua AI gratis bergantian sampai ada yang berhasil)"
         type: choice
-        options: [otomatis, gemini, github_models, anthropic]
+        options: [otomatis, gemini, groq, cerebras, openrouter, mistral, github_models, anthropic]
         default: otomatis
 
 permissions:
@@ -52,6 +55,10 @@ jobs:
       - name: Cari kandidat sumber
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KOMODITAS: ${{ inputs.komoditas }}

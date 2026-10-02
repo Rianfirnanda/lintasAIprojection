@@ -241,6 +241,13 @@ def _urut_seperti(acuan: dict, data: dict) -> dict:
     return {k: _urut_seperti(acuan.get(k), data[k]) if isinstance(data[k], dict) else data[k] for k in urut}
 
 
+def _lengkapi(acuan, data):
+    """Isian yang belum ada di simpanan situs (misalnya isian baru setelah pembaruan sistem) diambil dari berkas sekarang."""
+    if not isinstance(acuan, dict) or not isinstance(data, dict):
+        return data
+    return {**acuan, **{k: _lengkapi(acuan.get(k), v) for k, v in data.items()}}
+
+
 def terapkan_pengaturan(akar: Path, dok: dict | None, versi_terapan: int) -> tuple[int, str]:
     """Tulis pengaturan dari situs ke config/pengaturan.json bila versinya lebih baru dan isinya sah.
 
@@ -256,7 +263,7 @@ def terapkan_pengaturan(akar: Path, dok: dict | None, versi_terapan: int) -> tup
     lama = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(isi, dict):
         return versi, f"Pengaturan versi {versi} dari situs kosong, tidak dipakai."
-    isi = _urut_seperti(lama, isi)
+    isi = _urut_seperti(lama, _lengkapi(lama, isi))
     masalah = modul_pengaturan.periksa(isi, modul_pengaturan.muat_skema(folder) or {"kolom": []})
     if masalah:
         return versi, f"Pengaturan versi {versi} dari situs tidak dipakai karena belum sah: {masalah[0][1]}"

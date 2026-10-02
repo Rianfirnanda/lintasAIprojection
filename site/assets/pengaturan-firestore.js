@@ -10,6 +10,10 @@ import { GalatGitHub } from "./github.js";
 export const JENIS_PERINTAH = { "pipeline.yml": "perbarui", "ai-data-finder.yml": "cari_sumber" };
 const NAMA_RAHASIA = /^[A-Z][A-Z0-9_]{1,79}$/;
 const iso = (t) => (t?.toDate ? t.toDate().toISOString() : t || null);
+const objek = (x) => x && typeof x === "object" && !Array.isArray(x);
+/** Isian yang belum ada di simpanan lama (isian baru setelah pembaruan sistem) diambil dari pengaturan yang terbit. */
+const lengkapi = (acuan, data) => (objek(acuan) && objek(data)
+  ? { ...acuan, ...Object.fromEntries(Object.entries(data).map(([k, v]) => [k, lengkapi(acuan[k], v)])) } : data);
 
 function galat(e) {
   if (e instanceof GalatGitHub) return e;
@@ -56,7 +60,7 @@ export class KlienFirestore {
       const data = d.exists() ? d.data() : null;
       const versi = data?.versi || 0;
       const menunggu = !!data && versi > this.versiTerbit;
-      return { teks: JSON.stringify(menunggu ? data.isi : this.terbit), sha: versi, menunggu,
+      return { teks: JSON.stringify(menunggu ? lengkapi(this.terbit, data.isi) : this.terbit), sha: versi, menunggu,
         diubahOleh: data?.diubah_oleh || "", diubahPada: iso(data?.diubah_pada) };
     });
   }

@@ -19,7 +19,7 @@ import logging
 import sys
 from pathlib import Path
 
-from . import konfigurasi, kualitas, masukan, pengaturan, pengguna
+from . import konfigurasi, kualitas, masukan, pencari_data, pengaturan, pengguna
 
 
 def _periksa(konf) -> int:
@@ -92,13 +92,13 @@ def _firestore(a) -> int:
 
 def _cari_dari_situs(akar: Path, masukan: dict) -> tuple[bool, str]:
     """Permintaan "Cari sumber data dengan AI" dari panel Pengaturan. Gagal tidak menghentikan pembaruan dashboard."""
-    from . import firestore_sinkron, pencari_data
+    from . import firestore_sinkron
 
     teks = lambda k, bawaan="": str(masukan.get(k) or bawaan).strip()[:200]  # noqa: E731
     if not teks("komoditas") or not teks("periode"):
         return False, "Permintaan cari sumber tidak lengkap: komoditas dan periode wajib diisi."
     penyedia = teks("penyedia", "otomatis")
-    if penyedia not in ("otomatis", "gemini", "github_models", "anthropic"):
+    if penyedia != "otomatis" and penyedia not in pencari_data.PENYEDIA:
         penyedia = "otomatis"
     try:
         konf = konfigurasi.muat(akar)
@@ -130,12 +130,12 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--hari", type=int, default=30)
     c.add_argument("--riwayat", type=int, default=400)
 
-    f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini gratis / GitHub Models / Claude)")
+    f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini, Groq, Cerebras, OpenRouter, Mistral, GitHub Models, Claude)")
     f.add_argument("--komoditas", required=True)
     f.add_argument("--periode", required=True)
     f.add_argument("--kebutuhan", default="harga eceran harian")
     f.add_argument("--wilayah", default="Kabupaten Bengkulu Tengah, Provinsi Bengkulu")
-    f.add_argument("--penyedia", choices=["otomatis", "gemini", "github_models", "anthropic"], default=None,
+    f.add_argument("--penyedia", choices=["otomatis", *pencari_data.PENYEDIA], default=None,
                    help="bawaan: ai.penyedia di config/pengaturan.json")
 
     w = sub.add_parser("sandi", help="buat entri akun (sandi berhash) untuk config/pengguna.json")
@@ -206,8 +206,6 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(hasil, ensure_ascii=False))
         return 0
     if a.perintah == "cari-sumber":
-        from . import pencari_data
-
         catatan = pencari_data.cari(konf, a.komoditas, a.periode, a.kebutuhan, a.wilayah, penyedia=a.penyedia)
         path = pencari_data.simpan(konf, catatan)
         n = len(catatan["hasil"].get("kandidat", []))

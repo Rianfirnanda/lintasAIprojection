@@ -88,16 +88,28 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 
 ## 5. AI Data Finder (gratis)
 
-1. (Disarankan) Buat kunci gratis Gemini di https://aistudio.google.com/apikey lalu simpan sebagai secret
-   `GEMINI_API_KEY` (**Settings → Secrets and variables → Actions → New repository secret**). Kuota gratis dapat
-   berubah; cek ketentuan terbaru Google AI Studio.
-2. **Actions → AI Data Finder → Run workflow**, isi komoditas, periode, jenis data, wilayah, dan penyedia
-   (`otomatis` = Gemini, lalu GitHub Models bila Gemini belum diatur/kuota habis).
-3. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**:
+1. (Disarankan) Buat kunci gratis Gemini di https://aistudio.google.com/apikey. Gemini satu-satunya AI gratis di sini
+   yang bisa mencari di Google, jadi URL hasilnya paling bisa dipercaya.
+2. (Cadangan, disarankan juga) Buat kunci gratis AI lain supaya pencarian tetap jalan saat kuota Gemini habis:
+
+   | AI | Tempat membuat kunci | Nama kunci |
+   |---|---|---|
+   | Groq | https://console.groq.com/keys | `GROQ_API_KEY` |
+   | Cerebras | https://cloud.cerebras.ai (menu API Keys) | `CEREBRAS_API_KEY` |
+   | OpenRouter | https://openrouter.ai/keys | `OPENROUTER_API_KEY` |
+   | Mistral | https://console.mistral.ai/api-keys (paket Experiment, perlu verifikasi nomor HP) | `MISTRAL_API_KEY` |
+
+   Isi kuncinya di menu **Pengaturan → AI → Kunci AI** (atau sebagai GitHub Secret dengan nama di atas). Semuanya
+   gratis tanpa kartu kredit; besar kuota gratis bisa berubah sewaktu-waktu sesuai kebijakan tiap layanan.
+3. **Actions → AI Data Finder → Run workflow** (atau Pengaturan → Jalankan → *Cari sumber data dengan AI*), isi
+   komoditas, periode, jenis data, wilayah, dan penyedia. `otomatis` mencoba AI sesuai *Urutan kalau memilih Otomatis*,
+   lalu AI gratis lain yang belum disebut. AI yang kuncinya belum diisi, kena batas pemakaian, atau jawabannya rusak
+   dilewati, dan alasannya dicatat di hasil ("dilewati: ...").
+4. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**:
    - *URL di hasil pencarian?* "tidak" = URL tidak muncul di hasil pencarian Google, jadi periksa dengan saksama.
    - *URL dapat dibuka?* "tidak" = alamat tidak bisa dibuka (kemungkinan dikarang/berubah).
-   - Hasil GitHub Models ditandai **tanpa pencarian web**: semua URL wajib dicek manual.
-4. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
+   - Hasil selain Gemini dan Claude ditandai **tanpa pencarian web**: semua URL wajib dicek manual.
+5. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
    Kandidat tidak pernah otomatis menjadi sumber data.
 
 ## 6. Buletin, laporan, dan notifikasi
@@ -144,7 +156,7 @@ Menu **Pengaturan** mengumpulkan semua yang perlu diatur. Langkahnya:
 
 1. **Buat token GitHub** (sekali, lalu diganti berkala). Buka https://github.com/settings/personal-access-tokens/new, pilih *Only select repositories* lalu repositori ini, atur *Repository permissions*: **Contents**, **Secrets**, dan **Actions** = *Read and write*. Pilih masa berlaku pendek (misalnya 30 hari), klik *Generate token*, dan salin.
 2. Buka **Pengaturan**, tempel token di kolom *Token GitHub*, lalu **Sambungkan**. Token hanya tersimpan di tab itu dan hilang saat tab ditutup.
-3. **Isi kunci AI**: tab *AI*, isi *Kunci Gemini* (gratis dari https://aistudio.google.com/apikey), klik **Simpan kunci yang diisi**. Kunci dienkripsi di browser dan disimpan di GitHub Secrets. Setelah tersimpan, kolomnya kosong lagi dan statusnya "sudah diisi". Nilainya memang tidak bisa dilihat, hanya bisa diganti atau dihapus.
+3. **Isi kunci AI**: tab *AI*, isi *Kunci Gemini* (gratis dari https://aistudio.google.com/apikey) dan sebaiknya juga kunci gratis Groq, Cerebras, OpenRouter, atau Mistral sebagai cadangan (lihat bagian AI Data Finder), klik **Simpan kunci yang diisi**. Kunci dienkripsi di browser dan disimpan di GitHub Secrets. Setelah tersimpan, kolomnya kosong lagi dan statusnya "sudah diisi". Nilainya memang tidak bisa dilihat, hanya bisa diganti atau dihapus.
 4. **Pilih AI dan modelnya** di tab yang sama, lalu klik **Simpan perubahan** di bilah bawah. Perubahan tercatat sebagai commit dan dashboard diperbarui otomatis 2 sampai 3 menit kemudian.
 5. **Coba AI**: tab *Jalankan* → *Cari sumber data dengan AI* → isi komoditas dan periode → *Jalankan sekarang*. Statusnya tampil di sebelah tombol.
 6. **Notifikasi**: tab *Notifikasi* untuk kunci Telegram (token bot dari @BotFather dan ID obrolan) dan email (server SMTP, pengguna, kata sandi aplikasi, penerima), serta kapan pesan dikirim.
