@@ -5,7 +5,6 @@ name: AI Data Finder
 #   - Gemini (utama, dengan pencarian Google): secret GEMINI_API_KEY (gratis dari Google AI Studio).
 #   - Groq, Cerebras, OpenRouter, Mistral (tanpa pencarian web): secret GROQ_API_KEY, CEREBRAS_API_KEY,
 #     OPENROUTER_API_KEY, MISTRAL_API_KEY. Semuanya punya kuota gratis.
-#   - GitHub Models (cadangan terakhir, tanpa pencarian web): memakai GITHUB_TOKEN bawaan, tidak perlu secret.
 # Pencarian web gratis: secret TAVILY_API_KEY (1.000 kredit per bulan); hasilnya diberikan ke AI mana pun.
 # Opsional berbayar: Claude (secret ANTHROPIC_API_KEY, pilih penyedia "anthropic").
 # Kunci yang diisi lewat situs (Firestore) juga dipakai di sini, menggantikan GitHub Secret yang sama.
@@ -27,7 +26,7 @@ on:
       penyedia:
         description: "Penyedia AI (otomatis = coba semua AI gratis bergantian sampai ada yang berhasil)"
         type: choice
-        options: [otomatis, gemini, groq, cerebras, openrouter, mistral, github_models, anthropic]
+        options: [otomatis, gemini, groq, cerebras, openrouter, mistral, anthropic]
         default: otomatis
 
 permissions:

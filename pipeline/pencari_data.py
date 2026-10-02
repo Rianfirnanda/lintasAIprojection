@@ -6,7 +6,6 @@ Penyedia (pengaturan.json -> ai.penyedia):
   cerebras      : Cerebras (kuota gratis harian besar). Butuh CEREBRAS_API_KEY. TANPA pencarian web.
   openrouter    : OpenRouter, model gratis (":free" atau router openrouter/free). Butuh OPENROUTER_API_KEY. TANPA pencarian web.
   mistral       : Mistral (paket Experiment gratis). Butuh MISTRAL_API_KEY. TANPA pencarian web.
-  github_models : GitHub Models (gratis, memakai GITHUB_TOKEN di Actions). TANPA pencarian web.
   anthropic     : Claude + web search (berbayar, opsional). Butuh ANTHROPIC_API_KEY.
   otomatis      : coba penyedia sesuai urutan ai.urutan_otomatis, lalu penyedia gratis lain yang belum disebut.
 
@@ -28,6 +27,7 @@ import json
 import logging
 import os
 import re
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime
@@ -43,8 +43,10 @@ log = logging.getLogger(__name__)
 MAKS_LANJUT = 5
 MAKS_RIWAYAT = 50
 URL_GEMINI = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
-URL_GITHUB_MODELS = "https://models.github.ai/inference/chat/completions"
 URL_TAVILY = "https://api.tavily.com/search"
+MODEL_GEMINI_CADANGAN = "gemini-flash-lite-latest"
+JEDA_ULANG_DETIK = 15
+_tidur = time.sleep
 DOMAIN_RESMI = ["bps.go.id", "badanpangan.go.id", "bi.go.id", "kemendag.go.id", "pertanian.go.id", "bmkg.go.id",
                 "bengkuluprov.go.id", "bengkulutengahkab.go.id", "satudata.go.id", "data.go.id"]
 MAKS_HASIL_WEB = 15
@@ -58,12 +60,12 @@ SEJENIS_OPENAI = {
                    "kunci": "OPENROUTER_API_KEY", "model": "model_openrouter"},
     "mistral": {"nama": "Mistral", "url": "https://api.mistral.ai/v1/chat/completions", "kunci": "MISTRAL_API_KEY",
                 "model": "model_mistral"},
-    "github_models": {"nama": "GitHub Models", "url": URL_GITHUB_MODELS, "kunci": "GITHUB_TOKEN", "model": "model_github",
-                      "header": {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"},
-                      "tanpa_kunci": "GITHUB_TOKEN tidak tersedia (jalankan dari GitHub Actions dengan izin models: read)"},
 }
+# Penyedia yang sudah ditutup layanannya. Pilihan lama yang menyebutnya tetap sah, tetapi dilewati.
+# GitHub Models ditutup GitHub pada 30 Juli 2026.
+PENSIUN = {"github_models"}
 # Penyedia gratis. Pada mode otomatis, yang tidak disebut di ai.urutan_otomatis tetap dicoba paling akhir sebagai cadangan.
-GRATIS = ["gemini", "groq", "cerebras", "openrouter", "mistral", "github_models"]
+GRATIS = ["gemini", "groq", "cerebras", "openrouter", "mistral"]
 BAWAAN = {
     "penyedia": "otomatis",
     "urutan_otomatis": list(GRATIS),
@@ -72,7 +74,6 @@ BAWAAN = {
     "model_cerebras": "gpt-oss-120b",
     "model_openrouter": "openrouter/free",
     "model_mistral": "mistral-small-latest",
-    "model_github": "openai/gpt-4.1-mini",
     "model_anthropic": "claude-opus-5-5",
 }
 ARTI_KODE = {400: "permintaan ditolak", 401: "kunci ditolak", 402: "saldo atau kuota habis", 403: "akses ditolak",
@@ -176,6 +177,8 @@ def pengaturan_ai(konf: Konfigurasi) -> dict:
 def urutan_penyedia(konf: Konfigurasi, pilihan: str | None = None) -> list[str]:
     cfg = pengaturan_ai(konf)
     pilihan = (pilihan or cfg["penyedia"]).lower()
+    if pilihan in PENSIUN:
+        pilihan = "otomatis"
     if pilihan == "otomatis":
         # Urutan pilihan admin dulu, lalu semua AI gratis lain sebagai cadangan supaya batas kuota satu AI tidak
         # menggagalkan pencarian.
@@ -328,6 +331,25 @@ def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
     kirim = klien or _post_json
     model = cfg["model_gemini"]
     web = cfg.get("_hasil_web") or []
+    # Saat server Gemini penuh (HTTP 500/503 "high demand"), coba lagi sekali, lalu pakai model yang lebih ringan.
+    daftar_model = list(dict.fromkeys([model, MODEL_GEMINI_CADANGAN]))
+
+    def kirim_ulang(isi: dict) -> dict:
+        nonlocal model
+        galat = None
+        for m in daftar_model:
+            for coba in range(2):
+                try:
+                    data = kirim(URL_GEMINI.format(model=m), {"x-goog-api-key": kunci or ""}, isi)
+                    model = m
+                    return data
+                except PenyediaTidakTersedia as e:
+                    if not re.search(r"HTTP 50[03]", str(e)):
+                        raise
+                    galat = e
+                    if coba == 0:
+                        _tidur(JEDA_ULANG_DETIK)
+        raise galat
 
     def tanya(pakai_google: bool) -> dict:
         tambahan = TAMBAHAN_PENCARIAN if pakai_google else (TAMBAHAN_HASIL_WEB if web else TAMBAHAN_TANPA_PENCARIAN)
@@ -338,14 +360,14 @@ def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
         }
         if pakai_google:
             isi["tools"] = [{"google_search": {}}]
-        return kirim(URL_GEMINI.format(model=model), {"x-goog-api-key": kunci or ""}, isi)
+        return kirim_ulang(isi)
 
     # Hasil Tavily sudah ada: tidak perlu pencarian Google (yang tidak tersedia di kuota gratis Gemini 3.x).
     pakai_google = not web
     try:
         data = tanya(pakai_google)
     except PenyediaTidakTersedia as e:
-        if not pakai_google or "429" in str(e) or "401" in str(e):
+        if not pakai_google or re.search(r"HTTP (429|401|50[03])", str(e)):
             raise
         log.warning("Gemini menolak pencarian Google (%s); dicoba lagi tanpa pencarian", e)
         pakai_google = False

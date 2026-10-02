@@ -156,12 +156,12 @@ def test_pengaturan_dari_situs_dipakai_bila_sah_dan_lebih_baru(akar):
     asli = json.loads(path.read_text(encoding="utf-8"))
     db = DBTiruan()
     isi = json.loads(json.dumps(asli))
-    isi["ai"]["penyedia"] = "github_models"
+    isi["ai"]["penyedia"] = "groq"
     # Firestore tidak menjaga urutan kunci; berkas tetap disusun seperti semula.
     db.data["lbp_pengaturan"] = {"utama": {"isi": dict(reversed(list(isi.items()))), "versi": 3, "diubah_oleh": "adm@contoh.go.id"}}
     ringkas = fs.tarik(akar, db=db)
     baru = json.loads(path.read_text(encoding="utf-8"))
-    assert baru["ai"]["penyedia"] == "github_models"
+    assert baru["ai"]["penyedia"] == "groq"
     assert list(baru) == list(asli)
     assert fs.baca_tanda(akar)["pengaturan_versi"] == 3
     assert any("versi 3" in p for p in ringkas["pesan"])
@@ -185,13 +185,14 @@ def test_pengaturan_lama_dari_situs_dilengkapi_isian_baru(akar):
     isi = json.loads(json.dumps(asli))
     for k in ("model_groq", "model_cerebras", "model_openrouter", "model_mistral"):
         del isi["ai"][k]
-    isi["ai"]["urutan_otomatis"] = ["gemini", "github_models"]
+    isi["ai"]["urutan_otomatis"] = ["groq", "github_models"]
+    isi["ai"]["model_github"] = "openai/gpt-4.1-mini"
     db = DBTiruan()
     db.data["lbp_pengaturan"] = {"utama": {"isi": isi, "versi": 7, "diubah_oleh": "adm@contoh.go.id"}}
     ringkas = fs.tarik(akar, db=db)
     assert not ringkas.get("peringatan")
     baru = json.loads(path.read_text(encoding="utf-8"))
-    assert baru["ai"]["urutan_otomatis"] == ["gemini", "github_models"]
+    assert baru["ai"]["urutan_otomatis"] == ["groq"] and "model_github" not in baru["ai"]  # GitHub Models sudah ditutup
     assert baru["ai"]["model_groq"] == asli["ai"]["model_groq"] and list(baru["ai"]) == list(asli["ai"])
 
 
