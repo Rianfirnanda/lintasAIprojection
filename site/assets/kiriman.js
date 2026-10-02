@@ -169,16 +169,28 @@ const jam = (t) => (t?.toDate ? t.toDate() : t ? new Date(t) : null);
 
 /**
  * Kalimat singkat tentang kapan kiriman muncul di dashboard. Pemeriksa otomatis (antrean.yml) melihat kiriman baru
- * tiap 15 menit pada jam kerja; harga baru dikumpulkan dulu paling lama sekitar satu jam.
+ * tiap 5 menit pada jam kerja, lalu langsung mengolahnya.
  */
 export function teksProses(st, { harga = false } = {}) {
   const fmt = (d) => d.toLocaleString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const dasar = harga
-    ? "Harga yang terkirim masuk dashboard otomatis, paling lambat sekitar 1 jam pada jam kerja (Senin sampai Jumat, 07.00 sampai 18.00 WIB)."
-    : "Kiriman diproses otomatis, biasanya dalam 15 sampai 30 menit pada jam kerja (Senin sampai Jumat, 07.00 sampai 18.00 WIB).";
+    ? "Harga yang terkirim langsung terlihat di Beranda sebagai harga masuk, lalu diolah otomatis dalam 5 sampai 10 menit pada jam kerja (Senin sampai Jumat, 07.00 sampai 18.00 WIB)."
+    : "Kiriman diproses otomatis, biasanya dalam 5 sampai 10 menit pada jam kerja (Senin sampai Jumat, 07.00 sampai 18.00 WIB). Halaman memperbarui diri sendiri.";
   if (!st) return dasar;
   if (st.status === "berjalan") return `Pembaruan sedang berjalan sejak ${fmt(jam(st.mulai))}. ${dasar}`;
   const selesai = jam(st.selesai);
   if (!selesai) return dasar;
   return `Pembaruan terakhir ${st.hasil === "success" ? "selesai" : "gagal"} ${fmt(selesai)}. ${dasar}`;
+}
+
+/**
+ * Pantau harga yang sudah terkirim tetapi belum masuk olahan dashboard (diterima setelah `sejakIso`).
+ * Hanya untuk akun yang boleh melihat semua kiriman harga (operator, analis, atau yang diberi halaman Cek Data);
+ * akun lain mendapat galat izin dan kartunya tidak ditampilkan. Mengembalikan fungsi berhenti.
+ */
+export async function pantauHargaMasuk(sejakIso, saatBerubah, saatGagal = () => {}) {
+  const { fb, db } = await siap();
+  const sejak = fb.Timestamp.fromDate(new Date(sejakIso || 0));
+  const q = fb.query(fb.collection(db, "lbp_harga"), fb.where("diterima", ">", sejak), fb.orderBy("diterima", "desc"), fb.limit(200));
+  return fb.onSnapshot(q, (snap) => saatBerubah(snap.docs.map((d) => ({ id: d.id, ...d.data(), diterima: jam(d.data().diterima) }))), saatGagal);
 }

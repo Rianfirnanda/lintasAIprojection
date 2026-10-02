@@ -24,16 +24,78 @@ export const STATUS_SINYAL = {
 
 let metaCache = null;
 
-export async function muatJSON(nama) {
-  const versi = metaCache?.dibuat ? `?v=${encodeURIComponent(metaCache.dibuat)}` : `?t=${Date.now()}`;
-  const r = await fetch(`data/${nama}${versi}`, { cache: "no-cache" });
-  if (!r.ok) throw new Error(`Gagal memuat data/${nama} (HTTP ${r.status})`);
-  return r.json();
+/* ---------- data dashboard
+ * Bila situs memakai login Firebase, data hasil olahan dibaca langsung dari Firestore (koleksi lbp_data, ditulis
+ * mesin pengolah), jadi hanya akun yang sudah disetujui yang bisa membukanya dan perubahan langsung terlihat.
+ * Berkas di hosting hanya cadangan (masa peralihan) dan untuk berkas publik seperti meta.json dan master.json. */
+const BERKAS_PUBLIK = new Set(["meta.json", "firebase.json", "pengguna.json", "pengaturan.json", "skema_pengaturan.json", "master.json"]);
+const modeFirebase = () => metaCache?.login === "firebase";
+
+async function teksDariFirestore(nama) {
+  try {
+    const fk = await import("./firebase-klien.js");
+    if (!(await fk.penggunaKini())) return null;
+    const { fb, db } = await fk.firebaseSiap();
+    const id = nama.replaceAll("/", "~");
+    const d = await fb.getDoc(fb.doc(db, "lbp_data", id));
+    if (!d.exists()) return null;
+    const { isi, bagian = 1 } = d.data();
+    const sisa = await Promise.all(Array.from({ length: bagian - 1 }, (_, i) => fb.getDoc(fb.doc(db, "lbp_data", `${id}@${i + 2}`))));
+    return isi + sisa.map((b) => b.data()?.isi || "").join("");
+  } catch (e) {
+    console.warn(`data/${nama} tidak bisa dibaca dari Firestore:`, e?.code || e);
+    return null;
+  }
 }
 
-export async function muatMeta() {
-  if (!metaCache) metaCache = await muatJSON("meta.json");
-  return metaCache;
+async function muatBerkas(nama) {
+  const versi = metaCache?.dibuat ? `?v=${encodeURIComponent(metaCache.dibuat)}` : `?t=${Date.now()}`;
+  const r = await fetch(`data/${nama}${versi}`, { cache: "no-cache" });
+  if (!r.ok) {
+    throw new Error(r.status === 404 && modeFirebase()
+      ? "data hanya bisa dibuka setelah masuk dengan akun yang sudah disetujui"
+      : `Gagal memuat data/${nama} (HTTP ${r.status})`);
+  }
+  return r;
+}
+
+/** Isi berkas data sebagai teks (misalnya CSV unduhan). */
+export async function muatTeks(nama) {
+  if (!metaCache && nama !== "meta.json") await muatMeta().catch(() => null);
+  if (modeFirebase() && !BERKAS_PUBLIK.has(nama)) {
+    const t = await teksDariFirestore(nama);
+    if (t !== null) return t;
+  }
+  return (await muatBerkas(nama)).text();
+}
+
+export async function muatJSON(nama) {
+  // Halaman kadang memuat data bersamaan dengan pasangKerangka; mode situs (login Firebase atau bukan) perlu diketahui dulu.
+  if (!metaCache && nama !== "meta.json") await muatMeta().catch(() => null);
+  if (modeFirebase() && !BERKAS_PUBLIK.has(nama)) {
+    const t = await teksDariFirestore(nama);
+    if (t !== null) return JSON.parse(t);
+  }
+  return (await muatBerkas(nama)).json();
+}
+
+let janjiMeta = null;
+export function muatMeta() {
+  janjiMeta ||= (async () => {
+    const m = await (await muatBerkas("meta.json")).json();
+    metaCache = m;
+    // meta.json di Firestore selalu yang terbaru (ditulis mesin begitu data baru siap, sebelum situs terbit ulang).
+    if (m.login === "firebase" && sesi()?.sumber === "firebase") {
+      const t = await teksDariFirestore("meta.json");
+      if (t !== null) {
+        const baru = JSON.parse(t);
+        if (String(baru.dibuat || "") > String(m.dibuat || "")) metaCache = { ...m, ...baru };
+      }
+    }
+    return metaCache;
+  })();
+  janjiMeta.catch(() => { janjiMeta = null; metaCache = null; });
+  return janjiMeta;
 }
 
 export function esc(s) {
@@ -378,6 +440,7 @@ function pasangPembaruan(meta) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
   if (!meta) return;
+  if (meta.login === "firebase" && sesi()?.sumber === "firebase") pantauDataBaru(meta);
   const awal = tandaVersi(meta);
   let sudahDitawarkan = false;
   const periksa = async () => {
@@ -398,6 +461,87 @@ function pasangPembaruan(meta) {
   setInterval(periksa, 3 * 60 * 1000);
   document.addEventListener("visibilitychange", periksa);
 }
+
+/**
+ * Ada isian yang sudah diubah orang tapi belum disimpan? Kalau ada, halaman jangan dimuat ulang otomatis.
+ * Yang dihitung hanya isian yang benar-benar diubah orang (bukan yang diisi program, misalnya pilihan grafik),
+ * berada di dalam formulir atau berupa kotak teks, dan isinya kini berbeda dari saat mulai disentuh.
+ */
+const nilaiAwalIsian = new WeakMap();
+const isianDisentuh = new Set();
+const nilaiIsian = (el) => (el.type === "checkbox" || el.type === "radio" ? String(el.checked) : el.value);
+document.addEventListener("focusin", (e) => {
+  const el = e.target;
+  if (el.matches?.("input, textarea, select") && !nilaiAwalIsian.has(el)) nilaiAwalIsian.set(el, nilaiIsian(el));
+}, true);
+document.addEventListener("input", (e) => { if (e.isTrusted && e.target.matches?.("input, textarea, select")) isianDisentuh.add(e.target); }, true);
+document.addEventListener("submit", (e) => { e.target.querySelectorAll?.("input, textarea, select").forEach((el) => isianDisentuh.delete(el)); }, true);
+function adaIsianBelumDisimpan() {
+  if (document.querySelector("dialog[open], [data-belum-disimpan]")) return true;
+  return [...isianDisentuh].some((el) => el.isConnected && (el.closest("form") || el.matches("textarea, input:not([type]), input[type=text], input[type=number], input[type=email], input[type=password]"))
+    && nilaiIsian(el) !== nilaiAwalIsian.get(el));
+}
+
+const KUNCI_GULIR = "lbp-gulir-muat-ulang";
+try {
+  const g = JSON.parse(sessionStorage.getItem(KUNCI_GULIR) || "null");
+  if (g && g.url === location.href) {
+    sessionStorage.removeItem(KUNCI_GULIR);
+    addEventListener("load", () => setTimeout(() => scrollTo(0, g.y), 300), { once: true });
+  }
+} catch { /* abaikan */ }
+
+/**
+ * Data langsung: pantau dokumen lbp_data/meta.json. Begitu mesin selesai mengolah data baru, halaman dimuat ulang
+ * sendiri (posisi gulir dipertahankan). Bila sedang ada isian yang belum disimpan, cukup tampilkan pita pemberitahuan.
+ */
+async function pantauDataBaru(meta) {
+  try {
+    const fk = await import("./firebase-klien.js");
+    if (!(await fk.penggunaKini())) return;
+    const { fb, db } = await fk.firebaseSiap();
+    let ditawarkan = false;
+    fb.onSnapshot(fb.doc(db, "lbp_data", "meta.json"), (d) => {
+      if (!d.exists()) return;
+      let baru;
+      try { baru = JSON.parse(d.data().isi); } catch { return; }
+      if (!baru.dibuat || String(baru.dibuat) <= String(meta.dibuat)) return;
+      const muatUlang = () => {
+        try { sessionStorage.setItem(KUNCI_GULIR, JSON.stringify({ url: location.href, y: scrollY })); } catch { /* abaikan */ }
+        location.reload();
+      };
+      if (document.visibilityState === "visible" && !adaIsianBelumDisimpan()) { muatUlang(); return; }
+      if (document.visibilityState !== "visible") {
+        document.addEventListener("visibilitychange", () => { if (!adaIsianBelumDisimpan()) muatUlang(); }, { once: true });
+      }
+      if (ditawarkan) return;
+      ditawarkan = true;
+      const p = document.createElement("div");
+      p.className = "pita-baru";
+      p.setAttribute("role", "status");
+      p.innerHTML = `<span>Data baru sudah masuk (${esc(waktu(baru.dibuat))}).</span><button type="button" class="tombol utama-aksi">Tampilkan</button>`;
+      p.querySelector("button").addEventListener("click", muatUlang);
+      document.body.append(p);
+    }, (e) => console.warn("pantau data baru berhenti:", e?.code || e));
+  } catch (e) {
+    console.warn("pantau data baru tidak jalan:", e?.code || e);
+  }
+}
+
+// Tautan unduhan berkas data (misalnya CSV harga) di mode Firebase: ambil dari Firestore, bukan dari hosting.
+document.addEventListener("click", async (e) => {
+  const a = e.target.closest?.('a[href^="data/"][download]');
+  if (!a || !modeFirebase()) return;
+  const nama = a.getAttribute("href").slice(5).split("?")[0];
+  if (BERKAS_PUBLIK.has(nama)) return;
+  e.preventDefault();
+  try {
+    const isi = await muatTeks(nama);
+    unduhTeks(nama.split("/").pop(), isi, nama.endsWith(".csv") ? "text/csv" : "application/json");
+  } catch (galat) {
+    alert(`Berkas belum bisa diunduh: ${galat.message || galat}`);
+  }
+});
 
 function tautanLayanan(l) {
   if (!l) return "";

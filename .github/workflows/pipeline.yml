@@ -153,6 +153,21 @@ jobs:
           FIREBASE_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG }}
         run: python -m pipeline jalankan --keluaran site/data --demo "$MODE_DEMO"
 
+      # Situs dengan login Firebase membaca data dashboard langsung dari Firestore (lbp_data): langsung terlihat begitu
+      # langkah ini selesai, dan berkas berisi harga tidak ikut terbit terbuka di hosting. Bila langkah ini gagal,
+      # berkasnya tetap diterbitkan seperti biasa supaya dashboard tidak kosong.
+      - name: Terbitkan data dashboard ke Firestore
+        if: steps.fs.outputs.siap == 'ya'
+        continue-on-error: true
+        env:
+          FIREBASE_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG }}
+        run: |
+          if [ -n "$FIREBASE_WEB_CONFIG" ]; then
+            python -m pipeline firestore-terbit --folder site/data --sembunyikan
+          else
+            python -m pipeline firestore-terbit --folder site/data
+          fi
+
       - name: Simpan status notifikasi (agar tidak terkirim dua kali)
         continue-on-error: true
         run: |
@@ -255,17 +270,18 @@ jobs:
           echo "Proyek Firebase: $PROYEK, situs Hosting: $FIREBASE_HOSTING_SITE"
           echo "FIREBASE_PROYEK=$PROYEK" >> "$GITHUB_ENV"
 
-      - name: Terbitkan ke Firebase Hosting
-        if: steps.cek.outputs.siap == 'ya'
-        run: |
-          npx --yes "$FIREBASE_TOOLS" target:apply hosting lbp "$FIREBASE_HOSTING_SITE" --project "$FIREBASE_PROYEK"
-          npx --yes "$FIREBASE_TOOLS" deploy --only hosting:lbp --project "$FIREBASE_PROYEK" --non-interactive --message "commit ${GITHUB_SHA::7}"
-
+      # Aturan dulu, baru situs: situs versi baru mungkin membaca koleksi yang baru diizinkan aturan versi baru.
       - name: Terbitkan aturan Firestore
         if: steps.cek.outputs.siap == 'ya' && env.FIREBASE_TERBITKAN_ATURAN == 'ya'
         run: |
           python -m pipeline aturan-firebase --keluaran firestore.rules
           npx --yes "$FIREBASE_TOOLS" deploy --only firestore:rules --project "$FIREBASE_PROYEK" --non-interactive
+
+      - name: Terbitkan ke Firebase Hosting
+        if: steps.cek.outputs.siap == 'ya'
+        run: |
+          npx --yes "$FIREBASE_TOOLS" target:apply hosting lbp "$FIREBASE_HOSTING_SITE" --project "$FIREBASE_PROYEK"
+          npx --yes "$FIREBASE_TOOLS" deploy --only hosting:lbp --project "$FIREBASE_PROYEK" --non-interactive --message "commit ${GITHUB_SHA::7}"
 
       - name: Hapus kredensial
         if: always()

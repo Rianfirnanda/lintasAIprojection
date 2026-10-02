@@ -420,7 +420,7 @@ const NAMA_HASIL = { success: "selesai dengan baik", failure: "gagal", cancelled
 
 function htmlProses(p) {
   if (!p) return "Belum pernah dijalankan";
-  const teks = FS && p.status === "queued" ? "menunggu diambil (paling lambat 15 menit pada jam kerja)"
+  const teks = FS && p.status === "queued" ? "menunggu diambil (paling lambat 5 menit pada jam kerja)"
     : p.status === "completed" ? (NAMA_HASIL[p.hasil] || p.hasil || "selesai") : (NAMA_STATUS[p.status] || p.status);
   const warna = p.status !== "completed" ? "info" : p.hasil === "success" ? "baik" : "tinggi";
   const tautan = p.url ? ` · <a href="${esc(urlAman(p.url))}" rel="noopener" target="_blank">${FS ? "rincian proses" : "lihat di GitHub"}</a>` : "";
@@ -482,7 +482,7 @@ async function jalankan(wadah) {
     const mulai = Date.now();
     await S.klien.jalankanAlur(a.berkas, S.cabang, masukan);
     tampilPesan(pesan, "sukses", FS
-      ? "Permintaan tersimpan. Sistem mengambilnya paling lambat 15 menit pada jam kerja, lalu statusnya berubah sendiri di sebelah tombol."
+      ? "Permintaan tersimpan. Sistem mengambilnya paling lambat 5 menit pada jam kerja, lalu statusnya berubah sendiri di sebelah tombol."
       : `Sudah diminta dijalankan. Statusnya muncul di sebelah tombol dalam beberapa detik. <a href="${esc(S.klien.alamatRepo)}/actions/workflows/${esc(a.berkas)}" rel="noopener" target="_blank">Lihat di GitHub</a>.`);
     mulaiPantau(a.berkas, mulai);
   } catch (e) {

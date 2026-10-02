@@ -44,6 +44,9 @@ class _Ref:
         assert self.id in self._s, "update pada dokumen yang tidak ada"
         self._s[self.id].update(data)
 
+    def delete(self):
+        self._s.pop(self.id, None)
+
 
 class _Kueri:
     def __init__(self, simpan, saring=(), urut=None, batas=None):
@@ -226,7 +229,8 @@ def test_pemeriksa_berkala(akar):
     db.data["lbp_harga"] = {"k1": _harga("k1", T0)}
     assert fs.perlu_jalan(akar, db, kini)[0] is True
     db.data["lbp_status"] = {"pipeline": {"status": "selesai", "selesai": kini - timedelta(minutes=10)}}
-    jalan, alasan = fs.perlu_jalan(akar, db, kini)
+    assert fs.perlu_jalan(akar, db, kini)[0] is True  # bawaan: harga baru langsung diproses
+    jalan, alasan = fs.perlu_jalan(akar, db, kini, jeda_harga_menit=60)
     assert not jalan and "jeda" in alasan
     db.data["lbp_tindak_lanjut"] = {"a": {"diperbarui": T0}}
     assert fs.perlu_jalan(akar, db, kini)[0] is True
@@ -303,3 +307,38 @@ def test_dengan_emulator_firestore(akar, monkeypatch):
     assert not jalan, alasan
     db.collection("lbp_harga").document("e2").set(_harga("e2", firestore.SERVER_TIMESTAMP))
     assert fs.tarik(akar, "u", db=db)["berkas"] == {"data/masuk/harga/situs/situs_2026-09.csv": 1}
+
+
+def test_data_dashboard_ke_firestore_hanya_yang_berubah(tmp_path):
+    folder = tmp_path / "data"
+    (folder / "seri").mkdir(parents=True)
+    (folder / "unduh").mkdir()
+    (folder / "meta.json").write_text('{"dibuat": "2026-10-02T08:00:00+07:00", "login": "firebase"}', encoding="utf-8")
+    (folder / "ringkasan.json").write_text('{"kpi": [1, 2]}', encoding="utf-8")
+    (folder / "master.json").write_text('{"varian": []}', encoding="utf-8")
+    (folder / "seri" / "CMR01.json").write_text('{"harga": [[1, 2]]}', encoding="utf-8")
+    besar = "tanggal,harga\n" + "2026-10-01,55000\n" * 40_000  # lebih dari satu bagian
+    (folder / "unduh" / "harga_harian.csv").write_text(besar, encoding="utf-8")
+    db = DBTiruan()
+
+    h = fs.terbit_data(folder, db=db)
+    data = db.data["lbp_data"]
+    assert sorted(h["ditulis"]) == ["master.json", "meta.json", "ringkasan.json", "seri/CMR01.json", "unduh/harga_harian.csv"]
+    assert h["ditulis"][-1] == "meta.json"  # meta paling akhir: tanda bagi situs bahwa data baru sudah lengkap
+    assert json.loads(data["seri~CMR01.json"]["isi"]) == {"harga": [[1, 2]]}
+    dok = data["unduh~harga_harian.csv"]
+    assert dok["bagian"] == 3 and dok["versi"] == "2026-10-02T08:00:00+07:00"
+    assert dok["isi"] + data["unduh~harga_harian.csv@2"]["isi"] + data["unduh~harga_harian.csv@3"]["isi"] == besar
+
+    # Jalan kedua tanpa perubahan: hanya meta yang ditulis ulang.
+    assert fs.terbit_data(folder, db=db)["ditulis"] == ["meta.json"]
+
+    # Berkas berubah, mengecil, dan ada yang hilang.
+    (folder / "unduh" / "harga_harian.csv").write_text("tanggal,harga\n", encoding="utf-8")
+    (folder / "seri" / "CMR01.json").unlink()
+    h = fs.terbit_data(folder, db=db, hapus_berkas=True)
+    assert h["ditulis"] == ["unduh/harga_harian.csv", "meta.json"] and h["dihapus"] == ["seri/CMR01.json"]
+    assert "seri~CMR01.json" not in data and "unduh~harga_harian.csv@2" not in data and "unduh~harga_harian.csv@3" not in data
+    # Berkas berisi harga tidak ikut diterbitkan terbuka; meta dan master tetap.
+    assert sorted(h["disembunyikan"]) == ["ringkasan.json", "unduh/harga_harian.csv"]
+    assert sorted(fs.berkas_data(folder)) == ["master.json", "meta.json"]
