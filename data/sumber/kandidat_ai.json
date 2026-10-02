@@ -1,6 +1,162 @@
 {
   "pencarian": [
     {
+      "waktu": "2026-10-02T21:10:57+07:00",
+      "permintaan": {
+        "komoditas": "Bawang Merah",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Bawang Merah, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Harga Bawang Merah Capai Rp35.000 di Bengkulu\nURL: https://aktual.com/harga-bawang-merah-capai-rp35000-di-bengkulu\nCuplikan: “Untuk kualitas bagus sekarang sudah mencapai Rp35.000 per kg, dan untuk kualitas sedang Rp30.000 per kg. Harga ini mengalami kenaikan\n\n[2] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Rawit Hijau | 1 kg | Rp 68.333,- | Rp 75.000,- | Rp 6.667,- | Rp 61.667,- | Rp 61.667,- Rp 55.000,- | Rp 55.000,- | Bawang | Bawang Merah | 1 kg | Rp 45.000,- | Rp 45.000,- Rp 38.333,- | Rp 38.333,- Rp 50.000,- | Rp 50.000,- | Industri | Gula Pasir | Gula Pasir Curah | 1 kg | Rp 18.833,- | Rp 18.833,- Rp 19.000,- | Rp 19.000,- Rp 18.500,- | Rp 18.500,- | Gula Pasir Premium | 1 kg | Rp 19.000,- | Rp 19.000,- Rp 19.667,- | Rp 19.667,- Rp 19.500,- | Rp 19.500,- [...] | Tahu | Mentah Putih | 1 kg | Rp 15.000,- | Rp 15.000,- Rp 15.000,- | Rp 15.000,- Rp 15.000,- | Rp 15.000,- | Bawang | Putih | 1\n\n[3] Rata-rata Harga Pangan Bulanan Tingkat Produsen ...\nURL: https://data.badanpangan.go.id/datasetpublications/z4t/rata-rata-harga-pangan-bulanan-produsen-provinsi\nCuplikan: ... harga komoditas pangan tingkat produsen dari seluruh kab/kota sentra sampel provinsi ... Bawang Merah Tingkat Petani, 2023, Januari, Rp20,773. 33, Jawa Tengah\n\n[4] Meski Harga Cabai Alami penurunan Yang Signifikan ...\nURL: https://www.instagram.com/reel/DVXjKZSCWh_\nCuplikan: Harga TBS Sawit Bengkulu September Periode I Ditetapkan Rp3.300 per Kilogram, PKS Diminta Patuhi Kesepakatan BENGKULU, BETVNEWS – Harga tandan\n\n[5] wagub pantau harga bahan pokok di pasar panorama\nURL: https://www.facebook.com/BetvBeken/videos/wagub-pantau-harga-bahan-pokok-di-pasar-panorama/1169116812070714\nCuplikan: Pemerintah Provinsi Bengkulu akan menjamin ketersediaan dan memastikan tidak ada kenaikan harga. Natal dan Tahun Baru, perayaan Natal dan\n\n[6] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[7] Rata-rata Harga Pangan Bulanan Tingkat Produsen Provinsi (Angka Desember 2025) - DATASET | Open Data Badan Pangan Nasional\nURL: https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi\nCuplikan: | 16 | Sumatera Selatan | Bawang Merah Tingkat Petani | 2025 | Februari | 17 | Bengkulu | Bawang Merah Tingkat Petani | 2025 | Februari | 18 | Lampung | Bawang Merah Tingkat Petani | 2025 | Februari | 32 | Jawa Barat | Bawang Merah Tingkat Petani | 2025 | Februari | Rp16,531 | | 33 | Jawa Tengah | Bawang Merah Tingkat Petani | 2025 | Februari | Rp19,888 | | 34 | D.I Yogyakarta | Bawang Merah Tingkat Petani | 2025 | Februari | Rp23,067 | [...] | 15 | Jambi | Bawang Merah Tingkat Petani | 2025 | September | Rp21,661 | | 16 | Sumatera Selatan | Bawang Merah Tingkat Petani | 2025 | September | | 1\n\n[8] Statistik Harga Komoditas Pertanian Tahun 2025\nURL: https://satudata.pertanian.go.id/assets/docs/publikasi/c9c87ec57f8a22249659ace0dc306047.pdf\nCuplikan: Provinsi Nasional Tahun Statistik Harga Komoditas Pertanian 2025 86 Pusat Data dan Sistem Informasi Pertanian Tabel 4.5b. Perkembangan Rata-rata Harga Eceran Bawang Merah menurut Provinsi, Januari - November 2025 Rp/kg Jan Feb Mar Apr Mei Jun Jul Ags Sep Okt Nov 1 Aceh 44.415 36.340 40.219 45.070 42.016 39.302 45.030 57.714 43.759 36.191 35.948 42.364 2 Sumatera Utara 45.196 37.740 39.202 42.111 39.107 37.983 45.752 54.821 42.334 36.072 35.775 41.463 3 Sumatera Barat 39.966 33.142 36.493 40.755 [...] Provinsi 2025 Rata-rata 2025 Nasional Statistik Harga Komoditas Pertanian 2025 Pusat Data dan \n\n[9] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id/faq\nCuplikan: 8. Kedelai Biji Kering (Lokal), harga di Petani (Rp/Kg) 9. Bawang Merah, harga di Petani (Rp/Kg) 10. Cabai Merah Keriting, harga di Petani (Rp/Kg) 11. Cabai Rawit Merah, harga di Petani (Rp/Kg) 12. Sapi (Hidup), harga di Peternak (Rp/Kg Berat Hidup) 13. Ayam Ras Pedaging (Hidup), harga di Peternak (Rp/Kg Berat Hidup) 14. Telur Ayam ras, harga di Peternak (Rp/Kg) 15. Stok GKG Tingkat Penggilingan, stok dalam satuan Kwintal [...] 1. Beras Premium, harga di Pedagang Grosir (Rp/Kg) 2. Beras Medium, harga di Pedagang Grosir (Rp/Kg) 3. Kedelai Biji Kering (Impor), harga di Pedagang Grosir (Rp/Kg) 4.\n\n[10] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id\nCuplikan: # Harga Rata Rata Nasional Jenis Data Panel Tanggal \\ Disclaimer: Lokasi pemantauan harga tingkat produsen (provinsi/kabupaten kota) merupakan wilayah sentra produksi yang ditetapkan berdasarkan sebaran tingkat produksi 3 tahun terakhir yang dirilis oleh BPS Memuat data nasional. # Perkembangan Harga Pangan Pokok Strategis Jenis Data Panel Memuat harga historis. # Harga Rata-Rata Provinsi Jenis Data Panel Komoditas Tanggal Maps Histogram Alternative content for the map [...] Memuat data provinsi. Memuat data nasional. Memuat detail harga provinsi. Panel Harga Pangan - Badan Pangan Nasional / N\n\n[11] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/Hargapangan/TabelHarga/ProdusenDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[12] Gate Riwayat Harga: Unduh GT Data Historis | CoinGecko\nURL: https://www.coingecko.com/id/coins/gatetoken/historical_data\nCuplikan: | 2026-09-23 | $1.180.585.467 | $2.078.102 | $10,62 | | 2026-09-22 | $1.182.896.894 | $7.084.937 | $11,07 | | 2026-09-21 | $1.112.694.943 | $1.652.723 | $11,09 | | 2026-09-20 | $1.105.764.789 | $2.244.821 | $10,43 | | 2026-09-19 | $1.060.474.144 | $4.768.384 | $10,37 | | 2026-09-18 | $996.201.032 | $2.541.732 | $9,95 | | 2026-09-17 | $1.000.532.562 | $3.576.641 | $9,34 | | 2026-09-16 | $963.391.457 | $4.734.404 | $9,38 | | 2026-09-15 | $990.207.450 | $3.476.826 | $9,03 | [...] | 2026-09-14 | $972.852.228 | $1.963.560 | $9,29 | | 2026-09-13 | $998.392.169 | $1.900.132 | $9,12 | | 2026-09-12 | $\n\n[13] Daddy Tate Riwayat Harga: Unduh DADDY Data Historis | CoinGecko\nURL: https://www.coingecko.com/id/coins/daddy-tate/historical_data\nCuplikan: | 2026-09-24 | $5.530.805 | $163.523 | $0,00936756 | | 2026-09-23 | $5.846.087 | $175.456 | $0,00922398 | | 2026-09-22 | $6.031.343 | $199.359 | $0,00974979 | | 2026-09-21 | $5.854.440 | $162.868 | $0,01005875 | | 2026-09-20 | $6.168.094 | $170.843 | $0,00976372 | | 2026-09-19 | $6.814.404 | $186.398 | $0,01028682 | | 2026-09-18 | $6.064.987 | $157.770 | $0,01136470 | | 2026-09-17 | $6.238.276 | $172.240 | $0,01011486 | | 2026-09-16 | $5.989.244 | $175.615 | $0,01040386 | [...] | Tanggal | Kapitalisasi Pasar | Volume | Tutup | --- --- | | 2026-10-02 | $0,000000000000000000 | $126.756 | N/A | |\n\n[14] SISKAPERBAPO\nURL: https://siskaperbapo.jatimprov.go.id/harga/tabel\nCuplikan: SISKAPERBAPO Tabel + Harga Konsumen (per Area) + Harga Konsumen (per Komoditas) + Harga Produsen Grafik + Harga Konsumen + Harga Produsen Tren Informasi Profil Pasar Display Panduan Login 1. Home 2. Harga 3. Tabel Tabel Harga Konsumen #### Please Wait #### QR Code © 2011 - 2026 . dikelola Disperindag Jatim, Hak Cipta dilindungi\n\n[15] Falcon USD Riwayat Harga: Unduh USDF Data Historis | CoinGecko\nURL: https://www.coingecko.com/id/coins/falcon-usd/historical_data\nCuplikan: | 2026-09-24 | $1.371.551.007 | $443.456 | $0,995501 | | 2026-09-23 | $1.371.119.141 | $346.151 | $0,995754 | | 2026-09-22 | $1.371.391.741 | $770.768 | $0,995694 | | 2026-09-21 | $1.371.201.542 | $470.643 | $0,995901 | | 2026-09-20 | $1.371.114.900 | $582.980 | $0,995759 | | 2026-09-19 | $1.371.843.562 | $926.911 | $0,995703 | | 2026-09-18 | $1.370.789.505 | $364.910 | $0,996232 | | 2026-09-17 | $1.338.991.388 | $480.858 | $0,995463 | | 2026-09-16 | $1.339.301.300 | $862.833 | $0,995611 | [...] | Tanggal | Kapitalisasi Pasar | Volume | Tutup | --- --- | | 2026-10-02 | $1.473.797.097 | $272.49"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": "cLu_avKjDua2sOIP6dPEoAE",
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "SIGAHADA (Sistem Informasi Harga Bahan Pokok)",
+            "penyedia": "Pemerintah Kota Bengkulu",
+            "url": "https://sigahada.bengkulukota.go.id",
+            "wilayah": "Kota Bengkulu",
+            "peran_wilayah": "pembanding",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Bawang Merah",
+            "satuan": "1 kg",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan data harga bahan pokok termasuk bawang merah untuk wilayah terdekat (Kota Bengkulu) yang dapat digunakan sebagai pembanding rantai pasok untuk Kabupaten Bengkulu Tengah.",
+            "catatan_keandalan": "Sumber merupakan portal resmi pemerintah daerah tetangga (Kota Bengkulu), namun hanya menyediakan tampilan web dan bukan spesifik untuk Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": null,
+            "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
+            "status_verifikasi": "kandidat"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Tidak ditemukan sumber data harga eceran harian spesifik untuk Kabupaten Bengkulu Tengah pada periode Oktober 2026 dari hasil pencarian web yang tersedia."
+        ],
+        "catatan": "Hasil pencarian web tidak menyertakan data atau sumber spesifik yang memuat harga eceran harian Bawang Merah di Kabupaten Bengkulu Tengah untuk bulan Oktober 2026. Sumber dari Kota Bengkulu (SIGAHADA) dimasukkan sebagai konteks pembanding regional."
+      },
+      "url_hasil_pencarian": [
+        "https://aktual.com/harga-bawang-merah-capai-rp35000-di-bengkulu",
+        "https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://data.badanpangan.go.id/datasetpublications/z4t/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://dev-panelharga.badanpangan.go.id",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://satudata.pertanian.go.id/assets/docs/publikasi/c9c87ec57f8a22249659ace0dc306047.pdf",
+        "https://sigahada.bengkulukota.go.id",
+        "https://siskaperbapo.jatimprov.go.id/harga/tabel",
+        "https://www.bi.go.id/Hargapangan/TabelHarga/ProdusenDaerah",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+        "https://www.coingecko.com/id/coins/daddy-tate/historical_data",
+        "https://www.coingecko.com/id/coins/falcon-usd/historical_data",
+        "https://www.coingecko.com/id/coins/gatetoken/historical_data",
+        "https://www.facebook.com/BetvBeken/videos/wagub-pantau-harga-bahan-pokok-di-pasar-panorama/1169116812070714",
+        "https://www.instagram.com/reel/DVXjKZSCWh_"
+      ],
+      "log": [
+        {
+          "waktu": "21.10.17",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Bawang Merah (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "21.10.22",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "21.10.57",
+          "teks": "gemini (gemini-3.5-flash-lite) menjawab: 1 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
+      "waktu": "2026-10-02T21:10:16+07:00",
+      "permintaan": {
+        "komoditas": "Beras",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Beras, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Stok dan Harga Pangan di Kota Bengkulu Masih Stabil ...\nURL: https://www.facebook.com/mediacenterkotabengkulu/posts/stok-dan-harga-pangan-di-kota-bengkulu-masih-stabil-jelang-natarubengkuluinfopub/1136784868454229\nCuplikan: Untuk di Kota Bengkulu, Disperindag Kota Bengkulu … beras merek Paten Rp 18.000/KG, beras Manggis Rp 16.000/KG, beras Kembang Kol Rp 15.750/KG,\n\n[2] Jelang Nataru, Harga Beras Premium Bertahan Diatas ...\nURL: https://www.instagram.com/p/DSjqxqQEpXF\nCuplikan: Harga bervariasi dari Rp 13.000 hingga berada diharga Rp. 14.500/kilogram untuk medium. Harga Eceran Tertinggi beras jenis medium Rp 14.000/kg\n\n[3] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Beras (Medium) | 1 kg | Rp 15.400,- | Rp 15.400,- Rp 15.400,- | Rp 14.500,- | Rp 900,- | Rp 14.500,- | Rp 14.500,- | Beras SPHP Bulog | 1 kg | Rp 13.000,- | Rp 13.000,- Rp 12.400,- | Rp 12.400,- Rp 13.000,- | Rp 13.000,- | Beras Cap Anak Daro (Khusus) | 1 kg | Rp 17.000,- | Rp 17.000,- Rp 17.000,- | Rp 17.000,- Rp 17.000,- | Rp 17.000,- | Beras Cap Manggis (Premium) | 1 kg | Rp 16.750,- | Rp 16.750,- Rp 16.750,- | Rp 16.750,- Rp 16.750,- | Rp 16.750,- [...] | Beras (Premium) | 1 kg | Rp 16.750,- | Rp 16.750,- Rp 16.750,- | Rp 16.750,- Rp 16.750,- | Rp 16.750,- | Beras Cap IR 64 (Medium) | 1 \n\n[4] SP2KP\nURL: https://sp2kp.kemendag.go.id\nCuplikan: Beras Medium, kg, Rp 14.023 ; Region A, kg, Rp 14.110 ; Region B · kg, Rp 14.755 ; Region C · kg, Rp 17.024\n\n[5] Rata-rata Harga Eceran Beras di Pasar Tradisional di 33 Kota - Tabel Statistik - Badan Pusat Statistik Indonesia\nURL: https://www.bps.go.id/id/statistics-table/2/NzkjMg==/rata-rata-harga-eceran-beras-di-pasar-tradisional-di-33-kota.html\nCuplikan: Harga-Harga Rata-rata Harga Eceran Beras di Pasar Tradisional di 33 Kota Badan Pusat Statistik Badan Pusat Statistik Badan Pusat Statistik(BPS - Statistics Indonesia) Jl. Dr. Sutomo 6-8 Jakarta 10710 Indonesia Telp (62-21) 3841195; 3842508; 3810291 Faks (62-21) 3857046 Mailbox : (/cdn-cgi/l/email-protection) logo_footer Manual S&K Daftar Tautan Tentang Kami Tautan Lainnya Hak Cipta © 2023 Badan Pusat Statistik Manual S&K Daftar Tautan [...] Badan Pusat Statistik ##### Badan Pusat Statistik Beranda Rencana Terbit Layanan Indonesia Dalam rangka percepatan transformasi tata kelola penyelenggaraan\n\n[6] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[7] Rata-rata Harga Pangan Bulanan Tingkat Produsen Provinsi (Angka Desember 2025) - DATASET | Open Data Badan Pangan Nasional\nURL: https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi\nCuplikan: | 17 | Bengkulu | Beras Premium Tingkat Penggilingan | 2023 | Desember | Rp13,478 | | 18 | Lampung | Beras Premium Tingkat Penggilingan | 2023 | Desember | Rp13,574 | | 32 | Jawa Barat | Beras Premium Tingkat Penggilingan | 2023 | Desember | Rp13,689 | | 33 | Jawa Tengah | Beras Premium Tingkat Penggilingan | 2023 | Desember | Rp13,104 | | 34 | D.I Yogyakarta | Beras Premium Tingkat Penggilingan | 2023 | Desember [...] | 14 | Riau | Beras Medium Tingkat Penggilingan | 2025 | Maret | 15 | Jambi | Beras Medium Tingkat Penggilingan | 2025 | Maret | Rp12,695 | | 16 | Sumatera Selatan | Beras Mediu\n\n[8] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id/faq\nCuplikan: | 6 | Bengkulu | | | | | v | | | | | | 7 | Sumatera Selatan | v | v | | | v | | v | v | v | | 8 | Lampung | v | v | | | v | | v | v | v | | 9 | Banten | v | | | | | | v | v | v | | 10 | Jawa Barat | v | v | v | v | v | v | v | v | v | | 11 | Jawa Tengah | v | v | v | v | v | v | v | v | v | | 12 | Jawa Timur | v | v | v | v | v | v | v | v | v | | 13 | DI Yogyakarta | v | | | | v | v | | | | | 14 | Bali | v | | | v | | v | v | v | | [...] 1. Luas Lahan/Sawah Padi, persentase (%) luas panen Padi di kecamatan sentra produksi. 2. GKP Tingkat Petani, harga di Petani (Rp/Kg) 3. GKP Tingkat Penggili\n\n[9] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id\nCuplikan: Memuat data provinsi. Memuat data nasional. Memuat detail harga provinsi. Panel Harga Pangan - Badan Pangan Nasional / National Food Agency © 2022 All Right Reserved Sejak 23-12-2022 EAS WG Global [...] # Harga Rata Rata Nasional Jenis Data Panel Tanggal \\ Disclaimer: Lokasi pemantauan harga tingkat produsen (provinsi/kabupaten kota) merupakan wilayah sentra produksi yang ditetapkan berdasarkan sebaran tingkat produksi 3 tahun terakhir yang dirilis oleh BPS Memuat data nasional. # Perkembangan Harga Pangan Pokok Strategis Jenis Data Panel Memuat harga historis. # Harga Rata-Rata Provinsi Jenis\n\n[10] - PIHPS\nURL: https://www.bi.go.id/hargapangan\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional ### Informasi Harga Pangan Antar Daerah ### Harga Rata-Rata dan Perubahan 25 September 2026\n\n[11] Survei Penjualan Eceran Agustus 2026: Penjualan Eceran Diprakirakan Tetap Tumbuh\nURL: https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2818426.aspx\nCuplikan: Dari sisi harga, tekanan inflasi pada Oktober 2026 dan Januari 2027 diprakirakan menurun. Hal ini tecermin dari Indeks Ekspektasi Harga Umum (IEH) Oktober 2026 dan Januari 2027 yang masing-masing tercatat sebesar 146,5 dan 166,0, lebih rendah dibandingkan dengan periode sebelumnya yang masing-masing tercatat sebesar 155,2 dan 168,1. Hasil lengkap survei dapat dilihat dalam Survei Penjualan Eceran di website Bank Indonesia.​ [...] Dari sisi harga, tekanan inflasi pada Oktober 2026 dan Januari 2027 diprakirakan menurun. Hal ini tecermin dari Indeks Ekspektasi Harga Umum (IEH) Oktober 2026 dan Ja\n\n[12] Survei Penjualan Eceran Mei 2026: Penjualan Eceran Diprakirakan Terjaga\nURL: https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2812326.aspx\nCuplikan: Dari sisi harga, tekanan inflasi tiga bulan yang akan datang, yaitu Juli 2026, diprakirakan relatif stabil, sementara pada enam bulan yang akan datang, yaitu Oktober 2026, diprakirakan meningkat. Hal ini tecermin dari Indeks Ekspektasi Harga Umum (IEH) Juli 2026 sebesar 175,8, relatif stabil dibandingkan IEH pada Juni 2026 sebesar 175,6. Sementara itu, IEH Oktober 2026 diprakirakan sebesar 167,6, lebih tinggi dibandingkan IEH September 2026 sebesar 163,2 didorong oleh kenaikan harga bahan [...] Dari sisi harga, tekanan inflasi tiga bulan yang akan datang, yaitu Juli 2026, diprakirakan relatif \n\n[13] Survei Penjualan Eceran Juli 2026: Penjualan Eceran Diprakirakan Meningkat\nURL: https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2815526.aspx\nCuplikan: Dari sisi harga, tekanan inflasi pada September 2026 diprakirakan menurun, sementara pada Desember 2026, diprakirakan meningkat. Hal ini tecermin dari Indeks Ekspektasi Harga Umum (IEH) September 2026 sebesar 155,2, lebih rendah dibandingkan dengan IEH pada Agustus 2026 sebesar 178,0. Sementara itu, IEH Desember 2026 diprakirakan sebesar 168,1, lebih tinggi dibandingkan dengan IEH November 2026 sebesar 167,5. [...] Dari sisi harga, tekanan inflasi pada September 2026 diprakirakan menurun, sementara pada Desember 2026, diprakirakan meningkat. Hal ini tecermin dari Indeks Ekspektasi Harga Umum (\n\n[14] Pedagang Eceran | Direktorat Jenderal Pajak\nURL: https://pajak.go.id/id/pedagang-eceran\nCuplikan: | 15% x Rp200.000.000 | Rp 30.000.000 | | 25% x Rp250.000.000 | Rp 62.500.000 | | 35% x Rp52.500.000 | Rp 15.750.000 (+) | | | RP 110.750.000 | [...] | | | | --- | Bulan | Omzet | PPh Terutang | | Januari | 200.000.000 | 1.000.000 | | Februari | 150.000.000 | 750.000 | | Maret | 250.000.000 | 1.250.000 | | April | 300.000.000 | 1.500.000 | | Mei | 350.000.000 | 1.750.000 | | Juni | 400.000.000 | 2.000.000 | | Juli | 250.000.000 | 1.250.000 | | Agustus | 250.000.000 | 1.250.000 | | September | 450.000.000 | 2.250.000 | | Oktober | 250.000.000 | 1.250.000 | | November | 500.000.000 | 2.500.000 |\n\n[15] OSS RBA - Perdagangan Eceran Beras\nURL: https://oss.go.id/kbli/detail/e82fc68a-fe76-4b38-83f1-ef6e9ac1fafa\nCuplikan: ## Pencarian KBLI Temukan klasifikasi usaha berdasarkan kode, judul, atau uraian kegiatan. Filter AktifKBLI 2020Semua KBLI 202047241 Kelompok # Perdagangan Eceran Beras ## URAIAN Kelompok ini mencakup usaha perdagangan eceran khusus berbagai jenis beras di dalam bangunan, seperti beras cianjur, beras cisadane, beras saigon dan beras ketan. ## Dampak Konversi KBLI 2020 → 2025 Tetap1:1 [...] Tetap1:1 Kode 47241 tetap digunakan pada KBLI 2025. Dimungkinkan terdapat penyesuaian berupa perubahan diksi dalam judul atau perubahan dalam uraian. Lihat konversi & perubahan ketentuan ## RUANG LINGKUP Pil"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": "Rru_auDgOtHUjMcP2NrMuQc",
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "Sistem Informasi Harga Bahan Pokok (SIGAHADA) Kota Bengkulu",
+            "penyedia": "Pemerintah Kota Bengkulu (Disperindag)",
+            "url": "https://sigahada.bengkulukota.go.id",
+            "wilayah": "Kota Bengkulu",
+            "peran_wilayah": "pembanding",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Beras (Medium), Beras SPHP Bulog, Beras Cap Anak Daro (Khusus), Beras Cap Manggis (Premium), Beras (Premium), Beras Cap IR 64 (Medium)",
+            "satuan": "1 kg",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan rincian harga eceran berbagai varian beras, namun wilayah pemantauan adalah Kota Bengkulu (bukan Kabupaten Bengkulu Tengah), sehingga relevan sebagai data pembanding rantai pasok.",
+            "catatan_keandalan": "Hanya menampilkan antarmuka web (tampilan halaman) untuk wilayah Kota Bengkulu; tidak mencakup langsung Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": null,
+            "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
+            "status_verifikasi": "kandidat"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Tidak ditemukan sumber data harga eceran harian khusus untuk Kabupaten Bengkulu Tengah pada periode Oktober 2026 di dalam hasil pencarian web yang disediakan."
+        ],
+        "catatan": "Hasil pencarian web tidak memiliki data spesifik untuk Kabupaten Bengkulu Tengah pada Oktober 2026. Sumber yang tersedia di web mencakup Kota Bengkulu (SIGAHADA) dan data agregat nasional/provinsi/survei ekspektasi inflasi Bank Indonesia, sehingga hanya dapat digunakan sebagai pembanding atau konteks makro."
+      },
+      "url_hasil_pencarian": [
+        "https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://dev-panelharga.badanpangan.go.id",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://oss.go.id/kbli/detail/e82fc68a-fe76-4b38-83f1-ef6e9ac1fafa",
+        "https://pajak.go.id/id/pedagang-eceran",
+        "https://sigahada.bengkulukota.go.id",
+        "https://sp2kp.kemendag.go.id",
+        "https://www.bi.go.id/hargapangan",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+        "https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2812326.aspx",
+        "https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2815526.aspx",
+        "https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2818426.aspx",
+        "https://www.bps.go.id/id/statistics-table/2/NzkjMg==/rata-rata-harga-eceran-beras-di-pasar-tradisional-di-33-kota.html",
+        "https://www.facebook.com/mediacenterkotabengkulu/posts/stok-dan-harga-pangan-di-kota-bengkulu-masih-stabil-jelang-natarubengkuluinfopub/1136784868454229",
+        "https://www.instagram.com/p/DSjqxqQEpXF"
+      ],
+      "log": [
+        {
+          "waktu": "21.09.43",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Beras (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "21.09.48",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "21.10.16",
+          "teks": "gemini (gemini-3.5-flash-lite) menjawab: 1 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
       "waktu": "2026-10-02T20:48:04+07:00",
       "permintaan": {
         "komoditas": "Cabai rawit merah",
