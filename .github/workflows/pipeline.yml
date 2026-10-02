@@ -2,6 +2,8 @@ name: Pipeline & Dashboard
 
 # Menjalankan pipeline (ambil data -> quality gate -> analisis -> publikasi) lalu menerbitkan dashboard ke GitHub Pages,
 # dan juga ke Firebase Hosting bila Secret Firebase sudah diisi (lihat docs/FIREBASE.md).
+# Bila Firebase aktif, kiriman dari situs (harga, keputusan, pengaturan, kunci, permintaan "jalankan") diambil dulu
+# dari Firestore. Workflow antrean.yml memanggil workflow ini begitu ada kiriman baru.
 on:
   push:
     branches: [main]
@@ -12,6 +14,7 @@ on:
       - "site/**"
       - "tests/**"
       - "requirements.txt"
+      - "requirements-firebase.txt"
       - ".github/workflows/pipeline.yml"
       - "firebase.json"
       - "firestore.rules"
@@ -26,12 +29,18 @@ on:
         type: choice
         options: [otomatis, ya, tidak]
         default: otomatis
+  workflow_call:
+    inputs:
+      demo:
+        type: string
+        default: otomatis
 
 permissions:
   contents: write
   pages: write
   id-token: write
   issues: write
+  models: read
 
 concurrency:
   group: pipeline-pages
@@ -56,6 +65,44 @@ jobs:
 
       - name: Uji otomatis
         run: python -m pytest -q
+
+      - name: Sambungkan ke Firestore
+        id: fs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "Firebase belum diatur, kiriman dari situs dilewati."
+            echo "siap=tidak" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          pip install -q -r requirements-firebase.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-layanan.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/akun-layanan.json" >> "$GITHUB_ENV"
+          echo "URL_PROSES=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
+          echo "siap=ya" >> "$GITHUB_OUTPUT"
+
+      - name: Ambil kiriman dari situs (harga, keputusan, pengaturan, permintaan)
+        id: tarik
+        if: steps.fs.outputs.siap == 'ya'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python -m pipeline firestore-tarik --url "$URL_PROSES"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data config
+          if git diff --cached --quiet; then
+            echo "Tidak ada kiriman baru."
+          else
+            git commit -m "situs: kiriman harga, keputusan, dan pengaturan dari situs"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
 
       - name: Ambil data cuaca (konektor Big Data)
         if: github.event_name != 'push'
@@ -90,7 +137,7 @@ jobs:
       - name: Jalankan pipeline
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODE_DEMO: ${{ inputs.demo || 'otomatis' }}
+          MODE_DEMO: ${{ steps.tarik.outputs.demo || inputs.demo || 'otomatis' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
@@ -116,6 +163,14 @@ jobs:
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
+
+      - name: Laporkan hasil ke situs
+        if: always() && steps.fs.outputs.siap == 'ya'
+        continue-on-error: true
+        run: |
+          python -m pipeline firestore-lapor --hasil "${{ job.status }}" --url "$URL_PROSES" \
+            --pesan "${{ steps.tarik.outcome == 'failure' && 'Kiriman dari situs gagal diambil. Lihat log proses.' || '' }}"
+          rm -f "$RUNNER_TEMP/akun-layanan.json"
 
       - uses: actions/configure-pages@v5
 

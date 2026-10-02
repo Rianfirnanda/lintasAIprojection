@@ -1,0 +1,74 @@
+name: Antrean dari situs
+
+# Pemeriksa berkala: melihat Firestore apakah ada kiriman atau permintaan baru dari situs (harga dari petugas,
+# keputusan cek data, tindak lanjut, persetujuan model, pengaturan, atau tombol "Jalankan" di panel Pengaturan).
+# Bila ada, pipeline dijalankan. Pemeriksaannya ringan (beberapa kali baca Firestore) dan selesai dalam 1 menit.
+# Bila Firebase belum diatur, pemeriksa ini selesai tanpa melakukan apa-apa.
+on:
+  schedule:
+    # Setiap 15 menit, Senin sampai Jumat, pukul 07.00 sampai 17.45 WIB (UTC+7).
+    - cron: "*/15 0-10 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      paksa:
+        description: "Jalankan pipeline walaupun tidak ada kiriman baru"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: antrean-situs
+  cancel-in-progress: false
+
+jobs:
+  cek:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      jalankan: ${{ steps.cek.outputs.jalankan }}
+    env:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        if: env.FIREBASE_SERVICE_ACCOUNT != '' && !inputs.paksa
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-firebase.txt
+
+      - name: Periksa kiriman baru di Firestore
+        id: cek
+        env:
+          PAKSA: ${{ inputs.paksa && 'ya' || 'tidak' }}
+        run: |
+          if [ "$PAKSA" = "ya" ]; then
+            echo "Diminta jalan sekarang."
+            echo "jalankan=ya" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "Firebase belum diatur. Tidak ada yang diperiksa."
+            echo "jalankan=tidak" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          pip install -q -r requirements-firebase.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-layanan.json"
+          trap 'rm -f "$RUNNER_TEMP/akun-layanan.json"' EXIT
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/akun-layanan.json" python -m pipeline firestore-cek
+
+  perbarui:
+    needs: cek
+    if: needs.cek.outputs.jalankan == 'ya'
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      issues: write
+      models: read
+    uses: ./.github/workflows/pipeline.yml
+    secrets: inherit

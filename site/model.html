@@ -56,8 +56,9 @@
         <button class="tombol utama-aksi" type="button" id="unduh-persetujuan">Unduh berkas persetujuan</button>
       </div>
     </div>
+    <div id="pesan-persetujuan" role="status" style="margin-bottom:8px"></div>
     <details><summary>Cara menyetujui</summary>
-      <p class="meta-kecil" style="margin-top:8px">Centang varian yang disetujui di tabel atas, lalu unggah berkas hasil unduhan ke <code>data/persetujuan_model/</code>.
+      <p class="meta-kecil" style="margin-top:8px" id="cara-setuju">Centang varian yang disetujui di tabel atas, lalu unggah berkas hasil unduhan ke <code>data/persetujuan_model/</code>.
       Kalau <code>analisis.wajib_persetujuan_model</code> di <code>config/pengaturan.json</code> diisi <code>true</code>, varian yang belum disetujui memakai cara sederhana.</p>
     </details>
   </section>
@@ -71,8 +72,11 @@
 <script type="module">
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, persen, angka, rp, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
+import { sesi } from "./assets/akses.js";
 
-await pasangKerangka("model.html");
+const meta = await pasangKerangka("model.html");
+// Dengan login Google (Firebase), persetujuan langsung tersimpan dari halaman ini.
+const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
 let m;
 try {
   m = await muatJSON("model.json");
@@ -145,14 +149,38 @@ const menunggu = m.per_varian.filter((v) => v.status_persetujuan === "menunggu_p
 document.getElementById("info-persetujuan").textContent =
   `${m.per_varian.length - menunggu} dari ${m.per_varian.length} varian sudah memakai cara yang disetujui atau cara sederhana. ${menunggu} menunggu persetujuan.` +
   (m.pengaturan.analisis.wajib_persetujuan_model ? " Persetujuan wajib." : " Persetujuan belum wajib, jadi cara yang disarankan tetap dipakai.");
-document.getElementById("unduh-persetujuan").addEventListener("click", () => {
+const tombolSetuju = document.getElementById("unduh-persetujuan");
+if (kiriman) {
+  tombolSetuju.textContent = "Simpan persetujuan";
+  document.getElementById("penyetuju").value = sesi()?.nama || "";
+  document.getElementById("cara-setuju").textContent = "Centang varian yang disetujui di tabel atas, lalu tekan Simpan persetujuan. Persetujuan dipakai pada pembaruan berikutnya. Kalau persetujuan diwajibkan (panel Pengaturan), varian yang belum disetujui memakai cara sederhana.";
+}
+tombolSetuju.addEventListener("click", async () => {
   const penyetuju = document.getElementById("penyetuju").value.trim();
   if (!penyetuju) { document.getElementById("penyetuju").focus(); return; }
   const hari = new Date().toISOString().slice(0, 10);
-  const baris = [...document.querySelectorAll("[data-setuju]:checked")].map((c) => ({
+  const centang = [...document.querySelectorAll("[data-setuju]:checked")];
+  const baris = centang.map((c) => ({
     kode_varian: c.dataset.setuju, model: c.dataset.model, keputusan: "setuju", penyetuju, tanggal: hari, catatan: "",
   }));
-  if (!baris.length) return;
+  const pesan = document.getElementById("pesan-persetujuan");
+  if (!baris.length) { pesan.innerHTML = `<div class="pesan peringatan">Centang dulu varian yang disetujui di tabel.</div>`; return; }
+  if (kiriman) {
+    tombolSetuju.disabled = true;
+    try {
+      const { terkirim, gagal } = await kiriman.kirimPersetujuan(baris);
+      const ok = new Set(terkirim.map((s) => s.kode_varian));
+      centang.forEach((c) => { if (ok.has(c.dataset.setuju)) c.disabled = true; });
+      pesan.innerHTML = `<div class="pesan ${gagal.length ? "peringatan" : "sukses"}">${esc(gagal.length
+        ? `${terkirim.length} persetujuan tersimpan, ${gagal.length} gagal: ${gagal[0].pesan}`
+        : `${terkirim.length} persetujuan tersimpan. Dipakai pada pembaruan berikutnya.`)}</div>`;
+    } catch (e) {
+      pesan.innerHTML = `<div class="pesan galat">${esc(kiriman.pesanKiriman(e))}</div>`;
+    } finally {
+      tombolSetuju.disabled = false;
+    }
+    return;
+  }
   unduhTeks(`persetujuan_${hari}.csv`, keCSV(["kode_varian", "model", "keputusan", "penyetuju", "tanggal", "catatan"], baris));
 });
 

@@ -35,7 +35,7 @@
     <div class="kartu-kepala">
       <div>
         <h2>Menunggu keputusan</h2>
-        <p>Pilih terima atau tolak di tiap baris, lalu unduh berkasnya dan unggah ke <code>data/validasi/</code>. Keputusan dipakai pada pembaruan berikutnya.</p>
+        <p id="ket-keputusan">Pilih terima atau tolak di tiap baris, lalu unduh berkasnya dan unggah ke <code>data/validasi/</code>. Keputusan dipakai pada pembaruan berikutnya.</p>
       </div>
       <div class="baris-kontrol">
         <input type="text" id="validator" placeholder="Nama atau kode pemeriksa" aria-label="Nama validator">
@@ -46,6 +46,22 @@
       <th>Tanggal</th><th>Pasar</th><th>Varian</th><th class="angka">Harga per kg atau liter</th><th class="angka">Harga yang ditulis</th><th>Alasan ditahan</th>
       <th>Berkas</th><th>Keputusan</th><th>Alasan</th></tr></thead><tbody></tbody></table></div>
     <p class="meta-kecil" id="info-validasi" style="margin-top:6px"></p>
+    <div id="pesan-keputusan" role="status" style="margin-top:8px"></div>
+  </section>
+
+  <section class="kartu" id="kartu-unggah" hidden>
+    <div class="kartu-kepala">
+      <div>
+        <h2>Unggah berkas harga</h2>
+        <p>Untuk data dari luar formulir Catat Harga, misalnya rekap Dinas atau pencatatan di kertas yang sudah diketik. Pakai berkas CSV
+          (dari Excel: <i>Simpan Sebagai</i>, pilih CSV). Kolom wajib: tanggal, kode_pasar, kode_varian, harga.</p>
+      </div>
+    </div>
+    <div class="baris-kontrol">
+      <input type="file" id="berkas-harga" accept=".csv,text/csv" aria-label="Pilih berkas CSV harga">
+      <button class="tombol utama-aksi" id="kirim-berkas" type="button" disabled>Kirim ke sistem</button>
+    </div>
+    <div id="pratinjau-berkas" role="status" style="margin-top:10px"></div>
   </section>
 
   <div class="grid dua-sama">
@@ -71,8 +87,11 @@
 <script type="module">
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
+import { sesi } from "./assets/akses.js";
 
-await pasangKerangka("kualitas.html");
+const meta = await pasangKerangka("kualitas.html");
+// Dengan login Google (Firebase), keputusan dan berkas harga langsung dikirim ke sistem dari halaman ini.
+const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
 let q, master;
 try {
   [q, master] = await Promise.all([muatJSON("kualitas.json"), muatJSON("master.json")]);
@@ -121,14 +140,44 @@ const tombol = document.getElementById("unduh-keputusan");
 tbodyV.addEventListener("change", () => {
   tombol.disabled = ![...tbodyV.querySelectorAll("select")].some((s) => s.value);
 });
-tombol.addEventListener("click", () => {
+const pesanKep = document.getElementById("pesan-keputusan");
+const tampil = (el, jenis, teks) => { el.innerHTML = teks ? `<div class="pesan ${jenis}">${esc(teks)}</div>` : ""; };
+if (kiriman) {
+  tombol.textContent = "Simpan keputusan";
+  document.getElementById("validator").value = sesi()?.nama || "";
+  document.getElementById("ket-keputusan").textContent = "Pilih terima atau tolak di tiap baris, lalu tekan Simpan keputusan. Keputusan langsung tersimpan dan dipakai pada pembaruan berikutnya.";
+}
+tombol.addEventListener("click", async () => {
   const validator = document.getElementById("validator").value.trim();
   if (!validator) { document.getElementById("validator").focus(); return; }
   const hari = new Date().toISOString().slice(0, 10);
-  const baris = [...tbodyV.querySelectorAll("tr[data-id]")]
-    .filter((tr) => tr.querySelector("select").value)
+  const terpilih = [...tbodyV.querySelectorAll("tr[data-id]")].filter((tr) => tr.querySelector("select").value);
+  const baris = terpilih
     .map((tr) => ({ id_observasi: tr.dataset.id, keputusan: tr.querySelector("select").value,
                     alasan: tr.querySelector("input").value.trim(), validator, tanggal_validasi: hari }));
+  if (kiriman) {
+    tombol.disabled = true;
+    tombol.textContent = "Menyimpan…";
+    try {
+      const { terkirim, gagal } = await kiriman.simpanKeputusan(baris);
+      const ok = new Set(terkirim.map((k) => k.id_observasi));
+      terpilih.forEach((tr) => {
+        if (!ok.has(tr.dataset.id)) return;
+        tr.classList.add("sudah-diputus");
+        tr.querySelector("select").disabled = true;
+        tr.querySelector("input").disabled = true;
+      });
+      tampil(pesanKep, gagal.length ? "peringatan" : "sukses", gagal.length
+        ? `${terkirim.length} keputusan tersimpan, ${gagal.length} gagal: ${gagal[0].pesan}`
+        : `${terkirim.length} keputusan tersimpan. Data ini hilang dari daftar setelah pembaruan berikutnya.`);
+    } catch (e) {
+      tampil(pesanKep, "galat", kiriman.pesanKiriman(e));
+    } finally {
+      tombol.textContent = "Simpan keputusan";
+      tombol.disabled = ![...tbodyV.querySelectorAll("select:not(:disabled)")].some((s) => s.value);
+    }
+    return;
+  }
   unduhTeks(`keputusan_${hari}_${validator.replace(/[^a-z0-9]/gi, "")}.csv`,
             keCSV(["id_observasi", "keputusan", "alasan", "validator", "tanggal_validasi"], baris));
 });
@@ -148,6 +197,50 @@ document.querySelector("#tabel-batch tbody").innerHTML = q.batch.map((b) => `<tr
   <td class="angka">${angka(b.diterima)}</td><td class="angka">${angka(b.ditolak)}</td>
   <td><code title="${esc(b.sha256)}">${esc(b.sha256.slice(0, 12))}…</code></td><td>${esc(b.galat_berkas)}</td></tr>`).join("")
   || `<tr><td colspan="7" class="kosong">Belum ada berkas.</td></tr>`;
+
+/* ---------- unggah berkas harga (Firebase) */
+if (kiriman) {
+  const { petakanHarga } = await import("./assets/berkas-harga.js");
+  const kartu = document.getElementById("kartu-unggah");
+  const pilih = document.getElementById("berkas-harga");
+  const kirim = document.getElementById("kirim-berkas");
+  const prat = document.getElementById("pratinjau-berkas");
+  const terlarang = await muatJSON("pengaturan.json").then((p) => p.privasi?.kolom_terlarang || []).catch(() => []);
+  kartu.hidden = false;
+  let siapKirim = null;
+  pilih.addEventListener("change", async () => {
+    siapKirim = null;
+    kirim.disabled = true;
+    const f = pilih.files?.[0];
+    if (!f) { prat.innerHTML = ""; return; }
+    if (!/\.csv$/i.test(f.name)) { tampil(prat, "galat", "Pilih berkas berakhiran .csv. Berkas Excel perlu disimpan sebagai CSV dulu."); return; }
+    if (f.size > 2 * 1024 * 1024) { tampil(prat, "galat", "Berkas lebih dari 2 MB. Bagi dulu menjadi beberapa berkas."); return; }
+    const h = petakanHarga(await f.text(), { terlarang });
+    if (h.galatBerkas) { tampil(prat, "galat", h.galatBerkas); return; }
+    if (!h.baris.length) { tampil(prat, "galat", "Tidak ada baris yang bisa dikirim."); return; }
+    siapKirim = { berkas: f.name, baris: h.baris };
+    kirim.disabled = false;
+    prat.innerHTML = `<div class="pesan ${h.galat.length ? "peringatan" : "info"}">${esc(`${h.baris.length} baris siap dikirim dari ${f.name}.`)}
+      ${h.galat.length ? `<br>${esc(`${h.galat.length} baris dilewati:`)} ${h.galat.slice(0, 5).map((g) => esc(`baris ${g.baris} (${g.alasan})`)).join(", ")}${h.galat.length > 5 ? ", …" : ""}` : ""}</div>`;
+  });
+  kirim.addEventListener("click", async () => {
+    if (!siapKirim) return;
+    kirim.disabled = true;
+    kirim.textContent = "Mengirim…";
+    try {
+      const { terkirim, gagal } = await kiriman.kirimHarga(siapKirim.baris, { berkas: siapKirim.berkas });
+      tampil(prat, gagal.length ? "peringatan" : "sukses", gagal.length
+        ? `${terkirim.length} baris terkirim, ${gagal.length} gagal: ${gagal[0].pesan} Kirim ulang berkas yang sama aman, baris yang sudah masuk tidak menjadi ganda.`
+        : `${terkirim.length} baris terkirim dari ${siapKirim.berkas}. Hasil pemeriksaannya muncul di halaman ini setelah pembaruan berikutnya.`);
+      if (!gagal.length) { siapKirim = null; pilih.value = ""; }
+    } catch (e) {
+      tampil(prat, "galat", kiriman.pesanKiriman(e));
+    } finally {
+      kirim.textContent = "Kirim ke sistem";
+      kirim.disabled = !siapKirim;
+    }
+  });
+}
 </script>
 </body>
 </html>

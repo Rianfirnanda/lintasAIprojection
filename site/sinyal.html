@@ -63,7 +63,7 @@
       <div class="prosa" style="margin-top:8px;font-size:0.9rem">
         <ol>
           <li><strong>Lewat GitHub Issues (disarankan).</strong> Peringatan tinggi otomatis dibuatkan issue berlabel <code>sinyal-harga</code>. Pasang satu label status: <code>status: terverifikasi</code>, <code>status: false-alarm</code>, <code>status: ditindaklanjuti</code>, atau <code>status: selesai</code>. Kalau issue ditutup, berarti sudah selesai.</li>
-          <li><strong>Lewat buku tindak lanjut.</strong> Buat baris CSV dengan formulir di atas, lalu tambahkan ke berkas di <code>data/tindak_lanjut/</code>.</li>
+          <li><strong>Lewat formulir di atas.</strong> Bila masuk dengan akun Google, tekan <em>Simpan catatan</em> dan selesai. Tanpa itu, formulir membuat baris CSV untuk ditambahkan ke berkas di <code>data/tindak_lanjut/</code>.</li>
         </ol>
         <p>Label <em>terverifikasi</em> dan <em>false alarm</em> dipakai untuk menilai seberapa tepat peringatan kami di halaman <a href="model.html">Akurasi</a>.</p>
         <p class="meta-kecil">Header berkas: <code>id_sinyal,status,catatan,petugas,tanggal,kode_varian,tanggal_kejadian</code></p>
@@ -76,8 +76,15 @@
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, lencanaKeparahan, lencanaStatus, JENIS_SINYAL, STATUS_SINYAL,
          tampilkanGalat, keCSV } from "./assets/app.js";
+import { sesi } from "./assets/akses.js";
 
-await pasangKerangka("sinyal.html");
+const meta = await pasangKerangka("sinyal.html");
+// Dengan login Google (Firebase), catatan tindak lanjut langsung tersimpan dari halaman ini.
+const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
+if (kiriman) {
+  document.querySelector('#form-tl button[type="submit"]').textContent = "Simpan catatan";
+  document.getElementById("tl-petugas").value = sesi()?.nama || "";
+}
 let data;
 try {
   data = await muatJSON("sinyal.json");
@@ -162,8 +169,22 @@ document.getElementById("form-tl").addEventListener("submit", async (e) => {
     kode_varian: document.getElementById("tl-varian").value.trim().toUpperCase(),
     tanggal_kejadian: document.getElementById("tl-kejadian").value,
   };
-  const csv = keCSV(Object.keys(baris), [baris]).split("\n")[1];
   const hasil = document.getElementById("tl-hasil");
+  if (kiriman) {
+    const tombol = e.target.querySelector('button[type="submit"]');
+    tombol.disabled = true;
+    try {
+      await kiriman.kirimTindakLanjut(baris);
+      hasil.textContent = "Tersimpan. Status peringatan diperbarui pada pembaruan berikutnya.";
+      document.getElementById("tl-catatan").value = "";
+    } catch (err) {
+      hasil.textContent = kiriman.pesanKiriman(err);
+    } finally {
+      tombol.disabled = false;
+    }
+    return;
+  }
+  const csv = keCSV(Object.keys(baris), [baris]).split("\n")[1];
   try {
     await navigator.clipboard.writeText(csv);
     hasil.textContent = "Tersalin: " + csv;

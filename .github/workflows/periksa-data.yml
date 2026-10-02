@@ -37,7 +37,7 @@ jobs:
       - name: Uji pipeline lengkap (tanpa publikasi)
         run: python -m pipeline jalankan --keluaran site/data --tanpa-github
 
-  # Aturan keamanan Firestore diuji di emulator Firebase (tanpa proyek atau kunci sungguhan).
+  # Aturan keamanan Firestore dan pengambil kiriman situs diuji di emulator Firebase (tanpa proyek atau kunci sungguhan).
   aturan-firebase:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -54,3 +54,12 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Uji aturan Firestore di emulator
         run: npm run uji:aturan
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-firebase.txt
+      - name: Uji mesin pengambil kiriman situs di emulator
+        run: |
+          pip install -q -r requirements-firebase.txt
+          npm run uji:mesin

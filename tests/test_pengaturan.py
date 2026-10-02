@@ -205,14 +205,20 @@ def test_halaman_pengaturan_dikunci_dan_tanpa_pihak_ketiga():
     csp = re.search(r'http-equiv="Content-Security-Policy" content="([^"]+)"', html).group(1)
     arah = {bagian.split()[0]: bagian.split()[1:] for bagian in csp.split(";") if bagian.strip()}
     assert arah["script-src"] == ["'self'"], "skrip hanya boleh dari situs sendiri"
-    assert arah["connect-src"] == ["'self'", "https://api.github.com"]
+    # GitHub (tanpa Firebase) atau layanan Firebase (Firestore dan login Google); 127.0.0.1 hanya untuk emulator uji.
+    firebase = ["https://firestore.googleapis.com", "https://identitytoolkit.googleapis.com", "https://securetoken.googleapis.com"]
+    assert arah["connect-src"] == ["'self'", "https://api.github.com", *firebase, "http://127.0.0.1:8080", "http://127.0.0.1:9099"]
+    assert arah["frame-src"] == ["https://*.firebaseapp.com", "https://*.web.app"]
     assert arah["default-src"] == ["'self'"] and arah["object-src"] == ["'none'"] and arah["form-action"] == ["'none'"]
     assert not re.search(r"<script(?![^>]*\bsrc=)", html), "tanpa skrip inline"
     assert 'name="referrer" content="no-referrer"' in html
-    # tidak ada alamat luar selain github.com di halaman dan modul yang dimuatnya
+    # tidak ada alamat luar selain github.com (dan alamat Firebase di CSP) di halaman dan modul yang dimuatnya
     boleh = {"github.com", "api.github.com"}
-    for berkas in ("pengaturan.html", "assets/pengaturan.js", "assets/github.js", "assets/pengaturan-inti.js", "assets/pengaturan.css"):
+    for berkas in ("pengaturan.html", "assets/pengaturan.js", "assets/github.js", "assets/pengaturan-inti.js", "assets/pengaturan.css",
+                   "assets/pengaturan-firestore.js"):
         teks = (AKAR / "site" / berkas).read_text(encoding="utf-8")
+        if berkas == "pengaturan.html":
+            teks = teks.replace(csp, "")
         host = set(re.findall(r"https?://([A-Za-z0-9.-]+)", teks)) - {"www.w3.org"}
         assert host <= boleh, f"{berkas} menyebut alamat luar: {host - boleh}"
 

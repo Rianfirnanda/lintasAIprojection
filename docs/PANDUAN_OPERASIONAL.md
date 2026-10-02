@@ -29,12 +29,18 @@ Ingat: login dan persetujuan dijaga aturan Firestore, tetapi berkas data dashboa
 3. Isi harga per varian. Satuan dapat diubah (mis. ons); sistem mengonversi otomatis ke kg/liter.
    Peringatan merah berarti harga di luar batas kewajaran. Periksa ulang, tetapi data tetap boleh disimpan.
 4. Tekan **Simpan**. Data tetap tersimpan walau tidak ada sinyal (wilayah blank spot).
-5. Saat ada sinyal, tekan **Unduh CSV** atau **Bagikan** (WhatsApp/email) ke operator.
-6. Setelah operator mengonfirmasi, tekan **Bersihkan yang terkirim**.
+5. **Dengan login Google:** tombolnya **Simpan dan kirim**. Harga langsung terkirim ke sistem; tanpa sinyal, harga
+   aman di HP dan terkirim sendiri begitu ada sinyal. Kolom *Dikirim* menjadi *ya* setelah diterima. Selesai.
+6. **Tanpa login Google:** saat ada sinyal, tekan **Unduh CSV** atau **Bagikan** (WhatsApp/email) ke operator. Setelah
+   operator mengonfirmasi, tekan **Bersihkan yang terkirim**.
 
 Batas tepat waktu: data hari pencatatan diinput paling lambat pukul 14.00 WIB (`jam_batas_tepat_waktu`).
 
 ## 2. Operator data
+
+**Dengan login Google:** buka **Cek Data** → kartu **Unggah berkas harga** → pilih berkas CSV → **Kirim ke sistem**.
+Keputusan terima/tolak disimpan dengan **Simpan keputusan** di halaman yang sama. Tidak perlu membuka GitHub. Langkah
+di bawah hanya untuk situs tanpa login Google.
 
 1. Terima CSV dari petugas (atau siapkan CSV/Excel sesuai `docs/templat/templat_harga.csv`).
 2. Di GitHub buka `data/masuk/harga/` → **Add file → Upload files** → seret berkas → **Commit changes**.

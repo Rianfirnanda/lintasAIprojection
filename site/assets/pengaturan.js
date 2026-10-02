@@ -1,6 +1,9 @@
 // Panel pengaturan admin. Formulir dibuat dari config/skema_pengaturan.json (diterbitkan ke data/skema_pengaturan.json).
-// Perubahan disimpan sebagai commit pada config/pengaturan.json, kunci API disimpan sebagai GitHub Secrets, dan
-// semuanya memakai token GitHub admin yang hanya hidup di tab ini. Tidak ada server perantara.
+// Dua cara menyimpan, dengan tampilan yang sama:
+//   - Login Google (Firebase): disimpan di Firestore dengan akun admin yang sedang masuk, tanpa token GitHub.
+//     Mesin pengolah mengambilnya lalu menerapkannya (pipeline/firestore_sinkron.py). Lihat pengaturan-firestore.js.
+//   - Tanpa Firebase: disimpan sebagai commit pada config/pengaturan.json dan GitHub Secrets, memakai token GitHub
+//     admin yang hanya hidup di tab ini. Tidak ada server perantara.
 import { pasangKerangka, muatJSON, esc, waktu } from "./app.js";
 import { ind } from "./peran.js";
 import { GalatGitHub, KlienGitHub, bacaRepo } from "./github.js";
@@ -9,6 +12,9 @@ import {
 } from "./pengaturan-inti.js";
 
 const meta = await pasangKerangka("pengaturan.html");
+/** true bila situs memakai login Google: semua lewat Firestore, tanpa token GitHub. */
+const FS = meta?.login === "firebase";
+const rahasiaFirebase = (nama) => nama.startsWith("FIREBASE_");
 const BERKAS = "config/pengaturan.json";
 const KUNCI_SESI = "lintas-gh-sambungan";
 const $ = (id) => document.getElementById(id);
@@ -40,17 +46,20 @@ const lapor = (e) => { if (!(e instanceof GalatGitHub)) console.error(e); };
 const urlAman = (u) => (/^https:\/\/github\.com\//.test(String(u)) ? String(u) : "#");
 const galatTeks = (e) => (e instanceof GalatGitHub ? e.message : e?.message || "Terjadi kesalahan yang tidak dikenal.");
 
+/** Kunci yang diatur lewat panel ini. Dengan Firebase, kunci Firebase sendiri tetap di GitHub Secrets. */
+const daftarKunci = () => skema.rahasia.filter((r) => !(FS && rahasiaFirebase(r.nama)));
+
 /* ------------------------------------------------------------------ ringkasan */
 function renderRingkas() {
-  const nAda = S.rahasia ? skema.rahasia.filter((r) => S.rahasia.has(r.nama)).length : null;
+  const nAda = S.rahasia ? daftarKunci().filter((r) => S.rahasia.has(r.nama)).length : null;
   const penyedia = ambil(S.kini, "ai.penyedia").nilai;
   const kolomAi = skema.kolom.find((k) => k.jalur === "ai.penyedia");
   const beda = bedaPengaturan(S.awal, S.kini, skema).length;
   $("ringkas").innerHTML = [
-    ind({ i: "tautan", warna: S.klien ? "hijau" : "oranye", label: "Sambungan GitHub", nilai: S.klien ? "Tersambung" : "Belum",
-      sub: S.klien ? `@${esc(S.pengguna.login)} · ${esc(S.klien.namaRepo)}` : "Tempel token di bawah" }),
-    ind({ i: "gembokPerisai", warna: nAda ? "hijau" : "abu", label: "Kunci terisi", nilai: nAda === null ? "–" : `${nAda}/${skema.rahasia.length}`,
-      sub: nAda === null ? (S.rahasiaGalat ? "tidak bisa dicek" : "sambungkan dulu") : "di GitHub Secrets", meter: nAda === null ? null : nAda / skema.rahasia.length * 100, meterWarna: "hijau" }),
+    ind({ i: "tautan", warna: S.klien ? "hijau" : "oranye", label: FS ? "Sambungan" : "Sambungan GitHub", nilai: S.klien ? "Tersambung" : "Belum",
+      sub: S.klien ? (FS ? esc(S.pengguna.login) : `@${esc(S.pengguna.login)} · ${esc(S.klien.namaRepo)}`) : (FS ? "masuk sebagai admin" : "Tempel token di bawah") }),
+    ind({ i: "gembokPerisai", warna: nAda ? "hijau" : "abu", label: "Kunci terisi", nilai: nAda === null ? "–" : `${nAda}/${daftarKunci().length}`,
+      sub: nAda === null ? (S.rahasiaGalat ? "tidak bisa dicek" : "sambungkan dulu") : (FS ? "tersimpan aman" : "di GitHub Secrets"), meter: nAda === null ? null : nAda / daftarKunci().length * 100, meterWarna: "hijau" }),
     ind({ i: "otak", label: "AI yang dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${esc(teksNilai(kolomAi, penyedia).replace(/ \(.*\)$/, ""))}</span>`,
       sub: penyedia === "otomatis" ? esc(teksNilai(skema.kolom.find((k) => k.jalur === "ai.urutan_otomatis"), ambil(S.kini, "ai.urutan_otomatis").nilai))
         : esc(ambil(S.kini, penyedia === "anthropic" ? "ai.model_anthropic" : penyedia === "github_models" ? "ai.model_github" : "ai.model_gemini").nilai) }),
@@ -59,8 +68,51 @@ function renderRingkas() {
 }
 
 /* ------------------------------------------------------------------ sambungan */
+function renderSambunganFirestore(kartu) {
+  if (S.klien) {
+    const tunda = S.menunggu ? `<p class="pesan peringatan" style="margin-top:10px">Ada perubahan yang disimpan ${S.menunggu.oleh ? `oleh ${esc(S.menunggu.oleh)} ` : ""}dan sedang menunggu diproses. Isian di bawah sudah memuat perubahan itu.</p>` : "";
+    kartu.innerHTML = `<div class="kartu-kepala"><div><h2 id="j-sambungan">Penyimpanan</h2></div></div>
+      <div class="tersambung"><p>Masuk sebagai <b>${esc(S.pengguna.login)}</b>. Perubahan, kunci, dan permintaan di halaman ini langsung tersimpan.
+        Sistem menerapkannya otomatis, biasanya dalam 15 sampai 30 menit pada jam kerja. Tidak perlu membuka GitHub.</p>
+        <div class="baris-kontrol"><button class="tombol" type="button" id="btn-muat">Muat ulang</button></div></div>${tunda}
+      <div id="pesan-sambungan" class="pesan-bagian"></div>`;
+    $("btn-muat").addEventListener("click", () => {
+      if (adaPerubahan() && !confirm("Perubahan yang belum disimpan akan hilang. Lanjutkan?")) return;
+      sambungFirestore({ muatUlang: true });
+    });
+    return;
+  }
+  kartu.innerHTML = `<div class="kartu-kepala"><div><h2 id="j-sambungan">Penyimpanan</h2>
+      <p>Menghubungkan dengan akun Anda…</p></div></div><div id="pesan-sambungan" class="pesan-bagian"></div>`;
+}
+
+async function sambungFirestore({ muatUlang = false } = {}) {
+  try {
+    const { KlienFirestore } = await import("./pengaturan-firestore.js");
+    const klien = await KlienFirestore.sambung({ terbit, versiTerbit: meta?.pengaturan_versi || 0 });
+    const [pengguna, berkas] = await Promise.all([klien.pengguna(), klien.bacaBerkas()]);
+    const data = JSON.parse(berkas.teks);
+    Object.values(S.pantau).forEach((h) => h());
+    Object.assign(S, { klien, pengguna, awal: data, kini: salin(data), sha: berkas.sha, pantau: {},
+      menunggu: berkas.menunggu ? { oleh: berkas.diubahOleh } : null });
+    await Promise.all([muatRahasia(), ...skema.alur_kerja.map((a) => muatProses(a.berkas))]);
+    renderSemua();
+    for (const a of skema.alur_kerja) {
+      S.pantau[a.berkas] = klien.pantauProses(a.berkas, (p) => { S.proses = { ...S.proses, [a.berkas]: p }; tampilProses(a.berkas); });
+    }
+    if (muatUlang) tampilPesan($("pesan-sambungan"), "sukses", "Pengaturan dimuat ulang.");
+  } catch (e) {
+    lapor(e);
+    S.klien = null;
+    renderSemua();
+    tampilPesan($("pesan-sambungan"), "galat", `${esc(galatTeks(e))} <button class="tombol kecil" type="button" id="btn-ulang">Coba lagi</button>`);
+    $("btn-ulang")?.addEventListener("click", () => sambungFirestore());
+  }
+}
+
 function renderSambungan() {
   const kartu = $("kartu-sambungan");
+  if (FS) return renderSambunganFirestore(kartu);
   if (S.klien) {
     kartu.innerHTML = `<div class="kartu-kepala"><div><h2 id="j-sambungan">Sambungan GitHub</h2></div></div>
       <div class="tersambung"><p>Tersambung sebagai <b>@${esc(S.pengguna.login)}</b> ke <a href="${esc(S.klien.alamatRepo)}" rel="noopener">${esc(S.klien.namaRepo)}</a> (cabang ${esc(S.cabang)}).</p>
@@ -150,6 +202,11 @@ async function muatRahasia() {
 function tglSingkat(iso) { return iso ? waktu(iso).split(" ").slice(0, 3).join(" ") : ""; }
 
 function htmlRahasia(r) {
+  if (FS && rahasiaFirebase(r.nama)) {
+    // Kunci Firebase dipakai mesin untuk masuk ke Firestore, jadi tetap disimpan di GitHub Secrets (diatur sekali di awal).
+    return `<div class="isian"><div class="rahasia-kepala"><span class="label-isian">${esc(r.label)}</span><span class="lencana polos">di GitHub Secrets</span></div>
+      <span class="bantuan">${esc(r.bantuan)} Diatur sekali saat memasang Firebase, jadi tidak diubah dari sini (lihat docs/FIREBASE.md).</span></div>`;
+  }
   const ada = S.rahasia?.get(r.nama);
   const lencana = !S.klien ? '<span class="lencana polos">sambungkan dulu</span>'
     : S.rahasiaGalat ? '<span class="lencana rendah">tidak bisa dicek</span>'
@@ -185,7 +242,9 @@ async function simpanKunci(wadah) {
       x.el.value = "";
       berhasil.push(x.def.label);
     }
-    hasil = ["sukses", `Tersimpan di GitHub Secrets: ${esc(berhasil.join(", "))}. Nilainya tidak bisa dilihat lagi, hanya bisa diganti.`];
+    hasil = ["sukses", FS
+      ? `Tersimpan: ${esc(berhasil.join(", "))}. Nilainya tidak bisa dilihat lagi dari situs, hanya bisa diganti. Mulai dipakai pada proses berikutnya.`
+      : `Tersimpan di GitHub Secrets: ${esc(berhasil.join(", "))}. Nilainya tidak bisa dilihat lagi, hanya bisa diganti.`];
   } catch (e) {
     hasil = ["galat", `${berhasil.length ? `Sudah tersimpan: ${esc(berhasil.join(", "))}. ` : ""}Gagal menyimpan berikutnya: ${esc(galatTeks(e))}`];
   }
@@ -202,7 +261,8 @@ async function hapusKunci(nama, wadah) {
   let hasil;
   try {
     await S.klien.hapusRahasia(nama);
-    hasil = ["sukses", `Kunci "${esc(def.label)}" sudah dihapus dari GitHub Secrets.`];
+    hasil = ["sukses", FS ? `Kunci "${esc(def.label)}" sudah dihapus. Bila kunci yang sama ada di GitHub Secrets, kunci itu yang dipakai.`
+      : `Kunci "${esc(def.label)}" sudah dihapus dari GitHub Secrets.`];
   } catch (e) {
     hasil = ["galat", esc(galatTeks(e))];
   }
@@ -303,7 +363,7 @@ function renderBilah(jumlahMasalah = periksa(S.kini, skema).length) {
   const html = `<div class="ringkas-simpan"><b>${beda.length}</b> perubahan belum disimpan${jumlahMasalah ? ` · <span class="jumlah-masalah">${jumlahMasalah} isian belum benar</span>` : ""}
       <details><summary>Lihat perubahan</summary><ul>${daftar}</ul></details></div>
     <div class="aksi-simpan"><button class="tombol" type="button" id="btn-batal">Batalkan perubahan</button>
-      <button class="tombol utama-aksi" type="button" id="btn-simpan" ${S.klien && !jumlahMasalah ? "" : "disabled"} title="${S.klien ? "" : "Sambungkan ke GitHub dulu"}">Simpan perubahan</button></div>`;
+      <button class="tombol utama-aksi" type="button" id="btn-simpan" ${S.klien && !jumlahMasalah ? "" : "disabled"} title="${S.klien || FS ? "" : "Sambungkan ke GitHub dulu"}">Simpan perubahan</button></div>`;
   // Jangan gambar ulang bila isinya sama. Kalau tidak, tombol yang sedang diklik bisa terganti di tengah klik
   // (mis. saat isian kehilangan fokus karena tombol ditekan) dan kliknya hilang.
   if (bilah.dataset.tanda === html) return;
@@ -326,7 +386,7 @@ async function simpanPengaturan() {
     const data = JSON.parse(segar.teks);
     const bentrok = beda.filter((b) => !sama(ambil(data, b.jalur).nilai, b.dari));
     if (bentrok.length) {
-      throw new GalatGitHub(`Isian berikut sudah diubah orang lain sejak dimuat: ${bentrok.map((b) => b.kolom.label).join(", ")}. Muat ulang dari GitHub, lalu ulangi perubahan Anda.`, { kode: "bentrok" });
+      throw new GalatGitHub(`Isian berikut sudah diubah orang lain sejak dimuat: ${bentrok.map((b) => b.kolom.label).join(", ")}. Tekan Muat ulang di atas, lalu ulangi perubahan Anda.`, { kode: "bentrok" });
     }
     for (const b of beda) atur(data, b.jalur, b.ke);
     const masalah = periksa(data, skema);
@@ -339,8 +399,11 @@ async function simpanPengaturan() {
     S.awal = salin(data);
     S.kini = salin(data);
     S.sha = hasil.sha;
+    if (FS) { S.menunggu = { oleh: S.pengguna.login }; renderSambungan(); }
     renderPanelIsi(); renderRingkas(); renderBilah();
-    tampilPesan(pesan, "sukses", `Tersimpan. <a href="${esc(urlAman(hasil.urlCommit))}" rel="noopener" target="_blank">Lihat perubahannya di GitHub</a>. Dashboard diperbarui otomatis sekitar 2 sampai 3 menit lagi.`);
+    tampilPesan(pesan, "sukses", FS
+      ? "Tersimpan. Sistem menerapkannya dan memperbarui dashboard otomatis, biasanya dalam 15 sampai 30 menit pada jam kerja."
+      : `Tersimpan. <a href="${esc(urlAman(hasil.urlCommit))}" rel="noopener" target="_blank">Lihat perubahannya di GitHub</a>. Dashboard diperbarui otomatis sekitar 2 sampai 3 menit lagi.`);
     mulaiPantau("pipeline.yml", Date.now());
   } catch (e) {
     lapor(e);
@@ -355,9 +418,11 @@ const NAMA_HASIL = { success: "selesai dengan baik", failure: "gagal", cancelled
 
 function htmlProses(p) {
   if (!p) return "Belum pernah dijalankan";
-  const teks = p.status === "completed" ? (NAMA_HASIL[p.hasil] || p.hasil || "selesai") : (NAMA_STATUS[p.status] || p.status);
+  const teks = FS && p.status === "queued" ? "menunggu diambil (paling lambat 15 menit pada jam kerja)"
+    : p.status === "completed" ? (NAMA_HASIL[p.hasil] || p.hasil || "selesai") : (NAMA_STATUS[p.status] || p.status);
   const warna = p.status !== "completed" ? "info" : p.hasil === "success" ? "baik" : "tinggi";
-  return `<span class="lencana ${warna}">${esc(teks)}</span> ${esc(waktu(p.dibuat))} · <a href="${esc(urlAman(p.url))}" rel="noopener" target="_blank">lihat di GitHub</a>`;
+  const tautan = p.url ? ` · <a href="${esc(urlAman(p.url))}" rel="noopener" target="_blank">${FS ? "rincian proses" : "lihat di GitHub"}</a>` : "";
+  return `<span class="lencana ${warna}">${esc(teks)}</span> ${esc(waktu(p.dibuat))}${p.oleh ? ` oleh ${esc(p.oleh)}` : ""}${tautan}${p.pesan ? `<br><span class="meta-kecil">${esc(p.pesan)}</span>` : ""}`;
 }
 
 async function muatProses(berkas) {
@@ -371,6 +436,7 @@ function tampilProses(berkas) {
 
 /** Memeriksa proses terakhir tiap 8 detik sampai selesai (paling lama sekitar 6 menit). */
 function mulaiPantau(berkas, sejak) {
+  if (FS) return; // dengan Firestore, status dipantau langsung sejak tersambung
   clearInterval(S.pantau[berkas]);
   let hitung = 0;
   S.pantau[berkas] = setInterval(async () => {
@@ -395,7 +461,7 @@ function htmlAlur(a) {
     <h3>${esc(a.judul)}</h3><p class="bantuan">${esc(a.bantuan)}</p>
     <div class="form-grid">${bidang}</div>
     <div class="baris-kontrol" style="margin-top:14px"><button class="tombol utama-aksi" type="button" data-jalankan ${S.klien ? "" : "disabled"}>Jalankan sekarang</button>
-      <span class="status-proses" id="proses-${a.berkas}">${S.klien ? htmlProses(S.proses?.[a.berkas]) : "Sambungkan ke GitHub dulu"}</span></div>
+      <span class="status-proses" id="proses-${a.berkas}">${S.klien ? htmlProses(S.proses?.[a.berkas]) : (FS ? "Menghubungkan…" : "Sambungkan ke GitHub dulu")}</span></div>
     <div class="pesan-bagian" role="status"></div></section>`;
 }
 
@@ -413,7 +479,9 @@ async function jalankan(wadah) {
   try {
     const mulai = Date.now();
     await S.klien.jalankanAlur(a.berkas, S.cabang, masukan);
-    tampilPesan(pesan, "sukses", `Sudah diminta dijalankan. Statusnya muncul di sebelah tombol dalam beberapa detik. <a href="${esc(S.klien.alamatRepo)}/actions/workflows/${esc(a.berkas)}" rel="noopener" target="_blank">Lihat di GitHub</a>.`);
+    tampilPesan(pesan, "sukses", FS
+      ? "Permintaan tersimpan. Sistem mengambilnya paling lambat 15 menit pada jam kerja, lalu statusnya berubah sendiri di sebelah tombol."
+      : `Sudah diminta dijalankan. Statusnya muncul di sebelah tombol dalam beberapa detik. <a href="${esc(S.klien.alamatRepo)}/actions/workflows/${esc(a.berkas)}" rel="noopener" target="_blank">Lihat di GitHub</a>.`);
     mulaiPantau(a.berkas, mulai);
   } catch (e) {
     tampilPesan(pesan, "galat", esc(galatTeks(e)));
@@ -464,16 +532,17 @@ function renderPanelIsi({ bersih = false } = {}) {
     const bagian = [...urutBagian(g.kode)].map(([nama, isi]) => `<div class="bagian-pengaturan" data-bagian="${esc(nama)}">
       <h3>${esc(nama)}</h3>
       ${isi.kolom.length ? `<div class="kolom-isian">${isi.kolom.map(htmlKolom).join("")}</div>` : ""}
-      ${isi.rahasia.length ? `<div class="kolom-isian">${isi.rahasia.map(htmlRahasia).join("")}</div>
+      ${isi.rahasia.length && FS && isi.rahasia.every((r) => rahasiaFirebase(r.nama)) ? `<div class="kolom-isian">${isi.rahasia.map(htmlRahasia).join("")}</div>`
+        : isi.rahasia.length ? `<div class="kolom-isian">${isi.rahasia.map(htmlRahasia).join("")}</div>
         <div class="rahasia-aksi"><button class="tombol utama-aksi kecil" type="button" data-simpan-kunci ${S.klien ? "" : "disabled"}>Simpan kunci yang diisi</button>
-          <span class="meta-kecil">${S.klien ? (S.rahasiaGalat ? esc(S.rahasiaGalat) : "Kunci dienkripsi di browser, lalu disimpan di GitHub Secrets.") : "Sambungkan ke GitHub dulu."}</span></div>
+          <span class="meta-kecil">${S.klien ? (S.rahasiaGalat ? esc(S.rahasiaGalat) : FS ? "Kunci hanya bisa ditulis dari sini dan hanya dibaca mesin pengolah. Tidak ada yang bisa membacanya lewat situs." : "Kunci dienkripsi di browser, lalu disimpan di GitHub Secrets.") : (FS ? "Menghubungkan…" : "Sambungkan ke GitHub dulu.")}</span></div>
         <div class="pesan-bagian" role="status"></div>` : ""}
     </div>`).join("");
     return `<div class="panel-pengaturan" data-panel="${g.kode}" ${g.kode === S.tab ? "" : "hidden"}>
       <p class="ringkas-tab">${esc(g.ringkas)}</p>${g.kode === "ai" ? htmlKesiapanAi() : ""}${bagian}</div>`;
   }).join("");
   const alur = `<div class="panel-pengaturan" data-panel="jalankan" ${S.tab === "jalankan" ? "" : "hidden"}>
-    <p class="ringkas-tab">Jalankan proses di GitHub tanpa membuka GitHub.</p>${skema.alur_kerja.map(htmlAlur).join("")}</div>`;
+    <p class="ringkas-tab">${FS ? "Minta sistem menjalankan proses sekarang, tanpa menunggu jadwal." : "Jalankan proses di GitHub tanpa membuka GitHub."}</p>${skema.alur_kerja.map(htmlAlur).join("")}</div>`;
   $("panel-isi").innerHTML = kelompok + alur;
   pulihkanDraf(draf);
   perbarui();
@@ -491,9 +560,11 @@ function pilihTab(kode) {
 }
 
 function renderKeterangan() {
-  $("ket-simpan").textContent = S.klien
-    ? "Perubahan disimpan sebagai commit di GitHub, lalu dashboard diperbarui otomatis."
-    : "Tampilan baca saja. Sambungkan ke GitHub di atas untuk mengubah.";
+  $("ket-simpan").textContent = FS
+    ? (S.klien ? "Perubahan tersimpan langsung, lalu sistem menerapkannya dan memperbarui dashboard otomatis." : "Menghubungkan dengan akun Anda…")
+    : S.klien
+      ? "Perubahan disimpan sebagai commit di GitHub, lalu dashboard diperbarui otomatis."
+      : "Tampilan baca saja. Sambungkan ke GitHub di atas untuk mengubah.";
 }
 
 function renderSemua({ bersih = false } = {}) {
@@ -522,5 +593,9 @@ isi.addEventListener("click", (e) => {
 window.addEventListener("beforeunload", (e) => { if (adaPerubahan()) { e.preventDefault(); e.returnValue = ""; } });
 
 renderSemua();
-const sesiTersimpan = bacaSesi();
-if (sesiTersimpan?.token) await sambungkan(sesiTersimpan.token, sesiTersimpan.repo, { diam: true });
+if (FS) {
+  await sambungFirestore();
+} else {
+  const sesiTersimpan = bacaSesi();
+  if (sesiTersimpan?.token) await sambungkan(sesiTersimpan.token, sesiTersimpan.repo, { diam: true });
+}

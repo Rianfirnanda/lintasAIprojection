@@ -12,6 +12,11 @@ rules_version = '2';
 //   2. Admin aktif menyetujui (status "aktif" + peran + izin halaman), menolak, atau menonaktifkan akun.
 //   3. Admin pertama: email yang terdaftar di daftarAdminAwal() boleh mengangkat dirinya sendiri menjadi admin.
 //      Daftar ini diisi otomatis saat terbit dari GitHub Secret FIREBASE_ADMIN_AWAL, bukan ditulis di repositori.
+//
+// Pekerjaan harian juga lewat situs: harga dari petugas, keputusan cek data, tindak lanjut peringatan, persetujuan
+// model, pengaturan, kunci rahasia, dan permintaan "jalankan". Mesin pengolah (GitHub Actions dengan akun layanan)
+// mengambilnya dari koleksi di bawah. Akun layanan tidak terikat aturan ini, jadi koleksi yang hanya untuk mesin
+// (lbp_rahasia, lbp_status) cukup ditutup bagi browser.
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -33,6 +38,30 @@ service cloud.firestore {
     function statusSah(s) { return s in ['menunggu', 'aktif', 'ditolak', 'nonaktif']; }
     function teksPendek(x, maks) { return x is string && x.size() <= maks; }
     function halamanSah(h) { return h == null || (h is list && h.size() <= 30); }
+    function tanggalSah(x) { return x is string && x.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'); }
+
+    // Hak membuka halaman: izin halaman yang diatur admin (bila ada), selain itu bawaan peran. Admin selalu boleh.
+    // Bawaan peran harus sama dengan menu di site/assets/akses.js.
+    function bolehHalaman(h, bawaan) {
+      let a = get(akun(request.auth.uid)).data;
+      return a.status == 'aktif'
+        && (a.peran == 'admin' || (a.halaman is list && h in a.halaman) || (!(a.halaman is list) && a.peran in bawaan));
+    }
+    function izin(h, bawaan) { return masuk() && exists(akun(request.auth.uid)) && bolehHalaman(h, bawaan); }
+    function aktif() { return masuk() && exists(akun(request.auth.uid)) && get(akun(request.auth.uid)).data.status == 'aktif'; }
+    function bolehCatat() { return izin('input.html', ['petugas']); }
+    function bolehCekData() { return izin('kualitas.html', ['operator', 'analis']); }
+    function bolehTindakLanjut() { return izin('sinyal.html', ['analis', 'tpid']); }
+    function bolehSetujuiModel() { return izin('model.html', ['analis']); }
+    function baru() { return request.resource.data; }
+    function stempel() { return baru().diperbarui == request.time && baru().oleh_uid == request.auth.uid; }
+
+    // Kunci yang boleh diisi lewat situs. Kunci Firebase sendiri tetap di GitHub Secrets (mesin butuh itu untuk masuk).
+    function namaRahasiaSah(n) {
+      return n in ['GEMINI_API_KEY', 'ANTHROPIC_API_KEY', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'SMTP_HOST', 'SMTP_PORT',
+                   'SMTP_USER', 'SMTP_PASSWORD', 'EMAIL_KE', 'EMAIL_DARI'];
+    }
+
     function kolomSah(d) {
       return d.keys().hasOnly(['email', 'nama', 'foto', 'status', 'peran', 'halaman', 'dibuat', 'diperbarui',
                                'diputus_oleh', 'diputus_pada', 'catatan']);
@@ -93,6 +122,111 @@ service cloud.firestore {
         && request.resource.data.oleh == request.auth.uid
         && request.resource.data.waktu == request.time
         && teksPendek(request.resource.data.aksi, 40);
+    }
+
+    // Harga dari petugas (formulir Catat Harga) atau dari berkas yang diunggah operator. ID dokumen = id_klien, jadi
+    // kiriman ulang dari HP yang sempat luring tidak menjadi ganda. Tidak bisa diubah: koreksi lewat Cek Data.
+    match /lbp_harga/{id} {
+      allow read: if (masuk() && resource.data.oleh_uid == request.auth.uid) || bolehCekData();
+      allow create: if (bolehCatat() || bolehCekData())
+        && baru().keys().hasAll(['tanggal', 'kode_pasar', 'kode_varian', 'harga', 'id_klien', 'petugas', 'diterima', 'diperbarui', 'oleh_uid'])
+        && baru().keys().hasOnly(['tanggal', 'kode_pasar', 'kode_varian', 'harga', 'satuan', 'kode_sumber', 'petugas', 'responden',
+                                  'id_klien', 'waktu_input', 'catatan', 'berkas', 'oleh_uid', 'oleh_email', 'diterima', 'diperbarui'])
+        && tanggalSah(baru().tanggal)
+        && teksPendek(baru().kode_pasar, 30) && baru().kode_pasar.size() > 0
+        && teksPendek(baru().kode_varian, 30) && baru().kode_varian.size() > 0
+        && baru().harga is number && baru().harga > 0 && baru().harga < 100000000
+        && teksPendek(baru().get('satuan', ''), 20) && teksPendek(baru().get('kode_sumber', ''), 30)
+        && teksPendek(baru().petugas, 60) && teksPendek(baru().get('responden', ''), 60)
+        && baru().id_klien == id && id.size() <= 80
+        && teksPendek(baru().get('waktu_input', ''), 40) && teksPendek(baru().get('catatan', ''), 300)
+        && teksPendek(baru().get('berkas', ''), 160)
+        && baru().get('oleh_email', request.auth.token.email) == request.auth.token.email
+        && baru().diterima == request.time && stempel();
+    }
+
+    // Keputusan cek data (terima/tolak) per observasi. ID dokumen = id_observasi; keputusan terbaru yang berlaku.
+    match /lbp_validasi/{id} {
+      allow read: if bolehCekData();
+      allow create, update: if bolehCekData()
+        && baru().keys().hasOnly(['id_observasi', 'keputusan', 'alasan', 'validator', 'tanggal_validasi', 'oleh_uid', 'diperbarui'])
+        && baru().id_observasi == id && id.size() <= 120
+        && baru().keputusan in ['terima', 'tolak']
+        && teksPendek(baru().alasan, 300) && teksPendek(baru().validator, 120) && teksPendek(baru().tanggal_validasi, 40)
+        && stempel();
+    }
+
+    // Tindak lanjut peringatan. Setiap catatan dokumen baru, jadi riwayatnya utuh.
+    match /lbp_tindak_lanjut/{id} {
+      allow read: if bolehTindakLanjut();
+      allow create: if bolehTindakLanjut()
+        && baru().keys().hasOnly(['id_sinyal', 'status', 'catatan', 'petugas', 'tanggal', 'kode_varian', 'tanggal_kejadian', 'oleh_uid', 'diperbarui'])
+        && baru().status in ['perlu_verifikasi', 'terverifikasi', 'false_alarm', 'ditindaklanjuti', 'selesai', 'anomali_terlewat']
+        && teksPendek(baru().id_sinyal, 160) && teksPendek(baru().catatan, 500) && teksPendek(baru().petugas, 120)
+        && teksPendek(baru().tanggal, 40) && teksPendek(baru().kode_varian, 30) && teksPendek(baru().tanggal_kejadian, 20)
+        && (baru().status == 'anomali_terlewat' ? baru().kode_varian.size() > 0 : baru().id_sinyal.size() > 0)
+        && stempel();
+    }
+
+    // Persetujuan model proyeksi per komoditas.
+    match /lbp_persetujuan_model/{id} {
+      allow read: if bolehSetujuiModel();
+      allow create: if bolehSetujuiModel()
+        && baru().keys().hasOnly(['kode_varian', 'model', 'keputusan', 'penyetuju', 'tanggal', 'catatan', 'oleh_uid', 'diperbarui'])
+        && baru().keputusan in ['setuju', 'tolak']
+        && teksPendek(baru().kode_varian, 30) && baru().kode_varian.size() > 0
+        && teksPendek(baru().model, 60) && baru().model.size() > 0
+        && teksPendek(baru().penyetuju, 120) && teksPendek(baru().tanggal, 40) && teksPendek(baru().catatan, 300)
+        && stempel();
+    }
+
+    // Pengaturan sistem (isi config/pengaturan.json). "versi" naik satu setiap simpan, jadi dua admin yang menyimpan
+    // bersamaan tidak saling menimpa: simpanan kedua ditolak dan perlu dimuat ulang.
+    match /lbp_pengaturan/{id} {
+      allow read: if aktif();
+      allow create, update: if adminAktif() && id == 'utama'
+        && baru().keys().hasOnly(['isi', 'versi', 'diubah_oleh', 'diubah_pada', 'ringkasan'])
+        && baru().isi is map && baru().versi is int
+        && baru().versi == (resource == null ? 1 : resource.data.versi + 1)
+        && baru().diubah_oleh == request.auth.token.email
+        && baru().diubah_pada == request.time
+        && teksPendek(baru().ringkasan, 2000);
+    }
+
+    // Kunci rahasia: hanya bisa ditulis admin, tidak bisa dibaca dari browser siapa pun. Yang tampil di panel hanya
+    // tanda "sudah diisi" di lbp_rahasia_status.
+    match /lbp_rahasia/{nama} {
+      allow read: if false;
+      allow create, update: if adminAktif() && namaRahasiaSah(nama)
+        && baru().keys().hasOnly(['nilai', 'diperbarui', 'oleh_uid'])
+        && baru().nilai is string && baru().nilai.size() > 0 && baru().nilai.size() <= 8000
+        && stempel();
+      allow delete: if adminAktif();
+    }
+    match /lbp_rahasia_status/{nama} {
+      allow read: if adminAktif();
+      allow create, update: if adminAktif() && namaRahasiaSah(nama)
+        && baru().keys().hasOnly(['diperbarui', 'oleh_uid', 'oleh_email'])
+        && baru().oleh_email == request.auth.token.email
+        && stempel();
+      allow delete: if adminAktif();
+    }
+
+    // Permintaan "jalankan sekarang" dari panel Pengaturan. Satu dokumen per jenis; mesin mengambilnya lalu
+    // mengisi status, waktu, dan alamat proses.
+    match /lbp_perintah/{jenis} {
+      allow read: if adminAktif();
+      allow create, update: if adminAktif() && jenis in ['perbarui', 'cari_sumber']
+        && baru().keys().hasOnly(['jenis', 'masukan', 'status', 'diminta_oleh', 'diminta_pada'])
+        && baru().jenis == jenis && baru().masukan is map && baru().masukan.size() <= 10
+        && baru().status == 'menunggu'
+        && baru().diminta_oleh == request.auth.token.email
+        && baru().diminta_pada == request.time;
+    }
+
+    // Status proses terakhir, ditulis mesin. Semua akun aktif boleh membaca.
+    match /lbp_status/{id} {
+      allow read: if aktif();
     }
   }
 }
