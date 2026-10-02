@@ -28,7 +28,7 @@ let metaCache = null;
  * Bila situs memakai login Firebase, data hasil olahan dibaca langsung dari Firestore (koleksi lbp_data, ditulis
  * mesin pengolah), jadi hanya akun yang sudah disetujui yang bisa membukanya dan perubahan langsung terlihat.
  * Berkas di hosting hanya cadangan (masa peralihan) dan untuk berkas publik seperti meta.json dan master.json. */
-const BERKAS_PUBLIK = new Set(["meta.json", "firebase.json", "pengguna.json", "pengaturan.json", "skema_pengaturan.json", "master.json"]);
+const BERKAS_PUBLIK = new Set(["meta.json", "firebase.json", "pengguna.json", "pengaturan.json", "skema_pengaturan.json", "master.json", "ai_prompt.json"]);
 const modeFirebase = () => metaCache?.login === "firebase";
 
 async function teksDariFirestore(nama) {

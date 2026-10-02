@@ -66,7 +66,9 @@ KIRIMAN = {
 }
 # Koleksi yang langsung memicu pembaruan (keputusan dan catatan); harga dan kunjungan dikumpulkan dulu (lihat perlu_jalan).
 KIRIMAN_SEGERA = ("lbp_validasi", "lbp_tindak_lanjut", "lbp_persetujuan_model", "lbp_kebijakan", "lbp_rapat",
-                  "lbp_keputusan_rekomendasi")
+                  "lbp_keputusan_rekomendasi", "lbp_kandidat_ai")
+WIB = timezone(timedelta(hours=7))
+JAM_AI_HARIAN = 8  # AI Data Finder harian mulai pukul 08.00 WIB
 
 JENIS_PERINTAH = ("perbarui", "cari_sumber")
 
@@ -380,6 +382,15 @@ def tarik(akar: Path, url_proses: str = "", db=None) -> dict:
         if "tidak dipakai" in pesan:
             ringkas["peringatan"] = pesan
 
+    # Hasil AI Data Finder yang dijalankan di browser admin: alamatnya dicek dan digabung ke kandidat sumber.
+    kandidat = _baru_sejak(db, "lbp_kandidat_ai", _waktu(tanda.get("lbp_kandidat_ai")))
+    if kandidat:
+        ringkas["kandidat_situs"] = [d for _, d in kandidat]
+        terakhir = max((_waktu(d.get("diperbarui")) for _, d in kandidat if d.get("diperbarui")), default=None)
+        if terakhir:
+            tanda["lbp_kandidat_ai"] = _iso(terakhir)
+        ringkas["pesan"].append(f"{len(kandidat)} hasil AI Data Finder dari situs")
+
     for jenis in JENIS_PERINTAH:
         ref = db.collection("lbp_perintah").document(jenis)
         snap = ref.get()
@@ -449,6 +460,8 @@ def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harg
     for koleksi in KIRIMAN_SEGERA:
         if _baru_sejak(db, koleksi, _waktu(tanda.get(koleksi)), batas=1):
             return True, f"ada kiriman baru di {koleksi}"
+    if ai_harian_jatuh_tempo(akar, db, sekarang):
+        return True, "AI Data Finder harian"
     if any(_baru_sejak(db, k, _waktu(tanda.get(k)), batas=1) for k in ("lbp_harga", "lbp_kunjungan")):
         selesai = _waktu(status.get("selesai"))
         if selesai and sekarang - selesai < timedelta(minutes=jeda_harga_menit):
@@ -487,7 +500,8 @@ def catat_perintah(jenis: str, url_proses: str, db=None, **kolom) -> None:
 KOLEKSI_DATA = "lbp_data"
 DOK_DAFTAR = "_daftar"
 # Berkas yang tetap boleh terbuka di hosting: dibutuhkan sebelum login atau tidak memuat harga.
-BERKAS_PUBLIK = {"meta.json", "firebase.json", "pengguna.json", "pengaturan.json", "skema_pengaturan.json", "master.json"}
+BERKAS_PUBLIK = {"meta.json", "firebase.json", "pengguna.json", "pengaturan.json", "skema_pengaturan.json", "master.json",
+                 "ai_prompt.json"}
 UKURAN_BAGIAN = 300_000  # karakter; paling banyak 3 bait per karakter, jadi tetap di bawah batas 1 MiB per dokumen
 
 
@@ -548,3 +562,43 @@ def terbit_data(folder: Path, db=None, hapus_berkas: bool = False) -> dict:
                 (folder / rel).unlink()
                 disembunyikan.append(rel)
     return {"ditulis": ditulis, "dihapus": dihapus, "tetap": len(daftar) - len(ditulis), "disembunyikan": disembunyikan}
+
+
+# ---------------------------------------------------------------- AI Data Finder: log dan jadwal harian
+
+def tulis_log_ai(entri: dict, db=None) -> None:
+    """Catat satu proses AI Data Finder di lbp_log_ai (dibaca halaman Sumber Data). Gagal mencatat tidak fatal."""
+    try:
+        db = db or klien()
+        db.collection("lbp_log_ai").add({**entri, "diperbarui": datetime.now(timezone.utc)})
+    except Exception as e:  # noqa: BLE001
+        log.warning("log AI tidak tercatat: %s", e)
+
+
+def _pengaturan_ai(akar: Path) -> dict:
+    try:
+        return json.loads((akar / "config" / "pengaturan.json").read_text(encoding="utf-8")).get("ai", {})
+    except (OSError, ValueError):
+        return {}
+
+
+def ai_harian_jatuh_tempo(akar: Path, db, sekarang: datetime) -> bool:
+    """Sudah lewat pukul 08.00 WIB dan AI Data Finder harian belum jalan hari ini?"""
+    cfg = _pengaturan_ai(akar)
+    if not cfg.get("harian_aktif", True) or int(cfg.get("harian_jumlah", 2)) <= 0:
+        return False
+    w = sekarang.astimezone(WIB)
+    if w.hour < JAM_AI_HARIAN:
+        return False
+    snap = db.collection("lbp_status").document("ai_harian").get()
+    return ((snap.to_dict() or {}) if snap.exists else {}).get("tanggal") != w.date().isoformat()
+
+
+def status_ai_harian(db) -> dict:
+    snap = db.collection("lbp_status").document("ai_harian").get()
+    return (snap.to_dict() or {}) if snap.exists else {}
+
+
+def catat_ai_harian(db, tanggal: str, indeks: int, komoditas: list[str]) -> None:
+    db.collection("lbp_status").document("ai_harian").set(
+        {"tanggal": tanggal, "indeks": indeks, "komoditas": komoditas, "waktu": datetime.now(timezone.utc)})

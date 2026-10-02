@@ -146,7 +146,11 @@ test("kunci rahasia: admin menulis, tidak ada yang bisa membaca nilainya", async
   b.set(doc(d, "lbp_rahasia", "GEMINI_API_KEY"), { nilai: "rahasia-123", diperbarui: serverTimestamp(), oleh_uid: "adm" });
   b.set(doc(d, "lbp_rahasia_status", "GEMINI_API_KEY"), { diperbarui: serverTimestamp(), oleh_uid: "adm", oleh_email: "adm@contoh.go.id" });
   await assertSucceeds(b.commit());
-  await assertFails(getDoc(doc(d, "lbp_rahasia", "GEMINI_API_KEY")));
+  // Kunci AI boleh dibaca Administrator (AI jalan di browser admin); kunci lain dan pengguna lain tetap tidak.
+  await assertSucceeds(getDoc(doc(d, "lbp_rahasia", "GEMINI_API_KEY")));
+  await assertFails(getDoc(doc(db("an"), "lbp_rahasia", "GEMINI_API_KEY")));
+  await isiLangsung("lbp_rahasia", "SMTP_PASSWORD", { nilai: "sandi" });
+  await assertFails(getDoc(doc(d, "lbp_rahasia", "SMTP_PASSWORD")));
   await assertFails(getDocs(collection(d, "lbp_rahasia")));
   await assertSucceeds(getDocs(collection(d, "lbp_rahasia_status")));
   await assertFails(getDocs(collection(db("an"), "lbp_rahasia_status")));
@@ -190,4 +194,25 @@ test("data dashboard di lbp_data hanya bisa dibaca akun yang sudah disetujui, da
   await assertFails(getDoc(doc(db("m"), "lbp_data", "ringkasan.json")));
   await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), "lbp_data", "ringkasan.json")));
   await assertFails(setDoc(doc(db("adm"), "lbp_data", "ringkasan.json"), { isi: "palsu" }));
+});
+
+
+test("hasil dan log AI dari browser: hanya pengelola sistem yang menulis, sesuai bentuknya", async () => {
+  await akun("adm", "admin");
+  await akun("an", "analis");
+  await akun("ptg", "petugas");
+  const k = (uid, tambahan = {}) => ({ permintaan: { komoditas: "cabai" }, penyedia: "gemini", model: "m", pencarian_web: "Tavily, 3 hasil",
+    punya_pencarian_web: true, penyedia_dilewati: [], url_pencarian: [], hasil: "{}", oleh_uid: uid, oleh_email: `${uid}@contoh.go.id`,
+    diperbarui: serverTimestamp(), ...tambahan });
+  await assertSucceeds(addDoc(collection(db("adm"), "lbp_kandidat_ai"), k("adm")));
+  await assertFails(addDoc(collection(db("an"), "lbp_kandidat_ai"), k("an")));
+  await assertFails(addDoc(collection(db("adm"), "lbp_kandidat_ai"), k("adm", { lain: 1 })));
+  const l = (uid, tambahan = {}) => ({ sumber: "situs", komoditas: "cabai", periode: "Okt", langkah: [{ teks: "a", jenis: "info" }],
+    hasil: "berhasil", penyedia: "gemini", model: "m", jumlah_kandidat: 3, pencarian_web: "", oleh_uid: uid,
+    oleh_email: `${uid}@contoh.go.id`, diperbarui: serverTimestamp(), ...tambahan });
+  await assertSucceeds(addDoc(collection(db("adm"), "lbp_log_ai"), l("adm")));
+  await assertFails(addDoc(collection(db("adm"), "lbp_log_ai"), l("adm", { sumber: "harian" })));
+  await assertFails(addDoc(collection(db("an"), "lbp_log_ai"), l("an")));
+  await assertSucceeds(getDocs(collection(db("an"), "lbp_log_ai")));
+  await assertFails(getDocs(collection(db("ptg"), "lbp_log_ai")));
 });

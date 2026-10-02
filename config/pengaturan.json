@@ -33,6 +33,8 @@
   },
   "ai": {
     "penyedia": "otomatis",
+    "harian_aktif": true,
+    "harian_jumlah": 2,
     "urutan_otomatis": ["gemini", "groq", "cerebras", "openrouter", "mistral"],
     "model_gemini": "gemini-flash-latest",
     "model_groq": "openai/gpt-oss-120b",

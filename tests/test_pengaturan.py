@@ -207,7 +207,11 @@ def test_halaman_pengaturan_dikunci_dan_tanpa_pihak_ketiga():
     assert arah["script-src"] == ["'self'"], "skrip hanya boleh dari situs sendiri"
     # GitHub (tanpa Firebase) atau layanan Firebase (Firestore dan login Google); 127.0.0.1 hanya untuk emulator uji.
     firebase = ["https://firestore.googleapis.com", "https://identitytoolkit.googleapis.com", "https://securetoken.googleapis.com"]
-    assert arah["connect-src"] == ["'self'", "https://api.github.com", *firebase, "http://127.0.0.1:8080", "http://127.0.0.1:9099"]
+    # AI Data Finder di browser admin: Tavily dan penyedia AI (kunci dibaca dari Firestore, tidak ada di halaman).
+    ai = ["https://api.tavily.com", "https://generativelanguage.googleapis.com", "https://api.groq.com", "https://api.cerebras.ai",
+          "https://openrouter.ai", "https://api.mistral.ai"]
+    assert sorted(arah["connect-src"]) == sorted(["'self'", "https://api.github.com", *firebase, *ai,
+                                                  "http://127.0.0.1:8080", "http://127.0.0.1:9099"])
     assert arah["frame-src"] == ["https://*.firebaseapp.com", "https://*.web.app"]
     assert arah["default-src"] == ["'self'"] and arah["object-src"] == ["'none'"] and arah["form-action"] == ["'none'"]
     assert not re.search(r"<script(?![^>]*\bsrc=)", html), "tanpa skrip inline"

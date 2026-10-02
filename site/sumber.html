@@ -55,6 +55,12 @@
     </div>
     <div id="kandidat"></div>
   </section>
+
+  <section class="kartu" id="kartu-log" hidden aria-labelledby="j-log">
+    <div class="kartu-kepala"><div><h2 id="j-log">Log proses AI</h2>
+      <p>Setiap pencarian AI Data Finder, dari tombol di Pengaturan maupun jadwal harian, beserta langkahnya. Diperbarui langsung.</p></div></div>
+    <div id="log-ai"></div>
+  </section>
 </main>
 
 <script type="module">
@@ -84,14 +90,31 @@ document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) =>
   <td class="angka">${s.prioritas}</td><td class="angka">${angka(s.jumlah_observasi)}</td>
   <td class="meta-kecil">${esc(s.lisensi)}</td><td class="meta-kecil">${esc(s.catatan)}</td></tr>`).join("");
 
+// Log proses AI (langsung dari Firestore) untuk akun yang boleh melihatnya.
+if (meta?.login === "firebase") {
+  const SUMBER = { situs: "Tombol di situs", mesin: "Mesin (antrean)", harian: "Jadwal harian" };
+  const LENCANA = { berhasil: "baik", gagal: "tinggi", dialihkan: "info" };
+  const kartuLog = document.getElementById("kartu-log");
+  import("./assets/ai-situs.js").then((ai) => ai.pantauLog((daftar) => {
+    kartuLog.hidden = false;
+    document.getElementById("log-ai").innerHTML = daftar.length ? daftar.map((l, i) => `<details class="log-entri" ${i === 0 ? "open" : ""}>
+      <summary><b>${esc(l.komoditas)}</b> <small>${esc(l.periode || "")}</small>
+        <span class="lencana ${LENCANA[l.hasil] || "polos"}">${esc(l.hasil)}</span>
+        <small>${esc(SUMBER[l.sumber] || l.sumber)} · ${l.diperbarui ? esc(waktu(l.diperbarui.toISOString())) : ""}${l.penyedia ? ` · ${esc(l.penyedia)}` : ""}${l.hasil === "berhasil" ? ` · ${l.jumlah_kandidat} kandidat` : ""}${l.pencarian_web ? ` · ${esc(l.pencarian_web)}` : ""}${l.oleh_email ? ` · ${esc(l.oleh_email)}` : ""}</small></summary>
+      <ol class="log-ai">${(l.langkah || []).map((x) => `<li class="log-${esc(x.jenis || "info")}"><time>${esc(x.waktu || "")}</time><span>${esc(x.teks)}</span></li>`).join("")}</ol></details>`).join("")
+      : '<p class="kosong">Belum ada proses AI yang tercatat.</p>';
+  }, () => { kartuLog.hidden = true; })).catch(() => {});
+}
+
 const finder = document.getElementById("tautan-finder");
-if (meta?.url_repo) finder.href = `${meta.url_repo}/actions/workflows/ai-data-finder.yml`;
+if (meta?.login === "firebase") finder.href = "pengaturan.html#jalankan";
+else if (meta?.url_repo) finder.href = `${meta.url_repo}/actions/workflows/ai-data-finder.yml`;
 else finder.href = "tentang.html#ai-data-finder";
 
 const pencarian = data.kandidat_ai?.pencarian || [];
 const wadah = document.getElementById("kandidat");
 if (!pencarian.length) {
-  wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan <strong>AI Data Finder</strong> dari tab Actions di GitHub, lalu isi komoditas dan periode.
+  wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan <strong>AI Data Finder</strong> dari menu Pengaturan, tab Jalankan, lalu isi komoditas dan periode. Pencarian otomatis juga berjalan setiap hari.
     <details style="margin-top:8px"><summary>Detail penyedia AI</summary>Gratis lewat Gemini, Groq, Cerebras, OpenRouter, dan Mistral
     (semuanya punya kuota gratis). Kunci diisi di menu Pengaturan, tab AI. Isi juga kunci Tavily (gratis) supaya AI memakai hasil pencarian web. Pada mode Otomatis, AI dicoba bergantian, jadi kalau
     satu AI kena batas pemakaian gratis, AI berikutnya yang dipakai. Hasil tersimpan di <code>data/sumber/kandidat_ai.json</code>.</details></div>`;
