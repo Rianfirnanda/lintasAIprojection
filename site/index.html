@@ -132,6 +132,8 @@ document.getElementById("beranda-tpid").hidden = !tampilanTpid;
 if (!tampilanTpid) document.body.classList.remove("halaman-dash");
 document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 26));
+// Harga yang baru dikirim petugas langsung tampil (real-time), sebelum selesai diolah.
+if (meta?.login === "firebase") import("./assets/harga-masuk.js").then((m) => m.pasangHargaMasuk(meta, utama)).catch(() => {});
 
 /* ---------- indikator utama (tiap kotak bisa diklik untuk melihat rinciannya) */
 function kartuKpi(jenis, ikonNama, warna, angkaHtml, label, sub, ada = false) {

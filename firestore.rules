@@ -324,5 +324,11 @@ service cloud.firestore {
     match /lbp_status/{id} {
       allow read: if aktif();
     }
+
+    // Data dashboard hasil olahan mesin (harga, prakiraan, peringatan, laporan). Hanya akun yang sudah disetujui yang
+    // bisa membaca; yang menulis hanya mesin pengolah (akun layanan, tidak lewat aturan ini).
+    match /lbp_data/{id} {
+      allow read: if aktif();
+    }
   }
 }

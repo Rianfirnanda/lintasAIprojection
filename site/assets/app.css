@@ -1146,3 +1146,12 @@ td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d
 .baru-dicatat td { background: var(--aksen-lembut); }
 
 .form-grid label[hidden] { display: none; }
+
+/* Harga masuk real-time di Beranda */
+.harga-masuk { margin-block: 0 16px; }
+.dash .harga-masuk { margin-block: 16px; }
+.harga-masuk h2 { display: flex; align-items: center; gap: 8px; }
+.titik-langsung { width: 9px; height: 9px; border-radius: 50%; background: var(--d-hijau); flex: none;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--d-hijau) 55%, transparent); animation: denyut 1.8s ease-out infinite; }
+@keyframes denyut { 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .titik-langsung { animation: none; } }

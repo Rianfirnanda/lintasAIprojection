@@ -179,3 +179,15 @@ test("permintaan jalankan hanya dari admin, selalu berstatus menunggu, dan statu
   await assertFails(setDoc(doc(db("adm"), "lbp_status", "pipeline"), { hasil: "palsu" }));
   await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), "lbp_status", "pipeline")));
 });
+
+test("data dashboard di lbp_data hanya bisa dibaca akun yang sudah disetujui, dan tidak bisa ditulis dari situs", async () => {
+  await akun("adm", "admin");
+  await akun("ptg", "petugas");
+  await akun("m", "petugas", "menunggu");
+  await isiLangsung("lbp_data", "ringkasan.json", { nama: "ringkasan.json", isi: "{}", bagian: 1 });
+  await assertSucceeds(getDoc(doc(db("ptg"), "lbp_data", "ringkasan.json")));
+  await assertSucceeds(getDocs(collection(db("ptg"), "lbp_data")));
+  await assertFails(getDoc(doc(db("m"), "lbp_data", "ringkasan.json")));
+  await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), "lbp_data", "ringkasan.json")));
+  await assertFails(setDoc(doc(db("adm"), "lbp_data", "ringkasan.json"), { isi: "palsu" }));
+});

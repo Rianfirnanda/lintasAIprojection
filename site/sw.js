@@ -1,5 +1,5 @@
 // Service worker: formulir input tetap berfungsi tanpa sinyal (wilayah blank spot).
-const CACHE = "lintas-benteng-v16";
+const CACHE = "lintas-benteng-v17";
 const ASET = [
   "input.html", "masuk.html", "assets/app.css", "assets/app.js", "assets/akses.js", "assets/peran.js", "assets/dashboard.js", "assets/gambar-komoditas.js", "assets/selisih.js", "assets/rincian.js", "assets/kiriman.js", "assets/firebase-klien.js", "vendor/firebase/firebase.js", "assets/logo-bps.png", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
   "data/master.json", "data/meta.json",

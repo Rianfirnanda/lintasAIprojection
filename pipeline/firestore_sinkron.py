@@ -14,6 +14,10 @@ Yang diisi orang lewat situs (tanpa membuka GitHub):
   lbp_rahasia/{NAMA}      kunci API dan notifikasi (hanya dibaca mesin, langsung dipakai, tidak ditulis ke berkas)
   lbp_perintah/{jenis}    permintaan "jalankan sekarang" dari panel Pengaturan
 
+Arah sebaliknya (terbit_data): hasil olahan untuk dashboard (site/data) ditulis ke koleksi lbp_data, satu dokumen per
+berkas. Situs membacanya langsung dari Firestore dan langsung tahu bila ada data baru, dan berkas yang memuat harga tidak
+perlu lagi diterbitkan terbuka di hosting.
+
 Kiriman disalin ke berkas CSV di repositori supaya tetap ada jejak audit dan pipeline membaca data dengan cara yang
 sama seperti sebelumnya. Batas yang sudah diambil disimpan di data/firestore_tanda.json, jadi setiap kali jalan hanya
 kiriman baru yang dibaca (hemat kuota gratis Firestore).
@@ -24,6 +28,7 @@ Mesin masuk dengan akun layanan (GOOGLE_APPLICATION_CREDENTIALS), atau ke emulat
 from __future__ import annotations
 
 import csv
+import hashlib
 import io
 import json
 import logging
@@ -407,12 +412,11 @@ def tulis_adopsi(akar: Path, data: dict) -> bool:
     return True
 
 
-def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harga_menit: int = 60) -> tuple[bool, str]:
+def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harga_menit: int = 0) -> tuple[bool, str]:
     """Untuk pemeriksa berkala: apakah ada yang perlu diproses sekarang?
 
-    Perintah dan pengaturan baru langsung diproses. Keputusan dan catatan baru juga. Harga baru diproses paling cepat
-    `jeda_harga_menit` setelah proses terakhir selesai, supaya saat petugas mengirim bergantian dashboard tidak
-    dibangun ulang terus-menerus.
+    Semua kiriman baru langsung diproses supaya dashboard secepat mungkin mengikuti. `jeda_harga_menit` (bawaan 0)
+    bisa dipakai untuk menahan harga baru sampai sekian menit setelah proses terakhir selesai.
     """
     db = db or klien()
     sekarang = sekarang or datetime.now(timezone.utc)
@@ -462,3 +466,71 @@ def catat_perintah(jenis: str, url_proses: str, db=None, **kolom) -> None:
     snap = ref.get()
     if snap.exists and (snap.to_dict() or {}).get("url", "") == url_proses:
         ref.update(kolom)
+
+
+# ---------------------------------------------------------------- data dashboard -> Firestore
+
+KOLEKSI_DATA = "lbp_data"
+DOK_DAFTAR = "_daftar"
+# Berkas yang tetap boleh terbuka di hosting: dibutuhkan sebelum login atau tidak memuat harga.
+BERKAS_PUBLIK = {"meta.json", "firebase.json", "pengguna.json", "pengaturan.json", "skema_pengaturan.json", "master.json"}
+UKURAN_BAGIAN = 300_000  # karakter; paling banyak 3 bait per karakter, jadi tetap di bawah batas 1 MiB per dokumen
+
+
+def id_data(rel: str) -> str:
+    """seri/CMR01.json -> seri~CMR01.json (ID dokumen Firestore tidak boleh memuat garis miring)."""
+    return rel.replace("/", "~")
+
+
+def berkas_data(folder: Path) -> list[str]:
+    return sorted(p.relative_to(folder).as_posix() for p in folder.rglob("*")
+                  if p.is_file() and p.suffix in (".json", ".csv") and not p.name.startswith("."))
+
+
+def terbit_data(folder: Path, db=None, hapus_berkas: bool = False) -> dict:
+    """Tulis hasil olahan dashboard ke lbp_data. Hanya berkas yang isinya berubah yang ditulis (hemat kuota).
+
+    Dokumen meta.json selalu ditulis paling akhir: situs memantau dokumen itu untuk tahu ada data baru.
+    Bila `hapus_berkas`, berkas yang bukan publik dihapus dari folder setelah semuanya tertulis, supaya tidak ikut
+    diterbitkan terbuka di hosting.
+    """
+    db = db or klien()
+    kol = db.collection(KOLEKSI_DATA)
+    lama = ((kol.document(DOK_DAFTAR).get().to_dict() or {}).get("berkas") or {})
+    meta = json.loads((folder / "meta.json").read_text(encoding="utf-8"))
+    versi = str(meta.get("dibuat", ""))
+    sekarang = datetime.now(timezone.utc)
+    daftar, ditulis = {}, []
+    semua = berkas_data(folder)
+    for rel in [r for r in semua if r != "meta.json"] + (["meta.json"] if "meta.json" in semua else []):
+        teks = (folder / rel).read_text(encoding="utf-8")
+        kunci = hashlib.sha256(teks.encode("utf-8")).hexdigest()
+        bagian = [teks[i:i + UKURAN_BAGIAN] for i in range(0, len(teks), UKURAN_BAGIAN)] or [""]
+        id_ = id_data(rel)
+        daftar[id_] = {"nama": rel, "hash": kunci, "bagian": len(bagian)}
+        sebelum = lama.get(id_) or {}
+        if sebelum.get("hash") == kunci and rel != "meta.json":
+            continue
+        for i, isi in enumerate(bagian[1:], start=2):
+            kol.document(f"{id_}@{i}").set({"isi": isi})
+        for i in range(len(bagian) + 1, int(sebelum.get("bagian", 1)) + 1):
+            kol.document(f"{id_}@{i}").delete()
+        kol.document(id_).set({"nama": rel, "isi": bagian[0], "bagian": len(bagian), "hash": kunci, "versi": versi,
+                               "diperbarui": sekarang})
+        ditulis.append(rel)
+    dihapus = []
+    for id_, info in lama.items():
+        if id_ in daftar:
+            continue
+        for i in range(2, int(info.get("bagian", 1)) + 1):
+            kol.document(f"{id_}@{i}").delete()
+        kol.document(id_).delete()
+        dihapus.append(info.get("nama", id_))
+    kol.document(DOK_DAFTAR).set({"berkas": daftar, "versi": versi, "diperbarui": sekarang})
+    disembunyikan = []
+    if hapus_berkas:
+        for rel in semua:
+            if rel not in BERKAS_PUBLIK:
+                (folder / rel).unlink()
+                disembunyikan.append(rel)
+    return {"ditulis": ditulis, "dihapus": dihapus, "tetap": len(daftar) - len(ditulis), "disembunyikan": disembunyikan}

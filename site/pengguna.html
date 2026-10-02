@@ -135,10 +135,14 @@ const wadah = document.getElementById("akun");
 if (meta?.login === "firebase") {
   // Persetujuan akun paling sering dipakai admin, jadi diletakkan paling atas.
   document.getElementById("ringkas").after(document.getElementById("kartu-akun"), document.getElementById("kartu-jejak"));
-  document.getElementById("catatan-keamanan").innerHTML = `Masuk memakai akun Google. Akun baru, peran, dan izin halaman
-    dijaga aturan keamanan Firestore, jadi orang yang belum disetujui tidak bisa memberi dirinya hak apa pun.
-    Namun berkas data dashboard (harga, peringatan, laporan) masih berupa berkas terbuka di hosting. Data yang perlu
-    dirahasiakan sebaiknya dipindah ke Firestore pada tahap berikutnya.`;
+  const catatan = document.getElementById("catatan-keamanan");
+  catatan.className = "pesan";
+  catatan.innerHTML = `Masuk memakai akun Google. Akun baru, peran, dan izin halaman dijaga aturan keamanan Firestore,
+    jadi orang yang belum disetujui tidak bisa memberi dirinya hak apa pun. Data dashboard (harga, peringatan,
+    laporan) dibaca langsung dari Firestore, jadi hanya bisa dibuka akun yang sudah disetujui, dan halaman memperbarui
+    diri sendiri begitu ada data baru. Salinan data mentah harga masih tersimpan di repositori GitHub sebagai jejak audit.`;
+  // Cara lama (akun contoh dengan kata sandi, menyambungkan Firebase) tidak berlaku lagi.
+  document.querySelectorAll("#catatan-keamanan ~ details").forEach((d) => d.remove());
   pasangTabelAkses();
   const { pasangPanelAkun } = await import("./assets/panel-akun.js");
   await pasangPanelAkun({ wadah, ket: document.getElementById("ket-akun"), ringkas: document.getElementById("ringkas"),
