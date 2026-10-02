@@ -132,8 +132,11 @@ Cara kerjanya:
    `lbp_persetujuan_model`, `lbp_kunjungan`, `lbp_kebijakan`, `lbp_rapat`, `lbp_keputusan_rekomendasi`,
    `lbp_pengaturan`, `lbp_rahasia`, `lbp_perintah`). Aturan Firestore memeriksa siapa yang
    boleh mengirim apa, dan isinya harus wajar.
-2. Pemeriksa otomatis (`.github/workflows/antrean.yml`) melihat Firestore setiap 5 menit, Senin sampai Jumat pukul
-   07.00 sampai 18.00 WIB. Bila ada yang baru, pipeline langsung dijalankan.
+2. Penjaga antrean (`.github/workflows/antrean.yml`, `pipeline/penjaga.py`) berjalan terus sebagai satu job panjang:
+   memeriksa Firestore tiap menit pada jam kerja (Senin sampai Jumat, 07.00 sampai 18.00 WIB) dan tiap 10 menit di
+   luar itu. Bila ada yang baru, pipeline langsung dijalankan. Menjelang batas 6 jam, penjaga menjalankan dirinya lagi.
+   Jadwal cron GitHub tidak dipakai sebagai pemicu utama karena bisa tertunda berjam-jam; jadwal tiap 2 jam hanya
+   cadangan untuk menghidupkan penjaga bila rantainya putus.
 3. Pipeline menyalin kiriman ke berkas di repositori (`data/masuk/harga/situs/`, `data/validasi/situs.csv`, dan
    seterusnya) sebagai jejak audit, menerapkan pengaturan, memakai kunci dari situs, lalu memperbarui dashboard.
    Kiriman yang sudah diambil dicatat di `data/firestore_tanda.json`, jadi yang dibaca hanya kiriman baru.
@@ -146,9 +149,9 @@ Cara kerjanya:
 6. Status proses tampil langsung di panel Pengaturan.
 
 Waktu tunggu: semua kiriman (harga, keputusan, catatan, pengaturan, tombol Jalankan) biasanya tampil di dashboard
-5 sampai 10 menit kemudian: paling lama 5 menit menunggu pemeriksa, lalu sekitar 3 sampai 5 menit diolah. Harga yang
-baru dikirim langsung terlihat di Beranda sebagai "harga masuk, sedang diolah". Di luar jam kerja, kiriman diproses
-pada jam kerja berikutnya. Jadwal GitHub kadang terlambat beberapa menit saat ramai.
+4 sampai 7 menit kemudian: paling lama 1 menit menunggu penjaga, lalu sekitar 3 sampai 5 menit diolah. Harga yang
+baru dikirim langsung terlihat di Beranda sebagai "harga masuk, sedang diolah". Di luar jam kerja, penjaga memeriksa
+tiap 10 menit.
 
 **Batasan yang perlu diketahui:** repositori GitHub ini publik dan mesin menyimpan salinan kiriman harga di folder
 `data/` sebagai jejak audit. Jadi data mentah harga masih bisa dilihat di repositori. Bila perlu dirahasiakan
@@ -158,9 +161,10 @@ sepenuhnya, repositori harus dijadikan private (lihat kuota di bawah).
 dari browser siapa pun, termasuk admin. Bila kunci yang sama juga ada di GitHub Secrets, kunci dari situs yang dipakai.
 Kunci Firebase (`FIREBASE_*`) tetap di GitHub Secrets karena mesin membutuhkannya untuk masuk ke Firestore.
 
-**Kuota GitHub Actions:** repositori publik tidak dibatasi. Bila repositori dijadikan private, pemeriksa berkala memakai
-sekitar 2.900 menit per bulan (tiap 5 menit), melebihi kuota gratis 2.000 menit. Kurangi frekuensinya di
-`antrean.yml` (misalnya `*/15`) bila repositori dijadikan private.
+**Kuota:** repositori publik tidak dibatasi menit GitHub Actions, jadi penjaga gratis. Bila repositori dijadikan
+private, penjaga yang berjalan terus akan menghabiskan kuota gratis 2.000 menit dalam beberapa hari, jadi harus diganti
+pemicu lain. Tiap pemeriksaan membaca sekitar 12 dokumen Firestore, kira-kira 9.000 baca per hari dari kuota gratis
+50.000.
 
 ## Yang perlu diketahui
 
