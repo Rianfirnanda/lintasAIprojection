@@ -97,6 +97,11 @@ def _firestore(a) -> int:
             firestore_sinkron.catat_perintah("cari_sumber", a.url, **kolom)
         except Exception as e:  # noqa: BLE001
             print(f"::warning::Status cari sumber tidak tercatat di situs: {e}")
+    if ringkas.get("kandidat_situs"):
+        n = _kandidat_dari_situs(akar, ringkas["kandidat_situs"])
+        print(f"{n} hasil AI Data Finder dari situs digabung ke kandidat sumber.")
+    for pesan in _ai_harian(akar):
+        print(pesan)
     if ringkas.get("peringatan"):
         print(f"::warning::{ringkas['peringatan']}")
     keluaran = {"perintah": ",".join(x["jenis"] for x in ringkas["perintah"]) or "-"}
@@ -106,6 +111,96 @@ def _firestore(a) -> int:
         keluaran["demo"] = demo
     _keluaran_github(**keluaran)
     return 0
+
+
+def _log_ai(sumber: str, komoditas: str, periode: str, catatan: dict | None = None, galat: Exception | None = None,
+            oleh: str = "") -> None:
+    """Catat proses AI Data Finder (berhasil atau gagal) ke Log proses AI di situs."""
+    from . import firestore_sinkron
+
+    if not firestore_sinkron.aktif():
+        return
+    langkah = (catatan or {}).get("log") or getattr(galat, "langkah", None) or []
+    if galat is not None:
+        langkah = [*langkah, {"waktu": "", "teks": f"Gagal: {galat}"[:400], "jenis": "galat"}]
+    firestore_sinkron.tulis_log_ai({
+        "sumber": sumber, "komoditas": komoditas[:120], "periode": periode[:60], "langkah": langkah[:80],
+        "hasil": "gagal" if galat is not None else "berhasil",
+        "penyedia": (catatan or {}).get("penyedia") or "", "model": (catatan or {}).get("model") or "",
+        "jumlah_kandidat": len(((catatan or {}).get("hasil") or {}).get("kandidat", [])),
+        "pencarian_web": (catatan or {}).get("pencarian_web") or "", "oleh_email": oleh, "oleh_uid": "",
+    })
+
+
+def _kandidat_dari_situs(akar: Path, daftar: list[dict]) -> int:
+    """Hasil AI Data Finder dari browser admin: cek apakah alamatnya bisa dibuka, lalu gabung ke kandidat sumber."""
+    konf = konfigurasi.muat(akar)
+    n = 0
+    for d in daftar:
+        try:
+            hasil = pencari_data.normalisasi_hasil(json.loads(d.get("hasil") or "{}"))
+        except ValueError:
+            continue
+        url_cari = [str(u) for u in d.get("url_pencarian") or []]
+        for k in hasil["kandidat"]:
+            k["url_ada_di_hasil_pencarian"] = pencari_data._cocok(k["url"], url_cari) if d.get("punya_pencarian_web") else None
+            k["url_dapat_diakses"], k["keterangan_url"] = pencari_data.cek_url(k["url"])
+            k["status_verifikasi"] = "kandidat"
+        p = d.get("permintaan") or {}
+        waktu = d.get("diperbarui")
+        pencari_data.simpan(konf, {
+            "waktu": waktu.isoformat() if hasattr(waktu, "isoformat") else str(waktu or ""),
+            "permintaan": {k: str(p.get(k, ""))[:400] for k in ("komoditas", "periode", "kebutuhan", "wilayah", "prompt")},
+            "penyedia": d.get("penyedia") or "", "punya_pencarian_web": bool(d.get("punya_pencarian_web")),
+            "pencarian_web": d.get("pencarian_web") or None, "penyedia_dilewati": list(d.get("penyedia_dilewati") or [])[:20],
+            "model": d.get("model") or "", "request_id": None, "hasil": hasil, "url_hasil_pencarian": sorted(set(url_cari)),
+            "dari": "situs", "oleh": d.get("oleh_email") or "",
+        })
+        n += 1
+    return n
+
+
+BULAN_ID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober",
+            "November", "Desember"]
+
+
+def _ai_harian(akar: Path) -> list[str]:
+    """AI Data Finder harian: beberapa komoditas bergilir, sekali sehari mulai pukul 08.00 WIB."""
+    from datetime import datetime, timezone
+
+    from . import firestore_sinkron
+
+    if not firestore_sinkron.aktif():
+        return []
+    try:
+        db = firestore_sinkron.klien()
+        sekarang = datetime.now(timezone.utc)
+        if not firestore_sinkron.ai_harian_jatuh_tempo(akar, db, sekarang):
+            return []
+        konf = konfigurasi.muat(akar)
+        jumlah = int(konf.pengaturan.get("ai", {}).get("harian_jumlah", 2))
+        daftar = list(dict.fromkeys(v.komoditas for v in sorted(konf.varian_aktif, key=lambda v: v.kode_komoditas)))
+        status = firestore_sinkron.status_ai_harian(db)
+        mulai = int(status.get("indeks", 0)) % max(1, len(daftar))
+        pilih = [daftar[(mulai + i) % len(daftar)] for i in range(min(jumlah, len(daftar)))]
+        hari = sekarang.astimezone(firestore_sinkron.WIB)
+        periode = f"{BULAN_ID[hari.month - 1]} {hari.year}"
+        # Catat dulu supaya penjaga tidak memicu ulang walaupun pencarian gagal; hasilnya ada di log.
+        firestore_sinkron.catat_ai_harian(db, hari.date().isoformat(), (mulai + len(pilih)) % len(daftar), pilih)
+        firestore_sinkron.pasang_rahasia_dari_firestore(akar)
+    except Exception as e:  # noqa: BLE001
+        return [f"::warning::AI Data Finder harian tidak bisa dimulai: {e}"]
+    pesan = []
+    for komoditas in pilih:
+        try:
+            catatan = pencari_data.cari(konf, komoditas, periode)
+            pencari_data.simpan(konf, catatan)
+            _log_ai("harian", komoditas, periode, catatan=catatan)
+            pesan.append(f"AI harian {komoditas}: {len(catatan['hasil']['kandidat'])} kandidat ({catatan['penyedia']}).")
+        except Exception as e:  # noqa: BLE001
+            _log_ai("harian", komoditas, periode, galat=e)
+            pesan.append(f"::warning::AI harian {komoditas} gagal: {e}")
+    return pesan
 
 
 def _cari_dari_situs(akar: Path, masukan: dict) -> tuple[bool, str]:
@@ -124,7 +219,9 @@ def _cari_dari_situs(akar: Path, masukan: dict) -> tuple[bool, str]:
         catatan = pencari_data.cari(konf, teks("komoditas"), teks("periode"), teks("kebutuhan", "harga eceran harian"),
                                     teks("wilayah", "Kabupaten Bengkulu Tengah, Provinsi Bengkulu"), penyedia=penyedia)
         pencari_data.simpan(konf, catatan)
+        _log_ai("mesin", teks("komoditas"), teks("periode"), catatan=catatan, oleh=str(masukan.get("diminta_oleh", "")))
     except Exception as e:  # noqa: BLE001
+        _log_ai("mesin", teks("komoditas"), teks("periode"), galat=e)
         return False, f"Cari sumber data dengan AI gagal: {e}"
     n = len(catatan["hasil"].get("kandidat", []))
     return True, f"AI ({catatan['penyedia']}) menemukan {n} kandidat sumber. Lihat di halaman Sumber setelah dashboard diperbarui."

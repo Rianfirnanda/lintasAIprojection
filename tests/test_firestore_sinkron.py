@@ -73,6 +73,11 @@ class _Koleksi(_Kueri):
     def document(self, id_):
         return _Ref(self._s, id_)
 
+    def add(self, data):
+        id_ = f"auto{len(self._s) + 1}"
+        self._s[id_] = dict(data)
+        return None, _Ref(self._s, id_)
+
 
 class DBTiruan:
     def __init__(self):
@@ -225,7 +230,7 @@ def test_perintah_diambil_lalu_ditutup_oleh_proses_yang_sama(akar):
 
 def test_pemeriksa_berkala(akar):
     db = DBTiruan()
-    kini = T0 + timedelta(days=1)
+    kini = T0 + timedelta(hours=20)  # 04.00 WIB: AI harian belum jatuh tempo
     assert fs.perlu_jalan(akar, db, kini) == (False, "tidak ada yang baru")
     db.data["lbp_harga"] = {"k1": _harga("k1", T0)}
     assert fs.perlu_jalan(akar, db, kini)[0] is True
@@ -304,6 +309,10 @@ def test_dengan_emulator_firestore(akar, monkeypatch):
     assert fs.perlu_jalan(akar, db)[0] is True
     assert fs.tarik(akar, "u", db=db)["berkas"] == {"data/masuk/harga/situs/situs_2026-09.csv": 1}
     fs.lapor("success", "u", db=db)
+    # jam dinding sungguhan: lewat 08.00 WIB AI harian jatuh tempo sampai dicatat sudah jalan hari ini
+    hari_ini = datetime.now(timezone.utc).astimezone(fs.WIB).date().isoformat()
+    fs.catat_ai_harian(db, hari_ini, 0, ["cabai rawit merah"])
+    assert fs.ai_harian_jatuh_tempo(akar, db, datetime.now(timezone.utc)) is False
     jalan, alasan = fs.perlu_jalan(akar, db)
     assert not jalan, alasan
     db.collection("lbp_harga").document("e2").set(_harga("e2", firestore.SERVER_TIMESTAMP))
@@ -343,3 +352,28 @@ def test_data_dashboard_ke_firestore_hanya_yang_berubah(tmp_path):
     # Berkas berisi harga tidak ikut diterbitkan terbuka; meta dan master tetap.
     assert sorted(h["disembunyikan"]) == ["ringkasan.json", "unduh/harga_harian.csv"]
     assert sorted(fs.berkas_data(folder)) == ["master.json", "meta.json"]
+
+
+def test_ai_harian_jatuh_tempo_sekali_sehari_mulai_jam_delapan(akar):
+    db = DBTiruan()
+    pagi = datetime(2026, 10, 2, 0, 30, tzinfo=timezone.utc)   # 07.30 WIB
+    siang = datetime(2026, 10, 2, 2, 0, tzinfo=timezone.utc)   # 09.00 WIB
+    assert not fs.ai_harian_jatuh_tempo(akar, db, pagi)
+    assert fs.ai_harian_jatuh_tempo(akar, db, siang)
+    assert fs.perlu_jalan(akar, db, siang) == (True, "AI Data Finder harian")
+    fs.catat_ai_harian(db, "2026-10-02", 2, ["Beras", "Cabai"])
+    assert not fs.ai_harian_jatuh_tempo(akar, db, siang)
+    assert fs.ai_harian_jatuh_tempo(akar, db, siang + timedelta(days=1))
+    # Bisa dimatikan dari Pengaturan
+    path = akar / "config/pengaturan.json"
+    isi = json.loads(path.read_text(encoding="utf-8"))
+    isi["ai"]["harian_aktif"] = False
+    path.write_text(json.dumps(isi), encoding="utf-8")
+    assert not fs.ai_harian_jatuh_tempo(akar, db, siang + timedelta(days=1))
+
+
+def test_hasil_ai_dari_situs_diambil_sekali(akar):
+    db = DBTiruan()
+    db.data["lbp_kandidat_ai"] = {"a": {"permintaan": {"komoditas": "cabai"}, "hasil": "{}", "diperbarui": T0}}
+    assert fs.tarik(akar, db=db)["kandidat_situs"][0]["permintaan"] == {"komoditas": "cabai"}
+    assert "kandidat_situs" not in fs.tarik(akar, db=db)

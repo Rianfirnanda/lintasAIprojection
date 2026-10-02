@@ -490,12 +490,26 @@ PENYEDIA = {"gemini": _cari_gemini, **{n: partial(_cari_sejenis_openai, n) for n
 
 def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harga eceran harian",
          wilayah: str = "Kabupaten Bengkulu Tengah, Provinsi Bengkulu", penyedia: str | None = None,
-         klien: dict | None = None, pemeriksa_url=cek_url) -> dict:
+         klien: dict | None = None, pemeriksa_url=cek_url, catat=None) -> dict:
     """Jalankan pencarian. `klien` (untuk uji) memetakan nama penyedia (dan "tavily") -> pengganti fungsi kirim/klien SDK."""
     cfg = dict(pengaturan_ai(konf))
     klien = klien or {}
     teks = susun_permintaan(komoditas, periode, kebutuhan, wilayah)
+    langkah: list[dict] = []
+
+    def tulis(teks: str, jenis: str = "info") -> None:
+        langkah.append({"waktu": datetime.now(ZoneInfo("Asia/Jakarta")).strftime("%H.%M.%S"), "teks": teks[:400], "jenis": jenis})
+        if catat:
+            catat(teks, jenis)
+
+    tulis(f"Mulai mencari sumber data {kebutuhan} untuk {komoditas} ({periode}).")
     hasil_web, galat = cari_web(kueri_web(komoditas, periode, kebutuhan, wilayah), klien.get("tavily"))
+    if hasil_web:
+        tulis(f"Pencarian web Tavily: {len(hasil_web)} halaman ditemukan.")
+    elif galat:
+        tulis(f"Pencarian web Tavily gagal: {galat[-1]}", "peringatan")
+    else:
+        tulis("Pencarian web dilewati: kunci Tavily belum diisi. AI menjawab dari pengetahuannya saja.", "peringatan")
     if hasil_web:
         cfg["_hasil_web"] = hasil_web
         teks += teks_hasil_web(hasil_web)
@@ -509,10 +523,15 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
             pesan = str(e) if isinstance(e, RuntimeError) else f"{e.__class__.__name__}: {e}"
             log.warning("penyedia %s dilewati: %s", nama, pesan)
             galat.append(f"{nama}: {pesan}"[:400])
+            tulis(f"{nama} dilewati: {pesan}", "peringatan")
     if jawab is None:
-        raise RuntimeError("tidak ada penyedia AI yang dapat dipakai: " + "; ".join(galat))
+        tulis("Tidak ada AI yang bisa dipakai. Isi atau ganti kunci AI di Pengaturan.", "galat")
+        e = RuntimeError("tidak ada penyedia AI yang dapat dipakai: " + "; ".join(galat))
+        e.langkah = langkah
+        raise e
 
     hasil = normalisasi_hasil(jawab["hasil"])
+    tulis(f"{dipakai} ({jawab['model']}) menjawab: {len(hasil['kandidat'])} kandidat sumber.")
     for k in hasil["kandidat"]:
         k["url_ada_di_hasil_pencarian"] = _cocok(k["url"], jawab["url_pencarian"]) if jawab["punya_pencarian"] else None
         k["url_dapat_diakses"], k["keterangan_url"] = pemeriksa_url(k["url"]) if pemeriksa_url else (None, "tidak dicek")
@@ -530,7 +549,22 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
         "request_id": jawab["request_id"],
         "hasil": hasil,
         "url_hasil_pencarian": sorted(set(jawab["url_pencarian"])),
+        "log": langkah,
     }
+
+
+def bahan_situs() -> dict:
+    """Prompt dan pengaturan yang dipakai AI Data Finder di browser admin (site/data/ai_prompt.json), supaya
+    browser dan mesin selalu memakai aturan yang sama."""
+    return {"sistem": SISTEM, "tambahan_hasil_web": TAMBAHAN_HASIL_WEB, "tambahan_tanpa_pencarian": TAMBAHAN_TANPA_PENCARIAN,
+            "format_json": FORMAT_JSON, "kolom_kandidat": KOLOM_KANDIDAT, "domain_resmi": DOMAIN_RESMI,
+            "maks_hasil_web": MAKS_HASIL_WEB, "url_gemini": URL_GEMINI, "model_gemini_cadangan": MODEL_GEMINI_CADANGAN,
+            "url_tavily": URL_TAVILY, "gratis": GRATIS,
+            # Templat dengan penanda {komoditas}, {periode}, {kebutuhan}, {wilayah} yang diganti di browser.
+            "templat_permintaan": susun_permintaan("{komoditas}", "{periode}", "{kebutuhan}", "{wilayah}"),
+            "templat_kueri_web": [[q, d] for q, d in kueri_web("{komoditas}", "{periode}", "{kebutuhan}", "{wilayah}")],
+            "sejenis_openai": {n: {"nama": p["nama"], "url": p["url"], "kunci": p["kunci"], "model": p["model"]}
+                               for n, p in SEJENIS_OPENAI.items()}}
 
 
 def simpan(konf: Konfigurasi, catatan: dict) -> Path:

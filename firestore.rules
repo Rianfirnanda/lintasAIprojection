@@ -292,13 +292,38 @@ service cloud.firestore {
     // Kunci rahasia: hanya bisa ditulis admin, tidak bisa dibaca dari browser siapa pun. Yang tampil di panel hanya
     // tanda "sudah diisi" di lbp_rahasia_status.
     match /lbp_rahasia/{nama} {
-      allow read: if false;
+      // Kunci AI (semuanya gratis) boleh dibaca peran Administrator supaya AI Data Finder bisa langsung jalan di
+      // browser admin. Kunci lain (notifikasi, email) tetap hanya dibaca mesin pengolah.
+      allow read: if adminAktif() && nama in ['GEMINI_API_KEY', 'GROQ_API_KEY', 'CEREBRAS_API_KEY', 'OPENROUTER_API_KEY',
+                                              'MISTRAL_API_KEY', 'TAVILY_API_KEY'];
       allow create, update: if kelolaSistem() && namaRahasiaSah(nama)
         && baru().keys().hasOnly(['nilai', 'diperbarui', 'oleh_uid'])
         && baru().nilai is string && baru().nilai.size() > 0 && baru().nilai.size() <= 8000
         && stempel();
       allow delete: if kelolaSistem();
     }
+    // Hasil AI Data Finder yang dijalankan langsung di browser admin. Mesin mengambilnya, mengecek alamatnya, lalu
+    // menggabungkannya ke daftar kandidat sumber.
+    match /lbp_kandidat_ai/{id} {
+      allow read: if kelolaSistem();
+      allow create: if kelolaSistem() && stempel()
+        && baru().keys().hasOnly(['permintaan', 'penyedia', 'model', 'pencarian_web', 'punya_pencarian_web',
+                                  'penyedia_dilewati', 'url_pencarian', 'hasil', 'oleh_uid', 'oleh_email', 'diperbarui'])
+        && baru().hasil is string && baru().hasil.size() <= 200000
+        && baru().permintaan is map && baru().oleh_email == request.auth.token.email;
+    }
+
+    // Log proses AI Data Finder: dari tombol di situs maupun dari jadwal harian mesin.
+    match /lbp_log_ai/{id} {
+      allow read: if kelolaSistem() || izin('sumber.html', ['operator', 'analis']);
+      allow create: if kelolaSistem() && stempel()
+        && baru().keys().hasOnly(['sumber', 'komoditas', 'periode', 'langkah', 'hasil', 'penyedia', 'model',
+                                  'jumlah_kandidat', 'pencarian_web', 'oleh_uid', 'oleh_email', 'diperbarui'])
+        && baru().sumber == 'situs' && baru().langkah is list && baru().langkah.size() <= 80
+        && teksPendek(baru().komoditas, 120) && baru().hasil in ['berhasil', 'gagal', 'dialihkan']
+        && baru().oleh_email == request.auth.token.email;
+    }
+
     match /lbp_rahasia_status/{nama} {
       allow read: if kelolaSistem();
       allow create, update: if kelolaSistem() && namaRahasiaSah(nama)

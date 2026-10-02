@@ -494,6 +494,9 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     if skema_pengaturan.exists():
         shutil.copyfile(skema_pengaturan, keluaran / "skema_pengaturan.json")
         _tulis_json(keluaran / "pengaturan.json", konf.pengaturan)
+    # Prompt AI Data Finder untuk browser admin (tidak rahasia; kunci tidak ikut).
+    from . import pencari_data
+    _tulis_json(keluaran / "ai_prompt.json", pencari_data.bahan_situs())
     # Login per peran: Firebase (akun Google) bila konfigurasinya terisi lewat Secret FIREBASE_WEB_CONFIG atau
     # config/firebase.json; jika tidak, akun contoh dari config/pengguna.json. Berkas cara masuk yang tidak dipakai
     # dihapus supaya akun contoh tidak tetap terbuka saat Firebase sudah aktif.

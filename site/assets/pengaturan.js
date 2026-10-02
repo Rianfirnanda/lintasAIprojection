@@ -5,6 +5,7 @@
 //   - Tanpa Firebase: disimpan sebagai commit pada config/pengaturan.json dan GitHub Secrets, memakai token GitHub
 //     admin yang hanya hidup di tab ini. Tidak ada server perantara.
 import { pasangKerangka, muatJSON, esc, waktu } from "./app.js";
+import { peranAktif } from "./akses.js";
 import { ind } from "./peran.js";
 import { GalatGitHub, KlienGitHub, bacaRepo } from "./github.js";
 import {
@@ -464,7 +465,36 @@ function htmlAlur(a) {
     <div class="form-grid">${bidang}</div>
     <div class="baris-kontrol" style="margin-top:14px"><button class="tombol utama-aksi" type="button" data-jalankan ${S.klien ? "" : "disabled"}>Jalankan sekarang</button>
       <span class="status-proses" id="proses-${a.berkas}">${S.klien ? htmlProses(S.proses?.[a.berkas]) : (FS ? "Menghubungkan…" : "Sambungkan ke GitHub dulu")}</span></div>
-    <div class="pesan-bagian" role="status"></div></section>`;
+    <div class="pesan-bagian" role="status"></div>
+    ${aiDiBrowser(a.berkas) ? '<ol class="log-ai log-langsung" aria-live="polite" hidden></ol>' : ""}</section>`;
+}
+
+/** AI Data Finder langsung di browser: hanya di situs dengan login Google dan untuk peran Administrator. */
+const aiDiBrowser = (berkas) => FS && berkas === "ai-data-finder.yml" && peranAktif() === "admin";
+
+export function htmlLangkah(l) {
+  return `<li class="log-${esc(l.jenis || "info")}"><time>${esc(l.waktu || "")}</time><span>${esc(l.teks)}</span></li>`;
+}
+
+async function jalankanAiDiBrowser(wadah, masukan, pesan, tombol) {
+  const daftar = wadah.querySelector(".log-langsung");
+  daftar.hidden = false;
+  daftar.innerHTML = "";
+  const ai = await import("./ai-situs.js");
+  const hasil = await ai.cariDiBrowser(masukan, (l) => { daftar.insertAdjacentHTML("beforeend", htmlLangkah(l)); });
+  if (hasil.ok) {
+    const n = hasil.catatan.hasil.kandidat.length;
+    tampilPesan(pesan, "sukses", `Selesai: ${n} kandidat sumber. ${n ? `<ul class="daftar-kandidat">${hasil.catatan.hasil.kandidat.map((k) =>
+      `<li><b>${esc(k.nama_sumber)}</b>${k.url && /^https?:/.test(k.url) ? ` · <a href="${esc(k.url)}" rel="noopener nofollow" target="_blank">${esc(k.url)}</a>` : ""}${k.url_ada_di_hasil_pencarian === false ? ' <span class="lencana tinggi">alamat tidak ada di hasil pencarian</span>' : ""}</li>`).join("")}</ul>` : ""}`);
+  } else if (hasil.pindahKeMesin) {
+    daftar.insertAdjacentHTML("beforeend", htmlLangkah({ waktu: new Date().toLocaleTimeString("id-ID", { hour12: false }), teks: "Dialihkan ke mesin pengolah (beberapa menit).", jenis: "info" }));
+    await S.klien.jalankanAlur("ai-data-finder.yml", S.cabang, masukan);
+    tampilPesan(pesan, "info", "Browser tidak bisa menjalankan AI, jadi permintaan dialihkan ke mesin pengolah. Statusnya muncul di sebelah tombol.");
+  } else {
+    tampilPesan(pesan, "galat", `Belum berhasil: ${esc(hasil.alasan)}`);
+  }
+  try { await ai.simpanLog(masukan, hasil); } catch (e) { console.warn("log AI tidak tersimpan", e); }
+  tombol.disabled = false;
 }
 
 async function jalankan(wadah) {
@@ -478,6 +508,11 @@ async function jalankan(wadah) {
   }
   const tombol = wadah.querySelector("[data-jalankan]");
   tombol.disabled = true;
+  if (aiDiBrowser(a.berkas)) {
+    tampilPesan(pesan, "", "");
+    try { await jalankanAiDiBrowser(wadah, masukan, pesan, tombol); } catch (e) { tampilPesan(pesan, "galat", esc(galatTeks(e))); tombol.disabled = false; }
+    return;
+  }
   try {
     const mulai = Date.now();
     await S.klien.jalankanAlur(a.berkas, S.cabang, masukan);

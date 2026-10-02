@@ -1158,3 +1158,15 @@ td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d
 
 /* Halaman Masuk sebelum login (situs dengan login Google): tanpa menu, kartu masuk di tengah layar. */
 body.tanpa-kepala .masuk-wadah { min-height: calc(100vh - 220px); }
+
+/* Log proses AI */
+.log-ai { list-style: none; margin: 12px 0 0; padding: 10px 12px; border-radius: 12px; background: var(--surface);
+  border: 1px solid var(--rule); font-size: 0.82rem; display: grid; gap: 4px; max-height: 320px; overflow: auto; }
+.log-ai li { display: grid; grid-template-columns: 64px 1fr; gap: 8px; line-height: 1.45; }
+.log-ai time { color: var(--muted); font-variant-numeric: tabular-nums; }
+.log-ai .log-peringatan span { color: var(--d-oranye-teks); }
+.log-ai .log-galat span { color: var(--d-merah-teks); font-weight: 600; }
+.daftar-kandidat { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; word-break: break-word; }
+.log-entri { border: 1px solid var(--rule); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: var(--surface-2); }
+.log-entri summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 0.88rem; }
+.log-entri summary small { color: var(--muted); }
