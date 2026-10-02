@@ -291,7 +291,7 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .tombol:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .baris-kontrol { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-select, input[type="text"], input[type="date"], input[type="number"], input[type="search"], input[type="password"], input[type="email"], textarea {
+select, input[type="text"], input[type="date"], input[type="number"], input[type="search"], input[type="password"], input[type="email"], input[type="url"], textarea {
   font: 400 0.88rem var(--sans); color: var(--ink); background: var(--kaca-atas);
   border: 1px solid var(--rule-2); border-radius: var(--radius-kecil); padding: 8px 10px; max-width: 100%;
 }
@@ -1125,3 +1125,24 @@ td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d
 
 /* Baris yang keputusannya sudah tersimpan (Cek Data) */
 #tabel-validasi tr.sudah-diputus td { opacity: .55; }
+
+/* ---------- halaman Kebijakan TPID */
+.form-kartu { padding: 16px; margin-bottom: 16px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--rule); display: grid; gap: 14px; }
+.form-kartu[hidden] { display: none; }
+.pilih-chip { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+.pilih-chip legend { font-size: 0.84rem; font-weight: 500; color: var(--ink-2); margin-bottom: 6px; }
+.pilih-chip > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px 16px; }
+.grup-chip { display: grid; gap: 5px; align-content: start; }
+.pilih-chip .kelompok-centang { display: flex; flex-wrap: wrap; gap: 6px; }
+.pilih-chip .chip-centang { cursor: pointer; position: relative; }
+.pilih-chip .chip-centang input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pilih-chip .chip-centang span { display: inline-block; padding: 5px 12px; border-radius: 99px; font-size: 0.8rem; border: 1px solid var(--rule-2); background: var(--surface-3); color: var(--ink-2); }
+.pilih-chip .chip-centang input:checked + span { background: var(--aksen); border-color: var(--aksen); color: var(--on-accent); }
+.pilih-chip .chip-centang input:focus-visible + span { outline: 2px solid var(--aksen); outline-offset: 2px; }
+.langkah-rek { margin: 8px 0 0; padding-left: 20px; color: var(--ink-2); font-size: 0.86rem; line-height: 1.55; display: grid; gap: 3px; }
+.daftar-sinyal .langkah-rek li { border: 0; padding: 0; }
+.aksi-rek { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+.aksi-rek .catatan-rek { flex: 1 1 220px; max-width: 360px; }
+.baru-dicatat td { background: var(--aksen-lembut); }
+
+.form-grid label[hidden] { display: none; }

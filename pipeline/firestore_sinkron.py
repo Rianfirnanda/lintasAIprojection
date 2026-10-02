@@ -5,6 +5,11 @@ Yang diisi orang lewat situs (tanpa membuka GitHub):
   lbp_validasi            keputusan cek data                                 -> data/validasi/situs.csv
   lbp_tindak_lanjut       tindak lanjut peringatan                           -> data/tindak_lanjut/situs.csv
   lbp_persetujuan_model   persetujuan model proyeksi                         -> data/persetujuan_model/situs.csv
+  lbp_kunjungan           kunjungan pedagang yang gagal (menolak, dst.)      -> data/kunjungan/situs_YYYY-MM.csv
+  lbp_kebijakan           kebijakan atau intervensi TPID                     -> data/kebijakan/situs.csv
+  lbp_rapat               rapat TPID yang membahas data                      -> data/rapat/situs.csv
+  lbp_keputusan_rekomendasi  persetujuan rekomendasi langkah               -> data/keputusan_rekomendasi/situs.csv
+  lbp_pengguna            hanya dihitung ringkas (akun aktif, pemakaian)     -> data/adopsi.json
   lbp_pengaturan/utama    pengaturan sistem                                  -> config/pengaturan.json
   lbp_rahasia/{NAMA}      kunci API dan notifikasi (hanya dibaca mesin, langsung dipakai, tidak ditulis ke berkas)
   lbp_perintah/{jenis}    permintaan "jalankan sekarang" dari panel Pengaturan
@@ -44,7 +49,19 @@ KIRIMAN = {
                           ["id", "id_sinyal", "status", "catatan", "petugas", "tanggal", "kode_varian", "tanggal_kejadian"], "id"),
     "lbp_persetujuan_model": (Path("data/persetujuan_model"),
                               ["id", "kode_varian", "model", "keputusan", "penyetuju", "tanggal", "catatan"], "id"),
+    "lbp_kunjungan": (Path("data/kunjungan"),
+                      ["id", "tanggal", "kode_pasar", "responden", "status", "alasan", "petugas", "waktu_input"], "id"),
+    "lbp_kebijakan": (Path("data/kebijakan"),
+                      ["id", "tanggal_mulai", "tanggal_selesai", "jenis", "kode_varian", "tujuan", "uraian", "id_rekomendasi",
+                       "pencatat"], "id"),
+    "lbp_rapat": (Path("data/rapat"),
+                  ["id", "tanggal", "jenis", "agenda", "keputusan", "jumlah_sinyal", "peserta", "tautan_notulen", "pencatat"], "id"),
+    "lbp_keputusan_rekomendasi": (Path("data/keputusan_rekomendasi"),
+                                  ["id_rekomendasi", "keputusan", "catatan", "penyetuju", "tanggal"], "id_rekomendasi"),
 }
+# Koleksi yang langsung memicu pembaruan (keputusan dan catatan); harga dan kunjungan dikumpulkan dulu (lihat perlu_jalan).
+KIRIMAN_SEGERA = ("lbp_validasi", "lbp_tindak_lanjut", "lbp_persetujuan_model", "lbp_kebijakan", "lbp_rapat",
+                  "lbp_keputusan_rekomendasi")
 
 JENIS_PERINTAH = ("perbarui", "cari_sumber")
 
@@ -112,6 +129,8 @@ def _teks(nilai) -> str:
         return "ya" if nilai else "tidak"
     if isinstance(nilai, float):
         return str(int(nilai)) if nilai.is_integer() else repr(nilai)
+    if isinstance(nilai, (list, tuple)):
+        return ";".join(_teks(x) for x in nilai)
     return str(nilai).replace("\r\n", " ").replace("\n", " ").replace("\r", " ").strip()
 
 
@@ -127,12 +146,16 @@ def baris_csv(koleksi: str, id_dok: str, data: dict) -> dict[str, str]:
         baris["kode_varian"] = baris["kode_varian"].upper()
     if koleksi == "lbp_validasi":
         baris["id_observasi"] = baris["id_observasi"] or id_dok
+    if koleksi == "lbp_keputusan_rekomendasi":
+        baris["id_rekomendasi"] = baris["id_rekomendasi"] or id_dok
+    if koleksi == "lbp_kebijakan":
+        baris["kode_varian"] = baris["kode_varian"].upper()
     return baris
 
 
 def berkas_tujuan(koleksi: str, baris: dict) -> Path:
     folder, _, _ = KIRIMAN[koleksi]
-    if koleksi == "lbp_harga":
+    if koleksi in ("lbp_harga", "lbp_kunjungan"):
         bulan = baris["tanggal"][:7] if len(baris["tanggal"]) >= 7 else "tanpa-tanggal"
         return folder / f"situs_{bulan}.csv"
     return folder / "situs.csv"
@@ -340,8 +363,41 @@ def tarik(akar: Path, url_proses: str = "", db=None) -> dict:
             ringkas["perintah"].append({"jenis": jenis, "masukan": data.get("masukan") or {},
                                         "diminta_oleh": data.get("diminta_oleh", "")})
 
+    try:
+        akun = [(d.id, d.to_dict() or {}) for d in db.collection("lbp_pengguna").stream()]
+        if akun and tulis_adopsi(akar, ringkas_adopsi(akun, sekarang)):
+            ringkas["berkas"]["data/adopsi.json"] = 1
+    except Exception as e:  # noqa: BLE001  pemakaian hanya pelengkap indikator; jangan gagalkan pengambilan kiriman
+        log.warning("ringkasan pemakaian akun tidak bisa dibuat: %s", e)
+
     tulis_tanda(akar, tanda)
     return ringkas
+
+
+def ringkas_adopsi(akun: list[tuple[str, dict]], sekarang: datetime, hari: int = 30) -> dict:
+    """Angka ringkas pemakaian sistem (Tabel 23 Rancangan): tanpa nama, email, atau ID akun."""
+    aktif = [d for _, d in akun if d.get("status") == "aktif"]
+    batas = sekarang - timedelta(days=hari)
+    pakai = [d for d in aktif if (_waktu(d.get("terakhir_aktif")) or datetime.min.replace(tzinfo=timezone.utc)) >= batas]
+    per_peran: dict[str, dict] = {}
+    for d in aktif:
+        p = per_peran.setdefault(d.get("peran") or "-", {"akun": 0, "aktif_30_hari": 0})
+        p["akun"] += 1
+        p["aktif_30_hari"] += d in pakai
+    mulai = min((_waktu(d.get("dibuat")) for d in aktif if _waktu(d.get("dibuat"))), default=None)
+    return {"akun_aktif": len(aktif), "aktif_30_hari": len(pakai), "per_peran": dict(sorted(per_peran.items())),
+            "mulai": mulai.date().isoformat() if mulai else None, "periode_hari": hari}
+
+
+def tulis_adopsi(akar: Path, data: dict) -> bool:
+    """Tulis data/adopsi.json bila isinya berubah. Mengembalikan True bila berkas ditulis."""
+    path = akar / "data" / "adopsi.json"
+    teks = json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    if path.exists() and path.read_text(encoding="utf-8") == teks:
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(teks, encoding="utf-8")
+    return True
 
 
 def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harga_menit: int = 60) -> tuple[bool, str]:
@@ -365,10 +421,10 @@ def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harg
     dok = db.collection("lbp_pengaturan").document("utama").get()
     if dok.exists and int((dok.to_dict() or {}).get("versi", 0)) > int(tanda.get("pengaturan_versi", 0)):
         return True, "ada pengaturan baru"
-    for koleksi in ("lbp_validasi", "lbp_tindak_lanjut", "lbp_persetujuan_model"):
+    for koleksi in KIRIMAN_SEGERA:
         if _baru_sejak(db, koleksi, _waktu(tanda.get(koleksi)), batas=1):
             return True, f"ada kiriman baru di {koleksi}"
-    if _baru_sejak(db, "lbp_harga", _waktu(tanda.get("lbp_harga")), batas=1):
+    if any(_baru_sejak(db, k, _waktu(tanda.get(k)), batas=1) for k in ("lbp_harga", "lbp_kunjungan")):
         selesai = _waktu(status.get("selesai"))
         if selesai and sekarang - selesai < timedelta(minutes=jeda_harga_menit):
             return False, f"ada harga baru, diproses setelah jeda {jeda_harga_menit} menit"

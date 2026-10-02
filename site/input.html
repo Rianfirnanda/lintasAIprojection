@@ -51,6 +51,29 @@
     </div>
   </section>
 
+  <section class="kartu" id="kartu-kunjungan" hidden>
+    <div class="kartu-kepala">
+      <div><h2>Pedagang tidak bisa diwawancarai?</h2>
+        <p>Catat juga kunjungan yang gagal. Gunanya mengukur seberapa banyak pedagang bersedia memberi harga, bukan menilai petugas.</p></div>
+    </div>
+    <div class="form-grid">
+      <label>Kode pedagang (anonim)<input type="text" id="kj-responden" placeholder="mis. R3" autocomplete="off" maxlength="60"></label>
+      <label>Yang terjadi<select id="kj-status">
+        <option value="menolak">Pedagang menolak</option>
+        <option value="tidak_ada">Pedagang tidak ada di tempat</option>
+        <option value="tutup">Kios atau lapak tutup</option></select></label>
+      <label id="kj-alasan-label">Alasan menolak<select id="kj-alasan">
+        <option value="takut_pajak">Takut dipakai untuk pajak atau sidak</option>
+        <option value="sibuk">Sedang sibuk melayani pembeli</option>
+        <option value="tidak_percaya">Tidak percaya atau tidak mau ditanya</option>
+        <option value="lainnya">Lainnya</option></select></label>
+    </div>
+    <div class="baris-kontrol" style="margin-top:12px">
+      <button class="tombol" id="kj-simpan" type="button">Catat kunjungan</button>
+      <span class="meta-kecil" id="kj-hasil" role="status"></span>
+    </div>
+  </section>
+
   <section class="kartu">
     <div class="kartu-kepala">
       <div><h2 id="judul-antrean">Menunggu dikirim</h2><p id="info-antrean"></p></div>
@@ -317,6 +340,48 @@ async function kirimAntrean({ diam = false } = {}) {
     renderAntrean();
   }
 }
+/* ---------- kunjungan yang gagal (pedagang menolak, tidak ada, kios tutup) */
+const KUNCI_KUNJUNGAN = "antrean_kunjungan_v1";
+let sedangKirimKunjungan = false;
+async function kirimKunjunganTertunda() {
+  if (!kiriman || sedangKirimKunjungan || !navigator.onLine) return;
+  const belum = baca(KUNCI_KUNJUNGAN, []).filter((k) => !k._dikirim);
+  if (!belum.length) return;
+  sedangKirimKunjungan = true;
+  try {
+    const { terkirim } = await kiriman.kirimKunjungan(belum);
+    const ok = new Set(terkirim.map((k) => k.id_klien));
+    // Yang sudah terkirim tidak perlu disimpan lagi di HP.
+    tulis(KUNCI_KUNJUNGAN, baca(KUNCI_KUNJUNGAN, []).filter((k) => !ok.has(k.id_klien)));
+  } catch { /* dicoba lagi saat ada sinyal */ } finally {
+    sedangKirimKunjungan = false;
+  }
+}
+if (kiriman) {
+  const kartu = document.getElementById("kartu-kunjungan");
+  kartu.hidden = false;
+  const status = document.getElementById("kj-status");
+  status.addEventListener("change", () => { document.getElementById("kj-alasan-label").hidden = status.value !== "menolak"; });
+  document.getElementById("kj-simpan").addEventListener("click", async () => {
+    const hasil = document.getElementById("kj-hasil");
+    const kepala = Object.fromEntries(["tanggal", "pasar", "petugas"].map((id) => [id, document.getElementById(id).value.trim()]));
+    if (!kepala.tanggal || !kepala.pasar || !kepala.petugas) { hasil.textContent = "Lengkapi tanggal, pasar, dan kode petugas di atas."; return; }
+    const k = {
+      id_klien: uuid(), tanggal: kepala.tanggal, kode_pasar: kepala.pasar, petugas: kepala.petugas.toUpperCase(),
+      responden: document.getElementById("kj-responden").value.trim().toUpperCase(), status: status.value,
+      alasan: status.value === "menolak" ? document.getElementById("kj-alasan").value : "", waktu_input: waktuLokal(), _dikirim: false,
+    };
+    if (!tulis(KUNCI_KUNJUNGAN, baca(KUNCI_KUNJUNGAN, []).concat([k]))) { hasil.textContent = "Gagal menyimpan di perangkat."; return; }
+    document.getElementById("kj-responden").value = "";
+    hasil.textContent = navigator.onLine ? "Tercatat. Mengirim…" : "Tercatat di HP. Dikirim otomatis saat ada sinyal.";
+    await kirimKunjunganTertunda();
+    if (navigator.onLine) hasil.textContent = baca(KUNCI_KUNJUNGAN, []).some((x) => x.id_klien === k.id_klien)
+      ? "Tercatat di HP. Belum terkirim, dicoba lagi otomatis." : "Kunjungan tercatat dan terkirim.";
+  });
+  window.addEventListener("online", () => kirimKunjunganTertunda());
+  kirimKunjunganTertunda();
+}
+
 if (kiriman) {
   document.getElementById("kirim").addEventListener("click", () => kirimAntrean());
   window.addEventListener("online", () => kirimAntrean({ diam: true }));

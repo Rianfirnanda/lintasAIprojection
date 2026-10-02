@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kamus Data · Lintas Benteng Projection</title>
+  <meta name="description" content="Kamus data 10 komoditas dan 21 varian: definisi, satuan, batas harga wajar, pasar, sumber data, dan arti setiap kolom data harga.">
+  <meta name="theme-color" content="#0e1114">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Kamus Data</h1>
+      <p>Satu acuan untuk semua pihak: komoditas dan varian yang dipantau, satuannya, batas harga wajar, pasar, sumber data, dan arti setiap kolom.</p>
+    </div>
+    <div class="baris-kontrol">
+      <button class="tombol" type="button" id="unduh-varian">Unduh kamus varian (CSV)</button>
+    </div>
+  </div>
+
+  <div class="ind-baris" id="kpi"></div>
+
+  <section class="kartu" aria-labelledby="j-varian">
+    <div class="kartu-kepala"><div><h2 id="j-varian">Komoditas dan varian</h2>
+      <p>Varian dipisah menurut mutu, ukuran, atau kemasan supaya harga yang dibandingkan memang sebanding. Harga di luar batas wajar ditahan untuk dicek dulu.</p></div></div>
+    <div class="gulir-tabel"><table id="tabel-varian"><thead><tr>
+      <th>No</th><th>Kode</th><th>Varian</th><th>Komoditas</th><th>Kelompok</th><th>Satuan</th><th class="angka">Batas wajar</th><th>Status</th>
+    </tr></thead><tbody></tbody></table></div>
+    <p class="meta-kecil" style="margin-top:8px" id="ket-kelompok"></p>
+  </section>
+
+  <section class="kartu" aria-labelledby="j-kolom">
+    <div class="kartu-kepala"><div><h2 id="j-kolom">Arti setiap kolom data harga</h2>
+      <p>Berlaku untuk formulir Catat Harga dan berkas CSV yang diunggah. Kolom bertanda wajib harus diisi.</p></div></div>
+    <div class="gulir-tabel"><table id="tabel-kolom"><thead><tr><th>Kolom</th><th>Arti</th><th>Contoh</th><th>Wajib</th></tr></thead><tbody></tbody></table></div>
+    <div class="pesan peringatan" style="margin-top:12px">Jangan mencatat nama, NIK, nomor HP, atau alamat pedagang. Berkas yang memuat kolom seperti itu ditolak otomatis. Pakai kode anonim seperti R1 atau R2.</div>
+  </section>
+
+  <div class="dua-sama">
+    <section class="kartu" aria-labelledby="j-pasar">
+      <div class="kartu-kepala"><div><h2 id="j-pasar">Pasar</h2><p>Tempat pencatatan harga. Pasar di wilayah sulit sinyal memakai pengiriman luring lalu daring.</p></div></div>
+      <div class="gulir-tabel"><table id="tabel-pasar"><thead><tr><th>Kode</th><th>Pasar</th><th>Kecamatan</th><th>Sinyal</th></tr></thead><tbody></tbody></table></div>
+    </section>
+    <section class="kartu" aria-labelledby="j-sumber">
+      <div class="kartu-kepala"><div><h2 id="j-sumber">Sumber data</h2>
+        <p>Data resmi BPS menjadi acuan utama. Sumber lain melengkapi dan dicek silang, tidak dirata-ratakan begitu saja.</p></div></div>
+      <div class="gulir-tabel"><table id="tabel-sumber"><thead><tr><th>Kode</th><th>Sumber</th><th>Frekuensi</th><th class="angka">Urutan dipakai</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </div>
+</main>
+
+<script type="module">
+import { ind } from "./assets/peran.js";
+import { pasangKerangka, muatJSON, esc, rp, angka, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
+
+await pasangKerangka("kamus.html");
+let master, sumber;
+try {
+  [master, sumber] = await Promise.all([muatJSON("master.json"), muatJSON("sumber.json").catch(() => ({ sumber: [] }))]);
+} catch (e) {
+  tampilkanGalat(document.querySelector("main"), e);
+  throw e;
+}
+const $ = (id) => document.getElementById(id);
+const NAMA_KELOMPOK = { pokok: "Pokok", volatil: "Mudah bergejolak", protein: "Protein hewani", pabrikan: "Olahan pabrik" };
+const varian = master.varian;
+const aktif = varian.filter((v) => v.aktif);
+const pasar = master.pasar.filter((p) => p.aktif);
+const daftarSumber = sumber.sumber || [];
+
+$("kpi").innerHTML = [
+  ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: "dipantau rutin" }),
+  ind({ i: "dokumen", label: "Varian", nilai: aktif.length, sub: `${varian.length - aktif.length} varian tidak aktif` }),
+  ind({ i: "toko", label: "Pasar", nilai: pasar.length, sub: `${pasar.filter((p) => p.blank_spot).length} di wilayah sulit sinyal` }),
+  ind({ i: "database", label: "Sumber data", nilai: daftarSumber.length, sub: `${daftarSumber.filter((s) => s.status === "aktif").length} aktif` }),
+].join("");
+
+$("tabel-varian").querySelector("tbody").innerHTML = varian.map((v, i) => `<tr>
+  <td>${i + 1}</td><td><code>${esc(v.kode)}</code></td><td>${esc(v.nama)}</td><td>${esc(v.komoditas)}</td>
+  <td>${esc(NAMA_KELOMPOK[v.kelompok] || v.kelompok)}</td><td>${esc(v.satuan)}</td>
+  <td class="angka">${rp(v.batas_bawah)} – ${rp(v.batas_atas)}</td>
+  <td>${v.aktif ? '<span class="lencana baik">aktif</span>' : '<span class="lencana polos">tidak aktif</span>'}</td></tr>`).join("");
+// Keterangan kelompok disusun dari data, supaya selalu cocok dengan isi tabel.
+const perKelompok = {};
+for (const v of aktif) (perKelompok[v.kelompok] ||= new Set()).add(v.komoditas.toLowerCase());
+$("ket-kelompok").textContent = "Kelompok menentukan seberapa besar kenaikan yang dianggap janggal. " + Object.entries(perKelompok)
+  .map(([k, s]) => `${NAMA_KELOMPOK[k] || k}: ${[...s].join(", ")}`).join(" · ") + ".";
+
+const KOLOM = [
+  ["tanggal", "Tanggal harga dicatat di pasar", "2026-10-02 atau 02/10/2026", true],
+  ["kode_pasar", "Kode pasar, lihat daftar Pasar di bawah", "PSR01", true],
+  ["kode_varian", "Kode varian, lihat tabel di atas", "CRW02", true],
+  ["harga", "Harga eceran per satuan yang ditulis. Boleh memakai titik ribuan atau awalan Rp", "Rp 55.000", true],
+  ["satuan", "Satuan harga yang ditulis. Diubah otomatis ke satuan baku (kg atau liter)", "kg, ons, gram, liter", false],
+  ["kode_sumber", "Asal data, lihat daftar Sumber data. Kosong berarti pencatatan petugas pasar", "PSR-ENUM", false],
+  ["petugas", "Kode petugas pencatat", "PTG01", false],
+  ["responden", "Kode pedagang yang diwawancarai, anonim", "R1", false],
+  ["id_klien", "Penanda unik tiap baris. Diisi otomatis oleh formulir supaya kiriman ulang tidak ganda", "otomatis", false],
+  ["waktu_input", "Waktu pengisian. Dipakai untuk menghitung ketepatan waktu", "otomatis", false],
+  ["catatan", "Keterangan bila harga tidak biasa", "stok menipis", false],
+];
+$("tabel-kolom").querySelector("tbody").innerHTML = KOLOM.map(([k, arti, contoh, wajib]) => `<tr>
+  <td><code>${k}</code></td><td>${esc(arti)}</td><td>${esc(contoh)}</td><td>${wajib ? '<span class="lencana sedang">wajib</span>' : "–"}</td></tr>`).join("");
+
+$("tabel-pasar").querySelector("tbody").innerHTML = pasar.map((p) => `<tr><td><code>${esc(p.kode)}</code></td><td>${esc(p.nama)}</td>
+  <td>${esc(p.kecamatan || "-")}</td><td>${p.blank_spot ? '<span class="lencana rendah">sulit sinyal</span>' : "baik"}</td></tr>`).join("")
+  || `<tr><td colspan="4" class="kosong">Belum ada pasar.</td></tr>`;
+$("tabel-sumber").querySelector("tbody").innerHTML = daftarSumber.slice().sort((a, b) => (a.prioritas || 99) - (b.prioritas || 99)).map((s) => `<tr>
+  <td><code>${esc(s.kode)}</code></td><td>${esc(s.nama)}<div class="meta-kecil">${esc(s.lisensi || "")}${s.status !== "aktif" ? ` · ${esc(s.status)}` : ""}</div></td>
+  <td>${esc(s.frekuensi || "-")}</td><td class="angka">${angka(s.prioritas)}</td></tr>`).join("")
+  || `<tr><td colspan="4" class="kosong">Daftar sumber belum tersedia.</td></tr>`;
+
+$("unduh-varian").addEventListener("click", () => {
+  unduhTeks("kamus_varian_lintas_benteng.csv", keCSV(["kode_varian", "varian", "kode_komoditas", "komoditas", "kelompok", "satuan", "batas_bawah", "batas_atas", "aktif"],
+    varian.map((v) => ({ kode_varian: v.kode, varian: v.nama, kode_komoditas: v.kode_komoditas, komoditas: v.komoditas,
+      kelompok: NAMA_KELOMPOK[v.kelompok] || v.kelompok, satuan: v.satuan, batas_bawah: v.batas_bawah, batas_atas: v.batas_atas, aktif: v.aktif ? "ya" : "tidak" }))));
+});
+</script>
+</body>
+</html>

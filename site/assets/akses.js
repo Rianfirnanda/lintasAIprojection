@@ -9,6 +9,7 @@ const M = {
   beranda: ["index.html", "Beranda"],
   harga: ["harga.html", "Harga"],
   peringatan: ["sinyal.html", "Peringatan"],
+  kebijakan: ["kebijakan.html", "Kebijakan"],
   laporan: ["laporan.html", "Laporan"],
   capaian: ["kinerja.html", "Capaian"],
   cek: ["kualitas.html", "Cek Data"],
@@ -16,6 +17,7 @@ const M = {
   sumber: ["sumber.html", "Sumber"],
   catat: ["input.html", "Catat Harga"],
   alur: ["alur.html", "Alur"],
+  kamus: ["kamus.html", "Kamus Data"],
   pengguna: ["pengguna.html", "Pengguna"],
   pengaturan: ["pengaturan.html", "Pengaturan"],
   tentang: ["tentang.html", "Tentang"],
@@ -24,33 +26,33 @@ const M = {
 export const PERAN = {
   masyarakat: {
     nama: "Masyarakat", ikon: "orang", ringkas: "Lihat harga dan laporan mingguan", judulBeranda: "Harga Hari Ini",
-    menu: ["beranda", "harga", "laporan", "tentang"], lainnya: [],
+    menu: ["beranda", "harga", "laporan", "tentang"], lainnya: ["kamus"],
   },
   petugas: {
     nama: "Petugas Lapangan", ikon: "toko", ringkas: "Catat harga di pasar", judulBeranda: "Tugas Hari Ini",
-    menu: ["beranda", "catat", "harga", "tentang"], lainnya: [],
+    menu: ["beranda", "catat", "harga", "tentang"], lainnya: ["kamus"],
   },
   operator: {
     nama: "Operator Data", ikon: "database", ringkas: "Kelola berkas dan cek mutu data", judulBeranda: "Kondisi Data",
-    menu: ["beranda", "cek", "sumber", "harga", "tentang"], lainnya: [],
+    menu: ["beranda", "cek", "sumber", "harga", "tentang"], lainnya: ["kamus"],
   },
   analis: {
     nama: "Analis", ikon: "cari", ringkas: "Periksa data, peringatan, dan model", judulBeranda: "Meja Analis",
-    menu: ["beranda", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["tentang"],
+    menu: ["beranda", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["kebijakan", "kamus", "tentang"],
   },
   tpid: {
     nama: "TPID", ikon: "tim", ringkas: "Pantau harga dan ambil keputusan", judulBeranda: "Dashboard TPID",
-    menu: ["beranda", "peringatan", "laporan", "capaian", "harga"], lainnya: ["alur", "tentang"],
+    menu: ["beranda", "peringatan", "kebijakan", "laporan", "capaian", "harga"], lainnya: ["alur", "kamus", "tentang"],
   },
   admin: {
     nama: "Administrator", ikon: "gembokPerisai", ringkas: "Kelola seluruh sistem", judulBeranda: "Kondisi Sistem",
     menu: ["beranda", "pengaturan", "pengguna", "peringatan", "laporan", "cek"],
-    lainnya: ["akurasi", "harga", "capaian", "sumber", "catat", "alur", "tentang"],
+    lainnya: ["kebijakan", "akurasi", "harga", "capaian", "sumber", "catat", "alur", "kamus", "tentang"],
   },
 };
 
 export const URUT_PERAN = ["masyarakat", "petugas", "operator", "analis", "tpid", "admin"];
-export const HALAMAN_BEBAS = ["index.html", "tentang.html", "masuk.html"];
+export const HALAMAN_BEBAS = ["index.html", "tentang.html", "masuk.html", "kamus.html"];
 export const SEMUA_HALAMAN = Object.values(M).map((x) => x[0]);
 export const DAFTAR_HALAMAN = Object.values(M).map(([href, label]) => ({ href, label }));
 

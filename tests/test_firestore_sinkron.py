@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 
 import pytest
 
@@ -219,6 +219,45 @@ def test_pemeriksa_berkala(akar):
     assert fs.perlu_jalan(akar, db, kini)[0] is True
     db.data = {"lbp_perintah": {"cari_sumber": {"status": "menunggu"}}}
     assert fs.perlu_jalan(akar, db, kini) == (True, "ada permintaan cari_sumber")
+
+
+def test_kebijakan_rapat_keputusan_dan_kunjungan_dari_situs(akar):
+    from pipeline import kebijakan
+
+    db = DBTiruan()
+    db.data["lbp_kebijakan"] = {"k1": {"tanggal_mulai": "2026-09-20", "tanggal_selesai": "", "jenis": "operasi_pasar",
+                                       "kode_varian": ["crw02", "CRW01"], "tujuan": "menurunkan_harga", "uraian": "Pasar murah",
+                                       "id_rekomendasi": "R-abc", "pencatat": "TPID", "diperbarui": T0}}
+    db.data["lbp_rapat"] = {"r1": {"tanggal": "2026-09-25", "jenis": "rapat_koordinasi", "agenda": "Cabai", "keputusan": "Pasar murah",
+                                   "jumlah_sinyal": 2, "peserta": "BPS, Disdag", "tautan_notulen": "", "pencatat": "TPID", "diperbarui": T0}}
+    db.data["lbp_keputusan_rekomendasi"] = {"R-abc": {"keputusan": "setuju", "catatan": "", "penyetuju": "Kepala", "tanggal": "2026-09-19",
+                                                      "diperbarui": T0}}
+    db.data["lbp_kunjungan"] = {"v1": {"tanggal": "2026-09-27", "kode_pasar": "PSR01", "responden": "R9", "status": "menolak",
+                                       "alasan": "takut_pajak", "petugas": "PTG01", "waktu_input": "", "diperbarui": T0}}
+    fs.tarik(akar, db=db)
+    k = kebijakan.baca_kebijakan(akar)
+    assert k[0]["kode_varian"] == "CRW02;CRW01" and k[0]["jenis"] == "operasi_pasar"
+    assert kebijakan.baca_rapat(akar)[0]["jumlah_sinyal"] == "2"
+    assert kebijakan.baca_keputusan_rekomendasi(akar)["R-abc"]["keputusan"] == "setuju"
+    assert kinerja.baca_kunjungan(akar / "data" / "kunjungan")[0]["status"] == "menolak"
+    assert (akar / "data/kunjungan/situs_2026-09.csv").exists()
+
+
+def test_ringkasan_pemakaian_akun_tanpa_data_pribadi(akar):
+    db = DBTiruan()
+    kini = T0 + timedelta(days=40)
+    db.data["lbp_pengguna"] = {
+        "a": {"email": "a@x.id", "status": "aktif", "peran": "admin", "dibuat": T0, "terakhir_aktif": kini - timedelta(days=1)},
+        "b": {"email": "b@x.id", "status": "aktif", "peran": "petugas", "dibuat": T0 + timedelta(days=2), "terakhir_aktif": kini - timedelta(days=45)},
+        "c": {"email": "c@x.id", "status": "menunggu", "peran": None, "dibuat": T0},
+    }
+    r = fs.ringkas_adopsi([(k, v) for k, v in db.data["lbp_pengguna"].items()], kini)
+    assert r["akun_aktif"] == 2 and r["aktif_30_hari"] == 1 and r["mulai"] == "2026-09-28"
+    assert r["per_peran"]["petugas"] == {"akun": 1, "aktif_30_hari": 0}
+    assert "x.id" not in json.dumps(r)
+    assert fs.tulis_adopsi(akar, r) and not fs.tulis_adopsi(akar, r)  # tidak ditulis ulang bila sama
+    hasil = kinerja.adopsi(akar / "data" / "adopsi.json", date(2026, 11, 10))
+    assert hasil["persen"] == 50.0 and hasil["bulan_ke"] == 2 and hasil["target_persen"] == 35
 
 
 def test_format_pengaturan_sama_dengan_panel_admin():

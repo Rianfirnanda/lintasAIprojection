@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kebijakan TPID · Lintas Benteng Projection</title>
+  <meta name="description" content="Dari peringatan ke keputusan: rekomendasi langkah, kebijakan TPID beserta dampaknya terhadap harga, dan catatan rapat TPID.">
+  <meta name="theme-color" content="#0e1114">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Kebijakan TPID</h1>
+      <p>Dari peringatan ke keputusan: langkah yang disarankan, kebijakan yang diambil, dan apakah kebijakan itu berpengaruh pada harga.</p>
+    </div>
+  </div>
+
+  <div class="ind-baris" id="kpi"></div>
+  <div id="pesan-mode"></div>
+
+  <section class="kartu" aria-labelledby="j-rek">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-rek">Rekomendasi langkah</h2>
+        <p>Disusun otomatis dari peringatan harga yang dideteksi AI. Rekomendasi berisiko tinggi wajib disetujui manusia sebelum dijalankan.</p>
+      </div>
+    </div>
+    <ul class="daftar-sinyal daftar-rek" id="daftar-rek"></ul>
+  </section>
+
+  <section class="kartu" aria-labelledby="j-kbj">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-kbj">Kebijakan dan dampaknya</h2>
+        <p>Setiap kebijakan dinilai otomatis dari harga sebelum dan sesudahnya: <b>berpengaruh</b>, <b>tidak berpengaruh</b>, atau <b>netral</b>.</p>
+      </div>
+      <button class="tombol utama-aksi" type="button" id="buka-kbj">Catat kebijakan</button>
+    </div>
+    <form id="form-kbj" class="form-kartu" hidden>
+      <div class="form-grid">
+        <label>Tanggal mulai<input type="date" id="k-mulai" required></label>
+        <label>Tanggal selesai (bila ada)<input type="date" id="k-selesai"></label>
+        <label>Jenis kebijakan<select id="k-jenis"></select></label>
+        <label>Tujuan<select id="k-tujuan"></select></label>
+      </div>
+      <fieldset class="pilih-chip">
+        <legend>Komoditas yang disasar</legend>
+        <div id="k-varian"></div>
+      </fieldset>
+      <div class="form-grid">
+        <label style="grid-column:1/-1">Uraian singkat<textarea id="k-uraian" rows="2" maxlength="500" placeholder="mis. Pasar murah cabai di Pasar Taba Penanjung bersama Disperindag"></textarea></label>
+        <label>Dicatat oleh<input type="text" id="k-pencatat" maxlength="120" required></label>
+      </div>
+      <input type="hidden" id="k-rek">
+      <div class="baris-kontrol" style="margin-top:12px">
+        <button class="tombol utama-aksi" type="submit">Simpan kebijakan</button>
+        <button class="tombol" type="button" id="batal-kbj">Batal</button>
+        <span class="meta-kecil" id="hasil-kbj" role="status"></span>
+      </div>
+    </form>
+    <div class="gulir-tabel"><table id="tabel-kbj"><thead><tr>
+      <th>Mulai</th><th>Kebijakan</th><th>Komoditas</th><th>Tujuan</th><th>Dampak</th><th class="angka">Harga sebelum → sesudah</th>
+    </tr></thead><tbody></tbody></table></div>
+    <details style="margin-top:12px"><summary>Cara menilai dampak</summary>
+      <div class="prosa" style="margin-top:8px;font-size:0.88rem" id="cara-dampak"></div>
+    </details>
+  </section>
+
+  <section class="kartu" aria-labelledby="j-rapat">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-rapat">Rapat TPID</h2>
+        <p id="ket-rapat">Forum yang membahas data harga. Target: minimal sekali tiap triwulan.</p>
+      </div>
+      <button class="tombol utama-aksi" type="button" id="buka-rapat">Catat rapat</button>
+    </div>
+    <form id="form-rapat" class="form-kartu" hidden>
+      <div class="form-grid">
+        <label>Tanggal<input type="date" id="r-tanggal" required></label>
+        <label>Jenis forum<select id="r-jenis"></select></label>
+        <label>Peringatan yang dibahas<input type="number" id="r-sinyal" min="0" max="500" value="0"></label>
+        <label>Peserta (instansi)<input type="text" id="r-peserta" maxlength="300" placeholder="mis. BPS, Disperindag, Bappeda"></label>
+        <label style="grid-column:1/-1">Agenda<input type="text" id="r-agenda" maxlength="300" required></label>
+        <label style="grid-column:1/-1">Keputusan<textarea id="r-keputusan" rows="2" maxlength="1000"></textarea></label>
+        <label>Tautan notulen (opsional)<input type="url" id="r-notulen" maxlength="300" placeholder="https://"></label>
+        <label>Dicatat oleh<input type="text" id="r-pencatat" maxlength="120" required></label>
+      </div>
+      <div class="baris-kontrol" style="margin-top:12px">
+        <button class="tombol utama-aksi" type="submit">Simpan rapat</button>
+        <button class="tombol" type="button" id="batal-rapat">Batal</button>
+        <span class="meta-kecil" id="hasil-rapat" role="status"></span>
+      </div>
+    </form>
+    <div class="gulir-tabel"><table id="tabel-rapat"><thead><tr>
+      <th>Tanggal</th><th>Forum</th><th>Agenda</th><th>Keputusan</th><th class="angka">Peringatan dibahas</th><th>Notulen</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+
+<script type="module">
+import { ind } from "./assets/peran.js";
+import { pasangKerangka, muatJSON, esc, rp, tgl, tampilkanGalat } from "./assets/app.js";
+import { sesi } from "./assets/akses.js";
+
+const meta = await pasangKerangka("kebijakan.html");
+let data, master;
+try {
+  [data, master] = await Promise.all([muatJSON("kebijakan.json"), muatJSON("master.json")]);
+} catch (e) {
+  tampilkanGalat(document.querySelector("main"), e);
+  throw e;
+}
+// Dengan login Google (Firebase), keputusan dan catatan langsung tersimpan dari halaman ini.
+const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
+const $ = (id) => document.getElementById(id);
+const L = data.label;
+const r = data.ringkasan;
+const namaVarian = Object.fromEntries(master.varian.map((v) => [v.kode, v.nama]));
+const hariIni = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+const KELAS_DAMPAK = { berpengaruh: "baik", tidak_berpengaruh: "tinggi", netral: "polos", menunggu: "info", belum_dapat_dinilai: "polos" };
+const KELAS_STATUS = { menunggu: ["Menunggu keputusan", "sedang"], disetujui: ["Disetujui", "baik"], ditolak: ["Ditolak", "polos"] };
+const pesanProses = "Tersimpan. Muncul di daftar setelah pembaruan berikutnya, biasanya 15 sampai 30 menit pada jam kerja.";
+
+/* ---------- ringkasan */
+const tinggi = r.rekomendasi_tinggi;
+$("kpi").innerHTML = [
+  ind({ i: "jam", warna: r.rekomendasi_menunggu ? "oranye" : "hijau", label: "Rekomendasi menunggu", nilai: r.rekomendasi_menunggu, kecil: "langkah",
+    sub: r.rekomendasi_menunggu ? "perlu diputuskan" : "semua sudah diputuskan", warnaNilai: r.rekomendasi_menunggu ? "oranye" : "" }),
+  ind({ i: "gembokPerisai", warna: tinggi && r.rekomendasi_tinggi_diputuskan < tinggi ? "merah" : "hijau", label: "Risiko tinggi diputuskan",
+    nilai: tinggi ? `${r.rekomendasi_tinggi_diputuskan}/${tinggi}` : "–", sub: "target: semua disetujui manusia" }),
+  ind({ i: "dokumen", label: "Kebijakan tercatat", nilai: r.kebijakan, kecil: "kebijakan",
+    sub: `${r.dampak.berpengaruh} berpengaruh · ${r.dampak.tidak_berpengaruh} tidak · ${r.dampak.netral} netral` }),
+  ind({ i: "tim", warna: r.rapat_triwulan_ini ? "hijau" : "oranye", label: "Rapat TPID triwulan ini", nilai: r.rapat_triwulan_ini, kecil: "rapat",
+    sub: "target minimal 1 per triwulan", warnaNilai: r.rapat_triwulan_ini ? "hijau" : "oranye" }),
+].join("");
+if (!kiriman) {
+  $("pesan-mode").innerHTML = `<div class="pesan peringatan" style="margin-bottom:14px">Mencatat keputusan, kebijakan, dan rapat butuh masuk dengan akun Google. Halaman ini hanya bisa dibaca.</div>`;
+  ["buka-kbj", "buka-rapat"].forEach((id) => { $(id).hidden = true; });
+}
+
+/* ---------- rekomendasi */
+function htmlRek(x) {
+  const [label, kelas] = KELAS_STATUS[x.status];
+  const k = x.keputusan;
+  const putus = k ? `<div class="bawah"><span>${esc(x.status === "disetujui" ? "Disetujui" : "Ditolak")} oleh ${esc(k.penyetuju || "-")} · ${esc(tgl(k.tanggal))}</span>${k.catatan ? `<span>“${esc(k.catatan)}”</span>` : ""}</div>` : "";
+  const aksi = kiriman ? `<div class="aksi-rek">
+      <input type="text" class="catatan-rek" maxlength="300" placeholder="Catatan (opsional)" aria-label="Catatan keputusan">
+      <button class="tombol utama-aksi kecil" type="button" data-putus="setuju">Setujui</button>
+      <button class="tombol kecil" type="button" data-putus="tolak">Tolak</button>
+      <button class="tombol kecil" type="button" data-jadikan ${x.risiko_tinggi && x.status !== "disetujui" ? 'disabled title="Setujui dulu, karena risikonya tinggi"' : ""}>Catat sebagai kebijakan</button>
+      <span class="meta-kecil hasil-rek" role="status"></span></div>` : "";
+  return `<li data-id="${esc(x.id)}">
+    <div class="atas"><span class="lencana ${x.keparahan === "tinggi" ? "tinggi" : "sedang"}">${x.risiko_tinggi ? "Risiko tinggi" : "Perlu perhatian"}</span>
+      <span class="lencana ${kelas}">${esc(label)}</span><span class="meta-kecil">${esc(L.jenis[x.jenis_kebijakan] || "")}</span></div>
+    <div class="judul">${esc(x.judul)}</div>
+    <ol class="langkah-rek">${x.langkah.map((l) => `<li>${esc(l)}</li>`).join("")}</ol>
+    ${putus}${aksi}</li>`;
+}
+$("daftar-rek").innerHTML = data.rekomendasi.length ? data.rekomendasi.map(htmlRek).join("")
+  : `<li class="kosong">Tidak ada peringatan penting yang perlu ditindaklanjuti saat ini.</li>`;
+
+$("daftar-rek").addEventListener("click", async (e) => {
+  const li = e.target.closest("li[data-id]");
+  const x = li && data.rekomendasi.find((y) => y.id === li.dataset.id);
+  if (!x) return;
+  if (e.target.closest("[data-jadikan]")) {
+    bukaFormKebijakan({ jenis: x.jenis_kebijakan, varian: x.kode_varian ? [x.kode_varian] : [], rek: x.id,
+      uraian: `Tindak lanjut: ${x.judul}`, tujuan: x.jenis_kebijakan === "penyerapan_panen" ? "menahan_penurunan" : "menurunkan_harga" });
+    return;
+  }
+  const b = e.target.closest("[data-putus]");
+  if (!b) return;
+  const keputusan = b.dataset.putus;
+  if (keputusan === "tolak" && !confirm("Tolak rekomendasi ini?")) return;
+  const hasil = li.querySelector(".hasil-rek");
+  li.querySelectorAll("button, input").forEach((el) => { el.disabled = true; });
+  hasil.textContent = "Menyimpan…";
+  try {
+    await kiriman.putuskanRekomendasi(x.id, keputusan, { catatan: li.querySelector(".catatan-rek").value, penyetuju: sesi()?.nama || "" });
+    li.querySelector(".atas .lencana:nth-child(2)").outerHTML = `<span class="lencana ${keputusan === "setuju" ? "baik" : "polos"}">${keputusan === "setuju" ? "Disetujui" : "Ditolak"}</span>`;
+    hasil.textContent = keputusan === "setuju" ? "Disetujui. Catat kebijakannya bila sudah dijalankan." : "Ditolak.";
+    li.querySelector("[data-jadikan]").disabled = keputusan !== "setuju";
+  } catch (err) {
+    hasil.textContent = kiriman.pesanKiriman(err);
+    li.querySelectorAll("button, input").forEach((el) => { el.disabled = false; });
+  }
+});
+
+/* ---------- kebijakan */
+const a = data.aturan_dampak;
+$("cara-dampak").innerHTML = `<ol>
+  <li>Harga tengah (median) ${a.hari_sebelum} hari sebelum kebijakan dibandingkan dengan harga tengah hari ke-${a.jeda_hari} sampai ke-${a.hari_sesudah} sesudahnya. Beberapa hari pertama dilewati karena kebijakan butuh waktu untuk terasa.</li>
+  <li><b>Berpengaruh</b>: harga turun minimal ${a.ambang_persen}%, atau sebelumnya naik lalu kenaikannya jelas melambat atau berhenti.</li>
+  <li><b>Tidak berpengaruh</b>: harga tetap naik secepat sebelumnya atau lebih cepat.</li>
+  <li><b>Netral</b>: perubahan harga kecil, kurang dari ${a.ambang_persen}%.</li>
+  <li>Untuk kebijakan melindungi petani, arahnya dibalik: yang diharapkan harga berhenti jatuh.</li>
+  <li>Penilaian ini petunjuk, bukan bukti sebab-akibat. Panen, cuaca, dan pasokan dari luar daerah juga menggerakkan harga, jadi tetap dibahas di rapat TPID.</li></ol>`;
+
+function selDampak(k) {
+  const d = k.dampak;
+  return `<td><span class="lencana ${KELAS_DAMPAK[d.status] || "polos"}">${esc(L.dampak[d.status] || d.status)}</span>
+    <div class="meta-kecil" style="margin-top:4px;max-width:340px">${esc(d.keterangan || "")}</div></td>`;
+}
+function selHarga(k) {
+  const v = k.dampak.per_varian.filter((x) => x.harga_sebelum);
+  return `<td class="angka">${v.map((x) => `<div>${rp(x.harga_sebelum)} → ${rp(x.harga_sesudah)} <span class="meta-kecil">(${x.perubahan_persen > 0 ? "+" : ""}${String(x.perubahan_persen).replace(".", ",")}%)</span></div>`).join("") || "–"}</td>`;
+}
+$("tabel-kbj").querySelector("tbody").innerHTML = data.kebijakan.map((k) => `<tr>
+  <td>${esc(tgl(k.tanggal_mulai))}${k.tanggal_selesai ? `<div class="meta-kecil">s.d. ${esc(tgl(k.tanggal_selesai))}</div>` : ""}</td>
+  <td><b>${esc(k.nama_jenis)}</b>${k.uraian ? `<div class="meta-kecil">${esc(k.uraian)}</div>` : ""}<div class="meta-kecil">Dicatat ${esc(k.pencatat || "-")}</div></td>
+  <td>${k.nama_varian.map(esc).join(", ")}</td><td>${esc(k.nama_tujuan)}</td>${selDampak(k)}${selHarga(k)}</tr>`).join("")
+  || `<tr><td colspan="6" class="kosong">Belum ada kebijakan yang dicatat.</td></tr>`;
+
+// Formulir: pilihan jenis, tujuan, dan varian per komoditas
+$("k-jenis").innerHTML = Object.entries(L.jenis).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("");
+$("k-tujuan").innerHTML = Object.entries(L.tujuan).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("");
+$("r-jenis").innerHTML = Object.entries(L.rapat).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("");
+$("k-varian").innerHTML = master.komoditas.map((kom) => `<div class="grup-chip"><span class="meta-kecil">${esc(kom.nama)}</span>
+  <div class="kelompok-centang">${kom.varian.map((kode) => `<label class="chip-centang"><input type="checkbox" value="${esc(kode)}"><span>${esc(namaVarian[kode] || kode)}</span></label>`).join("")}</div></div>`).join("");
+
+function bukaFormKebijakan(isi = {}) {
+  const f = $("form-kbj");
+  f.hidden = false;
+  $("k-mulai").value = isi.mulai || hariIni();
+  $("k-mulai").max = hariIni();
+  if (isi.jenis) $("k-jenis").value = isi.jenis;
+  if (isi.tujuan) $("k-tujuan").value = isi.tujuan;
+  $("k-uraian").value = isi.uraian || "";
+  $("k-rek").value = isi.rek || "";
+  $("k-pencatat").value ||= sesi()?.nama || "";
+  $("k-varian").querySelectorAll("input").forEach((c) => { c.checked = (isi.varian || []).includes(c.value); });
+  $("hasil-kbj").textContent = "";
+  f.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+$("buka-kbj").addEventListener("click", () => bukaFormKebijakan());
+$("batal-kbj").addEventListener("click", () => { $("form-kbj").hidden = true; });
+$("form-kbj").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const varian = [...$("k-varian").querySelectorAll("input:checked")].map((c) => c.value);
+  const hasil = $("hasil-kbj");
+  if (!varian.length) { hasil.textContent = "Pilih minimal satu komoditas."; return; }
+  if ($("k-selesai").value && $("k-selesai").value < $("k-mulai").value) { hasil.textContent = "Tanggal selesai tidak boleh sebelum tanggal mulai."; return; }
+  const tombol = e.target.querySelector('button[type="submit"]');
+  tombol.disabled = true;
+  hasil.textContent = "Menyimpan…";
+  try {
+    await kiriman.simpanKebijakan({ tanggal_mulai: $("k-mulai").value, tanggal_selesai: $("k-selesai").value, jenis: $("k-jenis").value,
+      tujuan: $("k-tujuan").value, kode_varian: varian, uraian: $("k-uraian").value, id_rekomendasi: $("k-rek").value, pencatat: $("k-pencatat").value });
+    hasil.textContent = pesanProses;
+    $("tabel-kbj").querySelector("tbody").insertAdjacentHTML("afterbegin", `<tr class="baru-dicatat"><td>${esc(tgl($("k-mulai").value))}</td>
+      <td><b>${esc(L.jenis[$("k-jenis").value])}</b><div class="meta-kecil">${esc($("k-uraian").value)}</div></td>
+      <td>${varian.map((k) => esc(namaVarian[k] || k)).join(", ")}</td><td>${esc(L.tujuan[$("k-tujuan").value])}</td>
+      <td><span class="lencana info">Menunggu diproses</span></td><td class="angka">–</td></tr>`);
+    $("tabel-kbj").querySelector(".kosong")?.closest("tr")?.remove();
+    e.target.reset();
+    setTimeout(() => { $("form-kbj").hidden = true; }, 2500);
+  } catch (err) {
+    hasil.textContent = kiriman.pesanKiriman(err);
+  } finally {
+    tombol.disabled = false;
+  }
+});
+
+/* ---------- rapat */
+const triwulan = Object.entries(r.rapat_per_triwulan || {}).slice(0, 4).map(([t, n]) => `${t.replace("-T", " triwulan ")}: ${n}`).join(" · ");
+if (triwulan) $("ket-rapat").textContent = `Forum yang membahas data harga. Target: minimal sekali tiap triwulan. ${triwulan}.`;
+$("tabel-rapat").querySelector("tbody").innerHTML = data.rapat.map((x) => `<tr>
+  <td>${esc(tgl(x.tanggal))}</td><td>${esc(x.nama_jenis)}${x.peserta ? `<div class="meta-kecil">${esc(x.peserta)}</div>` : ""}</td>
+  <td>${esc(x.agenda)}</td><td>${esc(x.keputusan || "-")}</td><td class="angka">${esc(x.jumlah_sinyal || "0")}</td>
+  <td>${/^https:\/\//.test(x.tautan_notulen || "") ? `<a href="${esc(x.tautan_notulen)}" rel="noopener" target="_blank">Buka</a>` : "–"}</td></tr>`).join("")
+  || `<tr><td colspan="6" class="kosong">Belum ada rapat yang dicatat.</td></tr>`;
+
+$("buka-rapat").addEventListener("click", () => {
+  $("form-rapat").hidden = false;
+  $("r-tanggal").value ||= hariIni();
+  $("r-tanggal").max = hariIni();
+  $("r-pencatat").value ||= sesi()?.nama || "";
+  $("r-sinyal").value = data.rekomendasi.length;
+  $("form-rapat").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("batal-rapat").addEventListener("click", () => { $("form-rapat").hidden = true; });
+$("form-rapat").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const hasil = $("hasil-rapat");
+  const notulen = $("r-notulen").value.trim();
+  if (notulen && !/^https:\/\//.test(notulen)) { hasil.textContent = "Tautan notulen harus diawali https://"; return; }
+  const tombol = e.target.querySelector('button[type="submit"]');
+  tombol.disabled = true;
+  hasil.textContent = "Menyimpan…";
+  try {
+    await kiriman.simpanRapat({ tanggal: $("r-tanggal").value, jenis: $("r-jenis").value, agenda: $("r-agenda").value, keputusan: $("r-keputusan").value,
+      jumlah_sinyal: $("r-sinyal").value, peserta: $("r-peserta").value, tautan_notulen: notulen, pencatat: $("r-pencatat").value });
+    hasil.textContent = pesanProses;
+    $("tabel-rapat").querySelector("tbody").insertAdjacentHTML("afterbegin", `<tr class="baru-dicatat"><td>${esc(tgl($("r-tanggal").value))}</td>
+      <td>${esc(L.rapat[$("r-jenis").value])}</td><td>${esc($("r-agenda").value)}</td><td>${esc($("r-keputusan").value || "-")}</td>
+      <td class="angka">${esc($("r-sinyal").value)}</td><td><span class="lencana info">Menunggu diproses</span></td></tr>`);
+    $("tabel-rapat").querySelector(".kosong")?.closest("tr")?.remove();
+    e.target.reset();
+    setTimeout(() => { $("form-rapat").hidden = true; }, 2500);
+  } catch (err) {
+    hasil.textContent = kiriman.pesanKiriman(err);
+  } finally {
+    tombol.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

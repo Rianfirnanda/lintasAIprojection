@@ -22,6 +22,7 @@ from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, laya
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
 from . import firestore_sinkron
+from . import kebijakan as modul_kebijakan
 
 log = logging.getLogger(__name__)
 HARI_SERI_PUBLIKASI = 400
@@ -150,6 +151,14 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
         "stabilitas": kinerja.stabilitas_segmen(hasil_varian, konf.varian),
         "uptime": kinerja.ringkas_uptime(akar / "data" / "uptime.csv", konf.hari_ini, cfg_kinerja.get("hari_uptime", 30)),
         "persetujuan": persetujuan,
+        # Respons pedagang dihitung dari pencatatan asli saja; data contoh tidak punya kunjungan sungguhan.
+        "respons_pedagang": kinerja.respons_pedagang(
+            [] if pakai_demo else hasil_qc.observasi, [] if pakai_demo else kinerja.baca_kunjungan(akar / "data" / "kunjungan"),
+            konf.hari_ini),
+        "adopsi": kinerja.adopsi(akar / "data" / "adopsi.json", konf.hari_ini),
+        "kebijakan": modul_kebijakan.bentuk(
+            akar, daftar_sinyal, {kode: per for (w, kode), per in harian.items() if w == target}, konf.hari_ini,
+            {k: v.nama for k, v in konf.varian.items()}, konf.pengaturan.get("kebijakan")),
     }
 
     # Publikasi
@@ -332,7 +341,9 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     indikator = kinerja.indikator_smart(
         konf, hasil_qc, hasil_masuk, ringkasan_model, evaluasi, daftar_sinyal, data_kinerja.get("respons", {}),
         data_kinerja.get("koreksi", {}), data_kinerja.get("stabilitas", {}), data_kinerja.get("uptime", {}),
-        status_persetujuan, data_kinerja.get("layanan"))
+        status_persetujuan, data_kinerja.get("layanan"),
+        tambahan={"respons_pedagang": data_kinerja.get("respons_pedagang"), "adopsi": data_kinerja.get("adopsi"),
+                  "kebijakan": (data_kinerja.get("kebijakan") or {}).get("ringkasan")})
     _tulis_json(keluaran / "kinerja.json", {
         "indikator": indikator,
         "koreksi_supervisor": data_kinerja.get("koreksi", {}),
@@ -344,7 +355,13 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "status": status_persetujuan,
         },
         "layanan": data_kinerja.get("layanan") or {},
+        "respons_pedagang": data_kinerja.get("respons_pedagang") or {},
+        "adopsi": data_kinerja.get("adopsi") or {},
     })
+
+    # ---------- kebijakan.json (rekomendasi, kebijakan dan dampaknya, rapat TPID)
+    if data_kinerja.get("kebijakan"):
+        _tulis_json(keluaran / "kebijakan.json", data_kinerja["kebijakan"])
 
     # ---------- laporan.json (mingguan, bulanan, triwulanan, semesteran, tahunan)
     kinerja_model = {"ringkasan": ringkasan_model, "evaluasi_anomali": evaluasi, "target": tk}

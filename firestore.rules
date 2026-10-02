@@ -70,6 +70,7 @@ service cloud.firestore {
     function bolehCekData() { return izin('kualitas.html', ['operator', 'analis']); }
     function bolehTindakLanjut() { return izin('sinyal.html', ['analis', 'tpid']); }
     function bolehSetujuiModel() { return izin('model.html', ['analis']); }
+    function bolehKebijakan() { return izin('kebijakan.html', ['tpid', 'analis']); }
     function kelolaPengguna() { return izin('pengguna.html', []); }
     function kelolaSistem() { return izin('pengaturan.html', []); }
     function baru() { return request.resource.data; }
@@ -83,7 +84,7 @@ service cloud.firestore {
 
     function kolomSah(d) {
       return d.keys().hasOnly(['email', 'nama', 'foto', 'status', 'peran', 'halaman', 'dibuat', 'diperbarui',
-                               'diputus_oleh', 'diputus_pada', 'catatan']);
+                               'diputus_oleh', 'diputus_pada', 'catatan', 'terakhir_aktif']);
     }
 
     match /lbp_pengguna/{uid} {
@@ -115,10 +116,13 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['status', 'peran', 'halaman', 'diperbarui', 'diputus_oleh', 'diputus_pada']);
 
-      // Pemilik hanya boleh memperbarui nama dan foto, tidak bisa mengubah status, peran, atau izinnya sendiri.
+      // Pemilik hanya boleh memperbarui nama, foto, dan waktu terakhir memakai sistem (untuk mengukur pemakaian),
+      // tidak bisa mengubah status, peran, atau izinnya sendiri.
       allow update: if masuk() && request.auth.uid == uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nama', 'foto', 'diperbarui'])
-        && teksPendek(request.resource.data.nama, 120);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nama', 'foto', 'diperbarui', 'terakhir_aktif'])
+        && teksPendek(request.resource.data.nama, 120)
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['terakhir_aktif'])
+            || request.resource.data.terakhir_aktif == request.time);
 
       // Pengelola akun mengatur akun orang lain. Tidak ada yang bisa mengubah status, peran, atau izin akunnya sendiri
       // (admin tidak terkunci, dan pengelola tidak bisa menaikkan haknya sendiri). Akun yang memegang atau akan
@@ -177,6 +181,63 @@ service cloud.firestore {
         && teksPendek(baru().get('berkas', ''), 160)
         && baru().get('oleh_email', request.auth.token.email) == request.auth.token.email
         && baru().diterima == request.time && stempel();
+    }
+
+    // Kunjungan ke pedagang yang tidak menghasilkan harga (menolak, tidak ada, kios tutup), untuk mengukur respons dan
+    // penolakan pedagang. Kunjungan yang berhasil sudah tercatat lewat harganya. Tidak bisa diubah setelah terkirim.
+    match /lbp_kunjungan/{id} {
+      allow read: if (masuk() && resource.data.oleh_uid == request.auth.uid) || bolehCekData();
+      allow create: if (bolehCatat() || bolehCekData())
+        && baru().keys().hasOnly(['tanggal', 'kode_pasar', 'responden', 'status', 'alasan', 'petugas', 'waktu_input',
+                                  'oleh_uid', 'diperbarui'])
+        && tanggalSah(baru().tanggal)
+        && teksPendek(baru().kode_pasar, 30) && baru().kode_pasar.size() > 0
+        && baru().status in ['menolak', 'tidak_ada', 'tutup']
+        && teksPendek(baru().responden, 60) && teksPendek(baru().alasan, 60) && teksPendek(baru().petugas, 60)
+        && teksPendek(baru().waktu_input, 40) && id.size() <= 80
+        && stempel();
+    }
+
+    // Kebijakan atau intervensi TPID beserta varian yang disasar. Dampaknya dinilai mesin dari harga sebelum dan sesudah.
+    match /lbp_kebijakan/{id} {
+      allow read: if bolehKebijakan();
+      allow create, update: if bolehKebijakan()
+        && baru().keys().hasOnly(['tanggal_mulai', 'tanggal_selesai', 'jenis', 'kode_varian', 'tujuan', 'uraian',
+                                  'id_rekomendasi', 'pencatat', 'oleh_uid', 'diperbarui'])
+        && tanggalSah(baru().tanggal_mulai)
+        && (baru().tanggal_selesai == '' || tanggalSah(baru().tanggal_selesai))
+        && baru().jenis in ['operasi_pasar', 'koordinasi_pasokan', 'distribusi', 'komunikasi_publik', 'pengawasan',
+                            'penyerapan_panen', 'lainnya']
+        && baru().tujuan in ['menurunkan_harga', 'menahan_kenaikan', 'menahan_penurunan']
+        && baru().kode_varian is list && baru().kode_varian.size() > 0 && baru().kode_varian.size() <= 30
+        && teksPendek(baru().uraian, 500) && teksPendek(baru().id_rekomendasi, 80) && teksPendek(baru().pencatat, 120)
+        && stempel();
+    }
+
+    // Rapat atau forum TPID yang membahas data (target: minimal sekali per triwulan).
+    match /lbp_rapat/{id} {
+      allow read: if bolehKebijakan();
+      allow create, update: if bolehKebijakan()
+        && baru().keys().hasOnly(['tanggal', 'jenis', 'agenda', 'keputusan', 'jumlah_sinyal', 'peserta', 'tautan_notulen',
+                                  'pencatat', 'oleh_uid', 'diperbarui'])
+        && tanggalSah(baru().tanggal)
+        && baru().jenis in ['rapat_koordinasi', 'high_level_meeting', 'rapat_teknis']
+        && teksPendek(baru().agenda, 300) && teksPendek(baru().keputusan, 1000) && teksPendek(baru().peserta, 300)
+        && (baru().tautan_notulen == '' || (teksPendek(baru().tautan_notulen, 300) && baru().tautan_notulen.matches('^https://.*')))
+        && baru().jumlah_sinyal is int && baru().jumlah_sinyal >= 0 && baru().jumlah_sinyal <= 500
+        && teksPendek(baru().pencatat, 120)
+        && stempel();
+    }
+
+    // Keputusan manusia atas rekomendasi langkah (wajib untuk rekomendasi berisiko tinggi). ID = ID rekomendasi.
+    match /lbp_keputusan_rekomendasi/{id} {
+      allow read: if bolehKebijakan();
+      allow create, update: if bolehKebijakan()
+        && baru().keys().hasOnly(['id_rekomendasi', 'keputusan', 'catatan', 'penyetuju', 'tanggal', 'oleh_uid', 'diperbarui'])
+        && baru().id_rekomendasi == id && id.size() <= 80
+        && baru().keputusan in ['setuju', 'tolak']
+        && teksPendek(baru().catatan, 300) && teksPendek(baru().penyetuju, 120) && teksPendek(baru().tanggal, 40)
+        && stempel();
     }
 
     // Keputusan cek data (terima/tolak) per observasi. ID dokumen = id_observasi; keputusan terbaru yang berlaku.

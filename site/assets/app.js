@@ -260,7 +260,7 @@ export async function pasangKerangka(aktif) {
     const b = document.createElement("div");
     b.className = "pita-contoh";
     b.setAttribute("role", "status");
-    b.innerHTML = `<b>Data contoh.</b> Angka di sini masih untuk uji coba, bukan angka resmi.`;
+    b.innerHTML = `<b>Data contoh.</b> Angka di sini masih untuk uji coba, bukan angka resmi. Tanda ini hilang sendiri setelah harga asli pertama dari petugas masuk.`;
     kepala.after(b);
   }
   kaki.innerHTML = `
@@ -305,16 +305,34 @@ async function segarkanSesiFirebase(lama) {
       location.replace(`masuk.html?status=${encodeURIComponent(akun?.status || (user ? "hilang" : "keluar"))}`);
       return;
     }
+    catatPemakaian(fk, user.uid);
     const baru = await fk.sesiAkun(akun);
     const beda = baru.peran !== lama.peran || JSON.stringify(baru.halaman) !== JSON.stringify(lama.halaman ?? null) || baru.nama !== lama.nama;
     if (beda) {
       simpanSesiFirebase(baru);
       location.reload();
+    } else if ((baru.foto || null) !== (lama.foto || null)) {
+      simpanSesiFirebase(baru); // foto akun Google tampil mulai halaman berikutnya
     }
   } catch (e) {
     // Tanpa sinyal atau Firebase sedang bermasalah: tetap pakai sesi yang ada, dicoba lagi saat halaman berikutnya.
     console.warn("Akun belum bisa diperiksa", e);
   }
+}
+
+/**
+ * Catat sekali sehari bahwa akun ini memakai sistem (waktu server). Dipakai untuk indikator pemakaian (adopsi) di
+ * halaman Capaian; yang diterbitkan hanya jumlah akun aktif, bukan siapa atau kapan.
+ */
+async function catatPemakaian(fk, uid) {
+  const kunci = `lbp-aktif-${uid}`;
+  const hari = new Date().toISOString().slice(0, 10);
+  try { if (localStorage.getItem(kunci) === hari) return; } catch { return; }
+  try {
+    const { fb, db } = await fk.firebaseSiap();
+    await fb.updateDoc(fb.doc(db, fk.KOLEKSI_PENGGUNA, uid), { terakhir_aktif: fb.serverTimestamp() });
+    localStorage.setItem(kunci, hari);
+  } catch { /* dicoba lagi saat halaman berikutnya */ }
 }
 
 /* ---------- angka indikator menghitung naik saat muncul (mis. 0 → 92%) */

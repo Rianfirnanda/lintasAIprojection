@@ -106,18 +106,24 @@ async function tampilkanGoogle() {
   const tombol = document.getElementById("btn-google");
   const galat = document.getElementById("galat");
   let fk;
-  try {
-    fk = await import("./assets/firebase-klien.js");
-    const dariRedirect = await fk.hasilRedirect();
-    if (dariRedirect) return lanjutkanAkun(fk, dariRedirect);
-    const kini = !status && (await fk.penggunaKini());
-    if (kini) return lanjutkanAkun(fk, kini);
-  } catch (e) {
-    galat.textContent = fk ? fk.pesanGalat(e) : "Firebase belum bisa dimuat. Periksa sambungan internet.";
-    galat.hidden = false;
-  }
+  // Tombol langsung bisa ditekan. Pemeriksaan awal (kembali dari login redirect, atau sudah masuk sebelumnya) berjalan
+  // bersamaan; ketukan menunggu pemeriksaan itu selesai supaya tidak ada dua proses masuk sekaligus.
+  const awal = (async () => {
+    try {
+      fk = await import("./assets/firebase-klien.js");
+      const dariRedirect = await fk.hasilRedirect();
+      if (dariRedirect) { await lanjutkanAkun(fk, dariRedirect); return true; }
+      const kini = !status && (await fk.penggunaKini());
+      if (kini) { await lanjutkanAkun(fk, kini); return true; }
+    } catch (e) {
+      galat.textContent = fk ? fk.pesanGalat(e) : "Firebase belum bisa dimuat. Periksa sambungan internet.";
+      galat.hidden = false;
+    }
+    return false;
+  })();
   tombol.addEventListener("click", async () => {
     tombol.disabled = true; galat.hidden = true;
+    if (await awal) return; // sudah diteruskan oleh pemeriksaan awal
     try {
       fk ||= await import("./assets/firebase-klien.js");
       const user = await fk.masukGoogle();
