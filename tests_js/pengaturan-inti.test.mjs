@@ -44,7 +44,7 @@ test("jenis isian lain diperiksa", () => {
   assert.ok(periksaKolom(kolom("hari_pencatatan"), []), "minimal satu hari");
   assert.ok(periksaKolom(kolom("hari_pencatatan"), [7]));
   assert.ok(periksaKolom(kolom("hari_pencatatan"), [1, 1]));
-  assert.equal(periksaKolom(kolom("ai.urutan_otomatis"), ["github_models", "gemini"]), null);
+  assert.equal(periksaKolom(kolom("ai.urutan_otomatis"), ["groq", "gemini"]), null);
   assert.ok(periksaKolom(kolom("ai.urutan_otomatis"), []));
   assert.ok(periksaKolom(kolom("ai.urutan_otomatis"), ["gemini", "gemini"]));
   assert.equal(periksaKolom(kolom("ai.model_gemini"), "gemini-flash-latest"), null);

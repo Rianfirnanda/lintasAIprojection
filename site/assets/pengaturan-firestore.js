@@ -12,6 +12,19 @@ const NAMA_RAHASIA = /^[A-Z][A-Z0-9_]{1,79}$/;
 const iso = (t) => (t?.toDate ? t.toDate().toISOString() : t || null);
 const objek = (x) => x && typeof x === "object" && !Array.isArray(x);
 /** Isian yang belum ada di simpanan lama (isian baru setelah pembaruan sistem) diambil dari pengaturan yang terbit. */
+/** Pilihan AI yang layanannya sudah ditutup (GitHub Models, 30 Juli 2026) dibuang dari simpanan lama. */
+function bersihkanLama(isi) {
+  const ai = isi?.ai;
+  if (ai && typeof ai === "object") {
+    if (Array.isArray(ai.urutan_otomatis)) {
+      ai.urutan_otomatis = ai.urutan_otomatis.filter((p) => p !== "github_models");
+      if (!ai.urutan_otomatis.length) ai.urutan_otomatis = ["gemini"];
+    }
+    if (ai.penyedia === "github_models") ai.penyedia = "otomatis";
+    delete ai.model_github;
+  }
+  return isi;
+}
 const lengkapi = (acuan, data) => (objek(acuan) && objek(data)
   ? { ...acuan, ...Object.fromEntries(Object.entries(data).map(([k, v]) => [k, lengkapi(acuan[k], v)])) } : data);
 
@@ -60,7 +73,7 @@ export class KlienFirestore {
       const data = d.exists() ? d.data() : null;
       const versi = data?.versi || 0;
       const menunggu = !!data && versi > this.versiTerbit;
-      return { teks: JSON.stringify(menunggu ? lengkapi(this.terbit, data.isi) : this.terbit), sha: versi, menunggu,
+      return { teks: JSON.stringify(menunggu ? bersihkanLama(lengkapi(this.terbit, data.isi)) : this.terbit), sha: versi, menunggu,
         diubahOleh: data?.diubah_oleh || "", diubahPada: iso(data?.diubah_pada) };
     });
   }

@@ -92,8 +92,8 @@ const pencarian = data.kandidat_ai?.pencarian || [];
 const wadah = document.getElementById("kandidat");
 if (!pencarian.length) {
   wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan <strong>AI Data Finder</strong> dari tab Actions di GitHub, lalu isi komoditas dan periode.
-    <details style="margin-top:8px"><summary>Detail penyedia AI</summary>Gratis lewat Gemini (bisa mencari di Google), Groq, Cerebras, OpenRouter, Mistral,
-    atau GitHub Models (tanpa kunci). Kunci diisi di menu Pengaturan, tab AI. Isi juga kunci Tavily (gratis) supaya AI memakai hasil pencarian web. Pada mode Otomatis, AI dicoba bergantian, jadi kalau
+    <details style="margin-top:8px"><summary>Detail penyedia AI</summary>Gratis lewat Gemini, Groq, Cerebras, OpenRouter, dan Mistral
+    (semuanya punya kuota gratis). Kunci diisi di menu Pengaturan, tab AI. Isi juga kunci Tavily (gratis) supaya AI memakai hasil pencarian web. Pada mode Otomatis, AI dicoba bergantian, jadi kalau
     satu AI kena batas pemakaian gratis, AI berikutnya yang dipakai. Hasil tersimpan di <code>data/sumber/kandidat_ai.json</code>.</details></div>`;
 } else {
   wadah.innerHTML = pencarian.slice(0, 10).map((p) => {

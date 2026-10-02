@@ -253,6 +253,20 @@ def _lengkapi(acuan, data):
     return {**acuan, **{k: _lengkapi(acuan.get(k), v) for k, v in data.items()}}
 
 
+def _bersihkan_lama(isi: dict) -> dict:
+    """Pilihan AI yang layanannya sudah ditutup (GitHub Models) dibuang dari simpanan lama, supaya tetap sah."""
+    from .pencari_data import PENSIUN
+
+    ai = isi.get("ai")
+    if isinstance(ai, dict):
+        if isinstance(ai.get("urutan_otomatis"), list):
+            ai["urutan_otomatis"] = [p for p in ai["urutan_otomatis"] if p not in PENSIUN] or ["gemini"]
+        if ai.get("penyedia") in PENSIUN:
+            ai["penyedia"] = "otomatis"
+        ai.pop("model_github", None)
+    return isi
+
+
 def terapkan_pengaturan(akar: Path, dok: dict | None, versi_terapan: int) -> tuple[int, str]:
     """Tulis pengaturan dari situs ke config/pengaturan.json bila versinya lebih baru dan isinya sah.
 
@@ -268,7 +282,7 @@ def terapkan_pengaturan(akar: Path, dok: dict | None, versi_terapan: int) -> tup
     lama = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(isi, dict):
         return versi, f"Pengaturan versi {versi} dari situs kosong, tidak dipakai."
-    isi = _urut_seperti(lama, _lengkapi(lama, isi))
+    isi = _urut_seperti(lama, _bersihkan_lama(_lengkapi(lama, isi)))
     masalah = modul_pengaturan.periksa(isi, modul_pengaturan.muat_skema(folder) or {"kolom": []})
     if masalah:
         return versi, f"Pengaturan versi {versi} dari situs tidak dipakai karena belum sah: {masalah[0][1]}"

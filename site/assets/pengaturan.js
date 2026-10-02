@@ -19,7 +19,7 @@ const BERKAS = "config/pengaturan.json";
 const KUNCI_SESI = "lintas-gh-sambungan";
 const $ = (id) => document.getElementById(id);
 const MODEL_AI = { gemini: "ai.model_gemini", groq: "ai.model_groq", cerebras: "ai.model_cerebras", openrouter: "ai.model_openrouter",
-  mistral: "ai.model_mistral", github_models: "ai.model_github", anthropic: "ai.model_anthropic" };
+  mistral: "ai.model_mistral", anthropic: "ai.model_anthropic" };
 
 let skema, terbit;
 try {
@@ -501,7 +501,7 @@ function urutBagian(kode) {
   return bagian;
 }
 
-// Kunci tiap AI. GitHub Models memakai akses bawaan GitHub Actions, jadi tanpa kunci.
+// Kunci tiap AI gratis. (GitHub Models, yang dulu tanpa kunci, ditutup GitHub pada 30 Juli 2026.)
 const KUNCI_AI = [["Gemini", "GEMINI_API_KEY"], ["Groq", "GROQ_API_KEY"], ["Cerebras", "CEREBRAS_API_KEY"],
   ["OpenRouter", "OPENROUTER_API_KEY"], ["Mistral", "MISTRAL_API_KEY"]];
 
@@ -509,10 +509,9 @@ function htmlKesiapanAi() {
   const ada = (n) => S.rahasia?.has(n);
   const status = (nama, siap, ket) => `<span class="lencana ${siap ? "baik" : "polos"}">${nama}: ${ket}</span>`;
   const tahu = S.klien && !S.rahasiaGalat;
-  const nSiap = 1 + KUNCI_AI.filter(([, k]) => ada(k)).length;
+  const nSiap = KUNCI_AI.filter(([, k]) => ada(k)).length;
   return `<div class="kesiapan-ai">
     ${KUNCI_AI.map(([nama, k]) => status(nama, ada(k), tahu ? (ada(k) ? "kunci sudah diisi" : "kunci belum diisi") : "belum dicek")).join("\n    ")}
-    ${status("GitHub Models", true, "siap, tanpa kunci")}
     ${status("Claude", ada("ANTHROPIC_API_KEY"), tahu ? (ada("ANTHROPIC_API_KEY") ? "kunci sudah diisi" : "tidak dipakai") : "belum dicek")}
     ${status("Pencarian web (Tavily)", ada("TAVILY_API_KEY"), tahu ? (ada("TAVILY_API_KEY") ? "aktif" : "kunci belum diisi") : "belum dicek")}</div>
     <p class="ringkas-tab">Pada mode Otomatis, kalau satu AI kena batas pemakaian gratis, sistem pindah ke AI berikutnya. Makin banyak kunci gratis yang diisi, makin kecil kemungkinan gagal${tahu ? ` (sekarang ${nSiap} AI gratis siap)` : ""}. Dengan kunci Tavily, sistem lebih dulu mencari di web, lalu AI menyusun kandidat dari hasil pencarian itu, jadi alamat webnya nyata. Untuk mencoba, buka tab <a href="#" data-ke-tab="jalankan">Jalankan</a> lalu pilih "Cari sumber data dengan AI".</p>`;

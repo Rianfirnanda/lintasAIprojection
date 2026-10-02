@@ -151,32 +151,53 @@ def jawaban_chat(isi, **lain):
     return {"choices": [{"message": {"content": isi}}], **lain}
 
 
-def test_pencari_data_otomatis_jatuh_ke_github_models(konf, tanpa_kunci):
+def test_pencari_data_otomatis_melewati_ai_tanpa_kunci(konf, monkeypatch, tanpa_kunci):
+    monkeypatch.setenv("MISTRAL_API_KEY", "kunci-uji-mistral-1234567890")
 
-    def kirim_github(url, header, isi):
-        assert url == pencari_data.URL_GITHUB_MODELS and isi["model"] == "openai/gpt-4.1-mini"
+    def mistral(url, header, isi):
         assert "TIDAK memiliki akses internet" in isi["messages"][0]["content"]
-        return {"choices": [{"message": {"content": json.dumps({"kandidat": [HASIL_JSON["kandidat"][0]]})}}], "id": "gh-1"}
+        return jawaban_chat(json.dumps({"kandidat": [HASIL_JSON["kandidat"][0]]}), id="m-1")
 
-    catatan = pencari_data.cari(konf, "cabai", "Oktober 2026", klien={"github_models": kirim_github}, pemeriksa_url=cek_palsu)
-    assert catatan["penyedia"] == "github_models"
+    catatan = pencari_data.cari(konf, "cabai", "Oktober 2026", klien={"mistral": mistral}, pemeriksa_url=cek_palsu)
+    assert catatan["penyedia"] == "mistral"
     # AI yang kuncinya belum diisi dilewati satu per satu, alasannya dicatat
-    assert [d.split(":")[0] for d in catatan["penyedia_dilewati"]] == ["gemini", "groq", "cerebras", "openrouter", "mistral"]
+    assert [d.split(":")[0] for d in catatan["penyedia_dilewati"]] == ["gemini", "groq", "cerebras", "openrouter"]
     assert "GROQ_API_KEY belum diisi" in catatan["penyedia_dilewati"][1]
     k = catatan["hasil"]["kandidat"][0]
     assert k["url_ada_di_hasil_pencarian"] is None and k["url_dapat_diakses"] is True
     assert catatan["hasil"]["tidak_ditemukan"] == [] and catatan["hasil"]["catatan"] == ""
 
 
-def test_pencari_data_kuota_habis_lanjut_penyedia_berikutnya(konf, tanpa_kunci):
+def test_pencari_data_kuota_habis_lanjut_penyedia_berikutnya(konf, monkeypatch, tanpa_kunci):
+    monkeypatch.setenv("GROQ_API_KEY", "kunci-uji-groq-1234567890")
+
     def gemini_habis(url, header, isi):
         raise pencari_data.PenyediaTidakTersedia("HTTP 429: kuota habis")
 
-    def github_ok(url, header, isi):
-        return {"choices": [{"message": {"content": json.dumps({"kandidat": []})}}]}
+    catatan = pencari_data.cari(konf, "x", "y", pemeriksa_url=None,
+                                klien={"gemini": gemini_habis, "groq": lambda u, h, i: jawaban_chat('{"kandidat": []}')})
+    assert catatan["penyedia"] == "groq" and "429" in catatan["penyedia_dilewati"][0]
 
-    catatan = pencari_data.cari(konf, "x", "y", klien={"gemini": gemini_habis, "github_models": github_ok}, pemeriksa_url=None)
-    assert catatan["penyedia"] == "github_models" and "429" in catatan["penyedia_dilewati"][0]
+
+def test_gemini_penuh_dicoba_ulang_lalu_model_ringan(konf, monkeypatch, tanpa_kunci):
+    monkeypatch.setattr(pencari_data, "_tidur", lambda d: None)
+    url_dipanggil = []
+
+    def gemini(url, header, isi):
+        url_dipanggil.append(url)
+        if "flash-lite" not in url:
+            raise pencari_data.PenyediaTidakTersedia("HTTP 503 (layanan sedang bermasalah): high demand")
+        return {"candidates": [{"content": {"parts": [{"text": '{"kandidat": []}'}]}}]}
+
+    catatan = pencari_data.cari(konf, "x", "y", penyedia="gemini", klien={"gemini": gemini}, pemeriksa_url=None)
+    assert catatan["penyedia"] == "gemini" and catatan["model"] == "gemini-flash-lite-latest"
+    assert [u.split("/models/")[1].split(":")[0] for u in url_dipanggil] == [
+        "gemini-flash-latest", "gemini-flash-latest", "gemini-flash-lite-latest"]
+
+
+def test_github_models_sudah_ditutup(konf, tanpa_kunci):
+    assert "github_models" not in pencari_data.PENYEDIA
+    assert pencari_data.urutan_penyedia(konf, "github_models") == pencari_data.urutan_penyedia(konf, "otomatis")
 
 
 def test_pencari_data_semua_penyedia_gagal(konf, tanpa_kunci):
@@ -204,14 +225,12 @@ def test_pencari_data_ai_gratis_bergantian_sampai_berhasil(konf, monkeypatch, ta
         "openrouter": catat("openrouter", {"error": {"message": "Provider returned error", "code": 502}}),
         "mistral": catat("mistral", jawaban_chat([{"type": "text", "text": json.dumps({"kandidat": [HASIL_JSON["kandidat"][0]]})}],
                                                  model="mistral-small-2603", id="mis-1")),
-        "github_models": catat("github_models", AssertionError("tidak boleh dipanggil karena Mistral sudah berhasil")),
     }
     catatan = pencari_data.cari(konf, "cabai", "Oktober 2026", klien=klien, pemeriksa_url=None)
     assert catatan["penyedia"] == "mistral" and catatan["model"] == "mistral-small-2603" and catatan["request_id"] == "mis-1"
     assert catatan["punya_pencarian_web"] is False and len(catatan["hasil"]["kandidat"]) == 1
     assert [d.split(":")[0] for d in catatan["penyedia_dilewati"]] == ["gemini", "groq", "cerebras", "openrouter"]
     assert "JSON" in catatan["penyedia_dilewati"][2] and "Provider returned error" in catatan["penyedia_dilewati"][3]
-    assert "github_models" not in dikirim
     # alamat, kunci, dan model tiap layanan
     assert dikirim["groq"][0] == "https://api.groq.com/openai/v1/chat/completions"
     assert dikirim["groq"][1]["Authorization"] == "Bearer kunci-uji-groq_api_key"
@@ -231,7 +250,7 @@ def test_pencari_data_pilihan_tunggal_tidak_pindah(konf, monkeypatch, tanpa_kunc
         raise pencari_data.PenyediaTidakTersedia("HTTP 429 (batas pemakaian gratis tercapai)")
 
     with pytest.raises(RuntimeError, match="groq: HTTP 429"):
-        pencari_data.cari(konf, "x", "y", penyedia="groq", klien={"groq": habis, "github_models": habis}, pemeriksa_url=None)
+        pencari_data.cari(konf, "x", "y", penyedia="groq", klien={"groq": habis, "mistral": habis}, pemeriksa_url=None)
 
 
 def test_post_json_semua_galat_http_membuat_ai_dilewati(monkeypatch):
@@ -275,15 +294,15 @@ def test_cek_url_tidak_valid():
 
 
 def test_urutan_penyedia(konf):
-    gratis = ["gemini", "groq", "cerebras", "openrouter", "mistral", "github_models"]
+    gratis = ["gemini", "groq", "cerebras", "openrouter", "mistral"]
     assert pencari_data.urutan_penyedia(konf) == gratis
     assert pencari_data.urutan_penyedia(konf, "anthropic") == ["anthropic"]
     assert pencari_data.urutan_penyedia(konf, "cerebras") == ["cerebras"]
     # urutan lama yang tersimpan tetap didahulukan, AI gratis lain menyusul sebagai cadangan
-    konf.pengaturan["ai"]["urutan_otomatis"] = ["github_models", "gemini"]
-    assert pencari_data.urutan_penyedia(konf) == ["github_models", "gemini", "groq", "cerebras", "openrouter", "mistral"]
+    konf.pengaturan["ai"]["urutan_otomatis"] = ["github_models", "groq", "gemini"]  # simpanan lama: yang sudah ditutup dilewati
+    assert pencari_data.urutan_penyedia(konf) == ["groq", "gemini", "cerebras", "openrouter", "mistral"]
     konf.pengaturan["ai"]["urutan_otomatis"] = ["gemini", "anthropic"]
-    assert pencari_data.urutan_penyedia(konf) == ["gemini", "anthropic", "groq", "cerebras", "openrouter", "mistral", "github_models"]
+    assert pencari_data.urutan_penyedia(konf) == ["gemini", "anthropic", "groq", "cerebras", "openrouter", "mistral"]
     with pytest.raises(ValueError):
         pencari_data.urutan_penyedia(konf, "entah")
 

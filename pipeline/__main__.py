@@ -150,7 +150,7 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("ambil-resmi", help="ambil prakiraan cuaca BMKG dan harga PIHPS Bank Indonesia")
 
-    f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini, Groq, Cerebras, OpenRouter, Mistral, GitHub Models, Claude)")
+    f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini, Groq, Cerebras, OpenRouter, Mistral, Claude)")
     f.add_argument("--komoditas", required=True)
     f.add_argument("--periode", required=True)
     f.add_argument("--kebutuhan", default="harga eceran harian")
