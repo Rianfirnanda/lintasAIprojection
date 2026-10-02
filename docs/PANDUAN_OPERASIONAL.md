@@ -86,6 +86,24 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 4. Bila ada gejolak nyata yang **tidak** terdeteksi, catat `anomali_terlewat` agar recall model terukur.
 5. Target Rancangan: ≥ 75% sinyal prioritas tervalidasi ditindaklanjuti; forum TPID minimal triwulanan.
 
+## 4b. Big Data resmi otomatis (BMKG dan PIHPS)
+
+Setiap kali pipeline jalan, `python -m pipeline ambil-resmi` mengambil:
+
+- **Prakiraan cuaca BMKG** 3 hari ke depan (api.bmkg.go.id, data terbuka; sebutkan BMKG sebagai sumber) untuk desa
+  Taba Terunjam (Karang Tinggi, Bengkulu Tengah) dan Pagar Dewa (Kota Bengkulu). Disimpan di
+  `data/masuk/konteks/prakiraan_bmkg_<tahun>.csv`. Bila hujan 3 hari ke depan diperkirakan 60 mm atau lebih,
+  peringatan harga menyebutkannya.
+- **Harga PIHPS Bank Indonesia**: rata-rata pasar tradisional Provinsi Bengkulu untuk 21 varian yang sama dengan
+  daftar varian sistem. Disimpan di `data/masuk/konteks/harga_pihps_<tahun>.csv` (riwayat sekitar setahun diambil
+  sekali, lalu 45 hari terakhir tiap jalan). Tampil sebagai garis pembanding "Provinsi Bengkulu (PIHPS BI)" di grafik
+  harga dan disebut di peringatan ("harga Bengkulu Tengah +x% dari rata-rata provinsi").
+- **Panel Harga Bapanas** belum bisa diambil otomatis: server datanya tidak menjawab permintaan dari luar Indonesia
+  (server GitHub ada di luar negeri). Perlu akses API resmi dari Bapanas, atau unduh tabelnya dan unggah manual.
+
+Bila salah satu sumber gangguan, pipeline tetap jalan; galatnya tercatat di log langkah "Ambil prakiraan BMKG dan
+harga PIHPS".
+
 ## 5. AI Data Finder (gratis)
 
 1. (Disarankan) Buat kunci gratis Gemini di https://aistudio.google.com/apikey. Gemini satu-satunya AI gratis di sini

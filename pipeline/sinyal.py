@@ -25,6 +25,9 @@ def id_sinyal(*bagian) -> str:
     return hashlib.sha1("|".join(str(b) for b in bagian).encode()).hexdigest()[:10]
 
 
+WILAYAH_PROVINSI = "17"  # kode Provinsi Bengkulu di config/wilayah.csv (data PIHPS)
+
+
 def _rp(x: float) -> str:
     return f"Rp{x:,.0f}".replace(",", ".")
 
@@ -115,6 +118,26 @@ def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float 
             for i in pembanding_info.values()
         ]
         kalimat.append("Harga terakhir di wilayah pembanding: " + "; ".join(bagian) + ".")
+
+    # Harga pasar tradisional tingkat provinsi (PIHPS Bank Indonesia).
+    pihps = indeks.terakhir(WILAYAH_PROVINSI, "harga_pihps", tgl, kode_varian)
+    if pihps and (tgl - pihps[0]).days <= 7 and pihps[1]:
+        info = {"tanggal": pihps[0].isoformat(), "harga": round(pihps[1])}
+        teks = f"Rata-rata pasar tradisional Provinsi Bengkulu (PIHPS Bank Indonesia) {_rp(pihps[1])}"
+        if nilai:
+            info["selisih_persen"] = round((nilai / pihps[1] - 1) * 100, 1)
+            teks += f"; harga Bengkulu Tengah {info['selisih_persen']:+.0f}% dari angka itu"
+        konteks["pihps_provinsi"] = info
+        kalimat.append(teks + ".")
+
+    # Prakiraan cuaca BMKG 3 hari ke depan (hanya untuk peringatan yang masih baru).
+    if (konf.hari_ini - tgl).days <= 7:
+        hujan3 = indeks.jumlah(wil, "prakiraan_hujan_mm", konf.hari_ini, konf.hari_ini + timedelta(days=2))
+        if hujan3 is not None:
+            konteks["prakiraan_hujan_3_hari_mm"] = round(hujan3, 1)
+            if hujan3 >= 60:
+                kalimat.append(f"BMKG memperkirakan hujan cukup lebat, sekitar {hujan3:.0f} mm dalam 3 hari ke depan. "
+                               "Panen dan pengiriman bisa terganggu.")
 
     # Stok/pasokan dari Pemda bila ada.
     for ind in indeks.indikator_stok(wil, kode_varian):
