@@ -1155,3 +1155,6 @@ td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d
   box-shadow: 0 0 0 0 color-mix(in srgb, var(--d-hijau) 55%, transparent); animation: denyut 1.8s ease-out infinite; }
 @keyframes denyut { 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 @media (prefers-reduced-motion: reduce) { .titik-langsung { animation: none; } }
+
+/* Halaman Masuk sebelum login (situs dengan login Google): tanpa menu, kartu masuk di tengah layar. */
+body.tanpa-kepala .masuk-wadah { min-height: calc(100vh - 220px); }
