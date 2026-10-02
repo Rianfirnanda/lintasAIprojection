@@ -19,7 +19,7 @@ const LABEL_STATUS = { menunggu: ["Menunggu", "sedang"], aktif: ["Aktif", "baik"
 const LABEL_AKSI = { setujui: "menyetujui", tolak: "menolak", ubah: "mengubah", nonaktifkan: "menonaktifkan", aktifkan: "mengaktifkan lagi", hapus: "menghapus",
   hak_akses: "mengubah tabel hak akses" };
 const adminSaya = sesi()?.peran === "admin";
-const PERAN_PILIHAN = URUT_PERAN.filter((k) => k !== "masyarakat" && (adminSaya || k !== "admin"));
+const PERAN_PILIHAN = URUT_PERAN.filter((k) => adminSaya || k !== "admin");
 /** Akun yang memegang hak admin (sama dengan hakAdmin() di aturan Firestore). */
 const hakAdmin = (a) => a.peran === "admin" || (Array.isArray(a.halaman) && a.halaman.some((h) => HALAMAN_ADMIN.includes(h)));
 

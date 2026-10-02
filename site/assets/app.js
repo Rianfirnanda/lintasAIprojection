@@ -214,6 +214,20 @@ async function ikonUI(nama, ukuran) {
 
 /** Memasang bilah atas dan kaki halaman, memeriksa hak akses, lalu mengembalikan data meta. */
 export async function pasangKerangka(aktif) {
+  // Situs dengan login Google: semua orang, termasuk masyarakat, wajib masuk dulu. Sebelum masuk, yang tampil hanya
+  // halaman Masuk, tanpa menu.
+  let wajibMasuk = false;
+  if (!sesi()) {
+    const m = await muatMeta().catch(() => null);
+    if (m?.login === "firebase") {
+      if (aktif !== "masuk.html") {
+        location.replace(`masuk.html?lanjut=${encodeURIComponent(aktif)}`);
+        return tundaSelamanya();
+      }
+      wajibMasuk = true;
+      document.body.classList.add("tanpa-kepala");
+    }
+  }
   const izin = periksaAkses(aktif);
   if (izin === "masuk") {
     location.replace(`masuk.html?lanjut=${encodeURIComponent(aktif)}`);
@@ -251,7 +265,7 @@ export async function pasangKerangka(aktif) {
         : `<a class="tombol utama-aksi tombol-masuk" href="masuk.html?lanjut=${encodeURIComponent(aktif)}">Masuk</a>`}
       </div>
     </div>`;
-  document.body.prepend(kepala);
+  if (!wajibMasuk) document.body.prepend(kepala);
 
   // menu tarik-turun: buka/tutup, tutup saat klik di luar atau tekan Esc
   const pasangMenu = (tombol) => {
@@ -318,7 +332,7 @@ export async function pasangKerangka(aktif) {
   status.classList.toggle("tua", umurJam >= 36);
   status.title = `Data terakhir ${tgl(meta.tanggal_data_terakhir)} · versi ${meta.versi}`;
   status.lastElementChild.textContent = umurJam < 36 ? `Diperbarui ${waktu(meta.dibuat)}` : `Belum diperbarui ${Math.round(umurJam / 24)} hari`;
-  if (meta.mode_demo) {
+  if (meta.mode_demo && !wajibMasuk) {
     const b = document.createElement("div");
     b.className = "pita-contoh";
     b.setAttribute("role", "status");

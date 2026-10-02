@@ -25,9 +25,10 @@ import { pasangKerangka, esc } from "./assets/app.js";
 import { ikon } from "./assets/dashboard.js";
 import { PERAN, SEMUA_HALAMAN, bolehAkses, masuk, keluar, sesi, simpanSesiFirebase } from "./assets/akses.js";
 
+const meta0 = await fetch("data/meta.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => null);
 if (new URLSearchParams(location.search).get("keluar")) {
   await keluar();
-  location.replace("index.html");
+  location.replace(meta0?.login === "firebase" ? "masuk.html" : "index.html");
   await new Promise(() => {}); // berhenti di sini sampai halaman berpindah
 }
 const meta = await pasangKerangka("masuk.html");
@@ -79,8 +80,7 @@ function tampilkanStatusAkun(fk, akun) {
       <div class="akun-google">${akun.foto ? `<img src="${esc(akun.foto)}" alt="" width="36" height="36" referrerpolicy="no-referrer">` : ikon("orang", 22)}
         <div><b>${esc(akun.nama || "")}</b><span>${esc(akun.email || "")}</span></div></div>
     </div>
-    <button class="tombol lebar" type="button" id="btn-ganti" style="margin-top:14px">Masuk dengan akun lain</button>
-    <a class="tautan-tamu" href="index.html">Lanjut tanpa masuk (sebagai masyarakat)</a>`;
+    <button class="tombol lebar" type="button" id="btn-ganti" style="margin-top:14px">Masuk dengan akun lain</button>`;
   document.getElementById("btn-ganti").addEventListener("click", async () => { await keluar(); await fk.keluarFirebase(); location.replace("masuk.html"); });
   if (menunggu) {
     fk.pantauAkunSendiri(akun.uid, async (a) => {
@@ -97,11 +97,10 @@ async function tampilkanGoogle() {
   const status = new URLSearchParams(location.search).get("status");
   const pesan = PESAN_STATUS[status];
   isi.innerHTML = `<h1 id="judul-masuk">Masuk</h1>
-    <p>Masuk dengan akun Google. Akun baru perlu disetujui admin sebelum bisa dipakai.</p>
+    <p>Semua pengguna, termasuk masyarakat, masuk dengan akun Google. Akun baru perlu disetujui admin sebelum bisa dipakai.</p>
     ${pesan ? `<div class="pesan ${pesan[0]}" role="status">${esc(pesan[1])}</div>` : ""}
     <button class="tombol tombol-google lebar" type="button" id="btn-google">${LOGO_GOOGLE}<span>Masuk dengan Google</span></button>
     <div class="masuk-galat" id="galat" role="alert" hidden></div>
-    <a class="tautan-tamu" href="index.html">Lanjut tanpa masuk (sebagai masyarakat)</a>
     <p class="meta-kecil masuk-catatan">Yang disimpan hanya nama, email, dan foto profil Google Anda, untuk keperluan persetujuan akun.</p>`;
   const tombol = document.getElementById("btn-google");
   const galat = document.getElementById("galat");
