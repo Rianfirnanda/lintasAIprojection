@@ -178,10 +178,12 @@ export async function pasangKerangka(aktif) {
       <div class="kepala-kanan">
         <span class="status-mini" id="status-mini" hidden><i></i><span></span></span>
         ${pengguna ? `<div class="akun"><button class="akun-tombol" type="button" aria-expanded="false" aria-haspopup="true" title="${esc(pengguna.nama)} · ${esc(PERAN[peran].nama)}">
-            <span class="avatar">${esc((pengguna.nama || "?").trim().charAt(0).toUpperCase())}</span>
+            <span class="avatar" data-huruf="${esc((pengguna.nama || "?").trim().charAt(0).toUpperCase())}">${pengguna.foto
+              ? `<img src="${esc(pengguna.foto)}" alt="" width="30" height="30" referrerpolicy="no-referrer" decoding="async">`
+              : esc((pengguna.nama || "?").trim().charAt(0).toUpperCase())}</span>
             <span class="akun-nama"><span class="akun-label">${esc(pengguna.nama)}</span><small>${esc(PERAN[peran].nama)}</small></span></button>
           <div class="menu-jatuh" hidden>
-            <div class="kepala-menu"><b>${esc(pengguna.nama)}</b><span>${esc(PERAN[peran].nama)}</span></div>
+            <div class="kepala-menu"><b>${esc(pengguna.nama)}</b><span>${esc(pengguna.id && pengguna.id !== pengguna.nama ? `${pengguna.id} · ` : "")}${esc(PERAN[peran].nama)}</span></div>
             <button type="button" data-keluar>Keluar</button>
           </div></div>`
         : `<a class="tombol utama-aksi tombol-masuk" href="masuk.html?lanjut=${encodeURIComponent(aktif)}">Masuk</a>`}
@@ -201,6 +203,11 @@ export async function pasangKerangka(aktif) {
     });
   };
   kepala.querySelectorAll(".akun-tombol, .lainnya-tombol").forEach(pasangMenu);
+  // Foto akun Google gagal dimuat (luring atau tautan kedaluwarsa): kembali ke huruf awal nama.
+  kepala.querySelector(".avatar img")?.addEventListener("error", (e) => {
+    const av = e.target.parentElement;
+    av.textContent = av.dataset.huruf;
+  }, { once: true });
   document.addEventListener("click", () => kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }); });
   // Keluar lewat halaman Masuk (yang membersihkan sesi lalu kembali ke beranda), supaya halaman dengan CSP ketat tidak perlu memuat pustaka pihak lain.
@@ -218,12 +225,12 @@ export async function pasangKerangka(aktif) {
     dark: '<path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/>',
   };
   const NAMA_TEMA = { auto: "Otomatis", light: "Terang", dark: "Gelap" };
-  const URUT_TEMA = ["auto", "light", "dark"];
   const pasangTema = () => {
     const tombol = kaki.querySelector("[data-tema-ganti]");
-    const m = modeTema();
+    // Ikon menunjukkan tampilan yang sedang terlihat (bukan "otomatis"), supaya setiap klik jelas berubah.
+    const m = temaGelap() ? "dark" : "light";
     tombol.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IKON_TEMA[m]}</svg>`;
-    tombol.title = `Tampilan: ${NAMA_TEMA[m]}. Klik untuk ganti.`;
+    tombol.title = `Tampilan: ${NAMA_TEMA[m]}. Klik untuk ganti ke ${m === "dark" ? "terang" : "gelap"}.`;
     tombol.setAttribute("aria-label", tombol.title);
   };
 
@@ -264,8 +271,12 @@ export async function pasangKerangka(aktif) {
     </div>
     <button type="button" class="tema-ikon" data-tema-ganti></button>`;
   kaki.querySelector("[data-tema-ganti]").addEventListener("click", () => {
-    setTema(URUT_TEMA[(URUT_TEMA.indexOf(modeTema()) + 1) % URUT_TEMA.length]);
+    // Matikan animasi warna sesaat supaya semua bagian berganti serentak, tanpa kedip.
+    const akar = document.documentElement;
+    akar.classList.add("ganti-tema");
+    setTema(temaGelap() ? "light" : "dark");
     pasangTema();
+    requestAnimationFrame(() => requestAnimationFrame(() => akar.classList.remove("ganti-tema")));
   });
   pasangTema();
   // Grafik kanvas baru memakai huruf Plex setelah berkasnya termuat.

@@ -236,8 +236,9 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .akun-tombol:hover { background: var(--surface-3); }
 .avatar {
   width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex: none; color: #fff; font-weight: 700; font-size: 0.82rem;
-  background: linear-gradient(135deg, #0a62ad, #2b8ad3);
+  background: linear-gradient(135deg, #0a62ad, #2b8ad3); overflow: hidden;
 }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .akun-nama { display: flex; flex-direction: column; line-height: 1.15; text-align: left; min-width: 0; max-width: 150px; }
 /* Nama akun Google bisa panjang: dipotong dengan "…", nama lengkap tetap ada di menu akun dan tooltip. */
 .akun-label, .akun-nama small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -371,6 +372,13 @@ tr.bisa-klik { cursor: pointer; }
 .sel-turun { background: var(--down-wash); }
 .sel-turun-kuat { background: var(--down-wash-strong); }
 .kosong { color: var(--muted); }
+p.kosong { font-size: 0.88rem; margin: 4px 0 0; }
+/* Ganti tema: semua warna berganti serentak (tanpa animasi yang membuat bagian-bagian berkedip bergantian). */
+.ganti-tema, .ganti-tema *, .ganti-tema *::before, .ganti-tema *::after { transition: none !important; }
+/* Tautan aksi berbahaya (hapus, kembalikan): teks merah, bukan tombol. */
+.tautan-bahaya { background: none; border: 0; padding: 4px 2px; color: var(--critical); font: 500 0.84rem var(--sans); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+:root[data-theme="dark"] .tautan-bahaya { color: #ff8f8f; }
+.tautan-bahaya:disabled { opacity: 0.4; cursor: not-allowed; text-decoration: none; }
 
 /* ---------- lencana status */
 .lencana {
@@ -901,11 +909,30 @@ button.ind:hover .kpi-buka { opacity: 1; color: var(--aksen); transform: transla
 .peran-kartu p { margin: 3px 0 10px; font-size: 0.82rem; color: var(--muted); }
 .peran-kartu .menu-mini { display: flex; flex-wrap: wrap; gap: 5px; }
 .peran-kartu .menu-mini span { font-size: 0.72rem; padding: 3px 9px; border-radius: 99px; background: var(--surface-3); color: var(--ink-2); }
-.matriks td, .matriks th { text-align: center; }
+.matriks { table-layout: fixed; min-width: 760px; }
+.matriks col.kol-halaman { width: 22%; }
+.matriks td, .matriks th { text-align: center; vertical-align: middle; height: 44px; }
 .matriks td:first-child, .matriks th:first-child { text-align: left; }
+.matriks th { font-size: 0.8rem; }
 .matriks .ya { color: #11763f; font-weight: 700; }
 :root[data-theme="dark"] .matriks .ya { color: #5fd08f; }
 .matriks .tidak { color: var(--muted); opacity: 0.45; }
+.matriks .lencana { margin-left: 6px; vertical-align: 1px; }
+/* Kotak centang tabel hak akses: sama di tema terang dan gelap, dan selaras dengan tombol lain. */
+.cek-matriks {
+  appearance: none; -webkit-appearance: none; width: 20px; height: 20px; margin: 0; border-radius: 6px; cursor: pointer;
+  border: 1.5px solid var(--rule-2); background: var(--surface); display: inline-grid; place-items: center; vertical-align: middle;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.cek-matriks:hover:not(:disabled) { border-color: var(--aksen); }
+.cek-matriks:focus-visible { outline: 2px solid var(--aksen); outline-offset: 2px; }
+.cek-matriks:checked { background: var(--aksen); border-color: var(--aksen); }
+.cek-matriks:checked::after {
+  content: ""; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg);
+}
+.cek-matriks:disabled { cursor: default; opacity: 0.45; }
+.aksi-matriks { margin-top: 14px; }
+.aksi-matriks .tautan-bahaya { margin-left: auto; }
 
 /* ============================================================
    Akses ditolak
