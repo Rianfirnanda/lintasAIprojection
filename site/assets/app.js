@@ -177,9 +177,9 @@ export async function pasangKerangka(aktif) {
       </nav>
       <div class="kepala-kanan">
         <span class="status-mini" id="status-mini" hidden><i></i><span></span></span>
-        ${pengguna ? `<div class="akun"><button class="akun-tombol" type="button" aria-expanded="false" aria-haspopup="true">
+        ${pengguna ? `<div class="akun"><button class="akun-tombol" type="button" aria-expanded="false" aria-haspopup="true" title="${esc(pengguna.nama)} · ${esc(PERAN[peran].nama)}">
             <span class="avatar">${esc((pengguna.nama || "?").trim().charAt(0).toUpperCase())}</span>
-            <span class="akun-nama">${esc(pengguna.nama)}<small>${esc(PERAN[peran].nama)}</small></span></button>
+            <span class="akun-nama"><span class="akun-label">${esc(pengguna.nama)}</span><small>${esc(PERAN[peran].nama)}</small></span></button>
           <div class="menu-jatuh" hidden>
             <div class="kepala-menu"><b>${esc(pengguna.nama)}</b><span>${esc(PERAN[peran].nama)}</span></div>
             <button type="button" data-keluar>Keluar</button>

@@ -196,9 +196,9 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .merek-teks { display: flex; flex-direction: column; line-height: 1.15; }
 .merek-nama { font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; }
 .merek-sub { font-size: 0.72rem; color: var(--muted); }
-.navigasi { display: flex; align-items: center; gap: 2px; flex: 1; justify-content: center; min-width: 0; }
+.navigasi { display: flex; align-items: center; gap: 2px; flex: 1; justify-content: safe center; min-width: 0; }
 .navigasi > a, .lainnya-tombol {
-  color: var(--ink-2); text-decoration: none; padding: 8px 14px; border-radius: 12px; white-space: nowrap; font: 500 0.9rem var(--sans);
+  color: var(--ink-2); text-decoration: none; padding: 8px 11px; border-radius: 12px; white-space: nowrap; font: 500 0.9rem var(--sans);
   border: 0; background: transparent; cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
 }
 .navigasi > a:hover, .lainnya-tombol:hover { background: var(--surface-3); color: var(--ink); }
@@ -238,7 +238,9 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
   width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex: none; color: #fff; font-weight: 700; font-size: 0.82rem;
   background: linear-gradient(135deg, #0a62ad, #2b8ad3);
 }
-.akun-nama { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+.akun-nama { display: flex; flex-direction: column; line-height: 1.15; text-align: left; min-width: 0; max-width: 150px; }
+/* Nama akun Google bisa panjang: dipotong dengan "…", nama lengkap tetap ada di menu akun dan tooltip. */
+.akun-label, .akun-nama small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .akun-nama small { font-size: 0.7rem; color: var(--muted); font-weight: 400; }
 .tombol-masuk { padding: 8px 16px; }
 
@@ -914,6 +916,28 @@ button.ind:hover .kpi-buka { opacity: 1; color: var(--aksen); transform: transla
 .tolak p { color: var(--ink-2); }
 
 /* ============================================================
+   Layar laptop: menu admin paling panjang, jadi bilah atas dipadatkan bertahap supaya tidak saling tumpang
+   ============================================================ */
+@media (max-width: 1440px) {
+  .navigasi > a, .lainnya-tombol { padding: 8px 9px; }
+  .kepala-dalam { gap: 10px; }
+}
+@media (max-width: 1320px) and (min-width: 901px) {
+  .merek-sub { display: none; }
+  .status-mini { padding: 6px 8px; }
+  .status-mini span { display: none; }
+}
+@media (max-width: 1180px) and (min-width: 901px) {
+  .merek-nama { font-size: 0.92rem; }
+  .akun-nama { display: none; }
+  .akun-tombol { padding: 3px; }
+  .navigasi > a, .lainnya-tombol { padding: 7px 8px; font-size: 0.86rem; }
+}
+@media (max-width: 1000px) and (min-width: 901px) {
+  .merek-teks { display: none; }
+}
+
+/* ============================================================
    Layar sempit
    ============================================================ */
 @media (max-width: 900px) {
@@ -1035,10 +1059,10 @@ td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d
 .akun-atas { display: flex; align-items: center; gap: 12px; }
 .akun-foto { width: 40px; height: 40px; border-radius: 50%; flex: none; object-fit: cover; }
 .kosong-foto { display: grid; place-items: center; background: var(--surface-3); color: var(--muted); }
-.akun-nama { flex: 1; min-width: 0; display: grid; gap: 1px; }
-.akun-nama b { font-size: 0.94rem; }
-.akun-nama b small { font-weight: 500; color: var(--muted); }
-.akun-nama > span { font-size: 0.82rem; color: var(--ink-2); overflow-wrap: anywhere; }
+.akun-kartu .akun-nama { flex: 1; min-width: 0; display: grid; gap: 1px; max-width: none; }
+.akun-kartu .akun-nama b { font-size: 0.94rem; }
+.akun-kartu .akun-nama b small { font-weight: 500; color: var(--muted); }
+.akun-kartu .akun-nama > span { font-size: 0.82rem; color: var(--ink-2); overflow-wrap: anywhere; white-space: normal; }
 .akun-atur { display: grid; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
 .pilih-peran { display: flex; align-items: center; gap: 10px; font-size: 0.86rem; font-weight: 600; color: var(--ink-2); }
 .pilih-peran select { min-width: 200px; }
