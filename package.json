@@ -5,8 +5,9 @@
   "description": "Alat uji dan terbit. Situs sendiri tidak memakai build; SDK Firebase sudah disimpan di site/vendor/firebase.",
   "scripts": {
     "test": "node --test tests_js/*.test.mjs",
-    "uji:aturan": "firebase emulators:exec --only firestore --project demo-lbp \"node --test tests_firebase/*.test.mjs\"",
-    "emulator": "firebase emulators:start --only auth,firestore --project demo-lbp"
+    "uji:aturan": "firebase emulators:exec --only firestore --project demo-lbp \"node --test --test-concurrency=1 tests_firebase/*.test.mjs\"",
+    "emulator": "firebase emulators:start --only auth,firestore --project demo-lbp",
+    "uji:mesin": "firebase emulators:exec --only firestore --project demo-lbp \"python -m pytest -q tests/test_firestore_sinkron.py\""
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "4.0.1",

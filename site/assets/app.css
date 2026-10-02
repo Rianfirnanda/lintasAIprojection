@@ -275,6 +275,7 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .meta-kecil { color: var(--muted); font-size: 0.8rem; }
 
 /* ---------- tombol & kontrol */
+.tombol[hidden] { display: none; }
 .tombol {
   font: 500 0.86rem/1 var(--sans);
   border: 1px solid var(--rule-2); background: var(--surface); color: var(--ink);
@@ -1070,3 +1071,6 @@ td .naik { color: var(--d-merah); font-weight: 600; } td .turun { color: var(--d
 }
 .pengingat-akun { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
 .pengingat-akun .tombol { margin-left: auto; }
+
+/* Baris yang keputusannya sudah tersimpan (Cek Data) */
+#tabel-validasi tr.sudah-diputus td { opacity: .55; }

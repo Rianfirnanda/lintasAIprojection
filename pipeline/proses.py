@@ -21,6 +21,7 @@ from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, laya
                sinyal as modul_sinyal, tindak_lanjut)
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
+from . import firestore_sinkron
 
 log = logging.getLogger(__name__)
 HARI_SERI_PUBLIKASI = 400
@@ -476,6 +477,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     akun = pengguna.muat(konf.akar / "config" / "pengguna.json")
     for lama in ("firebase.json", "pengguna.json"):
         (keluaran / lama).unlink(missing_ok=True)
+    # Versi pengaturan dari situs yang sudah dipakai, supaya panel Pengaturan tahu isian mana yang terbaru.
+    meta["pengaturan_versi"] = int(firestore_sinkron.baca_tanda(konf.akar).get("pengaturan_versi", 0))
     if fb:
         meta["login"] = "firebase"
         _tulis_json(keluaran / "firebase.json", {"konfigurasi": fb})

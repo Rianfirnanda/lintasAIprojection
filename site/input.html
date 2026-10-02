@@ -16,7 +16,7 @@
   <div class="judul-halaman">
     <div>
       <h1>Catat Harga</h1>
-      <p>Bisa dipakai tanpa internet. Data tersimpan di perangkat sampai Anda kirim.</p>
+      <p id="ket-halaman">Bisa dipakai tanpa internet. Data tersimpan di perangkat sampai Anda kirim.</p>
     </div>
     <span class="status-koneksi" id="status-koneksi"></span>
   </div>
@@ -53,15 +53,17 @@
 
   <section class="kartu">
     <div class="kartu-kepala">
-      <div><h2>Menunggu dikirim</h2><p id="info-antrean"></p></div>
+      <div><h2 id="judul-antrean">Menunggu dikirim</h2><p id="info-antrean"></p></div>
       <div class="baris-kontrol">
+        <button class="tombol utama-aksi" id="kirim" type="button" hidden>Kirim sekarang</button>
         <button class="tombol utama-aksi" id="unduh" type="button">Unduh CSV</button>
         <button class="tombol" id="bagikan" type="button">Bagikan</button>
         <button class="tombol" id="hapus-terkirim" type="button">Bersihkan yang terkirim</button>
       </div>
     </div>
+    <div id="pesan-kirim" role="status"></div>
     <div class="gulir-tabel" style="max-height:360px"><table id="tabel-antrean"><thead><tr><th>Tanggal</th><th>Pasar</th><th>Varian</th><th class="angka">Harga</th><th>Satuan</th><th>Dikirim</th></tr></thead><tbody></tbody></table></div>
-    <details style="margin-top:12px"><summary>Cara mengirim ke sistem</summary>
+    <details style="margin-top:12px" id="cara-kirim"><summary>Cara mengirim ke sistem</summary>
       <ol class="langkah-daftar">
         <li>Tekan <strong>Unduh CSV</strong>, atau <strong>Bagikan</strong> ke operator lewat WhatsApp atau email.</li>
         <li>Operator mengunggah berkasnya di <a id="tautan-unggah" href="#">halaman unggah</a>, lalu menekan <em>Commit changes</em>.</li>
@@ -75,6 +77,7 @@
 <script type="module">
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, tgl, keCSV, unduhTeks } from "./assets/app.js";
+import { sesi } from "./assets/akses.js";
 
 const KUNCI_ANTREAN = "antrean_harga_v1";
 const KUNCI_DRAF = "draf_input_v1";
@@ -85,6 +88,26 @@ if ("serviceWorker" in navigator) {
 }
 const meta = await pasangKerangka("input.html").catch(() => null);
 if (meta?.url_repo) document.getElementById("tautan-unggah").href = `${meta.url_repo}/upload/main/data/masuk/harga`;
+// Dengan login Google (Firebase), harga langsung dikirim ke sistem dari halaman ini. Tanpa itu, lewat berkas CSV.
+const langsung = meta ? meta.login === "firebase" : sesi()?.sumber === "firebase";
+const kiriman = langsung ? await import("./assets/kiriman.js") : null;
+if (langsung) {
+  document.getElementById("ket-halaman").textContent = "Bisa dipakai tanpa internet. Harga dikirim otomatis begitu ada sinyal.";
+  document.getElementById("judul-antrean").textContent = "Pengiriman";
+  document.getElementById("kirim").hidden = false;
+  document.getElementById("simpan").textContent = "Simpan dan kirim";
+  const unduh = document.getElementById("unduh");
+  unduh.classList.remove("utama-aksi");
+  unduh.textContent = "Unduh cadangan CSV";
+  document.getElementById("bagikan").hidden = true;
+  document.getElementById("cara-kirim").innerHTML = `<summary>Cara kerja pengiriman</summary>
+    <ol class="langkah-daftar">
+      <li>Tekan <strong>Simpan dan kirim</strong>. Harga disimpan di HP dulu, lalu langsung dikirim ke sistem.</li>
+      <li>Kalau tidak ada sinyal, harga tetap aman di HP. Begitu ada sinyal, halaman ini mengirimnya sendiri. Bisa juga tekan <strong>Kirim sekarang</strong>.</li>
+      <li>Kolom <strong>Dikirim</strong> berubah menjadi <em>ya</em> setelah sistem menerimanya. <span id="ket-proses"></span></li>
+      <li>Kalau HP akan direset atau diganti, tekan <strong>Unduh cadangan CSV</strong> dulu untuk baris yang belum terkirim.</li>
+    </ol>`;
+}
 
 function baca(kunci, awal) {
   try { return JSON.parse(localStorage.getItem(kunci)) ?? awal; } catch { return awal; }
@@ -208,11 +231,12 @@ document.getElementById("simpan").addEventListener("click", () => {
     hasil.textContent = "Gagal menyimpan di perangkat (penyimpanan penuh/diblokir). Segera unduh CSV.";
     return;
   }
-  hasil.textContent = `${baru.length} harga disimpan ke antrean.`;
+  hasil.textContent = langsung ? `${baru.length} harga disimpan di HP. Mengirim…` : `${baru.length} harga disimpan ke antrean.`;
   tbody.querySelectorAll("input").forEach((i) => { i.value = ""; });
   tbody.querySelectorAll(".peringatan-harga").forEach((p) => { p.textContent = ""; });
   simpanDraf();
   renderAntrean();
+  if (langsung) kirimAntrean().then((r) => { if (r) hasil.textContent = r; });
 });
 document.getElementById("bersihkan").addEventListener("click", () => {
   tbody.querySelectorAll("input").forEach((i) => { i.value = ""; });
@@ -235,7 +259,7 @@ document.getElementById("unduh").addEventListener("click", () => {
   const { belum, nama, isi } = berkasCSV();
   if (!belum.length) return;
   unduhTeks(nama, isi);
-  tandaiTerkirim();
+  if (!langsung) tandaiTerkirim(); // dengan kirim langsung, berkas ini hanya cadangan
 });
 document.getElementById("bagikan").addEventListener("click", async () => {
   const { belum, nama, isi } = berkasCSV();
@@ -251,6 +275,58 @@ document.getElementById("bagikan").addEventListener("click", async () => {
     tandaiTerkirim();
   }
 });
+/* ---------- kirim langsung ke sistem (Firebase) */
+let sedangKirim = false;
+function tampilPesanKirim(jenis, teks) {
+  document.getElementById("pesan-kirim").innerHTML = teks ? `<div class="pesan ${jenis}" style="margin-bottom:10px">${esc(teks)}</div>` : "";
+}
+/** Kirim semua baris yang belum terkirim. Mengembalikan kalimat hasil (atau "" bila tidak ada yang dikirim). */
+async function kirimAntrean({ diam = false } = {}) {
+  if (!kiriman || sedangKirim) return "";
+  const belum = baca(KUNCI_ANTREAN, []).filter((b) => !b._dikirim);
+  if (!belum.length) return "";
+  if (!navigator.onLine) {
+    const t = `${belum.length} harga menunggu sinyal. Akan dikirim otomatis.`;
+    if (!diam) tampilPesanKirim("peringatan", t);
+    return t;
+  }
+  sedangKirim = true;
+  const tombol = document.getElementById("kirim");
+  tombol.disabled = true;
+  tombol.textContent = "Mengirim…";
+  try {
+    const { terkirim, gagal } = await kiriman.kirimHarga(belum);
+    const ok = new Set(terkirim.map((b) => b.id_klien));
+    const salah = new Map(gagal.map((g) => [g.item.id_klien, g.pesan]));
+    // Baca ulang antrean: bisa saja ada baris baru disimpan selama pengiriman berjalan.
+    tulis(KUNCI_ANTREAN, baca(KUNCI_ANTREAN, []).map((b) => (ok.has(b.id_klien) ? { ...b, _dikirim: true, _galat: undefined }
+      : salah.has(b.id_klien) ? { ...b, _galat: salah.get(b.id_klien) } : b)));
+    const t = gagal.length
+      ? `${terkirim.length} harga terkirim, ${gagal.length} belum: ${gagal[0].pesan}`
+      : `${terkirim.length} harga terkirim ke sistem.`;
+    tampilPesanKirim(gagal.length ? "peringatan" : "sukses", t);
+    return t;
+  } catch (e) {
+    const t = kiriman.pesanKiriman(e);
+    tampilPesanKirim("galat", t);
+    return t;
+  } finally {
+    sedangKirim = false;
+    tombol.disabled = false;
+    tombol.textContent = "Kirim sekarang";
+    renderAntrean();
+  }
+}
+if (kiriman) {
+  document.getElementById("kirim").addEventListener("click", () => kirimAntrean());
+  window.addEventListener("online", () => kirimAntrean({ diam: true }));
+  kirimAntrean({ diam: true });
+  kiriman.pantauProses((st) => {
+    const el = document.getElementById("ket-proses");
+    if (el) el.textContent = kiriman.teksProses(st, { harga: true });
+  }).catch(() => {});
+}
+
 document.getElementById("hapus-terkirim").addEventListener("click", () => {
   tulis(KUNCI_ANTREAN, baca(KUNCI_ANTREAN, []).filter((b) => !b._dikirim));
   renderAntrean();
@@ -278,7 +354,8 @@ function renderAntrean() {
   renderIndikator();
   document.querySelector("#tabel-antrean tbody").innerHTML = antrean.slice().reverse().slice(0, 200).map((b) => `<tr>
     <td>${esc(tgl(b.tanggal))}</td><td>${esc(namaPasar[b.kode_pasar] || b.kode_pasar)}</td><td>${esc(namaVarian[b.kode_varian] || b.kode_varian)}</td>
-    <td class="angka">${rp(b.harga)}</td><td>${esc(b.satuan)}</td><td>${b._dikirim ? '<span class="lencana baik">ya</span>' : '<span class="lencana rendah">belum</span>'}</td></tr>`).join("")
+    <td class="angka">${rp(b.harga)}</td><td>${esc(b.satuan)}</td><td>${b._dikirim ? '<span class="lencana baik">ya</span>'
+      : `<span class="lencana rendah" ${b._galat ? `title="${esc(b._galat)}"` : ""}>belum</span>`}</td></tr>`).join("")
     || `<tr><td colspan="6" class="kosong">Antrean kosong.</td></tr>`;
 }
 renderAntrean();

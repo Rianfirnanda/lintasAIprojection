@@ -1,0 +1,3 @@
+# Dipasang hanya saat Firebase dipakai: mesin membaca kiriman dari situs (Firestore) dengan akun layanan.
+-r requirements.txt
+google-cloud-firestore>=2.19,<3

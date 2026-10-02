@@ -273,8 +273,7 @@ export async function pasangKerangka(aktif) {
   document.body.classList.add("siap");
   pasangPembaruan(meta);
   pasangHitungNaik();
-  // Halaman Pengaturan dibatasi CSP ke api.github.com saja, jadi pemeriksaan akun Firebase dilewati di sana.
-  if (pengguna?.sumber === "firebase" && aktif !== "pengaturan.html") segarkanSesiFirebase(pengguna);
+  if (pengguna?.sumber === "firebase") segarkanSesiFirebase(pengguna);
   return izin === "tolak" ? tundaSelamanya() : meta;
 }
 

@@ -4,6 +4,10 @@ Sistem ini bisa terbit ke **Firebase Hosting** dan memakai **login Google** deng
 AI, dan notifikasi tetap berjalan gratis di GitHub Actions. Hasilnya otomatis dikirim ke Firebase setiap kali proses
 berjalan.
 
+Setelah Firebase aktif, **pekerjaan sehari-hari cukup lewat situs**. Petugas, operator, analis, TPID, dan admin tidak
+perlu membuka GitHub sama sekali (lihat [Kerja harian lewat situs](#kerja-harian-lewat-situs)). GitHub hanya dipakai
+sekali di awal untuk menyimpan kunci Firebase.
+
 Selama masa peralihan, situs tetap terbit juga ke GitHub Pages. Setelah alamat Firebase berjalan baik, GitHub Pages
 boleh dimatikan.
 
@@ -61,6 +65,8 @@ misalnya `terbit-lbp`. Beri peran:
 - **Firebase Hosting Admin**: untuk menerbitkan situs.
 - **Service Usage Consumer**: dibutuhkan alat Firebase untuk memeriksa layanan proyek.
 - **Firebase Rules Admin**: hanya bila aturan Firestore ikut diterbitkan otomatis (langkah 7).
+- **Cloud Datastore User**: supaya mesin pengolah bisa mengambil kiriman dari situs (harga, keputusan, pengaturan,
+  kunci) dan menulis status proses.
 
 Lalu buka akun layanan itu → **Keys** → **Add key** → **JSON**. Berkas JSON akan terunduh.
 
@@ -101,6 +107,41 @@ Di panel Pengaturan, tekan **Perbarui data dan dashboard sekarang**, atau tunggu
 - Matikan GitHub Pages: GitHub → Settings → Pages → Source: None.
 - Repositori boleh dijadikan **private**. GitHub Actions tetap berjalan, dengan kuota gratis 2.000 menit per bulan.
 
+## Kerja harian lewat situs
+
+| Siapa | Di halaman | Yang dilakukan |
+|---|---|---|
+| Petugas | Catat Harga | Isi harga, tekan **Simpan dan kirim**. Tanpa sinyal, harga aman di HP dan terkirim sendiri begitu ada sinyal. |
+| Operator | Cek Data | **Unggah berkas harga** (CSV dari Excel) dan **Simpan keputusan** terima/tolak. |
+| Analis, TPID | Peringatan | Isi formulir tindak lanjut, tekan **Simpan catatan**. |
+| Analis | Akurasi | Centang cara prakiraan, tekan **Simpan persetujuan**. |
+| Admin | Pengaturan | Ubah isian, isi kunci AI dan notifikasi, tekan **Jalankan sekarang**. Tanpa token GitHub. |
+| Admin | Pengguna | Setujui akun, atur peran dan izin. |
+
+Cara kerjanya:
+
+1. Situs menyimpan kiriman langsung ke Firestore (`lbp_harga`, `lbp_validasi`, `lbp_tindak_lanjut`,
+   `lbp_persetujuan_model`, `lbp_pengaturan`, `lbp_rahasia`, `lbp_perintah`). Aturan Firestore memeriksa siapa yang
+   boleh mengirim apa, dan isinya harus wajar.
+2. Pemeriksa otomatis (`.github/workflows/antrean.yml`) melihat Firestore setiap 15 menit, Senin sampai Jumat pukul
+   07.00 sampai 18.00 WIB. Bila ada yang baru, pipeline dijalankan.
+3. Pipeline menyalin kiriman ke berkas di repositori (`data/masuk/harga/situs/`, `data/validasi/situs.csv`, dan
+   seterusnya) sebagai jejak audit, menerapkan pengaturan, memakai kunci dari situs, lalu memperbarui dashboard.
+   Kiriman yang sudah diambil dicatat di `data/firestore_tanda.json`, jadi yang dibaca hanya kiriman baru.
+4. Status proses tampil langsung di panel Pengaturan.
+
+Waktu tunggu: keputusan, catatan, pengaturan, dan tombol Jalankan biasanya 15 sampai 30 menit. Harga baru dikumpulkan
+dulu, paling lama sekitar 1 jam, supaya dashboard tidak dibangun ulang setiap kali seorang petugas mengirim. Di luar jam
+kerja, kiriman diproses pada jam kerja berikutnya. Jadwal GitHub kadang terlambat beberapa menit.
+
+**Kunci di situs:** kunci AI dan notifikasi yang diisi lewat panel Pengaturan hanya bisa ditulis, tidak bisa dibaca
+dari browser siapa pun, termasuk admin. Bila kunci yang sama juga ada di GitHub Secrets, kunci dari situs yang dipakai.
+Kunci Firebase (`FIREBASE_*`) tetap di GitHub Secrets karena mesin membutuhkannya untuk masuk ke Firestore.
+
+**Kuota GitHub Actions:** repositori publik tidak dibatasi. Bila repositori dijadikan private, pemeriksa berkala memakai
+sekitar 900 menit per bulan dari kuota gratis 2.000 menit, belum termasuk pipeline. Kurangi frekuensinya di
+`antrean.yml` (misalnya `*/30`) bila kuota mepet.
+
 ## Yang perlu diketahui
 
 - **Data dashboard masih berupa berkas terbuka di Hosting.** Harga, peringatan, dan laporan bisa dibuka siapa pun
@@ -114,7 +155,9 @@ Di panel Pengaturan, tekan **Perbarui data dan dashboard sekarang**, atau tunggu
 
 ```bash
 npm install                       # alat Firebase (emulator) untuk uji
-npm run uji:aturan                # 13 uji aturan Firestore di emulator, butuh Java 11+
+npm run uji:aturan                # uji aturan Firestore di emulator, butuh Java 11+
+pip install -r requirements-firebase.txt
+npm run uji:mesin                 # uji pengambil kiriman situs di emulator
 ```
 
 Untuk mencoba alur login dengan emulator:

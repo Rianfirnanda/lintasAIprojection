@@ -12,7 +12,7 @@ site/data/
 data/uptime.csv
 
 # alat uji Firebase (npm install) dan berkas sementara emulator
-node_modules/
+/node_modules
 .firebase/
 .firebaserc
 *-debug.log

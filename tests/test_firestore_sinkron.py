@@ -1,0 +1,249 @@
+"""Jembatan Firestore: kiriman dari situs menjadi berkas yang dibaca pipeline seperti biasa."""
+
+from __future__ import annotations
+
+import json
+import os
+from datetime import datetime, timedelta, timezone
+
+import pytest
+
+from pipeline import firestore_sinkron as fs
+from pipeline import kinerja, konfigurasi, kualitas, masukan, tindak_lanjut
+
+from .conftest import HARI_INI
+
+T0 = datetime(2026, 9, 28, 1, 0, tzinfo=timezone.utc)
+
+
+# ---------------------------------------------------------------- Firestore tiruan (cukup untuk modul ini)
+
+class _Snap:
+    def __init__(self, id_, data):
+        self.id, self._data = id_, data
+
+    @property
+    def exists(self):
+        return self._data is not None
+
+    def to_dict(self):
+        return None if self._data is None else dict(self._data)
+
+
+class _Ref:
+    def __init__(self, simpan, id_):
+        self._s, self.id = simpan, id_
+
+    def get(self):
+        return _Snap(self.id, self._s.get(self.id))
+
+    def set(self, data, merge=False):
+        self._s[self.id] = {**(self._s.get(self.id) or {}), **data} if merge else dict(data)
+
+    def update(self, data):
+        assert self.id in self._s, "update pada dokumen yang tidak ada"
+        self._s[self.id].update(data)
+
+
+class _Kueri:
+    def __init__(self, simpan, saring=(), urut=None, batas=None):
+        self._s, self._saring, self._urut, self._batas = simpan, saring, urut, batas
+
+    def where(self, kolom, op, nilai):
+        assert op == ">"
+        return _Kueri(self._s, (*self._saring, (kolom, nilai)), self._urut, self._batas)
+
+    def order_by(self, kolom):
+        return _Kueri(self._s, self._saring, kolom, self._batas)
+
+    def limit(self, n):
+        return _Kueri(self._s, self._saring, self._urut, n)
+
+    def stream(self):
+        hasil = [(k, v) for k, v in self._s.items() if all(k2 in v and v[k2] > n for k2, n in self._saring)]
+        if self._urut:
+            hasil.sort(key=lambda kv: kv[1][self._urut])
+        return [_Snap(k, v) for k, v in hasil[: self._batas or None]]
+
+
+class _Koleksi(_Kueri):
+    def document(self, id_):
+        return _Ref(self._s, id_)
+
+
+class DBTiruan:
+    def __init__(self):
+        self.data: dict[str, dict] = {}
+
+    def collection(self, nama):
+        return _Koleksi(self.data.setdefault(nama, {}))
+
+
+def _harga(id_, waktu, **lain):
+    return {"tanggal": "2026-09-28", "kode_pasar": "psr01", "kode_varian": "cmr01", "harga": 55000.0, "satuan": "kg",
+            "kode_sumber": "PSR-ENUM", "petugas": "PTG01", "responden": "R1", "id_klien": id_,
+            "waktu_input": "2026-09-28T08:00:00+07:00", "catatan": "baris\nkedua", "oleh_uid": "u1",
+            "oleh_email": "petugas@contoh.go.id", "diterima": waktu, "diperbarui": waktu, **lain}
+
+
+@pytest.fixture
+def akar(akar_sementara):
+    for sub in ("persetujuan_model",):
+        (akar_sementara / "data" / sub).mkdir(parents=True, exist_ok=True)
+    return akar_sementara
+
+
+# ---------------------------------------------------------------- uji
+
+def test_harga_dari_situs_terbaca_pipeline_dan_tanpa_email(akar):
+    db = DBTiruan()
+    db.data["lbp_harga"] = {"k1": _harga("k1", T0), "k2": _harga("k2", T0 + timedelta(seconds=5), harga=60000)}
+    ringkas = fs.tarik(akar, "https://github.com/x/y/actions/runs/1", db=db)
+    berkas = akar / "data/masuk/harga/situs/situs_2026-09.csv"
+    assert ringkas["berkas"] == {"data/masuk/harga/situs/situs_2026-09.csv": 2}
+    teks = berkas.read_text(encoding="utf-8")
+    assert "petugas@contoh.go.id" not in teks and "oleh_uid" not in teks
+    assert ",55000," in teks and "baris kedua" in teks
+
+    konf = konfigurasi.muat(akar, hari_ini=HARI_INI)
+    hasil = masukan.baca_semua(akar / "data" / "masuk", konf, akar_relatif=akar)
+    assert hasil.penolakan == []
+    assert sorted(o.harga for o in hasil.observasi) == [55000, 60000]
+    assert {o.id_klien for o in hasil.observasi} == {"k1", "k2"}
+    assert fs.baca_tanda(akar)["lbp_harga"].startswith("2026-09-28T01:00:05")
+
+
+def test_hanya_kiriman_baru_yang_dibaca_dan_tidak_ganda(akar):
+    db = DBTiruan()
+    db.data["lbp_harga"] = {"k1": _harga("k1", T0)}
+    fs.tarik(akar, db=db)
+    db.data["lbp_harga"]["k2"] = _harga("k2", T0 + timedelta(minutes=1), tanggal="2026-10-01")
+    ringkas = fs.tarik(akar, db=db)
+    assert ringkas["berkas"] == {"data/masuk/harga/situs/situs_2026-10.csv": 1}
+    assert fs.tarik(akar, db=db)["berkas"] == {}
+    sep = (akar / "data/masuk/harga/situs/situs_2026-09.csv").read_text(encoding="utf-8").splitlines()
+    assert len(sep) == 2  # header + k1, tidak ditulis ulang
+
+
+def test_keputusan_tindak_lanjut_dan_persetujuan_dari_situs(akar):
+    db = DBTiruan()
+    db.data["lbp_validasi"] = {
+        "OBS1": {"id_observasi": "OBS1", "keputusan": "terima", "alasan": "dicek", "validator": "Op",
+                 "tanggal_validasi": "2026-09-28", "diperbarui": T0}}
+    db.data["lbp_tindak_lanjut"] = {
+        "a": {"id_sinyal": "SIG-1", "status": "terverifikasi", "catatan": "cek", "petugas": "TPID", "tanggal": "2026-09-28T09:00",
+              "kode_varian": "", "tanggal_kejadian": "", "diperbarui": T0}}
+    db.data["lbp_persetujuan_model"] = {
+        "b": {"kode_varian": "CMR01", "model": "ets", "keputusan": "setuju", "penyetuju": "Analis", "tanggal": "2026-09-28",
+              "catatan": "", "diperbarui": T0}}
+    fs.tarik(akar, db=db)
+    assert kualitas.baca_keputusan(akar / "data" / "validasi")["OBS1"].keputusan == "terima"
+    assert tindak_lanjut.baca_buku(akar / "data" / "tindak_lanjut")[0]["SIG-1"].status == "terverifikasi"
+    assert kinerja.baca_persetujuan(akar / "data" / "persetujuan_model")["CMR01"]["model"] == "ets"
+
+    # Keputusan yang diubah (dokumen sama) menggantikan baris lama, bukan menambah.
+    db.data["lbp_validasi"]["OBS1"].update(keputusan="tolak", diperbarui=T0 + timedelta(hours=1))
+    fs.tarik(akar, db=db)
+    assert kualitas.baca_keputusan(akar / "data" / "validasi")["OBS1"].keputusan == "tolak"
+    assert len((akar / "data/validasi/situs.csv").read_text(encoding="utf-8").splitlines()) == 2
+
+
+def test_pengaturan_dari_situs_dipakai_bila_sah_dan_lebih_baru(akar):
+    path = akar / "config/pengaturan.json"
+    asli = json.loads(path.read_text(encoding="utf-8"))
+    db = DBTiruan()
+    isi = json.loads(json.dumps(asli))
+    isi["ai"]["penyedia"] = "github_models"
+    # Firestore tidak menjaga urutan kunci; berkas tetap disusun seperti semula.
+    db.data["lbp_pengaturan"] = {"utama": {"isi": dict(reversed(list(isi.items()))), "versi": 3, "diubah_oleh": "adm@contoh.go.id"}}
+    ringkas = fs.tarik(akar, db=db)
+    baru = json.loads(path.read_text(encoding="utf-8"))
+    assert baru["ai"]["penyedia"] == "github_models"
+    assert list(baru) == list(asli)
+    assert fs.baca_tanda(akar)["pengaturan_versi"] == 3
+    assert any("versi 3" in p for p in ringkas["pesan"])
+
+    # Versi lama tidak diterapkan lagi; isian tidak sah ditolak tapi tetap dicatat supaya tidak diulang terus.
+    path.write_text(fs.tulis_pengaturan(asli), encoding="utf-8")
+    fs.tarik(akar, db=db)
+    assert json.loads(path.read_text(encoding="utf-8"))["ai"]["penyedia"] == asli["ai"]["penyedia"]
+    isi["ai"]["penyedia"] = "tidak-dikenal"
+    db.data["lbp_pengaturan"]["utama"] = {"isi": isi, "versi": 4}
+    ringkas = fs.tarik(akar, db=db)
+    assert "tidak dipakai" in ringkas["peringatan"]
+    assert json.loads(path.read_text(encoding="utf-8")) == asli
+    assert fs.baca_tanda(akar)["pengaturan_versi"] == 4
+
+
+def test_kunci_dari_situs_menggantikan_secret_dan_kunci_asing_diabaikan(akar):
+    db = DBTiruan()
+    db.data["lbp_rahasia"] = {"GEMINI_API_KEY": {"nilai": " kunci-situs "}, "FIREBASE_SERVICE_ACCOUNT": {"nilai": "x"},
+                              "PATH": {"nilai": "/jahat"}, "SMTP_HOST": {"nilai": ""}}
+    env = {"GEMINI_API_KEY": "kunci-lama", "SMTP_HOST": "smtp.lama"}
+    assert fs.terapkan_rahasia(fs.muat_rahasia(db, akar), env) == ["GEMINI_API_KEY"]
+    assert env == {"GEMINI_API_KEY": "kunci-situs", "SMTP_HOST": "smtp.lama"}
+
+
+def test_perintah_diambil_lalu_ditutup_oleh_proses_yang_sama(akar):
+    db = DBTiruan()
+    db.data["lbp_perintah"] = {"perbarui": {"jenis": "perbarui", "masukan": {"demo": "otomatis"}, "status": "menunggu"}}
+    url = "https://github.com/x/y/actions/runs/7"
+    ringkas = fs.tarik(akar, url, db=db)
+    assert [p["jenis"] for p in ringkas["perintah"]] == ["perbarui"]
+    assert db.data["lbp_perintah"]["perbarui"]["status"] == "berjalan"
+    assert db.data["lbp_status"]["pipeline"]["status"] == "berjalan"
+    fs.lapor("success", url, db=db)
+    assert db.data["lbp_perintah"]["perbarui"]["status"] == "selesai"
+    assert db.data["lbp_status"]["pipeline"]["hasil"] == "success"
+
+    # Permintaan baru yang masuk saat proses lain berjalan tidak ikut ditutup.
+    db.data["lbp_perintah"]["perbarui"] = {"jenis": "perbarui", "masukan": {}, "status": "menunggu"}
+    fs.lapor("failure", url, db=db)
+    assert db.data["lbp_perintah"]["perbarui"]["status"] == "menunggu"
+
+
+def test_pemeriksa_berkala(akar):
+    db = DBTiruan()
+    kini = T0 + timedelta(days=1)
+    assert fs.perlu_jalan(akar, db, kini) == (False, "tidak ada yang baru")
+    db.data["lbp_harga"] = {"k1": _harga("k1", T0)}
+    assert fs.perlu_jalan(akar, db, kini)[0] is True
+    db.data["lbp_status"] = {"pipeline": {"status": "selesai", "selesai": kini - timedelta(minutes=10)}}
+    jalan, alasan = fs.perlu_jalan(akar, db, kini)
+    assert not jalan and "jeda" in alasan
+    db.data["lbp_tindak_lanjut"] = {"a": {"diperbarui": T0}}
+    assert fs.perlu_jalan(akar, db, kini)[0] is True
+    db.data["lbp_status"]["pipeline"] = {"status": "berjalan", "mulai": kini - timedelta(minutes=5)}
+    assert fs.perlu_jalan(akar, db, kini) == (False, "proses lain sedang berjalan")
+    db.data["lbp_status"]["pipeline"]["mulai"] = kini - timedelta(hours=2)  # proses macet tidak menahan selamanya
+    assert fs.perlu_jalan(akar, db, kini)[0] is True
+    db.data = {"lbp_perintah": {"cari_sumber": {"status": "menunggu"}}}
+    assert fs.perlu_jalan(akar, db, kini) == (True, "ada permintaan cari_sumber")
+
+
+def test_format_pengaturan_sama_dengan_panel_admin():
+    from .conftest import AKAR
+
+    teks = (AKAR / "config/pengaturan.json").read_text(encoding="utf-8")
+    assert fs.tulis_pengaturan(json.loads(teks)) == teks
+
+
+@pytest.mark.skipif(not os.environ.get("FIRESTORE_EMULATOR_HOST"), reason="butuh emulator Firestore")
+def test_dengan_emulator_firestore(akar, monkeypatch):
+    """Uji kueri sungguhan (stempel waktu server) di emulator: npm run uji:mesin."""
+    pytest.importorskip("google.cloud.firestore")
+    from google.cloud import firestore
+
+    monkeypatch.setenv("GCLOUD_PROJECT", "demo-lbp")
+    db = fs.klien()
+    for k in ("lbp_harga", "lbp_status", "lbp_perintah"):
+        for d in db.collection(k).stream():
+            d.reference.delete()
+    db.collection("lbp_harga").document("e1").set(_harga("e1", firestore.SERVER_TIMESTAMP))
+    assert fs.perlu_jalan(akar, db)[0] is True
+    assert fs.tarik(akar, "u", db=db)["berkas"] == {"data/masuk/harga/situs/situs_2026-09.csv": 1}
+    fs.lapor("success", "u", db=db)
+    jalan, alasan = fs.perlu_jalan(akar, db)
+    assert not jalan, alasan
+    db.collection("lbp_harga").document("e2").set(_harga("e2", firestore.SERVER_TIMESTAMP))
+    assert fs.tarik(akar, "u", db=db)["berkas"] == {"data/masuk/harga/situs/situs_2026-09.csv": 1}
