@@ -93,7 +93,7 @@ const wadah = document.getElementById("kandidat");
 if (!pencarian.length) {
   wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan <strong>AI Data Finder</strong> dari tab Actions di GitHub, lalu isi komoditas dan periode.
     <details style="margin-top:8px"><summary>Detail penyedia AI</summary>Gratis lewat Gemini (bisa mencari di Google), Groq, Cerebras, OpenRouter, Mistral,
-    atau GitHub Models (tanpa kunci). Kunci diisi di menu Pengaturan, tab AI. Pada mode Otomatis, AI dicoba bergantian, jadi kalau
+    atau GitHub Models (tanpa kunci). Kunci diisi di menu Pengaturan, tab AI. Isi juga kunci Tavily (gratis) supaya AI memakai hasil pencarian web. Pada mode Otomatis, AI dicoba bergantian, jadi kalau
     satu AI kena batas pemakaian gratis, AI berikutnya yang dipakai. Hasil tersimpan di <code>data/sumber/kandidat_ai.json</code>.</details></div>`;
 } else {
   wadah.innerHTML = pencarian.slice(0, 10).map((p) => {
@@ -101,7 +101,7 @@ if (!pencarian.length) {
     const kandidat = h.kandidat || [];
     return `<details ${p === pencarian[0] ? "open" : ""} style="margin-bottom:12px">
       <summary><strong>${esc(p.permintaan.komoditas)}</strong> · ${esc(p.permintaan.periode)} · ${esc(waktu(p.waktu))} · ${kandidat.length} kandidat · ${esc(p.penyedia || "anthropic")}</summary>
-      <p class="meta-kecil" style="margin:6px 0">Model: ${esc(p.model)}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web, jadi semua URL perlu dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
+      <p class="meta-kecil" style="margin:6px 0">Model: ${esc(p.model)}${p.pencarian_web ? ` · dari pencarian web (${esc(p.pencarian_web)})` : ""}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web, jadi semua URL perlu dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
       <p class="meta-kecil" style="margin:6px 0">Prompt: ${esc(p.permintaan.prompt)}</p>
       <div class="gulir-tabel"><table><thead><tr><th>Sumber</th><th>Wilayah</th><th>Periode</th><th>Komoditas/satuan</th><th>Frekuensi</th>
         <th>Akses</th><th>URL di hasil pencarian?</th><th>URL dapat dibuka?</th><th>Perlu izin?</th><th>Catatan</th></tr></thead><tbody>

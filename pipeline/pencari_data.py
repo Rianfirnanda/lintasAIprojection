@@ -9,6 +9,10 @@ Penyedia (pengaturan.json -> ai.penyedia):
   github_models : GitHub Models (gratis, memakai GITHUB_TOKEN di Actions). TANPA pencarian web.
   anthropic     : Claude + web search (berbayar, opsional). Butuh ANTHROPIC_API_KEY.
   otomatis      : coba penyedia sesuai urutan ai.urutan_otomatis, lalu penyedia gratis lain yang belum disebut.
+
+Pencarian web (opsional, gratis): bila TAVILY_API_KEY diisi, mesin lebih dulu mencari di web lewat Tavily (kuota gratis
+1.000 kredit per bulan), lalu hasilnya diberikan ke AI mana pun yang dipakai. AI diminta menyusun kandidat hanya dari
+hasil pencarian itu, jadi alamat webnya nyata. Bila Tavily gagal atau kuotanya habis, AI tetap bekerja tanpa pencarian.
                   Lanjut ke berikutnya bila kunci belum diisi, kuota habis, atau jawabannya rusak.
 
 Prinsip (Pedoman Pemahaman Proyek, bagian 9-10):
@@ -40,6 +44,10 @@ MAKS_LANJUT = 5
 MAKS_RIWAYAT = 50
 URL_GEMINI = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 URL_GITHUB_MODELS = "https://models.github.ai/inference/chat/completions"
+URL_TAVILY = "https://api.tavily.com/search"
+DOMAIN_RESMI = ["bps.go.id", "badanpangan.go.id", "bi.go.id", "kemendag.go.id", "pertanian.go.id", "bmkg.go.id",
+                "bengkuluprov.go.id", "bengkulutengahkab.go.id", "satudata.go.id", "data.go.id"]
+MAKS_HASIL_WEB = 15
 # Penyedia dengan antarmuka chat completions ala OpenAI. Semuanya punya kuota gratis, tetapi tanpa pencarian web.
 SEJENIS_OPENAI = {
     "groq": {"nama": "Groq", "url": "https://api.groq.com/openai/v1/chat/completions", "kunci": "GROQ_API_KEY",
@@ -97,6 +105,11 @@ TAMBAHAN_TANPA_PENCARIAN = """
 - Anda TIDAK memiliki akses internet. Sebutkan hanya lembaga/portal resmi yang Anda yakini ada, gunakan URL halaman \
 utama portal (bukan halaman spesifik yang mungkin tidak ada), dan tulis di catatan_keandalan bahwa URL perlu dicek \
 manual. Lebih baik sedikit kandidat yang pasti daripada banyak yang meragukan."""
+
+TAMBAHAN_HASIL_WEB = """
+- Anda TIDAK mencari sendiri, tetapi pesan pengguna memuat HASIL PENCARIAN WEB yang baru diambil. Susun kandidat \
+HANYA dari hasil itu, dan pakai URL persis seperti tertulis di sana. Sumber resmi yang Anda ketahui tetapi tidak ada \
+di hasil pencarian boleh disebut di tidak_ditemukan atau catatan, bukan sebagai kandidat."""
 
 FORMAT_JSON = """
 
@@ -194,6 +207,48 @@ def _post_json(url: str, header: dict, isi: dict, batas_waktu: int = 180) -> dic
         raise PenyediaTidakTersedia("jawaban layanan bukan JSON") from e
 
 
+def kueri_web(komoditas: str, periode: str, kebutuhan: str, wilayah: str) -> list[tuple[str, list[str] | None]]:
+    """Tiga pencarian (3 kredit Tavily): umum, situs pemerintah saja, dan tingkat provinsi."""
+    return [
+        (f"{kebutuhan} {komoditas} {wilayah}", None),
+        (f"data harga {komoditas} Bengkulu", DOMAIN_RESMI),
+        (f"{kebutuhan} {komoditas} Provinsi Bengkulu {periode} tabel unduh", None),
+    ]
+
+
+def cari_web(kueri: list[tuple[str, list[str] | None]], klien=None) -> tuple[list[dict], list[str]]:
+    """Cari di web lewat Tavily. Mengembalikan (hasil unik per URL, catatan galat). Tanpa kunci: ([], [])."""
+    kunci = os.environ.get("TAVILY_API_KEY")
+    if not kunci and klien is None:
+        return [], []
+    kirim = klien or _post_json
+    hasil: dict[str, dict] = {}
+    galat: list[str] = []
+    for q, domain in kueri:
+        isi = {"query": q, "search_depth": "basic", "max_results": 6, "include_answer": False}
+        if domain:
+            isi["include_domains"] = domain
+        try:
+            data = kirim(URL_TAVILY, {"Authorization": f"Bearer {kunci or ''}"}, isi)
+        except Exception as e:  # noqa: BLE001 - kuota habis atau gangguan: lanjut tanpa pencarian ini
+            galat.append(f"tavily: {e}"[:300])
+            log.warning("pencarian web dilewati: %s", e)
+            if "401" in str(e) or "432" in str(e) or "433" in str(e):
+                break  # kunci salah atau kuota habis: pencarian berikutnya pasti gagal juga
+            continue
+        for r in data.get("results") or []:
+            url = str(r.get("url") or "").strip()
+            if url.startswith("http") and url not in hasil:
+                hasil[url] = {"judul": str(r.get("title") or "")[:200], "url": url,
+                              "isi": " ".join(str(r.get("content") or "").split())[:600]}
+    return list(hasil.values())[:MAKS_HASIL_WEB], galat
+
+
+def teks_hasil_web(hasil: list[dict]) -> str:
+    baris = [f"[{i}] {h['judul']}\nURL: {h['url']}\nCuplikan: {h['isi']}" for i, h in enumerate(hasil, 1)]
+    return "\n\nHASIL PENCARIAN WEB (diambil hari ini):\n" + "\n\n".join(baris)
+
+
 def ambil_json_dari_teks(teks: str) -> dict:
     """Ambil objek JSON dari keluaran model (boleh dibungkus ```json ... ``` atau diberi teks pengantar)."""
     teks = teks.strip()
@@ -269,16 +324,29 @@ def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
         raise PenyediaTidakTersedia("kunci GEMINI_API_KEY belum diisi")
     kirim = klien or _post_json
     model = cfg["model_gemini"]
-    data = kirim(
-        URL_GEMINI.format(model=model),
-        {"x-goog-api-key": kunci or ""},
-        {
-            "system_instruction": {"parts": [{"text": SISTEM + TAMBAHAN_PENCARIAN}]},
+    web = cfg.get("_hasil_web") or []
+
+    def tanya(pakai_google: bool) -> dict:
+        tambahan = TAMBAHAN_PENCARIAN if pakai_google else (TAMBAHAN_HASIL_WEB if web else TAMBAHAN_TANPA_PENCARIAN)
+        isi = {
+            "system_instruction": {"parts": [{"text": SISTEM + tambahan}]},
             "contents": [{"role": "user", "parts": [{"text": teks + FORMAT_JSON}]}],
-            "tools": [{"google_search": {}}],
             "generationConfig": {"temperature": 0.2},
-        },
-    )
+        }
+        if pakai_google:
+            isi["tools"] = [{"google_search": {}}]
+        return kirim(URL_GEMINI.format(model=model), {"x-goog-api-key": kunci or ""}, isi)
+
+    # Hasil Tavily sudah ada: tidak perlu pencarian Google (yang tidak tersedia di kuota gratis Gemini 3.x).
+    pakai_google = not web
+    try:
+        data = tanya(pakai_google)
+    except PenyediaTidakTersedia as e:
+        if not pakai_google or "429" in str(e) or "401" in str(e):
+            raise
+        log.warning("Gemini menolak pencarian Google (%s); dicoba lagi tanpa pencarian", e)
+        pakai_google = False
+        data = tanya(False)
     if data.get("promptFeedback", {}).get("blockReason"):
         raise RuntimeError(f"permintaan diblokir Gemini: {data['promptFeedback']['blockReason']}")
     kandidat = data.get("candidates") or []
@@ -286,12 +354,12 @@ def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
         raise PenyediaTidakTersedia("Gemini tidak mengembalikan jawaban")
     c = kandidat[0]
     keluaran = "".join(p.get("text", "") for p in (c.get("content") or {}).get("parts", []))
-    rujukan = []
+    rujukan = [h["url"] for h in web]
     for ch in (c.get("groundingMetadata") or {}).get("groundingChunks", []):
-        web = ch.get("web") or {}
+        w = ch.get("web") or {}
         # uri Gemini berupa tautan pengalih; title berisi domain sumber asli
-        rujukan += [x for x in (web.get("title"), web.get("uri")) if x]
-    return {"hasil": ambil_json_dari_teks(keluaran), "url_pencarian": rujukan, "punya_pencarian": True,
+        rujukan += [x for x in (w.get("title"), w.get("uri")) if x]
+    return {"hasil": ambil_json_dari_teks(keluaran), "url_pencarian": rujukan, "punya_pencarian": pakai_google or bool(web),
             "model": data.get("modelVersion") or model, "request_id": data.get("responseId")}
 
 
@@ -318,7 +386,7 @@ def _cari_sejenis_openai(nama: str, teks: str, cfg: dict, klien=None) -> dict:
             "model": model,
             "temperature": 0.2,
             "messages": [
-                {"role": "system", "content": SISTEM + TAMBAHAN_TANPA_PENCARIAN},
+                {"role": "system", "content": SISTEM + (TAMBAHAN_HASIL_WEB if cfg.get("_hasil_web") else TAMBAHAN_TANPA_PENCARIAN)},
                 {"role": "user", "content": teks + FORMAT_JSON},
             ],
         },
@@ -330,7 +398,8 @@ def _cari_sejenis_openai(nama: str, teks: str, cfg: dict, klien=None) -> dict:
     keluaran = _teks_pesan((pilihan[0].get("message") or {}).get("content")) if pilihan else ""
     if not keluaran.strip():
         raise PenyediaTidakTersedia(f"{p['nama']} tidak mengembalikan jawaban")
-    return {"hasil": ambil_json_dari_teks(keluaran), "url_pencarian": [], "punya_pencarian": False,
+    web = cfg.get("_hasil_web") or []
+    return {"hasil": ambil_json_dari_teks(keluaran), "url_pencarian": [h["url"] for h in web], "punya_pencarian": bool(web),
             "model": data.get("model") or model, "request_id": data.get("id")}
 
 
@@ -386,17 +455,25 @@ def _cari_anthropic(teks: str, cfg: dict, klien=None) -> dict:
             "model": getattr(respons, "model", cfg["model_anthropic"]), "request_id": getattr(respons, "_request_id", None)}
 
 
+def nama_pakai_web(nama: str | None) -> bool:
+    """Claude mencari sendiri; penyedia lain memakai hasil Tavily."""
+    return nama != "anthropic"
+
+
 PENYEDIA = {"gemini": _cari_gemini, **{n: partial(_cari_sejenis_openai, n) for n in SEJENIS_OPENAI}, "anthropic": _cari_anthropic}
 
 
 def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harga eceran harian",
          wilayah: str = "Kabupaten Bengkulu Tengah, Provinsi Bengkulu", penyedia: str | None = None,
          klien: dict | None = None, pemeriksa_url=cek_url) -> dict:
-    """Jalankan pencarian. `klien` (untuk uji) memetakan nama penyedia -> pengganti fungsi kirim/klien SDK."""
-    cfg = pengaturan_ai(konf)
-    teks = susun_permintaan(komoditas, periode, kebutuhan, wilayah)
+    """Jalankan pencarian. `klien` (untuk uji) memetakan nama penyedia (dan "tavily") -> pengganti fungsi kirim/klien SDK."""
+    cfg = dict(pengaturan_ai(konf))
     klien = klien or {}
-    galat: list[str] = []
+    teks = susun_permintaan(komoditas, periode, kebutuhan, wilayah)
+    hasil_web, galat = cari_web(kueri_web(komoditas, periode, kebutuhan, wilayah), klien.get("tavily"))
+    if hasil_web:
+        cfg["_hasil_web"] = hasil_web
+        teks += teks_hasil_web(hasil_web)
     jawab = dipakai = None
     for nama in urutan_penyedia(konf, penyedia):
         try:
@@ -422,6 +499,7 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
         "permintaan": {"komoditas": komoditas, "periode": periode, "kebutuhan": kebutuhan, "wilayah": wilayah, "prompt": teks},
         "penyedia": dipakai,
         "punya_pencarian_web": jawab["punya_pencarian"],
+        "pencarian_web": f"Tavily, {len(hasil_web)} hasil" if hasil_web and nama_pakai_web(dipakai) else None,
         "penyedia_dilewati": galat,
         "model": jawab["model"],
         "request_id": jawab["request_id"],

@@ -101,15 +101,24 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
 
    Isi kuncinya di menu **Pengaturan → AI → Kunci AI** (atau sebagai GitHub Secret dengan nama di atas). Semuanya
    gratis tanpa kartu kredit; besar kuota gratis bisa berubah sewaktu-waktu sesuai kebijakan tiap layanan.
-3. **Actions → AI Data Finder → Run workflow** (atau Pengaturan → Jalankan → *Cari sumber data dengan AI*), isi
+3. (Sangat disarankan) **Pencarian web gratis dengan Tavily.** AI gratis tidak bisa mencari di Google sendiri (Gemini
+   versi 3 tidak menyediakan pencarian Google di kuota gratis). Tavily mencarikannya: mesin mencari di web lebih dulu
+   (3 pencarian tiap permintaan, gratis 1.000 per bulan, tanpa kartu kredit), lalu AI menyusun kandidat hanya dari
+   hasil pencarian itu.
+   1. Buka https://app.tavily.com, pilih **Sign up**, lalu **Continue with Google**.
+   2. Di halaman **Overview**, bagian **API Keys**, salin kunci *default* (berawalan `tvly-`). Pastikan paketnya
+      **Researcher (Free)**.
+   3. Tempel di **Pengaturan → AI → Pencarian web → Kunci Tavily**, lalu **Simpan kunci yang diisi**.
+   Bila kuota habis atau Tavily gangguan, AI tetap bekerja tanpa pencarian dan alasannya dicatat ("dilewati: tavily").
+4. **Actions → AI Data Finder → Run workflow** (atau Pengaturan → Jalankan → *Cari sumber data dengan AI*), isi
    komoditas, periode, jenis data, wilayah, dan penyedia. `otomatis` mencoba AI sesuai *Urutan kalau memilih Otomatis*,
    lalu AI gratis lain yang belum disebut. AI yang kuncinya belum diisi, kena batas pemakaian, atau jawabannya rusak
    dilewati, dan alasannya dicatat di hasil ("dilewati: ...").
-4. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**:
+5. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**:
    - *URL di hasil pencarian?* "tidak" = URL tidak muncul di hasil pencarian Google, jadi periksa dengan saksama.
    - *URL dapat dibuka?* "tidak" = alamat tidak bisa dibuka (kemungkinan dikarang/berubah).
-   - Hasil selain Gemini dan Claude ditandai **tanpa pencarian web**: semua URL wajib dicek manual.
-5. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
+   - Hasil tanpa Tavily (dan selain Claude) ditandai **tanpa pencarian web**: semua URL wajib dicek manual.
+6. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
    Kandidat tidak pernah otomatis menjadi sumber data.
 
 ## 6. Buletin, laporan, dan notifikasi

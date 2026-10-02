@@ -513,8 +513,9 @@ function htmlKesiapanAi() {
   return `<div class="kesiapan-ai">
     ${KUNCI_AI.map(([nama, k]) => status(nama, ada(k), tahu ? (ada(k) ? "kunci sudah diisi" : "kunci belum diisi") : "belum dicek")).join("\n    ")}
     ${status("GitHub Models", true, "siap, tanpa kunci")}
-    ${status("Claude", ada("ANTHROPIC_API_KEY"), tahu ? (ada("ANTHROPIC_API_KEY") ? "kunci sudah diisi" : "tidak dipakai") : "belum dicek")}</div>
-    <p class="ringkas-tab">Pada mode Otomatis, kalau satu AI kena batas pemakaian gratis, sistem pindah ke AI berikutnya. Makin banyak kunci gratis yang diisi, makin kecil kemungkinan gagal${tahu ? ` (sekarang ${nSiap} AI gratis siap)` : ""}. Untuk mencoba, buka tab <a href="#" data-ke-tab="jalankan">Jalankan</a> lalu pilih "Cari sumber data dengan AI".</p>`;
+    ${status("Claude", ada("ANTHROPIC_API_KEY"), tahu ? (ada("ANTHROPIC_API_KEY") ? "kunci sudah diisi" : "tidak dipakai") : "belum dicek")}
+    ${status("Pencarian web (Tavily)", ada("TAVILY_API_KEY"), tahu ? (ada("TAVILY_API_KEY") ? "aktif" : "kunci belum diisi") : "belum dicek")}</div>
+    <p class="ringkas-tab">Pada mode Otomatis, kalau satu AI kena batas pemakaian gratis, sistem pindah ke AI berikutnya. Makin banyak kunci gratis yang diisi, makin kecil kemungkinan gagal${tahu ? ` (sekarang ${nSiap} AI gratis siap)` : ""}. Dengan kunci Tavily, sistem lebih dulu mencari di web, lalu AI menyusun kandidat dari hasil pencarian itu, jadi alamat webnya nyata. Untuk mencoba, buka tab <a href="#" data-ke-tab="jalankan">Jalankan</a> lalu pilih "Cari sumber data dengan AI".</p>`;
 }
 
 /** Isian yang diketik tapi belum dikirim (kunci rahasia dan masukan alur kerja), supaya tidak hilang saat panel digambar ulang. */
