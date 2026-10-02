@@ -1,6 +1,8 @@
-// Panel admin untuk akun Firebase (halaman Pengguna): setujui atau tolak pendaftar, atur peran dan izin halaman,
-// nonaktifkan, aktifkan lagi, hapus, dan lihat jejak tindakan admin. Daftar diperbarui langsung (real-time).
-// Semua perubahan tetap diperiksa aturan Firestore di server, jadi panel ini tidak bisa dipakai oleh non-admin.
+// Panel akun Firebase (halaman Pengguna): setujui atau tolak pendaftar, atur peran dan izin halaman, nonaktifkan,
+// aktifkan lagi, hapus, dan lihat jejak tindakan. Daftar diperbarui langsung (real-time).
+// Bisa dipakai peran Administrator dan orang yang diberi halaman Pengguna. Hanya peran Administrator yang bisa
+// memberi atau mencabut hak admin (peran Administrator, halaman Pengaturan/Pengguna). Semua perubahan tetap
+// diperiksa aturan Firestore di server.
 import { esc } from "./app.js";
 import { ikon } from "./dashboard.js";
 import { PERAN, URUT_PERAN, DAFTAR_HALAMAN, HALAMAN_ADMIN, menuPeran, sesi } from "./akses.js";
@@ -14,19 +16,26 @@ const TAB = [
   ["lain", "Ditolak dan nonaktif"],
 ];
 const LABEL_STATUS = { menunggu: ["Menunggu", "sedang"], aktif: ["Aktif", "baik"], ditolak: ["Ditolak", "tinggi"], nonaktif: ["Nonaktif", "polos"] };
-const LABEL_AKSI = { setujui: "menyetujui", tolak: "menolak", ubah: "mengubah", nonaktifkan: "menonaktifkan", aktifkan: "mengaktifkan lagi", hapus: "menghapus" };
-const PERAN_PILIHAN = URUT_PERAN.filter((k) => k !== "masyarakat");
+const LABEL_AKSI = { setujui: "menyetujui", tolak: "menolak", ubah: "mengubah", nonaktifkan: "menonaktifkan", aktifkan: "mengaktifkan lagi", hapus: "menghapus",
+  hak_akses: "mengubah tabel hak akses" };
+const adminSaya = sesi()?.peran === "admin";
+const PERAN_PILIHAN = URUT_PERAN.filter((k) => k !== "masyarakat" && (adminSaya || k !== "admin"));
+/** Akun yang memegang hak admin (sama dengan hakAdmin() di aturan Firestore). */
+const hakAdmin = (a) => a.peran === "admin" || (Array.isArray(a.halaman) && a.halaman.some((h) => HALAMAN_ADMIN.includes(h)));
 
 const FORMAT_WAKTU = new Intl.DateTimeFormat("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
 const tanggal = (t) => {
   const d = t?.toDate?.();
   return d ? `${FORMAT_WAKTU.format(d)} WIB` : "baru saja";
 };
+/** Tabel hak akses per peran dari Firestore (null = bawaan). Diisi oleh pasangPanelAkun. */
+let tabelAkses = null;
 const bawaanPeran = (peran) => {
-  const m = menuPeran(peran);
+  const m = menuPeran(peran, peran !== "admin" ? tabelAkses?.[peran] ?? null : null);
   return [...m.utama, ...m.lainnya].map((x) => x.href);
 };
-const halamanUntuk = (peran) => DAFTAR_HALAMAN.filter((h) => peran === "admin" || !HALAMAN_ADMIN.includes(h.href));
+/** Halaman yang bisa dicentang. Halaman admin hanya bisa diberikan oleh peran Administrator. */
+const halamanUntuk = () => DAFTAR_HALAMAN.filter((h) => adminSaya || !HALAMAN_ADMIN.includes(h.href));
 
 export async function pasangPanelAkun({ wadah, ket, ringkas, jejak, kartuJejak }) {
   const uidSaya = (await fk.penggunaKini())?.uid || sesi()?.uid;
@@ -77,7 +86,7 @@ export async function pasangPanelAkun({ wadah, ket, ringkas, jejak, kartuJejak }
   function htmlIzin(a, d) {
     const peran = d.peran || "masyarakat";
     const bawaan = new Set(bawaanPeran(peran));
-    const daftar = halamanUntuk(peran);
+    const daftar = halamanUntuk();
     const atur = d.mode === "atur";
     return `<fieldset class="izin-akun">
       <legend>Izin halaman</legend>
@@ -88,8 +97,12 @@ export async function pasangPanelAkun({ wadah, ket, ringkas, jejak, kartuJejak }
       <div class="kelompok-centang">${daftar.map((h) => {
         const centang = h.href === "index.html" || (atur ? d.halaman.has(h.href) : bawaan.has(h.href));
         const kunci = h.href === "index.html" || !atur;
-        return `<label class="chip-centang"><input type="checkbox" data-f="halaman" value="${esc(h.href)}" ${centang ? "checked" : ""} ${kunci ? "disabled" : ""}><span>${esc(h.label)}</span></label>`;
+        const admin = HALAMAN_ADMIN.includes(h.href);
+        return `<label class="chip-centang${admin ? " chip-admin" : ""}" ${admin ? 'title="Memberi hak admin"' : ""}><input type="checkbox" data-f="halaman" value="${esc(h.href)}" ${centang ? "checked" : ""} ${kunci ? "disabled" : ""}><span>${esc(h.label)}${admin ? " (admin)" : ""}</span></label>`;
       }).join("")}</div>
+      ${peran !== "admin" && atur && HALAMAN_ADMIN.some((h) => d.halaman.has(h)) ? `<p class="catatan-admin">${ikon("gembokPerisai", 15)} Orang ini akan punya hak admin:
+        ${d.halaman.has("pengaturan.html") ? "mengubah pengaturan sistem, kunci, dan menjalankan proses" : ""}${d.halaman.has("pengaturan.html") && d.halaman.has("pengguna.html") ? ", serta " : ""}${d.halaman.has("pengguna.html") ? "menyetujui dan mengatur akun biasa" : ""}.
+        Mengangkat atau mencopot admin tetap hanya bisa dilakukan peran Administrator.</p>` : ""}
     </fieldset>`;
   }
 
@@ -103,6 +116,8 @@ export async function pasangPanelAkun({ wadah, ket, ringkas, jejak, kartuJejak }
     let atur = "", aksi = "";
     if (saya) {
       atur = `<p class="meta-kecil">Ini akun Anda. Peran dan status akun sendiri tidak bisa diubah dari sini, supaya admin tidak terkunci.</p>`;
+    } else if (!adminSaya && hakAdmin(a)) {
+      atur = `<p class="meta-kecil">Akun ini memegang hak admin, jadi hanya peran Administrator yang bisa mengubahnya.</p>`;
     } else if (a.status === "menunggu") {
       atur = pilihPeran + htmlIzin(a, d);
       aksi = `<button class="tombol utama-aksi" type="button" data-aksi="setujui" ${d.peran ? "" : "disabled"}>${ikon("centang", 16)} Setujui</button>
@@ -155,10 +170,11 @@ export async function pasangPanelAkun({ wadah, ket, ringkas, jejak, kartuJejak }
     if (f === "peran") {
       d.peran = e.target.value;
       if (d.mode === "bawaan") d.halaman = new Set(bawaanPeran(d.peran));
-      if (d.peran !== "admin") HALAMAN_ADMIN.forEach((h) => d.halaman.delete(h));
+      if (!adminSaya) HALAMAN_ADMIN.forEach((h) => d.halaman.delete(h));
     } else if (f === "mode") {
       d.mode = e.target.value;
       if (d.mode === "atur") d.halaman = new Set(bawaanPeran(d.peran || "masyarakat"));
+      if (!adminSaya) HALAMAN_ADMIN.forEach((h) => d.halaman.delete(h));
     } else if (f === "halaman") {
       if (e.target.checked) d.halaman.add(e.target.value); else d.halaman.delete(e.target.value);
     }
@@ -199,6 +215,14 @@ export async function pasangPanelAkun({ wadah, ket, ringkas, jejak, kartuJejak }
     }
   });
 
+  tabelAkses = await fk.muatTabelAkses();
+  fk.pantauTabelAkses((dok) => {
+    tabelAkses = dok?.halaman || null;
+    // Draf yang mengikuti peran dihitung ulang dari tabel terbaru.
+    for (const [uid, d] of Object.entries(draf)) if (d.mode === "bawaan") draf[uid].halaman = new Set(bawaanPeran(d.peran || "masyarakat"));
+    if (akun.length) renderDaftar();
+  }).catch(() => {});
+
   await fk.pantauSemuaAkun((daftar, dariSimpanan) => {
     akun = daftar;
     // Saat pertama dimuat, pindah ke tab Aktif bila tidak ada yang menunggu. Tunggu data dari server,
@@ -217,7 +241,7 @@ export async function pasangPanelAkun({ wadah, ket, ringkas, jejak, kartuJejak }
   await fk.pantauJejak((daftar) => {
     jejak.innerHTML = daftar.length
       ? `<ul class="daftar-jejak">${daftar.map((j) => `<li><span class="meta-kecil">${esc(tanggal(j.waktu))}</span>
-          <span><b>${esc(j.oleh_email)}</b> ${esc(LABEL_AKSI[j.aksi] || j.aksi)} <b>${esc(j.sasaran_email)}</b>${j.rincian ? ` (${esc(j.rincian)})` : ""}</span></li>`).join("")}</ul>`
+          <span><b>${esc(j.oleh_email)}</b> ${esc(LABEL_AKSI[j.aksi] || j.aksi)}${j.sasaran_email ? ` <b>${esc(j.sasaran_email)}</b>` : ""}${j.rincian ? ` (${esc(j.rincian)})` : ""}</span></li>`).join("")}</ul>`
       : `<p class="kosong">Belum ada tindakan admin.</p>`;
   }, () => { jejak.innerHTML = `<p class="kosong">Jejak belum bisa dimuat.</p>`; });
 }

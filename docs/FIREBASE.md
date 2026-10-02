@@ -20,6 +20,12 @@ boleh dimatikan.
 4. Begitu disetujui, halaman orang itu langsung lanjut ke berandanya.
 5. Admin juga bisa mengubah peran dan izin, menonaktifkan, mengaktifkan lagi, atau menghapus akun. Setiap tindakan
    tercatat di **Jejak tindakan admin**.
+6. **Tabel Hak akses** di halaman Pengguna bisa dicentang langsung oleh peran Administrator. Halaman yang dicentang
+   berlaku untuk semua akun dengan peran itu, kecuali akun yang izinnya diatur sendiri.
+7. **Hak admin per orang:** beri seseorang halaman **Pengguna** (lewat "Atur sendiri" di kartu akunnya) supaya ia bisa
+   menyetujui dan mengatur akun biasa, atau halaman **Pengaturan** supaya ia bisa mengubah pengaturan, kunci, dan
+   menjalankan proses. Mengangkat atau mencopot admin, dan mengubah tabel Hak akses, tetap hanya untuk peran
+   Administrator. Tidak ada yang bisa mengubah peran atau izinnya sendiri.
 
 Semua ini dijaga **aturan keamanan Firestore** (`firestore.rules`), bukan hanya tampilan. Pendaftar tidak bisa memberi
 dirinya peran atau izin, dan hanya admin aktif yang bisa membaca serta mengubah akun orang lain.

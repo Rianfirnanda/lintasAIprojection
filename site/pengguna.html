@@ -27,8 +27,14 @@
   </section>
 
   <section class="kartu">
-    <div class="kartu-kepala"><div><h2>Hak akses</h2><p>Halaman apa saja yang terbuka untuk tiap peran.</p></div></div>
+    <div class="kartu-kepala"><div><h2>Hak akses</h2><p id="ket-matriks">Halaman apa saja yang terbuka untuk tiap peran.</p></div></div>
     <div class="gulir-tabel"><table class="matriks" id="matriks"></table></div>
+    <div class="baris-kontrol" id="aksi-matriks" hidden style="margin-top:12px">
+      <button class="tombol utama-aksi" type="button" id="simpan-matriks" disabled>Simpan hak akses</button>
+      <button class="tombol" type="button" id="batal-matriks" disabled>Batalkan</button>
+      <button class="tautan-bahaya" type="button" id="bawaan-matriks">Kembalikan ke bawaan</button>
+      <span class="meta-kecil" id="pesan-matriks" role="status"></span>
+    </div>
   </section>
 
   <section class="kartu" id="kartu-akun">
@@ -66,7 +72,7 @@
 <script type="module">
 import { pasangKerangka, muatJSON, esc, angka } from "./assets/app.js";
 import { ikon } from "./assets/dashboard.js";
-import { PERAN, URUT_PERAN, DAFTAR_HALAMAN, bolehAkses, menuPeran } from "./assets/akses.js";
+import { PERAN, URUT_PERAN, DAFTAR_HALAMAN, HALAMAN_ADMIN, HALAMAN_BEBAS, bolehAkses, menuPeran, sesi } from "./assets/akses.js";
 import { ind } from "./assets/peran.js";
 
 const meta = await pasangKerangka("pengguna.html");
@@ -83,15 +89,42 @@ document.getElementById("ringkas").innerHTML = [
   ind({ i: "dokumen", label: "Halaman", nilai: DAFTAR_HALAMAN.length + 1, sub: "termasuk halaman masuk" }),
 ].join("");
 
-document.getElementById("peran").innerHTML = URUT_PERAN.map((k) => {
-  const p = PERAN[k], m = menuPeran(k);
-  return `<div class="peran-kartu"><span class="ind-ikon biru">${ikon(p.ikon, 20)}</span><h3>${esc(p.nama)}</h3><p>${esc(p.ringkas)}</p>
-    <div class="menu-mini">${[...m.utama, ...m.lainnya].map((x) => `<span>${esc(x.label)}</span>`).join("")}</div></div>`;
-}).join("");
+/* ---------- peran dan hak akses
+ * Dengan Firebase, tabel hak akses bisa diubah peran Administrator: halaman yang dicentang berlaku untuk semua akun
+ * dengan peran itu (kecuali akun yang izinnya diatur sendiri). Disimpan di Firestore (lbp_akses/peran). */
+const ATUR = URUT_PERAN.filter((k) => k !== "admin");
+let tabelSimpan = null; // tabel tersimpan ({ peran: [halaman] } atau null = bawaan)
+let draf = null; // { peran: Set(halaman) } yang sedang diubah
+const halamanPeran = (k, tabel) => {
+  if (k === "admin") return new Set(DAFTAR_HALAMAN.map((h) => h.href));
+  const m = menuPeran(k, tabel?.[k] ?? null);
+  return new Set([...m.utama, ...m.lainnya].map((x) => x.href));
+};
+const keTabel = (d) => Object.fromEntries(ATUR.map((k) => [k, DAFTAR_HALAMAN.map((h) => h.href).filter((h) => d[k].has(h))]));
+const samaTabel = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
-document.getElementById("matriks").innerHTML = `<thead><tr><th>Halaman</th>${URUT_PERAN.map((k) => `<th>${esc(PERAN[k].nama)}</th>`).join("")}</tr></thead>
-  <tbody>${DAFTAR_HALAMAN.map((h) => `<tr><td>${esc(h.label)}</td>${URUT_PERAN.map((k) =>
-    bolehAkses(k, h.href) ? `<td class="ya" aria-label="boleh">✓</td>` : `<td class="tidak" aria-label="tidak boleh">–</td>`).join("")}</tr>`).join("")}</tbody>`;
+function gambarPeran(tabel) {
+  document.getElementById("peran").innerHTML = URUT_PERAN.map((k) => {
+    const p = PERAN[k], m = menuPeran(k, k !== "admin" ? tabel?.[k] ?? null : null);
+    return `<div class="peran-kartu"><span class="ind-ikon biru">${ikon(p.ikon, 20)}</span><h3>${esc(p.nama)}</h3><p>${esc(p.ringkas)}</p>
+      <div class="menu-mini">${[...m.utama, ...m.lainnya].map((x) => `<span>${esc(x.label)}</span>`).join("")}</div></div>`;
+  }).join("");
+}
+
+function gambarMatriks({ tabel = null, ubah = false } = {}) {
+  const sel = (k, h) => {
+    const ya = draf ? draf[k]?.has(h.href) ?? true : (tabel || meta?.login === "firebase" ? halamanPeran(k, tabel).has(h.href) : bolehAkses(k, h.href));
+    if (!ubah || k === "admin" || HALAMAN_BEBAS.includes(h.href)) {
+      return ya ? `<td class="ya" aria-label="boleh">✓</td>` : `<td class="tidak" aria-label="tidak boleh">–</td>`;
+    }
+    return `<td><input type="checkbox" class="cek-matriks" data-peran="${k}" data-halaman="${esc(h.href)}" ${ya ? "checked" : ""}
+      aria-label="${esc(PERAN[k].nama)} boleh membuka ${esc(h.label)}"></td>`;
+  };
+  document.getElementById("matriks").innerHTML = `<thead><tr><th>Halaman</th>${URUT_PERAN.map((k) => `<th>${esc(PERAN[k].nama)}</th>`).join("")}</tr></thead>
+    <tbody>${DAFTAR_HALAMAN.map((h) => `<tr><td>${esc(h.label)}${HALAMAN_ADMIN.includes(h.href) ? ' <span class="lencana sedang">hak admin</span>' : ""}</td>${URUT_PERAN.map((k) => sel(k, h)).join("")}</tr>`).join("")}</tbody>`;
+}
+gambarPeran(null);
+gambarMatriks();
 
 const wadah = document.getElementById("akun");
 if (meta?.login === "firebase") {
@@ -101,6 +134,7 @@ if (meta?.login === "firebase") {
     dijaga aturan keamanan Firestore, jadi orang yang belum disetujui tidak bisa memberi dirinya hak apa pun.
     Namun berkas data dashboard (harga, peringatan, laporan) masih berupa berkas terbuka di hosting. Data yang perlu
     dirahasiakan sebaiknya dipindah ke Firestore pada tahap berikutnya.`;
+  pasangTabelAkses();
   const { pasangPanelAkun } = await import("./assets/panel-akun.js");
   await pasangPanelAkun({ wadah, ket: document.getElementById("ket-akun"), ringkas: document.getElementById("ringkas"),
     jejak: document.getElementById("jejak"), kartuJejak: document.getElementById("kartu-jejak") });
@@ -111,6 +145,73 @@ if (meta?.login === "firebase") {
 } else {
   document.getElementById("ket-akun").textContent = "Belum ada akun.";
   wadah.innerHTML = `<p class="kosong">Isi <code>config/pengguna.json</code> atau <code>config/firebase.json</code> agar orang bisa masuk.</p>`;
+}
+
+async function pasangTabelAkses() {
+  const fk = await import("./assets/firebase-klien.js");
+  const ubah = sesi()?.peran === "admin";
+  const el = (id) => document.getElementById(id);
+  el("ket-matriks").textContent = ubah
+    ? "Centang halaman yang boleh dibuka tiap peran, lalu simpan. Berlaku untuk semua akun dengan peran itu, kecuali akun yang izinnya diatur sendiri. Peran Administrator selalu membuka semua halaman."
+    : "Halaman apa saja yang terbuka untuk tiap peran. Hanya peran Administrator yang bisa mengubah tabel ini.";
+  el("aksi-matriks").hidden = !ubah;
+  const segarkanTombol = () => {
+    const beda = draf && !samaTabel(keTabel(draf), keTabel(Object.fromEntries(ATUR.map((k) => [k, halamanPeran(k, tabelSimpan)]))));
+    el("simpan-matriks").disabled = el("batal-matriks").disabled = !beda;
+  };
+  const mulaiDraf = () => { draf ||= Object.fromEntries(ATUR.map((k) => [k, halamanPeran(k, tabelSimpan)])); };
+  await fk.pantauTabelAkses((dok) => {
+    tabelSimpan = dok?.halaman || null;
+    if (!el("simpan-matriks").disabled) return; // ada perubahan belum disimpan: jangan ditimpa
+    draf = null;
+    gambarPeran(tabelSimpan);
+    gambarMatriks({ tabel: tabelSimpan, ubah });
+    if (dok?.diubah_oleh) el("pesan-matriks").textContent = `Terakhir diubah ${dok.diubah_oleh}.`;
+  });
+  if (!ubah) return;
+  el("matriks").addEventListener("change", (e) => {
+    const c = e.target.closest(".cek-matriks");
+    if (!c) return;
+    mulaiDraf();
+    if (c.checked) draf[c.dataset.peran].add(c.dataset.halaman); else draf[c.dataset.peran].delete(c.dataset.halaman);
+    el("pesan-matriks").textContent = "";
+    segarkanTombol();
+  });
+  el("batal-matriks").addEventListener("click", () => {
+    draf = null;
+    gambarMatriks({ tabel: tabelSimpan, ubah });
+    segarkanTombol();
+  });
+  const simpan = async (tabel, rincian) => {
+    const tombol = [el("simpan-matriks"), el("batal-matriks"), el("bawaan-matriks")];
+    tombol.forEach((b) => { b.disabled = true; });
+    el("pesan-matriks").textContent = "Menyimpan…";
+    try {
+      await fk.simpanTabelAkses(tabel, rincian);
+      draf = null;
+      tabelSimpan = Object.keys(tabel).length ? tabel : null;
+      gambarPeran(tabelSimpan);
+      gambarMatriks({ tabel: tabelSimpan, ubah });
+      el("pesan-matriks").textContent = "Tersimpan. Berlaku saat orang membuka halaman berikutnya.";
+    } catch (err) {
+      el("pesan-matriks").textContent = fk.pesanGalat(err);
+    } finally {
+      el("bawaan-matriks").disabled = false;
+      segarkanTombol();
+    }
+  };
+  el("simpan-matriks").addEventListener("click", () => {
+    const tabel = keTabel(draf);
+    const lama = Object.fromEntries(ATUR.map((k) => [k, halamanPeran(k, tabelSimpan)]));
+    const beda = ATUR.filter((k) => !samaTabel(tabel[k], keTabel(lama)[k])).map((k) => PERAN[k].nama);
+    const adminBaru = ATUR.filter((k) => HALAMAN_ADMIN.some((h) => tabel[k].includes(h)) && !HALAMAN_ADMIN.some((h) => lama[k].has(h)));
+    if (adminBaru.length && !confirm(`Semua akun ${adminBaru.map((k) => PERAN[k].nama).join(", ")} akan mendapat hak admin (halaman Pengaturan atau Pengguna). Lanjutkan?`)) return;
+    simpan(tabel, `peran diubah: ${beda.join(", ")}`);
+  });
+  el("bawaan-matriks").addEventListener("click", () => {
+    if (!confirm("Kembalikan semua peran ke hak akses bawaan?")) return;
+    simpan({}, "kembali ke bawaan");
+  });
 }
 </script>
 </body>

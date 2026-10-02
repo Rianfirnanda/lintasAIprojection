@@ -9,7 +9,10 @@ rules_version = '2';
 // Alur akun:
 //   1. Orang masuk dengan Google, lalu membuat dokumen lbp_pengguna/{uid} miliknya sendiri berstatus "menunggu",
 //      tanpa peran dan tanpa izin halaman.
-//   2. Admin aktif menyetujui (status "aktif" + peran + izin halaman), menolak, atau menonaktifkan akun.
+//   2. Pengelola akun menyetujui (status "aktif" + peran + izin halaman), menolak, atau menonaktifkan akun.
+//      Pengelola akun = akun aktif yang boleh membuka halaman Pengguna: peran Administrator, atau orang yang diberi
+//      halaman itu lewat izin pribadi atau tabel hak akses. Mengangkat atau mencopot admin (peran Administrator atau
+//      halaman Pengaturan/Pengguna) dan mengubah tabel hak akses tetap hanya untuk peran Administrator.
 //   3. Admin pertama: email yang terdaftar di daftarAdminAwal() boleh mengangkat dirinya sendiri menjadi admin.
 //      Daftar ini diisi otomatis saat terbit dari GitHub Secret FIREBASE_ADMIN_AWAL, bukan ditulis di repositori.
 //
@@ -23,10 +26,19 @@ service cloud.firestore {
 
     function masuk() { return request.auth != null; }
     function akun(uid) { return /databases/$(database)/documents/lbp_pengguna/$(uid); }
+    /** Peran Administrator yang aktif (pemilik sistem). */
     function adminAktif() {
       return masuk() && exists(akun(request.auth.uid))
         && get(akun(request.auth.uid)).data.status == 'aktif'
         && get(akun(request.auth.uid)).data.peran == 'admin';
+    }
+    function jalurAkses() { return /databases/$(database)/documents/lbp_akses/peran; }
+    /** Tabel hak akses per peran yang diatur admin di halaman Pengguna ({} bila belum pernah diubah). */
+    function tabelAkses() { return exists(jalurAkses()) ? get(jalurAkses()).data.halaman : {}; }
+    /** Akun yang memegang hak admin: peran Administrator, atau diberi halaman Pengaturan/Pengguna. */
+    function hakAdmin(d) {
+      return d.get('peran', null) == 'admin'
+        || (d.get('halaman', null) is list && d.halaman.hasAny(['pengaturan.html', 'pengguna.html']));
     }
     function daftarAdminAwal() { return /*ADMIN_AWAL*/[]; }
     function adminAwal() {
@@ -42,10 +54,15 @@ service cloud.firestore {
 
     // Hak membuka halaman: izin halaman yang diatur admin (bila ada), selain itu bawaan peran. Admin selalu boleh.
     // Bawaan peran harus sama dengan menu di site/assets/akses.js.
+    // Urutan: izin pribadi akun (bila diatur), lalu tabel hak akses dari halaman Pengguna, lalu bawaan peran.
     function bolehHalaman(h, bawaan) {
       let a = get(akun(request.auth.uid)).data;
+      let t = tabelAkses();
       return a.status == 'aktif'
-        && (a.peran == 'admin' || (a.halaman is list && h in a.halaman) || (!(a.halaman is list) && a.peran in bawaan));
+        && (a.peran == 'admin'
+            || (a.halaman is list && h in a.halaman)
+            || (!(a.halaman is list) && a.peran in t && t[a.peran] is list && h in t[a.peran])
+            || (!(a.halaman is list) && !(a.peran in t) && a.peran in bawaan));
     }
     function izin(h, bawaan) { return masuk() && exists(akun(request.auth.uid)) && bolehHalaman(h, bawaan); }
     function aktif() { return masuk() && exists(akun(request.auth.uid)) && get(akun(request.auth.uid)).data.status == 'aktif'; }
@@ -53,6 +70,8 @@ service cloud.firestore {
     function bolehCekData() { return izin('kualitas.html', ['operator', 'analis']); }
     function bolehTindakLanjut() { return izin('sinyal.html', ['analis', 'tpid']); }
     function bolehSetujuiModel() { return izin('model.html', ['analis']); }
+    function kelolaPengguna() { return izin('pengguna.html', []); }
+    function kelolaSistem() { return izin('pengaturan.html', []); }
     function baru() { return request.resource.data; }
     function stempel() { return baru().diperbarui == request.time && baru().oleh_uid == request.auth.uid; }
 
@@ -68,8 +87,8 @@ service cloud.firestore {
     }
 
     match /lbp_pengguna/{uid} {
-      // Pemilik boleh membaca akunnya sendiri; admin aktif boleh membaca dan mendaftar semua akun.
-      allow read: if (masuk() && request.auth.uid == uid) || adminAktif();
+      // Pemilik boleh membaca akunnya sendiri; pengelola akun boleh membaca dan mendaftar semua akun.
+      allow read: if (masuk() && request.auth.uid == uid) || kelolaPengguna();
 
       // Pendaftaran: hanya untuk diri sendiri, selalu "menunggu", tanpa peran dan tanpa izin.
       allow create: if masuk() && request.auth.uid == uid
@@ -101,8 +120,10 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nama', 'foto', 'diperbarui'])
         && teksPendek(request.resource.data.nama, 120);
 
-      // Admin aktif mengatur akun orang lain. Admin tidak bisa mencabut hak adminnya sendiri (supaya tidak terkunci).
-      allow update: if adminAktif()
+      // Pengelola akun mengatur akun orang lain. Tidak ada yang bisa mengubah status, peran, atau izin akunnya sendiri
+      // (admin tidak terkunci, dan pengelola tidak bisa menaikkan haknya sendiri). Akun yang memegang atau akan
+      // memegang hak admin hanya bisa diatur oleh peran Administrator.
+      allow update: if kelolaPengguna()
         && kolomSah(request.resource.data)
         && request.resource.data.email == resource.data.email
         && statusSah(request.resource.data.status)
@@ -110,18 +131,31 @@ service cloud.firestore {
         && (request.resource.data.status != 'aktif' || request.resource.data.peran != null)
         && halamanSah(request.resource.data.halaman)
         && (uid != request.auth.uid
-            || (request.resource.data.status == 'aktif' && request.resource.data.peran == 'admin'));
-      allow delete: if adminAktif() && uid != request.auth.uid;
+            || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'peran', 'halaman']))
+        && ((!hakAdmin(resource.data) && !hakAdmin(request.resource.data)) || adminAktif());
+      allow delete: if kelolaPengguna() && uid != request.auth.uid && (!hakAdmin(resource.data) || adminAktif());
     }
 
     // Jejak tindakan admin (siapa menyetujui, mengubah peran, menolak, menghapus). Tidak bisa diubah atau dihapus.
     match /lbp_jejak/{id} {
-      allow read: if adminAktif();
-      allow create: if adminAktif()
+      allow read: if kelolaPengguna();
+      allow create: if kelolaPengguna()
         && request.resource.data.keys().hasOnly(['aksi', 'oleh', 'oleh_email', 'sasaran', 'sasaran_email', 'rincian', 'waktu'])
         && request.resource.data.oleh == request.auth.uid
         && request.resource.data.waktu == request.time
         && teksPendek(request.resource.data.aksi, 40);
+    }
+
+    // Tabel hak akses per peran (halaman Pengguna). Semua akun aktif membacanya untuk menyusun menu; hanya peran
+    // Administrator yang mengubahnya. Peran Administrator sendiri selalu membuka semua halaman, jadi tidak ada di sini.
+    match /lbp_akses/{id} {
+      allow read: if aktif();
+      allow create, update: if adminAktif() && id == 'peran'
+        && baru().keys().hasOnly(['halaman', 'diubah_oleh', 'diubah_pada'])
+        && baru().halaman is map
+        && baru().halaman.keys().hasOnly(['masyarakat', 'petugas', 'operator', 'analis', 'tpid'])
+        && baru().diubah_oleh == request.auth.token.email
+        && baru().diubah_pada == request.time;
     }
 
     // Harga dari petugas (formulir Catat Harga) atau dari berkas yang diunggah operator. ID dokumen = id_klien, jadi
@@ -184,7 +218,7 @@ service cloud.firestore {
     // bersamaan tidak saling menimpa: simpanan kedua ditolak dan perlu dimuat ulang.
     match /lbp_pengaturan/{id} {
       allow read: if aktif();
-      allow create, update: if adminAktif() && id == 'utama'
+      allow create, update: if kelolaSistem() && id == 'utama'
         && baru().keys().hasOnly(['isi', 'versi', 'diubah_oleh', 'diubah_pada', 'ringkasan'])
         && baru().isi is map && baru().versi is int
         && baru().versi == (resource == null ? 1 : resource.data.versi + 1)
@@ -197,26 +231,26 @@ service cloud.firestore {
     // tanda "sudah diisi" di lbp_rahasia_status.
     match /lbp_rahasia/{nama} {
       allow read: if false;
-      allow create, update: if adminAktif() && namaRahasiaSah(nama)
+      allow create, update: if kelolaSistem() && namaRahasiaSah(nama)
         && baru().keys().hasOnly(['nilai', 'diperbarui', 'oleh_uid'])
         && baru().nilai is string && baru().nilai.size() > 0 && baru().nilai.size() <= 8000
         && stempel();
-      allow delete: if adminAktif();
+      allow delete: if kelolaSistem();
     }
     match /lbp_rahasia_status/{nama} {
-      allow read: if adminAktif();
-      allow create, update: if adminAktif() && namaRahasiaSah(nama)
+      allow read: if kelolaSistem();
+      allow create, update: if kelolaSistem() && namaRahasiaSah(nama)
         && baru().keys().hasOnly(['diperbarui', 'oleh_uid', 'oleh_email'])
         && baru().oleh_email == request.auth.token.email
         && stempel();
-      allow delete: if adminAktif();
+      allow delete: if kelolaSistem();
     }
 
     // Permintaan "jalankan sekarang" dari panel Pengaturan. Satu dokumen per jenis; mesin mengambilnya lalu
     // mengisi status, waktu, dan alamat proses.
     match /lbp_perintah/{jenis} {
-      allow read: if adminAktif();
-      allow create, update: if adminAktif() && jenis in ['perbarui', 'cari_sumber']
+      allow read: if kelolaSistem();
+      allow create, update: if kelolaSistem() && jenis in ['perbarui', 'cari_sumber']
         && baru().keys().hasOnly(['jenis', 'masukan', 'status', 'diminta_oleh', 'diminta_pada'])
         && baru().jenis == jenis && baru().masukan is map && baru().masukan.size() <= 10
         && baru().status == 'menunggu'
