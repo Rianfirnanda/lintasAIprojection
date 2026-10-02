@@ -49,11 +49,16 @@ def _baca_objek(teks: str) -> dict:
         return json.loads(teks)
     except json.JSONDecodeError:
         pass
-    awal, akhir = teks.find("{"), teks.rfind("}")
-    if awal < 0 or akhir < awal:
-        raise ValueError("FIREBASE_WEB_CONFIG bukan JSON yang sah: tidak ada tanda { }")
+    # Potongan kode lengkap dari Console juga memuat `import { initializeApp } ...` dan komentar. Ambil hanya objek
+    # yang berisi apiKey: dari "{" terdekat sebelum apiKey sampai "}" pasangannya.
+    teks = re.sub(r"/\*.*?\*/", "", teks, flags=re.S)                 # komentar blok
+    teks = re.sub(r"(?m)(^|[\s;{,])//[^\n]*", r"\1", teks)           # komentar satu baris (bukan https://)
+    kunci = teks.find("apiKey")
+    awal = teks.rfind("{", 0, kunci) if kunci >= 0 else teks.find("{")
+    akhir = _pasangan_kurung(teks, awal) if awal >= 0 else -1
+    if awal < 0 or akhir < 0:
+        raise ValueError("FIREBASE_WEB_CONFIG bukan JSON yang sah: tidak ada objek { ... } berisi apiKey")
     isi = teks[awal:akhir + 1]
-    isi = re.sub(r"//[^\n]*", "", isi)                               # komentar satu baris
     isi = re.sub(r"([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:", r'\1"\2":', isi)  # kunci tanpa tanda kutip
     isi = re.sub(r"'([^'\\]*)'", r'"\1"', isi)                       # kutip tunggal
     isi = re.sub(r",\s*}", "}", isi)                                   # koma di akhir
@@ -61,6 +66,27 @@ def _baca_objek(teks: str) -> dict:
         return json.loads(isi)
     except json.JSONDecodeError as e:
         raise ValueError(f"FIREBASE_WEB_CONFIG bukan JSON yang sah: {e.msg}") from None
+
+
+def _pasangan_kurung(teks: str, awal: int) -> int:
+    """Posisi "}" yang menutup "{" di `awal` (mengabaikan isi tanda kutip), atau -1."""
+    tingkat, kutip = 0, ""
+    for i in range(awal, len(teks)):
+        c = teks[i]
+        if kutip:
+            if c == "\\":
+                continue
+            if c == kutip and teks[i - 1] != "\\":
+                kutip = ""
+        elif c in "\"'`":
+            kutip = c
+        elif c == "{":
+            tingkat += 1
+        elif c == "}":
+            tingkat -= 1
+            if tingkat == 0:
+                return i
+    return -1
 
 
 def daftar_admin_awal(teks: str | None) -> list[str]:

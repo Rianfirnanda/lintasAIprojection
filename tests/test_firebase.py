@@ -32,6 +32,35 @@ const firebaseConfig = {
     assert hasil["authDomain"] == "lintas-benteng.firebaseapp.com" and hasil["storageBucket"].endswith(".app")
 
 
+def test_konfigurasi_potongan_kode_lengkap_dari_console(tmp_path):
+    """Seluruh kotak kode di Console ikut tersalin: import, komentar berisi alamat, dan pemanggilan initializeApp."""
+    salinan = """// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIza-contoh",
+  authDomain: "lintas-benteng-projection.firebaseapp.com",
+  databaseURL: "https://lintas-benteng-projection-default-rtdb.firebaseio.com",
+  projectId: "lintas-benteng-projection",
+  storageBucket: "lintas-benteng-projection.firebasestorage.app",
+  messagingSenderId: "1234",
+  appId: "1:1234:web:abcd",
+  measurementId: "G-XYZ"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);"""
+    hasil = firebase.konfigurasi_web(tmp_path, {"FIREBASE_WEB_CONFIG": salinan})
+    assert hasil["projectId"] == "lintas-benteng-projection" and hasil["appId"] == "1:1234:web:abcd"
+    assert hasil["measurementId"] == "G-XYZ" and "databaseURL" not in hasil
+
+
 def test_konfigurasi_kosong_atau_salah(tmp_path):
     assert firebase.konfigurasi_web(tmp_path, {}) is None
     assert firebase.konfigurasi_web(AKAR, {}) is None  # contoh di repositori masih kosong
