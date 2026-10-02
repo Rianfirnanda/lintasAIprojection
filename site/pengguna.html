@@ -29,7 +29,7 @@
   <section class="kartu">
     <div class="kartu-kepala"><div><h2>Hak akses</h2><p id="ket-matriks">Halaman apa saja yang terbuka untuk tiap peran.</p></div></div>
     <div class="gulir-tabel"><table class="matriks" id="matriks"></table></div>
-    <div class="baris-kontrol" id="aksi-matriks" hidden style="margin-top:12px">
+    <div class="baris-kontrol aksi-matriks" id="aksi-matriks" hidden>
       <button class="tombol utama-aksi" type="button" id="simpan-matriks" disabled>Simpan hak akses</button>
       <button class="tombol" type="button" id="batal-matriks" disabled>Batalkan</button>
       <button class="tautan-bahaya" type="button" id="bawaan-matriks">Kembalikan ke bawaan</button>
@@ -114,13 +114,18 @@ function gambarPeran(tabel) {
 function gambarMatriks({ tabel = null, ubah = false } = {}) {
   const sel = (k, h) => {
     const ya = draf ? draf[k]?.has(h.href) ?? true : (tabel || meta?.login === "firebase" ? halamanPeran(k, tabel).has(h.href) : bolehAkses(k, h.href));
-    if (!ubah || k === "admin" || HALAMAN_BEBAS.includes(h.href)) {
+    if (ubah && (k === "admin" || HALAMAN_BEBAS.includes(h.href))) {
+      // Selalu terbuka: tampil sebagai kotak tercentang yang terkunci, supaya satu tabel memakai satu bentuk.
+      return `<td><input type="checkbox" class="cek-matriks" checked disabled title="${k === "admin" ? "Administrator selalu membuka semua halaman" : "Selalu terbuka untuk semua"}"
+        aria-label="${esc(PERAN[k].nama)} selalu boleh membuka ${esc(h.label)}"></td>`;
+    }
+    if (!ubah) {
       return ya ? `<td class="ya" aria-label="boleh">✓</td>` : `<td class="tidak" aria-label="tidak boleh">–</td>`;
     }
     return `<td><input type="checkbox" class="cek-matriks" data-peran="${k}" data-halaman="${esc(h.href)}" ${ya ? "checked" : ""}
       aria-label="${esc(PERAN[k].nama)} boleh membuka ${esc(h.label)}"></td>`;
   };
-  document.getElementById("matriks").innerHTML = `<thead><tr><th>Halaman</th>${URUT_PERAN.map((k) => `<th>${esc(PERAN[k].nama)}</th>`).join("")}</tr></thead>
+  document.getElementById("matriks").innerHTML = `<colgroup><col class="kol-halaman">${URUT_PERAN.map(() => "<col>").join("")}</colgroup><thead><tr><th>Halaman</th>${URUT_PERAN.map((k) => `<th>${esc(PERAN[k].nama)}</th>`).join("")}</tr></thead>
     <tbody>${DAFTAR_HALAMAN.map((h) => `<tr><td>${esc(h.label)}${HALAMAN_ADMIN.includes(h.href) ? ' <span class="lencana sedang">hak admin</span>' : ""}</td>${URUT_PERAN.map((k) => sel(k, h)).join("")}</tr>`).join("")}</tbody>`;
 }
 gambarPeran(null);

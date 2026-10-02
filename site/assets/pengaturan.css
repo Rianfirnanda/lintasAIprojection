@@ -54,9 +54,6 @@
 .rahasia-kepala label { font-size: 0.86rem; font-weight: 600; color: var(--ink); line-height: 1.35; }
 .rahasia-kepala .lencana { font-size: 0.74rem; }
 .rahasia-aksi { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
-.tautan-bahaya { background: none; border: 0; color: var(--critical); font: inherit; font-size: 0.78rem; cursor: pointer; padding: 0; text-decoration: underline; }
-:root[data-theme="dark"] .tautan-bahaya { color: #ff8f8f; }
-.tautan-bahaya:disabled { opacity: 0.4; cursor: not-allowed; text-decoration: none; }
 
 .pesan-bagian { margin-top: 10px; }
 .pesan-bagian:empty { display: none; }
@@ -95,3 +92,4 @@
   .bilah-simpan { bottom: 8px; }
   .bilah-simpan .aksi-simpan .tombol { flex: 1; justify-content: center; }
 }
+.bantuan .tautan-bahaya { font-size: 0.78rem; padding: 0; }
