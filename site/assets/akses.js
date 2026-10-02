@@ -1,8 +1,9 @@
 // Peran pengguna, menu tiap peran, akses halaman, dan login.
 //
 // Penting: situs ini statis, jadi peran di sini mengatur TAMPILAN (menu dan beranda). Data tetap berupa berkas publik.
-// Login "contoh" memakai akun di config/pengguna.json. Login "firebase" (config/firebase.json terisi) memakai
-// Firebase Authentication, dan pembatasan data sungguhan dilakukan lewat aturan Firestore di sisi server.
+// Login "contoh" memakai akun di config/pengguna.json. Login "firebase" (konfigurasi Firebase terisi) memakai akun Google
+// lewat Firebase Authentication; akun baru menunggu persetujuan admin, dan peran serta izin halaman diatur admin di
+// halaman Pengguna. Aturan Firestore (firestore.rules) yang menjaga hak itu di sisi server.
 
 const M = {
   beranda: ["index.html", "Beranda"],
@@ -54,19 +55,36 @@ export const SEMUA_HALAMAN = Object.values(M).map((x) => x[0]);
 export const DAFTAR_HALAMAN = Object.values(M).map(([href, label]) => ({ href, label }));
 
 const ubah = (kunci) => kunci.map((k) => ({ href: M[k][0], label: M[k][1] }));
+const KUNCI_DARI_HREF = Object.fromEntries(Object.entries(M).map(([k, [href]]) => [href, k]));
+/** Halaman yang hanya boleh dibuka administrator, apa pun izin yang diberikan. */
+export const HALAMAN_ADMIN = ["pengaturan.html", "pengguna.html"];
 
-export function menuPeran(peran) {
+/**
+ * Menu untuk peran tertentu. `izin` (daftar href, dari akun Firebase) membatasi atau menambah halaman:
+ * null berarti memakai bawaan peran.
+ */
+export function menuPeran(peran, izin = null) {
   const p = PERAN[peran] || PERAN.masyarakat;
-  return { utama: ubah(p.menu), lainnya: ubah(p.lainnya) };
+  if (!Array.isArray(izin)) return { utama: ubah(p.menu), lainnya: ubah(p.lainnya) };
+  const boleh = new Set(izin.filter((h) => KUNCI_DARI_HREF[h] && (peran === "admin" || !HALAMAN_ADMIN.includes(h))));
+  boleh.add("index.html");
+  const utama = p.menu.filter((k) => boleh.has(M[k][0]));
+  const sisa = Object.keys(M).filter((k) => boleh.has(M[k][0]) && !utama.includes(k));
+  const urutLainnya = [...p.lainnya.filter((k) => sisa.includes(k)), ...sisa.filter((k) => !p.lainnya.includes(k))];
+  return { utama: ubah(utama), lainnya: ubah(urutLainnya) };
 }
 
-export function halamanPeran(peran) {
-  const { utama, lainnya } = menuPeran(peran);
+/** Izin halaman akun yang sedang masuk (null = bawaan peran). */
+export const izinAktif = () => (Array.isArray(sesi()?.halaman) ? sesi().halaman : null);
+
+export function halamanPeran(peran, izin = null) {
+  const { utama, lainnya } = menuPeran(peran, izin);
   return new Set([...HALAMAN_BEBAS, ...utama.map((x) => x.href), ...lainnya.map((x) => x.href)]);
 }
 
-export function bolehAkses(peran, halaman) {
-  return halamanPeran(peran).has(halaman);
+/** Apakah peran boleh membuka halaman. Untuk peran yang sedang masuk, izin halaman akunnya ikut dihitung. */
+export function bolehAkses(peran, halaman, izin = peran === peranAktif() ? izinAktif() : null) {
+  return halamanPeran(peran, izin).has(halaman);
 }
 
 /* ---------- sesi */
@@ -99,11 +117,14 @@ export async function keluar() {
   const s = sesi();
   try { localStorage.removeItem(KUNCI); } catch { /* abaikan */ }
   if (s?.sumber === "firebase") {
-    try {
-      const { getAuth, signOut } = await import(`${FB}firebase-auth.js`);
-      await signOut(getAuth());
-    } catch { /* abaikan */ }
+    const { keluarFirebase } = await import("./firebase-klien.js");
+    await keluarFirebase();
   }
+}
+
+/** Simpan sesi dari akun Firebase yang sudah disetujui. */
+export function simpanSesiFirebase(data) {
+  return PERAN[data.peran] ? simpanSesi(data) : false;
 }
 
 /* ---------- login */
@@ -126,35 +147,12 @@ async function masukContoh(id, sandi) {
   return { ok: true, peran: a.peran };
 }
 
-const FB = "https://www.gstatic.com/firebasejs/10.12.2/";
-
-async function masukFirebase(email, sandi) {
-  const konf = (await (await fetch("data/firebase.json", { cache: "no-cache" })).json()).konfigurasi;
-  const [{ initializeApp, getApps }, { getAuth, signInWithEmailAndPassword, signOut }, { getFirestore, doc, getDoc }] =
-    await Promise.all([import(`${FB}firebase-app.js`), import(`${FB}firebase-auth.js`), import(`${FB}firebase-firestore.js`)]);
-  const app = getApps()[0] || initializeApp(konf);
-  const auth = getAuth(app);
-  try {
-    const { user } = await signInWithEmailAndPassword(auth, email.trim(), sandi);
-    const dok = await getDoc(doc(getFirestore(app), "pengguna", user.uid));
-    const data = dok.exists() ? dok.data() : {};
-    if (!PERAN[data.peran]) {
-      await signOut(auth);
-      return { ok: false, galat: "Akun ini belum diberi peran. Hubungi administrator." };
-    }
-    simpanSesi({ id: user.email, nama: data.nama || user.email, peran: data.peran, sumber: "firebase" });
-    return { ok: true, peran: data.peran };
-  } catch (e) {
-    const salah = ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"];
-    return { ok: false, galat: salah.includes(e.code) ? "Email atau kata sandi salah." : "Tidak bisa masuk saat ini. Coba lagi nanti." };
-  }
-}
-
 /** Masuk memakai penyedia login yang aktif menurut meta.login ("contoh" atau "firebase"). */
 export async function masuk(meta, id, sandi) {
   if (!id.trim() || !sandi) return { ok: false, galat: "Isi nama pengguna dan kata sandi." };
   try {
-    return meta?.login === "firebase" ? await masukFirebase(id, sandi) : await masukContoh(id, sandi);
+    if (meta?.login === "firebase") return { ok: false, galat: "Gunakan tombol Masuk dengan Google." };
+    return await masukContoh(id, sandi);
   } catch (e) {
     return { ok: false, galat: e.message || "Tidak bisa masuk saat ini." };
   }

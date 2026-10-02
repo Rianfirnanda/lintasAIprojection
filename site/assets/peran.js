@@ -254,6 +254,26 @@ async function berandaAdmin(el, meta) {
       </section>
     </div>`);
   pasangPanelData(el.querySelector("#panel-data"), { ubinStatis, ubinDinamis, master, sumber, ringkasan, sinyal, kualitas });
+  if (meta.login === "firebase") pengingatPersetujuan(el);
+}
+
+/** Pengingat di beranda admin bila ada akun Google yang menunggu persetujuan. */
+async function pengingatPersetujuan(el) {
+  try {
+    const fk = await import("./firebase-klien.js");
+    let wadah = null;
+    await fk.pantauSemuaAkun((daftar) => {
+      const n = daftar.filter((a) => a.status === "menunggu").length;
+      if (!n) { wadah?.remove(); wadah = null; return; }
+      if (!wadah) {
+        wadah = document.createElement("div");
+        wadah.className = "pesan peringatan pengingat-akun";
+        wadah.setAttribute("role", "status");
+        el.querySelector(".ind-baris")?.before(wadah);
+      }
+      wadah.innerHTML = `${ikon("jam", 18)}<span><b>${n} akun</b> menunggu persetujuan.</span>${tombol("pengguna.html", "Tinjau sekarang", true)}`;
+    }, () => {});
+  } catch { /* Firebase belum tersedia: pengingat tidak ditampilkan */ }
 }
 
 

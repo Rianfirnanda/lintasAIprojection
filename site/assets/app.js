@@ -1,5 +1,5 @@
 // Utilitas bersama dashboard (ES module, tanpa build step).
-import { PERAN, menuPeran, peranAktif, sesi, periksaAkses, keluar } from "./akses.js";
+import { PERAN, menuPeran, peranAktif, sesi, periksaAkses, keluar, izinAktif, simpanSesiFirebase } from "./akses.js";
 
 const BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -159,7 +159,7 @@ export async function pasangKerangka(aktif) {
   }
   const peran = peranAktif();
   const pengguna = sesi();
-  const { utama: menuUtama, lainnya } = menuPeran(peran);
+  const { utama: menuUtama, lainnya } = menuPeran(peran, izinAktif());
   const tautan = (m) => `<a href="${m.href}"${m.href === aktif ? ' aria-current="page"' : ""}>${m.label}</a>`;
 
   const kepala = document.createElement("header");
@@ -273,7 +273,38 @@ export async function pasangKerangka(aktif) {
   document.body.classList.add("siap");
   pasangPembaruan(meta);
   pasangHitungNaik();
+  // Halaman Pengaturan dibatasi CSP ke api.github.com saja, jadi pemeriksaan akun Firebase dilewati di sana.
+  if (pengguna?.sumber === "firebase" && aktif !== "pengaturan.html") segarkanSesiFirebase(pengguna);
   return izin === "tolak" ? tundaSelamanya() : meta;
+}
+
+/* ---------- akun Firebase: cocokkan sesi lokal dengan data akun terbaru di Firestore
+ * Kalau admin mengubah peran atau izin, menonaktifkan, atau menghapus akun, perubahan itu berlaku saat halaman dibuka. */
+async function segarkanSesiFirebase(lama) {
+  try {
+    const fk = await import("./firebase-klien.js");
+    const user = await fk.penggunaKini();
+    let akun = null;
+    if (user) {
+      const { fb, db } = await fk.firebaseSiap();
+      const d = await fb.getDoc(fb.doc(db, fk.KOLEKSI_PENGGUNA, user.uid));
+      akun = d.exists() ? { uid: user.uid, ...d.data() } : null;
+    }
+    if (!user || !akun || akun.status !== "aktif" || !PERAN[akun.peran]) {
+      await keluar();
+      location.replace(`masuk.html?status=${encodeURIComponent(akun?.status || (user ? "hilang" : "keluar"))}`);
+      return;
+    }
+    const baru = fk.sesiDariAkun(akun);
+    const beda = baru.peran !== lama.peran || JSON.stringify(baru.halaman) !== JSON.stringify(lama.halaman ?? null) || baru.nama !== lama.nama;
+    if (beda) {
+      simpanSesiFirebase(baru);
+      location.reload();
+    }
+  } catch (e) {
+    // Tanpa sinyal atau Firebase sedang bermasalah: tetap pakai sesi yang ada, dicoba lagi saat halaman berikutnya.
+    console.warn("Akun belum bisa diperiksa", e);
+  }
 }
 
 /* ---------- angka indikator menghitung naik saat muncul (mis. 0 → 92%) */

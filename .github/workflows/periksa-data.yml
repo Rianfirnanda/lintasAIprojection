@@ -11,6 +11,10 @@ on:
       - "tests/**"
       - "requirements*.txt"
       - ".github/workflows/**"
+      - "firebase.json"
+      - "firestore.rules"
+      - "tests_firebase/**"
+      - "package.json"
 
 permissions:
   contents: read
@@ -32,3 +36,21 @@ jobs:
         run: python -m pipeline periksa
       - name: Uji pipeline lengkap (tanpa publikasi)
         run: python -m pipeline jalankan --keluaran site/data --tanpa-github
+
+  # Aturan keamanan Firestore diuji di emulator Firebase (tanpa proyek atau kunci sungguhan).
+  aturan-firebase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Pasang alat uji Firebase
+        run: npm install --no-audit --no-fund
+      - name: Uji aturan Firestore di emulator
+        run: npm run uji:aturan

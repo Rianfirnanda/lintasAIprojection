@@ -14,9 +14,12 @@ Buka halaman **Masuk** (tombol di kanan atas). Setiap peran melihat menu dan ber
 | TPID | `tpid` | Memantau dashboard dan mengambil keputusan |
 | Administrator | `admin` | Mengelola sistem dan pengguna |
 
-Kata sandi semua akun contoh: `lintas2026`. Akun ini hanya untuk peragaan. Untuk pemakaian sungguhan, ganti akun di `config/pengguna.json` (buat entri baru dengan `python -m pipeline sandi ...`) atau pakai Firebase Authentication (lihat README, bagian Login).
+Kata sandi semua akun contoh: `lintas2026`. Akun ini hanya untuk peragaan.
 
-Ingat: login hanya mengatur tampilan. Berkas data tetap terbuka bagi umum.
+**Setelah Firebase aktif** (lihat `docs/FIREBASE.md`), akun contoh tidak dipakai lagi. Halaman Masuk berganti menjadi
+tombol **Masuk dengan Google**. Akun baru menunggu persetujuan admin, lalu admin memberi peran dan izin halaman.
+
+Ingat: login dan persetujuan dijaga aturan Firestore, tetapi berkas data dashboard tetap terbuka bagi umum.
 
 ## 1. Petugas lapangan (pencatat harga)
 
@@ -117,6 +120,17 @@ berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidas
   issue lalu tutup issue bila selesai.
 
 ## 8. Admin
+
+### Menyetujui akun (bila memakai Firebase)
+
+1. Buka **Pengguna**. Akun Google yang baru mendaftar ada di tab **Menunggu persetujuan**. Beranda admin juga
+   menampilkan pengingat bila ada yang menunggu.
+2. Pilih **Peran**. Izin halaman bisa **Ikuti peran**, atau **Atur sendiri** untuk menambah atau mengurangi halaman
+   tertentu.
+3. Tekan **Setujui** atau **Tolak**. Orang yang disetujui langsung masuk ke berandanya.
+4. Di tab **Aktif**, peran dan izin bisa diubah atau akun dinonaktifkan. Akun yang ditolak atau nonaktif bisa
+   diaktifkan lagi atau dihapus.
+5. Semua tindakan tercatat di **Jejak tindakan admin**. Admin tidak bisa mencabut hak adminnya sendiri.
 
 ### Panel Pengaturan (AI, kunci, dan fungsi)
 

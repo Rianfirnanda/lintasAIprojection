@@ -5,6 +5,7 @@
   python -m pipeline ambil-cuaca [--hari 30] # konektor Big Data cuaca (Open-Meteo)
   python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
   python -m pipeline sandi ID SANDI [--nama "Nama"] [--peran petugas]   # cetak entri akun untuk config/pengguna.json
+  python -m pipeline aturan-firebase --keluaran build/firestore.rules     # aturan Firestore + admin pertama (FIREBASE_ADMIN_AWAL)
 """
 
 from __future__ import annotations
@@ -69,11 +70,30 @@ def main(argv: list[str] | None = None) -> int:
     w.add_argument("--nama", default=None)
     w.add_argument("--peran", choices=pengguna.PERAN, default="petugas")
 
+    r = sub.add_parser("aturan-firebase", help="tulis firestore.rules dengan daftar admin pertama dari FIREBASE_ADMIN_AWAL")
+    r.add_argument("--keluaran", type=Path, required=True)
+
     a = p.parse_args(argv)
     if a.perintah == "sandi":
         data = pengguna.muat((a.akar or konfigurasi.AKAR) / "config" / "pengguna.json") or {}
         garam = data.get("garam") or "lintas-ai-bengkulu-tengah"
         print(json.dumps(pengguna.entri_akun(garam, a.id, a.nama or a.id, a.peran, a.sandi), ensure_ascii=False, indent=2))
+        return 0
+    if a.perintah == "aturan-firebase":
+        import os
+
+        from . import firebase
+
+        akar = a.akar or konfigurasi.AKAR
+        try:
+            emails = firebase.daftar_admin_awal(os.environ.get("FIREBASE_ADMIN_AWAL"))
+            teks = firebase.aturan_dengan_admin((akar / "firestore.rules").read_text(encoding="utf-8"), emails)
+        except ValueError as e:
+            print(f"GAGAL: {e}", file=sys.stderr)
+            return 2
+        a.keluaran.parent.mkdir(parents=True, exist_ok=True)
+        a.keluaran.write_text(teks, encoding="utf-8")
+        print(f"Aturan Firestore ditulis ke {a.keluaran} dengan {len(emails)} admin pertama.")
         return 0
     try:
         konf = konfigurasi.muat(a.akar)
