@@ -138,7 +138,7 @@ def test_pencari_data_gemini_grounding(konf):
 
 
 SEMUA_KUNCI = ("GEMINI_API_KEY", "GROQ_API_KEY", "CEREBRAS_API_KEY", "OPENROUTER_API_KEY", "MISTRAL_API_KEY",
-               "ANTHROPIC_API_KEY", "GITHUB_TOKEN")
+               "ANTHROPIC_API_KEY", "GITHUB_TOKEN", "TAVILY_API_KEY")
 
 
 @pytest.fixture
@@ -286,3 +286,70 @@ def test_urutan_penyedia(konf):
     assert pencari_data.urutan_penyedia(konf) == ["gemini", "anthropic", "groq", "cerebras", "openrouter", "mistral", "github_models"]
     with pytest.raises(ValueError):
         pencari_data.urutan_penyedia(konf, "entah")
+
+
+def tavily_palsu(dikirim, gagal_kode=None):
+    def kirim(url, header, isi):
+        dikirim.append(isi)
+        assert url == pencari_data.URL_TAVILY and header["Authorization"].startswith("Bearer ")
+        if gagal_kode:
+            raise pencari_data.PenyediaTidakTersedia(f"HTTP {gagal_kode}: kuota habis")
+        return {"results": [
+            {"title": "Panel Harga Pangan", "url": "https://panelharga.badanpangan.go.id/tabel", "content": "harga  cabai\nharian"},
+            {"title": "BPS Bengkulu", "url": "https://bengkulu.bps.go.id/statistics-table", "content": "tabel harga"}]}
+    return kirim
+
+
+def test_tavily_hasil_web_diberikan_ke_ai_dan_url_dicocokkan(konf, tanpa_kunci):
+    cari_web, dikirim_ai = [], []
+
+    def groq(url, header, isi):
+        dikirim_ai.append(isi)
+        return jawaban_chat(json.dumps(HASIL_JSON))
+
+    catatan = pencari_data.cari(konf, "cabai rawit merah", "Oktober 2026", penyedia="groq",
+                                klien={"tavily": tavily_palsu(cari_web), "groq": groq}, pemeriksa_url=None)
+    assert len(cari_web) == 3 and cari_web[1]["include_domains"] == pencari_data.DOMAIN_RESMI
+    sistem, pengguna = dikirim_ai[0]["messages"][0]["content"], dikirim_ai[0]["messages"][1]["content"]
+    assert "HASIL PENCARIAN WEB" in pengguna and "https://bengkulu.bps.go.id/statistics-table" in pengguna
+    assert "HANYA dari hasil itu" in sistem and "TIDAK memiliki akses internet" not in sistem
+    k = catatan["hasil"]["kandidat"]
+    assert k[0]["url_ada_di_hasil_pencarian"] is True and k[1]["url_ada_di_hasil_pencarian"] is False
+    assert catatan["punya_pencarian_web"] is True and catatan["pencarian_web"] == "Tavily, 2 hasil"
+
+
+def test_tavily_kuota_habis_ai_tetap_jalan_tanpa_pencarian(konf, tanpa_kunci):
+    cari_web = []
+    catatan = pencari_data.cari(konf, "x", "y", penyedia="groq", pemeriksa_url=None,
+                                klien={"tavily": tavily_palsu(cari_web, 432), "groq": lambda u, h, i: jawaban_chat('{"kandidat": []}')})
+    assert len(cari_web) == 1  # berhenti setelah kuota habis, tidak membuang permintaan
+    assert catatan["penyedia"] == "groq" and catatan["punya_pencarian_web"] is False and catatan["pencarian_web"] is None
+    assert catatan["penyedia_dilewati"][0].startswith("tavily: HTTP 432")
+
+
+def test_gemini_memakai_hasil_tavily_tanpa_pencarian_google(konf, tanpa_kunci):
+    isi_gemini = []
+
+    def gemini(url, header, isi):
+        isi_gemini.append(isi)
+        return {"candidates": [{"content": {"parts": [{"text": json.dumps(HASIL_JSON)}]}}]}
+
+    catatan = pencari_data.cari(konf, "cabai", "Okt", penyedia="gemini", pemeriksa_url=None,
+                                klien={"tavily": tavily_palsu([]), "gemini": gemini})
+    assert "tools" not in isi_gemini[0] and "HANYA dari hasil itu" in isi_gemini[0]["system_instruction"]["parts"][0]["text"]
+    assert catatan["hasil"]["kandidat"][0]["url_ada_di_hasil_pencarian"] is True
+
+
+def test_gemini_tanpa_tavily_pencarian_google_ditolak_dicoba_tanpa_pencarian(konf, tanpa_kunci):
+    isi_gemini = []
+
+    def gemini(url, header, isi):
+        isi_gemini.append(isi)
+        if "tools" in isi:
+            raise pencari_data.PenyediaTidakTersedia("HTTP 400 (permintaan ditolak): grounding tidak tersedia di free tier")
+        return {"candidates": [{"content": {"parts": [{"text": '{"kandidat": []}'}]}}]}
+
+    catatan = pencari_data.cari(konf, "x", "y", penyedia="gemini", klien={"gemini": gemini}, pemeriksa_url=None)
+    assert len(isi_gemini) == 2 and "tools" not in isi_gemini[1]
+    assert "TIDAK memiliki akses internet" in isi_gemini[1]["system_instruction"]["parts"][0]["text"]
+    assert catatan["penyedia"] == "gemini" and catatan["punya_pencarian_web"] is False
