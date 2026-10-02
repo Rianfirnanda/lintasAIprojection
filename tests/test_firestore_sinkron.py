@@ -175,6 +175,23 @@ def test_pengaturan_dari_situs_dipakai_bila_sah_dan_lebih_baru(akar):
     assert fs.baca_tanda(akar)["pengaturan_versi"] == 4
 
 
+def test_pengaturan_lama_dari_situs_dilengkapi_isian_baru(akar):
+    """Simpanan situs dari sebelum ada isian baru (misalnya model Groq) tetap sah; isian barunya diambil dari berkas."""
+    path = akar / "config/pengaturan.json"
+    asli = json.loads(path.read_text(encoding="utf-8"))
+    isi = json.loads(json.dumps(asli))
+    for k in ("model_groq", "model_cerebras", "model_openrouter", "model_mistral"):
+        del isi["ai"][k]
+    isi["ai"]["urutan_otomatis"] = ["gemini", "github_models"]
+    db = DBTiruan()
+    db.data["lbp_pengaturan"] = {"utama": {"isi": isi, "versi": 7, "diubah_oleh": "adm@contoh.go.id"}}
+    ringkas = fs.tarik(akar, db=db)
+    assert not ringkas.get("peringatan")
+    baru = json.loads(path.read_text(encoding="utf-8"))
+    assert baru["ai"]["urutan_otomatis"] == ["gemini", "github_models"]
+    assert baru["ai"]["model_groq"] == asli["ai"]["model_groq"] and list(baru["ai"]) == list(asli["ai"])
+
+
 def test_kunci_dari_situs_menggantikan_secret_dan_kunci_asing_diabaikan(akar):
     db = DBTiruan()
     db.data["lbp_rahasia"] = {"GEMINI_API_KEY": {"nilai": " kunci-situs "}, "FIREBASE_SERVICE_ACCOUNT": {"nilai": "x"},

@@ -18,6 +18,8 @@ const rahasiaFirebase = (nama) => nama.startsWith("FIREBASE_");
 const BERKAS = "config/pengaturan.json";
 const KUNCI_SESI = "lintas-gh-sambungan";
 const $ = (id) => document.getElementById(id);
+const MODEL_AI = { gemini: "ai.model_gemini", groq: "ai.model_groq", cerebras: "ai.model_cerebras", openrouter: "ai.model_openrouter",
+  mistral: "ai.model_mistral", github_models: "ai.model_github", anthropic: "ai.model_anthropic" };
 
 let skema, terbit;
 try {
@@ -62,7 +64,7 @@ function renderRingkas() {
       sub: nAda === null ? (S.rahasiaGalat ? "tidak bisa dicek" : "sambungkan dulu") : (FS ? "tersimpan aman" : "di GitHub Secrets"), meter: nAda === null ? null : nAda / daftarKunci().length * 100, meterWarna: "hijau" }),
     ind({ i: "otak", label: "AI yang dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${esc(teksNilai(kolomAi, penyedia).replace(/ \(.*\)$/, ""))}</span>`,
       sub: penyedia === "otomatis" ? esc(teksNilai(skema.kolom.find((k) => k.jalur === "ai.urutan_otomatis"), ambil(S.kini, "ai.urutan_otomatis").nilai))
-        : esc(ambil(S.kini, penyedia === "anthropic" ? "ai.model_anthropic" : penyedia === "github_models" ? "ai.model_github" : "ai.model_gemini").nilai) }),
+        : esc(ambil(S.kini, MODEL_AI[penyedia] || "ai.model_gemini").nilai) }),
     ind({ i: "dokumen", warna: beda ? "oranye" : "hijau", label: "Belum disimpan", nilai: beda, kecil: "perubahan", sub: beda ? "klik Simpan di bawah" : "semua sudah tersimpan", warnaNilai: beda ? "oranye" : "" }),
   ].join("");
 }
@@ -499,15 +501,20 @@ function urutBagian(kode) {
   return bagian;
 }
 
+// Kunci tiap AI. GitHub Models memakai akses bawaan GitHub Actions, jadi tanpa kunci.
+const KUNCI_AI = [["Gemini", "GEMINI_API_KEY"], ["Groq", "GROQ_API_KEY"], ["Cerebras", "CEREBRAS_API_KEY"],
+  ["OpenRouter", "OPENROUTER_API_KEY"], ["Mistral", "MISTRAL_API_KEY"]];
+
 function htmlKesiapanAi() {
   const ada = (n) => S.rahasia?.has(n);
   const status = (nama, siap, ket) => `<span class="lencana ${siap ? "baik" : "polos"}">${nama}: ${ket}</span>`;
   const tahu = S.klien && !S.rahasiaGalat;
+  const nSiap = 1 + KUNCI_AI.filter(([, k]) => ada(k)).length;
   return `<div class="kesiapan-ai">
-    ${status("Gemini", ada("GEMINI_API_KEY"), tahu ? (ada("GEMINI_API_KEY") ? "kunci sudah diisi" : "kunci belum diisi") : "belum dicek")}
+    ${KUNCI_AI.map(([nama, k]) => status(nama, ada(k), tahu ? (ada(k) ? "kunci sudah diisi" : "kunci belum diisi") : "belum dicek")).join("\n    ")}
     ${status("GitHub Models", true, "siap, tanpa kunci")}
     ${status("Claude", ada("ANTHROPIC_API_KEY"), tahu ? (ada("ANTHROPIC_API_KEY") ? "kunci sudah diisi" : "tidak dipakai") : "belum dicek")}</div>
-    <p class="ringkas-tab">GitHub Models memakai akses bawaan GitHub Actions, jadi tidak perlu kunci. Untuk mencoba AI setelah mengisi kunci, buka tab <a href="#" data-ke-tab="jalankan">Jalankan</a> dan pilih "Cari sumber data dengan AI".</p>`;
+    <p class="ringkas-tab">Pada mode Otomatis, kalau satu AI kena batas pemakaian gratis, sistem pindah ke AI berikutnya. Makin banyak kunci gratis yang diisi, makin kecil kemungkinan gagal${tahu ? ` (sekarang ${nSiap} AI gratis siap)` : ""}. Untuk mencoba, buka tab <a href="#" data-ke-tab="jalankan">Jalankan</a> lalu pilih "Cari sumber data dengan AI".</p>`;
 }
 
 /** Isian yang diketik tapi belum dikirim (kunci rahasia dan masukan alur kerja), supaya tidak hilang saat panel digambar ulang. */

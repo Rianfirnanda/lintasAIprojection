@@ -1,10 +1,15 @@
 """AI Data Finder: agen penemuan kandidat sumber data dengan beberapa penyedia AI.
 
 Penyedia (pengaturan.json -> ai.penyedia):
-  gemini        : Google Gemini API (kuota gratis) + Google Search grounding. Butuh secret GEMINI_API_KEY.
+  gemini        : Google Gemini API (kuota gratis) + Google Search grounding. Butuh GEMINI_API_KEY.
+  groq          : Groq (kuota gratis, sangat cepat). Butuh GROQ_API_KEY. TANPA pencarian web.
+  cerebras      : Cerebras (kuota gratis harian besar). Butuh CEREBRAS_API_KEY. TANPA pencarian web.
+  openrouter    : OpenRouter, model gratis (":free" atau router openrouter/free). Butuh OPENROUTER_API_KEY. TANPA pencarian web.
+  mistral       : Mistral (paket Experiment gratis). Butuh MISTRAL_API_KEY. TANPA pencarian web.
   github_models : GitHub Models (gratis, memakai GITHUB_TOKEN di Actions). TANPA pencarian web.
   anthropic     : Claude + web search (berbayar, opsional). Butuh ANTHROPIC_API_KEY.
-  otomatis      : coba penyedia gratis sesuai urutan ai.urutan_otomatis; lanjut ke berikutnya bila gagal/kuota habis.
+  otomatis      : coba penyedia sesuai urutan ai.urutan_otomatis, lalu penyedia gratis lain yang belum disebut.
+                  Lanjut ke berikutnya bila kunci belum diisi, kuota habis, atau jawabannya rusak.
 
 Prinsip (Pedoman Pemahaman Proyek, bagian 9-10):
   - AI hanya MENCARI KANDIDAT sumber; hasil wajib diverifikasi manusia sebelum dipakai.
@@ -22,6 +27,7 @@ import re
 import urllib.error
 import urllib.request
 from datetime import datetime
+from functools import partial
 from pathlib import Path
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
@@ -34,13 +40,35 @@ MAKS_LANJUT = 5
 MAKS_RIWAYAT = 50
 URL_GEMINI = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 URL_GITHUB_MODELS = "https://models.github.ai/inference/chat/completions"
+# Penyedia dengan antarmuka chat completions ala OpenAI. Semuanya punya kuota gratis, tetapi tanpa pencarian web.
+SEJENIS_OPENAI = {
+    "groq": {"nama": "Groq", "url": "https://api.groq.com/openai/v1/chat/completions", "kunci": "GROQ_API_KEY",
+             "model": "model_groq"},
+    "cerebras": {"nama": "Cerebras", "url": "https://api.cerebras.ai/v1/chat/completions", "kunci": "CEREBRAS_API_KEY",
+                 "model": "model_cerebras"},
+    "openrouter": {"nama": "OpenRouter", "url": "https://openrouter.ai/api/v1/chat/completions",
+                   "kunci": "OPENROUTER_API_KEY", "model": "model_openrouter"},
+    "mistral": {"nama": "Mistral", "url": "https://api.mistral.ai/v1/chat/completions", "kunci": "MISTRAL_API_KEY",
+                "model": "model_mistral"},
+    "github_models": {"nama": "GitHub Models", "url": URL_GITHUB_MODELS, "kunci": "GITHUB_TOKEN", "model": "model_github",
+                      "header": {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"},
+                      "tanpa_kunci": "GITHUB_TOKEN tidak tersedia (jalankan dari GitHub Actions dengan izin models: read)"},
+}
+# Penyedia gratis. Pada mode otomatis, yang tidak disebut di ai.urutan_otomatis tetap dicoba paling akhir sebagai cadangan.
+GRATIS = ["gemini", "groq", "cerebras", "openrouter", "mistral", "github_models"]
 BAWAAN = {
     "penyedia": "otomatis",
-    "urutan_otomatis": ["gemini", "github_models"],
+    "urutan_otomatis": list(GRATIS),
     "model_gemini": "gemini-flash-latest",
+    "model_groq": "openai/gpt-oss-120b",
+    "model_cerebras": "gpt-oss-120b",
+    "model_openrouter": "openrouter/free",
+    "model_mistral": "mistral-small-latest",
     "model_github": "openai/gpt-4.1-mini",
     "model_anthropic": "claude-opus-5-5",
 }
+ARTI_KODE = {400: "permintaan ditolak", 401: "kunci ditolak", 402: "saldo atau kuota habis", 403: "akses ditolak",
+             404: "model tidak ditemukan", 413: "permintaan terlalu besar", 429: "batas pemakaian gratis tercapai"}
 
 KOLOM_KANDIDAT = ["nama_sumber", "penyedia", "url", "wilayah", "peran_wilayah", "periode_data", "komoditas_varian",
                   "satuan", "frekuensi_pembaruan", "metode_akses", "lisensi_atau_ketentuan", "perlu_izin",
@@ -136,8 +164,10 @@ def urutan_penyedia(konf: Konfigurasi, pilihan: str | None = None) -> list[str]:
     cfg = pengaturan_ai(konf)
     pilihan = (pilihan or cfg["penyedia"]).lower()
     if pilihan == "otomatis":
-        return list(cfg["urutan_otomatis"])
-    if pilihan not in ("gemini", "github_models", "anthropic"):
+        # Urutan pilihan admin dulu, lalu semua AI gratis lain sebagai cadangan supaya batas kuota satu AI tidak
+        # menggagalkan pencarian.
+        return list(dict.fromkeys([p for p in cfg["urutan_otomatis"] if p in PENYEDIA] + GRATIS))
+    if pilihan not in PENYEDIA:
         raise ValueError(f"penyedia AI tidak dikenal: {pilihan}")
     return [pilihan]
 
@@ -147,16 +177,21 @@ def urutan_penyedia(konf: Konfigurasi, pilihan: str | None = None) -> list[str]:
 def _post_json(url: str, header: dict, isi: dict, batas_waktu: int = 180) -> dict:
     req = urllib.request.Request(url, method="POST", data=json.dumps(isi).encode(),
                                  headers={"Content-Type": "application/json", **header})
+    # Semua kegagalan dianggap "penyedia tidak tersedia" supaya mode otomatis lanjut ke AI berikutnya. Gemini misalnya
+    # menjawab HTTP 400 untuk kunci yang salah.
     try:
         with urllib.request.urlopen(req, timeout=batas_waktu) as r:
             return json.loads(r.read())
     except urllib.error.HTTPError as e:
-        badan = e.read().decode(errors="replace")[:500]
-        if e.code in (401, 403, 404, 429) or e.code >= 500:
-            raise PenyediaTidakTersedia(f"HTTP {e.code}: {badan}") from e
-        raise RuntimeError(f"HTTP {e.code}: {badan}") from e
+        badan = " ".join(e.read().decode(errors="replace").split())[:300]
+        arti = ARTI_KODE.get(e.code) or ("layanan sedang bermasalah" if e.code >= 500 else "")
+        raise PenyediaTidakTersedia(f"HTTP {e.code}{f' ({arti})' if arti else ''}: {badan}") from e
     except urllib.error.URLError as e:
         raise PenyediaTidakTersedia(f"jaringan: {e.reason}") from e
+    except OSError as e:  # batas waktu habis saat membaca jawaban
+        raise PenyediaTidakTersedia(f"jaringan: {e.__class__.__name__}") from e
+    except ValueError as e:
+        raise PenyediaTidakTersedia("jawaban layanan bukan JSON") from e
 
 
 def ambil_json_dari_teks(teks: str) -> dict:
@@ -231,7 +266,7 @@ def cek_url(url: str, batas_waktu: int = 15) -> tuple[bool | None, str]:
 def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
     kunci = os.environ.get("GEMINI_API_KEY")
     if not kunci and klien is None:
-        raise PenyediaTidakTersedia("secret GEMINI_API_KEY belum diatur")
+        raise PenyediaTidakTersedia("kunci GEMINI_API_KEY belum diisi")
     kirim = klien or _post_json
     model = cfg["model_gemini"]
     data = kirim(
@@ -260,17 +295,27 @@ def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
             "model": data.get("modelVersion") or model, "request_id": data.get("responseId")}
 
 
-def _cari_github_models(teks: str, cfg: dict, klien=None) -> dict:
-    token = os.environ.get("GITHUB_TOKEN")
-    if not token and klien is None:
-        raise PenyediaTidakTersedia("GITHUB_TOKEN tidak tersedia (jalankan dari GitHub Actions dengan izin models: read)")
+def _teks_pesan(isi) -> str:
+    """Isi pesan bisa berupa teks biasa atau daftar potongan (Mistral dan sebagian model di OpenRouter)."""
+    if isinstance(isi, str):
+        return isi
+    if isinstance(isi, list):
+        return "".join(p.get("text") or "" for p in isi if isinstance(p, dict) and p.get("type", "text") == "text")
+    return ""
+
+
+def _cari_sejenis_openai(nama: str, teks: str, cfg: dict, klien=None) -> dict:
+    p = SEJENIS_OPENAI[nama]
+    kunci = os.environ.get(p["kunci"])
+    if not kunci and klien is None:
+        raise PenyediaTidakTersedia(p.get("tanpa_kunci") or f"kunci {p['kunci']} belum diisi")
     kirim = klien or _post_json
+    model = cfg[p["model"]]
     data = kirim(
-        URL_GITHUB_MODELS,
-        {"Authorization": f"Bearer {token or ''}", "Accept": "application/vnd.github+json",
-         "X-GitHub-Api-Version": "2022-11-28"},
+        p["url"],
+        {"Authorization": f"Bearer {kunci or ''}", **p.get("header", {})},
         {
-            "model": cfg["model_github"],
+            "model": model,
             "temperature": 0.2,
             "messages": [
                 {"role": "system", "content": SISTEM + TAMBAHAN_TANPA_PENCARIAN},
@@ -278,12 +323,15 @@ def _cari_github_models(teks: str, cfg: dict, klien=None) -> dict:
             ],
         },
     )
+    if data.get("error"):  # OpenRouter kadang menjawab HTTP 200 berisi galat dari penyedia di belakangnya
+        galat = data["error"]
+        raise PenyediaTidakTersedia(f"{p['nama']}: {galat.get('message') if isinstance(galat, dict) else galat}"[:300])
     pilihan = data.get("choices") or []
-    if not pilihan:
-        raise PenyediaTidakTersedia("GitHub Models tidak mengembalikan jawaban")
-    keluaran = (pilihan[0].get("message") or {}).get("content") or ""
+    keluaran = _teks_pesan((pilihan[0].get("message") or {}).get("content")) if pilihan else ""
+    if not keluaran.strip():
+        raise PenyediaTidakTersedia(f"{p['nama']} tidak mengembalikan jawaban")
     return {"hasil": ambil_json_dari_teks(keluaran), "url_pencarian": [], "punya_pencarian": False,
-            "model": data.get("model") or cfg["model_github"], "request_id": data.get("id")}
+            "model": data.get("model") or model, "request_id": data.get("id")}
 
 
 def _url_dari_pencarian_claude(konten) -> list[str]:
@@ -300,7 +348,7 @@ def _url_dari_pencarian_claude(konten) -> list[str]:
 def _cari_anthropic(teks: str, cfg: dict, klien=None) -> dict:
     if klien is None:
         if not os.environ.get("ANTHROPIC_API_KEY"):
-            raise PenyediaTidakTersedia("secret ANTHROPIC_API_KEY belum diatur")
+            raise PenyediaTidakTersedia("kunci ANTHROPIC_API_KEY belum diisi")
         import anthropic  # hanya dibutuhkan bila memilih penyedia berbayar ini (requirements-ai.txt)
 
         klien = anthropic.Anthropic()
@@ -338,7 +386,7 @@ def _cari_anthropic(teks: str, cfg: dict, klien=None) -> dict:
             "model": getattr(respons, "model", cfg["model_anthropic"]), "request_id": getattr(respons, "_request_id", None)}
 
 
-PENYEDIA = {"gemini": _cari_gemini, "github_models": _cari_github_models, "anthropic": _cari_anthropic}
+PENYEDIA = {"gemini": _cari_gemini, **{n: partial(_cari_sejenis_openai, n) for n in SEJENIS_OPENAI}, "anthropic": _cari_anthropic}
 
 
 def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harga eceran harian",
@@ -355,9 +403,10 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
             jawab = PENYEDIA[nama](teks, cfg, klien.get(nama))
             dipakai = nama
             break
-        except PenyediaTidakTersedia as e:
-            log.warning("penyedia %s tidak tersedia: %s", nama, e)
-            galat.append(f"{nama}: {e}")
+        except Exception as e:  # noqa: BLE001 - kuota habis, kunci salah, jawaban rusak: coba AI berikutnya
+            pesan = str(e) if isinstance(e, RuntimeError) else f"{e.__class__.__name__}: {e}"
+            log.warning("penyedia %s dilewati: %s", nama, pesan)
+            galat.append(f"{nama}: {pesan}"[:400])
     if jawab is None:
         raise RuntimeError("tidak ada penyedia AI yang dapat dipakai: " + "; ".join(galat))
 
