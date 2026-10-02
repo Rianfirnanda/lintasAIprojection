@@ -114,6 +114,10 @@ jobs:
         continue-on-error: true
         run: python -m pipeline ambil-cuaca
 
+      - name: Ambil prakiraan BMKG dan harga PIHPS (konektor Big Data resmi)
+        continue-on-error: true
+        run: python -m pipeline ambil-resmi
+
       - name: Simpan data konektor ke repositori (jejak audit)
         if: github.event_name != 'push'
         continue-on-error: true
@@ -124,7 +128,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Tidak ada data konektor baru."
           else
-            git commit -m "data: perbarui cuaca Open-Meteo"
+            git commit -m "data: perbarui cuaca Open-Meteo, prakiraan BMKG, dan harga PIHPS"
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

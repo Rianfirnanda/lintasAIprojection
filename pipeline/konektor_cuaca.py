@@ -66,6 +66,8 @@ def perbarui(konf: Konfigurasi, hari_terakhir: int = 30, hari_riwayat: int = 400
     baru = 0
     galat = []
     for w in konf.wilayah.values():
+        if w.peran == "pembanding_provinsi":  # tingkat provinsi hanya untuk harga PIHPS
+            continue
         tanggal_ada = sorted(k[0] for k in ada if k[1] == w.kode)
         dasar = {"latitude": w.lat, "longitude": w.lon, "daily": daily, "timezone": konf.pengaturan["zona_waktu"]}
         try:

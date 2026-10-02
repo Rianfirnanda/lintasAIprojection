@@ -3,6 +3,7 @@
   python -m pipeline jalankan [--keluaran site/data] [--demo otomatis|ya|tidak] [--tanpa-github]
   python -m pipeline periksa                 # validasi berkas di data/masuk tanpa publikasi (untuk PR data)
   python -m pipeline ambil-cuaca [--hari 30] # konektor Big Data cuaca (Open-Meteo)
+  python -m pipeline ambil-resmi             # konektor Big Data resmi: prakiraan BMKG dan harga PIHPS Bank Indonesia
   python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
   python -m pipeline sandi ID SANDI [--nama "Nama"] [--peran petugas]   # cetak entri akun untuk config/pengguna.json
   python -m pipeline aturan-firebase --keluaran build/firestore.rules     # aturan Firestore + admin pertama (FIREBASE_ADMIN_AWAL)
@@ -147,6 +148,8 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--hari", type=int, default=30)
     c.add_argument("--riwayat", type=int, default=400)
 
+    sub.add_parser("ambil-resmi", help="ambil prakiraan cuaca BMKG dan harga PIHPS Bank Indonesia")
+
     f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini, Groq, Cerebras, OpenRouter, Mistral, GitHub Models, Claude)")
     f.add_argument("--komoditas", required=True)
     f.add_argument("--periode", required=True)
@@ -228,7 +231,16 @@ def main(argv: list[str] | None = None) -> int:
         hasil = konektor_cuaca.perbarui(konf, a.hari, a.riwayat)
         print(json.dumps(hasil, ensure_ascii=False))
         return 0
+    if a.perintah == "ambil-resmi":
+        from . import konektor_resmi
+
+        hasil = konektor_resmi.perbarui(konf)
+        print(json.dumps(hasil, ensure_ascii=False))
+        return 0
     if a.perintah == "cari-sumber":
+        from . import firestore_sinkron
+
+        firestore_sinkron.pasang_rahasia_dari_firestore(konf.akar)  # kunci yang diisi lewat situs
         catatan = pencari_data.cari(konf, a.komoditas, a.periode, a.kebutuhan, a.wilayah, penyedia=a.penyedia)
         path = pencari_data.simpan(konf, catatan)
         n = len(catatan["hasil"].get("kandidat", []))

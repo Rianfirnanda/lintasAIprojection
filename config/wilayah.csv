@@ -2,3 +2,4 @@ kode_wilayah,nama_wilayah,peran,lat,lon
 1709,Kabupaten Bengkulu Tengah,target,-3.720,102.450
 1708,Kabupaten Kepahiang,pembanding_produksi,-3.640,102.580
 1771,Kota Bengkulu,pembanding_konsumsi,-3.800,102.270
+17,Provinsi Bengkulu,pembanding_provinsi,-3.790,102.260

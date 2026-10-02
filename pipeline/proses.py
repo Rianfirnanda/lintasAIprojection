@@ -22,6 +22,7 @@ from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, laya
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
 from . import firestore_sinkron
+from . import konektor_resmi
 from . import kebijakan as modul_kebijakan
 
 log = logging.getLogger(__name__)
@@ -206,6 +207,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
 
     # ---------- seri/<varian>.json
     batas = (tanggal_data or konf.hari_ini) - timedelta(days=HARI_SERI_PUBLIKASI)
+    indeks_konteks = modul_sinyal.IndeksKonteks(hasil_masuk.konteks)
     ringkasan_varian = []
     sinyal_aktif_per_varian: dict[str, str] = {}
     for s in daftar_sinyal:
@@ -226,6 +228,11 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
                 j = sp.indeks(t)
                 nilai.append(None if j < 0 or j >= sp.n or np.isnan(sp.nilai[j]) else round(float(sp.nilai[j])))
             pembanding[w] = {"nama": konf.wilayah[w].nama, "peran": konf.wilayah[w].peran, "nilai": nilai}
+        # Harga rata-rata pasar tradisional Provinsi Bengkulu dari PIHPS Bank Indonesia (konektor Big Data).
+        pihps = indeks_konteks.data.get((konektor_resmi.WILAYAH_PIHPS, "harga_pihps", kode), {})
+        nilai_pihps = [round(pihps[t]) if t in pihps else None for t in tanggal]
+        if any(x is not None for x in nilai_pihps):
+            pembanding["PIHPS"] = {"nama": "Provinsi Bengkulu (PIHPS BI)", "peran": "pembanding_provinsi", "nilai": nilai_pihps}
         per_pasar = {}
         for p in konf.pasar_di(target):
             data_p = harian_pasar.get((p.kode, kode), {})
