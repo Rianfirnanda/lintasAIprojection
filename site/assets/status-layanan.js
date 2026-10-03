@@ -85,13 +85,16 @@ export function pasangStatusLayanan(wadah, { meta, firebase = false, masuk = fal
 
   wadah.innerHTML = `
     <div class="status-kepala">
-      <span class="status-titik netral" aria-hidden="true"></span>
-      <div class="status-judul"><b role="status" aria-live="polite">Memeriksa layanan…</b><small></small></div>
+      <button type="button" class="status-buka" aria-expanded="false" title="Lihat rincian status">
+        <span class="status-titik netral" aria-hidden="true"></span>
+        <span class="status-judul"><b role="status" aria-live="polite">Memeriksa layanan…</b><small></small></span>
+        <svg class="status-panah" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+      </button>
       <button type="button" class="status-ulang" title="Periksa lagi" aria-label="Periksa status layanan lagi">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 00-14-4M4 5v4h4M4 13a8 8 0 0014 4M20 19v-4h-4"/></svg>
       </button>
     </div>
-    <ul class="status-daftar"></ul>`;
+    <ul class="status-daftar" hidden></ul>`;
   const titik = wadah.querySelector(".status-titik");
   const judul = wadah.querySelector(".status-judul b");
   const kecil = wadah.querySelector(".status-judul small");
@@ -179,6 +182,14 @@ export function pasangStatusLayanan(wadah, { meta, firebase = false, masuk = fal
     }).catch(() => { delete baris.mesin; gambar(); });
   }
 
+  const buka = wadah.querySelector(".status-buka");
+  buka.addEventListener("click", (e) => {
+    e.stopPropagation();
+    daftar.hidden = !daftar.hidden;
+    buka.setAttribute("aria-expanded", String(!daftar.hidden));
+  });
+  document.addEventListener("click", (e) => { if (!wadah.contains(e.target)) { daftar.hidden = true; buka.setAttribute("aria-expanded", "false"); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { daftar.hidden = true; buka.setAttribute("aria-expanded", "false"); } });
   const semua = () => Promise.all([periksaJaringan(), periksaLayanan()]);
   wadah.querySelector(".status-ulang").addEventListener("click", (e) => {
     const t = e.currentTarget;

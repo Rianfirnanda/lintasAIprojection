@@ -1273,3 +1273,65 @@ body.tanpa-kepala .masuk-wadah { min-height: calc(100vh - 220px); }
   .masuk-isi { padding: 22px 20px 20px; }
   .masuk-isi h1 { font-size: 1.7rem; }
 }
+
+/* Video latar bagian login (halaman Masuk saja): selebar layar di belakang kartu, tanpa suara, berulang. */
+.masuk-wadah { position: relative; isolation: isolate; padding: 44px 0 52px; }
+.masuk-latar {
+  position: absolute; z-index: -1; top: -22px; bottom: 0; left: calc(50% - 50vw); width: 100vw; overflow: hidden;
+  border-radius: 0 0 40px 40px; background: #0a3d73 url("video/vbg-poster.jpg") center / cover no-repeat;
+  box-shadow: 0 24px 60px rgba(10, 34, 70, 0.18);
+}
+.masuk-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease; }
+.masuk-video.berputar { opacity: 1; }
+.masuk-latar::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(6, 30, 62, 0.42) 0%, rgba(6, 30, 62, 0.18) 45%, rgba(6, 30, 62, 0.5) 100%); }
+:root[data-theme="dark"] .masuk-latar::after {
+  background: linear-gradient(180deg, rgba(4, 14, 30, 0.62) 0%, rgba(4, 14, 30, 0.4) 45%, rgba(4, 14, 30, 0.72) 100%); }
+body:has(.masuk-latar) { overflow-x: clip; }
+/* Kartu di atas video: kaca lebih tebal supaya tulisan tetap jelas; panel sambutan sedikit tembus pandang. */
+.masuk-wadah .masuk-kartu { background: var(--kaca-atas); -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 30px 80px rgba(4, 20, 44, 0.35), inset 0 1px 0 var(--kaca-kilau); }
+.masuk-wadah .masuk-sambut {
+  background: radial-gradient(120% 90% at 0% 0%, rgba(29, 127, 214, 0.85) 0%, transparent 60%),
+    radial-gradient(90% 80% at 100% 100%, rgba(14, 138, 98, 0.75) 0%, transparent 55%),
+    linear-gradient(160deg, rgba(10, 79, 145, 0.86), rgba(6, 47, 92, 0.92));
+}
+@media (max-width: 640px) {
+  .masuk-wadah { padding: 26px 0 34px; }
+  .masuk-latar { top: -16px; border-radius: 0 0 28px 28px; }
+}
+@media (prefers-reduced-motion: reduce) { .masuk-video { transition: none; } }
+
+/* Kaki halaman ringkas: satu baris (merek, status, tautan), rincian status muncul saat diketuk. */
+.kaki { padding: 10px 16px 8px; margin: 14px auto 18px; border-radius: 18px; font-size: 0.8rem; overflow: visible; }
+.kaki::before { border-radius: 18px 18px 0 0; height: 2px; }
+.kaki-baris { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.kaki-baris .kaki-logo { flex: 1 1 220px; min-width: 0; }
+.kaki-baris .kaki-logo img { width: 30px; }
+.kaki-baris .kaki-logo strong { font-size: 0.86rem; }
+.kaki-baris .kaki-logo span { font-size: 0.72rem; }
+.kaki-kanan { display: flex; align-items: center; gap: 8px; }
+.kaki-tautan { gap: 6px; }
+.kaki-tautan a { min-height: 30px; padding: 4px 11px; font-size: 0.76rem; }
+.kaki-catatan { margin: 6px 0 0 !important; font-size: 0.7rem; color: var(--muted); }
+.kaki-status { position: relative; padding: 0; background: none; border: 0; }
+.status-kepala { gap: 4px; }
+.status-buka { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--rule); background: var(--surface-2); color: inherit; cursor: pointer; font: inherit; text-align: left; }
+.status-buka:hover { border-color: var(--rule-2); }
+.status-buka .status-judul b { font-size: 0.78rem; }
+.status-buka .status-judul small { display: none; }
+.status-kepala .status-titik { width: 10px; height: 10px; }
+.status-panah { transition: transform 0.15s; color: var(--muted); }
+.status-buka[aria-expanded="false"] .status-panah { transform: rotate(180deg); }
+.status-ulang { width: 30px; height: 30px; }
+.status-daftar { position: absolute; z-index: 30; bottom: calc(100% + 8px); left: 0; width: min(340px, calc(100vw - 32px)); margin: 0;
+  padding: 8px 12px; border-radius: 14px; background: var(--kaca-atas); border: 1px solid var(--rule-2);
+  box-shadow: 0 16px 40px rgba(10, 30, 60, 0.22); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); font-size: 0.8rem; }
+.status-daftar[hidden] { display: none; }
+@media (max-width: 640px) {
+  .kaki { padding: 10px 12px 8px; }
+  .kaki-baris .kaki-logo { flex-basis: 100%; }
+}
+.status-daftar { background: #ffffff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+:root[data-theme="dark"] .status-daftar { background: #16243a; }
