@@ -14,8 +14,12 @@
 <main class="utama">
   <div class="masuk-wadah">
     <section class="masuk-kartu" aria-labelledby="judul-masuk">
-      <div class="masuk-logo"><img src="assets/logo-bps.png" alt="" width="46" height="36"><div><b>Lintas Benteng Projection</b><span>BPS Kabupaten Bengkulu Tengah</span></div></div>
-      <div id="isi-masuk"></div>
+      <div class="masuk-sambut">
+        <div class="masuk-logo"><img src="assets/logo-bps.png" alt="" width="46" height="36"><div><b>Lintas Benteng Projection</b><span>BPS Kabupaten Bengkulu Tengah</span></div></div>
+        <p class="masuk-slogan">Harga pangan Bengkulu Tengah, dipantau setiap hari.</p>
+        <ul class="masuk-fitur" id="masuk-fitur"></ul>
+      </div>
+      <div class="masuk-isi" id="isi-masuk"></div>
     </section>
   </div>
 </main>
@@ -34,6 +38,11 @@ if (new URLSearchParams(location.search).get("keluar")) {
 const meta = await pasangKerangka("masuk.html");
 const isi = document.getElementById("isi-masuk");
 const SANDI_CONTOH = "lintas2026";
+document.getElementById("masuk-fitur").innerHTML = [
+  ["tren", "Harga terbaru dari pasar"],
+  ["lonceng", "Peringatan dini saat harga naik"],
+  ["target", "Proyeksi harga untuk rapat TPID"],
+].map(([i, t]) => `<li><span class="masuk-fitur-ikon">${ikon(i, 18)}</span>${t}</li>`).join("");
 
 function tujuan(peran, izin) {
   const l = new URLSearchParams(location.search).get("lanjut");
@@ -96,12 +105,18 @@ function tampilkanStatusAkun(fk, akun) {
 async function tampilkanGoogle() {
   const status = new URLSearchParams(location.search).get("status");
   const pesan = PESAN_STATUS[status];
-  isi.innerHTML = `<h1 id="judul-masuk">Masuk</h1>
-    <p>Semua pengguna, termasuk masyarakat, masuk dengan akun Google. Akun baru perlu disetujui admin sebelum bisa dipakai.</p>
+  isi.innerHTML = `<p class="masuk-sapa">Selamat datang</p>
+    <h1 id="judul-masuk">Masuk</h1>
+    <p class="masuk-pengantar">Gunakan akun Google Anda. Berlaku untuk semua pengguna, termasuk masyarakat.</p>
     ${pesan ? `<div class="pesan ${pesan[0]}" role="status">${esc(pesan[1])}</div>` : ""}
     <button class="tombol tombol-google lebar" type="button" id="btn-google">${LOGO_GOOGLE}<span>Masuk dengan Google</span></button>
     <div class="masuk-galat" id="galat" role="alert" hidden></div>
-    <p class="meta-kecil masuk-catatan">Yang disimpan hanya nama, email, dan foto profil Google Anda, untuk keperluan persetujuan akun.</p>`;
+    <ol class="masuk-langkah" aria-label="Cara mendapatkan akses">
+      <li><span>1</span><div><b>Masuk dengan Google</b><small>Pakai akun Gmail yang biasa Anda gunakan.</small></div></li>
+      <li><span>2</span><div><b>Tunggu persetujuan admin</b><small>Admin memberi peran sesuai tugas Anda.</small></div></li>
+      <li><span>3</span><div><b>Mulai gunakan</b><small>Menu yang tampil menyesuaikan peran Anda.</small></div></li>
+    </ol>
+    <p class="masuk-catatan">${ikon("gembokPerisai", 16)}<span>Kami hanya menyimpan nama, email, dan foto profil Google Anda, untuk persetujuan akun.</span></p>`;
   const tombol = document.getElementById("btn-google");
   const galat = document.getElementById("galat");
   let fk;

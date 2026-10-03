@@ -322,7 +322,9 @@ export async function pasangKerangka(aktif) {
   try {
     meta = await muatMeta();
   } catch (e) {
-    kaki.innerHTML = `<p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline di GitHub Actions terlebih dahulu.</p>`;
+    kaki.innerHTML = `<div class="kaki-atas"><div class="kaki-merek"><p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline di GitHub Actions terlebih dahulu.</p></div>
+      <section class="kaki-status" aria-label="Status jaringan dan layanan"></section></div>`;
+    pasangStatus(kaki, null);
     document.body.classList.add("siap");
     return izin === "tolak" ? tundaSelamanya() : null;
   }
@@ -339,13 +341,22 @@ export async function pasangKerangka(aktif) {
     b.innerHTML = `<b>Data contoh.</b> Angka di sini masih untuk uji coba, bukan angka resmi. Tanda ini hilang sendiri setelah harga asli pertama dari petugas masuk.`;
     kepala.after(b);
   }
+  const layanan = tautanLayanan(meta.layanan);
   kaki.innerHTML = `
-    <div class="kaki-teks">
-      <p><strong>${NAMA_SISTEM}</strong> · BPS Kabupaten Bengkulu Tengah${meta.url_repo ? ` · <a href="${esc(meta.url_repo)}">Repositori</a>` : ""}</p>
-      <p>Angka di sini membantu analisis, bukan angka resmi BPS. ${tautanLayanan(meta.layanan)}</p>
-      <p>Sumber: BPS, Pemda, cuaca Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</p>
+    <div class="kaki-atas">
+      <div class="kaki-merek">
+        <div class="kaki-logo">${LOGO}<div><strong>${NAMA_SISTEM}</strong><span>BPS Kabupaten Bengkulu Tengah</span></div></div>
+        <p>Pemantauan dan proyeksi harga pangan untuk mendukung TPID. Angka di sini membantu analisis, bukan angka resmi BPS.</p>
+        ${layanan ? `<nav class="kaki-tautan" aria-label="Layanan pengguna">${layanan}</nav>` : ""}
+      </div>
+      <section class="kaki-status" aria-label="Status jaringan dan layanan"></section>
     </div>
-    <button type="button" class="tema-ikon" data-tema-ganti></button>`;
+    <div class="kaki-bawah">
+      <span>Sumber: BPS, Pemda, cuaca Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</span>
+      <span class="kaki-hak">© ${new Date().getFullYear()} BPS Kabupaten Bengkulu Tengah${meta.versi ? ` · v${esc(meta.versi)}` : ""}</span>
+      <button type="button" class="tema-ikon" data-tema-ganti></button>
+    </div>`;
+  pasangStatus(kaki, meta);
   kaki.querySelector("[data-tema-ganti]").addEventListener("click", () => {
     // Matikan animasi warna sesaat supaya semua bagian berganti serentak, tanpa kedip.
     const akar = document.documentElement;
@@ -557,6 +568,16 @@ document.addEventListener("click", async (e) => {
   }
 });
 
+/** Panel status jaringan dan layanan di kaki halaman (dimuat terpisah supaya halaman tidak menunggu). */
+function pasangStatus(kaki, meta) {
+  const wadah = kaki.querySelector(".kaki-status");
+  if (!wadah) return;
+  muatMeta().catch(() => null).then((m) => {
+    const firebase = (m || meta)?.login === "firebase";
+    return import("./status-layanan.js").then((s) => s.pasangStatusLayanan(wadah, { meta, firebase, masuk: firebase && sesi()?.sumber === "firebase" }));
+  }).catch(() => { wadah.hidden = true; });
+}
+
 function tautanLayanan(l) {
   if (!l) return "";
   const t = [];
@@ -564,7 +585,7 @@ function tautanLayanan(l) {
   else if (l.url_pengaduan) t.push(`<a href="${esc(l.url_pengaduan)}">Laporkan data</a>`);
   if (l.url_survei_eksternal) t.push(`<a href="${esc(l.url_survei_eksternal)}">Survei kepuasan</a>`);
   else if (l.url_survei) t.push(`<a href="${esc(l.url_survei)}">Survei kepuasan</a>`);
-  return t.join(" · ");
+  return t.join("");
 }
 
 export function tampilkanGalat(wadah, e) {
