@@ -13,6 +13,10 @@
 <body>
 <main class="utama">
   <div class="masuk-wadah">
+    <div class="masuk-latar" aria-hidden="true">
+      <video class="masuk-video" muted loop playsinline disablepictureinpicture disableremoteplayback preload="none"
+        poster="assets/video/vbg-poster.jpg"></video>
+    </div>
     <section class="masuk-kartu" aria-labelledby="judul-masuk">
       <div class="masuk-sambut">
         <div class="masuk-logo"><img src="assets/logo-bps.png" alt="" width="46" height="36"><div><b>Lintas Benteng Projection</b><span>BPS Kabupaten Bengkulu Tengah</span></div></div>
@@ -25,6 +29,20 @@
 </main>
 
 <script type="module">
+// Video latar bagian login: tanpa suara, berulang. Dilewati (cukup gambar poster) bila pengguna memilih hemat data
+// atau mengurangi animasi, dan dijeda saat tab tidak dilihat supaya hemat baterai.
+{
+  const video = document.querySelector(".masuk-video");
+  const hemat = navigator.connection?.saveData || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (video && !hemat) {
+    video.muted = true;
+    video.src = "assets/video/vbg.mp4";
+    const putar = () => video.play().catch(() => {});
+    video.addEventListener("playing", () => video.classList.add("berputar"), { once: true });
+    putar();
+    document.addEventListener("visibilitychange", () => (document.hidden ? video.pause() : putar()));
+  }
+}
 import { pasangKerangka, esc } from "./assets/app.js";
 import { ikon } from "./assets/dashboard.js";
 import { PERAN, SEMUA_HALAMAN, bolehAkses, masuk, keluar, sesi, simpanSesiFirebase } from "./assets/akses.js";

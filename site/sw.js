@@ -1,5 +1,5 @@
 // Service worker: formulir input tetap berfungsi tanpa sinyal (wilayah blank spot).
-const CACHE = "lintas-benteng-v18";
+const CACHE = "lintas-benteng-v19";
 const ASET = [
   "input.html", "masuk.html", "assets/app.css", "assets/app.js", "assets/status-layanan.js", "assets/akses.js", "assets/peran.js", "assets/dashboard.js", "assets/gambar-komoditas.js", "assets/selisih.js", "assets/rincian.js", "assets/kiriman.js", "assets/firebase-klien.js", "vendor/firebase/firebase.js", "assets/logo-bps.png", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
   "data/master.json", "data/meta.json",
@@ -23,6 +23,8 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
+  // Video latar dimuat sepotong-sepotong (Range); biarkan browser yang mengurus, jangan disimpan di cache.
+  if (req.headers.has("range") || req.destination === "video") return;
   // cache: "no-cache" = selalu tanya server dulu apakah ada versi baru (bukan memakai simpanan browser sampai 10 menit).
   const segar = req.mode === "navigate" ? fetch(req.url, { cache: "no-cache", credentials: "same-origin" }) : fetch(req, { cache: "no-cache" });
   e.respondWith(
