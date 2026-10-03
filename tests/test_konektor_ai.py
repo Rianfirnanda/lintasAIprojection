@@ -1,4 +1,6 @@
 import csv
+import hashlib
+import io
 import json
 from types import SimpleNamespace
 
@@ -291,6 +293,54 @@ def test_ambil_json_dan_normalisasi():
 def test_cek_url_tidak_valid():
     assert pencari_data.cek_url("bukan-url")[0] is False
     assert pencari_data.cek_url("")[0] is False
+
+
+class _Respons:
+    """Tiruan jawaban urllib: isi dibaca bertahap seperti dari jaringan."""
+    def __init__(self, isi: bytes, status: int = 200):
+        self.isi, self.status = io.BytesIO(isi), status
+
+    def read(self, n=-1):
+        return self.isi.read(n)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+
+def test_periksa_url_mencatat_waktu_akses_dan_sidik_sha256(monkeypatch):
+    isi = b"<html>Harga cabai rawit merah</html>" * 100
+    monkeypatch.setattr(pencari_data.urllib.request, "urlopen", lambda req, timeout: _Respons(isi))
+    h = pencari_data.periksa_url("https://contoh.go.id/harga")
+    assert h["url_dapat_diakses"] is True and h["keterangan_url"] == "HTTP 200"
+    assert h["url_sha256"] == hashlib.sha256(isi).hexdigest() and h["url_ukuran_byte"] == len(isi)
+    assert h["url_sidik_terpotong"] is False and h["url_diakses"].endswith("+07:00")
+    # halaman besar: hanya bagian awal yang di-hash, dan itu dicatat
+    h = pencari_data.periksa_url("https://contoh.go.id/besar", maks_byte=1000)
+    assert h["url_ukuran_byte"] == 1000 and h["url_sidik_terpotong"] is True
+    assert h["url_sha256"] == hashlib.sha256(isi[:1000]).hexdigest()
+
+
+def test_periksa_url_gagal_tanpa_sidik(monkeypatch):
+    def tolak(req, timeout):
+        raise pencari_data.urllib.error.HTTPError(req.full_url, 403, "Forbidden", {}, None)
+    monkeypatch.setattr(pencari_data.urllib.request, "urlopen", tolak)
+    h = pencari_data.periksa_url("https://contoh.go.id/x")
+    assert h["url_dapat_diakses"] is None and "menolak" in h["keterangan_url"] and h["url_sha256"] == ""
+    assert h["url_diakses"]  # waktu percobaan tetap dicatat
+    assert pencari_data.cek_url("https://contoh.go.id/x") == (None, "HTTP 403 (situs menolak akses otomatis)")
+
+
+def test_id_kandidat_tetap_dan_unik():
+    data = {"pencarian": [{"waktu": "2026-10-02T09:00:00+07:00", "hasil": {"kandidat": [
+        {"nama_sumber": "A", "url": "https://a.go.id"}, {"nama_sumber": "A", "url": "https://a.go.id"}]}}]}
+    pencari_data.beri_id(data)
+    k = data["pencarian"][0]["hasil"]["kandidat"]
+    assert k[0]["id"] != k[1]["id"] and all(len(x["id"]) == 12 for x in k)
+    lama = [x["id"] for x in k]
+    assert [x["id"] for x in pencari_data.beri_id(data)["pencarian"][0]["hasil"]["kandidat"]] == lama
 
 
 def test_urutan_penyedia(konf):

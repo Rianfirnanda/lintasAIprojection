@@ -144,7 +144,7 @@ def _kandidat_dari_situs(akar: Path, daftar: list[dict]) -> int:
         url_cari = [str(u) for u in d.get("url_pencarian") or []]
         for k in hasil["kandidat"]:
             k["url_ada_di_hasil_pencarian"] = pencari_data._cocok(k["url"], url_cari) if d.get("punya_pencarian_web") else None
-            k["url_dapat_diakses"], k["keterangan_url"] = pencari_data.cek_url(k["url"])
+            pencari_data.terapkan_periksa(k, pencari_data.periksa_url(k["url"]))
             k["status_verifikasi"] = "kandidat"
         p = d.get("permintaan") or {}
         waktu = d.get("diperbarui")

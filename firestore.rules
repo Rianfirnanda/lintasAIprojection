@@ -73,6 +73,7 @@ service cloud.firestore {
     function bolehKebijakan() { return izin('kebijakan.html', ['tpid', 'analis']); }
     function kelolaPengguna() { return izin('pengguna.html', []); }
     function kelolaSistem() { return izin('pengaturan.html', []); }
+    function bolehNilaiSumber() { return izin('sumber.html', ['operator', 'analis']); }
     function baru() { return request.resource.data; }
     function stempel() { return baru().diperbarui == request.time && baru().oleh_uid == request.auth.uid; }
 
@@ -238,6 +239,21 @@ service cloud.firestore {
         && baru().id_rekomendasi == id && id.size() <= 80
         && baru().keputusan in ['setuju', 'tolak']
         && teksPendek(baru().catatan, 300) && teksPendek(baru().penyetuju, 120) && teksPendek(baru().tanggal, 40)
+        && stempel();
+    }
+
+    // Keputusan analis atas kandidat sumber dari AI Data Finder (terima/tolak), sebagai jejak verifikasi manusia.
+    // ID dokumen = ID kandidat; keputusan terbaru yang berlaku. Menolak wajib disertai alasan.
+    match /lbp_keputusan_sumber/{id} {
+      allow read: if bolehNilaiSumber();
+      allow create, update: if bolehNilaiSumber()
+        && baru().keys().hasOnly(['id_kandidat', 'keputusan', 'alasan', 'penilai', 'tanggal', 'url', 'nama_sumber', 'pencarian',
+                                  'oleh_uid', 'diperbarui'])
+        && baru().id_kandidat == id && id.matches('^[0-9a-f]{12}$')
+        && baru().keputusan in ['terima', 'tolak']
+        && teksPendek(baru().alasan, 500) && (baru().keputusan == 'terima' || baru().alasan.size() >= 3)
+        && teksPendek(baru().penilai, 120) && teksPendek(baru().tanggal, 40)
+        && teksPendek(baru().url, 2000) && teksPendek(baru().nama_sumber, 300) && teksPendek(baru().pencarian, 60)
         && stempel();
     }
 

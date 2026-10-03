@@ -159,6 +159,23 @@ export async function putuskanRekomendasi(id, keputusan, { catatan = "", penyetu
   }));
 }
 
+/** Terima atau tolak kandidat sumber dari AI Data Finder. ID dokumen = ID kandidat; keputusan terbaru yang berlaku. */
+export async function putuskanSumber(k, pencarian, keputusan, { alasan = "", penilai = "" } = {}) {
+  const { fb, db, user } = await siap();
+  await denganBatasWaktu(fb.setDoc(fb.doc(db, "lbp_keputusan_sumber", k.id), {
+    id_kandidat: k.id, keputusan, alasan: teks(alasan, 500), penilai: teks(penilai, 120),
+    tanggal: new Date().toISOString().slice(0, 10), url: teks(k.url, 2000), nama_sumber: teks(k.nama_sumber, 300),
+    pencarian: teks(pencarian, 60), oleh_uid: user.uid, diperbarui: fb.serverTimestamp(),
+  }));
+}
+
+/** Pantau keputusan terima/tolak kandidat sumber secara langsung. Mengembalikan fungsi berhenti. */
+export async function pantauKeputusanSumber(saatBerubah, saatGagal = () => {}) {
+  const { fb, db } = await siap();
+  return fb.onSnapshot(fb.collection(db, "lbp_keputusan_sumber"),
+    (s) => saatBerubah(new Map(s.docs.map((d) => [d.id, d.data()]))), saatGagal);
+}
+
 /** Pantau status proses pembaruan terakhir (lbp_status/pipeline). Mengembalikan fungsi berhenti. */
 export async function pantauProses(saatBerubah) {
   const { fb, db } = await siap();

@@ -62,6 +62,45 @@ def tentukan_mode_demo(konf: Konfigurasi, folder_masuk: Path, paksa: str | None)
     return not masukan.ada_data_harga(folder_masuk)
 
 
+def baca_keputusan_sumber(akar: Path) -> dict[str, dict]:
+    """Keputusan terima/tolak analis atas kandidat AI Data Finder (data/sumber/keputusan/*.csv), terbaru yang berlaku."""
+    hasil: dict[str, dict] = {}
+    for path in sorted((akar / "data" / "sumber" / "keputusan").glob("*.csv")):
+        with path.open(newline="", encoding="utf-8-sig") as f:
+            for b in csv.DictReader(f):
+                if b.get("id_kandidat") and b.get("keputusan") in ("terima", "tolak"):
+                    hasil[b["id_kandidat"]] = {k: (b.get(k) or "").strip() for k in ("keputusan", "alasan", "penilai", "tanggal")}
+    return hasil
+
+
+def terapkan_keputusan_sumber(kandidat: dict, keputusan: dict[str, dict]) -> list[dict]:
+    """Tandai kandidat yang sudah diputuskan analis, lalu kembalikan kandidat yang diterima sebagai baris daftar sumber
+    (status "diterima": sudah dinilai layak, tetapi datanya belum diambil)."""
+    from . import pencari_data
+
+    pencari_data.beri_id(kandidat)
+    diterima: dict[str, dict] = {}
+    for p in kandidat.get("pencarian", []):
+        for k in (p.get("hasil") or {}).get("kandidat") or []:
+            kp = keputusan.get(k["id"])
+            if not kp:
+                continue
+            k["keputusan"] = kp
+            k["status_verifikasi"] = "diterima" if kp["keputusan"] == "terima" else "ditolak"
+            kunci = k.get("url") or k["id"]
+            if kp["keputusan"] == "terima" and kunci not in diterima:
+                diterima[kunci] = {
+                    "kode": f"AI-{k['id'][:6].upper()}", "nama": k.get("nama_sumber") or k.get("url") or "-",
+                    "kelompok": "AI_FINDER", "metode_akses": k.get("metode_akses") or "web",
+                    "frekuensi": k.get("frekuensi_pembaruan") or "-", "url": k.get("url") or "",
+                    "lisensi": k.get("lisensi_atau_ketentuan") or "", "status": "diterima", "prioritas": 99,
+                    "catatan": f"Diterima {kp['penilai'] or 'analis'} {kp['tanggal']}"
+                               + (f": {kp['alasan']}" if kp["alasan"] else "") + ". Datanya belum diambil.",
+                    "jumlah_observasi": 0,
+                }
+    return list(diterima.values())
+
+
 def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, sinkron_github: bool = True,
              kirim_notifikasi: bool = True) -> dict:
     akar = konf.akar
@@ -403,9 +442,10 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     # ---------- sumber.json
     kandidat_path = konf.akar / "data" / "sumber" / "kandidat_ai.json"
     kandidat = json.loads(kandidat_path.read_text(encoding="utf-8")) if kandidat_path.exists() else {"pencarian": []}
+    diterima = terapkan_keputusan_sumber(kandidat, baca_keputusan_sumber(konf.akar))
     jumlah_per_sumber = Counter(o.kode_sumber for o in hasil_qc.observasi)
     _tulis_json(keluaran / "sumber.json", {
-        "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0)} for s in konf.sumber.values()],
+        "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0)} for s in konf.sumber.values()] + diterima,
         "kandidat_ai": kandidat,
     })
 

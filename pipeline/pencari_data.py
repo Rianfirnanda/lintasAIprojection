@@ -18,11 +18,13 @@ Prinsip (Pedoman Pemahaman Proyek, bagian 9-10):
   - AI hanya MENCARI KANDIDAT sumber; hasil wajib diverifikasi manusia sebelum dipakai.
   - Dilarang mengarang data/URL. Setiap URL kandidat dicek: (1) apakah domainnya muncul di hasil pencarian
     (bila penyedia punya pencarian) dan (2) apakah benar-benar dapat dibuka.
-  - Hasil disimpan di data/sumber/kandidat_ai.json berstatus "kandidat".
+  - Hasil disimpan di data/sumber/kandidat_ai.json berstatus "kandidat", lengkap dengan waktu akses dan sidik jari
+    (SHA-256) halaman. Analis menerima atau menolak tiap kandidat di halaman Sumber Data (data/sumber/keputusan).
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -42,6 +44,8 @@ log = logging.getLogger(__name__)
 
 MAKS_LANJUT = 5
 MAKS_RIWAYAT = 50
+MAKS_BYTE_SIDIK = 2 * 1024 * 1024  # isi halaman yang di-hash untuk bukti (checksum), paling banyak 2 MB
+WIB = ZoneInfo("Asia/Jakarta")
 URL_GEMINI = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 URL_TAVILY = "https://api.tavily.com/search"
 MODEL_GEMINI_CADANGAN = "gemini-flash-lite-latest"
@@ -306,20 +310,61 @@ def _cocok(url: str, daftar: list[str]) -> bool:
     return False
 
 
-def cek_url(url: str, batas_waktu: int = 15) -> tuple[bool | None, str]:
-    """Apakah URL dapat dibuka. Kembalikan (status, keterangan); None bila tidak dapat dipastikan."""
+def periksa_url(url: str, batas_waktu: int = 15, maks_byte: int = MAKS_BYTE_SIDIK) -> dict:
+    """Buka URL sekali dan catat buktinya: bisa dibuka atau tidak, kapan diakses (WIB), serta sidik jari isi halaman
+    (SHA-256) dan ukurannya. Sidik jari membuktikan isi halaman saat dicek; halaman yang sering berubah akan punya
+    sidik jari berbeda di pemeriksaan berikutnya. `url_dapat_diakses` None bila tidak dapat dipastikan."""
+    hasil = {"url_dapat_diakses": None, "keterangan_url": "", "url_diakses": datetime.now(WIB).isoformat(timespec="seconds"),
+             "url_sha256": "", "url_ukuran_byte": None, "url_sidik_terpotong": False}
     if not url or not url.startswith(("http://", "https://")):
-        return False, "URL tidak valid"
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (pemantauan-harga-benteng)", "Range": "bytes=0-2048"})
+        return {**hasil, "url_dapat_diakses": False, "keterangan_url": "URL tidak valid"}
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (pemantauan-harga-benteng)"})
     try:
         with urllib.request.urlopen(req, timeout=batas_waktu) as r:
-            return True, f"HTTP {r.status}"
+            sidik, n, terpotong = hashlib.sha256(), 0, False
+            while potong := r.read(65536):
+                if n + len(potong) > maks_byte:
+                    potong, terpotong = potong[:maks_byte - n], True
+                sidik.update(potong)
+                n += len(potong)
+                if terpotong:
+                    break
+            return {**hasil, "url_dapat_diakses": True, "keterangan_url": f"HTTP {r.status}", "url_sha256": sidik.hexdigest(),
+                    "url_ukuran_byte": n, "url_sidik_terpotong": terpotong}
     except urllib.error.HTTPError as e:
         if e.code in (401, 403, 405, 406, 429):  # situs ada tetapi menolak robot
-            return None, f"HTTP {e.code} (situs menolak akses otomatis)"
-        return False, f"HTTP {e.code}"
+            return {**hasil, "keterangan_url": f"HTTP {e.code} (situs menolak akses otomatis)"}
+        return {**hasil, "url_dapat_diakses": False, "keterangan_url": f"HTTP {e.code}"}
     except Exception as e:  # DNS, TLS, timeout
-        return False, f"tidak dapat dibuka: {e.__class__.__name__}"
+        return {**hasil, "url_dapat_diakses": False, "keterangan_url": f"tidak dapat dibuka: {e.__class__.__name__}"}
+
+
+def cek_url(url: str, batas_waktu: int = 15) -> tuple[bool | None, str]:
+    """Apakah URL dapat dibuka. Kembalikan (status, keterangan); None bila tidak dapat dipastikan."""
+    h = periksa_url(url, batas_waktu)
+    return h["url_dapat_diakses"], h["keterangan_url"]
+
+
+def terapkan_periksa(k: dict, hasil) -> None:
+    """Tulis hasil pemeriksaan URL ke kandidat. `hasil` bisa dict dari periksa_url atau (status, keterangan)."""
+    if isinstance(hasil, tuple):
+        hasil = {"url_dapat_diakses": hasil[0], "keterangan_url": hasil[1]}
+    k.update(hasil)
+
+
+def id_kandidat(waktu_pencarian: str, urutan: int, k: dict) -> str:
+    """ID tetap untuk satu kandidat (dipakai keputusan terima/tolak di situs)."""
+    kunci = f"{waktu_pencarian}|{urutan}|{k.get('url', '')}|{k.get('nama_sumber', '')}"
+    return hashlib.sha1(kunci.encode("utf-8")).hexdigest()[:12]
+
+
+def beri_id(data: dict) -> dict:
+    """Pastikan setiap kandidat di kandidat_ai.json punya ID (termasuk hasil lama yang belum punya)."""
+    for p in data.get("pencarian", []):
+        for i, k in enumerate((p.get("hasil") or {}).get("kandidat") or []):
+            if not k.get("id"):
+                k["id"] = id_kandidat(str(p.get("waktu", "")), i, k)
+    return data
 
 
 # ---------------------------------------------------------------- penyedia
@@ -490,7 +535,7 @@ PENYEDIA = {"gemini": _cari_gemini, **{n: partial(_cari_sejenis_openai, n) for n
 
 def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harga eceran harian",
          wilayah: str = "Kabupaten Bengkulu Tengah, Provinsi Bengkulu", penyedia: str | None = None,
-         klien: dict | None = None, pemeriksa_url=cek_url, catat=None) -> dict:
+         klien: dict | None = None, pemeriksa_url=periksa_url, catat=None) -> dict:
     """Jalankan pencarian. `klien` (untuk uji) memetakan nama penyedia (dan "tavily") -> pengganti fungsi kirim/klien SDK."""
     cfg = dict(pengaturan_ai(konf))
     klien = klien or {}
@@ -534,7 +579,7 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
     tulis(f"{dipakai} ({jawab['model']}) menjawab: {len(hasil['kandidat'])} kandidat sumber.")
     for k in hasil["kandidat"]:
         k["url_ada_di_hasil_pencarian"] = _cocok(k["url"], jawab["url_pencarian"]) if jawab["punya_pencarian"] else None
-        k["url_dapat_diakses"], k["keterangan_url"] = pemeriksa_url(k["url"]) if pemeriksa_url else (None, "tidak dicek")
+        terapkan_periksa(k, pemeriksa_url(k["url"]) if pemeriksa_url else (None, "tidak dicek"))
         k["status_verifikasi"] = "kandidat"
 
     zona = ZoneInfo(konf.pengaturan.get("zona_waktu", "Asia/Jakarta"))
@@ -572,5 +617,6 @@ def simpan(konf: Konfigurasi, catatan: dict) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"pencarian": []}
     data["pencarian"] = ([catatan] + data.get("pencarian", []))[:MAKS_RIWAYAT]
+    beri_id(data)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     return path

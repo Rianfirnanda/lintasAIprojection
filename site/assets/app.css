@@ -790,6 +790,10 @@ dialog.rincian::backdrop { background: rgba(6, 14, 28, 0.5); -webkit-backdrop-fi
 }
 
 .tombol.kecil { padding: 7px 12px; font-size: 0.8rem; }
+/* Keputusan terima/tolak kandidat sumber AI (Sumber Data) */
+.sel-putus { min-width: 170px; }
+.aksi-putus { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.form-putus textarea { display: block; width: 100%; min-width: 170px; margin-top: 4px; font: inherit; }
 
 .salam { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 20px; margin: 4px 4px 16px; }
 .salam h1 { font-size: clamp(1.55rem, 1.2rem + 1.4vw, 2.2rem); }
