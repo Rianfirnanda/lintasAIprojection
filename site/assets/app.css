@@ -1301,3 +1301,37 @@ body:has(.masuk-latar) { overflow-x: clip; }
   .masuk-latar { top: -16px; border-radius: 0 0 28px 28px; }
 }
 @media (prefers-reduced-motion: reduce) { .masuk-video { transition: none; } }
+
+/* Kaki halaman ringkas: satu baris (merek, status, tautan), rincian status muncul saat diketuk. */
+.kaki { padding: 10px 16px 8px; margin: 14px auto 18px; border-radius: 18px; font-size: 0.8rem; overflow: visible; }
+.kaki::before { border-radius: 18px 18px 0 0; height: 2px; }
+.kaki-baris { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.kaki-baris .kaki-logo { flex: 1 1 220px; min-width: 0; }
+.kaki-baris .kaki-logo img { width: 30px; }
+.kaki-baris .kaki-logo strong { font-size: 0.86rem; }
+.kaki-baris .kaki-logo span { font-size: 0.72rem; }
+.kaki-kanan { display: flex; align-items: center; gap: 8px; }
+.kaki-tautan { gap: 6px; }
+.kaki-tautan a { min-height: 30px; padding: 4px 11px; font-size: 0.76rem; }
+.kaki-catatan { margin: 6px 0 0 !important; font-size: 0.7rem; color: var(--muted); }
+.kaki-status { position: relative; padding: 0; background: none; border: 0; }
+.status-kepala { gap: 4px; }
+.status-buka { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--rule); background: var(--surface-2); color: inherit; cursor: pointer; font: inherit; text-align: left; }
+.status-buka:hover { border-color: var(--rule-2); }
+.status-buka .status-judul b { font-size: 0.78rem; }
+.status-buka .status-judul small { display: none; }
+.status-kepala .status-titik { width: 10px; height: 10px; }
+.status-panah { transition: transform 0.15s; color: var(--muted); }
+.status-buka[aria-expanded="false"] .status-panah { transform: rotate(180deg); }
+.status-ulang { width: 30px; height: 30px; }
+.status-daftar { position: absolute; z-index: 30; bottom: calc(100% + 8px); left: 0; width: min(340px, calc(100vw - 32px)); margin: 0;
+  padding: 8px 12px; border-radius: 14px; background: var(--kaca-atas); border: 1px solid var(--rule-2);
+  box-shadow: 0 16px 40px rgba(10, 30, 60, 0.22); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); font-size: 0.8rem; }
+.status-daftar[hidden] { display: none; }
+@media (max-width: 640px) {
+  .kaki { padding: 10px 12px 8px; }
+  .kaki-baris .kaki-logo { flex-basis: 100%; }
+}
+.status-daftar { background: #ffffff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+:root[data-theme="dark"] .status-daftar { background: #16243a; }

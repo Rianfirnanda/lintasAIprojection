@@ -322,7 +322,7 @@ export async function pasangKerangka(aktif) {
   try {
     meta = await muatMeta();
   } catch (e) {
-    kaki.innerHTML = `<div class="kaki-atas"><div class="kaki-merek"><p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline di GitHub Actions terlebih dahulu.</p></div>
+    kaki.innerHTML = `<div class="kaki-baris"><p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline di GitHub Actions terlebih dahulu.</p>
       <section class="kaki-status" aria-label="Status jaringan dan layanan"></section></div>`;
     pasangStatus(kaki, null);
     document.body.classList.add("siap");
@@ -343,19 +343,15 @@ export async function pasangKerangka(aktif) {
   }
   const layanan = tautanLayanan(meta.layanan);
   kaki.innerHTML = `
-    <div class="kaki-atas">
-      <div class="kaki-merek">
-        <div class="kaki-logo">${LOGO}<div><strong>${NAMA_SISTEM}</strong><span>BPS Kabupaten Bengkulu Tengah</span></div></div>
-        <p>Pemantauan dan proyeksi harga pangan untuk mendukung TPID. Angka di sini membantu analisis, bukan angka resmi BPS.</p>
-        ${layanan ? `<nav class="kaki-tautan" aria-label="Layanan pengguna">${layanan}</nav>` : ""}
-      </div>
+    <div class="kaki-baris">
+      <div class="kaki-logo">${LOGO}<div><strong>${NAMA_SISTEM}</strong><span>BPS Kab. Bengkulu Tengah · bukan angka resmi BPS</span></div></div>
       <section class="kaki-status" aria-label="Status jaringan dan layanan"></section>
+      <div class="kaki-kanan">
+        ${layanan ? `<nav class="kaki-tautan" aria-label="Layanan pengguna">${layanan}</nav>` : ""}
+        <button type="button" class="tema-ikon" data-tema-ganti></button>
+      </div>
     </div>
-    <div class="kaki-bawah">
-      <span>Sumber: BPS, Pemda, cuaca Open-Meteo (CC BY 4.0), peta © kontributor OpenStreetMap.</span>
-      <span class="kaki-hak">© ${new Date().getFullYear()} BPS Kabupaten Bengkulu Tengah${meta.versi ? ` · v${esc(meta.versi)}` : ""}</span>
-      <button type="button" class="tema-ikon" data-tema-ganti></button>
-    </div>`;
+    <p class="kaki-catatan">Sumber: BPS, Pemda, Open-Meteo (CC BY 4.0), peta © OpenStreetMap · © ${new Date().getFullYear()}${meta.versi ? ` · v${esc(meta.versi)}` : ""}</p>`;
   pasangStatus(kaki, meta);
   kaki.querySelector("[data-tema-ganti]").addEventListener("click", () => {
     // Matikan animasi warna sesaat supaya semua bagian berganti serentak, tanpa kedip.
