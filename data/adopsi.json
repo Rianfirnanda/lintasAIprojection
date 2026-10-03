@@ -1,6 +1,6 @@
 {
-  "aktif_30_hari": 4,
-  "akun_aktif": 4,
+  "aktif_30_hari": 5,
+  "akun_aktif": 5,
   "mulai": "2026-10-02",
   "per_peran": {
     "admin": {
@@ -8,6 +8,10 @@
       "akun": 3
     },
     "analis": {
+      "aktif_30_hari": 1,
+      "akun": 1
+    },
+    "tpid": {
       "aktif_30_hari": 1,
       "akun": 1
     }
