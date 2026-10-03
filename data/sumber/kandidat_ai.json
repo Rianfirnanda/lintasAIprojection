@@ -1,6 +1,69 @@
 {
   "pencarian": [
     {
+      "waktu": "2026-10-03T01:56:06.850000+00:00",
+      "permintaan": {
+        "komoditas": "Cabai rawit merah",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Cabai rawit merah, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": null,
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "Harga Bahan Pokok - DISPERINDAG",
+            "penyedia": "Dinas Perindustrian dan Perdagangan Provinsi Bengkulu",
+            "url": "https://disperindag.bengkuluprov.go.id/komoditas?page=3874",
+            "wilayah": "Provinsi Bengkulu (termasuk cakupan kabupaten/kota)",
+            "peran_wilayah": "provinsi",
+            "periode_data": "April 2026",
+            "komoditas_varian": "Cabai rawit merah / komoditas pangan pokok",
+            "satuan": "kg",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan data harga komoditas pangan di tingkat kabupaten/kota di Provinsi Bengkulu, namun periode yang tersedia pada cuplikan adalah April 2026 (bukan Oktober 2026).",
+            "catatan_keandalan": "Sumber resmi daerah, namun memerlukan verifikasi tautan untuk ketersediaan data pada periode Oktober 2026.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "status_verifikasi": "kandidat"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Data harga eceran harian untuk komoditas Cabai rawit merah di Kabupaten Bengkulu Tengah pada periode Oktober 2026 tidak ditemukan secara spesifik dalam hasil pencarian web yang disediakan."
+        ],
+        "catatan": "Hasil pencarian web mencakup data untuk wilayah lain, periode waktu yang berbeda (seperti tahun 2024, 2025, atau April 2026), atau komoditas/varian yang tidak tepat untuk Kabupaten Bengkulu Tengah pada Oktober 2026."
+      },
+      "url_hasil_pencarian": [
+        "http://hargapangan.sumutprov.go.id/harga-cabai-merah-turun-jadi-rp-25000kilogram",
+        "https://bkperdag.kemendag.go.id/storage/publikasi/120-221-file_kajian_analisis_harga_pangan_pokok_20241209142155q4woe39fvr.pdf",
+        "https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://data.badanpangan.go.id/nfs_storage/public/publication/documents/1779588677.pdf",
+        "https://databoks.katadata.co.id/ekonomi-makro/statistik/f488e8cc078d246/harga-cabai-rawit-merah-harian-di-pasar-tradisional-provinsi-bengkulu",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://disperindag.bengkuluprov.go.id/komoditas?page=3874",
+        "https://satudata.pertanian.go.id/assets/docs/publikasi/c9c87ec57f8a22249659ace0dc306047.pdf",
+        "https://sigahada.bengkulukota.go.id",
+        "https://simpang.medan.go.id?menu=harga",
+        "https://siskaperbapo.jatimprov.go.id/harga/tabel",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+        "https://www.coingecko.com/id/coins/daddy-tate/historical_data",
+        "https://www.coingecko.com/id/coins/gatetoken/historical_data",
+        "https://www.instagram.com/reel/Dd0rd8KPVHC"
+      ],
+      "dari": "situs",
+      "oleh": "rianfirnanda1@gmail.com"
+    },
+    {
       "waktu": "2026-10-03T08:06:01+07:00",
       "permintaan": {
         "komoditas": "Cabai Merah",
