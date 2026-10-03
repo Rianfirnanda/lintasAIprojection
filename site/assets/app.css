@@ -1335,3 +1335,4 @@ body:has(.masuk-latar) { overflow-x: clip; }
 }
 .status-daftar { background: #ffffff; -webkit-backdrop-filter: none; backdrop-filter: none; }
 :root[data-theme="dark"] .status-daftar { background: #16243a; }
+.kaki::before { content: none; }
