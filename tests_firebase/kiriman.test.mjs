@@ -216,3 +216,26 @@ test("hasil dan log AI dari browser: hanya pengelola sistem yang menulis, sesuai
   await assertSucceeds(getDocs(collection(db("an"), "lbp_log_ai")));
   await assertFails(getDocs(collection(db("ptg"), "lbp_log_ai")));
 });
+
+test("analis dan operator bisa menerima atau menolak kandidat sumber AI; tolak wajib beralasan", async () => {
+  await akun("an", "analis");
+  await akun("op", "operator");
+  await akun("ptg", "petugas");
+  await akun("tp", "tpid");
+  const id = "0123456789ab";
+  const k = (uid, tambahan = {}) => ({ id_kandidat: id, keputusan: "terima", alasan: "", penilai: "Analis", tanggal: "2026-10-03",
+    url: "https://contoh.go.id/harga", nama_sumber: "Disperindag", pencarian: "2026-10-02T09:00:00+07:00",
+    oleh_uid: uid, diperbarui: serverTimestamp(), ...tambahan });
+  await assertSucceeds(setDoc(doc(db("an"), "lbp_keputusan_sumber", id), k("an")));
+  // keputusan bisa diubah (terbaru yang berlaku), tetapi menolak tanpa alasan ditolak aturan
+  await assertFails(setDoc(doc(db("op"), "lbp_keputusan_sumber", id), k("op", { keputusan: "tolak" })));
+  await assertSucceeds(setDoc(doc(db("op"), "lbp_keputusan_sumber", id), k("op", { keputusan: "tolak", alasan: "salah wilayah" })));
+  await assertFails(setDoc(doc(db("an"), "lbp_keputusan_sumber", id), k("an", { keputusan: "mungkin" })));
+  await assertFails(setDoc(doc(db("an"), "lbp_keputusan_sumber", "id-asal"), k("an", { id_kandidat: "id-asal" })));
+  await assertFails(setDoc(doc(db("an"), "lbp_keputusan_sumber", id), k("an", { lain: 1 })));
+  await assertFails(setDoc(doc(db("an"), "lbp_keputusan_sumber", id), k("op")));  // memalsukan penilai
+  await assertFails(setDoc(doc(db("ptg"), "lbp_keputusan_sumber", id), k("ptg")));
+  await assertFails(setDoc(doc(db("tp"), "lbp_keputusan_sumber", id), k("tp")));
+  await assertSucceeds(getDocs(collection(db("an"), "lbp_keputusan_sumber")));
+  await assertFails(getDocs(collection(db("ptg"), "lbp_keputusan_sumber")));
+});

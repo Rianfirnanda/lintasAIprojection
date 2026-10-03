@@ -38,7 +38,7 @@ export const PERAN = {
   },
   analis: {
     nama: "Analis", ikon: "cari", ringkas: "Periksa data, peringatan, dan model", judulBeranda: "Meja Analis",
-    menu: ["beranda", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["kebijakan", "kamus", "tentang"],
+    menu: ["beranda", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["kebijakan", "sumber", "kamus", "tentang"],
   },
   tpid: {
     nama: "TPID", ikon: "tim", ringkas: "Pantau harga dan ambil keputusan", judulBeranda: "Dashboard TPID",

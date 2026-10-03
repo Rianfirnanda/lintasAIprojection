@@ -63,10 +63,14 @@ KIRIMAN = {
                   ["id", "tanggal", "jenis", "agenda", "keputusan", "jumlah_sinyal", "peserta", "tautan_notulen", "pencatat"], "id"),
     "lbp_keputusan_rekomendasi": (Path("data/keputusan_rekomendasi"),
                                   ["id_rekomendasi", "keputusan", "catatan", "penyetuju", "tanggal"], "id_rekomendasi"),
+    # Keputusan analis atas kandidat sumber dari AI Data Finder (terima/tolak), sebagai jejak verifikasi manusia.
+    "lbp_keputusan_sumber": (Path("data/sumber/keputusan"),
+                             ["id_kandidat", "keputusan", "alasan", "penilai", "tanggal", "url", "nama_sumber", "pencarian"],
+                             "id_kandidat"),
 }
 # Koleksi yang langsung memicu pembaruan (keputusan dan catatan); harga dan kunjungan dikumpulkan dulu (lihat perlu_jalan).
 KIRIMAN_SEGERA = ("lbp_validasi", "lbp_tindak_lanjut", "lbp_persetujuan_model", "lbp_kebijakan", "lbp_rapat",
-                  "lbp_keputusan_rekomendasi", "lbp_kandidat_ai")
+                  "lbp_keputusan_rekomendasi", "lbp_kandidat_ai", "lbp_keputusan_sumber")
 WIB = timezone(timedelta(hours=7))
 JAM_AI_HARIAN = 8  # AI Data Finder harian mulai pukul 08.00 WIB
 
@@ -155,6 +159,8 @@ def baris_csv(koleksi: str, id_dok: str, data: dict) -> dict[str, str]:
         baris["id_observasi"] = baris["id_observasi"] or id_dok
     if koleksi == "lbp_keputusan_rekomendasi":
         baris["id_rekomendasi"] = baris["id_rekomendasi"] or id_dok
+    if koleksi == "lbp_keputusan_sumber":
+        baris["id_kandidat"] = baris["id_kandidat"] or id_dok
     if koleksi == "lbp_kebijakan":
         baris["kode_varian"] = baris["kode_varian"].upper()
     return baris

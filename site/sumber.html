@@ -49,7 +49,8 @@
     <div class="kartu-kepala">
       <div>
         <h2>Kandidat sumber dari AI</h2>
-        <p>AI mencarikan sumber data baru. Hasilnya harus dicek analis dulu (AI Data Finder).</p>
+        <p>AI mencarikan sumber data baru (AI Data Finder). Analis memeriksa tiap kandidat lalu menerima atau menolaknya.
+          Yang diterima masuk Daftar sumber. Keputusan, penilai, dan alasannya tercatat.</p>
       </div>
       <a class="tombol" id="tautan-finder" href="#">Cari sumber baru</a>
     </div>
@@ -66,6 +67,7 @@
 <script type="module">
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, angka, waktu, tampilkanGalat } from "./assets/app.js";
+import { sesi } from "./assets/akses.js";
 
 const meta = await pasangKerangka("sumber.html");
 let data;
@@ -82,7 +84,7 @@ document.getElementById("kpi").innerHTML = [
   ind({ i: "lampu", warna: "oranye", label: "Masih kandidat", nilai: data.sumber.filter((x) => x.status !== "aktif" && x.status !== "ditolak").length, sub: "menunggu dicek" }),
   ind({ i: "dokumen", label: "Data terkumpul", nilai: angka(data.sumber.reduce((a, x) => a + (x.jumlah_observasi || 0), 0)), sub: "baris data" }),
 ].join("");
-const KELAS_STATUS = { aktif: "baik", kandidat: "info", menunggu_konfirmasi: "rendah", ditolak: "polos" };
+const KELAS_STATUS = { aktif: "baik", kandidat: "info", diterima: "info", menunggu_konfirmasi: "rendah", ditolak: "polos" };
 document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) => `<tr>
   <td><code>${esc(s.kode)}</code></td><td>${s.url ? `<a href="${esc(s.url)}" rel="noopener">${esc(s.nama)}</a>` : esc(s.nama)}</td>
   <td>${esc(s.kelompok)}</td><td>${esc(s.metode_akses.replace(/_/g, " "))}</td><td>${esc(s.frekuensi.replace(/_/g, " "))}</td>
@@ -112,6 +114,47 @@ else if (meta?.url_repo) finder.href = `${meta.url_repo}/actions/workflows/ai-da
 else finder.href = "tentang.html#ai-data-finder";
 
 const pencarian = data.kandidat_ai?.pencarian || [];
+const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
+const KANDIDAT = new Map(); // id kandidat -> { k, pencarian }
+let keputusanLangsung = new Map(); // keputusan di Firestore yang mungkin belum diolah mesin
+const sedangIsi = new Set();
+
+const sidik = (k) => `${k.url_diakses ? `<br><span class="meta-kecil">dicek ${esc(waktu(k.url_diakses))}</span>` : ""}${k.url_sha256
+  ? `<br><span class="meta-kecil" title="SHA-256 isi halaman saat dicek: ${esc(k.url_sha256)}">sidik SHA-256 <code>${esc(k.url_sha256.slice(0, 12))}…</code>${
+    k.url_ukuran_byte != null ? ` · ${angka(Math.max(1, Math.round(k.url_ukuran_byte / 1024)))} KB${k.url_sidik_terpotong ? " pertama" : ""}` : ""}</span>` : ""}`;
+
+function teksKeputusan(kp, menunggu) {
+  const terima = kp.keputusan === "terima";
+  return `<span class="lencana ${terima ? "baik" : "polos"}">${terima ? "diterima" : "ditolak"}</span>
+    <br><span class="meta-kecil">${esc(kp.penilai || "-")} · ${esc(kp.tanggal || "")}</span>
+    ${kp.alasan ? `<br><span class="meta-kecil">“${esc(kp.alasan)}”</span>` : ""}
+    ${menunggu ? '<br><span class="meta-kecil">Tersimpan. Daftar sumber ikut berubah setelah pembaruan berikutnya.</span>' : ""}`;
+}
+
+function isiSel(td, { pilih = false } = {}) {
+  const x = KANDIDAT.get(td.dataset.id);
+  if (!x) return;
+  const langsung = keputusanLangsung.get(td.dataset.id);
+  const kp = langsung || x.k.keputusan;
+  const menunggu = !!langsung && (langsung.keputusan !== x.k.keputusan?.keputusan || (langsung.alasan || "") !== (x.k.keputusan?.alasan || ""));
+  const tombol = !kiriman ? "" : kp && !pilih ? '<button class="tombol kecil" type="button" data-ubah>Ubah</button>'
+    : '<button class="tombol utama-aksi kecil" type="button" data-putus="terima">Terima</button><button class="tombol kecil" type="button" data-putus="tolak">Tolak</button>';
+  td.innerHTML = (kp ? teksKeputusan(kp, menunggu) : '<span class="lencana info">belum dinilai</span>')
+    + (tombol ? `<div class="aksi-putus">${tombol}</div>` : "");
+}
+
+function bukaForm(td, pilihan) {
+  sedangIsi.add(td.dataset.id);
+  const tolak = pilihan === "tolak";
+  td.innerHTML = `<form class="form-putus" data-pilihan="${pilihan}">
+    <label class="meta-kecil">Alasan ${tolak ? "(wajib)" : "(boleh kosong)"}
+      <textarea rows="2" maxlength="500" ${tolak ? "required minlength=\"3\"" : ""}
+        placeholder="${tolak ? "Mis. bukan data Bengkulu Tengah, situs tidak resmi" : "Mis. data resmi, rutin diperbarui"}"></textarea></label>
+    <div class="aksi-putus"><button class="tombol utama-aksi kecil" type="submit">${tolak ? "Simpan: tolak" : "Simpan: terima"}</button>
+      <button class="tombol kecil" type="button" data-batal>Batal</button></div>
+    <p class="meta-kecil pesan-putus" role="status"></p></form>`;
+  td.querySelector("textarea").focus();
+}
 const wadah = document.getElementById("kandidat");
 if (!pencarian.length) {
   wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan <strong>AI Data Finder</strong> dari menu Pengaturan, tab Jalankan, lalu isi komoditas dan periode. Pencarian otomatis juga berjalan setiap hari.
@@ -126,23 +169,64 @@ if (!pencarian.length) {
       <summary><strong>${esc(p.permintaan.komoditas)}</strong> · ${esc(p.permintaan.periode)} · ${esc(waktu(p.waktu))} · ${kandidat.length} kandidat · ${esc(p.penyedia || "anthropic")}</summary>
       <p class="meta-kecil" style="margin:6px 0">Model: ${esc(p.model)}${p.pencarian_web ? ` · dari pencarian web (${esc(p.pencarian_web)})` : ""}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web, jadi semua URL perlu dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
       <p class="meta-kecil" style="margin:6px 0">Prompt: ${esc(p.permintaan.prompt)}</p>
-      <div class="gulir-tabel"><table><thead><tr><th>Sumber</th><th>Wilayah</th><th>Periode</th><th>Komoditas/satuan</th><th>Frekuensi</th>
-        <th>Akses</th><th>URL di hasil pencarian?</th><th>URL dapat dibuka?</th><th>Perlu izin?</th><th>Catatan</th></tr></thead><tbody>
-      ${kandidat.map((k) => `<tr>
+      <div class="gulir-tabel"><table><thead><tr><th>Sumber</th><th>Keputusan analis</th><th>Wilayah</th><th>Periode</th><th>Komoditas/satuan</th><th>Frekuensi</th>
+        <th>Akses</th><th>URL di hasil pencarian?</th><th>URL dapat dibuka? (bukti akses)</th><th>Perlu izin?</th><th>Catatan</th></tr></thead><tbody>
+      ${kandidat.map((k) => {
+        if (k.id) KANDIDAT.set(k.id, { k, pencarian: p.waktu });
+        return `<tr>
         <td>${k.url ? `<a href="${esc(k.url)}" rel="noopener nofollow">${esc(k.nama_sumber)}</a>` : esc(k.nama_sumber)}<br><span class="meta-kecil">${esc(k.penyedia)}</span></td>
+        <td class="sel-putus" ${k.id ? `data-id="${esc(k.id)}"` : ""}></td>
         <td>${esc(k.wilayah)}<br><span class="meta-kecil">${esc(k.peran_wilayah)}</span></td><td>${esc(k.periode_data)}</td>
         <td>${esc(k.komoditas_varian)}<br><span class="meta-kecil">${esc(k.satuan)}</span></td><td>${esc(k.frekuensi_pembaruan)}</td>
         <td>${esc(k.metode_akses)}</td>
         <td>${k.url_ada_di_hasil_pencarian === null || k.url_ada_di_hasil_pencarian === undefined ? '<span class="lencana polos">tidak ada pencarian</span>' : k.url_ada_di_hasil_pencarian ? '<span class="lencana baik">ya</span>' : '<span class="lencana tinggi">tidak, periksa</span>'}</td>
-        <td>${k.url_dapat_diakses === true ? '<span class="lencana baik">ya</span>' : k.url_dapat_diakses === false ? '<span class="lencana tinggi">tidak</span>' : '<span class="lencana polos">belum pasti</span>'}<br><span class="meta-kecil">${esc(k.keterangan_url || "")}</span></td>
+        <td>${k.url_dapat_diakses === true ? '<span class="lencana baik">ya</span>' : k.url_dapat_diakses === false ? '<span class="lencana tinggi">tidak</span>' : '<span class="lencana polos">belum pasti</span>'}<br><span class="meta-kecil">${esc(k.keterangan_url || "")}</span>${sidik(k)}</td>
         <td>${k.perlu_izin ? '<span class="lencana rendah">ya</span>' : "tidak"}</td>
-        <td class="meta-kecil">${esc(k.relevansi)} ${esc(k.catatan_keandalan)} ${esc(k.lisensi_atau_ketentuan)}</td></tr>`).join("")
-        || `<tr><td colspan="10" class="kosong">Tidak ada kandidat.</td></tr>`}
+        <td class="meta-kecil">${esc(k.relevansi)} ${esc(k.catatan_keandalan)} ${esc(k.lisensi_atau_ketentuan)}</td></tr>`;
+      }).join("")
+        || `<tr><td colspan="11" class="kosong">Tidak ada kandidat.</td></tr>`}
       </tbody></table></div>
       ${(h.tidak_ditemukan || []).length ? `<p class="meta-kecil">Tidak ditemukan: ${h.tidak_ditemukan.map(esc).join("; ")}</p>` : ""}
       ${h.catatan ? `<p class="meta-kecil">Catatan AI: ${esc(h.catatan)}</p>` : ""}
     </details>`;
   }).join("");
+  wadah.querySelectorAll(".sel-putus[data-id]").forEach((td) => isiSel(td));
+
+  if (kiriman) {
+    wadah.addEventListener("click", (e) => {
+      const td = e.target.closest(".sel-putus[data-id]");
+      if (!td) return;
+      if (e.target.closest("[data-ubah]")) isiSel(td, { pilih: true });
+      else if (e.target.closest("[data-putus]")) bukaForm(td, e.target.closest("[data-putus]").dataset.putus);
+      else if (e.target.closest("[data-batal]")) { sedangIsi.delete(td.dataset.id); isiSel(td); }
+    });
+    wadah.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const td = form.closest(".sel-putus");
+      const x = KANDIDAT.get(td.dataset.id);
+      const pilihan = form.dataset.pilihan;
+      const alasan = form.querySelector("textarea").value.trim();
+      const pesan = form.querySelector(".pesan-putus");
+      if (pilihan === "tolak" && alasan.length < 3) { pesan.textContent = "Tulis alasan penolakan dulu."; return; }
+      form.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+      pesan.textContent = "Menyimpan…";
+      try {
+        const penilai = sesi()?.nama || "";
+        await kiriman.putuskanSumber(x.k, x.pencarian, pilihan, { alasan, penilai });
+        keputusanLangsung.set(td.dataset.id, { keputusan: pilihan, alasan, penilai, tanggal: new Date().toISOString().slice(0, 10) });
+        sedangIsi.delete(td.dataset.id);
+        isiSel(td);
+      } catch (galat) {
+        pesan.textContent = kiriman.pesanKiriman(galat);
+        form.querySelectorAll("button").forEach((b) => { b.disabled = false; });
+      }
+    });
+    kiriman.pantauKeputusanSumber((peta) => {
+      keputusanLangsung = peta;
+      wadah.querySelectorAll(".sel-putus[data-id]").forEach((td) => { if (!sedangIsi.has(td.dataset.id)) isiSel(td); });
+    }).catch(() => {});
+  }
 }
 </script>
 </body>
