@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from pipeline import notifikasi
 
 
@@ -55,3 +57,71 @@ def test_kanal_email_terdeteksi():
 def test_pesan_dipotong_dan_dibatasi():
     teks = notifikasi.susun_pesan_sinyal([_s(str(i)) for i in range(15)], "", 10)
     assert "… dan 5 sinyal lainnya." in teks
+
+
+def test_email_ke_semua_pengguna_terdaftar_tanpa_dobel():
+    env = {"SMTP_HOST": "smtp.resend.com", "SMTP_USER": "resend", "SMTP_PASSWORD": "p",
+           "EMAIL_KE": "kantor@contoh.go.id, A@contoh.go.id", "EMAIL_PENGGUNA": "a@contoh.go.id,b@contoh.go.id"}
+    assert notifikasi.penerima_email(env) == ["kantor@contoh.go.id", "a@contoh.go.id", "b@contoh.go.id"]
+    assert notifikasi.penerima_email(env, ke_pengguna=False) == ["kantor@contoh.go.id", "a@contoh.go.id"]
+    # cukup pengguna terdaftar, tanpa EMAIL_KE
+    tanpa_ke = {k: v for k, v in env.items() if k != "EMAIL_KE"}
+    assert notifikasi.kanal_tersedia(tanpa_ke) == ["email"]
+    assert notifikasi.kanal_tersedia(tanpa_ke, ke_pengguna=False) == []
+
+
+class _SmtpPalsu:
+    def __init__(self, *a, **k):
+        self.terkirim = []
+        _SmtpPalsu.terakhir = self
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def starttls(self, **k):
+        pass
+
+    def login(self, u, p):
+        self.masuk = (u, p)
+
+    def send_message(self, pesan):
+        if pesan["To"] == "ditolak@contoh.go.id":
+            import smtplib
+            raise smtplib.SMTPRecipientsRefused({pesan["To"]: (550, b"ditolak")})
+        self.terkirim.append(pesan)
+
+
+def test_kirim_email_satu_per_penerima(monkeypatch):
+    monkeypatch.setattr(notifikasi.smtplib, "SMTP_SSL", _SmtpPalsu)
+    env = {"SMTP_HOST": "smtp.resend.com", "SMTP_PORT": "465", "SMTP_USER": "resend", "SMTP_PASSWORD": "p",
+           "EMAIL_DARI": "onboarding@resend.dev"}
+    n = notifikasi.kirim_email(env, "Subjek", "Isi", ["a@contoh.go.id", "ditolak@contoh.go.id", "b@contoh.go.id"])
+    s = _SmtpPalsu.terakhir
+    # tiap orang menerima email sendiri: alamat pengguna lain tidak terlihat; satu alamat ditolak tidak menghentikan yang lain
+    assert n == 2 and [p["To"] for p in s.terkirim] == ["a@contoh.go.id", "b@contoh.go.id"]
+    assert all(p["From"] == "onboarding@resend.dev" and "Bcc" not in p for p in s.terkirim)
+    with pytest.raises(RuntimeError):
+        notifikasi.kirim_email(env, "S", "I", ["ditolak@contoh.go.id"])
+
+
+def test_email_pengguna_aktif_dari_firestore():
+    from pipeline import firestore_sinkron as fs
+
+    class Dok:
+        def __init__(self, d):
+            self.d = d
+
+        def to_dict(self):
+            return self.d
+
+    class Db:
+        def collection(self, nama):
+            assert nama == "lbp_pengguna"
+            return type("K", (), {"stream": lambda _s: [
+                Dok({"email": "B@contoh.go.id", "status": "aktif"}), Dok({"email": "a@contoh.go.id", "status": "aktif"}),
+                Dok({"email": "tunggu@contoh.go.id", "status": "menunggu"}), Dok({"email": "x@contoh.go.id", "status": "ditolak"}),
+                Dok({"email": "bukan-email", "status": "aktif"}), Dok({"status": "aktif"})]})()
+    assert fs.email_pengguna_aktif(Db()) == ["a@contoh.go.id", "b@contoh.go.id"]

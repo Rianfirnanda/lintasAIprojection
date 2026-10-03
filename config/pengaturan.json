@@ -48,6 +48,7 @@
     "keparahan_minimal": "sedang",
     "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat"],
     "maks_sinyal_per_pesan": 10,
+    "email_ke_pengguna": true,
     "buletin_mingguan": true,
     "kirim_saat_demo": false
   },

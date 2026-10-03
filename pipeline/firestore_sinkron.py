@@ -34,6 +34,7 @@ import json
 import logging
 import math
 import os
+import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -329,15 +330,35 @@ def muat_rahasia(db, akar: Path) -> dict[str, str]:
     return hasil
 
 
+POLA_EMAIL = re.compile(r"^[^\s@,]+@[^\s@,]+\.[^\s@,]+$")
+
+
+def email_pengguna_aktif(db) -> list[str]:
+    """Email semua akun yang sudah disetujui admin (status aktif), untuk penerima notifikasi email."""
+    hasil = set()
+    for d in db.collection("lbp_pengguna").stream():
+        a = d.to_dict() or {}
+        email = str(a.get("email") or "").strip().lower()
+        if a.get("status") == "aktif" and POLA_EMAIL.match(email):
+            hasil.add(email)
+    return sorted(hasil)
+
+
 def pasang_rahasia_dari_firestore(akar: Path) -> list[str]:
-    """Dipanggil sebelum pipeline/AI jalan. Gagal membaca bukan alasan berhenti: GitHub Secrets tetap dipakai."""
+    """Dipanggil sebelum pipeline/AI jalan. Gagal membaca bukan alasan berhenti: GitHub Secrets tetap dipakai.
+    Email pengguna aktif ikut dipasang (EMAIL_PENGGUNA) supaya notifikasi email bisa dikirim ke semua pengguna."""
     if not aktif():
         return []
     try:
-        terpasang = terapkan_rahasia(muat_rahasia(klien(), akar))
+        db = klien()
+        terpasang = terapkan_rahasia(muat_rahasia(db, akar))
     except Exception as e:  # noqa: BLE001
         log.warning("kunci dari situs tidak bisa dibaca, memakai GitHub Secrets: %s", e)
         return []
+    try:
+        os.environ["EMAIL_PENGGUNA"] = ",".join(email_pengguna_aktif(db))
+    except Exception as e:  # noqa: BLE001
+        log.warning("daftar email pengguna tidak bisa dibaca: %s", e)
     if terpasang:
         log.info("kunci dari situs dipakai: %s", ", ".join(terpasang))
     return terpasang
