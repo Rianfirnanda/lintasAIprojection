@@ -2,7 +2,10 @@
 
 Kanal diaktifkan lewat GitHub Secrets:
   Telegram : TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (bot dibuat lewat @BotFather, tambahkan ke grup TPID)
-  Email    : SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, EMAIL_KE (pisahkan dengan koma), EMAIL_DARI (opsional)
+  Email    : SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, EMAIL_DARI (opsional), dan penerima:
+             semua pengguna aktif (EMAIL_PENGGUNA, diisi mesin dari Firestore; bisa dimatikan lewat
+             notifikasi.email_ke_pengguna) ditambah EMAIL_KE (pisahkan dengan koma). Tiap penerima mendapat email
+             sendiri, jadi alamat sesama pengguna tidak saling terlihat.
 
 Sinyal yang sudah dikirim dicatat di data/notifikasi/terkirim.json (di-commit oleh GitHub Actions) agar tidak dobel.
 Mode demo tidak mengirim notifikasi kecuali notifikasi.kirim_saat_demo = true.
@@ -28,6 +31,7 @@ BAWAAN = {
     "keparahan_minimal": "sedang",
     "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat"],
     "maks_sinyal_per_pesan": 10,
+    "email_ke_pengguna": True,
     "buletin_mingguan": True,
     "kirim_saat_demo": False,
 }
@@ -99,35 +103,58 @@ def kirim_telegram(token: str, chat_id: str, teks: str) -> None:
                 raise RuntimeError(f"Telegram menolak pesan: {hasil}")
 
 
-def kirim_email(env: dict, subjek: str, teks: str) -> None:
-    pesan = EmailMessage()
-    pesan["Subject"] = subjek
-    pesan["From"] = env.get("EMAIL_DARI") or env["SMTP_USER"]
-    pesan["To"] = ", ".join(x.strip() for x in env["EMAIL_KE"].split(",") if x.strip())
-    pesan.set_content(teks)
+def _daftar(teks: str | None) -> list[str]:
+    return [x.strip().lower() for x in (teks or "").split(",") if "@" in x]
+
+
+def penerima_email(env: dict, ke_pengguna: bool = True) -> list[str]:
+    """EMAIL_KE ditambah (bila diaktifkan) email semua pengguna aktif, tanpa dobel."""
+    semua = _daftar(env.get("EMAIL_KE")) + (_daftar(env.get("EMAIL_PENGGUNA")) if ke_pengguna else [])
+    return list(dict.fromkeys(semua))
+
+
+def kirim_email(env: dict, subjek: str, teks: str, penerima: list[str] | None = None) -> int:
+    """Kirim satu email ke tiap penerima (alamat sesama penerima tidak terlihat). Kembalikan jumlah yang terkirim."""
+    penerima = penerima if penerima is not None else penerima_email(env)
+    pengirim = env.get("EMAIL_DARI") or env["SMTP_USER"]
     port = int(env.get("SMTP_PORT") or 465)
     konteks = ssl.create_default_context()
     if port == 465:
-        with smtplib.SMTP_SSL(env["SMTP_HOST"], port, context=konteks, timeout=30) as s:
-            s.login(env["SMTP_USER"], env["SMTP_PASSWORD"])
-            s.send_message(pesan)
+        s = smtplib.SMTP_SSL(env["SMTP_HOST"], port, context=konteks, timeout=30)
     else:
-        with smtplib.SMTP(env["SMTP_HOST"], port, timeout=30) as s:
-            s.starttls(context=konteks)
-            s.login(env["SMTP_USER"], env["SMTP_PASSWORD"])
-            s.send_message(pesan)
+        s = smtplib.SMTP(env["SMTP_HOST"], port, timeout=30)
+        s.starttls(context=konteks)
+    terkirim, gagal = 0, []
+    with s:
+        s.login(env["SMTP_USER"], env["SMTP_PASSWORD"])
+        for alamat in penerima:
+            pesan = EmailMessage()
+            pesan["Subject"] = subjek
+            pesan["From"] = pengirim
+            pesan["To"] = alamat
+            pesan.set_content(teks)
+            try:
+                s.send_message(pesan)
+                terkirim += 1
+            except smtplib.SMTPException as e:  # satu alamat ditolak tidak menghentikan yang lain
+                gagal.append(f"{alamat}: {e}")
+    if gagal:
+        log.warning("email tidak terkirim ke %d alamat: %s", len(gagal), "; ".join(gagal)[:500])
+    if not terkirim:
+        raise RuntimeError("email tidak terkirim ke siapa pun")
+    return terkirim
 
 
-def kanal_tersedia(env: dict) -> list[str]:
+def kanal_tersedia(env: dict, ke_pengguna: bool = True) -> list[str]:
     kanal = []
     if env.get("TELEGRAM_BOT_TOKEN") and env.get("TELEGRAM_CHAT_ID"):
         kanal.append("telegram")
-    if all(env.get(k) for k in ("SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_KE")):
+    if all(env.get(k) for k in ("SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD")) and penerima_email(env, ke_pengguna):
         kanal.append("email")
     return kanal
 
 
-def _kirim(kanal: list[str], env: dict, subjek: str, teks: str, pengirim: dict | None) -> list[str]:
+def _kirim(kanal: list[str], env: dict, subjek: str, teks: str, pengirim: dict | None, ke_pengguna: bool = True) -> list[str]:
     pengirim = pengirim or {}
     berhasil = []
     for k in kanal:
@@ -135,7 +162,7 @@ def _kirim(kanal: list[str], env: dict, subjek: str, teks: str, pengirim: dict |
             if k == "telegram":
                 (pengirim.get("telegram") or kirim_telegram)(env["TELEGRAM_BOT_TOKEN"], env["TELEGRAM_CHAT_ID"], teks)
             else:
-                (pengirim.get("email") or kirim_email)(env, subjek, teks)
+                (pengirim.get("email") or kirim_email)(env, subjek, teks, penerima_email(env, ke_pengguna))
             berhasil.append(k)
         except Exception as e:  # jangan gagalkan pipeline karena kanal notifikasi bermasalah
             log.warning("gagal mengirim notifikasi lewat %s: %s", k, e)
@@ -151,7 +178,8 @@ def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboa
         return "notifikasi dimatikan di pengaturan"
     if demo and not cfg["kirim_saat_demo"]:
         return "notifikasi tidak dikirim dalam mode demo"
-    kanal = kanal_tersedia(env)
+    ke_pengguna = bool(cfg["email_ke_pengguna"])
+    kanal = kanal_tersedia(env, ke_pengguna)
     if not kanal:
         return "belum ada kanal notifikasi (atur secret Telegram atau SMTP)"
 
@@ -162,7 +190,7 @@ def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboa
     baru = pilih_sinyal(sinyal, status["sinyal"], cfg)
     if baru:
         teks = susun_pesan_sinyal(baru, url_dashboard, cfg["maks_sinyal_per_pesan"])
-        ok = _kirim(kanal, env, f"[Sinyal harga] {len(baru)} sinyal baru di Kab. Bengkulu Tengah", teks, pengirim)
+        ok = _kirim(kanal, env, f"[Sinyal harga] {len(baru)} sinyal baru di Kab. Bengkulu Tengah", teks, pengirim, ke_pengguna)
         if ok:
             for s in baru:
                 status["sinyal"][s["id"]] = konf.hari_ini.isoformat()
@@ -175,7 +203,7 @@ def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboa
     selesai = [p for p in laporan_mingguan if not p.get("periode_berjalan")]
     if cfg["buletin_mingguan"] and selesai and selesai[0]["label"] not in status["buletin"]:
         p = selesai[0]
-        ok = _kirim(kanal, env, f"{p['judul']}, {p['label']}", susun_pesan_buletin(p, url_dashboard), pengirim)
+        ok = _kirim(kanal, env, f"{p['judul']}, {p['label']}", susun_pesan_buletin(p, url_dashboard), pengirim, ke_pengguna)
         if ok:
             status["buletin"].append(p["label"])
             berubah = True
