@@ -1,6 +1,221 @@
 {
   "pencarian": [
     {
+      "waktu": "2026-10-04T08:08:08+07:00",
+      "permintaan": {
+        "komoditas": "Daging Ayam",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Daging Ayam, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Harga Daging Ayam Terus Alami Kenaikan\nURL: https://www.instagram.com/reel/DcPwLkpv0Vu\nCuplikan: Masih dari Bengkulu, harga daging ayam potong di pasar tradisional Kota Bengkulu terus naik hingga 47.000 per kilogram. Harga ayam hari ini\n\n[2] Harga Ayam Di Bengkulu Terus Melonjak Harga Tembus ...\nURL: https://www.instagram.com/reel/DR01RH6CZhR\nCuplikan: Harga Tembus Hingga Rp. 45.000\". MENDEKATI RP50 RIBU. Kini Harganya Mencapai Rp48 Ribu Per Kilogram, Mendekati Rp50 Ribu. sekitar Rp.90.\n\n[3] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Peternakan dan Perikanan | Daging Ayam | Daging Ayam Ras | 1 kg | Rp 43.000,- | Rp 39.333,- | Rp 3.667,- | Rp 42.000,- | Rp 42.000,- Rp 45.000,- | Rp 42.000,- | Rp 3.000,- | | Telur Ayam | Telur Ayam Ras | 1 kg | Rp 30.400,- | Rp 30.400,- Rp 30.400,- | Rp 30.400,- Rp 30.400,- | Rp 30.400,- | Daging Sapi | Tetelan | 1 kg | Rp 80.000,- | Rp 80.000,- Rp 60.000,- | Rp 60.000,- Rp 80.000,- | Rp 80.000,- [...] | Sandung Lamur | 1 kg | Rp 80.000,- | Rp 80.000,- Rp 100.000,- | Rp 100.000,- Rp 80.000,- | Rp 80.000,- | Paha Belakang | 1 kg | Rp 160.000,- | Rp 160.000,- Rp 150.000,- | Rp 150.000,- Rp 1\n\n[4] BENGKULU, KOMPAS.TV - Harga ayam dan telur di Pasar ...\nURL: https://www.facebook.com/KompasTV/videos/harga-ayam-dan-telur-di-bengkulu-melonjak-akibat-program-makan-bergizi-gratis-ko/1203495584782753\nCuplikan: Harga ayam berkisar Rp38 ribu hingga Rp40 ribu per kilogram, dari harga sebelumnya yang hanya Rp35 ribu per kilogram. Kenaikan harga ayam diakui\n\n[5] Harga Daging Ayam Terus Alami Kenaikan\nURL: https://www.youtube.com/watch?v=AobPxNFc8ZQ\nCuplikan: Harga Daging Ayam Terus Alami Kenaikan. @kompastvjambi51401 like20 views1 month ago more. Subscribe. Comments. Comment.\n\n[6] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[7] Rata-rata Harga Pangan Bulanan Tingkat Produsen Provinsi (Angka September 2025) - DATASET | Open Data Badan Pangan Nasional\nURL: https://data.badanpangan.go.id/datasetpublications/z4t/rata-rata-harga-pangan-bulanan-produsen-provinsi\nCuplikan: | 16 | Sumatera Selatan | Ayam Ras Pedaging | 2025 | Februari | Rp19,055 | | 17 | Bengkulu | Ayam Ras Pedaging | 2025 | Februari | 18 | Lampung | Ayam Ras Pedaging | 2025 | Februari | Rp22,142 | | 32 | Jawa Barat | Ayam Ras Pedaging | 2025 | Februari | Rp22,271 | | 33 | Jawa Tengah | Ayam Ras Pedaging | 2025 | Februari | Rp19,679 | | 34 | D.I Yogyakarta | Ayam Ras Pedaging | 2025 | Februari | 35 | Jawa Timur | Ayam Ras Pedaging | 2025 | Februari | Rp21,933 | [...] | 16 | Sumatera Selatan | Ayam Ras Pedaging | 2025 | Agustus | Rp18,157 | | 17 | Bengkulu | Ayam Ras Pedaging | 2025 | Agustus | | \n\n[8] DALAM RANGKA STABILISASI HARGA DISPERINDAG DAN PEMPROV BENGKULU GELAR PASAR MURAH DI BENGKULU TENGAH\nURL: https://bengkulutengahkab.go.id/postingan/detail_postingan/DALAM-RANGKA-STABILISASI-HARGA-DISPERINDAG-DAN-PEMPROV-BENGKULU-GELAR-PASAR-MURAH-DI-BENGKULU-TENGAH\nCuplikan: “saat ini harga kebutuhan pokok sehari-hari cenderung meningkat seperti beras, minyak goreng, gula pasir, cabe merah, bawang merah, daging ayam ras dan telur hal ini disebabkan tidak seimbangnya antara ketersediaan dan kebutuhan masyarakat yang akhirnya berdampak pada meningkatnya angka inflasi seperti yang terjadi saat ini di provinsi bengkulu sebagai upaya mengatasi masalah itu pemerintah hadir dengan kegiatan pasar murah ini, dengan harapan bisa membantu masyarakat khususnya masyarakat trans [...] masyarakat trans sejahtera dengan memenuhi kebutuhan bahan pokok dengan harga relatif lebih mu\n\n[9] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id/faq\nCuplikan: | 6 | Bengkulu | | | | | v | | | | | | 7 | Sumatera Selatan | v | v | | | v | | v | v | v | | 8 | Lampung | v | v | | | v | | v | v | v | | 9 | Banten | v | | | | | | v | v | v | | 10 | Jawa Barat | v | v | v | v | v | v | v | v | v | | 11 | Jawa Tengah | v | v | v | v | v | v | v | v | v | | 12 | Jawa Timur | v | v | v | v | v | v | v | v | v | | 13 | DI Yogyakarta | v | | | | v | v | | | | | 14 | Bali | v | | | v | | v | v | v | | [...] 9. Daging Ayam Ras, harga di Pedagang Eceran (Rp/Kg) 10. Telur Ayam Ras, harga di Pedagang Eceran (Rp/Kg) 11. Gula Pasir Lokal, harga di Pedagang Eceran (Rp/\n\n[10] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/Hargapangan/TabelHarga/ProdusenDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[11] Beranda - Sistem Informasi Sarana Perdagangan (SISP)\nURL: https://sisp.kemendag.go.id\nCuplikan: Filter Pencarian | Komoditas | Satuan | 01 Oct 2026 (Rp.) | 30 Sep 2026 (Rp.) | (%) | Ket | --- --- --- | Brand Brand Brand Brand Brand Top [...] Berikut adalah sebaran pasar seluruh Indonesia yang ditampilkan dalam titik poin di Peta Indonesia. Untuk melihat detail Pasar maka klik Marker Lokasi Pasar yang ada di Peta. Memuat data peta... # Informasi Pasar Klik marker di peta untuk melihat info pasar ## Perbandingan Harga Barang Kebutuhan Pokok #### SP2KP (Diolah, 2026) Live Kontributor Dinas Perdagangan 411 Titik Pantauan 537 Pasar Rakyat Filter Pencarian [...] Logo Sistem Informasi Sarana Pe\n\n[12] - PIHPS\nURL: https://www.bi.go.id/hargapangan\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional ### Informasi Harga Pangan Antar Daerah ### Harga Rata-Rata dan Perubahan 25 September 2026\n\n[13] \"Harga Ayam Potong di Kota Bengkulu Terus Naik RRI.CO.ID, ...\nURL: https://www.instagram.com/reel/DbrpQPJp-jA\nCuplikan: Harga ayam di pasar hari ini, Rabu, 5 Agustus 2026, melonjak hingga mencapai Rp45.000 per kilogram dari kisaran sebelumnya Rp35.000 sampai Rp40.\n\n[14] Harga bahan pokok per 1 Oktober 2026 sigahada. ...\nURL: https://www.instagram.com/p/Dd8cvdoOKi2\nCuplikan: Berbagai kebutuhan pokok seperti beras, minyak goreng, telur, bawang hingga daging ayam tersedia dengan harga terjangkau bagi masyarakat.\n\n[15] Simponi Ternak: Beranda\nURL: https://simponiternak.pertanian.go.id\nCuplikan: Harga Acuan. Harga acuan komoditas peternakan nasional (PRODUSEN). Sapi (17) Daging Ayam (14) Telur (16). Sapi. Peraturan. KEPBADAN PANGAN NO 330 TAHUN 2026."
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": "5KbBavuyDbGt1MkP_NbMmQE",
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "Sistem Informasi Sarana Perdagangan (SISP) / SP2KP Kementerian Perdagangan",
+            "penyedia": "Kementerian Perdagangan",
+            "url": "https://sisp.kemendag.go.id",
+            "wilayah": "Indonesia (mencakup pasar rakyat di berbagai kabupaten/kota)",
+            "peran_wilayah": "target",
+            "periode_data": "01 Oct 2026",
+            "komoditas_varian": "Daging Ayam",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan data harga harian komoditas pangan dari sistem SP2KP yang mencakup titik pantauan pasar rakyat.",
+            "catatan_keandalan": "Memerlukan verifikasi lebih lanjut apakah titik pantauan mencakup spesifik Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-04T08:07:51+07:00",
+            "url_sha256": "797496f0e82d3c2994ee72561f339d6a9c6fcd7610c08470a1d9975b8308c16a",
+            "url_ukuran_byte": 149009,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "914e619772e8"
+          },
+          {
+            "nama_sumber": "Pusat Informasi Harga Pangan Strategis Nasional (PIHPS) - Pasar Tradisional Daerah",
+            "penyedia": "Bank Indonesia",
+            "url": "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+            "wilayah": "Provinsi Bengkulu / Kabupaten/Kota",
+            "peran_wilayah": "provinsi",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Daging Ayam",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan informasi harga pangan strategis harian di pasar tradisional berdasarkan daerah.",
+            "catatan_keandalan": "Cakupan detail hingga tingkat Kabupaten Bengkulu Tengah perlu dicek langsung pada tabel daerah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-04T08:08:00+07:00",
+            "url_sha256": "5a4895275dbe8ec7db4597b604a35e28c0ed19d1e81f7e85e013ed0453999419",
+            "url_ukuran_byte": 47052,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "643bd6588914"
+          },
+          {
+            "nama_sumber": "Open Data Badan Pangan Nasional - Rata-rata Harga Pangan Bulanan Tingkat Produsen Provinsi",
+            "penyedia": "Badan Pangan Nasional",
+            "url": "https://data.badanpangan.go.id/datasetpublications/z4t/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+            "wilayah": "Provinsi Bengkulu",
+            "peran_wilayah": "provinsi",
+            "periode_data": "2025",
+            "komoditas_varian": "Ayam Ras Pedaging",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "bulanan",
+            "metode_akses": "file",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": false,
+            "relevansi": "Sumber data resmi Badan Pangan Nasional untuk tingkat provinsi, meskipun periode pada cuplikan adalah tahun 2025 dan level produsen.",
+            "catatan_keandalan": "Data bersifat bulanan dan tingkat produsen, bukan eceran harian Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-04T08:08:01+07:00",
+            "url_sha256": "44b5fe58ba91f6d566bd67759cc1a32e22ace8904300563ece01f4b97ec073c0",
+            "url_ukuran_byte": 2097152,
+            "url_sidik_terpotong": true,
+            "status_verifikasi": "kandidat",
+            "id": "6599f50fb14b"
+          },
+          {
+            "nama_sumber": "SIGAHADA Kota Bengkulu",
+            "penyedia": "Pemerintah Kota Bengkulu",
+            "url": "https://sigahada.bengkulukota.go.id",
+            "wilayah": "Kota Bengkulu",
+            "peran_wilayah": "pembanding",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Daging Ayam Ras",
+            "satuan": "1 kg",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Relevan sebagai pembanding rantai pasok wilayah tetangga (Kota Bengkulu) yang memuat harga harian daging ayam ras.",
+            "catatan_keandalan": "Wilayah cakupan adalah Kota Bengkulu, bukan Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": null,
+            "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
+            "url_diakses": "2026-10-04T08:08:08+07:00",
+            "url_sha256": "",
+            "url_ukuran_byte": null,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "8e02d87e4c89"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Data harga eceran harian spesifik untuk Daging Ayam di wilayah Kabupaten Bengkulu Tengah pada periode Oktober 2026 yang bersumber langsung secara spesifik dari portal daerah Bengkulu Tengah tidak ditemukan dalam hasil pencarian web hari ini."
+        ],
+        "catatan": "Hasil pencarian lebih banyak menyajikan data untuk wilayah Kota Bengkulu, tingkat provinsi, atau informasi umum kegiatan pasar murah di Bengkulu Tengah tanpa rincian tabel harga eceran harian per Oktober 2026."
+      },
+      "url_hasil_pencarian": [
+        "https://bengkulutengahkab.go.id/postingan/detail_postingan/DALAM-RANGKA-STABILISASI-HARGA-DISPERINDAG-DAN-PEMPROV-BENGKULU-GELAR-PASAR-MURAH-DI-BENGKULU-TENGAH",
+        "https://data.badanpangan.go.id/datasetpublications/z4t/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://sigahada.bengkulukota.go.id",
+        "https://simponiternak.pertanian.go.id",
+        "https://sisp.kemendag.go.id",
+        "https://www.bi.go.id/Hargapangan/TabelHarga/ProdusenDaerah",
+        "https://www.bi.go.id/hargapangan",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+        "https://www.facebook.com/KompasTV/videos/harga-ayam-dan-telur-di-bengkulu-melonjak-akibat-program-makan-bergizi-gratis-ko/1203495584782753",
+        "https://www.instagram.com/p/Dd8cvdoOKi2",
+        "https://www.instagram.com/reel/DR01RH6CZhR",
+        "https://www.instagram.com/reel/DbrpQPJp-jA",
+        "https://www.instagram.com/reel/DcPwLkpv0Vu",
+        "https://www.youtube.com/watch?v=AobPxNFc8ZQ"
+      ],
+      "log": [
+        {
+          "waktu": "08.07.12",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Daging Ayam (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.07.19",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.07.51",
+          "teks": "gemini (gemini-3.5-flash-lite) menjawab: 4 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
+      "waktu": "2026-10-04T08:07:12+07:00",
+      "permintaan": {
+        "komoditas": "Cabai Rawit",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Cabai Rawit, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Harga Cabai Rawit Merah di Pasar Tradisional Periode Maret 2025-2026\nURL: https://databoks.katadata.co.id/ekonomi-makro/statistik/f488e8cc078d246/harga-cabai-rawit-merah-harian-di-pasar-tradisional-provinsi-bengkulu\nCuplikan: Sedangkan harga cabai rawit merah harian di pasar tradisional dalam tiga bulan terakhir di Bengkulu telah mengalami kenaikan sebesar 79,52% dari sebelumnya yang tercatat di harga Rp26,85 ribu. Rekor kenaikan harga cabai rawit merah harian di pasar tradisional di provinsi ini, sebelumnya pernah dicatatkan pada Agustus 2023 dengan kenaikan sebesar 81,22% dan penurunan terendah pernah dicatatkan pada Agustus 2023 dengan penurunan -43,6%. [...] Melansir dashboard Pusat Informasi Harga Pangan Strategis Nasional pukul 14:44 WIB, harga cabai rawit merah harian di pasar tradisional provinsi Bengkulu t\n\n[2] Pekan Pertama Ramadan, Harga Cabai Rawit Tembus Rp110 Ribu\nURL: https://www.youtube.com/watch?v=61PJ8rJgPrg\nCuplikan: [2:19] Harga bawang putih yang sebelumnya dilaporkan mencapai Rp60.000 per kg turun menjadi Rp38.000. [2:27] Sementara itu, harga minyak kita kemasan juga ditemukan melonjak dari harga eceran tertinggi. Minyak kita seharusnya dijual dengan harga Rp15.700 [2:35] per liter. Justru dijual seharga Rp19.000. [2:40] Eh, pengusaha tolong deh jangan main-main di bulan suci Ramadan. [2:44] kami langsung koordinasi ee kalau ada yang menaikkan harga pasti ditindak. [...] [1:23] Kenaikan harga sudah terjadi sejak sepekan terakhir. Kenaikan harga disebabkan oleh gagal panen di sejumlah wilayah di Pulau Jaw\n\n[3] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Kedelai Impor | 1 kg | Rp 11.800,- | Rp 11.800,- Rp 11.800,- | Rp 11.800,- Rp 11.800,- | Rp 11.800,- | Cabai | Merah Keriting | 1 kg | Rp 66.667,- | Rp 76.667,- | Rp 10.000,- | Rp 75.000,- | Rp 75.000,- Rp 55.000,- | Rp 55.000,- | Merah Besar | 1 kg | Rp 35.000,- | Rp 35.000,- Rp 50.000,- | Rp 50.000,- Rp 30.000,- | Rp 30.000,- | Rawit Merah | 1 kg | Rp 86.667,- | Rp 86.667,- Rp 83.333,- | Rp 83.333,- Rp 70.000,- | Rp 70.000,- [...] | Rawit Hijau | 1 kg | Rp 68.333,- | Rp 75.000,- | Rp 6.667,- | Rp 61.667,- | Rp 61.667,- Rp 55.000,- | Rp 55.000,- | Bawang | Bawang Merah | 1 kg | Rp 45.000,- \n\n[4] Harga cabai di Pasar Tradisional Modern atau PTM Kota ...\nURL: https://www.instagram.com/reel/Dd0rd8KPVHC\nCuplikan: Harga cabai di Pasar Tradisional Modern atau PTM Kota Bengkulu kini mencapai 70 ribu rupiah per kilogram. Kenaikan terjadi dalam beberapa\n\n[5] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[6] SISKAPERBAPO\nURL: https://siskaperbapo.jatimprov.go.id/harga/tabel\nCuplikan: SISKAPERBAPO Tabel + Harga Konsumen (per Area) + Harga Konsumen (per Komoditas) + Harga Produsen Grafik + Harga Konsumen + Harga Produsen Tren Informasi Profil Pasar Display Panduan Login 1. Home 2. Harga 3. Tabel Tabel Harga Konsumen #### Please Wait #### QR Code © 2011 - 2026 . dikelola Disperindag Jatim, Hak Cipta dilindungi\n\n[7] Rata-rata Harga Pangan Bulanan Tingkat Produsen Provinsi (Angka Desember 2025) - DATASET | Open Data Badan Pangan Nasional\nURL: https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi\nCuplikan: | 16 | Sumatera Selatan | Cabai Rawit Merah Tingkat Petani | 2025 | Mei | | 17 | Bengkulu | Cabai Rawit Merah Tingkat Petani | 2025 | Mei | | 18 | Lampung | Cabai Rawit Merah Tingkat Petani | 2025 | Mei | Rp25,448 | | 32 | Jawa Barat | Cabai Rawit Merah Tingkat Petani | 2025 | Mei | Rp24,732 | | 33 | Jawa Tengah | Cabai Rawit Merah Tingkat Petani | 2025 | Mei | Rp26,086 | | 34 | D.I Yogyakarta | Cabai Rawit Merah Tingkat Petani | 2025 | Mei | Rp20,952 | [...] | 16 | Sumatera Selatan | Cabai Rawit Merah Tingkat Petani | 2025 | Februari | 17 | Bengkulu | Cabai Rawit Merah Tingkat Petani | 2025 |\n\n[8] Yanti Nurhayanti, S.Si\nURL: https://data.badanpangan.go.id/nfs_storage/public/publication/documents/1766388005.pdf\nCuplikan: Sumber : Direktorat Stabilisasi Pasokan dan Harga Pangan diolah oleh Pusat data dan Informasi Pangan Rp. 6.836 HPP Rp. 6.500 GKP Tk. Petani Rp48.832 HAP Rp. 22.000 -29.600 Cabai Merah Keriting Rp. 7.084 HPP Rp. 6.700 GKP Tk. Penggilingan Rp. 14.373 HPP -Beras Premium Rp. 5.808 HAP Rp. 5.500 Jagung Pipilan Kering Rp. 9.374 HAP Rp. 10.775 Kedelai Biji Kering Rp. 13.092 HPP Rp. 12.000 Beras Medium Rp. 22.552 HAP Rp. 25.000 Ayam Ras Rp. 26.474 HAP Rp. 25.000 – 31.500 Cabai Rawit Merah Rp. 23.401 [...] Rp/ Kg Rp/ Kg Rp/ Kg Rp/ Kg Rp/ Kg Rp/ Kg Rp/ Kg Rp/ Kg Rp/ Kg Rp/ Kg Rp/Kg Berat Hidup Rp/Kg Eko\n\n[9] tim penyusun\nURL: https://data.badanpangan.go.id/nfs_storage/public/publication/documents/1779588677.pdf\nCuplikan: Sumber : Direktorat Stabilisasi Pasokan dan Harga Pangan diolah oleh Pusat data dan Informasi Pangan Rp. 6.715 HPP Rp. 6.500 GKP Tk. Petani Rp. 24.823 HAP Rp. 22.000 -29.600 Cabai Merah Keriting Rp. 25.153 HPP -Cabai Merah Besar Rp. 14.367 HPP -Beras Premium Tk.Penggilingan Rp. 5.635 HAP Rp. 5.500 Jagung Pipilan Kering Rp. 10.372 HAP Rp. 10.775 Kedelai Biji Kering Rp. 25.007 HAP Rp. 25.000 Ayam Ras Rp. 58.548 HAP Rp. 25.000 – 31.500 Cabai Rawit Merah Rp. 24.642 HAP Rp. 25.000 – 30.000 Bawang [...] Pasokan dan Harga Pangan diolah oleh Pusat data dan Informasi Pangan Rp. 12.441 HET Rp. 12.500 -1\n\n[10] Statistik Harga Komoditas Pertanian Tahun 2025\nURL: https://satudata.pertanian.go.id/assets/docs/publikasi/c9c87ec57f8a22249659ace0dc306047.pdf\nCuplikan: Provinsi Nasional Statistik Harga Komoditas Pertanian 2025 Pusat Data dan Sistem Informasi Pertanian 81 Tabel 4.3a. Perkembangan Rata-rata Harga Eceran Cabai Merah Besar menurut Provinsi, 2020 - 2024 Rp/kg 2020 2021 2022 2023 2024 1 Aceh 29,000 29,333 29,500 - - -2 Sumatera Utara ------3 Sumatera Barat ------4 Riau 31,671 33,038 48,500 40,500 44,367 9.55 5 Jambi 32,208 30,775 47,529 38,160 42,212 10.62 6 Sumatera Selatan 36,100 39,817 57,383 51,193 51,014 -0.35 7 Bengkulu 28,325 30,342 45,313 [...] Provinsi Nasional Tahun Statistik Harga Komoditas Pertanian 2025 116 Pusat Data dan Sistem Infor\n\n[11] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id/faq\nCuplikan: 8. Kedelai Biji Kering (Lokal), harga di Petani (Rp/Kg) 9. Bawang Merah, harga di Petani (Rp/Kg) 10. Cabai Merah Keriting, harga di Petani (Rp/Kg) 11. Cabai Rawit Merah, harga di Petani (Rp/Kg) 12. Sapi (Hidup), harga di Peternak (Rp/Kg Berat Hidup) 13. Ayam Ras Pedaging (Hidup), harga di Peternak (Rp/Kg Berat Hidup) 14. Telur Ayam ras, harga di Peternak (Rp/Kg) 15. Stok GKG Tingkat Penggilingan, stok dalam satuan Kwintal [...] 1. Beras Premium, harga di Pedagang Eceran (Rp/Kg) 2. Beras Medium, harga di Pedagang Eceran (Rp/Kg) 3. Kedelai Biji Kering (Impor), harga di Pedagang Eceran (Rp/Kg) 4.\n\n[12] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id\nCuplikan: # Harga Rata Rata Nasional Jenis Data Panel Tanggal \\ Disclaimer: Lokasi pemantauan harga tingkat produsen (provinsi/kabupaten kota) merupakan wilayah sentra produksi yang ditetapkan berdasarkan sebaran tingkat produksi 3 tahun terakhir yang dirilis oleh BPS Memuat data nasional. # Perkembangan Harga Pangan Pokok Strategis Jenis Data Panel Memuat harga historis. # Harga Rata-Rata Provinsi Jenis Data Panel Komoditas Tanggal Maps Histogram Alternative content for the map [...] Memuat data provinsi. Memuat data nasional. Memuat detail harga provinsi. Panel Harga Pangan - Badan Pangan Nasional / N\n\n[13] Pemerintah Kabupaten Padang Lawas Utara\nURL: https://padanglawasutarakab.go.id/pangan\nCuplikan: Rp 28.000 /kg Pasar Gunung Tua Update Hari Ini Harga bawang putih relatif stabil dengan distribusi yang cukup merata. Cabai Rawit #### Cabai Rawit Rp 50.000 /kg Pasar Gunung Tua Update Hari Ini Harga cabai rawit cenderung berfluktuasi tinggi, terutama saat permintaan meningkat. Tomat #### Tomat Rp 8.000 /kg Pasar Gunung Tua Update Hari Ini Harga tomat relatif stabil dengan ketersediaan yang cukup di pasar lokal. Kentang #### Kentang Rp 12.000 /kg [...] | 9 | Bawang Putih | Rp 28.000 /kg | Pasar Gunung Tua | Sinkron dari Informasi Pangan - Pasar Gunung Tua | | 10 | Cabai Rawit | Rp 50.000 /kg |\n\n[14] SIMPANG | DKP3 Kota Medan\nURL: https://simpang.medan.go.id?menu=harga\nCuplikan: | No | Komoditas | Harga Terendah | Harga Tertinggi | Harga Rata-Rata | --- --- | 1 | Bawang Merah | Rp.25,000 | Rp.35,000 | Rp.30,000 | | 2 | Bawang Putih | Rp.25,000 | Rp.38,000 | Rp.31,500 | | 3 | Beras | Rp.15,000 | Rp.17,000 | Rp.16,000 | | 4 | Cabai Merah | Rp.40,000 | Rp.60,000 | Rp.50,000 | | 5 | Cabai Rawit | Rp.45,000 | Rp.70,000 | Rp.57,500 | | 6 | Daging Ayam Ras | Rp.43,000 | Rp.48,000 | Rp.45,500 | | 7 | Daging Sapi | Rp.130,000 | Rp.150,000 | Rp.140,000 | [...] user-img Untuk Mendukung Keamanan Pangan Produkmu,Silahkan Daftar ke Sistem Perizinan Berusaha Terintegrasi Secara Elek\n\n[15] Panel Harga Pangan\nURL: https://panelharga.badanpangan.go.id\nCuplikan: Logo # Panel Harga Pangan Badan Pangan Nasional ## Website Sedang Dalam Pemeliharaan Mohon maaf atas ketidaknyamanannya. Saat ini kami sedang melakukan pemeliharaan dan peningkatan sistem untuk memberikan layanan yang lebih baik kepada Anda. Untuk informasi lebih lanjut, silakan hubungi: support@badanpangan.go.id"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": "v6bBavuLJ8Kf_uMPpd3F6AQ",
+      "hasil": {
+        "kandidat": [],
+        "tidak_ditemukan": [
+          "Tidak ditemukan sumber data harga eceran harian yang spesifik untuk Kabupaten Bengkulu Tengah pada periode Oktober 2026 dari hasil pencarian web yang tersedia. Hasil pencarian yang ada hanya mencakup tingkat Provinsi Bengkulu, Kota Bengkulu, atau wilayah lain di luar Kabupaten Bengkulu Tengah."
+        ],
+        "catatan": "Hasil pencarian web menyediakan data untuk Provinsi Bengkulu dan Kota Bengkulu (seperti SIGAHADA Kota Bengkulu), namun tidak ada data spesifik untuk Kabupaten Bengkulu Tengah maupun untuk periode Oktober 2026."
+      },
+      "url_hasil_pencarian": [
+        "https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://data.badanpangan.go.id/nfs_storage/public/publication/documents/1766388005.pdf",
+        "https://data.badanpangan.go.id/nfs_storage/public/publication/documents/1779588677.pdf",
+        "https://databoks.katadata.co.id/ekonomi-makro/statistik/f488e8cc078d246/harga-cabai-rawit-merah-harian-di-pasar-tradisional-provinsi-bengkulu",
+        "https://dev-panelharga.badanpangan.go.id",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://padanglawasutarakab.go.id/pangan",
+        "https://panelharga.badanpangan.go.id",
+        "https://satudata.pertanian.go.id/assets/docs/publikasi/c9c87ec57f8a22249659ace0dc306047.pdf",
+        "https://sigahada.bengkulukota.go.id",
+        "https://simpang.medan.go.id?menu=harga",
+        "https://siskaperbapo.jatimprov.go.id/harga/tabel",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+        "https://www.instagram.com/reel/Dd0rd8KPVHC",
+        "https://www.youtube.com/watch?v=61PJ8rJgPrg"
+      ],
+      "log": [
+        {
+          "waktu": "08.06.36",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Cabai Rawit (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.06.42",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.07.12",
+          "teks": "gemini (gemini-3.5-flash-lite) menjawab: 0 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
       "waktu": "2026-10-03T01:56:06.850000+00:00",
       "permintaan": {
         "komoditas": "Cabai rawit merah",
@@ -35,7 +250,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "229416e53416"
           }
         ],
         "tidak_ditemukan": [
@@ -155,7 +371,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "e9543ba21970"
           }
         ],
         "tidak_ditemukan": [
@@ -233,7 +450,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": null,
             "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "386ae1a539b5"
           }
         ],
         "tidak_ditemukan": [
@@ -311,7 +529,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": null,
             "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "fafc770a5a44"
           }
         ],
         "tidak_ditemukan": [
@@ -429,7 +648,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 206",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "421ab1a5fcb6"
           },
           {
             "nama_sumber": "Sistem Informasi Harga Bahan Pokok (SIGAHADA) Kota Bengkulu",
@@ -449,7 +669,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": null,
             "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "8abf61b41e95"
           },
           {
             "nama_sumber": "Sistem Pemantauan Pasar dan Kebutuhan Pokok (SP2KP)",
@@ -469,7 +690,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "f9c39d529055"
           },
           {
             "nama_sumber": "Pusat Informasi Harga Pangan Strategis Nasional (PIHPS) - Pasar Tradisional Daerah",
@@ -489,7 +711,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "ce178da78295"
           },
           {
             "nama_sumber": "Harga Cabai Rawit Merah Harian di Pasar Modern Provinsi Bengkulu",
@@ -509,7 +732,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "d241a18a4b7a"
           }
         ],
         "tidak_ditemukan": [
@@ -570,7 +794,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "345fd4276660"
           },
           {
             "nama_sumber": "Sistem Informasi Harga Bahan Pokok (SIGAHADA) Kota Bengkulu",
@@ -590,7 +815,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": null,
             "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "fe143f948fc8"
           },
           {
             "nama_sumber": "Sistem Pemantauan Pasar dan Kebutuhan Pokok (SP2KP) Kementerian Perdagangan",
@@ -610,7 +836,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "a6329bb5e628"
           },
           {
             "nama_sumber": "Pusat Informasi Harga Pangan Strategis Nasional (PIHPS) Bank Indonesia - Berdasarkan Daerah",
@@ -630,7 +857,8 @@
             "url_ada_di_hasil_pencarian": true,
             "url_dapat_diakses": true,
             "keterangan_url": "HTTP 200",
-            "status_verifikasi": "kandidat"
+            "status_verifikasi": "kandidat",
+            "id": "419bb401c02a"
           }
         ],
         "tidak_ditemukan": [
