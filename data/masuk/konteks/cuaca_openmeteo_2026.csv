@@ -1649,3 +1649,9 @@ tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
 2026-10-02,1709,suhu_rata_c,25.9,C,,BD-CUACA
 2026-10-02,1771,curah_hujan_mm,12.3,mm,,BD-CUACA
 2026-10-02,1771,suhu_rata_c,27.4,C,,BD-CUACA
+2026-10-03,1708,curah_hujan_mm,12.8,mm,,BD-CUACA
+2026-10-03,1708,suhu_rata_c,22.3,C,,BD-CUACA
+2026-10-03,1709,curah_hujan_mm,13.4,mm,,BD-CUACA
+2026-10-03,1709,suhu_rata_c,25.2,C,,BD-CUACA
+2026-10-03,1771,curah_hujan_mm,6.3,mm,,BD-CUACA
+2026-10-03,1771,suhu_rata_c,26.6,C,,BD-CUACA
