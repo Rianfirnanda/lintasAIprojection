@@ -1336,3 +1336,44 @@ body:has(.masuk-latar) { overflow-x: clip; }
 .status-daftar { background: #ffffff; -webkit-backdrop-filter: none; backdrop-filter: none; }
 :root[data-theme="dark"] .status-daftar { background: #16243a; }
 .kaki::before { content: none; }
+
+/* ============================================================
+   Layar pembuka: logo BPS dengan cincin tiga warna BPS yang berputar, tampil saat situs pertama kali dibuka dalam
+   satu sesi, lalu memudar begitu halaman siap. Murni CSS (html::before dan html::after) supaya muncul sebelum
+   JavaScript termuat. Saat pindah halaman di dalam situs, app.js menambahkan html.lewati-pembuka sehingga layar ini
+   tidak tampil lagi. Pengaman: bila halaman tidak pernah siap (mis. gagal memuat), layar hilang sendiri setelah 10 detik.
+   ============================================================ */
+html:not(.lewati-pembuka)::before {
+  content: "Lintas Benteng Projection\A BPS Kabupaten Bengkulu Tengah"; white-space: pre; text-align: center;
+  position: fixed; inset: 0; z-index: 9998; pointer-events: none; box-sizing: border-box;
+  display: grid; place-items: center; padding-top: 220px;
+  color: #ffffff; font: 600 1.05rem/1.6 "IBM Plex Sans", system-ui, sans-serif; letter-spacing: 0.01em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  background-image:
+    url("logo-bps.png"),
+    radial-gradient(circle at 50% calc(50% - 22px), #ffffff 0 50px, rgba(255, 255, 255, 0.18) 51px 53px, transparent 54px),
+    radial-gradient(120% 80% at 15% 10%, rgba(29, 127, 214, 0.55), transparent 60%),
+    radial-gradient(90% 70% at 90% 95%, rgba(14, 138, 98, 0.45), transparent 60%),
+    linear-gradient(160deg, #0a4f91, #052a52);
+  background-repeat: no-repeat; background-size: 62px auto, auto, auto, auto, auto;
+  background-position: 50% calc(50% - 22px), 0 0, 0 0, 0 0, 0 0;
+  animation: pembuka-hilang 0.5s ease 10s forwards;
+}
+/* cincin tiga warna di sekeliling logo */
+html:not(.lewati-pembuka)::after {
+  content: ""; position: fixed; z-index: 9999; pointer-events: none; left: 50%; top: calc(50% - 22px);
+  width: 128px; height: 128px; margin: -64px 0 0 -64px; border-radius: 50%;
+  background: conic-gradient(from 0deg, #2a9df4 0 30%, transparent 30% 36%, #3fbf6f 36% 64%, transparent 64% 70%, #f59a23 70% 96%, transparent 96%);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+  animation: pembuka-putar 1.1s linear infinite, pembuka-hilang 0.5s ease 10s forwards;
+}
+/* halaman siap: layar pembuka memudar */
+html:not(.lewati-pembuka):has(body.siap)::before,
+html:not(.lewati-pembuka):has(body.siap)::after { animation: pembuka-hilang 0.55s ease forwards; }
+@keyframes pembuka-putar { to { transform: rotate(360deg); } }
+@keyframes pembuka-hilang { to { opacity: 0; visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) {
+  html:not(.lewati-pembuka)::after { animation: pembuka-hilang 0.5s ease 10s forwards; }
+}
+@media print { html::before, html::after { content: none !important; } }
