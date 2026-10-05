@@ -1,6 +1,196 @@
 {
   "pencarian": [
     {
+      "waktu": "2026-10-05T08:04:13+07:00",
+      "permintaan": {
+        "komoditas": "Gula Pasir",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Gula Pasir, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Harga Gula Pasir di Pasar Tradisional Periode Februari ...\nURL: https://databoks.katadata.co.id/ekonomi-makro/statistik/7e7c40d0a1d22c1/harga-gula-pasir-harian-di-pasar-tradisional-provinsi-bengkulu\nCuplikan: Informasi terbaru panel Pusat Informasi Harga Pangan Strategis Nasional, harga gula pasir harian di pasar tradisional provinsi Bengkulu tercatat Rp18,35 ribu.\n\n[2] Pemprov akui harga gula pasir di Bengkulu naik\nURL: https://bengkulu.antaranews.com/berita/105992/pemprov-akui-harga-gula-pasir-di-bengkulu-naik\nCuplikan: saat ini harga jual gula pasir di pasar sebesar Rp18.000 per kilogram dari sebelumnya Rp12.000. eceran tertinggi berkisar antara Rp17 ribu\n\n[3] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Rawit Hijau | 1 kg | Rp 68.333,- | Rp 75.000,- | Rp 6.667,- | Rp 61.667,- | Rp 61.667,- Rp 55.000,- | Rp 55.000,- | Bawang | Bawang Merah | 1 kg | Rp 45.000,- | Rp 45.000,- Rp 38.333,- | Rp 38.333,- Rp 50.000,- | Rp 50.000,- | Industri | Gula Pasir | Gula Pasir Curah | 1 kg | Rp 18.833,- | Rp 18.833,- Rp 19.000,- | Rp 19.000,- Rp 18.500,- | Rp 18.500,- | Gula Pasir Premium | 1 kg | Rp 19.000,- | Rp 19.000,- Rp 19.667,- | Rp 19.667,- Rp 19.500,- | Rp 19.500,- [...] | Gula Dikemas | 1 kg | Rp 19.000,- | Rp 19.000,- Rp 19.667,- | Rp 19.667,- Rp 19.500,- | Rp 19.500,- | Minyak Goreng | Minyak Go\n\n[4] Harga Gula Pasir Tembus Rp18 Ribu Per Kg\nURL: https://www.youtube.com/watch?v=YgTsgZVG2Ig\nCuplikan: [0:33] Rp18.000 perambilan per kilo 164 bertarung kenaikannya Sudah berapa lama bang harga ini sudah berapa lama [0:42] sudah 2 minggu bertahap-tahap naiknya dari 15 sekiian naik naik naik sampai 2 [0:49] minggu sekarang sudah Rp8.000 kami jual jual per kilo 17.500 Sudah berapa lama harga seperti [0:56] itu di sini di pasar sudah sekitar 1 bulan lebih naik turun ini naik terus panjang ini naik terus naik terus harga [...] # Harga Gula Pasir Tembus Rp18 Ribu Per Kg ## Channel: CNN Indonesia (verified) 12M subscribers 12 likes ### Description 7,885 views Posted: 2023-12-04 Harga eceran gula pasi\n\n[5] Perkembangan Rata-Rata Harga Eceran Gula Pasir Per ...\nURL: https://data.go.id/dataset/dataset/perkembangan-rata-rata-harga-eceran-gula-pasir-per-kilogram-menurut-bulan\nCuplikan: Dataset ini berisi Perkembangan Rata-Rata Harga Eceran Gula Pasir Per Kilogram Menurut Bulan (Rupiah), 2018 – 2019 di Kec. Kota Bangun.\n\n[6] STATISTIK HARGA KONSUMEN PROVINSI BENGKULU\nURL: https://web-api.bps.go.id/download.php?f=yMSoIOGdBhzC8PNycAwhRmNTTUdKYTBya3NnZ051amMyL0d1K3g5VWVKczZtdEczRnh1Y0Q2Um4xZ254MlZCeDRPaWhGbHFBeDJXODUzM2VXZFR2MjRZT1NqZG45anRiUGpOdzB2NVRndVpZMWFUdVlTNDJzRGJXSnJqWEhkbU9GK09zR1RFN1dDNUZueFExVHBPS0l0b1VHSXBwbXkyTkJ5a0ZXcGVEZEpiOHZ6RjZ1dlN4aWNka042K2NDMC9JK0VRamt1VVA0WURyTmlWSm5uOFRmYXdrWUdFYjZoeEpHS0ZqaGhsZHI2cU1EL1lMVFZFWVdTc1IxZHlNcFJDeUlZL3QwWHd5TkJDZVV0YkNCUGhHUUNRT1ZvYUUyTkhwcWxORXdRPT0%3D\nCuplikan: Konsumen adalah harga transaksi yang terjadi antara penjual (pedagang eceran) dengan pembeli (konsumen) secara eceran dengan pembayaran tunai.\n\n[7] Detail Metadata Indikator Statistik\nURL: https://sirusa.web.bps.go.id/metadata/indikator/56085\nCuplikan: | | | --- | | Nama Indikator | Rata-Rata Harga Gula Pasir | | Konsep | Harga Gula Pasir, harga di Pedagang Eceran (Rp./Kg) | | Definisi | Gula pasir yang di jual dalam bentuk curah atau kemasan sederhana. | | Interpretasi | Rata-rata harga gula pasir selama 9 bulan terakhir adalah Rp17715 per Kg | | Metode Perhitungan | Data yang diambil adalah harga jual komoditas di setiap pedagang eceran. Data merupakan rata-rata harga penjualan dari pedagang eceran. | [...] # Detail Metadata Indikator Statistik Rata-Rata Harga Gula Pasir [...] | Rumus | $\\overline{x}=\\frac{\\sum x\\_{\\placeholder{?}}}{n}$ | \n\n[8] Badan Pangan Nasional - Pemerintah Terbitkan Harga Acuan Kedelai, Bawang Merah, Cabai Rawit Merah, Cabai Merah Keriting, Daging Sapi/Kerbau, dan Gula Pasir Konsumsi - Blog\nURL: https://badanpangan.go.id/blog/post/pemerintah-terbitkan-harga-acuan-kedelai-bawang-merah-cabai-rawit-merah-cabai-merah-keriting-daging-sapikerbau-dan-gula-pasir-konsumsi\nCuplikan: produsen (untuk kemasan karung 50 kg) dan Rp 13.500-Rp14.500 per kg di tingkat konsumen. [...] Dalam Perbadan tersebut ditetapkan harga acuan kedelai lokal di produsen Rp. 10.775 per kg dan harga acuan di konsumen Rp 11.400 per kg untuk kedelai lokal dan Rp 12.000 per kg untuk kedelai impor. Sedangkan, harga acuan bawang merah di produsen terbagi ke dalam beberapa jenis, untuk konde basah Rp 18.500-Rp 20.000 per kg, rogol kering panen Rp 25.000-Rp30.000 per kg, konde kering askip Rp 32.000 per kg. Untuk harga acuan bawang merah di tingkat konsumen, jenis rogol kering panen Rp 36.500-Rp [...] p\n\n[9] DALAM RANGKA STABILISASI HARGA DISPERINDAG DAN PEMPROV BENGKULU GELAR PASAR MURAH DI BENGKULU TENGAH\nURL: https://bengkulutengahkab.go.id/postingan/detail_postingan/DALAM-RANGKA-STABILISASI-HARGA-DISPERINDAG-DAN-PEMPROV-BENGKULU-GELAR-PASAR-MURAH-DI-BENGKULU-TENGAH\nCuplikan: “saat ini harga kebutuhan pokok sehari-hari cenderung meningkat seperti beras, minyak goreng, gula pasir, cabe merah, bawang merah, daging ayam ras dan telur hal ini disebabkan tidak seimbangnya antara ketersediaan dan kebutuhan masyarakat yang akhirnya berdampak pada meningkatnya angka inflasi seperti yang terjadi saat ini di provinsi bengkulu sebagai upaya mengatasi masalah itu pemerintah hadir dengan kegiatan pasar murah ini, dengan harapan bisa membantu masyarakat khususnya masyarakat trans [...] masyarakat trans sejahtera dengan memenuhi kebutuhan bahan pokok dengan harga relatif lebih mu\n\n[10] Perkembangan Rata-Rata Harga Eceran Gula Pasir Per-Kilogram Menurut Bulan (Rupiah) di Muara Kaman\nURL: https://data.go.id/dataset/dataset/perkembangan-rata-rata-harga-eceran-gula-pasir-per-kilogram-menurut-bulan-rupiah\nCuplikan: Image ### Kabupaten Kutai Kartanegara Informasi Dataset 14-11-2023 15-11-2023 a49cb07f-9f1b-40c7-8227-a19da9839a3a INFORMASI: Data berikut ini masih dalam proses pemenuhan Prinsip SDI. # Perkembangan Rata-Rata Harga Eceran Gula Pasir Per-Kilogram Menurut Bulan (Rupiah) di Muara Kaman Terbuka Data ini berisi: Perkembangan Rata-Rata Harga Eceran Gula Pasir Per-Kilogram Menurut Bulan (Rupiah) ## Data and Resources [...] ### Perkembangan Rata-Rata Harga Eceran Gula Pasir Per Kilogram Menurut Bu... Data ini berisi: Perkembangan Rata-Rata Harga Eceran Gula Pasir Per Ki... gula pasir kecamatan muara \n\n[11] Harga Rata-rata Bahan Pangan\nURL: https://data.go.id/dataset/dataset/harga-rata-rata-bahan-pangan\nCuplikan: Image ### Provinsi DKI Jakarta Informasi Dataset 02-12-2025 03-09-2026 90ac8d0a-a64b-45c0-8d94-963a28723666 INFORMASI: Data berikut ini masih dalam proses pemenuhan Prinsip SDI. # Harga Rata-rata Bahan Pangan Terbuka Merupakan data harga pangan strategis (beras IR I, beras IR III, cabai rawit merah, cabai merah keriting, bawang merah, bawang putih, daging ayam, telur ayam, daging sapi, gula pasir, minyak goreng) di tingkat eceran. ## Data and Resources ### Harga Rata-rata Bahan Pangan [...] ### Harga Rata-rata Bahan Pangan Bawang Beras Cabai Daging HargaPangan Pangan Telur ## Metadata Source N\n\n[12] JDIH\nURL: https://jdih.badanpangan.go.id/doc/b697f2c9-4754-4f29-a59f-17cfbdae598f\nCuplikan: JDIH Badan Pangan Nasional #### Detail Dokumen ##### Pemerintah Terbitkan Harga Acuan Kedelai, Bawang Merah, Cabai Rawit Merah, Cabai Merah Keriting, Daging Sapi/Kerbau, dan Gula Pasir Konsumsi Dipublikasikan pada tahun: 2024 [...] | | | --- | | Klasifikasi | Sub Klasifikasi | Judul | Pemerintah Terbitkan Harga Acuan Kedelai, Bawang Merah, Cabai Rawit Merah, Cabai Merah Keriting, Daging Sapi/Kerbau, dan Gula Pasir Konsumsi | | TEU Badan | Indonesia. Badan Pangan Nasional | | Jenis | Tulisan | | Singkatan | Tempat | Jakarta | | Tahun | 2024 | | Sumber | Siaran Pers, Badan Pangan Nasional | [...\n\n[13] SISKAPERBAPO\nURL: https://siskaperbapo.jatimprov.go.id\nCuplikan: SISKAPERBAPO Tabel + Harga Konsumen (per Area) + Harga Konsumen (per Komoditas) + Harga Produsen Grafik + Harga Konsumen + Harga Produsen Tren Informasi Profil Pasar Display Login Wait .... Wait ... Wait ... Wait ... Harga rata-rata Beras/kg Jawa Timur 30 hari terakhir Harga rata-rata Beras/kg Jawa Timur 30 hari terakhir Harga rata-rata Gula Pasir/kg 30 hari terakhir Harga rata-rata Minyak Goreng Curah/liter 30 hari terakhir [...] | No | NAMA BAHAN POKOK | SATUAN | HARGA | --- --- | | 1 | Beras Premium / kg | kg | 14.961 | | 2 | Beras Medium / kg | kg | 12.980 | | 3 | Gula Kristal Putih / kg |\n\n[14] Gate Riwayat Harga: Unduh GT Data Historis | CoinGecko\nURL: https://www.coingecko.com/id/coins/gatetoken/historical_data\nCuplikan: | 2026-09-23 | $1.180.585.467 | $2.078.102 | $10,62 | | 2026-09-22 | $1.182.896.894 | $7.084.937 | $11,07 | | 2026-09-21 | $1.112.694.943 | $1.652.723 | $11,09 | | 2026-09-20 | $1.105.764.789 | $2.244.821 | $10,43 | | 2026-09-19 | $1.060.474.144 | $4.768.384 | $10,37 | | 2026-09-18 | $996.201.032 | $2.541.732 | $9,95 | | 2026-09-17 | $1.000.532.562 | $3.576.641 | $9,34 | | 2026-09-16 | $963.391.457 | $4.734.404 | $9,38 | | 2026-09-15 | $990.207.450 | $3.476.826 | $9,03 | [...] | Tanggal | Kapitalisasi Pasar | Volume | Tutup | --- --- | | 2026-10-01 | $1.153.738.344 | $3.325.144 | N/A | | 2026-\n\n[15] Daddy Tate Riwayat Harga: Unduh DADDY Data Historis | CoinGecko\nURL: https://www.coingecko.com/id/coins/daddy-tate/historical_data\nCuplikan: | 2026-09-24 | $5.530.805 | $163.523 | $0,00936756 | | 2026-09-23 | $5.846.087 | $175.456 | $0,00922398 | | 2026-09-22 | $6.031.343 | $199.359 | $0,00974979 | | 2026-09-21 | $5.854.440 | $162.868 | $0,01005875 | | 2026-09-20 | $6.168.094 | $170.843 | $0,00976372 | | 2026-09-19 | $6.814.404 | $186.398 | $0,01028682 | | 2026-09-18 | $6.064.987 | $157.770 | $0,01136470 | | 2026-09-17 | $6.238.276 | $172.240 | $0,01011486 | | 2026-09-16 | $5.989.244 | $175.615 | $0,01040386 | [...] | Tanggal | Kapitalisasi Pasar | Volume | Tutup | --- --- | | 2026-10-02 | $0,000000000000000000 | $126.756 | N/A | |"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": "jffCarm_AeLV-sAP_6388AQ",
+      "hasil": {
+        "kandidat": [],
+        "tidak_ditemukan": [
+          "Tidak ada sumber data harga eceran harian spesifik untuk komoditas Gula Pasir di Kabupaten Bengkulu Tengah pada periode Oktober 2026 yang ditemukan dalam hasil pencarian web yang tersedia."
+        ],
+        "catatan": "Hasil pencarian web yang tersedia tidak memuat data spesifik untuk Kabupaten Bengkulu Tengah pada periode Oktober 2026. Terdapat informasi terkait Kabupaten Bengkulu Tengah mengenai kegiatan pasar murah oleh Disperindag (URL 9), namun tidak menyajikan data harga eceran harian secara berkala. Sumber lain seperti SIGAHADA (URL 3) merupakan data untuk Kota Bengkulu, dan sumber PIHPS/Katadata (URL 1) mencakup tingkat Provinsi Bengkulu."
+      },
+      "url_hasil_pencarian": [
+        "https://badanpangan.go.id/blog/post/pemerintah-terbitkan-harga-acuan-kedelai-bawang-merah-cabai-rawit-merah-cabai-merah-keriting-daging-sapikerbau-dan-gula-pasir-konsumsi",
+        "https://bengkulu.antaranews.com/berita/105992/pemprov-akui-harga-gula-pasir-di-bengkulu-naik",
+        "https://bengkulutengahkab.go.id/postingan/detail_postingan/DALAM-RANGKA-STABILISASI-HARGA-DISPERINDAG-DAN-PEMPROV-BENGKULU-GELAR-PASAR-MURAH-DI-BENGKULU-TENGAH",
+        "https://data.go.id/dataset/dataset/harga-rata-rata-bahan-pangan",
+        "https://data.go.id/dataset/dataset/perkembangan-rata-rata-harga-eceran-gula-pasir-per-kilogram-menurut-bulan",
+        "https://data.go.id/dataset/dataset/perkembangan-rata-rata-harga-eceran-gula-pasir-per-kilogram-menurut-bulan-rupiah",
+        "https://databoks.katadata.co.id/ekonomi-makro/statistik/7e7c40d0a1d22c1/harga-gula-pasir-harian-di-pasar-tradisional-provinsi-bengkulu",
+        "https://jdih.badanpangan.go.id/doc/b697f2c9-4754-4f29-a59f-17cfbdae598f",
+        "https://sigahada.bengkulukota.go.id",
+        "https://sirusa.web.bps.go.id/metadata/indikator/56085",
+        "https://siskaperbapo.jatimprov.go.id",
+        "https://web-api.bps.go.id/download.php?f=yMSoIOGdBhzC8PNycAwhRmNTTUdKYTBya3NnZ051amMyL0d1K3g5VWVKczZtdEczRnh1Y0Q2Um4xZ254MlZCeDRPaWhGbHFBeDJXODUzM2VXZFR2MjRZT1NqZG45anRiUGpOdzB2NVRndVpZMWFUdVlTNDJzRGJXSnJqWEhkbU9GK09zR1RFN1dDNUZueFExVHBPS0l0b1VHSXBwbXkyTkJ5a0ZXcGVEZEpiOHZ6RjZ1dlN4aWNka042K2NDMC9JK0VRamt1VVA0WURyTmlWSm5uOFRmYXdrWUdFYjZoeEpHS0ZqaGhsZHI2cU1EL1lMVFZFWVdTc1IxZHlNcFJDeUlZL3QwWHd5TkJDZVV0YkNCUGhHUUNRT1ZvYUUyTkhwcWxORXdRPT0%3D",
+        "https://www.coingecko.com/id/coins/daddy-tate/historical_data",
+        "https://www.coingecko.com/id/coins/gatetoken/historical_data",
+        "https://www.youtube.com/watch?v=YgTsgZVG2Ig"
+      ],
+      "log": [
+        {
+          "waktu": "08.03.41",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Gula Pasir (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.03.50",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.04.13",
+          "teks": "gemini (gemini-3.5-flash-lite) menjawab: 0 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
+      "waktu": "2026-10-05T08:03:41+07:00",
+      "permintaan": {
+        "komoditas": "Daging Sapi",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Daging Sapi, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Harga Daging Sapi di Pasar Modern Periode Mei 2025-2026\nURL: https://databoks.katadata.co.id/ekonomi-makro/statistik/c6376e48dfdd3e8/harga-daging-sapi-harian-di-pasar-modern-provinsi-bengkulu\nCuplikan: Menurut catatan historis harga pangan di panel harga PIHPS, harga daging sapi harian di pasar modern provinsi Bengkulu diperdagangkan di harga Rp157,7 ribu per\n\n[2] Harga Daging Sapi Kian Mahal, Tembus Rp150 Ribu/Kg di ...\nURL: https://betv.disway.id/bengkulu-tengah/read/15210/harga-daging-sapi-kian-mahal-tembus-rp150-ribukg-di-bengkulu-tengah\nCuplikan: Saat ini terpantau harga daging sapi menembus Rp150.000 per kilogram di Pasar Tradisional Kabupaten Bengkulu Tengah Provinsi Bengkulu. BACA JUGA\n\n[3] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Peternakan dan Perikanan | Daging Ayam | Daging Ayam Ras | 1 kg | Rp 43.000,- | Rp 39.333,- | Rp 3.667,- | Rp 42.000,- | Rp 42.000,- Rp 45.000,- | Rp 42.000,- | Rp 3.000,- | | Telur Ayam | Telur Ayam Ras | 1 kg | Rp 30.400,- | Rp 30.400,- Rp 30.400,- | Rp 30.400,- Rp 30.400,- | Rp 30.400,- | Daging Sapi | Tetelan | 1 kg | Rp 80.000,- | Rp 80.000,- Rp 60.000,- | Rp 60.000,- Rp 80.000,- | Rp 80.000,- [...] | Sandung Lamur | 1 kg | Rp 80.000,- | Rp 80.000,- Rp 100.000,- | Rp 100.000,- Rp 80.000,- | Rp 80.000,- | Paha Belakang | 1 kg | Rp 160.000,- | Rp 160.000,- Rp 150.000,- | Rp 150.000,- Rp 1\n\n[4] Menjelang Hari Raya Iduladha 1447 Hijriah, harga daging sapi ...\nURL: https://www.instagram.com/reel/DYZERGQx-A4\nCuplikan: Pedagang daging sapi, Novri, mengatakan harga daging sapi saat ini berada di kisaran Rp150 ribu per kilogram. Menurutnya, situasi pasar\n\n[5] Jumlah Produksi Daging 1 Sapi 2 Menurut Kabupaten/Kota ...\nURL: https://bengkulu.bps.go.id/id/statistics-table/3/YzJaM05YaFBjRVZJTTNwM1MwUklNMms1Y1VvMGR6MDkjMyMxNzAw/jumlah-produksi-daging-sup-1--sup--sapi-sup-2--sup--menurut-kabupaten-kota-dan-jenis-produksi-di-provinsi-bengkulu--kg-.html\nCuplikan: Jumlah Produksi Daging1 Sapi2 Menurut Kabupaten/Kota dan Jenis Produksi di Provinsi Bengkulu (kg), 2025 ; Kepahiang, 303.052,75 · 215.343,48 ; Bengkulu Tengah\n\n[6] KOMPAS.TV Dinas Peternakan dan Kesehatan Hewan ...\nURL: https://www.facebook.com/KompasTV/posts/kompastv-dinas-peternakan-dan-kesehatan-hewan-provinsi-bengkulu-tengah-menyiapka/1793065862183348\nCuplikan: KOMPAS.TV Dinas Peternakan dan Kesehatan Hewan Provinsi Bengkulu Tengah menyiapkan peternak lokal untuk menjadi pemasok Program Makan\n\n[7] Sidak Pasar di Lampung dan Bengkulu, Kementan Cek Keamanan Daging Sapi dan Ayam - Direktorat Jenderal Peternakan dan Kesehatan Hewan\nURL: https://ditjenpkh.pertanian.go.id/berita/sidak-pasar-di-lampung-dan-bengkulu-kementan-cek-keamanan-daging-sapi-dan-ayam\nCuplikan: Hasil pemeriksaan terhadap tiga pedagang daging sapi menunjukkan kondisi daging masih segar dengan nilai pH sekitar 5,5 yang berada dalam kisaran normal. Harga daging sapi di pasar terpantau berada pada kisaran Rp130.000–Rp135.000 per kilogram, masih sejalan dengan Harga Acuan Penjualan (HAP) pemerintah, yakni Rp130.000 per kilogram untuk paha depan dan Rp140.000 per kilogram untuk paha belakang. [...] Sementara itu, pengujian terhadap tujuh pedagang daging ayam menunjukkan kondisi daging segar serta negatif formalin. Harga ayam ras tercatat berada di kisaran Rp40.000 per kilogram, atau masih \n\n[8] Rata-rata Harga Pangan Bulanan Tingkat Produsen Provinsi (Angka September 2025) - DATASET | Open Data Badan Pangan Nasional\nURL: https://data.badanpangan.go.id/datasetpublications/z4t/rata-rata-harga-pangan-bulanan-produsen-provinsi\nCuplikan: | 17 | Bengkulu | Sapi Hidup (Tingkat Peternak/RPH) | 2025 | Maret | 18 | Lampung | Sapi Hidup (Tingkat Peternak/RPH) | 2025 | Maret | Rp49,324 | | 32 | Jawa Barat | Sapi Hidup (Tingkat Peternak/RPH) | 2025 | Maret | Rp53,492 | | 33 | Jawa Tengah | Sapi Hidup (Tingkat Peternak/RPH) | 2025 | Maret | Rp49,609 | | 34 | D.I Yogyakarta | Sapi Hidup (Tingkat Peternak/RPH) | 2025 | Maret | Rp47,905 | | 35 | Jawa Timur | Sapi Hidup (Tingkat Peternak/RPH) | 2025 | Maret | Rp49,706 | [...] | 16 | Sumatera Selatan | Sapi Hidup (Tingkat Peternak/RPH) | 2025 | Januari | Rp51,192 | | 17 | Bengkulu | Sapi Hi\n\n[9] Produksi Daging Sapi menurut Provinsi (Ton), 2025\nURL: https://www.bps.go.id/id/statistics-table/2/NDgwIzI=/produksi-daging-sapi-menurut-provinsi.html\nCuplikan: Produksi Daging Sapi menurut Provinsi - Tabel Statistik. Daging Sapi menurut. BENGKULU 2.528,89 LAMPUNG 18.398,54 KEP. BANGKA BELITUNG 3.244,07\n\n[10] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/Hargapangan/TabelHarga/PasarModernDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[11] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/Hargapangan/TabelHarga/ProdusenDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[12] - PIHPS\nURL: https://www.bi.go.id/hargapangan\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional ### Informasi Harga Pangan Antar Daerah ### Harga Rata-Rata dan Perubahan 25 September 2026\n\n[13] Daging Sapi - Harga - Grafik - Data Historis - Berita\nURL: https://id.tradingeconomics.com/commodity/beef\nCuplikan: | | Harga | | | Hari | Bulan | Tahun | Tanggal | --- --- --- --- | | Daging Sapi | 369.90 | | 3.40 | 0.93% | 6.42% | 20.35% | 2026-10-02 | | Feeder Sapi | 334.63 | | -4.2500 | -1.25% | 2.69% | -6.31% | 2026-10-02 | | Sapi Hidup | 218.85 | | -0.4500 | -0.21% | 2.12% | -5.27% | 2026-10-02 | | Hogs Ramping | 77.88 | | 0.3750 | 0.48% | -6.68% | -21.32% | 2026-10-02 | | Unggas | 8.34 | | 0.03 | 0.36% | 10.61% | 3.09% | 2026-10-02 | [...] ##### # Daging SapiHarga - Grafik - Data Historis - Berita ## Daging sapi naik menjadi 369,90 BRL/15KG pada 2 Oktober 2026, naik 0,93% dari hari sebelumnya. Selama\n\n[14] Rilis Berita Resmi Statistik BPS Provinsi Bengkulu 1 ...\nURL: https://www.facebook.com/bpsbengkulu/videos/rilis-berita-resmi-statistik-bps-provinsi-bengkulu-1-oktober-2026/1130884139635812\nCuplikan: BPS Provinsi Bengkulu 1 Oktober 2026 (1) Perkembangan Indeks Harga Konsumen (Inflasi) (2) Nilai Tukar Petani (NTP) (3) Ekspor - Impor (4)\n\n[15] SISKAPERBAPO\nURL: https://siskaperbapo.jatimprov.go.id/harga/tabel\nCuplikan: SISKAPERBAPO Tabel + Harga Konsumen (per Area) + Harga Konsumen (per Komoditas) + Harga Produsen Grafik + Harga Konsumen + Harga Produsen Tren Informasi Profil Pasar Display Panduan Login 1. Home 2. Harga 3. Tabel Tabel Harga Konsumen #### Please Wait #### QR Code © 2011 - 2026 . dikelola Disperindag Jatim, Hak Cipta dilindungi"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.8-flash",
+      "request_id": "WPfCaunyDLCc1MkPiOPruQc",
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "Pemberitaan Harga Daging Sapi BETV Disway",
+            "penyedia": "BETV Disway",
+            "url": "https://betv.disway.id/bengkulu-tengah/read/15210/harga-daging-sapi-kian-mahal-tembus-rp150-ribukg-di-bengkulu-tengah",
+            "wilayah": "Kabupaten Bengkulu Tengah",
+            "peran_wilayah": "target",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Daging Sapi (Pasar Tradisional)",
+            "satuan": "Rp/kg",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyajikan data harga daging sapi eceran di Pasar Tradisional Kabupaten Bengkulu Tengah (disebutkan Rp150.000/kg), namun berupa liputan berita tunggal dan bukan deret waktu harian terstruktur.",
+            "catatan_keandalan": "Sumber berasal dari portal media daring lokal (non-pemerintah). Tanggal pemantauan spesifik Oktober 2026 dan metodologi pengumpulan data tidak terdokumentasi dalam cuplikan.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-05T08:03:35+07:00",
+            "url_sha256": "1afed0fcdde4f10fcda48381f81302d2d3a1eb2e692b3f89ce46a83d75a90e39",
+            "url_ukuran_byte": 134535,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "ad60c3dc5271"
+          },
+          {
+            "nama_sumber": "SIGAHADA (Sistem Informasi Penjagaan Harga Pasaran Anda)",
+            "penyedia": "Pemerintah Kota Bengkulu",
+            "url": "https://sigahada.bengkulukota.go.id",
+            "wilayah": "Kota Bengkulu",
+            "peran_wilayah": "pembanding",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Daging Sapi (Tetelan, Sandung Lamur, Paha Belakang)",
+            "satuan": "1 kg",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyajikan data eceran per varian daging sapi di pasar wilayah Kota Bengkulu sebagai proksi/pembanding rantai pasok yang berbatasan langsung dengan Kabupaten Bengkulu Tengah.",
+            "catatan_keandalan": "Portal resmi pemerintah daerah tetangga dengan rincian varian daging yang detail, namun cakupan wilayah terbatas Kota Bengkulu dan tanggal pemantauan persis untuk Oktober 2026 tidak tertera pada cuplikan.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": null,
+            "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
+            "url_diakses": "2026-10-05T08:03:36+07:00",
+            "url_sha256": "",
+            "url_ukuran_byte": null,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "8461b875bd7a"
+          },
+          {
+            "nama_sumber": "Pusat Informasi Harga Pangan Strategis (PIHPS) Nasional",
+            "penyedia": "Bank Indonesia",
+            "url": "https://www.bi.go.id/hargapangan",
+            "wilayah": "Provinsi Bengkulu / Antar Daerah",
+            "peran_wilayah": "provinsi",
+            "periode_data": "25 September 2026 (pada cuplikan)",
+            "komoditas_varian": "Daging Sapi / Bahan Pokok Strategis",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Sumber rujukan utama TPID untuk pemantauan harga pangan harian agregat provinsi dan antar-daerah.",
+            "catatan_keandalan": "Portal resmi Bank Indonesia dengan metodologi baku, tetapi umumnya survei harga eceran harian hanya mencakup pasar sampel di ibu kota provinsi (Kota Bengkulu), bukan pasar tradisional di Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-05T08:03:36+07:00",
+            "url_sha256": "6140f37f8c13c7d4095084883f17844cb4ee875888089e528e8d7cf1b532448f",
+            "url_ukuran_byte": 313681,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "f0fe667ad43d"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Tidak ditemukan portal data resmi pemerintah atau API/file unduhan harga eceran harian yang khusus mencakup wilayah Kabupaten Bengkulu Tengah untuk periode Oktober 2026 dalam hasil pencarian (misalnya Panel Harga Pangan Badan Pangan Nasional tingkat kabupaten atau SP2KP Kemendag untuk Bengkulu Tengah)."
+        ],
+        "catatan": "Sebagian besar hasil pencarian yang menyertakan data resmi Bengkulu Tengah hanya memuat data volume produksi tahunan (BPS) atau harga tingkat produsen bulanan (Bapanas). Data pasar eceran Kabupaten Bengkulu Tengah hanya muncul dalam bentuk laporan berita insidental BETV Disway."
+      },
+      "url_hasil_pencarian": [
+        "https://bengkulu.bps.go.id/id/statistics-table/3/YzJaM05YaFBjRVZJTTNwM1MwUklNMms1Y1VvMGR6MDkjMyMxNzAw/jumlah-produksi-daging-sup-1--sup--sapi-sup-2--sup--menurut-kabupaten-kota-dan-jenis-produksi-di-provinsi-bengkulu--kg-.html",
+        "https://betv.disway.id/bengkulu-tengah/read/15210/harga-daging-sapi-kian-mahal-tembus-rp150-ribukg-di-bengkulu-tengah",
+        "https://data.badanpangan.go.id/datasetpublications/z4t/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://databoks.katadata.co.id/ekonomi-makro/statistik/c6376e48dfdd3e8/harga-daging-sapi-harian-di-pasar-modern-provinsi-bengkulu",
+        "https://ditjenpkh.pertanian.go.id/berita/sidak-pasar-di-lampung-dan-bengkulu-kementan-cek-keamanan-daging-sapi-dan-ayam",
+        "https://id.tradingeconomics.com/commodity/beef",
+        "https://sigahada.bengkulukota.go.id",
+        "https://siskaperbapo.jatimprov.go.id/harga/tabel",
+        "https://www.bi.go.id/Hargapangan/TabelHarga/PasarModernDaerah",
+        "https://www.bi.go.id/Hargapangan/TabelHarga/ProdusenDaerah",
+        "https://www.bi.go.id/hargapangan",
+        "https://www.bps.go.id/id/statistics-table/2/NDgwIzI=/produksi-daging-sapi-menurut-provinsi.html",
+        "https://www.facebook.com/KompasTV/posts/kompastv-dinas-peternakan-dan-kesehatan-hewan-provinsi-bengkulu-tengah-menyiapka/1793065862183348",
+        "https://www.facebook.com/bpsbengkulu/videos/rilis-berita-resmi-statistik-bps-provinsi-bengkulu-1-oktober-2026/1130884139635812",
+        "https://www.instagram.com/reel/DYZERGQx-A4"
+      ],
+      "log": [
+        {
+          "waktu": "08.02.55",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Daging Sapi (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.03.00",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.03.35",
+          "teks": "gemini (gemini-3.8-flash) menjawab: 3 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
       "waktu": "2026-10-04T08:08:08+07:00",
       "permintaan": {
         "komoditas": "Daging Ayam",
