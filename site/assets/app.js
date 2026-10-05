@@ -207,6 +207,22 @@ export const NAMA_SISTEM = "Lintas Benteng Projection";
 const LOGO = `<img class="merek-ikon" src="assets/logo-bps.png" alt="" width="38" height="30">`;
 const tundaSelamanya = () => new Promise(() => {});
 
+// Layar pembuka (lihat app.css): tampil sekali per sesi browser. Pada halaman berikutnya langsung dilewati.
+const KUNCI_PEMBUKA = "lbp-pembuka-tampil";
+const pembukaSudah = (() => { try { return sessionStorage.getItem(KUNCI_PEMBUKA) === "1"; } catch { return false; } })();
+if (pembukaSudah) document.documentElement.classList.add("lewati-pembuka");
+
+/** Tandai halaman siap. Pada pembukaan pertama, layar pembuka tampil paling sedikit 1,4 detik supaya animasinya utuh;
+ *  halaman tidak ditahan, isinya tetap dimuat di belakang layar pembuka. */
+function tandaiSiap() {
+  const sisa = pembukaSudah ? 0 : 1400 - performance.now();
+  const selesai = () => {
+    try { sessionStorage.setItem(KUNCI_PEMBUKA, "1"); } catch { /* abaikan */ }
+    document.body.classList.add("siap");
+  };
+  if (sisa > 0) setTimeout(selesai, sisa); else selesai();
+}
+
 async function ikonUI(nama, ukuran) {
   const { ikon } = await import("./dashboard.js");
   return ikon(nama, ukuran);
@@ -325,7 +341,7 @@ export async function pasangKerangka(aktif) {
     kaki.innerHTML = `<div class="kaki-baris"><p>Data belum tersedia: ${esc(e.message)}. Jalankan pipeline di GitHub Actions terlebih dahulu.</p>
       <section class="kaki-status" aria-label="Status jaringan dan layanan"></section></div>`;
     pasangStatus(kaki, null);
-    document.body.classList.add("siap");
+    tandaiSiap();
     return izin === "tolak" ? tundaSelamanya() : null;
   }
   const umurJam = (Date.now() - new Date(meta.dibuat).getTime()) / 3.6e6;
@@ -364,7 +380,7 @@ export async function pasangKerangka(aktif) {
   pasangTema();
   // Grafik kanvas baru memakai huruf Plex setelah berkasnya termuat.
   try { await document.fonts?.ready; } catch { /* abaikan */ }
-  document.body.classList.add("siap");
+  tandaiSiap();
   pasangPembaruan(meta);
   pasangHitungNaik();
   if (pengguna?.sumber === "firebase") segarkanSesiFirebase(pengguna);
