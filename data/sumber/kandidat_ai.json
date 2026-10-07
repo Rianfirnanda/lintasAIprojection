@@ -1,6 +1,72 @@
 {
   "pencarian": [
     {
+      "waktu": "2026-10-07T03:53:12.323000+00:00",
+      "permintaan": {
+        "komoditas": "beras",
+        "periode": "oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: beras, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang d"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 13 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.5-flash-lite",
+      "request_id": null,
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "Data Komoditas | BEN CONNECT PROVINSI BENGKULU",
+            "penyedia": "Pemerintah Provinsi Bengkulu",
+            "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+            "wilayah": "Kabupaten Bengkulu Tengah",
+            "peran_wilayah": "target",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Beras Premium, Beras SPHP Bulog",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyediakan data harga komoditas beras di Kabupaten Bengkulu Tengah.",
+            "catatan_keandalan": "Sumber memuat data spesifik Kabupaten Bengkulu Tengah, namun periode tanggal aktual untuk Oktober 2026 tidak tercantum secara eksplisit pada cuplikan.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-07T10:55:08+07:00",
+            "url_sha256": "bd9575105dfb36d3c3988ae44952d88b24d75cc608e5b54421fa14f10067d66f",
+            "url_ukuran_byte": 503499,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "69ced760fa4b"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Data spesifik harga eceran harian beras di Kabupaten Bengkulu Tengah untuk periode penuh Oktober 2026 dari sumber resmi BPS, PIHPS Bank Indonesia, atau Panel Harga Badan Pangan Nasional tidak ditemukan secara lengkap dalam hasil pencarian web hari ini."
+        ],
+        "catatan": "Sumber BEN CONNECT memuat data wilayah target (Kabupaten Bengkulu Tengah) untuk komoditas beras, tetapi rincian metode akses dan periode tanggal perlu diverifikasi lebih lanjut oleh analis BPS."
+      },
+      "url_hasil_pencarian": [
+        "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+        "https://bengkulu.antaranews.com/berita/481100/bps-beras-penting-dijaga-pastikan-stabilitas-inflasi-bengkulu-2026",
+        "https://bkperdag.kemendag.go.id/storage/publikasi/639-369-ANALISIS_PERKEMBANGAN_HARGA_BAHAN_PANGAN_POKOK_DI_PASAR_DOMESTIK_DAN_INTERNASIONAL_(APRIL_2017)-ilovepdf-compressed.pdf",
+        "https://data.badanpangan.go.id/datasetpublications/79k/rata-rata-harga-pangan-bulanan-produsen-provinsi",
+        "https://databoks.katadata.co.id/ekonomi-makro/statistik/89f447fc3b0625b/harga-beras-kualitas-medium-ii-pasar-tradisional-bengkulu-hari-ini-2026",
+        "https://dev-panelharga.badanpangan.go.id",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://regional.kompas.com/read/2025/10/25/063832078/harga-beras-premium-di-bengkulu-tembus-rp-17000-melebihi-het",
+        "https://satudata.pertanian.go.id/assets/docs/publikasi/c9c87ec57f8a22249659ace0dc306047.pdf",
+        "https://sigahada.bengkulukota.go.id",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah",
+        "https://www.instagram.com/p/DSjqxqQEpXF",
+        "https://www.youtube.com/watch?v=lfAjSnSh3xg"
+      ],
+      "dari": "situs",
+      "oleh": "rianfirnanda1@gmail.com"
+    },
+    {
       "waktu": "2026-10-07T08:03:22+07:00",
       "permintaan": {
         "komoditas": "Bawang Merah",
