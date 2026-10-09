@@ -4,6 +4,7 @@
   python -m pipeline periksa                 # validasi berkas di data/masuk tanpa publikasi (untuk PR data)
   python -m pipeline ambil-cuaca [--hari 30] # konektor Big Data cuaca (Open-Meteo)
   python -m pipeline ambil-resmi             # konektor Big Data resmi: prakiraan BMKG dan harga PIHPS Bank Indonesia
+  python -m pipeline berita [--tanpa-ai]      # berita lokal: cari, baca, ambil harga, ringkas (juga jalan otomatis tiap hari)
   python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
   python -m pipeline sandi ID SANDI [--nama "Nama"] [--peran petugas]   # cetak entri akun untuk config/pengguna.json
   python -m pipeline aturan-firebase --keluaran build/firestore.rules     # aturan Firestore + admin pertama (FIREBASE_ADMIN_AWAL)
@@ -22,7 +23,7 @@ import logging
 import sys
 from pathlib import Path
 
-from . import konfigurasi, kualitas, masukan, pencari_data, pengaturan, pengguna
+from . import berita, konfigurasi, kualitas, masukan, pencari_data, pengaturan, pengguna
 
 
 def _periksa(konf) -> int:
@@ -102,6 +103,8 @@ def _firestore(a) -> int:
         print(f"{n} hasil AI Data Finder dari situs digabung ke kandidat sumber.")
     for pesan in _ai_harian(akar):
         print(pesan)
+    for pesan in _berita_harian(akar):
+        print(pesan)
     if ringkas.get("peringatan"):
         print(f"::warning::{ringkas['peringatan']}")
     keluaran = {"perintah": ",".join(x["jenis"] for x in ringkas["perintah"]) or "-"}
@@ -162,6 +165,47 @@ def _kandidat_dari_situs(akar: Path, daftar: list[dict]) -> int:
 
 BULAN_ID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober",
             "November", "Desember"]
+
+
+def _berita_harian(akar: Path) -> list[str]:
+    """Berita lokal harian: sekali sehari mulai pukul 07.00 WIB. Hasil ditulis ke data/berita/berita.json (ikut dikirim ke
+    repositori oleh alur kerja) dan prosesnya tercatat di Log proses AI. Gagal tidak menghentikan pembaruan dashboard."""
+    from datetime import datetime, timezone
+
+    from . import firestore_sinkron
+
+    if not firestore_sinkron.aktif():
+        return []
+    try:
+        db = firestore_sinkron.klien()
+        sekarang = datetime.now(timezone.utc)
+        if not firestore_sinkron.berita_jatuh_tempo(akar, db, sekarang):
+            return []
+        konf = konfigurasi.muat(akar)
+        hari = sekarang.astimezone(firestore_sinkron.WIB)
+        # Catat dulu supaya penjaga tidak memicu ulang walaupun pencarian gagal; hasilnya ada di log.
+        firestore_sinkron.catat_berita_harian(db, hari.date().isoformat())
+        firestore_sinkron.pasang_rahasia_dari_firestore(akar)
+    except Exception as e:  # noqa: BLE001
+        return [f"::warning::Berita lokal harian tidak bisa dimulai: {e}"]
+    periode = f"{BULAN_ID[hari.month - 1]} {hari.year}"
+    try:
+        hasil = berita.jalankan(konf)
+        berita.simpan(konf, hasil)
+        baru = hasil["statistik"]["berita_baru"]
+        firestore_sinkron.catat_berita_harian(db, hari.date().isoformat(), baru, "berhasil")
+        _log_ai("berita", "Berita lokal", periode, catatan={"log": hasil["log"], "penyedia": hasil["statistik"]["penyedia_ai"],
+                                                          "model": hasil["statistik"]["model_ai"],
+                                                          "hasil": {"kandidat": [b for b in hasil["berita"] if b.get("baru")]}})
+        return [f"Berita lokal harian: {baru} berita baru, {hasil['statistik']['kandidat_harga_baru']} kandidat harga "
+                f"({hasil['kesimpulan'][0]['metode']})."]
+    except Exception as e:  # noqa: BLE001
+        try:
+            firestore_sinkron.catat_berita_harian(db, hari.date().isoformat(), 0, "gagal")
+        except Exception:  # noqa: BLE001
+            pass
+        _log_ai("berita", "Berita lokal", periode, galat=e)
+        return [f"::warning::Berita lokal harian gagal: {e}"]
 
 
 def _ai_harian(akar: Path) -> list[str]:
@@ -255,6 +299,9 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--penyedia", choices=["otomatis", *pencari_data.PENYEDIA], default=None,
                    help="bawaan: ai.penyedia di config/pengaturan.json")
 
+    b = sub.add_parser("berita", help="berita lokal: cari, baca, ambil harga dari isinya, ringkas (hasil di data/berita/berita.json)")
+    b.add_argument("--tanpa-ai", action="store_true", help="jangan pakai AI; ringkasan dan kesimpulan disusun otomatis")
+
     w = sub.add_parser("sandi", help="buat entri akun (sandi berhash) untuk config/pengguna.json")
     w.add_argument("id")
     w.add_argument("sandi")
@@ -308,10 +355,19 @@ def main(argv: list[str] | None = None) -> int:
         print(f"GAGAL: {e}", file=sys.stderr)
         return 2
 
-    if a.perintah in ("jalankan", "cari-sumber"):
+    if a.perintah in ("jalankan", "cari-sumber", "berita"):
         from . import firestore_sinkron
 
         firestore_sinkron.pasang_rahasia_dari_firestore(konf.akar)
+    if a.perintah == "berita":
+        hasil = berita.jalankan(konf, tanpa_ai=a.tanpa_ai)
+        path = berita.simpan(konf, hasil)
+        st = hasil["statistik"]
+        for baris in hasil["log"]:
+            print(f"[{baris['jenis']}] {baris['teks']}")
+        print(f"{st['berita_baru']} berita baru, {st['total_arsip']} di arsip, {st['kandidat_harga_baru']} kandidat harga. Disimpan ke {path}")
+        print("Kesimpulan:", hasil["kesimpulan"][0]["ringkas"])
+        return 0
     if a.perintah == "jalankan":
         from . import proses
 

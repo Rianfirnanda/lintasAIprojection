@@ -139,6 +139,51 @@ harga PIHPS".
 6. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
    Kandidat tidak pernah otomatis menjadi sumber data.
 
+## 5b. Berita lokal harian
+
+Mesin mencari berita lokal tentang harga pangan, membaca isinya, mengambil harga yang disebut sebagai **kandidat**, lalu
+menyusun kesimpulan harian. Hasilnya tampil di halaman **Berita Lokal** (menu Lainnya untuk analis, TPID, operator, dan admin).
+
+**Jadwal.** Berjalan sendiri sekali sehari. Penjaga (`antrean.yml`) melihat bahwa jam 07.00 WIB sudah lewat dan berita hari
+ini belum dicari, lalu memicu pembaruan harian yang memuat langkah ini. Jam mulainya bisa diubah di **Pengaturan → Berita lokal**.
+Mau hasilnya sekarang: **Actions → Berita lokal → Run workflow** (atau Pengaturan → Jalankan → *Cari berita lokal sekarang*).
+Prosesnya tercatat di **Log proses AI** (halaman Sumber Data) dengan keterangan "Berita lokal harian".
+
+**Yang dikerjakan setiap hari:**
+
+1. **Mencari.** Pencarian berita Tavily (hasilnya sudah memuat isi artikel), umpan RSS Google Berita untuk tiap kata kunci,
+   dan umpan RSS portal berita yang diisi admin (`berita.umpan_rss` di `config/pengaturan.json`).
+2. **Menyaring.** Duplikat dibuang (tautan yang sama, atau judul yang sama dari portal lain), begitu pula berita lebih lama
+   dari `umur_maks_hari` dan yang berasal dari media sosial atau video. Berita yang tidak menyebut wilayah Bengkulu
+   beserta topik pangan dibuang.
+3. **Membaca.** Halaman artikel diunduh hanya bila `robots.txt` situsnya mengizinkan, dengan jeda antar permintaan, batas ukuran,
+   dan nama bot yang jelas (`LintasBentengBot`). Halaman yang melarang, berbayar, atau memakai JavaScript hanya tampil dengan judulnya.
+4. **Mengambil harga.** Dengan aturan baku (bukan AI): kalimat yang memuat komoditas, angka rupiah, dan satuan kg atau liter.
+   Selisih kenaikan ("naik Rp 5.000"), harga per butir atau ikat, dan angka di luar batas wajar komoditas tidak dihitung
+   sebagai harga. Setiap kandidat membawa kalimat buktinya dan wilayah yang disebut (Bengkulu Tengah, pembanding, provinsi,
+   nasional, atau tidak jelas).
+5. **Meringkas dan menyimpulkan.** AI gratis (rotasi yang sama dengan AI Data Finder) meringkas berita yang paling relevan dan menyusun
+   kesimpulan harian. AI hanya boleh memakai fakta dari teks berita, dan kalimat yang memuat angka yang tidak ada di berita
+   dibuang otomatis. Bila semua AI sedang tidak bisa dipakai, ringkasan dan kesimpulan disusun otomatis dari kalimat berita
+   dan ditandai "ringkasan otomatis".
+
+**Aturan yang tidak boleh dilanggar:**
+
+- Harga dari berita **tidak pernah** masuk deret harga resmi atau perhitungan prakiraan. Statusnya selalu "kandidat, belum
+  diverifikasi". Analis memeriksa kalimat buktinya dan membuka beritanya; bila layak dipakai, catat sebagai data biasa lewat
+  jalur harga yang sudah ada.
+- Isi lengkap artikel **tidak disimpan** (hak cipta penerbit). Yang disimpan: tautan, judul, ringkasan, kutipan pendek, kalimat bukti,
+  dan sidik SHA-256 isi artikel pada saat dibaca (`data/berita/berita.json`).
+- Berita sering menyebut harga di wilayah lain atau rata-rata nasional. Kolom "Berlaku untuk" di halaman menunjukkan wilayahnya.
+
+**Pengaturan** (Pengaturan → Berita lokal): hidup/mati, jam mulai, umur berita paling lama, jumlah berita yang diringkas AI per hari,
+dan pakai AI atau tidak. Kata kunci pencarian dan umpan RSS tambahan diubah di `config/pengaturan.json` bagian `berita`.
+Pemakaian kuota Tavily: satu pencarian per kata kunci per hari (bawaan 6 kata kunci, sekitar 180 kredit per bulan). Ditambah AI Data
+Finder harian (sekitar 180), totalnya sekitar 360 dari 1.000 kredit gratis per bulan. Tanpa kunci Tavily, pencarian tetap jalan dari Google Berita, tetapi isi artikelnya lebih sering tidak terbaca.
+
+**Yang belum terbukti.** Seluruh uji otomatis memakai berkas tiruan. Berapa banyak berita yang benar-benar terbaca dari Google Berita
+dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catatan proses terakhir" di halaman Berita Lokal.
+
 ## 6. Buletin, laporan, dan notifikasi
 
 - Halaman **Laporan**: buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan, evaluasi semesteran, dan laporan tahunan. Pilih periode lalu
@@ -226,3 +271,5 @@ Di repositori publik, panel hanya bisa mengubah sesuatu bila token valid, jadi j
 | Issue tidak dibuat | Mode demo, keparahan < tinggi, atau `github_issues=false` | Periksa `pengaturan.json` dan pesan sinkronisasi di halaman Sinyal |
 | Workflow deploy gagal "Pages not enabled" | Pages belum diaktifkan | Settings → Pages → Source: GitHub Actions |
 | Cuaca tidak bertambah | API Open-Meteo tidak terjangkau | Langkah konektor bersifat `continue-on-error`; cek log Actions |
+| Halaman Berita Lokal kosong | Pencarian pertama belum jalan, atau dimatikan di Pengaturan → Berita lokal | Jalankan **Berita lokal** lewat Actions; cek Log proses AI |
+| Banyak berita "hanya judul" | Situs melarang robot, berbayar, atau memakai JavaScript; tautan Google Berita tidak mengarah ke artikel | Isi kunci Tavily (isi artikel ikut terambil), atau tambahkan umpan RSS portal di `berita.umpan_rss` |

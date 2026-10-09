@@ -1,0 +1,72 @@
+name: Berita lokal
+
+# Mencari berita lokal tentang harga pangan, membaca isinya, mengambil harga sebagai KANDIDAT, lalu menyimpulkannya.
+# Biasanya tidak perlu dijalankan sendiri: penjaga (antrean.yml) memicu pembaruan harian yang sudah memuat langkah ini.
+# Alur kerja ini untuk menjalankan sekarang juga (misalnya setelah mengubah kueri atau mengisi kunci baru).
+# Kunci AI dan Tavily sama dengan AI Data Finder; yang diisi lewat situs (Firestore) menggantikan GitHub Secret yang sama.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+  models: read
+
+concurrency:
+  group: berita
+  cancel-in-progress: false
+
+jobs:
+  berita:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements-ai.txt
+
+      - name: Sambungkan ke Firestore (kunci dari situs)
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then echo "Firebase belum diatur, hanya GitHub Secrets yang dipakai."; exit 0; fi
+          pip install -q -r requirements-firebase.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-layanan.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/akun-layanan.json" >> "$GITHUB_ENV"
+
+      - name: Cari dan baca berita
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m pipeline berita
+
+      - name: Simpan hasil
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/berita
+          if git diff --cached --quiet; then echo "Tidak ada perubahan."; exit 0; fi
+          git commit -m "berita: berita lokal harian"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Perbarui dashboard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pipeline.yml --ref "${GITHUB_REF_NAME}"
+
+      - name: Hapus kredensial
+        if: always()
+        run: rm -f "$RUNNER_TEMP/akun-layanan.json"

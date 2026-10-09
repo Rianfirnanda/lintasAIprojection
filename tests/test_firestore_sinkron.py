@@ -312,6 +312,7 @@ def test_dengan_emulator_firestore(akar, monkeypatch):
     # jam dinding sungguhan: lewat 08.00 WIB AI harian jatuh tempo sampai dicatat sudah jalan hari ini
     hari_ini = datetime.now(timezone.utc).astimezone(fs.WIB).date().isoformat()
     fs.catat_ai_harian(db, hari_ini, 0, ["cabai rawit merah"])
+    fs.catat_berita_harian(db, hari_ini)
     assert fs.ai_harian_jatuh_tempo(akar, db, datetime.now(timezone.utc)) is False
     jalan, alasan = fs.perlu_jalan(akar, db)
     assert not jalan, alasan

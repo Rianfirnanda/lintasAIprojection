@@ -22,6 +22,7 @@ from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, laya
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
 from . import firestore_sinkron
+from . import berita
 from . import konektor_resmi
 from . import kebijakan as modul_kebijakan
 
@@ -448,6 +449,9 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0)} for s in konf.sumber.values()] + diterima,
         "kandidat_ai": kandidat,
     })
+
+    # ---------- berita.json (halaman Berita Lokal; hasil pencarian harian di data/berita/berita.json)
+    _tulis_json(keluaran / "berita.json", berita.untuk_situs(konf))
 
     # ---------- ringkasan.json (dashboard utama)
     jhr = konf.pengaturan["jendela_hari_raya"]

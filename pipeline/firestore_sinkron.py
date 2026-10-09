@@ -74,6 +74,7 @@ KIRIMAN_SEGERA = ("lbp_validasi", "lbp_tindak_lanjut", "lbp_persetujuan_model", 
                   "lbp_keputusan_rekomendasi", "lbp_kandidat_ai", "lbp_keputusan_sumber")
 WIB = timezone(timedelta(hours=7))
 JAM_AI_HARIAN = 8  # AI Data Finder harian mulai pukul 08.00 WIB
+JAM_BERITA = 7  # berita lokal harian mulai pukul 07.00 WIB (bisa diubah di pengaturan berita.jam_mulai)
 
 JENIS_PERINTAH = ("perbarui", "cari_sumber")
 
@@ -489,6 +490,8 @@ def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harg
             return True, f"ada kiriman baru di {koleksi}"
     if ai_harian_jatuh_tempo(akar, db, sekarang):
         return True, "AI Data Finder harian"
+    if berita_jatuh_tempo(akar, db, sekarang):
+        return True, "berita lokal harian"
     if any(_baru_sejak(db, k, _waktu(tanda.get(k)), batas=1) for k in ("lbp_harga", "lbp_kunjungan")):
         selesai = _waktu(status.get("selesai"))
         if selesai and sekarang - selesai < timedelta(minutes=jeda_harga_menit):
@@ -629,3 +632,29 @@ def status_ai_harian(db) -> dict:
 def catat_ai_harian(db, tanggal: str, indeks: int, komoditas: list[str]) -> None:
     db.collection("lbp_status").document("ai_harian").set(
         {"tanggal": tanggal, "indeks": indeks, "komoditas": komoditas, "waktu": datetime.now(timezone.utc)})
+
+
+# ---------------------------------------------------------------- berita lokal harian
+
+def _pengaturan_berita(akar: Path) -> dict:
+    try:
+        return json.loads((akar / "config" / "pengaturan.json").read_text(encoding="utf-8")).get("berita", {})
+    except (OSError, ValueError):
+        return {}
+
+
+def berita_jatuh_tempo(akar: Path, db, sekarang: datetime) -> bool:
+    """Sudah lewat jam mulai (bawaan 07.00 WIB) dan berita lokal harian belum jalan hari ini?"""
+    cfg = _pengaturan_berita(akar)
+    if not cfg.get("aktif", True):
+        return False
+    w = sekarang.astimezone(WIB)
+    if w.hour < int(cfg.get("jam_mulai", JAM_BERITA)):
+        return False
+    snap = db.collection("lbp_status").document("berita_harian").get()
+    return ((snap.to_dict() or {}) if snap.exists else {}).get("tanggal") != w.date().isoformat()
+
+
+def catat_berita_harian(db, tanggal: str, berita_baru: int = 0, hasil: str = "mulai") -> None:
+    db.collection("lbp_status").document("berita_harian").set(
+        {"tanggal": tanggal, "berita_baru": berita_baru, "hasil": hasil, "waktu": datetime.now(timezone.utc)})

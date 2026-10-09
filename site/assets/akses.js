@@ -15,6 +15,7 @@ const M = {
   cek: ["kualitas.html", "Cek Data"],
   akurasi: ["model.html", "Akurasi"],
   sumber: ["sumber.html", "Sumber"],
+  berita: ["berita.html", "Berita Lokal"],
   catat: ["input.html", "Catat Harga"],
   alur: ["alur.html", "Alur"],
   kamus: ["kamus.html", "Kamus Data"],
@@ -34,20 +35,20 @@ export const PERAN = {
   },
   operator: {
     nama: "Operator Data", ikon: "database", ringkas: "Kelola berkas dan cek mutu data", judulBeranda: "Kondisi Data",
-    menu: ["beranda", "cek", "sumber", "harga", "tentang"], lainnya: ["kamus"],
+    menu: ["beranda", "cek", "sumber", "harga", "tentang"], lainnya: ["berita", "kamus"],
   },
   analis: {
     nama: "Analis", ikon: "cari", ringkas: "Periksa data, peringatan, dan model", judulBeranda: "Meja Analis",
-    menu: ["beranda", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["kebijakan", "sumber", "kamus", "tentang"],
+    menu: ["beranda", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["berita", "kebijakan", "sumber", "kamus", "tentang"],
   },
   tpid: {
     nama: "TPID", ikon: "tim", ringkas: "Pantau harga dan ambil keputusan", judulBeranda: "Dashboard TPID",
-    menu: ["beranda", "peringatan", "kebijakan", "laporan", "capaian", "harga"], lainnya: ["alur", "kamus", "tentang"],
+    menu: ["beranda", "peringatan", "kebijakan", "laporan", "capaian", "harga"], lainnya: ["berita", "alur", "kamus", "tentang"],
   },
   admin: {
     nama: "Administrator", ikon: "gembokPerisai", ringkas: "Kelola seluruh sistem", judulBeranda: "Kondisi Sistem",
     menu: ["beranda", "pengaturan", "pengguna", "peringatan", "laporan", "cek"],
-    lainnya: ["kebijakan", "akurasi", "harga", "capaian", "sumber", "catat", "alur", "kamus", "tentang"],
+    lainnya: ["berita", "kebijakan", "akurasi", "harga", "capaian", "sumber", "catat", "alur", "kamus", "tentang"],
   },
 };
 
