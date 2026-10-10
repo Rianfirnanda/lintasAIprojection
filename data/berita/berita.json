@@ -1,0 +1,309 @@
+{
+ "diperbarui": "2026-10-10T09:19:11+07:00",
+ "kesimpulan": [
+  {
+   "tanggal": "2026-10-10",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Di Bengkulu Tengah, penyaluran bantuan pangan beras telah mencapai 99,26 persen dan pemerintah daerah memperkuat sinergi antardaerah untuk pengendalian inflasi, meski dampak langsungnya terhadap harga belum tertera jelas karena keterbatasan isi berita. Di luar wilayah target, harga cabai rawit di Bengkulu Selatan melonjak hingga Rp80 ribu akibat peralihan musim kemarau ke hujan, sementara Jawa Barat mencatat kenaikan harga cabai merah dan penurunan harga bawang. Mengingat data perkembangan harga lokal Bengkulu Tengah masih sangat terbatas, TPID perlu terus memantau potensi rambatan harga cabai dari daerah tetangga serta dampak pasokan beras bantuan terhadap stabilitas harga setempat.",
+   "poin": [
+    "Penyaluran Bantuan Pangan Beras (PBP) di Bengkulu Tengah tercatat mencapai 99,26 persen.",
+    "Pemkab Bengkulu Tengah melakukan penguatan sinergi antardaerah dalam pengendalian inflasi dan percepatan digitalisasi.",
+    "Di Bengkulu Selatan, harga cabai rawit menembus Rp80 ribu dampak peralihan musim kemarau ke hujan.",
+    "Di Jawa Barat, komoditas cabai merah mengalami kenaikan harga, sedangkan harga bawang mengalami penurunan."
+   ],
+   "perlu_dipantau": [
+    "Potensi kenaikan harga komoditas aneka cabai (cabai rawit dan cabai merah) di Bengkulu Tengah menyusul lonjakan harga di wilayah sekitar.",
+    "Dampak capaian penyaluran bantuan pangan beras terhadap stabilitas pasokan dan harga beras lokal di Bengkulu Tengah.",
+    "Perkembangan harga bawang di tingkat pasar lokal."
+   ],
+   "kalimat_dibuang": 0
+  }
+ ],
+ "berita": [
+  {
+   "id": "a491bf1851e4",
+   "url": "https://databoks.katadata.co.id/ekonomi-makro/statistik/c8a619a9690db51/harga-pangan-hari-ini-08-oktober-di-jawa-barat-cabai-merah-naik-bawang-turun",
+   "judul": "Harga Pangan Hari Ini 08 Oktober di Jawa Barat: Cabai Merah Naik, Bawang Turun",
+   "sumber": "databoks.katadata.co.id",
+   "tanggal": "2026-10-08",
+   "diakses": "2026-10-10T09:19:11+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 8,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu",
+    "Kedelai"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 16784,
+   "sidik_sha256": "d50977ecedf92931a1d67f2d915a29d666d2ab9a66cbc1407a8e29612883e12b",
+   "kutipan": "13.361 CAD/IDR 12.349 CHF/IDR 21.861 CNH/IDR 2.461 CNY/IDR 2.460 DKK/IDR 2.668 EUR/IDR 19.935 GBP/IDR 22.858 HKD/IDR 2.160 JPY/IDR 10.838 KRW/IDR 11 KWD/IDR 55.318 LAK/IDR 0 MYR/IDR 4.349 NOK/IDR 1.770 NZD/IDR 10.112 PGK",
+   "ringkasan": "Berdasarkan pemantauan harga pangan per 8 Oktober di Jawa Barat, komoditas cabai merah tercatat mengalami kenaikan harga sementara harga bawang mengalami penurunan.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 65790,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Komoditas cabai merah keriting naik paling tinggi Rp1.673 (2,61%) menjadi Rp65.790 per kg.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": null,
+     "nilai": 30784,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Adapun harga bawang merah turun paling dalam Rp333 (1,07%) menjadi Rp30.784 per kg.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Daging Sapi",
+     "kode_komoditas": "DSP",
+     "kode_varian": null,
+     "nilai": 144296,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Daging Sapi Paha Belakang: Rp144.296 per kg (turun 0,04%)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 77269,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Cabai Rawit Merah: Rp77.269 per kg (naik 0,57%)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR01",
+     "nilai": 50080,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Cabai Merah Besar: Rp50.080 per kg (naik 0,45%)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": null,
+     "nilai": 39704,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Daging Ayam Ras: Rp39.704 per kg (naik 0,71%)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 32643,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Bawang Putih Honan: Rp32.643 per kg (turun 0,17%)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 25569,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Telur Ayam Ras: Rp25.569 per kg (naik 0,02%)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 21324,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Minyak Goreng Sawit Kemasan Premium: Rp21.324 per liter (tetap)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 19951,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Minyak Goreng Sawit Curah: Rp19.951 per liter (turun 0,11%)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": null,
+     "nilai": 17926,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Gula Pasir Curah: Rp17.926 per kg (tetap)",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 15700,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "bukti": "Minyakita: Rp15.700 per liter (tetap)",
+     "status": "kandidat"
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "92f7b779d963",
+   "url": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxNSWpHN3g4UFFpY2o5U3BuNVBtUV9QOGVoNkYzNVNGQWlERXc2aGp1YWVxUUp3X2MycFhxT3Q3Q0RfOTFjUWtWdHQ3NC02dExMQVlCMlhOTG9RMGI1dUhwRjJyR3BCQlN4SlRDYWRMejhjRTh6V3d1NFpYMjZLbjZ6WjdKWV9IYW9rbjBDaTI2STZVSmtpUDM5V0pSVlRDZkxaNW9IdjlXZkd3ZXFPdDBNUElrV1FJVk9yT0JRWko0dE95VldaNlpjTV9LOHdaRzgtOWRsZTJ6cXRFREppVjBj?oc=5",
+   "judul": "RAPAT EVALUASI PBP, PENYALURAN BANTUAN PANGAN BERAS DI BENGKULU TENGAH CAPAI 99,26 PERSEN",
+   "sumber": "Pemerintah Kabupaten Bengkulu Tengah",
+   "tanggal": "2026-10-07",
+   "diakses": "2026-10-10T09:19:11+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "b41535e6cc9f",
+   "url": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxPVnNtTDdwbzJWXzF2b1V5OEhLWDFEc3ZhYTVFeXRIMWZteERuWDVuTndoa0xsUk9NZnY2Tk8yVkMwMFozR1ZFUnBhRktpWEtZdlVTWjYwUzg3Z1ctMEExMThfNDktOENkdm5QdUJ2eUoxZjNqdUY5aTg0czhOMnl5dm5LaHBpa2V3WnJpSVEtM21HTEpwaHluRXdHYjE1UzVYV0gwNFFXNkFEUVk2VV9JZ1JLdV9MRTVVVDByTnlDWGFCWFhEVTlIaU5KREhQb0pSZjZBLWNyTjEyUUh5U016eW9acHZoMTlaQ3F6dmhfYi0?oc=5",
+   "judul": "Dampak Peralihan Musim Kemarau ke Hujan, Harga Cabai Rawit di Bengkulu Selatan Tembus Rp80 Ribu",
+   "sumber": "Tribunbengkulu.com",
+   "tanggal": "2026-10-05",
+   "diakses": "2026-10-10T09:19:11+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Cabai Rawit"
+   ],
+   "tag": [
+    "harga_naik",
+    "cuaca"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "536293a6ddc3",
+   "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNZjg4cXhPZFZTVXJQMTZDUlF5TVpQY2tqZ3BsQVRsc2VGMGVWSlFJS3c4TGxzZHBFWE54VFhRcktaX1RfUmZRaC1KcktFdS1GZEtuRFk0bEdGb0VHR0l2bEhMWktEZ3c5Y0lhU0VWR1VybTRvMDNpZTRPNXo1ZjZLM3RWV3htS3ZuZFdyYXUwdVBnSTdIQU9JQkRMMTlSMHRQQWJVdXp0SVE2aDlkRnNZV3VSWVF6MWFOYV9iUjJvVjg5Q1lqOVB6VEUxam1oT0s2a3NnZkdMVU1ienJsQkhBS1dTVVF5YjlVMzUxeGJqYmNVOEpvVzNBSQ?oc=5",
+   "judul": "PEMKAB BENGKULU TENGAH PERKUAT SINERGI ANTAR DAERAH DALAM PENGENDALIAN INFLASI DAN PERCEPATAN DIGITALISASI",
+   "sumber": "Pemerintah Kabupaten Bengkulu Tengah",
+   "tanggal": "2026-10-05",
+   "diakses": "2026-10-10T09:19:11+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  }
+ ],
+ "statistik": {
+  "hasil_pencarian": 110,
+  "setelah_duplikat": 86,
+  "berita_baru": 4,
+  "total_arsip": 4,
+  "kandidat_harga_baru": 12,
+  "isi_tidak_terbaca": 3,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.8-flash"
+ },
+ "galat": []
+}
