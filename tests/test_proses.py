@@ -142,3 +142,20 @@ def test_batas_wilayah_opsional_diterbitkan(konf, akar_sementara):
     proses.jalankan(konf, keluaran, sinkron_github=False)
     assert baca(keluaran, "meta.json")["batas_wilayah"] is True
     assert (keluaran / "batas_wilayah.geojson").exists()
+
+
+def test_mode_data_asli_tanpa_data_tidak_gagal_dan_tidak_memakai_data_contoh(tmp_path):
+    """Pengaturan sungguhan: selalu data asli. Bila berkas harga belum ada, pipeline tetap selesai tanpa mengarang angka."""
+    import shutil
+    from pipeline import konfigurasi
+    from tests.conftest import AKAR, HARI_INI
+
+    shutil.copytree(AKAR / "config", tmp_path / "config")
+    (tmp_path / "data/masuk/harga").mkdir(parents=True)
+    konf = konfigurasi.muat(tmp_path, hari_ini=HARI_INI)
+    assert konf.pengaturan["mode_demo"] == "tidak"
+    keluaran = tmp_path / "site/data"
+    proses.jalankan(konf, keluaran, sinkron_github=False, kirim_notifikasi=False)
+    meta = baca(keluaran, "meta.json")
+    assert meta["mode_demo"] is False and meta["jumlah"]["observasi_total"] == 0
+    assert baca(keluaran, "ringkasan.json")["kpi"]["varian_berdata"] == 0

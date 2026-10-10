@@ -695,6 +695,7 @@ class HasilVarian:
     kelas_volatilitas: str = "sedang"
     parameter: dict = field(default_factory=dict)
     terbaik_per_horizon: dict = field(default_factory=dict)
+    sumber_seri: dict = field(default_factory=dict)
 
 
 def smape_segmen(bt: HasilBacktest, acara: list[Acara], sebelum: int, sesudah: int) -> dict:
@@ -719,6 +720,10 @@ VALIDASI_BAWAAN = {
     "akurasi_arah_min_persen": {"tinggi": 60.0},
     "cakupan_min_persen": 75.0,
     "cakupan_maks_persen": 85.0,
+    # Rentang prakiraan dikalibrasi dari residu origin mingguan selama setahun sebelum holdout (bukan hanya origin seleksi),
+    # supaya mewakili beberapa musim harga. Model mesin belajar memakai setengahnya karena mahal dihitung.
+    "origin_kalibrasi": 52,
+    "jarak_origin_kalibrasi_hari": 7,
 }
 KELAS_VOLATILITAS = {"volatil": "tinggi", "protein": "sedang", "pokok": "rendah", "pabrikan": "rendah"}
 # Laporan Pengembangan Model, tabel "Rekomendasi Model dan Validasi per Varian": Bawang Putih berkelas volatilitas sedang
@@ -766,11 +771,13 @@ def uji_diebold_mariano(galat_a: np.ndarray, galat_b: np.ndarray, horizon: int) 
     return {"n": int(n), "statistik": round(stat, 3), "p": round(p, 4)}
 
 
-def kelengkapan_seri(seri: SeriHarian, hari_catat: list[int], jendela: int = 365) -> float | None:
-    """Persen hari pencatatan (mis. Senin-Jumat) yang punya harga dalam jendela hari terakhir."""
+def kelengkapan_seri(seri: SeriHarian, hari_catat: list[int], jendela: int = 365, libur: set | None = None) -> float | None:
+    """Persen hari pencatatan (mis. Senin-Jumat, di luar libur pencatatan) yang punya harga dalam jendela hari terakhir."""
     n = min(seri.n, jendela)
-    diharapkan = sum(1 for t in seri.tanggal[-n:] if t.weekday() in hari_catat)
-    ada = sum(1 for t, x in zip(seri.tanggal[-n:], seri.nilai[-n:]) if t.weekday() in hari_catat and not np.isnan(x))
+    libur = libur or set()
+    wajib = lambda t: t.weekday() in hari_catat and t not in libur  # noqa: E731
+    diharapkan = sum(1 for t in seri.tanggal[-n:] if wajib(t))
+    ada = sum(1 for t, x in zip(seri.tanggal[-n:], seri.nilai[-n:]) if wajib(t) and not np.isnan(x))
     return round(ada / diharapkan * 100, 1) if diharapkan else None
 
 
@@ -939,7 +946,8 @@ def simpanan_fitur(terisi: np.ndarray, tanggal: list[date], acara: list[Acara]) 
 
 
 def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengaturan: dict,
-                    model_disetujui: str | None = None, wajib_persetujuan: bool = False, kode: str | None = None) -> HasilVarian:
+                    model_disetujui: str | None = None, wajib_persetujuan: bool = False, kode: str | None = None,
+                    libur_pasar: set | None = None) -> HasilVarian:
     a = pengaturan["analisis"]
     s = pengaturan["sinyal"]
     jhr = pengaturan["jendela_hari_raya"]
@@ -1062,18 +1070,28 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         catatan.append(f"Model rekomendasi '{rekomendasi}' belum disetujui; proyeksi memakai '{terpilih}'.")
 
     holdout, bt_hold = None, None
+    kalibrasi: dict[str, HasilBacktest] = {}
+
+    def bt_kalibrasi(model: str) -> HasilBacktest:
+        if model not in kalibrasi:
+            n_kal = int(v["origin_kalibrasi"]) // (2 if model in MODEL_CHALLENGER else 1)
+            bt_k = backtest(seri, terisi, model, konteks, horizon, max(n_kal, jumlah_origin), int(v["jarak_origin_kalibrasi_hari"]),
+                            a["minimal_hari_riwayat"], ambang_gejolak, geser) if model in hasil_bt else None
+            kalibrasi[model] = bt_k if bt_k is not None and len(bt_k.aktual) >= len(hasil_bt[model].aktual) else hasil_bt[model]
+        return kalibrasi[model]
+
     if geser and terpilih in hasil_bt:
         holdout, bt_hold, _ = evaluasi_holdout(seri, terisi, terpilih, konteks, horizon, v, a["minimal_hari_riwayat"], ambang_gejolak,
-                                               hasil_bt[terpilih], a["tingkat_interval"])
+                                               bt_kalibrasi(terpilih), a["tingkat_interval"])
         dm = (holdout or {}).get("uji_dm") or {}
         if (holdout and terpilih in MODEL_CHALLENGER and dm.get("p") is not None and dm["p"] < 0.05 and (dm.get("statistik") or 0) > 0):
             catatan.append(f"Uji Diebold-Mariano pada holdout menunjukkan '{terpilih}' lebih buruk dari cara naif (p={dm['p']}); kembali ke '{baseline_champion}'.")
             rekomendasi = terpilih = baseline_champion
             holdout, bt_hold, _ = evaluasi_holdout(seri, terisi, terpilih, konteks, horizon, v, a["minimal_hari_riwayat"], ambang_gejolak,
-                                                   hasil_bt[terpilih], a["tingkat_interval"])
+                                                   bt_kalibrasi(terpilih), a["tingkat_interval"])
         if holdout is None:
             catatan.append("Holdout tidak dapat dihitung (origin tidak cukup); model berstatus eksperimen.")
-    kelengkapan = kelengkapan_seri(seri, list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4])))
+    kelengkapan = kelengkapan_seri(seri, list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4])), libur=libur_pasar)
     validasi = nilai_validasi(kelompok, v, jumlah_obs, kelengkapan, holdout, kode) if terpilih else {"status": "eksperimen", "syarat": [],
                                                                                               "gagal": ["Tidak ada model"], "belum_dinilai": []}
     diagnostik = diagnostik_deret(seri, terisi)
@@ -1100,7 +1118,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         _, r = log_return(seri)
         sigma = float(np.std(r[-90:])) if len(r) > 5 else 0.05
         if terpilih in hasil_bt:
-            iv = interval_empiris(gabung_backtest(hasil_bt[terpilih], bt_hold), horizon, a["tingkat_interval"], sigma)
+            iv = interval_empiris(gabung_backtest(bt_kalibrasi(terpilih), bt_hold), horizon, a["tingkat_interval"], sigma)
         else:
             lebar = 1.6449 * max(sigma, 0.01)
             iv = [(-lebar * math.sqrt(h), lebar * math.sqrt(h)) for h in range(1, horizon + 1)]

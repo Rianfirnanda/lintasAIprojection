@@ -367,7 +367,7 @@ export async function pasangKerangka(aktif) {
         <button type="button" class="tema-ikon" data-tema-ganti></button>
       </div>
     </div>
-    <p class="kaki-catatan">Sumber: BPS, Pemda, Open-Meteo (CC BY 4.0), peta © OpenStreetMap · © ${new Date().getFullYear()}${meta.versi ? ` · v${esc(meta.versi)}` : ""}</p>`;
+    <p class="kaki-catatan">Sumber: BPS, SP2KP Kemendag, PIHPS Bank Indonesia, BMKG, Pemda, Open-Meteo (CC BY 4.0), peta © OpenStreetMap · © ${new Date().getFullYear()}${meta.versi ? ` · v${esc(meta.versi)}` : ""}</p>`;
   pasangStatus(kaki, meta);
   kaki.querySelector("[data-tema-ganti]").addEventListener("click", () => {
     // Matikan animasi warna sesaat supaya semua bagian berganti serentak, tanpa kedip.

@@ -105,7 +105,7 @@ function renderGambar10(k, prio, jumlahBlank) {
     ["toko", "Pasar / Pedagang", "Harga harian dari pasar dan pedagang", "ada", "Formulir Input Harga untuk petugas pasar"],
     ["pemda", "Data Sektoral Pemda", "Pertanian, perikanan, transportasi, dll.", "ada", "Berkas konteks (stok, pasokan, biaya angkut) di data/masuk/konteks"],
     ["ai", "AI Data Finder", "Pengambilan data otomatis dari sumber terpercaya", "ada", "Mencari kandidat sumber; keputusan memakai tetap di analis"],
-    ["database", "Big Data (Sah)", "E-commerce, berita, cuaca, logistik, dan sumber terbuka lainnya", "sebagian", "Baru cuaca (Open-Meteo) dan kalender hari raya; PIHPS, Panel Harga Bapanas, dan BMKG masih kandidat"],
+    ["database", "Big Data (Sah)", "E-commerce, berita, cuaca, logistik, dan sumber terbuka lainnya", "sebagian", "Berjalan otomatis: harga harian SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu), PIHPS Bank Indonesia, cuaca Open-Meteo, prakiraan BMKG, berita lokal. Panel Harga Bapanas belum bisa diambil dari luar Indonesia"],
   ], "Kolaborasi data untuk gambaran harga yang lebih lengkap"));
   t.push(`<article class="tahap"><header class="tahap-kepala"><h3>2. Pengiriman Data</h3><p>Fleksibel dan inklusif, hingga ke wilayah blank spot.</p></header>
     <div class="tahap-isi">
@@ -118,14 +118,14 @@ function renderGambar10(k, prio, jumlahBlank) {
     ["dokumenCentang", "Standardisasi", "10 komoditas dan 21 varian", "ada", "Kode, satuan, dan batas kewajaran di config/komoditas.csv"],
     ["roda", "Metadata", "Pelabelan sumber, waktu, lokasi, dan atribut data", "ada", "Checksum SHA-256 setiap berkas masukan"],
     ["database", "Deduplikasi", "Menghapus data ganda", "ada", ""],
-    ["sinkron", "Rekonsiliasi", "Pencocokan antar sumber", "ada", ""],
-    ["orang", "Validasi Manusia", "Pemeriksaan oleh petugas/validator", "ada", "Halaman Quality Gate"],
+    ["sinkron", "Rekonsiliasi", "Pencocokan antar sumber", "ada", "Skor kecocokan SP2KP dan PIHPS di Dasbor Analitik"],
+    ["orang", "Validasi Manusia", "Pemeriksaan oleh petugas/validator", "ada", "Halaman Pemeriksaan Data"],
   ], "Data siap dianalisis: valid, konsisten, dan terstandar", true));
   t.push(tahapBiasa(4, "Analisis AI", "Mengubah data menjadi insight yang dapat ditindaklanjuti.", [
-    ["tren", "Deteksi Anomali", "Mengidentifikasi perubahan harga yang tidak wajar", "ada", ""],
-    ["batang", "Baseline", "Membandingkan dengan pola historis dan musiman", "ada", ""],
-    ["otak", "Proyeksi", "Prediksi pergerakan harga jangka pendek", "ada", "Proyeksi 7, 14, dan 30 hari dengan interval 80%"],
-    ["simpul", "Drift Detection", "Memantau perubahan pola dan risiko baru", "ada", ""],
+    ["tren", "Deteksi Harga Janggal (Anomali)", "Mengidentifikasi perubahan harga yang tidak wajar", "ada", "Peringatan dini lonjakan harga diuji pada riwayat"],
+    ["batang", "Harga Normal (Baseline)", "Membandingkan dengan pola historis dan musiman", "ada", ""],
+    ["otak", "Perkiraan Harga (Proyeksi)", "Prediksi pergerakan harga jangka pendek", "ada", "Perkiraan 7, 14, dan 30 hari dengan rentang wajar 80%"],
+    ["simpul", "Pola Berubah (Drift)", "Memantau perubahan pola dan risiko baru", "ada", ""],
   ], "AI membantu mendeteksi lebih cepat, lebih luas, dan lebih akurat"));
   t.push(`<article class="tahap"><header class="tahap-kepala"><h3>5. Dashboard TPID</h3><p>Informasi real-time untuk pengambilan keputusan.</p></header>
     <div class="tahap-isi">${LAPTOP}
@@ -177,7 +177,7 @@ function renderGambar11(k, prio, uptime, mutu) {
     `<div class="lapis-butir"><span class="angka-lingkar">${uptime === null ? "–" : persen(uptime, 1)}</span><span>Uptime<br>${uptime === null ? "belum ada log" : persen(uptime, 1)}</span>${titik("ada", "Diukur tiap jam oleh workflow Uptime")}</div>`,
   ];
   L[5] = [
-    it("tren", "Baseline", "ada", ""), it("batang", "Proyeksi", "ada", ""), it("cari", "Deteksi<br>Anomali", "ada", ""),
+    it("tren", "Harga<br>Normal", "ada", ""), it("batang", "Perkiraan<br>Harga", "ada", ""), it("cari", "Harga<br>Janggal", "ada", ""),
     it("sinkron", "Rolling-Origin<br>Backtesting", "ada", ""), it("tim", "Persetujuan<br>Manusia", "ada", "Opsional, dapat diwajibkan lewat config/pengaturan.json"),
     `<div class="lapis-ukuran">${mutu.map((u) => `<div title="${esc(u.catatan)}"><small>${u.nama}</small><b>${u.nilai}</b></div>`).join("")}</div>`,
   ];

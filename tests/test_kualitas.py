@@ -116,3 +116,20 @@ def test_ketepatan_waktu(konf):
     assert psr01["diterima"] == 2 and psr01["ketepatan_persen"] == 50.0
     assert psr01["diharapkan"] == len(wajib) * len(konf.varian_aktif)
     assert psr01["tanggal_terakhir"] == t.isoformat()
+
+
+def test_libur_pencatatan_terdeteksi_dari_data():
+    """Hari kerja yang kosong di semua pasar satu sumber (mis. SP2KP, tiga pasar) dianggap libur pencatatan; kosong di satu
+    pasar saja tetap dihitung data hilang."""
+    senin = date(2026, 3, 16)
+    hari = [senin + timedelta(days=i) for i in range(5)]  # Senin-Jumat
+    data = []
+    for p in ("PSR01", "PSR91", "PSR92"):
+        for t in hari:
+            if t == hari[2]:  # Rabu: semua pasar SP2KP tidak mencatat
+                continue
+            if p == "PSR01" and t == hari[3]:  # Kamis: hanya satu pasar kosong
+                continue
+            data.append(obs(t, 40000, pasar=p, sumber="BD-SP2KP"))
+    data.append(obs(hari[2], 41000, pasar="PSR02", sumber="PSR-ENUM"))  # sumber satu pasar tidak menentukan libur
+    assert kualitas.libur_pencatatan(data) == {hari[2]}

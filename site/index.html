@@ -348,7 +348,7 @@ function siapkanGrafik(varian, master, model) {
   const pilih = document.getElementById("pilih-varian");
   if (!varian.length) {
     document.querySelector(".wadah-grafik").innerHTML =
-      `<div class="pesan">Belum ada data harga yang lolos pemeriksaan. Unggah berkas harga ke <code>data/masuk/harga/</code> atau cek halaman <a href="kualitas.html">Quality Gate</a>.</div>`;
+      `<div class="pesan">Belum ada data harga yang lolos pemeriksaan. Unggah berkas harga ke <code>data/masuk/harga/</code> atau cek halaman <a href="kualitas.html">Pemeriksaan Data</a>.</div>`;
     pilih.disabled = true;
     return;
   }
@@ -376,11 +376,15 @@ function siapkanGrafik(varian, master, model) {
     kanvas.style.opacity = "1";
     document.getElementById("judul-grafik").textContent = `Pergerakan Harga ${seri.nama}`;
     const terakhir = seri.tanggal[seri.tanggal.length - 1];
-    document.getElementById("sub-grafik").textContent = `${bulanTahun(terakhir)} (Rp/${seri.satuan})`;
+    const sumber = seri.sumber_seri || {};
+    document.getElementById("sub-grafik").textContent = `${bulanTahun(terakhir)} (Rp/${seri.satuan})` + (sumber.label ? ` · Sumber: ${sumber.label}` : "");
     const m = modelPer[kode];
     const metrik = m?.metrik?.[m.model_terpilih];
+    const lebih = m?.perbaikan_vs_naif_persen;
     document.getElementById("info-model").textContent = m
-      ? `Model ${m.nama_model}${metrik ? `, rata-rata meleset ${angka(metrik.smape, 2)}% saat diuji` : ""}${m.perbaikan_vs_naif_persen !== null ? ` (${persen(m.perbaikan_vs_naif_persen, 1, true)} dibanding metode naif)` : ""}. ${(seri.catatan || []).join(" ")}`
+      ? `Cara perkiraan: ${m.nama_model}.${metrik ? ` Saat diuji pada data lalu, perkiraannya rata-rata meleset ${angka(metrik.smape, 1)}%` : ""}` +
+        `${lebih !== null && lebih !== undefined ? (lebih >= 0 ? `, ${angka(lebih, 1)}% lebih tepat daripada sekadar memakai harga terakhir.` : `, belum lebih tepat daripada sekadar memakai harga terakhir.`) : (metrik ? "." : "")}` +
+        `${sumber.pengganti ? ` ${sumber.catatan}` : ""}`
       : "";
   }
   pilih.addEventListener("change", gambar);

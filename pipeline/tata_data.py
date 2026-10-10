@@ -105,19 +105,32 @@ def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> lis
                       "data_terakhir": None, "alasan": "Belum ada data PIHPS yang masuk.", "gerbang": [],
                       "tindakan_gagal": "Ulangi pengambilan; periksa perubahan alamat situs PIHPS."})
 
-    # 3. SP2KP
-    sp = probe.get("hasil_probe_lanjut.json", {}).get("sp2kp_coba", [])
-    butuh_token = any(r.get("status") == 401 and "report/api" in r.get("url", "") for r in sp)
-    sp_data = [k for k in kon if k.kode_sumber == "BD-SP2KP"]
-    hasil.append({"no": 3, "nama": "SP2KP Finder", "objek": "Harga pasar harian Kemendag per kabupaten/kota",
-                  "status": "lulus" if sp_data else "menunggu", "data_terakhir": max((k.tanggal for k in sp_data), default=None),
-                  "alasan": None if sp_data else ("Server SP2KP menjawab dari server GitHub, tetapi data laporan harganya meminta token "
-                                                  "masuk. Perlu akun atau izin akses dari Kemendag." if butuh_token else
-                                                  "Belum terhubung."),
-                  "gerbang": [_gerbang("Akses data laporan", bool(sp_data), "terbuka" if sp_data else "butuh token", "terbuka")],
-                  "tindakan_gagal": "Turunkan bobot sumber; konflik dikirim ke Cross-Source Reconciler."})
-    if hasil[-1]["data_terakhir"]:
-        hasil[-1]["data_terakhir"] = hasil[-1]["data_terakhir"].isoformat()
+    # 3. SP2KP (harga harian pasar acuan Kemendag: Taba Penanjung, Kepahiang, Panorama)
+    sp_data = [o for o in hasil_qc.observasi if o.kode_sumber == "BD-SP2KP"]
+    if sp_data:
+        terakhir = max(o.tanggal for o in sp_data)
+        segar = _hari_kerja_antara(terakhir, hari)
+        wil_sp = sorted({o.kode_wilayah for o in sp_data})
+        var_target = {o.kode_varian for o in sp_data if o.kode_wilayah == konf.wilayah_target}
+        kunci = Counter((o.tanggal, o.kode_pasar, o.kode_varian) for o in sp_data)
+        dup = sum(c - 1 for c in kunci.values() if c > 1)
+        hasil.append({"no": 3, "nama": "SP2KP Finder", "objek": "Harga pasar harian Kemendag: Bengkulu Tengah, Kepahiang, Kota Bengkulu",
+                      "status": None, "data_terakhir": terakhir.isoformat(), "baris": len(sp_data),
+                      "rentang": [min(o.tanggal for o in sp_data).isoformat(), terakhir.isoformat()],
+                      "gerbang": [
+                          _gerbang("Kesegaran", segar <= 2, f"{segar} hari kerja", "<= 2 hari kerja"),
+                          _gerbang("Wilayah tercakup", len(wil_sp) >= 3, f"{len(wil_sp)} wilayah", "3 wilayah"),
+                          _gerbang("Varian Bengkulu Tengah terpetakan", len(var_target) >= len(konf.varian_aktif) * 0.7,
+                                   f"{len(var_target)}/{len(konf.varian_aktif)}", ">= 70% (sisanya memakai harga provinsi)"),
+                          _gerbang("Duplikasi kunci", dup == 0, dup, "0"),
+                          _gerbang("Harga positif", all(o.harga > 0 for o in sp_data), "100%", "100%"),
+                      ],
+                      "tindakan_gagal": "Ulangi pengambilan; varian yang hilang memakai harga provinsi dengan label jelas; keyakinan diturunkan."})
+        hasil[-1]["status"] = _status(hasil[-1]["gerbang"], True)
+    else:
+        hasil.append({"no": 3, "nama": "SP2KP Finder", "objek": "Harga pasar harian Kemendag per kabupaten/kota", "status": "menunggu",
+                      "data_terakhir": None, "alasan": "Belum ada data SP2KP. Jalankan python -m pipeline ambil-sp2kp.", "gerbang": [],
+                      "tindakan_gagal": "Varian memakai harga provinsi dengan label jelas; keyakinan diturunkan."})
 
     # 4. SISP
     hasil.append({"no": 4, "nama": "SISP Finder", "objek": "Snapshot harga nasional Kemendag dan perubahannya", "status": "menunggu",
@@ -135,7 +148,7 @@ def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> lis
                   "tindakan_gagal": "Tandai tidak tersedia; model berjalan tanpa fitur ini dan keyakinan diturunkan."})
 
     # 6. Pasar lokal (petugas)
-    lok = [o for o in hasil_qc.observasi if o.kode_wilayah == "1709"]
+    lok = [o for o in hasil_qc.observasi if o.kode_wilayah == "1709" and o.kode_sumber in ("PSR-ENUM", "BPS-HRG", "PMD-DISDAG")]
     if lok:
         terakhir = max(o.tanggal for o in lok)
         pasar = {o.kode_pasar for o in lok}
@@ -147,8 +160,8 @@ def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> lis
         hasil[-1]["status"] = _status(hasil[-1]["gerbang"], True)
     else:
         hasil.append({"no": 6, "nama": "Pasar Lokal Finder", "objek": "Harga pedagang di pasar Bengkulu Tengah", "status": "menunggu",
-                      "data_terakhir": None, "alasan": "Belum ada catatan harga dari petugas di Pasar Taba Penanjung dan Karang Tinggi. "
-                      "Isi lewat halaman Input Harga atau unggah berkas.", "gerbang": [],
+                      "data_terakhir": None, "alasan": "Belum ada catatan harga dari petugas BPS di Pasar Taba Penanjung dan Karang Tinggi "
+                      "(harga Taba Penanjung sementara diambil dari SP2KP). Isi lewat halaman Input Harga atau unggah berkas.", "gerbang": [],
                       "tindakan_gagal": "Verifikasi lapangan; jangan terbitkan target yang tidak cukup."})
 
     # 7. Cuaca/BMKG
@@ -193,13 +206,14 @@ def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> lis
         hasil[-1]["data_terakhir"] = hasil[-1]["data_terakhir"].isoformat()
 
     # 10. Spatial comparator
-    pemb = [k for k in per_ind.get("harga_pihps", []) if k.kode_wilayah in ("1771", "1708")]
+    pemb = [k for k in per_ind.get("harga_pihps", []) if k.kode_wilayah in ("1771", "1708")] + \
+        [o for o in hasil_qc.observasi if o.kode_wilayah in ("1771", "1708")]
     wil = sorted({k.kode_wilayah for k in pemb})
     hasil.append({"no": 10, "nama": "Spatial Comparator Finder", "objek": "Harga pembanding Kepahiang dan Kota Bengkulu",
-                  "status": None, "data_terakhir": max((k.tanggal for k in pemb), default=None),
+                  "status": None, "data_terakhir": max((k.tanggal for k in pemb), default=None), "baris": len(pemb),
                   "gerbang": [_gerbang("Kota Bengkulu tersedia", "1771" in wil, "ada" if "1771" in wil else "belum", "tersedia t-1"),
                               _gerbang("Kepahiang tersedia", "1708" in wil, "ada" if "1708" in wil else "belum", "tersedia t-1")],
-                  "alasan": None if "1708" in wil else "Kepahiang belum ada di PIHPS; perlu data Dinas atau SP2KP.",
+                  "alasan": None if "1708" in wil else "Harga Kepahiang belum masuk; jalankan pengambilan SP2KP.",
                   "tindakan_gagal": "Model tanpa fitur spasial; pembanding ditandai hilang; target Bengkulu Tengah tidak diganti."})
     hasil[-1]["status"] = _status(hasil[-1]["gerbang"], bool(pemb))
     if hasil[-1]["data_terakhir"]:
@@ -207,7 +221,54 @@ def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> lis
     return hasil
 
 
-def tahap_pembersihan(konf, hasil_masuk, hasil_qc, hasil_varian: dict) -> list[dict]:
+BOBOT_KONSENSUS = {"kesepakatan": 0.5, "kesegaran": 0.2, "cakupan_varian": 0.15, "kecocokan_wilayah": 0.15}
+
+
+def konsensus_sumber(konf, hasil_qc, konteks: list, hari_terakhir: int = 90) -> dict:
+    """Skor konsensus antar-sumber (laporan: Cross-Source Reconciler, ambang >= 0,80; 0,60-0,79 perlu tinjauan statistikawan).
+
+    Dihitung pada wilayah yang dicatat dua sumber independen pada tanggal dan varian yang sama: SP2KP (pasar acuan Kemendag)
+    dan PIHPS Bank Indonesia tingkat kabupaten/kota. Skor = 0,5 x porsi pasangan yang selisihnya dalam batas rekonsiliasi
+    + 0,2 x kesegaran kedua sumber + 0,15 x cakupan varian + 0,15 x kecocokan wilayah (kode wilayah sama = 1)."""
+    ambang = float(konf.pengaturan["kualitas"].get("selisih_rekonsiliasi_persen", 15))
+    hari = konf.hari_ini
+    sp: dict[tuple, list[float]] = defaultdict(list)
+    for o in hasil_qc.dipakai():
+        if o.kode_sumber == "BD-SP2KP":
+            sp[(o.tanggal, o.kode_wilayah, o.kode_varian)].append(o.harga)
+    pi = {(k.tanggal, k.kode_wilayah, k.kode_varian): k.nilai for k in konteks
+          if k.indikator == "harga_pihps" and k.kode_wilayah not in ("17",) and k.kode_varian and k.nilai}
+    if not sp or not pi:
+        return {"skor": None, "alasan": "Belum ada dua sumber harga independen untuk wilayah, tanggal, dan varian yang sama."}
+    batas = hari - timedelta(days=hari_terakhir)
+    pasangan = [(k, float(np.median(sp[k])), pi[k]) for k in sp.keys() & pi.keys() if k[0] >= batas]
+    if not pasangan:
+        return {"skor": None, "alasan": f"Tidak ada tanggal yang sama antara SP2KP dan PIHPS dalam {hari_terakhir} hari terakhir."}
+    selisih = [abs(a / b - 1) * 100 for _, a, b in pasangan]
+    sepakat = sum(1 for x in selisih if x <= ambang) / len(selisih)
+    tgl_sp = max(k[0] for k in sp)
+    tgl_pi = max(k[0] for k in pi)
+    lambat = max(_hari_kerja_antara(tgl_sp, hari), _hari_kerja_antara(tgl_pi, hari))
+    segar = 1.0 if lambat <= 2 else 0.5 if lambat <= 5 else 0.0
+    var_pasangan = {k[2] for k, _, _ in pasangan}
+    cakupan = min(1.0, len(var_pasangan) / max(1, len(konf.varian_aktif)))
+    komponen = {"kesepakatan": round(sepakat, 3), "kesegaran": segar, "cakupan_varian": round(cakupan, 3), "kecocokan_wilayah": 1.0}
+    skor = round(sum(BOBOT_KONSENSUS[k] * v for k, v in komponen.items()), 3)
+    per_varian = {}
+    for v in sorted(var_pasangan):
+        sv = [abs(a / b - 1) * 100 for k, a, b in pasangan if k[2] == v]
+        per_varian[v] = {"pasangan": len(sv), "median_selisih_persen": round(float(np.median(sv)), 1),
+                         "sepakat_persen": round(sum(1 for x in sv if x <= ambang) / len(sv) * 100, 1)}
+    wil = sorted({k[1] for k, _, _ in pasangan})
+    return {"skor": skor, "komponen": komponen, "bobot": BOBOT_KONSENSUS, "pasangan": len(pasangan),
+            "median_selisih_persen": round(float(np.median(selisih)), 1), "ambang_selisih_persen": ambang,
+            "wilayah": wil, "per_varian": per_varian, "periode_hari": hari_terakhir,
+            "status": "lulus" if skor >= 0.8 else "tinjau" if skor >= 0.6 else "gagal",
+            "keterangan": "Dibandingkan pada wilayah yang dicatat dua sumber (SP2KP dan PIHPS Bank Indonesia). Bengkulu Tengah sendiri "
+                          "baru punya satu sumber harian (SP2KP), jadi kecocokan ini menjadi ukuran keandalan sumber SP2KP."}
+
+
+def tahap_pembersihan(konf, hasil_masuk, hasil_qc, hasil_varian: dict, konsensus: dict | None = None) -> list[dict]:
     """8 tahap pembersihan dengan gerbang kuantitatif, dihitung dari jalannya pipeline ini."""
     tolak = hasil_masuk.penolakan
     obs = hasil_qc.observasi
@@ -247,7 +308,9 @@ def tahap_pembersihan(konf, hasil_masuk, hasil_qc, hasil_varian: dict) -> list[d
         ("Outlier & Anomaly Detector", "MAD, robust z-score, perubahan harian ekstrem; ditandai, tidak dihapus otomatis.",
          [_gerbang("Porsi data yang ditandai", porsi(perlu, len(obs)) <= 5, f"{porsi(perlu, len(obs))}%", "<= 5%")]),
         ("Cross-Source Reconciler", "Membandingkan sumber dengan bobot kualitas, kesegaran, dan definisi.",
-         [_gerbang("Skor konsensus antar-sumber", None, "baru satu sumber harga", ">= 0,80")]),
+         [_gerbang("Skor konsensus antar-sumber", None if not konsensus or konsensus.get("skor") is None else konsensus["skor"] >= 0.8,
+                   (konsensus or {}).get("skor") if (konsensus or {}).get("skor") is not None else (konsensus or {}).get("alasan", "-"),
+                   ">= 0,80")]),
     ]
     hasil = []
     for i, (nama, proses, gerbang) in enumerate(tahap, 1):

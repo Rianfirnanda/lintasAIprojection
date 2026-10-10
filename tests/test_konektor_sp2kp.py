@@ -35,6 +35,7 @@ def test_ubah_respons_lewati_harga_kosong():
 
 
 def test_perbarui_simpan_mentah_dan_tambah_peta_baru(konf):
+    (konf.akar / "config/peta_varian_sp2kp.csv").unlink(missing_ok=True)  # mulai dari tabel pemetaan kosong
     panggil = []
     hasil = konektor_sp2kp.perbarui(konf, hari_riwayat=40, pengirim=_pengirim(panggil), tidur=lambda s: None)
     assert hasil["galat"] == [] and hasil["varian_baru"] == ["52", "61"]

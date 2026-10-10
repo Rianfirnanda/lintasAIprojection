@@ -49,7 +49,7 @@ concurrency:
 jobs:
   bangun:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -118,9 +118,19 @@ jobs:
         continue-on-error: true
         run: python -m pipeline ambil-resmi
 
-      # Harga utama sementara: PIHPS Provinsi Bengkulu disalin menjadi berkas harga biasa (lihat pipeline/pihps_harga.py).
-      # Dihentikan dengan menghapus berkas pihps_provinsi_*.csv dan langkah ini setelah data BPS Bengkulu Tengah masuk.
-      - name: Salin harga PIHPS Provinsi Bengkulu menjadi harga utama sementara
+      # Harga harian pasar acuan SP2KP Kemendag: Pasar Taba Penanjung (Bengkulu Tengah), Pasar Kepahiang, Pasar Panorama
+      # (Kota Bengkulu). Data mentah di data/mentah/sp2kp; hanya varian dengan pemetaan disetujui yang masuk berkas harga.
+      - name: Ambil harga harian SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)
+        continue-on-error: true
+        run: python -m pipeline ambil-sp2kp
+
+      - name: Salin harga SP2KP yang pemetaan variannya disetujui menjadi berkas harga
+        continue-on-error: true
+        run: python -m pipeline sp2kp-ke-harga
+
+      # Harga cadangan dan pembanding: PIHPS Provinsi Bengkulu disalin menjadi berkas harga biasa (lihat pipeline/pihps_harga.py).
+      # Dipakai sebagai deret utama hanya untuk varian yang tidak dicatat pasar Bengkulu Tengah, dengan penanda jelas.
+      - name: Salin harga PIHPS Provinsi Bengkulu (cadangan dan pembanding)
         continue-on-error: true
         run: python -m pipeline pihps-ke-harga
 
@@ -130,11 +140,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/masuk/konteks data/masuk/harga
+          git add data/masuk/konteks data/masuk/harga data/mentah config/peta_varian_sp2kp.csv
           if git diff --cached --quiet; then
             echo "Tidak ada data konektor baru."
           else
-            git commit -m "data: perbarui cuaca Open-Meteo, prakiraan BMKG, dan harga PIHPS"
+            git commit -m "data: perbarui cuaca Open-Meteo, prakiraan BMKG, harga SP2KP, dan harga PIHPS"
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
@@ -152,7 +162,8 @@ jobs:
       - name: Jalankan pipeline
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MODE_DEMO: ${{ steps.tarik.outputs.demo || inputs.demo || 'otomatis' }}
+          # Kosong = ikuti config/pengaturan.json (mode_demo: tidak, jadi selalu data asli).
+          MODE_DEMO: ${{ steps.tarik.outputs.demo || inputs.demo || '' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}

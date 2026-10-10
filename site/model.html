@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="gulir-tabel"><table id="tabel-model"><thead><tr>
-      <th>Varian</th><th class="angka" title="Pakai harga terakhir">Harga terakhir</th><th class="angka" title="Rata-rata 7 hari terakhir">Rata-rata 7 hari</th><th class="angka" title="Tren yang melandai">Tren</th><th class="angka" title="Pola dari hari raya sebelumnya">Hari raya</th><th class="angka" title="Penghalusan eksponensial">Penghalusan</th><th class="angka" title="Machine learning (Ridge, banyak horizon)">Mesin belajar</th><th class="angka" title="Gabungan cara sederhana dan mesin belajar">Gabungan</th>
+      <th>Varian</th><th class="angka" title="Pakai harga terakhir">Harga terakhir</th><th class="angka" title="Harga pada hari yang sama minggu lalu (Seasonal Naive-7)">Minggu lalu</th><th class="angka" title="Rata-rata 7 hari terakhir">Rata-rata 7 hari</th><th class="angka" title="Tren yang melandai">Tren</th><th class="angka" title="Pola dari hari raya sebelumnya">Hari raya</th><th class="angka" title="Penghalusan eksponensial">Penghalusan</th><th class="angka" title="Mesin belajar regresi Ridge">Mesin belajar Ridge</th><th class="angka" title="Mesin belajar Gradient Boosting (setara LightGBM)">Mesin belajar Boosting</th><th class="angka" title="Mesin belajar Random Forest">Mesin belajar Random Forest</th><th class="angka" title="Gabungan cara sederhana dan mesin belajar">Gabungan</th>
       <th class="angka" title="Seberapa lebih baik dari cara sederhana">Lebih baik dari harga terakhir</th><th class="angka" title="Cenderung terlalu tinggi atau terlalu rendah">Condong</th><th class="angka" title="Berapa kali harga sebenarnya jatuh di dalam rentang prakiraan">Tepat dalam rentang</th><th class="angka" title="Rata-rata meleset dalam rupiah">Meleset (Rp)</th>
       <th class="angka" title="Perbandingan naik-turun harga sekarang dengan biasanya">Naik-turun harga</th><th class="angka" title="Rata-rata meleset dua periode terakhir">Meleset, 2 periode</th><th title="Hasil uji pada 90 hari terakhir yang tidak dipakai memilih cara prakiraan">Status uji akhir</th><th>Persetujuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
   </section>
@@ -85,12 +85,14 @@ try {
   throw e;
 }
 const r = m.ringkasan, t = m.target, ev = m.evaluasi_anomali;
-const NAMA_CARA = { naif: "harga terakhir", rata7: "rata-rata 7 hari", holt_redam: "tren melandai", hari_raya: "pola hari raya", ses: "penghalusan eksponensial", ml_challenger: "machine learning", ensemble: "gabungan (ensemble)" };
+const NAMA_CARA = { naif: "harga terakhir", naif_musiman7: "hari yang sama minggu lalu", rata7: "rata-rata 7 hari", holt_redam: "tren melandai",
+  hari_raya: "pola hari raya", ses: "penghalusan eksponensial", ml_challenger: "mesin belajar Ridge", ml_hgb: "mesin belajar Boosting",
+  ml_rf: "mesin belajar Random Forest", ensemble: "gabungan (ensemble)" };
 const dipakai = Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(NAMA_CARA[k] || k.replace("_", " "))}`).join(" · ") || "–";
 document.getElementById("kpi").innerHTML = [
   ind({ i: "kubus", label: "Varian diuji", nilai: angka(r.varian_dinilai), sub: "riwayat harganya cukup" }),
   ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: "prakiraan 1 sampai 30 hari" }),
-  ind({ i: "tren", warna: "hijau", label: "Lebih baik dari harga terakhir", nilai: `${r.lolos_smape}/${r.varian_dinilai}`, sub: "unggul minimal 10%", meter: r.varian_dinilai ? r.lolos_smape / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
+  ind({ i: "tren", warna: "hijau", label: "Lebih baik dari harga terakhir", nilai: `${r.lolos_smape}/${r.varian_dinilai}`, sub: `unggul minimal ${t.perbaikan_smape_persen}%`, meter: r.varian_dinilai ? r.lolos_smape / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
   ind({ i: "perisai", warna: r.varian_valid ? "hijau" : "oranye", label: "Lolos uji akhir (Valid)", nilai: `${r.varian_valid ?? 0}/${r.varian_dinilai}`, sub: `${r.varian_eksperimen ?? 0} masih Eksperimen`, meter: r.varian_dinilai ? (r.varian_valid ?? 0) / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
   ind({ i: "otak", label: "Cara prakiraan dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${dipakai}</span>`, sub: "jumlah varian per cara" }),
 ].join("");
@@ -109,7 +111,18 @@ const baris = [
 document.querySelector("#tabel-target tbody").innerHTML = baris.map(([a, b, c, ok]) =>
   `<tr><td>${a}</td><td>${esc(b)}</td><td>${esc(c)}</td><td>${status(ok)}</td></tr>`).join("");
 
-document.getElementById("evaluasi").innerHTML = `
+document.getElementById("evaluasi").innerHTML = ev.episode_uji !== undefined ? `
+  <dl class="dl">
+    <dt>Acuan penilaian</dt><dd>${esc(ev.sumber_label || "-")}</dd>
+    <dt>Masa uji</dt><dd>${ev.periode_uji ? `${esc(ev.periode_uji[0])} sampai ${esc(ev.periode_uji[1])}` : "–"}</dd>
+    <dt>Lonjakan harga pada masa uji</dt><dd>${angka(ev.episode_uji)} lonjakan, ${angka(ev.episode_tertangkap)} tertangkap</dd>
+    <dt>Peringatan yang muncul</dt><dd>${angka(ev.alarm_uji)} peringatan: ${angka(ev.tp)} tepat, ${angka(ev.fp)} keliru</dd>
+    <dt>Peringatan yang tepat (precision)</dt><dd>${ev.precision ?? "–"}</dd>
+    <dt>Lonjakan yang tertangkap (recall)</dt><dd>${ev.recall ?? "–"}</dd>
+    <dt>Nilai gabungan (F1)</dt><dd>${ev.f1 ?? "–"}</dd>
+    <dt>Peringatan keliru di hari biasa</dt><dd>${ev.false_positive_rate ?? "–"}</dd>
+  </dl>
+  <p class="meta-kecil" style="margin-top:10px">${esc(ev.metode || "")}. Setelah analis menandai peringatan (terverifikasi atau keliru), penilaian juga memakai tanda itu.</p>` : `
   <dl class="dl">
     <dt>Acuan penilaian</dt><dd>${esc(ev.sumber_label)}</dd>
     <dt>Lonjakan yang ditemukan</dt><dd>${angka(ev.sinyal_total)}${ev.kebenaran_total !== undefined ? ` dari ${angka(ev.kebenaran_total)} lonjakan sebenarnya` : ""}</dd>
@@ -120,20 +133,19 @@ document.getElementById("evaluasi").innerHTML = `
     <dt>Peringatan yang salah</dt><dd>${ev.false_positive_rate ?? "–"}</dd>
     <dt>Hari yang diperiksa</dt><dd>${angka(ev.titik_dievaluasi)} (varian × hari)</dd>
   </dl>
-  ${ev.catatan ? `<p class="pesan" style="margin-top:10px">${esc(ev.catatan)}</p>` : ""}
-  <p class="meta-kecil" style="margin-top:10px">Kalau sudah memakai data asli, penilaian ini memakai status tindak lanjut (terverifikasi atau false alarm) dan catatan lonjakan yang terlewat dari analis.</p>`;
+  ${ev.catatan ? `<p class="pesan" style="margin-top:10px">${esc(ev.catatan)}</p>` : ""}`;
 
 const sm = (x) => (x ? angka(x.smape, 2) : "–");
 document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) => {
   const mt = v.metrik || {};
   const pilih = v.model_terpilih;
-  const kolom = ["naif", "rata7", "holt_redam", "hari_raya", "ses", "ml_challenger", "ensemble"].map((k) =>
+  const kolom = ["naif", "naif_musiman7", "rata7", "holt_redam", "hari_raya", "ses", "ml_challenger", "ml_hgb", "ml_rf", "ensemble"].map((k) =>
     `<td class="angka">${k === pilih ? `<strong>${sm(mt[k])}</strong>` : sm(mt[k])}</td>`).join("");
   const mp = mt[pilih] || {};
   const d = v.drift || {};
   const ok = v.lolos || {};
   const tanda = (x) => (x === false ? ' <span class="lencana sedang polos" style="padding:0 6px">✕</span>' : "");
-  return `<tr><td>${esc(v.nama)}</td>${kolom}
+  return `<tr><td>${esc(v.nama)}${v.sumber_seri?.pengganti ? `<br><span class="meta-kecil">harga ${esc(v.sumber_seri.wilayah)}</span>` : ""}</td>${kolom}
     <td class="angka">${persen(v.perbaikan_vs_naif_persen, 1, true)}${tanda(ok.smape)}</td>
     <td class="angka">${persen(mp.bias_persen, 2, true)}${tanda(ok.bias)}</td>
     <td class="angka">${persen(v.cakupan_interval_persen)}${tanda(ok.cakupan)}</td>
@@ -145,7 +157,7 @@ document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) =>
       : v.status_persetujuan === "menunggu_persetujuan" ? `<label class="cek"><input type="checkbox" data-setuju="${esc(v.kode)}" data-model="${esc(v.model_rekomendasi)}"> setujui ${esc(NAMA_CARA[v.model_rekomendasi] || v.model_rekomendasi)}</label>`
       : '<span class="lencana polos">–</span>'}</td>
     <td class="meta-kecil">${esc((v.catatan || []).join(" "))}</td></tr>`;
-}).join("") || `<tr><td colspan="17" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
+}).join("") || `<tr><td colspan="20" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
 
 const menunggu = m.per_varian.filter((v) => v.status_persetujuan === "menunggu_persetujuan").length;
 document.getElementById("info-persetujuan").textContent =
@@ -188,7 +200,9 @@ tombolSetuju.addEventListener("click", async () => {
 
 const a = m.pengaturan.analisis, s = m.pengaturan.sinyal;
 document.getElementById("metodologi").innerHTML = [
-  `Harga harian Bengkulu Tengah diambil dari nilai tengah data yang lolos pemeriksaan, dari sumber yang paling diprioritaskan pada hari itu.`,
+  `Harga harian Bengkulu Tengah diambil dari nilai tengah data yang lolos pemeriksaan, dari sumber yang paling diprioritaskan pada hari itu. Saat ini sumber hariannya SP2KP Kemendag (Pasar Taba Penanjung). Varian yang tidak dicatat di sana memakai rata-rata Provinsi Bengkulu dari PIHPS Bank Indonesia, dan selalu diberi tanda.`,
+  `Status Valid hanya diberikan bila riwayat sedikitnya 730 hari pencatatan, kelengkapan data sedikitnya 95% (libur nasional tidak dihitung), dan hasil uji 90 hari terakhir memenuhi batas kelompoknya (rendah, sedang, tinggi): rata-rata meleset, condong, rentang prakiraan 75 sampai 85%, dan MASE di bawah 1.`,
+  `Mesin belajar (Ridge, Boosting, Random Forest) dan gabungan hanya menggantikan cara sederhana bila lebih tepat sedikitnya 5% dan menang di sedikitnya 8 dari 12 titik uji. Bila polanya lemah, prakiraan mesin belajar disusutkan mendekati harga terakhir.`,
   `Harga normal adalah nilai tengah ${a.jendela_baseline_hari} hari sebelumnya. Cara prakiraan yang dicoba: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
   `Ujinya memakai data lama: ${a.jumlah_origin_backtest} titik awal yang berjarak ${a.jarak_origin_hari} hari, prakiraan sejauh ${a.horizon_hari} hari, dan butuh minimal ${a.minimal_hari_riwayat} hari data.`,
   `Rentang prakiraan ${Math.round(a.tingkat_interval * 100)}%: dihitung dari selisih harga sebenarnya dan prakiraan pada uji data lama.`,

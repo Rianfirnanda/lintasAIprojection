@@ -176,9 +176,9 @@ async function berandaAnalis(el, meta) {
     <div class="ind-baris">
       ${ind({ i: "peringatan", warna: "merah", label: "Menunggu keputusan", nilai: angka(kualitas.jumlah_perlu_validasi), sub: "data ditahan", warnaNilai: kualitas.jumlah_perlu_validasi ? "merah" : "", href: "kualitas.html" })}
       ${ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(k.sinyal_aktif), sub: `${k.sinyal_tinggi} prioritas tinggi`, href: "sinyal.html" })}
-      ${ind({ i: f1.ikon, warna: f1.status[1] === "baik" ? "hijau" : "oranye", label: f1.arti, nilai: f1.nilai, sub: f1.status[0], warnaNilai: "" })}
-      ${ind({ i: rc.ikon, warna: rc.status[1] === "baik" ? "hijau" : "oranye", label: rc.arti, nilai: rc.nilai, sub: rc.status[0] })}
-      ${ind({ i: "denyut", warna: mutu[5].status[1] === "baik" ? "hijau" : "oranye", label: mutu[5].arti, nilai: mutu[5].nilai, sub: mutu[5].status[0] })}
+      ${ind({ i: f1.ikon, warna: f1.status[1] === "baik" ? "hijau" : "oranye", label: f1.nama, nilai: f1.nilai, sub: f1.status[0], warnaNilai: "" })}
+      ${ind({ i: rc.ikon, warna: rc.status[1] === "baik" ? "hijau" : "oranye", label: rc.nama, nilai: rc.nilai, sub: rc.status[0] })}
+      ${ind({ i: "denyut", warna: mutu[5].status[1] === "baik" ? "hijau" : "oranye", label: mutu[5].nama, nilai: mutu[5].nilai, sub: mutu[5].status[0] })}
       ${ind({ i: "tren", label: "Prakiraan unggul", nilai: `${model.ringkasan.lolos_smape}/${model.ringkasan.varian_dinilai}`, sub: "lebih tepat dari cara sederhana", meter: model.ringkasan.lolos_smape / model.ringkasan.varian_dinilai * 100, href: "model.html" })}
     </div>
     <div class="grid tiga-kolom">

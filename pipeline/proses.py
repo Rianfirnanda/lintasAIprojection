@@ -56,6 +56,41 @@ def _nilai_list(arr: np.ndarray, pembulatan: int = 0) -> list:
     return [None if np.isnan(x) else round(float(x), pembulatan) for x in arr]
 
 
+LABEL_SUMBER = {"BD-SP2KP": "SP2KP Kemendag", "BD-PIHPS": "PIHPS Bank Indonesia", "BPS-HRG": "Survei harga BPS",
+                "PSR-ENUM": "Pencatatan petugas pasar", "PMD-DISDAG": "Dinas Perdagangan"}
+
+
+def pilih_wilayah_seri(harian: dict, kode: str, target: str, cadangan: str | None, tanggal_data: date | None,
+                       minimal_hari: int) -> str | None:
+    """Wilayah yang deretnya dianalisis untuk satu varian: wilayah target bila harganya ada, cukup panjang, dan masih baru
+    (30 hari terakhir); bila tidak, wilayah cadangan (mis. Provinsi Bengkulu). Deret dua wilayah tidak disambung."""
+    data = harian.get((target, kode)) or {}
+    if len(data) >= minimal_hari and (tanggal_data is None or max(data) >= tanggal_data - timedelta(days=30)):
+        return target
+    if cadangan and harian.get((cadangan, kode)):
+        return cadangan
+    return target if data else None
+
+
+def keterangan_sumber(konf: Konfigurasi, dipakai: list, w_seri: str, kode: str, tanggal_data: date | None) -> dict:
+    """Asal deret harga satu varian dalam bahasa sederhana: wilayah, lembaga sumber, dan pasar."""
+    batas = (tanggal_data or konf.hari_ini) - timedelta(days=60)
+    obs = [o for o in dipakai if o.kode_wilayah == w_seri and o.kode_varian == kode]
+    baru = [o for o in obs if o.tanggal >= batas] or obs
+    sumber = Counter(o.kode_sumber for o in baru).most_common(1)
+    ks = sumber[0][0] if sumber else None
+    pasar = sorted({konf.pasar[o.kode_pasar].nama for o in baru if o.kode_pasar in konf.pasar})
+    label = LABEL_SUMBER.get(ks, konf.sumber[ks].nama if ks in konf.sumber else (ks or "-"))
+    pengganti = w_seri != konf.wilayah_target
+    hasil = {"kode_wilayah": w_seri, "wilayah": konf.wilayah[w_seri].nama, "kode_sumber": ks, "sumber": label,
+             "pasar": pasar, "pengganti": pengganti,
+             "label": f"{label}, {', '.join(pasar)}" if pasar and not pengganti else f"{label}, rata-rata {konf.wilayah[w_seri].nama}"}
+    if pengganti:
+        hasil["catatan"] = (f"Pasar di {konf.wilayah[konf.wilayah_target].nama} belum mencatat harga varian ini, jadi yang dipakai "
+                            f"adalah harga rata-rata {konf.wilayah[w_seri].nama} ({label}).")
+    return hasil
+
+
 def tentukan_mode_demo(konf: Konfigurasi, folder_masuk: Path, paksa: str | None) -> bool:
     mode = (paksa or konf.pengaturan.get("mode_demo", "otomatis")).lower()
     if mode in ("ya", "on", "true"):
@@ -134,8 +169,12 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     harian = agregasi.harian_wilayah(dipakai, konf)
     harian_pasar = agregasi.harian_pasar(dipakai)
     target = konf.wilayah_target
+    cadangan = konf.wilayah_cadangan
     tanggal_target = [t for (w, _), per in harian.items() if w == target for t in per]
+    if not tanggal_target and cadangan:
+        tanggal_target = [t for (w, _), per in harian.items() if w == cadangan for t in per]
     tanggal_data = max(tanggal_target) if tanggal_target else None
+    minimal_hari = int(konf.pengaturan["analisis"].get("minimal_hari_riwayat", 60))
 
     # Analisis per varian (dengan persetujuan manusia atas model, bila diwajibkan)
     persetujuan = kinerja.baca_persetujuan(akar / "data" / "persetujuan_model")
@@ -143,15 +182,18 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     hasil_varian: dict[str, analisis.HasilVarian] = {}
     seri_pembanding: dict[str, dict[str, analisis.SeriHarian]] = defaultdict(dict)
     for v in konf.varian_aktif:
-        data = harian.get((target, v.kode))
-        if not data:
+        w_seri = pilih_wilayah_seri(harian, v.kode, target, cadangan, tanggal_data, minimal_hari)
+        if w_seri is None:
             continue
-        seri = analisis.bentuk_seri(data, akhir=tanggal_data)
-        hasil_varian[v.kode] = analisis.analisis_varian(
+        seri = analisis.bentuk_seri(harian[(w_seri, v.kode)], akhir=tanggal_data)
+        hv = analisis.analisis_varian(
             seri, v.kelompok, konf.hari_raya(), konf.pengaturan,
-            model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju, kode=v.kode)
+            model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju, kode=v.kode,
+            libur_pasar=hasil_qc.libur)
+        hv.sumber_seri = keterangan_sumber(konf, dipakai, w_seri, v.kode, tanggal_data)
+        hasil_varian[v.kode] = hv
         for w in konf.wilayah:
-            if w != target and harian.get((w, v.kode)):
+            if w != w_seri and harian.get((w, v.kode)):
                 seri_pembanding[v.kode][w] = analisis.bentuk_seri(harian[(w, v.kode)], akhir=tanggal_data)
 
     # Sinyal + tindak lanjut
@@ -213,7 +255,7 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
             konf.hari_ini),
         "adopsi": kinerja.adopsi(akar / "data" / "adopsi.json", konf.hari_ini),
         "kebijakan": modul_kebijakan.bentuk(
-            akar, daftar_sinyal, {kode: per for (w, kode), per in harian.items() if w == target}, konf.hari_ini,
+            akar, daftar_sinyal, {k: harian[(hv.sumber_seri["kode_wilayah"], k)] for k, hv in hasil_varian.items()}, konf.hari_ini,
             {k: v.nama for k, v in konf.varian.items()}, konf.pengaturan.get("kebijakan")),
     }
 
@@ -271,6 +313,12 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             if lama is None or modul_sinyal.TINGKAT[s["keparahan"]] > modul_sinyal.TINGKAT[lama]:
                 sinyal_aktif_per_varian[s["kode_varian"]] = s["keparahan"]
 
+    # Sumber utama tiap deret pembanding (wilayah, varian), untuk nama garis di grafik.
+    hitung_sumber: dict[tuple, Counter] = defaultdict(Counter)
+    for o in hasil_qc.dipakai():
+        if o.tanggal >= batas:
+            hitung_sumber[(o.kode_wilayah, o.kode_varian)][o.kode_sumber] += 1
+    sumber_pembanding = {k: c.most_common(1)[0][0] for k, c in hitung_sumber.items()}
     for kode, hv in hasil_varian.items():
         v = konf.varian[kode]
         seri = hv.seri
@@ -282,11 +330,15 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             for t in tanggal:
                 j = sp.indeks(t)
                 nilai.append(None if j < 0 or j >= sp.n or np.isnan(sp.nilai[j]) else round(float(sp.nilai[j])))
-            pembanding[w] = {"nama": konf.wilayah[w].nama, "peran": konf.wilayah[w].peran, "nilai": nilai}
-        # Harga rata-rata pasar tradisional Provinsi Bengkulu dari PIHPS Bank Indonesia (konektor Big Data).
+            ks = sumber_pembanding.get((w, kode))
+            nama_w = f"{konf.wilayah[w].nama} ({LABEL_SUMBER.get(ks, ks)})" if ks else konf.wilayah[w].nama
+            pembanding[w] = {"nama": nama_w, "peran": konf.wilayah[w].peran, "nilai": nilai, "kode_sumber": ks}
+        # Harga rata-rata pasar tradisional Provinsi Bengkulu dari PIHPS Bank Indonesia (konektor Big Data), bila belum
+        # tampil sebagai deret utama atau pembanding.
         pihps = indeks_konteks.data.get((konektor_resmi.WILAYAH_PIHPS, "harga_pihps", kode), {})
         nilai_pihps = [round(pihps[t]) if t in pihps else None for t in tanggal]
-        if any(x is not None for x in nilai_pihps):
+        if any(x is not None for x in nilai_pihps) and konektor_resmi.WILAYAH_PIHPS not in pembanding \
+                and hv.sumber_seri.get("kode_wilayah") != konektor_resmi.WILAYAH_PIHPS:
             pembanding["PIHPS"] = {"nama": "Provinsi Bengkulu (PIHPS BI)", "peran": "pembanding_provinsi", "nilai": nilai_pihps}
         # Pembanding kabupaten/kota dari PIHPS (mis. Kota Bengkulu), bila PIHPS memilikinya dan datanya sudah diambil.
         for w, wil in konf.wilayah.items():
@@ -307,7 +359,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "aktual": _nilai_list(seri.nilai[i0:]), "baseline": _nilai_list(hv.baseline[i0:]),
             "rata7": _nilai_list(hv.rata7[i0:]), "proyeksi": hv.proyeksi, "pembanding": pembanding,
             "per_pasar": per_pasar, "anomali": tgl_anomali, "model_terpilih": hv.model_terpilih,
-            "catatan": hv.catatan,
+            "catatan": hv.catatan, "sumber_seri": hv.sumber_seri,
         })
 
         idx = np.where(~np.isnan(seri.nilai))[0]
@@ -322,7 +374,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "baseline": round(base) if base else None,
             "deviasi_persen": round((terakhir / base - 1) * 100, 2) if terakhir and base else None,
             "perubahan": hv.perubahan, "harga_acuan": hv.harga_acuan, "proyeksi_h7": h7, "model": hv.model_terpilih,
-            "sinyal": sinyal_aktif_per_varian.get(kode),
+            "sinyal": sinyal_aktif_per_varian.get(kode), "sumber": hv.sumber_seri,
         })
 
     # ---------- sinyal.json
@@ -376,7 +428,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "nama_model": analisis.NAMA_MODEL.get(hv.model_terpilih or "", "-"), "metrik": hv.metrik_model,
             "perbaikan_vs_naif_persen": hv.perbaikan_vs_naif_persen,
             "cakupan_interval_persen": hv.cakupan_interval_persen, "drift": hv.drift, "catatan": hv.catatan,
-            "profil_hari_raya": hv.profil_hari_raya,
+            "profil_hari_raya": hv.profil_hari_raya, "sumber_seri": hv.sumber_seri,
             "model_rekomendasi": hv.model_rekomendasi, "status_persetujuan": hv.status_persetujuan,
             "persetujuan": {k: v for k, v in data_kinerja.get("persetujuan", {}).get(kode, {}).items() if k != "riwayat"},
             "segmen": hv.segmen,
@@ -536,7 +588,12 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     hasil_analitik["registry_riwayat"] = registry["riwayat"][-40:]
     # Tata kelola data (laporan: 10 AI Data Finder dan 8 tahap pembersihan), perbandingan antarwilayah, rantai harga, EWS.
     finder = tata_data.status_finder(konf, hasil_masuk, hasil_qc, tanggal_data)
-    pembersihan = tata_data.tahap_pembersihan(konf, hasil_masuk, hasil_qc, hasil_varian)
+    konsensus = tata_data.konsensus_sumber(konf, hasil_qc, hasil_masuk.konteks)
+    pembersihan = tata_data.tahap_pembersihan(konf, hasil_masuk, hasil_qc, hasil_varian, konsensus)
+    hasil_analitik["konsensus"] = konsensus
+    if konsensus.get("skor") is not None:
+        hasil_analitik["kpi"]["skor_konsensus"] = konsensus["skor"]
+        hasil_analitik["kpi"]["keterangan_konsensus"] = None
     hasil_analitik["finder"] = finder
     hasil_analitik["finder_ringkas"] = tata_data.ringkas(finder)
     hasil_analitik["pembersihan"] = pembersihan
@@ -546,16 +603,22 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     hasil_analitik["kpi"]["tahap_total"] = len(pembersihan)
     hasil_analitik["rantai_harga"] = tata_data.rantai_harga(hasil_masuk.konteks)
     banding = {}
-    for kode in hasil_varian:
+    for kode, hv in hasil_varian.items():
+        # Perbandingan antarwilayah hanya untuk deret yang sungguh dari wilayah target (bukan harga pengganti).
+        if hv.sumber_seri.get("pengganti"):
+            continue
         utama = harian.get((target, kode)) or {}
         per = {}
         for w in ("1771", "1708"):
             if w == target:
                 continue
-            pk = indeks_konteks.data.get((w, "harga_pihps", kode)) or {}
+            # Utamakan sumber yang sama dengan deret target (mis. SP2KP pasar acuan); bila tidak ada, PIHPS kabupaten/kota.
+            pk, sumber_b = harian.get((w, kode)) or {}, sumber_pembanding.get((w, kode))
+            if not pk:
+                pk, sumber_b = indeks_konteks.data.get((w, "harga_pihps", kode)) or {}, "BD-PIHPS"
             hasil_b = tata_data.banding_wilayah(utama, pk) if pk else None
             if hasil_b:
-                per[w] = {"nama": konf.wilayah[w].nama, **hasil_b}
+                per[w] = {"nama": konf.wilayah[w].nama, "sumber": LABEL_SUMBER.get(sumber_b, sumber_b), **hasil_b}
         if per:
             banding[kode] = per
     hasil_analitik["banding_wilayah"] = banding
@@ -590,6 +653,13 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "wilayah": konf.wilayah[target].nama,
             "sumber": "PIHPS Bank Indonesia (rata-rata pasar tradisional)",
             "catatan": "Di PIHPS, Provinsi Bengkulu baru memantau satu kota: Kota Bengkulu. Jadi angka ini sebenarnya harga pasar Kota Bengkulu."}),
+        "sumber_seri": {
+            "utama": sorted(k for k, hv in hasil_varian.items() if not hv.sumber_seri.get("pengganti")),
+            "pengganti": sorted(k for k, hv in hasil_varian.items() if hv.sumber_seri.get("pengganti")),
+            "sumber_utama": Counter(hv.sumber_seri.get("label") for hv in hasil_varian.values()
+                                    if not hv.sumber_seri.get("pengganti")).most_common(1)[0][0]
+            if any(not hv.sumber_seri.get("pengganti") for hv in hasil_varian.values()) else None,
+        },
         "repo": repo, "url_repo": f"{server}/{repo}" if repo else None,
         "url_run": f"{server}/{repo}/actions/runs/{run}" if repo and run else None,
         "commit": os.environ.get("GITHUB_SHA"),

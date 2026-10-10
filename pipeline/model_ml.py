@@ -9,6 +9,9 @@
   - Embargo sama dengan horizon: baris latih untuk horizon h hanya yang targetnya sudah terjadi sampai hari origin.
   - Tiga keluarga model: Ridge (regresi linear teregularisasi L2, alpha 10, fitur distandarkan), Gradient Boosting berbasis
     histogram (algoritma yang sama dengan LightGBM, implementasi scikit-learn), dan Random Forest.
+  - Penyusutan tertala: 20% baris latih terakhir (dipisah jeda sepanjang horizon) dipakai memilih faktor penyusut prediksi
+    {0; 0,25; 0,5; 0,75; 1}. Bila fitur tidak punya daya prediksi, faktornya kecil sehingga model mendekati cara naif dan tidak
+    memperburuk gabungan (ensemble). Pemilihan hanya memakai data latih pada origin itu (tanpa kebocoran).
 Semua acak dikunci (random_state 42) agar hasil dapat diulang.
 """
 
@@ -27,6 +30,8 @@ JANGKAR_POHON = (7, 14, 30)
 BATAS_RETURN = 0.4
 MAKS_BARIS_LATIH = 900
 MIN_BARIS_LATIH = 60
+GRID_SUSUT = (0.0, 0.25, 0.5, 0.75, 1.0)
+PORSI_VALIDASI = 0.2
 
 
 def _jendela(y: np.ndarray, w: int) -> np.ndarray:
@@ -117,6 +122,29 @@ def fitur_tersimpan(y: np.ndarray, asal: date, acara: list | None, simpanan: dic
     return X, t0
 
 
+def faktor_susut(jenis: str, X: np.ndarray, target: np.ndarray, jeda: int) -> float:
+    """Faktor penyusut prediksi dari validasi dalam data latih: latih pada baris awal, uji pada 20% baris terakhir dengan jeda
+    `jeda` baris (target horizon tidak tumpang tindih). Bila validasi tidak mungkin, faktor 1 (tanpa penyusutan)."""
+    n = len(target)
+    k = int(n * (1 - PORSI_VALIDASI))
+    if n - k < 20 or k - jeda < MIN_BARIS_LATIH:
+        return 1.0
+    m = buat_regresor(jenis)
+    m.fit(X[:k - jeda], target[:k - jeda])
+    p = m.predict(X[k:])
+    galat = {lam: float(np.mean(np.abs(lam * p - target[k:]))) for lam in GRID_SUSUT}
+    return min(galat, key=lambda lam: (round(galat[lam], 12), lam))
+
+
+def _latih_susut(jenis: str, X: np.ndarray, target: np.ndarray, x_akhir: np.ndarray, jeda: int) -> float:
+    lam = faktor_susut(jenis, X, target, jeda)
+    if lam == 0.0:
+        return 0.0
+    m = buat_regresor(jenis)
+    m.fit(X, target)
+    return lam * float(m.predict(x_akhir)[0])
+
+
 def prediksi_direct(y: np.ndarray, asal: date, h: int, jenis: str, acara: list | None = None,
                     simpanan: dict | None = None) -> np.ndarray | None:
     """Prediksi harga h hari ke depan dari origin = hari terakhir y. None bila data tidak cukup (pemanggil memakai cara naif)."""
@@ -138,9 +166,7 @@ def prediksi_direct(y: np.ndarray, asal: date, h: int, jenis: str, acara: list |
         if float(np.std(target)) < 1e-12:
             ret_jangkar[a] = float(target.mean())
             continue
-        m = buat_regresor(jenis)
-        m.fit(X[t], target)
-        ret_jangkar[a] = float(np.clip(m.predict(X[n - 1:n])[0], -BATAS_RETURN, BATAS_RETURN))
+        ret_jangkar[a] = float(np.clip(_latih_susut(jenis, X[t], target, X[n - 1:n], a), -BATAS_RETURN, BATAS_RETURN))
     if len(ret_jangkar) == 1:
         return None
     xs = np.array(sorted(ret_jangkar))

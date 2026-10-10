@@ -35,7 +35,9 @@ def _baris(awal: date, hari: int, kode: str, dasar: float):
 def test_pasar_pihps_ada_di_konfigurasi_sungguhan():
     konf = konfigurasi.muat(AKAR, hari_ini=HARI_INI)
     assert pihps_harga.KODE_PASAR in konf.pasar and konf.pasar[pihps_harga.KODE_PASAR].kode_wilayah == "17"
-    assert konf.wilayah_target == "17" and konf.wilayah["17"].peran != "target"  # sementara, bukan Bengkulu Tengah
+    # Sasaran Bengkulu Tengah; Provinsi Bengkulu (PIHPS) hanya cadangan untuk varian yang tidak dicatat pasar Bengkulu Tengah.
+    assert konf.wilayah_target == "1709" and konf.wilayah["1709"].peran == "target"
+    assert konf.wilayah_cadangan == "17" and konf.wilayah["17"].peran != "target"
 
 
 def test_salin_ke_harga_per_tahun_diterima_quality_gate(akar_sementara):
@@ -67,21 +69,56 @@ def test_salin_ulang_menghapus_berkas_tahun_yang_hilang_dan_tidak_menggandakan(a
     assert not list((akar_sementara / "data/masuk/harga").glob("pihps_provinsi_*.csv"))
 
 
-def test_dashboard_mode_asli_dengan_penanda_data_sementara(tmp_path):
+def _tulis_harga_target(akar, kode, awal, hari, dasar):
+    """Harga harian Pasar Taba Penanjung (Bengkulu Tengah) dari SP2KP untuk satu varian."""
+    p = akar / "data/masuk/harga"
+    p.mkdir(parents=True, exist_ok=True)
+    with (p / "sp2kp_uji.csv").open("a", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        if f.tell() == 0:
+            w.writerow(pihps_harga.KOLOM)
+        for i in range(hari):
+            t = awal + timedelta(days=i)
+            if t.weekday() < 5:
+                w.writerow([t.isoformat(), "PSR01", kode, dasar + (i % 4) * 250, "kg", "BD-SP2KP", "", "", "", "", "SP2KP uji"])
+
+
+def test_dashboard_bengkulu_tengah_dengan_cadangan_provinsi_per_varian(tmp_path):
+    """Varian yang punya harga Bengkulu Tengah memakai harga itu; varian yang tidak punya memakai rata-rata Provinsi Bengkulu
+    (PIHPS) dengan penanda jelas. Kedua deret tidak disambung."""
     shutil.copytree(AKAR / "config", tmp_path / "config")
+    p = tmp_path / "config/pengaturan.json"
+    d = json.loads(p.read_text(encoding="utf-8"))
+    d["analisis"]["model_pohon"] = False
+    p.write_text(json.dumps(d), encoding="utf-8")
     (tmp_path / "data/masuk/harga").mkdir(parents=True)
-    _tulis_konteks(tmp_path, 2026, _baris(date(2026, 6, 1), 120, "BRS03", 13500) + _baris(date(2026, 6, 1), 120, "CRW02", 40000))
+    _tulis_konteks(tmp_path, 2026, _baris(date(2026, 4, 1), 180, "BRS03", 13500) + _baris(date(2026, 4, 1), 180, "CRW02", 40000))
+    _tulis_harga_target(tmp_path, "CRW02", date(2026, 4, 1), 180, 45000)
     konf = konfigurasi.muat(tmp_path, hari_ini=HARI_INI)
     pihps_harga.ke_harga(konf)
     keluaran = tmp_path / "site/data"
     proses.jalankan(konf, keluaran, sinkron_github=False)
     meta = json.loads((keluaran / "meta.json").read_text(encoding="utf-8"))
-    assert meta["mode_demo"] is False and meta["wilayah_target"]["nama"] == "Provinsi Bengkulu"
-    assert meta["data_sementara"]["wilayah"] == "Provinsi Bengkulu"
-    assert meta["data_sementara"]["sumber"] == "PIHPS Bank Indonesia (rata-rata pasar tradisional)"
-    assert "Kota Bengkulu" in meta["data_sementara"]["catatan"]
-    ringkas = json.loads((keluaran / "ringkasan.json").read_text(encoding="utf-8"))
-    assert ringkas["kpi"]["varian_berdata"] == 2
+    assert meta["mode_demo"] is False and meta["wilayah_target"]["nama"] == "Kabupaten Bengkulu Tengah"
+    assert meta["data_sementara"] is None
+    assert meta["sumber_seri"]["utama"] == ["CRW02"] and meta["sumber_seri"]["pengganti"] == ["BRS03"]
+    crw = json.loads((keluaran / "seri/CRW02.json").read_text(encoding="utf-8"))
+    brs = json.loads((keluaran / "seri/BRS03.json").read_text(encoding="utf-8"))
+    assert crw["sumber_seri"]["kode_wilayah"] == "1709" and crw["sumber_seri"]["pengganti"] is False
+    assert crw["sumber_seri"]["sumber"] == "SP2KP Kemendag" and crw["sumber_seri"]["pasar"] == ["Pasar Taba Penanjung"]
+    assert max(x for x in crw["aktual"] if x) >= 45000  # deret Bengkulu Tengah, bukan provinsi
+    assert "17" in crw["pembanding"] and "PIHPS" in crw["pembanding"]["17"]["nama"]
+    assert brs["sumber_seri"]["kode_wilayah"] == "17" and brs["sumber_seri"]["pengganti"] is True
+    assert "belum mencatat" in brs["sumber_seri"]["catatan"]
+    analitik = json.loads((keluaran / "analitik.json").read_text(encoding="utf-8"))
+    kartu = {v["kode"]: v["kartu_model"] for v in analitik["varian"]}
+    assert kartu["BRS03"]["data"]["wilayah"] == "Provinsi Bengkulu"
+    assert any("belum mencatat" in b for b in kartu["BRS03"]["keterangan" if "keterangan" in kartu["BRS03"] else "keterbatasan"])
+    assert kartu["CRW02"]["data"]["wilayah"] == "Kabupaten Bengkulu Tengah"
+    sinyal = json.loads((keluaran / "sinyal.json").read_text(encoding="utf-8"))
+    for s_ in sinyal.get("sinyal", []):
+        if s_["kode_varian"] == "BRS03":
+            assert s_["kode_wilayah"] == "17" and "Bengkulu Tengah" not in s_["judul"]
 
 
 def test_tidak_ada_penanda_bila_target_adalah_bengkulu_tengah(akar_sementara):

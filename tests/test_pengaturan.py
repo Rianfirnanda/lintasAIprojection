@@ -157,7 +157,10 @@ def test_pilihan_ai_di_skema_sama_dengan_yang_didukung_pipeline():
 def jalankan_dengan(tmp_path: Path, perubahan: dict):
     shutil.copytree(FOLDER, tmp_path / "config")
     (tmp_path / "data/masuk/harga").mkdir(parents=True)
-    (tmp_path / "config/pengaturan.json").write_text(json.dumps(ubah(DASAR, perubahan)), encoding="utf-8")
+    isi = ubah(DASAR, perubahan)
+    isi["analisis"]["model_pohon"] = False  # model pohon diuji tersendiri; uji ini hanya memeriksa pipeline tetap jalan
+    isi["mode_demo"] = "otomatis"  # folder uji tanpa berkas harga: data contoh dipakai sebagai bahan uji analisis
+    (tmp_path / "config/pengaturan.json").write_text(json.dumps(isi), encoding="utf-8")
     konf = konfigurasi.muat(tmp_path, hari_ini=HARI_INI)
     keluaran = tmp_path / "site/data"
     proses.jalankan(konf, keluaran, sinkron_github=False, kirim_notifikasi=False)
@@ -191,7 +194,10 @@ def test_pipeline_jalan_bila_semua_isian_di_batas_terendah_atau_tertinggi(tmp_pa
 def test_pipeline_menerbitkan_pengaturan_dan_skema_tanpa_rahasia(tmp_path):
     keluaran = jalankan_dengan(tmp_path, {})
     terbit = json.loads((keluaran / "pengaturan.json").read_text(encoding="utf-8"))
-    assert terbit == DASAR
+    harap = copy.deepcopy(DASAR)
+    harap["analisis"]["model_pohon"] = False
+    harap["mode_demo"] = "otomatis"
+    assert terbit == harap
     assert json.loads((keluaran / "skema_pengaturan.json").read_text(encoding="utf-8"))["versi"] == SKEMA["versi"]
     # nama kunci rahasia boleh ada di skema (itu hanya daftar nama), tetapi tidak ada nilai kunci di pengaturan terbit
     teks = (keluaran / "pengaturan.json").read_text(encoding="utf-8")

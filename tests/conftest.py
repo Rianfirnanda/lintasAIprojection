@@ -11,14 +11,17 @@ HARI_INI = date(2026, 9, 29)
 
 
 def salin_config(tujuan: Path) -> None:
-    """Salin config/ ke folder uji. Sistem sungguhan sementara memakai Provinsi Bengkulu (PIHPS) sebagai target;
-    uji tetap memakai skenario Kabupaten Bengkulu Tengah (pasar PSR01 dan seterusnya)."""
+    """Salin config/ ke folder uji dengan skenario Kabupaten Bengkulu Tengah (pasar PSR01 dan seterusnya)."""
     import json
 
     shutil.copytree(AKAR / "config", tujuan)
     p = tujuan / "pengaturan.json"
     d = json.loads(p.read_text(encoding="utf-8"))
     d["wilayah_target"] = "1709"
+    # Model pohon (Gradient Boosting, Random Forest) diuji tersendiri di test_analisis.py; uji alur lengkap memakai Ridge saja
+    # supaya cepat (hasil pemilihan model tetap diuji dengan aturan yang sama).
+    d["analisis"]["model_pohon"] = False
+    d["mode_demo"] = "otomatis"  # uji alur lengkap tanpa berkas harga memakai data contoh
     p.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
 
 

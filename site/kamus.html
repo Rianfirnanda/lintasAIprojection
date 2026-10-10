@@ -40,6 +40,12 @@
     <div class="pesan peringatan" style="margin-top:12px">Jangan mencatat nama, NIK, nomor HP, atau alamat pedagang. Berkas yang memuat kolom seperti itu ditolak otomatis. Pakai kode anonim seperti R1 atau R2.</div>
   </section>
 
+  <section class="kartu" aria-labelledby="j-istilah">
+    <div class="kartu-kepala"><div><h2 id="j-istilah">Arti istilah di dasbor</h2>
+      <p>Istilah teknis ditulis di dalam kurung. Berikut artinya dalam bahasa sehari-hari.</p></div></div>
+    <div class="gulir-tabel"><table id="tabel-istilah"><thead><tr><th>Istilah</th><th>Artinya</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
   <div class="dua-sama">
     <section class="kartu" aria-labelledby="j-pasar">
       <div class="kartu-kepala"><div><h2 id="j-pasar">Pasar</h2><p>Tempat pencatatan harga. Pasar di wilayah sulit sinyal memakai pengiriman luring lalu daring.</p></div></div>
@@ -84,6 +90,34 @@ $("tabel-varian").querySelector("tbody").innerHTML = varian.map((v, i) => `<tr>
   <td>${esc(NAMA_KELOMPOK[v.kelompok] || v.kelompok)}</td><td>${esc(v.satuan)}</td>
   <td class="angka">${rp(v.batas_bawah)} – ${rp(v.batas_atas)}</td>
   <td>${v.aktif ? '<span class="lencana baik">aktif</span>' : '<span class="lencana polos">tidak aktif</span>'}</td></tr>`).join("");
+const ISTILAH = [
+  ["Harga tercatat", "Harga yang benar-benar dicatat di pasar pada hari itu."],
+  ["Harga normal (baseline)", "Nilai tengah harga 28 hari sebelumnya. Dipakai sebagai patokan apakah harga sekarang wajar."],
+  ["Harga janggal (anomali)", "Harga yang menyimpang jauh dari harga normal dan melewati batas kelompoknya. Perlu dicek ke pasar."],
+  ["Perkiraan (proyeksi)", "Dugaan harga 7, 14, atau 30 hari ke depan, dihitung dari riwayat harga dan kalender hari raya."],
+  ["Rentang wajar 80% (interval)", "Batas bawah dan atas tempat harga kemungkinan besar berada. Dari 10 kejadian, sekitar 8 masuk rentang ini."],
+  ["Rata-rata meleset (sMAPE)", "Seberapa jauh perkiraan dari harga sebenarnya, dalam persen, saat diuji pada data lama. Makin kecil makin baik."],
+  ["Condong (bias)", "Kecenderungan perkiraan terlalu tinggi (positif) atau terlalu rendah (negatif)."],
+  ["MASE", "Perbandingan kesalahan perkiraan dengan perubahan harga harian yang biasa terjadi. Di bawah 1 berarti cukup baik."],
+  ["Cara sederhana (naif)", "Menganggap harga nanti sama dengan harga terakhir. Dipakai sebagai pembanding: cara lain harus lebih tepat dari ini."],
+  ["Mesin belajar (machine learning)", "Cara perkiraan yang belajar dari pola data lama (Ridge, Boosting, Random Forest). Hanya dipakai bila terbukti lebih tepat."],
+  ["Gabungan (ensemble)", "Perpaduan cara sederhana dan mesin belajar dengan bobot yang dipilih dari hasil uji."],
+  ["Valid", "Cara perkiraan lolos semua uji: riwayat cukup panjang, data lengkap, dan ketepatannya memenuhi batas."],
+  ["Eksperimen", "Ada uji yang belum lolos. Angkanya boleh dipakai sebagai bahan pertimbangan, bukan patokan."],
+  ["Peringatan dini (EWS)", "Tanda awal bila harga mulai naik tidak biasa, supaya bisa dicek sebelum lonjakannya besar."],
+  ["Lonjakan tertangkap (recall)", "Dari semua lonjakan harga yang benar terjadi, berapa persen yang lebih dulu diberi peringatan."],
+  ["Peringatan tepat (precision)", "Dari semua peringatan yang muncul, berapa persen yang memang diikuti lonjakan harga."],
+  ["Peringatan keliru (false alarm)", "Peringatan yang muncul padahal harga tidak melonjak."],
+  ["Pola berubah (drift)", "Cara naik-turun harga sekarang berbeda dari biasanya, sehingga perkiraan perlu dicek ulang."],
+  ["Kecocokan sumber (skor konsensus)", "Seberapa sepakat dua sumber berbeda tentang harga yang sama. Target paling sedikit 0,80."],
+  ["Selisih antarwilayah (disparitas)", "Beda harga Bengkulu Tengah dengan Kepahiang atau Kota Bengkulu pada hari yang sama."],
+  ["Bergerak lebih dulu (lead-lag)", "Wilayah mana yang harganya biasanya naik atau turun lebih dulu, dalam hitungan hari."],
+  ["SP2KP", "Sistem Pemantauan Pasar dan Kebutuhan Pokok milik Kementerian Perdagangan. Sumber harga harian Pasar Taba Penanjung (Bengkulu Tengah), Pasar Kepahiang, dan Pasar Panorama (Kota Bengkulu)."],
+  ["PIHPS", "Pusat Informasi Harga Pangan Strategis milik Bank Indonesia. Dipakai sebagai pembanding dan sebagai harga pengganti tingkat provinsi."],
+  ["Harga pengganti", "Bila pasar di Bengkulu Tengah belum mencatat suatu varian, dipakai rata-rata Provinsi Bengkulu. Selalu diberi tanda."],
+  ["Libur pencatatan", "Hari kerja ketika semua pasar sumber yang sama tidak mencatat (libur nasional atau cuti bersama). Tidak dihitung sebagai data hilang."],
+];
+$("tabel-istilah").querySelector("tbody").innerHTML = ISTILAH.map(([a, b]) => `<tr><td><b>${esc(a)}</b></td><td>${esc(b)}</td></tr>`).join("");
 // Keterangan kelompok disusun dari data, supaya selalu cocok dengan isi tabel.
 const perKelompok = {};
 for (const v of aktif) (perKelompok[v.kelompok] ||= new Set()).add(v.komoditas.toLowerCase());
