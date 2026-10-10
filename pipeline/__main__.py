@@ -306,6 +306,8 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--riwayat-hari", type=int, default=None,
                    help="hanya PIHPS: ambil riwayat sejauh sekian hari ke belakang (mis. 1460 = 4 tahun), walau data sudah ada")
 
+    sub.add_parser("probe-sumber", help="penjajakan sumber harga tingkat kabupaten/kota (jalankan di GitHub Actions)")
+
     sub.add_parser("pihps-ke-harga", help="salin harga PIHPS Provinsi Bengkulu menjadi berkas harga utama sementara")
 
     f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini, Groq, Cerebras, OpenRouter, Mistral, Claude)")
@@ -409,6 +411,14 @@ def main(argv: list[str] | None = None) -> int:
         else:
             hasil = konektor_resmi.perbarui(konf)
         print(json.dumps(hasil, ensure_ascii=False))
+        return 0
+    if a.perintah == "probe-sumber":
+        from . import probe_sumber
+
+        hasil = probe_sumber.jalankan(konf.akar)
+        for k in ("pihps", "bapanas", "lain"):
+            for r in hasil[k]:
+                print(f"[{k}] {r['status']} {r['byte']}B wilayah={r['wilayah_disebut']} {r['url'][:110]}")
         return 0
     if a.perintah == "pihps-ke-harga":
         from . import pihps_harga
