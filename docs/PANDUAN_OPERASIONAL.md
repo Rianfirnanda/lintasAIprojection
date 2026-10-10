@@ -123,6 +123,43 @@ pita "Data asli sementara" supaya tidak ada yang mengira ini harga Bengkulu Teng
   berhari-hari), sehingga cara paling sederhana (harga terakhir) sulit dikalahkan model lain. Target "10% lebih baik dari cara sederhana" wajar
   tidak tercapai pada data ini, dan itu bukan kesalahan model.
 
+## 4d. Proyeksi, status Valid/Eksperimen, dan Dasbor Analitik
+
+Halaman **Dasbor Analitik** (menu Analis, TPID, dan Admin) memuat semua yang diminta rancangan: indikator di atas, pilihan varian dan
+horizon 7/14/30 hari, tabel 21 varian (bisa diurutkan dan diekspor ke CSV), grafik tren dan proyeksi, diagnostik deret waktu, kinerja
+model, proyeksi hari raya, proyeksi triwulanan/semesteran/tahunan, rekomendasi netral, dan jejak data. Angkanya dibaca dari
+`analitik.json`, `proyeksi_acara.json`, dan `proyeksi_periodik.json` yang dibuat tiap pipeline jalan.
+
+- **Proyeksi harian.** 7, 14, dan 30 hari ke depan dengan rentang 80%. Rentang dibentuk dari selisih prakiraan dan kenyataan pada uji data
+  lama (konformal), bukan dari rumus tebakan.
+- **Uji akhir (holdout).** 90 hari terakhir disisihkan dan tidak dipakai memilih cara prakiraan. Hasilnya dinilai dengan sMAPE, MASE, bias,
+  akurasi arah, dan cakupan rentang 80%. MASE memakai skala galat cara naif pada horizon yang sama, dihitung dari data sebelum masa uji.
+- **Status.** **Valid** hanya bila semua syarat Protokol Validasi lolos: riwayat minimal 730 hari, kelengkapan minimal 95%, sMAPE di bawah
+  batas kelompok (pokok dan pabrikan 5%, protein 10%, volatil 15%), bias paling banyak 3% (kelas rendah) atau 5%, MASE di bawah 1, cakupan 75
+  sampai 85%, dan khusus komoditas volatil akurasi arah minimal 60%. Selain itu **Eksperimen**: tetap tampil, berlabel eksperimen, dan bukan
+  angka resmi. Syarat yang gagal tertera di panel "Kinerja model pada data uji akhir".
+- **Tingkat keyakinan.** Tinggi bila semua syarat lolos, Sedang bila hanya satu syarat gagal, Rendah bila lebih. Ini aturan, bukan angka karangan.
+- **Uji Diebold-Mariano.** Mesin belajar atau gabungan yang terbukti lebih buruk dari cara naif pada masa uji akhir dikembalikan ke juara
+  cara sederhana.
+- **Hari raya.** Menuju Hari H dari H-7 dan H-3, sesudahnya H+3, H+7, H+14, untuk Idul Fitri, Idul Adha, dan Natal. Cara: harga titik asal
+  dikalikan median perubahan pada hari raya sejenis sebelumnya, diuji dengan menyisihkan satu hari raya bergiliran (butuh minimal 3).
+  Proyeksi aktif baru muncul setelah titik asalnya tiba (mis. Natal mulai 18 Desember), dihitung dari harga pada hari itu. Selama hari raya
+  sejenis kurang dari 8, cakupan rentang belum bisa dinilai, jadi statusnya Eksperimen. Kalender `config/kalender.csv` kini memuat 2022
+  sampai 2027; tanggal 2022 sampai 2026 sesuai keputusan sidang isbat dan SKB pemerintah.
+- **Triwulanan, semesteran, tahunan.** Rata-rata harga bulanan dengan skenario rendah, dasar, tinggi (kuantil 10%, 50%, 90% galat uji
+  bulanan). Syarat riwayat: 36 bulan (triwulanan), 48 bulan (semesteran), 60 bulan (tahunan). Yang belum terpenuhi tampil "Menunggu data" beserta
+  kekurangannya, tanpa angka.
+- **Faktor yang terukur.** Perubahan 7 dan 30 hari, rezim naik-turun harga, kekuatan pola mingguan, kenaikan puncak menjelang hari raya, dan
+  pergeseran pola (PSI). Ini **bukan SHAP**: model yang dipakai belum menghasilkan penjelasan per fitur.
+- **Yang menunggu data.** Harga Kepahiang dan Kota Bengkulu, skor kesepakatan antar sumber (butuh minimal dua sumber harga pada tanggal yang
+  sama). Panel terkait terisi otomatis begitu datanya masuk; sampai saat itu tertulis "menunggu data".
+- **Jejak dan versi.** Setiap keluaran mencatat versi data (hash berkas harga), versi konfigurasi (hash pengaturan), commit, dan SHA-256 tiap
+  berkas sumber. Model deterministik, jadi data dan konfigurasi yang sama selalu memberi hasil yang sama. Registri model
+  (`data/registry/model_registry.json`) mencatat keadaan terkini dan riwayat pergantian cara prakiraan tiap varian; ditulis hanya untuk data asli
+  dan disimpan ke repositori oleh pipeline. Kartu model per varian (tujuan, data, cara memilih, keterbatasan) ada di panel Ringkasan varian.
+- **Mengubah batas.** Semua ambang protokol ada di satu tempat, `VALIDASI_BAWAAN` di `pipeline/analisis.py`. Mengubahnya sebaiknya lewat
+  keputusan tim, karena menggeser definisi "Valid" untuk semua varian. Horizon (30 hari) dan tingkat rentang (80%) ada di panel Pengaturan.
+
 ## 5. AI Data Finder (gratis)
 
 1. (Disarankan) Buat kunci gratis Gemini di https://aistudio.google.com/apikey. Gemini satu-satunya AI gratis di sini

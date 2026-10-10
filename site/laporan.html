@@ -119,10 +119,10 @@ function kinerjaModel(km) {
   const r = km.ringkasan, ev = km.evaluasi_anomali, t = km.target;
   return `<h2>Ketepatan prakiraan dan peringatan harga janggal</h2>
     <dl class="dl">
-      <dt>Rata-rata meleset (prakiraan 1 sampai 14 hari)</dt><dd>${r.smape_median === null ? "–" : angka(r.smape_median, 2) + "%"}</dd>
+      <dt>Rata-rata meleset (prakiraan 1 sampai 30 hari)</dt><dd>${r.smape_median === null ? "–" : angka(r.smape_median, 2) + "%"}</dd>
       <dt>Varian yang minimal ${t.perbaikan_smape_persen}% lebih tepat dari cara sederhana</dt><dd>${r.lolos_smape}/${r.varian_dinilai}</dd>
       <dt>Bias absolut ≤${t.bias_absolut_maks_persen}%</dt><dd>${r.lolos_bias}/${r.varian_dinilai}</dd>
-      <dt>Cakupan interval 90% dalam ${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%</dt><dd>${r.lolos_cakupan}/${r.varian_dinilai}</dd>
+      <dt>Cakupan interval 80% dalam ${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%</dt><dd>${r.lolos_cakupan}/${r.varian_dinilai}</dd>
       <dt>Ketepatan peringatan (benar / tertangkap / gabungan)</dt><dd>${ev.precision ?? "–"} / ${ev.recall ?? "–"} / ${ev.f1 ?? "–"} <span class="meta-kecil">(${esc(ev.sumber_label)})</span></dd>
     </dl>`;
 }
@@ -205,7 +205,7 @@ function render() {
     <h2>Catatan metodologi</h2>
     <p class="meta-kecil">Harga harian Bengkulu Tengah adalah median data yang lolos pemeriksaan dari sumber berprioritas tertinggi.
       Rata-rata periode = rerata harga harian yang tersedia. Volatilitas = simpangan baku perubahan log harga harian.
-      Proyeksi H+7 memakai model terbaik hasil rolling-origin backtesting dengan interval 90%.
+      Proyeksi H+7 memakai model terbaik hasil rolling-origin backtesting dengan interval 80%.
       Sumber: pencatatan harga pasar BPS Kabupaten Bengkulu Tengah; cuaca © Open-Meteo. Angka bukan rilis resmi BPS.</p>`;
 }
 

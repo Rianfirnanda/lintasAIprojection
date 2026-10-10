@@ -40,9 +40,9 @@
       </div>
     </div>
     <div class="gulir-tabel"><table id="tabel-model"><thead><tr>
-      <th>Varian</th><th class="angka" title="Pakai harga terakhir">Harga terakhir</th><th class="angka" title="Rata-rata 7 hari terakhir">Rata-rata 7 hari</th><th class="angka" title="Tren yang melandai">Tren</th><th class="angka" title="Pola dari hari raya sebelumnya">Hari raya</th>
+      <th>Varian</th><th class="angka" title="Pakai harga terakhir">Harga terakhir</th><th class="angka" title="Rata-rata 7 hari terakhir">Rata-rata 7 hari</th><th class="angka" title="Tren yang melandai">Tren</th><th class="angka" title="Pola dari hari raya sebelumnya">Hari raya</th><th class="angka" title="Penghalusan eksponensial">Penghalusan</th><th class="angka" title="Machine learning (Ridge, banyak horizon)">Mesin belajar</th><th class="angka" title="Gabungan cara sederhana dan mesin belajar">Gabungan</th>
       <th class="angka" title="Seberapa lebih baik dari cara sederhana">Lebih baik dari harga terakhir</th><th class="angka" title="Cenderung terlalu tinggi atau terlalu rendah">Condong</th><th class="angka" title="Berapa kali harga sebenarnya jatuh di dalam rentang prakiraan">Tepat dalam rentang</th><th class="angka" title="Rata-rata meleset dalam rupiah">Meleset (Rp)</th>
-      <th class="angka" title="Perbandingan naik-turun harga sekarang dengan biasanya">Naik-turun harga</th><th class="angka" title="Rata-rata meleset dua periode terakhir">Meleset, 2 periode</th><th>Persetujuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+      <th class="angka" title="Perbandingan naik-turun harga sekarang dengan biasanya">Naik-turun harga</th><th class="angka" title="Rata-rata meleset dua periode terakhir">Meleset, 2 periode</th><th title="Hasil uji pada 90 hari terakhir yang tidak dipakai memilih cara prakiraan">Status uji akhir</th><th>Persetujuan</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section class="kartu">
@@ -85,12 +85,13 @@ try {
   throw e;
 }
 const r = m.ringkasan, t = m.target, ev = m.evaluasi_anomali;
-const NAMA_CARA = { naif: "harga terakhir", rata7: "rata-rata 7 hari", holt_redam: "tren melandai", hari_raya: "pola hari raya" };
+const NAMA_CARA = { naif: "harga terakhir", rata7: "rata-rata 7 hari", holt_redam: "tren melandai", hari_raya: "pola hari raya", ses: "penghalusan eksponensial", ml_challenger: "machine learning", ensemble: "gabungan (ensemble)" };
 const dipakai = Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(NAMA_CARA[k] || k.replace("_", " "))}`).join(" · ") || "–";
 document.getElementById("kpi").innerHTML = [
   ind({ i: "kubus", label: "Varian diuji", nilai: angka(r.varian_dinilai), sub: "riwayat harganya cukup" }),
-  ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: "prakiraan 1 sampai 14 hari" }),
+  ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: "prakiraan 1 sampai 30 hari" }),
   ind({ i: "tren", warna: "hijau", label: "Lebih baik dari harga terakhir", nilai: `${r.lolos_smape}/${r.varian_dinilai}`, sub: "unggul minimal 10%", meter: r.varian_dinilai ? r.lolos_smape / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
+  ind({ i: "perisai", warna: r.varian_valid ? "hijau" : "oranye", label: "Lolos uji akhir (Valid)", nilai: `${r.varian_valid ?? 0}/${r.varian_dinilai}`, sub: `${r.varian_eksperimen ?? 0} masih Eksperimen`, meter: r.varian_dinilai ? (r.varian_valid ?? 0) / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
   ind({ i: "otak", label: "Cara prakiraan dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${dipakai}</span>`, sub: "jumlah varian per cara" }),
 ].join("");
 
@@ -126,7 +127,7 @@ const sm = (x) => (x ? angka(x.smape, 2) : "–");
 document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) => {
   const mt = v.metrik || {};
   const pilih = v.model_terpilih;
-  const kolom = ["naif", "rata7", "holt_redam", "hari_raya"].map((k) =>
+  const kolom = ["naif", "rata7", "holt_redam", "hari_raya", "ses", "ml_challenger", "ensemble"].map((k) =>
     `<td class="angka">${k === pilih ? `<strong>${sm(mt[k])}</strong>` : sm(mt[k])}</td>`).join("");
   const mp = mt[pilih] || {};
   const d = v.drift || {};
@@ -139,11 +140,12 @@ document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) =>
     <td class="angka">${rp(mp.mae)}</td>
     <td class="angka">${d.rasio_volatilitas ?? "–"}</td>
     <td class="angka">${d.penurunan_periode_sebelumnya_persen ?? "–"}% → ${d.penurunan_periode_terakhir_persen ?? "–"}%</td>
+    <td>${v.validasi?.status === "valid" ? '<span class="lencana baik">Valid</span>' : `<span class="lencana sedang" title="${esc((v.validasi?.gagal || []).join(", "))}">Eksperimen</span>`}</td>
     <td>${v.status_persetujuan === "disetujui" ? `<span class="lencana baik">disetujui</span>${v.persetujuan?.penyetuju ? `<br><span class="meta-kecil">${esc(v.persetujuan.penyetuju)} ${esc(v.persetujuan.tanggal || "")}</span>` : ""}`
       : v.status_persetujuan === "menunggu_persetujuan" ? `<label class="cek"><input type="checkbox" data-setuju="${esc(v.kode)}" data-model="${esc(v.model_rekomendasi)}"> setujui ${esc(NAMA_CARA[v.model_rekomendasi] || v.model_rekomendasi)}</label>`
       : '<span class="lencana polos">–</span>'}</td>
     <td class="meta-kecil">${esc((v.catatan || []).join(" "))}</td></tr>`;
-}).join("") || `<tr><td colspan="13" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
+}).join("") || `<tr><td colspan="17" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
 
 const menunggu = m.per_varian.filter((v) => v.status_persetujuan === "menunggu_persetujuan").length;
 document.getElementById("info-persetujuan").textContent =

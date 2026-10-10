@@ -17,7 +17,7 @@ from zoneinfo import ZoneInfo
 
 import numpy as np
 
-from . import (VERSI, agregasi, analisis, demo, kinerja, kualitas, laporan, layanan, masukan, notifikasi, pengguna,
+from . import (VERSI, agregasi, analisis, analitik, demo, proyeksi_acara, proyeksi_periodik, kinerja, kualitas, laporan, layanan, masukan, notifikasi, pengguna,
                sinyal as modul_sinyal, tindak_lanjut)
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
@@ -357,6 +357,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "model_rekomendasi": hv.model_rekomendasi, "status_persetujuan": hv.status_persetujuan,
             "persetujuan": {k: v for k, v in data_kinerja.get("persetujuan", {}).get(kode, {}).items() if k != "riwayat"},
             "segmen": hv.segmen,
+            "holdout": hv.holdout, "validasi": hv.validasi, "diagnostik": hv.diagnostik,
+            "kelengkapan_persen": hv.kelengkapan_persen, "jumlah_obs": hv.jumlah_obs,
         }
         if m:
             dinilai += 1
@@ -376,6 +378,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "varian_dinilai": dinilai, "lolos_smape": lolos_smape, "lolos_bias": lolos_bias, "lolos_cakupan": lolos_cakupan,
         "smape_median": round(median(smape_terpilih), 2) if smape_terpilih else None,
         "model_dipakai": Counter(hv.model_terpilih for hv in hasil_varian.values() if hv.model_terpilih),
+        "varian_valid": sum(1 for hv in hasil_varian.values() if hv.validasi.get("status") == "valid"),
+        "varian_eksperimen": sum(1 for hv in hasil_varian.values() if hv.validasi.get("status") != "valid"),
     }
     _tulis_json(keluaran / "model.json", {
         "ringkasan": ringkasan_model, "per_varian": per_varian_model, "evaluasi_anomali": evaluasi,
@@ -490,6 +494,22 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "prioritas": [s["id"] for s in aktif[:8]],
     }
     _tulis_json(keluaran / "ringkasan.json", ringkasan)
+
+    # ---------- proyeksi_acara.json (H-7/H-3 menuju Hari H, dan H+3/H+7/H+14 sesudahnya)
+    _tulis_json(keluaran / "proyeksi_acara.json", proyeksi_acara.bentuk(konf, hasil_varian, tanggal_data))
+
+    # ---------- proyeksi_periodik.json (triwulanan, semesteran, tahunan; skenario rendah/dasar/tinggi)
+    _tulis_json(keluaran / "proyeksi_periodik.json", proyeksi_periodik.bentuk(konf, hasil_varian, tanggal_data))
+
+    # ---------- analitik.json (Dasbor Analitik: tabel varian, proyeksi 7/14/30, status validasi, jejak data)
+    hasil_analitik = analitik.bentuk(
+        konf, hasil_varian, hasil_qc, hasil_masuk, tanggal_data, pakai_demo, daftar_sinyal,
+        {"nama": berikut.nama, "hari_menuju": (berikut.tanggal - konf.hari_ini).days} if berikut else None,
+        seri_pembanding, ringkasan_model)
+    # Registri model dicatat ke repositori hanya untuk data asli (data contoh bukan jejak audit).
+    registry = analitik.perbarui_registry(konf.akar, hasil_analitik) if not pakai_demo else {"riwayat": [], "terkini": {}}
+    hasil_analitik["registry_riwayat"] = registry["riwayat"][-40:]
+    _tulis_json(keluaran / "analitik.json", hasil_analitik)
 
     # ---------- unduh/harga_harian.csv
     (keluaran / "unduh").mkdir(parents=True, exist_ok=True)

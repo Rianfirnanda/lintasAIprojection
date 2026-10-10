@@ -194,6 +194,21 @@ jobs:
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
 
+      - name: Simpan registri model (riwayat pergantian cara prakiraan)
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ ! -d data/registry ]; then echo "Belum ada registri model."; exit 0; fi
+          git add data/registry
+          if git diff --cached --quiet; then
+            echo "Tidak ada perubahan registri model."
+          else
+            git commit -m "registri: catat cara prakiraan dan versi data tiap varian"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
       - name: Laporkan hasil ke situs
         if: always() && steps.fs.outputs.siap == 'ya'
         continue-on-error: true
