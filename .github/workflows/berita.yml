@@ -12,8 +12,10 @@ permissions:
   actions: write
   models: read
 
+# Satu kelompok dengan pembaruan harian (pipeline.yml), yang juga menulis data/berita/berita.json. Dengan begitu keduanya
+# bergantian dan penyimpanan tidak bentrok; hasil run sebelumnya sudah ikut terambil saat checkout.
 concurrency:
-  group: berita
+  group: pipeline-pages
   cancel-in-progress: false
 
 jobs:

@@ -226,6 +226,37 @@ def test_relevansi_dan_tag(konf):
     assert berita.analisis_isi("Harga cabai naik di Surabaya", "Pedagang di Surabaya menaikkan harga cabai.", konf)["relevansi"] == "tidak"
 
 
+def test_kata_bengkulu_di_bagian_bawah_halaman_tidak_membuat_berita_daerah_lain_relevan(konf):
+    kurs = "USD/IDR 16.200 EUR/IDR 19.935 JPY/IDR 10.838 SGD/IDR 12.100 " * 30
+    bawah = f"{kurs}\nDaftar provinsi: Aceh, Bengkulu, Jambi, Lampung."
+    teks = f"Harga cabai merah naik menjadi Rp65.790 per kg. Harga bawang merah turun. {bawah}"
+    assert berita.analisis_isi("Harga Pangan Hari Ini di Jawa Barat", teks, konf)["relevansi"] == "tidak"
+    # di judul atau paragraf awal tetap dihitung
+    assert berita.analisis_isi("Harga cabai di Bengkulu naik", teks, konf)["relevansi"] != "tidak"
+    awal = "Harga cabai merah dan bawang merah di pasar Bengkulu naik pekan ini, kata pedagang. " + kurs
+    assert berita.analisis_isi("Harga pangan pekan ini", awal, konf)["relevansi"] != "tidak"
+
+
+def test_kutipan_memilih_kalimat_berita_bukan_tabel_kurs():
+    kurs = "13.361 CAD/IDR 12.349 CHF/IDR 21.861 CNH/IDR 2.461 CNY/IDR 2.460 DKK/IDR 2.668 EUR/IDR 19.935"
+    berita_ = "Komoditas cabai merah keriting naik paling tinggi Rp1.673 (2,61%) menjadi Rp65.790 per kg."
+    assert berita.kutipan_dari(kurs, f"{kurs}\n{berita_}\nParagraf lain.") == berita_
+    assert berita.kutipan_dari("Pemkab menggelar pasar murah di tiga kecamatan pekan ini.", "isi") == "Pemkab menggelar pasar murah di tiga kecamatan pekan ini."
+    assert berita.kutipan_dari(kurs, kurs) == ""
+    assert berita.kutipan_dari("", "") == ""
+
+
+def test_workflow_manual_antre_bersama_pembaruan_harian():
+    import re
+
+    from tests.conftest import AKAR
+
+    def kelompok(nama):
+        return re.search(r"concurrency:\s+group: (\S+)", (AKAR / ".github/workflows" / nama).read_text(encoding="utf-8")).group(1)
+
+    assert kelompok("berita.yml") == kelompok("pipeline.yml")  # keduanya menulis data/berita/berita.json
+
+
 def _harga(teks, konf):
     return berita.ekstrak_harga(teks, konf)
 
