@@ -1,0 +1,36 @@
+name: Penjajakan sumber data
+
+# Mencari tahu sumber mana yang sungguh menyediakan harga tingkat kabupaten/kota (Bengkulu Tengah, Kepahiang, Kota Bengkulu).
+# Hanya membaca; hasilnya apa adanya di data/sumber/hasil_probe.json. Dijalankan di GitHub Actions karena sandbox
+# pengembangan tidak bisa membuka situs resmi.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pipeline-pages
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy openpyxl
+      - name: Jajaki sumber
+        run: python -m pipeline probe-sumber
+      - name: Simpan hasil
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sumber/hasil_probe.json
+          if git diff --cached --quiet; then echo "Tidak ada perubahan."; exit 0; fi
+          git commit -m "data: hasil penjajakan sumber harga kabupaten/kota"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
