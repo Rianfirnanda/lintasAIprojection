@@ -5,6 +5,10 @@ name: Penjajakan sumber data
 # pengembangan tidak bisa membuka situs resmi.
 on:
   workflow_dispatch:
+    inputs:
+      jenis:
+        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun"
+        default: "lanjut"
 
 permissions:
   contents: write
@@ -16,7 +20,7 @@ concurrency:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,12 +28,16 @@ jobs:
           python-version: "3.11"
       - run: pip install numpy openpyxl
       - name: Jajaki sumber
-        run: python -m pipeline probe-sumber
+        env:
+          BPS_API_KEY: ${{ secrets.BPS_API_KEY }}
+          JENIS: ${{ inputs.jenis }}
+        run: |
+          if [ "$JENIS" = "dasar" ]; then python -m pipeline probe-sumber; else python -m pipeline probe-lanjut; fi
       - name: Simpan hasil
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/sumber/hasil_probe.json
+          git add data/sumber/
           if git diff --cached --quiet; then echo "Tidak ada perubahan."; exit 0; fi
           git commit -m "data: hasil penjajakan sumber harga kabupaten/kota"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"

@@ -307,6 +307,7 @@ def main(argv: list[str] | None = None) -> int:
                    help="hanya PIHPS: ambil riwayat sejauh sekian hari ke belakang (mis. 1460 = 4 tahun), walau data sudah ada")
 
     sub.add_parser("probe-sumber", help="penjajakan sumber harga tingkat kabupaten/kota (jalankan di GitHub Actions)")
+    sub.add_parser("probe-lanjut", help="penjajakan lanjutan: SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun")
 
     sub.add_parser("pihps-ke-harga", help="salin harga PIHPS Provinsi Bengkulu menjadi berkas harga utama sementara")
 
@@ -420,6 +421,21 @@ def main(argv: list[str] | None = None) -> int:
         for k in ("pihps", "bapanas", "lain"):
             for r in hasil[k]:
                 print(f"[{k}] {r['status']} {r['byte']}B wilayah={r['wilayah_disebut']} {r['url'][:110]}")
+        return 0
+    if a.perintah == "probe-lanjut":
+        from . import probe_lanjut
+
+        hasil = probe_lanjut.jalankan(konf.akar)
+        sp = hasil["sp2kp"]
+        print(f"[sp2kp] {sp['chunk']} potongan JS, {len(sp['api'])} alamat API, {len(sp['tableau'])} tampilan Tableau")
+        for k in ("sp2kp_coba", "tableau", "ckan", "pihps", "lain"):
+            for r in hasil[k]:
+                print(f"[{k}] {r['status']} {r['byte']}B wilayah={r['wilayah_disebut']} {r['url'][:120]}")
+        b = hasil["bapanas"]
+        print(f"[bapanas] kunci={b['kunci_ditemukan']} tcp={b['tcp']}")
+        for r in b["coba"]:
+            print(f"[bapanas] {r['status']} {r['detik']}s {r.get('galat', '')} {r['url'][:120]}")
+        print(f"[bps] {hasil['bps'].get('status')}")
         return 0
     if a.perintah == "pihps-ke-harga":
         from . import pihps_harga
