@@ -1,0 +1,1075 @@
+{
+ "waktu": "2026-10-10T09:29:02+00:00",
+ "sp2kp": {
+  "halaman": [
+   {
+    "jalur": "/",
+    "status": 200,
+    "byte": 137233
+   },
+   {
+    "jalur": "/statistik/area",
+    "status": 200,
+    "byte": 137233
+   },
+   {
+    "jalur": "/statistik/komoditas",
+    "status": 200,
+    "byte": 137233
+   },
+   {
+    "jalur": "/statistik",
+    "status": 200,
+    "byte": 137233
+   },
+   {
+    "jalur": "/harga",
+    "status": 200,
+    "byte": 137233
+   },
+   {
+    "jalur": "/informasi-harga",
+    "status": 200,
+    "byte": 137233
+   },
+   {
+    "jalur": "/peta-harga",
+    "status": 200,
+    "byte": 137233
+   }
+  ],
+  "chunk": 220,
+  "api": [
+   "https://api-sp2kp.kemendag.go.id/auth/api",
+   "https://api-sp2kp.kemendag.go.id/auth/api/${r}${e}",
+   "https://api-sp2kp.kemendag.go.id/auth/api/${t}${e}",
+   "https://api-sp2kp.kemendag.go.id/auth/api/application",
+   "https://api-sp2kp.kemendag.go.id/master/api",
+   "https://api-sp2kp.kemendag.go.id/master/api/${t}${e}",
+   "https://api-sp2kp.kemendag.go.id/master/api/order-komoditas",
+   "https://api-sp2kp.kemendag.go.id/master/api/order-komoditas/${a}",
+   "https://api-sp2kp.kemendag.go.id/master/api/order-komoditas/${l}",
+   "https://api-sp2kp.kemendag.go.id/master/api/waktu-server",
+   "https://api-sp2kp.kemendag.go.id/public/api",
+   "https://api-sp2kp.kemendag.go.id/report/api"
+  ],
+  "jalur": [
+   "/api/delete_cookie",
+   "/api/intranet",
+   "/api/satudata",
+   "/statistik",
+   "/statistik/area",
+   "/statistik/tabulasi-harga",
+   "/statistik/variant"
+  ],
+  "tableau": [],
+  "konteks": [
+   "[C3meC_C7.js] sole.log(u)}},c=async s=>{const u=Ihe(s);n.user_id=u.user_id,n.first_name=u.first_name,n.last_name=u.last_name,n.role_id=u.role.id,n.role_name=u.role.name,i()},i=async()=>{await t.getUser().then(s=>{s.data.role_id==1?(n.kode_kab_kota=null,n.kode_kecamatan=null,n.kode_kelurahan=null,n.kode_provinsi=null):(n.kode_kab_kota=s.data.kode_kab_kota,n.kode_kecamatan=s.data.kode_kecamatan,n.kode_kelurahan=s.data.kode_kelurahan,n.kode_provinsi=s.data.kode",
+   "[C3meC_C7.js] rst_name=u.first_name,n.last_name=u.last_name,n.role_id=u.role.id,n.role_name=u.role.name,i()},i=async()=>{await t.getUser().then(s=>{s.data.role_id==1?(n.kode_kab_kota=null,n.kode_kecamatan=null,n.kode_kelurahan=null,n.kode_provinsi=null):(n.kode_kab_kota=s.data.kode_kab_kota,n.kode_kecamatan=s.data.kode_kecamatan,n.kode_kelurahan=s.data.kode_kelurahan,n.kode_provinsi=s.data.kode_provinsi),o(n)})},o=async s=>{const u=JSON.stringify(s),l=jhe.encrypt",
+   "[B_8U66ad.js] emsPerPage:I,sortBy:L,role_id:C,search:D})=>{i.value=!0,M()},M=async()=>{if(o.value!==null&&r.value!==null){m.value=[];const S=b.value==-1?null:b.value,I={tanggal:o.value,tanggal_pembanding:r.value};(S!=null||S!=\"\")&&(I.kode_provinsi=S),(_.value!=null||_.value!=\"\")&&(I.kode_kab_kota=_.value);let L=0,C=0;p.value=!0,await t.generatePerbandinganHarga(I).then(D=>{var B;const H=(B=D==null?void 0:D.data)==null?void 0:B.data;if(Array.isArray(H)){for(const ",
+   "[B_8U66ad.js] ue=!0,M()},M=async()=>{if(o.value!==null&&r.value!==null){m.value=[];const S=b.value==-1?null:b.value,I={tanggal:o.value,tanggal_pembanding:r.value};(S!=null||S!=\"\")&&(I.kode_provinsi=S),(_.value!=null||_.value!=\"\")&&(I.kode_kab_kota=_.value);let L=0,C=0;p.value=!0,await t.generatePerbandinganHarga(I).then(D=>{var B;const H=(B=D==null?void 0:D.data)==null?void 0:B.data;if(Array.isArray(H)){for(const z of H){L+=z.harga,C+=z.harga_pembanding;cons",
+   "[B_8U66ad.js] _provinsi};h.value.push(H)})})},E=()=>{e.getKotaByProv(b.value).then(S=>{var L;const I=(L=S==null?void 0:S.data)==null?void 0:L.data;y.value=[],Array.isArray(I)&&I.forEach((C,D)=>{const H={id:C.kode_kab_kota,nama:C.nama_kab_kota};y.value.push(H)})})};return{take:n,search_komoditas_bapok:l,komoditasHeaders:u,tableRows:m,totalItems:s,today:a,date1:o,date2:r,listProvinsi:h,provinsiId:b,listKota:y,kotaId:_,load_data:p,loadItems:A,expandedItems:g,to",
+   "[B_8U66ad.js] r:\"#009688\"},{default:G(()=>[...e[0]||(e[0]=[R(\"Selengkapnya\",-1)])]),_:1})]),_:1})])])])}const E8=r1(h8,[[\"render\",x8]]),P8=w2.create({headers:{\"Content-type\":\"application/json\",Accept:\"application/json\"}}),C8=\"https://api-sp2kp.kemendag.go.id/public/api\",A8=a3(\"popup\",{actions:{async fetchData(t){const e=n3(t);return P8.get(`${C8}/popup?${e}`)}}}),M8=h1({setup(){const t=y2(),e=b2(),a=_3();A8();const{gtag:n}=M2(),s=x(null),i=s3(),l=r3(),o=x(!1),r=x(!1),c=x(null),d=x(nul",
+   "[BLLlR1YG.js] import{m as s,p as n,s as o}from\"./C3meC_C7.js\";const t=\"https://api-sp2kp.kemendag.go.id/report/api\",c=s(\"harga_rata_rata\",{actions:{async fetchData(a){const r=o(a);try{return await n.get(`${t}/average-price?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async fetchDataPublic(a){const r=o(a);try{return await ",
+   "[BLLlR1YG.js] import{m as s,p as n,s as o}from\"./C3meC_C7.js\";const t=\"https://api-sp2kp.kemendag.go.id/report/api\",c=s(\"harga_rata_rata\",{actions:{async fetchData(a){const r=o(a);try{return await n.get(`${t}/average-price?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async fetchDataPublic(a){const r=o(a);try{return await n.get(`${t}/average-price-public?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async komoditasPubl",
+   "[3A2uutgh.js] import{m as a,p as t,s as o}from\"./C3meC_C7.js\";const s=\"https://api-sp2kp.kemendag.go.id/public/api\",c=a(\"hyperlink\",{actions:{async fetchData(e){const r=o(e);try{return await t.get(`${s}/hyperlink?${r}`)}catch{}},async detail(e){try{return await t.get(`${s}/hyperlink/${e}`)}catch{}},async create(e){try{return await t",
+   "[BF_OVQxy.js] import{m as n,p as t,s as o}from\"./C3meC_C7.js\";const s=\"https://api-sp2kp.kemendag.go.id/public/api\",p=n(\"berita\",{actions:{async fetchData(e){const r=o(e);try{return await t.get(`${s}/berita?${r}`)}catch{}},async detail(e){try{return await t.get(`${s}/berita/${e}`)}catch{}},async create(e){try{return await t.post(`${",
+   "[C9tsmJyy.js] onst a=lt(i),k={user_id:a.user_id,first_name:a.first_name,last_name:a.last_name,role_id:a.role.id,role_name:a.role.name};await U(k)},U=async i=>{const a=await o.getUser();if(a!=null&&a.data){const k=a.data.role_id===1;i.kode_kab_kota=k?null:a.data.kode_kab_kota,i.kode_kecamatan=k?null:a.data.kode_kecamatan,i.kode_kelurahan=k?null:a.data.kode_kelurahan,i.kode_provinsi=k?null:a.data.kode_provinsi}await H(i)},H=async i=>{const a=JSON.stringify(i),",
+   "[C9tsmJyy.js] sync i=>{const a=await o.getUser();if(a!=null&&a.data){const k=a.data.role_id===1;i.kode_kab_kota=k?null:a.data.kode_kab_kota,i.kode_kecamatan=k?null:a.data.kode_kecamatan,i.kode_kelurahan=k?null:a.data.kode_kelurahan,i.kode_provinsi=k?null:a.data.kode_provinsi}await H(i)},H=async i=>{const a=JSON.stringify(i),k=rt.encrypt(\"k3m3nd46_5p2kp\",a);localStorage.setItem(\"userData\",k),await V()},V=async()=>{s.value=!1;const i=localStorage.getItem(\"userData\"",
+   "[u2VT0yAY.js] import{m as n,p as r}from\"./C3meC_C7.js\";const a=\"https://api-sp2kp.kemendag.go.id/public/api\",o=n(\"tentang\",{actions:{async detail(){try{return await r.get(`${a}/tentang`)}catch{}},async update(t){try{return await r.put(`${a}/tentang`,t)}catch(e){console.error(\"Terjadi kesalahan:\",e)}}}});export{o as u}; ",
+   "[67HBMILx.js] a(),e=Fa(),O=Ya(),K=ha(),B=La(),U=o(R(new Date,\"yyyy-MM-dd\")),d=o(null),y=o([]),u=o(1),w=o([]),V=o(0),M=o(!1),D=o(!1),Q=o([{title:\"Provinsi\",align:\"start\",key:\"nama_provinsi\"},{title:\"Kab / Kota\",align:\"start\",key:\"nama_kab_kota\"},{title:\"Pasar / Titik\",align:\"start\",key:\"nama_pasar\"},{title:\"Kontributor\",align:\"start\",key:\"kontributor\"}]),m=o([]),i=o(null),g=o(\"Pasar\"),c=o([]),A=o(null),j=o([]),I=o(null),P=o([]),X=o(null),L=o(null),z=o(null),b",
+   "[67HBMILx.js] ue==\"Verifikator Banting Timur\"||d.value==\"Verifikator Tengah\"||d.value==\"Verifikator Banting Tengah\";const _={wilayah:\"\"};try{const v=await B.getAllProv(_);c.value=[];const s=v.data.data;for(const C of s){const T={id:C.kode_provinsi,nama:C.nama_provinsi};c.value.push(T)}}catch{}},Ba=async()=>{try{const _=await B.getKotaByProv(A.value);j.value=[];const v=_.data.data;for(const s of v){const C={id:s.kode_kab_kota,nama:s.nama_kab_kota};j.value.push(C)}",
+   "[67HBMILx.js] a.data;for(const C of s){const T={id:C.kode_provinsi,nama:C.nama_provinsi};c.value.push(T)}}catch{}},Ba=async()=>{try{const _=await B.getKotaByProv(A.value);j.value=[];const v=_.data.data;for(const s of v){const C={id:s.kode_kab_kota,nama:s.nama_kab_kota};j.value.push(C)}}catch{}},J=async()=>{const _={is_active:!0,tipe_komoditas_id:u.value??\"\",kode_provinsi:A.value??\"\",kode_kab_kota:I.value??\"\"};try{const v=await K.fetchData(_);w.value=[],V.val",
+   "[DTQo9f0H.js] import{m as o,p as n,s as t}from\"./C3meC_C7.js\";const p=\"https://api-sp2kp.kemendag.go.id/report/api\",i=o(\"report\",{actions:{async fetchData(e){const a=t(e);try{return await n.get(`${p}/penutupan-harga-harian?${a}`)}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async detail(e){try{return await n.get(`${p}/penutupan-",
+   "[DTQo9f0H.js] jadi kesalahan:\",a)}},async dashboardHargaHarian(e){try{const a=new FormData;return a.append(\"tahun\",e.tahun),a.append(\"bulan\",e.bulan),a.append(\"hari\",e.hari),a.append(\"tipe_komoditas_id\",e.tipe_komoditas_id),a.append(\"kode_provinsi\",e.kode_provinsi),a.append(\"kode_kab_kota\",e.kode_kab_kota),await n.post(`${p}/harga-harian/dashboard-report-pasar`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},as",
+   "[DTQo9f0H.js] Harian(e){try{const a=new FormData;return a.append(\"tahun\",e.tahun),a.append(\"bulan\",e.bulan),a.append(\"hari\",e.hari),a.append(\"tipe_komoditas_id\",e.tipe_komoditas_id),a.append(\"kode_provinsi\",e.kode_provinsi),a.append(\"kode_kab_kota\",e.kode_kab_kota),await n.post(`${p}/harga-harian/dashboard-report-pasar`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},async exportDashboardHargaHarian(e){try",
+   "[DTQo9f0H.js] ,a.append(\"kode_provinsi\",e.kode_provinsi),a.append(\"kode_kab_kota\",e.kode_kab_kota),a.append(\"pasar_id\",e.pasar_id),a.append(\"skip_sat_sun\",e.skip_sat_sun),a.append(\"tipe_komoditas\",e.tipe_komoditas),await n.post(`${p}/average-price/export-area-daily-json`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},async statistikExcelHarian(e){try{const a=new FormData;return a.append(\"start_date\",e.start_da",
+   "[CsgGO7qo.js] pFGk0mVfi\"),d=[\"src\"];function _(e,a,m,f,h,k){return n(),c(\"div\",null,[p(\"iframe\",{src:e.url,width:\"100%\",height:\"1000\",frameborder:\"0\"},null,8,d)])}const $=s(l,[[\"render\",_],[\"__scopeId\",\"data-v-93c4e7cd\"]]),t=\"https://api-sp2kp.kemendag.go.id/report/api\",T=i(\"tableau\",{actions:{async getToken(){try{return await r.get(`${t}/tableau/token`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async getTokenPublic(){try{return await r.get(`${t}/tableau/token-harga-public`)}ca",
+   "[hurIJ0TB.js] ,()=>{const t=String(b.value),a=t.substring(4,7);K.value=t.substring(11,15);const o=R.filter(n=>n.name===a);x.value=o[0].id,U.value=o[0].name})});const T=async()=>{await M.userInfo().then(t=>{const a=t.data;let o=null;a.kode_kab_kota!=\"\"&&(o=a.kode_kab_kota),r.value=a.role.name,m.value=a.kode_provinsi,d.value=o,a.role.name==\"Kontributor Bapok\"||a.role.name==\"Admin Bapok\"?c.value=1:(a.role.name==\"Kontributor Banting\"||a.role.name==\"Admin Banting",
+   "[hurIJ0TB.js] 11,15);const o=R.filter(n=>n.name===a);x.value=o[0].id,U.value=o[0].name})});const T=async()=>{await M.userInfo().then(t=>{const a=t.data;let o=null;a.kode_kab_kota!=\"\"&&(o=a.kode_kab_kota),r.value=a.role.name,m.value=a.kode_provinsi,d.value=o,a.role.name==\"Kontributor Bapok\"||a.role.name==\"Admin Bapok\"?c.value=1:(a.role.name==\"Kontributor Banting\"||a.role.name==\"Admin Banting\")&&(c.value=2)}).catch(t=>{console.log(t)})},C=async()=>{const t={take:1e",
+   "[hurIJ0TB.js] ={id:n.kode_provinsi,name:n.nama_provinsi};g.value.push(s)}}).catch(a=>{console.log(a)})},E=()=>{V.getKotaByProv(m.value).then(t=>{v.value=[];const a=t.data;for(const n of a.data){const s={id:n.kode_kab_kota,name:n.nama_kab_kota};v.value.push(s)}v.value.filter(n=>n.id===d.value)==0&&(d.value=null)}).catch(t=>{console.log(t)})},F=async()=>{const t={kode_provinsi:m.value??\"\",tipe_pasar_id:17,is_active:!0};try{const o=(await h.dataByUser(t)).data.",
+   "[CPjHOcmE.js] (),D(b,()=>{w.value=b.value.slice(0,4),I.value=b.value.slice(5,7)}),D(m,()=>{m.value!=null?R():(J.value=[],K.value=null)})});const B=async()=>{try{const t=(await j.getAllProv()).data.data;for(const l of t){const o={id:l.kode_provinsi,nama:l.nama_provinsi};L.value.push(o)}}catch{}},R=async()=>{try{const t=(await j.getKotaByProv(m.value)).data.data;for(const l of t){const o={id:l.kode_kab_kota,nama:l.nama_kab_kota};J.value.push(o)}}catch{}},A=async()=",
+   "[CPjHOcmE.js]  j.getAllProv()).data.data;for(const l of t){const o={id:l.kode_provinsi,nama:l.nama_provinsi};L.value.push(o)}}catch{}},R=async()=>{try{const t=(await j.getKotaByProv(m.value)).data.data;for(const l of t){const o={id:l.kode_kab_kota,nama:l.nama_kab_kota};J.value.push(o)}}catch{}},A=async()=>{try{d.value=!0,x.value=[],T.value=[];const i={tahun:w.value??\"\",bulan:I.value??\"\",kode_provinsi:m.value??\"\",kode_kab_kota:K.value??\"\"},l=(await V.laporanP",
+   "[CPjHOcmE.js] ;for(const l of t){const o={id:l.kode_provinsi,nama:l.nama_provinsi};L.value.push(o)}}catch{}},R=async()=>{try{const t=(await j.getKotaByProv(m.value)).data.data;for(const l of t){const o={id:l.kode_kab_kota,nama:l.nama_kab_kota};J.value.push(o)}}catch{}},A=async()=>{try{d.value=!0,x.value=[],T.value=[];const i={tahun:w.value??\"\",bulan:I.value??\"\",kode_provinsi:m.value??\"\",kode_kab_kota:K.value??\"\"},l=(await V.laporanPenginputanKontributor(i)).",
+   "[B1KMCeqH.js] ();for(let t=l;t>=2e3;t--)j.value.push({id:t,nama:t})},M=l=>{h.value=!0;const n=(l.page-1)*l.itemsPerPage;K(n,l.itemsPerPage)},A=async()=>{await U.fetchData().then(l=>{const t=l.data;for(const n of t.data){const c={id:n.kode_provinsi,name:n.nama_provinsi};C.value.push(c)}}).catch(l=>{console.log(l)})},E=async()=>{$.fetchData(r.value).then(l=>{const t=l.data.data;p.value=[];for(const c of t){const u={id:c.kode_kab_kota,name:c.nama_kab_kota};p.value.p",
+   "[B1KMCeqH.js] onst n of t.data){const c={id:n.kode_provinsi,name:n.nama_provinsi};C.value.push(c)}}).catch(l=>{console.log(l)})},E=async()=>{$.fetchData(r.value).then(l=>{const t=l.data.data;p.value=[];for(const c of t){const u={id:c.kode_kab_kota,name:c.nama_kab_kota};p.value.push(u)}p.value.filter(c=>c.id===m.value)==0&&(m.value=null)}).catch(l=>{console.log(l)})},K=async(l=0,t=10,n=\"\",c=null)=>{const u={skip:l==-0?0:l,take:t==-1?9999:t,role_id:n,first_nam",
+   "[B1KMCeqH.js] {id:n.kode_provinsi,name:n.nama_provinsi};C.value.push(c)}}).catch(l=>{console.log(l)})},E=async()=>{$.fetchData(r.value).then(l=>{const t=l.data.data;p.value=[];for(const c of t){const u={id:c.kode_kab_kota,name:c.nama_kab_kota};p.value.push(u)}p.value.filter(c=>c.id===m.value)==0&&(m.value=null)}).catch(l=>{console.log(l)})},K=async(l=0,t=10,n=\"\",c=null)=>{const u={skip:l==-0?0:l,take:t==-1?9999:t,role_id:n,first_name:c??\"\"};await z.fetchData",
+   "[CAv3hkAC.js] import{m as t,p as e}from\"./C3meC_C7.js\";const s=\"https://api-sp2kp.kemendag.go.id/master/api\",r=t(\"kab_kota\",{actions:{async fetchData(a){return await e.get(`${s}/wilayah/kab-kota/${a}`)}}});export{r as u}; ",
+   "[BhtvuuDo.js] =s([]),P=s([{id:!0,name:\"Aktif\"},{id:!1,name:\"Non-Aktif\"}]);C(async()=>{await W(\"Master Bobot\",\"is_create\")}),M(()=>{T(),A()});const T=()=>{B.getAllProv().then(n=>{const e=n.data;for(const i of e.data)V.value.push({id:i.kode_provinsi,nama:i.nama_provinsi});V.value.sort((i,u)=>i.nama.localeCompare(u.nama))}).catch(n=>{console.log(n)})},A=async()=>{try{const n=await j.fetchData({take:999,is_active:!0});for(const e of n.data.data)h.value.push({id:e.id,",
+   "[DJOrJzKq.js] {id:!1,name:\"Non-Aktif\"}]);H(async()=>{await G(\"Master Bobot\",\"is_update\")}),I(async()=>{await D(),await A(),await N()});const D=async()=>{try{const e=(await P.getAllProv()).data;for(const i of e.data)w.value.push({id:i.kode_provinsi,nama:i.nama_provinsi});w.value.sort((i,b)=>i.nama.localeCompare(b.nama))}catch(l){console.log(l)}},A=async()=>{try{const l=await T.fetchData({take:999,is_active:!0});for(const e of l.data.data)y.value.push({id:e.id,nama",
+   "[BHMclrGX.js] n\"-\";const t=new Date(e);return isNaN(t.getTime())?\"-\":t.toLocaleDateString(\"id-ID\",{day:\"2-digit\",month:\"2-digit\",year:\"numeric\"})},E=()=>{M.getAllProv().then(e=>{const t=e.data;for(const i of t.data)g.value.push({id:i.kode_provinsi,nama:i.nama_provinsi});g.value.sort((i,o)=>i.nama.localeCompare(o.nama))}).catch(e=>{console.log(e)})},O=async()=>{try{const e=await U.fetchData({take:999,is_active:!0});for(const t of e.data.data)A.value.push({id:t.id,",
+   "[CnyXDT-V.js] st a=e.data.data;for(const n of a){const i={id:n.id,nama:n.deskripsi_singkat};W.value.push(i)}}).catch(e=>{console.log(e)})},ra=async()=>{await K.getAllProv().then(e=>{const a=e.data.data;for(const n of a){const i={id:n.kode_provinsi,name:n.nama_provinsi};$.value.push(i)}}).catch(e=>{console.log(e)})},ma=async()=>{await K.getKotaByProv(c.value).then(e=>{const a=e.data.data;g.value=[],h.value=[],p.value=[],v.value=null,m.value=null;for(const n of a){",
+   "[CnyXDT-V.js] rovinsi};$.value.push(i)}}).catch(e=>{console.log(e)})},ma=async()=>{await K.getKotaByProv(c.value).then(e=>{const a=e.data.data;g.value=[],h.value=[],p.value=[],v.value=null,m.value=null;for(const n of a){const i={id:n.kode_kab_kota,name:n.nama_kab_kota};g.value.push(i)}}).catch(e=>{console.log(e)})},ca=async()=>{await K.getKecByProvKota(c.value,r.value).then(e=>{const a=e.data.data;h.value=[],p.value=[],m.value=null;for(const n of a){const i=",
+   "[CnyXDT-V.js] ).catch(e=>{console.log(e)})},ma=async()=>{await K.getKotaByProv(c.value).then(e=>{const a=e.data.data;g.value=[],h.value=[],p.value=[],v.value=null,m.value=null;for(const n of a){const i={id:n.kode_kab_kota,name:n.nama_kab_kota};g.value.push(i)}}).catch(e=>{console.log(e)})},ca=async()=>{await K.getKecByProvKota(c.value,r.value).then(e=>{const a=e.data.data;h.value=[],p.value=[],m.value=null;for(const n of a){const i={id:n.kode_kecamatan,name:",
+   "[CDFj3UgJ.js] ue=l[0].name,C()}}),ka(),pa(),_a(),ba()});const ra=l=>{const{lat:a,lng:n}=l.latlng;b.value=a,_.value=n},ca=l=>{const{lat:a,lng:n}=l.latlng;b.value=a,_.value=n},va=async()=>{await $.detail(F).then(l=>{m.value=l.data.data.kode_provinsi!=\"\"?l.data.data.kode_provinsi:null,r.value=l.data.data.kode_kab_kota!=\"\"?l.data.data.kode_kab_kota:null,c.value=l.data.data.kode_kecamatan!=\"\"?l.data.data.kode_kecamatan:null,v.value=l.data.data.kode_kelurahan!=\"\"?l.dat",
+   "[CDFj3UgJ.js] g:n}=l.latlng;b.value=a,_.value=n},ca=l=>{const{lat:a,lng:n}=l.latlng;b.value=a,_.value=n},va=async()=>{await $.detail(F).then(l=>{m.value=l.data.data.kode_provinsi!=\"\"?l.data.data.kode_provinsi:null,r.value=l.data.data.kode_kab_kota!=\"\"?l.data.data.kode_kab_kota:null,c.value=l.data.data.kode_kecamatan!=\"\"?l.data.data.kode_kecamatan:null,v.value=l.data.data.kode_kelurahan!=\"\"?l.data.data.kode_kelurahan:null,K.value=l.data.data.alamat,Q.value=l.",
+   "[CDFj3UgJ.js] provinsi};I.value.push(i)}}).catch(l=>{console.log(l)})},Y=async()=>{await M.getKotaByProv(m.value).then(l=>{const a=l.data.data;g.value=[],h.value=[],p.value=[];for(const n of a){const i={id:n.kode_kab_kota,name:n.nama_kab_kota};g.value.push(i)}}).catch(l=>{console.log(l)})},Z=async()=>{await M.getKecByProvKota(m.value,r.value).then(l=>{const a=l.data.data;h.value=[],p.value=[];for(const n of a){const i={id:n.kode_kecamatan,name:n.nama_kecamat",
+   "[Mk5SdEtX.js] s data ini\",\"\",\"error\")}},oe=async a=>{const e={pasar_id:a};try{return(await X.dataByUser(e)).data.totalCount}catch(n){console.log(n)}},re=()=>{G.getAllProv().then(a=>{const e=a.data;for(const n of e.data){const s={id:n.kode_provinsi,nama:n.nama_provinsi};z.value.push(s)}}).catch(a=>{console.log(a)})},O=()=>{f.value!=null&&G.getKotaByProv(f.value).then(a=>{const e=a.data;for(const n of e.data){const s={id:n.kode_kab_kota,nama:n.nama_kab_kota};E.valu",
+   "[Mk5SdEtX.js] t n of e.data){const s={id:n.kode_provinsi,nama:n.nama_provinsi};z.value.push(s)}}).catch(a=>{console.log(a)})},O=()=>{f.value!=null&&G.getKotaByProv(f.value).then(a=>{const e=a.data;for(const n of e.data){const s={id:n.kode_kab_kota,nama:n.nama_kab_kota};E.value.push(s)}}).catch(a=>{console.log(a)})},ce=()=>{const a={is_active:!0};Q.fetchData(a).then(e=>{const n=e.data;for(const s of n.data){const l={id:s.id,nama:s.nama};F.value.push(l)}}).cat",
+   "[Mk5SdEtX.js] :n.kode_provinsi,nama:n.nama_provinsi};z.value.push(s)}}).catch(a=>{console.log(a)})},O=()=>{f.value!=null&&G.getKotaByProv(f.value).then(a=>{const e=a.data;for(const n of e.data){const s={id:n.kode_kab_kota,nama:n.nama_kab_kota};E.value.push(s)}}).catch(a=>{console.log(a)})},ce=()=>{const a={is_active:!0};Q.fetchData(a).then(e=>{const n=e.data;for(const s of n.data){const l={id:s.id,nama:s.nama};F.value.push(l)}}).catch(e=>{console.log(e)})},c",
+   "[DbGZNILS.js] b.getItem(\"status\");o&&(k.value=o??null)},_=()=>{u.value=!0,S()},H=t=>{u.value=!0;const e=(t.page-1)*t.itemsPerPage;S(e,t.itemsPerPage)},O=()=>{T.getAllProv().then(t=>{const a=t.data.data;for(const e of a){const n={id:e.kode_provinsi,name:e.nama_provinsi};j.value.push(n)}})},W=()=>{U.value=[],p.value!==null&&T.getKotaByProv(p.value).then(t=>{const a=t.data.data;for(const e of a){const n={id:e.kode_kab_kota,name:e.nama_kab_kota};U.value.push(n)}})},K",
+   "[DbGZNILS.js] t.data.data;for(const e of a){const n={id:e.kode_provinsi,name:e.nama_provinsi};j.value.push(n)}})},W=()=>{U.value=[],p.value!==null&&T.getKotaByProv(p.value).then(t=>{const a=t.data.data;for(const e of a){const n={id:e.kode_kab_kota,name:e.nama_kab_kota};U.value.push(n)}})},K=async()=>{I.value=[];const t={kode_provinsi:p.value??\"\",kode_kab_kota:v.value??\"\",take:9999};await R.dataByUser(t).then(a=>{const e=a.data.data;for(const n of e){const o=",
+   "[DbGZNILS.js]  a){const n={id:e.kode_provinsi,name:e.nama_provinsi};j.value.push(n)}})},W=()=>{U.value=[],p.value!==null&&T.getKotaByProv(p.value).then(t=>{const a=t.data.data;for(const e of a){const n={id:e.kode_kab_kota,name:e.nama_kab_kota};U.value.push(n)}})},K=async()=>{I.value=[];const t={kode_provinsi:p.value??\"\",kode_kab_kota:v.value??\"\",take:9999};await R.dataByUser(t).then(a=>{const e=a.data.data;for(const n of e){const o={id:n.id,name:n.nama};I.va",
+   "[B65EbJ43.js] st a=e.data.data;for(const l of a){const i={id:l.id,nama:l.deskripsi_singkat};W.value.push(i)}}).catch(e=>{console.log(e)})},oa=async()=>{await w.getAllProv().then(e=>{const a=e.data.data;for(const l of a){const i={id:l.kode_provinsi,name:l.nama_provinsi};N.value.push(i)}}).catch(e=>{console.log(e)})},sa=async()=>{await w.getKotaByProv(u.value).then(e=>{const a=e.data.data;h.value=[],b.value=[],m.value=[],_.value=null,v.value=null;for(const l of a){",
+   "[B65EbJ43.js] rovinsi};N.value.push(i)}}).catch(e=>{console.log(e)})},sa=async()=>{await w.getKotaByProv(u.value).then(e=>{const a=e.data.data;h.value=[],b.value=[],m.value=[],_.value=null,v.value=null;for(const l of a){const i={id:l.kode_kab_kota,name:l.nama_kab_kota};h.value.push(i)}}).catch(e=>{console.log(e)})},na=async()=>{await w.getKecByProvKota(u.value,r.value).then(e=>{const a=e.data.data;b.value=[],m.value=[],v.value=null;for(const l of a){const i=",
+   "[B65EbJ43.js] ).catch(e=>{console.log(e)})},sa=async()=>{await w.getKotaByProv(u.value).then(e=>{const a=e.data.data;h.value=[],b.value=[],m.value=[],_.value=null,v.value=null;for(const l of a){const i={id:l.kode_kab_kota,name:l.nama_kab_kota};h.value.push(i)}}).catch(e=>{console.log(e)})},na=async()=>{await w.getKecByProvKota(u.value,r.value).then(e=>{const a=e.data.data;b.value=[],m.value=[],v.value=null;for(const l of a){const i={id:l.kode_kecamatan,name:",
+   "[1Ey5YvLu.js] ue=t[0].name,B()}}),fa(),ma(),va(),pa()});const da=t=>{const{lat:a,lng:e}=t.latlng;v.value=a,m.value=e},ca=t=>{const{lat:a,lng:e}=t.latlng;v.value=a,m.value=e},ra=async()=>{await q.detail(E).then(t=>{u.value=t.data.data.kode_provinsi,d.value=t.data.data.kode_kab_kota,ua.value=t.data.data.kode_kab_kota,H.value=t.data.data.kode,C.value=t.data.data.nama,y.value=t.data.data.is_active,w.value=t.data.data.is_nasional,K.value=t.data.data.is_ihk2019,I.value",
+   "[1Ey5YvLu.js] ,pa()});const da=t=>{const{lat:a,lng:e}=t.latlng;v.value=a,m.value=e},ca=t=>{const{lat:a,lng:e}=t.latlng;v.value=a,m.value=e},ra=async()=>{await q.detail(E).then(t=>{u.value=t.data.data.kode_provinsi,d.value=t.data.data.kode_kab_kota,ua.value=t.data.data.kode_kab_kota,H.value=t.data.data.kode,C.value=t.data.data.nama,y.value=t.data.data.is_active,w.value=t.data.data.is_nasional,K.value=t.data.data.is_ihk2019,I.value=t.data.data.tipe_komoditas_i",
+   "[1Ey5YvLu.js] provinsi};N.value.push(i)}}).catch(t=>{console.log(t)})},J=async()=>{await P.getKotaByProv(u.value).then(t=>{const a=t.data.data;h.value=[],b.value=[],p.value=[];for(const e of a){const i={id:e.kode_kab_kota,name:e.nama_kab_kota};h.value.push(i)}}).catch(t=>{console.log(t)})},O=async()=>{await P.getKecByProvKota(u.value,d.value).then(t=>{const a=t.data.data;b.value=[],p.value=[];for(const e of a){const i={id:e.kode_kecamatan,name:e.nama_kecamat"
+  ]
+ },
+ "sp2kp_coba": [
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.9,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/order-komoditas",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.2,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/waktu-server",
+   "status": 200,
+   "jenis": "application/json",
+   "byte": 107,
+   "detik": 1.7,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"status\":\"success\",\"message\":\"Success retrieving record\",\"data\":{\"time\":\"2026-10-10T09:29:08.518146074Z\"}}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "status",
+    "message",
+    "data"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/public/api",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.7,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/report/api",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.7,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/provinsi",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.7,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/kab-kota",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.7,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/kabkota",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.7,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/komoditas",
+   "status": 200,
+   "jenis": "application/json",
+   "byte": 100753,
+   "detik": 2.0,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"id\":2,\"created_at\":\"2024-01-17T03:15:49.861382Z\",\"updated_at\":\"2024-01-17T03:15:49.861382Z\",\"kode\":\"112\",\"kode_old\":\"12\",\"nama\":\"Gula\",\"deskripsi\":\"\",\"sequence\":0,\"order\":0,\"order_komoditas\":0,\"tipe_komoditas_id\":1,\"tipe_komoditas\":{\"id\":1,\"created_at\":\"2023-08-31T09:37:17.735065Z\",\"updated_at\":\"2023-11-15T07:53:20.013117Z\",\"nama\":\"Barang Kebutuhan Pokok\",\"is_active\":true,\"tipe_pasar\":n",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "data",
+    "totalCount",
+    "summary",
+    "meta"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/variant",
+   "status": 200,
+   "jenis": "application/json",
+   "byte": 26045,
+   "detik": 1.2,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"id\":8,\"created_at\":\"2024-01-17T10:07:59.452189Z\",\"updated_at\":\"2024-01-17T10:07:59.452189Z\",\"tipe_komoditas_id\":1,\"tipe_komoditas\":{\"id\":1,\"created_at\":\"2023-08-31T09:37:17.735065Z\",\"updated_at\":\"2023-11-15T07:53:20.013117Z\",\"nama\":\"Barang Kebutuhan Pokok\",\"is_active\":true,\"tipe_pasar\":null},\"kode\":\"133001\",\"kode_old\":\"\",\"komoditas_id\":23,\"komoditas\":{\"id\":23,\"created_at\":\"2024-01-17T03",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "data",
+    "totalCount",
+    "summary",
+    "meta"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/master/api/pasar",
+   "status": 200,
+   "jenis": "application/json",
+   "byte": 3678,
+   "detik": 1.8,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"id\":7,\"created_at\":\"2024-01-17T05:44:57.271088Z\",\"updated_at\":\"2024-01-17T05:44:57.271088Z\",\"kode\":1671001,\"nama\":\"Pasar Km 5\",\"kode_provinsi\":\"16\",\"kode_kab_kota\":\"1671\",\"kode_kecamatan\":\"\",\"kode_kelurahan\":\"\",\"tipe_pasar_id\":8,\"lat\":-2.9534650470081716,\"lon\":104.7349765828221,\"is_active\":true,\"is_nasional\":true,\"is_ihk2019\":true,\"is_ihk2024\":true,\"status\":\"\",\"ods\":0},{\"id\":8,\"created_",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "data",
+    "totalCount",
+    "summary",
+    "meta"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.2,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price/public",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.0,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price/generate-perbandingan-harga",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.5,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  },
+  {
+   "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price/export-area-daily-json",
+   "status": 401,
+   "jenis": "application/json",
+   "byte": 73,
+   "detik": 1.0,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+   "cors": {
+    "Access-Control-Allow-Origin": "*"
+   },
+   "galat": "HTTP 401",
+   "catatan": "API SP2KP",
+   "json": true,
+   "kunci": [
+    "code",
+    "message",
+    "status"
+   ]
+  }
+ ],
+ "tableau": [],
+ "bapanas": {
+  "kunci_ditemukan": true,
+  "jalur_front": [
+   "/front/grafik-total-het-hap",
+   "/front/grafik-total-het-hap-month",
+   "/front/grafik-total-het-hap-month-keterangan",
+   "/front/harga-pangan-bulanan-v2",
+   "/front/harga-pangan-informasi",
+   "/front/harga-pangan-table",
+   "/front/harga-pangan-table-province",
+   "/front/harga-pangan-table-province/export",
+   "/front/harga-pangan-table-v2",
+   "/front/harga-pangan-table/export",
+   "/front/harga-peta-provinsi",
+   "/front/international/harga-pangan-bulanan-v2",
+   "/front/komoditas",
+   "/front/survey/answer/check",
+   "/front/survey/answer/store",
+   "/front/table-rekapitulasi",
+   "/front/table-rekapitulasi-komoditas",
+   "/front/table-rekapitulasi-komoditas/export",
+   "/front/table-rekapitulasi/export",
+   "/front/table-total-het-hap",
+   "/front/table-total-het-hap-month",
+   "/front/table-total-het-hap-month/export",
+   "/front/table-total-het-hap/export"
+  ],
+  "tcp": {
+   "host": "api-panelhargav2.badanpangan.go.id",
+   "ip": [
+    "103.18.117.165"
+   ],
+   "tcp": "gagal setelah 10.0 detik: TimeoutError"
+  },
+  "coba": [
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/komoditas?level_harga_id=3",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 60.4,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Bapanas v2 (batas waktu 60 detik)",
+    "json": false
+   },
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/harga-pangan-informasi?province_id=17&city_id=&level_harga_id=3",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 60.3,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Bapanas v2 (batas waktu 60 detik)",
+    "json": false
+   },
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/harga-pangan-table-province?province_id=17&level_harga_id=3&period_date=2026-10-09%20-%202026-10-09",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 60.3,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Bapanas v2 (batas waktu 60 detik)",
+    "json": false
+   }
+  ],
+  "data_terbuka": [
+   {
+    "url": "https://data.badanpangan.go.id/datasetpublications",
+    "status": 200,
+    "jenis": "text/html; charset=utf-8",
+    "byte": 87704,
+    "detik": 1.9,
+    "wilayah_disebut": [],
+    "cuplikan": "<!DOCTYPE html> <html lang=\"id\" dir=\"ltr\"> <head> <meta charset=\"utf-8\" /> <link href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"apple-touch-icon\" sizes=\"76x76\"> <link type=\"image/png\" href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"icon\"> <meta http-equiv=\"X-UA-Compatible\" con",
+    "catatan": "Data terbuka Bapanas",
+    "json": false,
+    "tautan": [],
+    "unduhan": []
+   },
+   {
+    "url": "https://data.badanpangan.go.id/dataset",
+    "status": 200,
+    "jenis": "text/html; charset=utf-8",
+    "byte": 17444,
+    "detik": 1.4,
+    "wilayah_disebut": [],
+    "cuplikan": "<!DOCTYPE html> <html lang=\"id\" dir=\"ltr\"> <head> <meta charset=\"utf-8\" /> <link href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"apple-touch-icon\" sizes=\"76x76\"> <link type=\"image/png\" href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"icon\"> <meta http-equiv=\"X-UA-Compatible\" con",
+    "catatan": "Data terbuka Bapanas",
+    "json": false,
+    "tautan": [],
+    "unduhan": []
+   },
+   {
+    "url": "https://data.badanpangan.go.id/api/3/action/package_search?q=harga&rows=50",
+    "status": 404,
+    "jenis": "application/json",
+    "byte": 78,
+    "detik": 1.3,
+    "wilayah_disebut": [],
+    "cuplikan": "{ \"message\": \"The route api/3/action/package_search could not be found.\" }",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "galat": "HTTP 404",
+    "catatan": "Data terbuka Bapanas",
+    "json": true,
+    "kunci": [
+     "message"
+    ]
+   }
+  ]
+ },
+ "ckan": [
+  {
+   "url": "https://satudata.bengkuluprov.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 0,
+   "jenis": "",
+   "byte": 0,
+   "detik": 0.1,
+   "wilayah_disebut": [],
+   "cuplikan": "",
+   "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
+   "catatan": "CKAN daerah",
+   "json": false
+  },
+  {
+   "url": "https://data.bengkuluprov.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 200,
+   "jenis": "application/json;charset=utf-8",
+   "byte": 18858,
+   "detik": 1.1,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"help\": \"https://data.bengkuluprov.go.id/api/3/action/help_show?name=package_search\", \"success\": true, \"result\": {\"count\": 4, \"facets\": {}, \"results\": [{\"accessRights\": \"terbuka\", \"accrualPeriodicity",
+   "catatan": "CKAN daerah",
+   "json": true,
+   "kunci": [
+    "help",
+    "success",
+    "result"
+   ],
+   "dataset": [
+    {
+     "nama": "NILAI TUKAR PETANI (NTP) TANAMAN PANGAN TAHUN 2025",
+     "sumber": [
+      "https://data.bengkuluprov.go.id/dataset/07f6098d-35e4-4981-aac0-7e7fed498913/resource/a89aa2ac-d665-421b-baa0-e9c7396fd34e/download/nilai-tukar-petani-tanaman-pangan-tahun-2025.xlsx"
+     ]
+    },
+    {
+     "nama": "Data Nilai Produksi Perikanan Tangkap Provinsi Bengkulu Tahun 2025",
+     "sumber": [
+      "https://data.bengkuluprov.go.id/dataset/b93d731f-00aa-4eef-b542-e58267f1988f/resource/1eb06df4-8a2d-41c7-abc8-4bc4f849d698/download/data-nilai-produksi-perikanan-tangkap-provinsi-bengkulu-2025.xlsx"
+     ]
+    },
+    {
+     "nama": "PRODUKSI DAN PENJUALAN BATUBARA DI PROVINSI BENGKULU TAHUN 2022",
+     "sumber": [
+      "https://data.bengkuluprov.go.id/dataset/a8f04110-dbbe-4ffc-8877-28f951c2d24a/resource/0c3bc5d0-2b2c-44fa-a199-1d097aefdced/download/produksi-dan-penjualan-batubara-di-provinsi-bengkulu-tahun-2022.xlsx"
+     ]
+    },
+    {
+     "nama": "PRODUKSI DAN PENJUALAN BATUBARA DI PROVINSI BENGKULU TAHUN 2021",
+     "sumber": [
+      "https://data.bengkuluprov.go.id/dataset/c7635ba3-94bb-45ec-85fe-71d3b66ad3ef/resource/fd91b5a1-7e0b-4454-a1be-6c28b47155f2/download/produksi-dan-penjualan-batubara-di-provinsi-bengkulu-tahun-2021.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "url": "https://opendata.bengkuluprov.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 0,
+   "jenis": "",
+   "byte": 0,
+   "detik": 0.2,
+   "wilayah_disebut": [],
+   "cuplikan": "",
+   "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
+   "catatan": "CKAN daerah",
+   "json": false
+  },
+  {
+   "url": "https://data.bengkulutengahkab.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 0,
+   "jenis": "",
+   "byte": 0,
+   "detik": 0.4,
+   "wilayah_disebut": [],
+   "cuplikan": "",
+   "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
+   "catatan": "CKAN daerah",
+   "json": false
+  },
+  {
+   "url": "https://satudata.bengkulutengahkab.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 2908,
+   "detik": 1.2,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>404 Page not found</title> <!-- Google Font: Source Sans Pro ",
+   "catatan": "CKAN daerah",
+   "json": false
+  },
+  {
+   "url": "https://opendata.bengkulutengahkab.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 2908,
+   "detik": 1.1,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>404 Page not found</title> <!-- Google Font: Source Sans Pro ",
+   "catatan": "CKAN daerah",
+   "json": false
+  },
+  {
+   "url": "https://satudata.kepahiangkab.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 0,
+   "jenis": "",
+   "byte": 0,
+   "detik": 0.1,
+   "wilayah_disebut": [],
+   "cuplikan": "",
+   "galat": "URLError: <urlopen error [Errno -5] No address associated with hostname>",
+   "catatan": "CKAN daerah",
+   "json": false
+  },
+  {
+   "url": "https://data.kepahiangkab.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 200,
+   "jenis": "application/json;charset=utf-8",
+   "byte": 223,
+   "detik": 1.0,
+   "wilayah_disebut": [
+    "kepahiang"
+   ],
+   "cuplikan": "{\"help\": \"https://data.kepahiangkab.go.id/api/3/action/help_show?name=package_search\", \"success\": true, \"result\": {\"count\": 0, \"facets\": {}, \"results\": [], \"sort\": \"score desc, metadata_modified desc\"",
+   "catatan": "CKAN daerah",
+   "json": true,
+   "kunci": [
+    "help",
+    "success",
+    "result"
+   ],
+   "dataset": []
+  },
+  {
+   "url": "https://opendata.bengkulukota.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 0,
+   "jenis": "",
+   "byte": 0,
+   "detik": 0.1,
+   "wilayah_disebut": [],
+   "cuplikan": "",
+   "galat": "URLError: <urlopen error [Errno -5] No address associated with hostname>",
+   "catatan": "CKAN daerah",
+   "json": false
+  },
+  {
+   "url": "https://satudata.bengkulukota.go.id/api/3/action/package_search?q=harga&rows=30",
+   "status": 0,
+   "jenis": "",
+   "byte": 0,
+   "detik": 0.0,
+   "wilayah_disebut": [],
+   "cuplikan": "",
+   "galat": "URLError: <urlopen error [Errno -5] No address associated with hostname>",
+   "catatan": "CKAN daerah",
+   "json": false
+  }
+ ],
+ "bps": {
+  "status": "kunci BPS_API_KEY belum ada di GitHub Secrets"
+ },
+ "pihps": [
+  {
+   "url": "https://www.bi.go.id/hargapangan/WebSite/TabelHarga/GetGridDataDaerah?price_type_id=1&comcat_id=&province_id=7&regency_id=&market_id=&tipe_laporan=1&start_date=2019-10-01&end_date=2019-10-10",
+   "status": 200,
+   "jenis": "application/json; charset=utf-8",
+   "byte": 6996,
+   "detik": 1.0,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"01/10/2019\":\"12,000\",\"02/10/2019\":\"12,000\",\"03/10/2019\":\"12,000\",\"04/10/2019\":\"12,000\",\"07/10/2019\":\"12,000\",\"08/10/2019\":\"12,000\",\"09/10/2019\":\"12,000\",\"1",
+   "catatan": "PIHPS jenis pasar 1 2019-10-01..2019-10-10",
+   "json": true,
+   "kunci": [
+    "data"
+   ],
+   "varian": 21,
+   "terisi": 168,
+   "nama": [
+    "Beras Kualitas Bawah I",
+    "Beras Kualitas Bawah II",
+    "Beras Kualitas Medium I",
+    "Beras Kualitas Medium II",
+    "Beras Kualitas Super I",
+    "Beras Kualitas Super II",
+    "Daging Ayam Ras Segar",
+    "Daging Sapi Kualitas 1",
+    "Daging Sapi Kualitas 2",
+    "Telur Ayam Ras Segar",
+    "Bawang Merah Ukuran Sedang",
+    "Bawang Putih Ukuran Sedang",
+    "Cabai Merah Besar",
+    "Cabai Merah Keriting ",
+    "Cabai Rawit Hijau",
+    "Cabai Rawit Merah",
+    "Minyak Goreng Curah",
+    "Minyak Goreng Kemasan Bermerk 1",
+    "Minyak Goreng Kemasan Bermerk 2",
+    "Gula Pasir Kualitas Premium",
+    "Gula Pasir Lokal"
+   ]
+  },
+  {
+   "url": "https://www.bi.go.id/hargapangan/WebSite/TabelHarga/GetGridDataDaerah?price_type_id=1&comcat_id=&province_id=7&regency_id=&market_id=&tipe_laporan=1&start_date=2020-10-01&end_date=2020-10-10",
+   "status": 200,
+   "jenis": "application/json; charset=utf-8",
+   "byte": 6311,
+   "detik": 0.9,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"01/10/2020\":\"11,750\",\"02/10/2020\":\"11,750\",\"05/10/2020\":\"11,750\",\"06/10/2020\":\"11,750\",\"07/10/2020\":\"11,750\",\"08/10/2020\":\"11,750\",\"09/10/2020\":\"11,750\"},{",
+   "catatan": "PIHPS jenis pasar 1 2020-10-01..2020-10-10",
+   "json": true,
+   "kunci": [
+    "data"
+   ],
+   "varian": 21,
+   "terisi": 147,
+   "nama": [
+    "Beras Kualitas Bawah I",
+    "Beras Kualitas Bawah II",
+    "Beras Kualitas Medium I",
+    "Beras Kualitas Medium II",
+    "Beras Kualitas Super I",
+    "Beras Kualitas Super II",
+    "Daging Ayam Ras Segar",
+    "Daging Sapi Kualitas 1",
+    "Daging Sapi Kualitas 2",
+    "Telur Ayam Ras Segar",
+    "Bawang Merah Ukuran Sedang",
+    "Bawang Putih Ukuran Sedang",
+    "Cabai Merah Besar",
+    "Cabai Merah Keriting ",
+    "Cabai Rawit Hijau",
+    "Cabai Rawit Merah",
+    "Minyak Goreng Curah",
+    "Minyak Goreng Kemasan Bermerk 1",
+    "Minyak Goreng Kemasan Bermerk 2",
+    "Gula Pasir Kualitas Premium",
+    "Gula Pasir Lokal"
+   ]
+  },
+  {
+   "url": "https://www.bi.go.id/hargapangan/WebSite/TabelHarga/GetGridDataDaerah?price_type_id=1&comcat_id=&province_id=7&regency_id=&market_id=&tipe_laporan=1&start_date=2021-10-01&end_date=2021-10-10",
+   "status": 200,
+   "jenis": "application/json; charset=utf-8",
+   "byte": 5620,
+   "detik": 0.9,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"01/10/2021\":\"11,350\",\"04/10/2021\":\"11,350\",\"05/10/2021\":\"11,350\",\"06/10/2021\":\"11,350\",\"07/10/2021\":\"11,350\",\"08/10/2021\":\"11,350\"},{\"no\":1,\"name\":\"Beras K",
+   "catatan": "PIHPS jenis pasar 1 2021-10-01..2021-10-10",
+   "json": true,
+   "kunci": [
+    "data"
+   ],
+   "varian": 21,
+   "terisi": 126,
+   "nama": [
+    "Beras Kualitas Bawah I",
+    "Beras Kualitas Bawah II",
+    "Beras Kualitas Medium I",
+    "Beras Kualitas Medium II",
+    "Beras Kualitas Super I",
+    "Beras Kualitas Super II",
+    "Daging Ayam Ras Segar",
+    "Daging Sapi Kualitas 1",
+    "Daging Sapi Kualitas 2",
+    "Telur Ayam Ras Segar",
+    "Bawang Merah Ukuran Sedang",
+    "Bawang Putih Ukuran Sedang",
+    "Cabai Merah Besar",
+    "Cabai Merah Keriting ",
+    "Cabai Rawit Hijau",
+    "Cabai Rawit Merah",
+    "Minyak Goreng Curah",
+    "Minyak Goreng Kemasan Bermerk 1",
+    "Minyak Goreng Kemasan Bermerk 2",
+    "Gula Pasir Kualitas Premium",
+    "Gula Pasir Lokal"
+   ]
+  },
+  {
+   "url": "https://www.bi.go.id/hargapangan/WebSite/TabelHarga/GetGridDataDaerah?price_type_id=2&comcat_id=&province_id=7&regency_id=&market_id=&tipe_laporan=1&start_date=2026-10-03&end_date=2026-10-10",
+   "status": 200,
+   "jenis": "application/json; charset=utf-8",
+   "byte": 4630,
+   "detik": 1.0,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"05/10/2026\":\"-\",\"06/10/2026\":\"16,000\",\"07/10/2026\":\"16,000\",\"08/10/2026\":\"16,000\",\"09/10/2026\":\"16,000\"},{\"no\":1,\"name\":\"Beras Kualitas Bawah I\",\"level\":2,",
+   "catatan": "PIHPS jenis pasar 2 2026-10-03..2026-10-10",
+   "json": true,
+   "kunci": [
+    "data"
+   ],
+   "varian": 20,
+   "terisi": 80,
+   "nama": [
+    "Beras Kualitas Bawah I",
+    "Beras Kualitas Bawah II",
+    "Beras Kualitas Medium I",
+    "Beras Kualitas Medium II",
+    "Beras Kualitas Super I",
+    "Beras Kualitas Super II",
+    "Daging Ayam Ras Segar",
+    "Daging Sapi Kualitas 1",
+    "Daging Sapi Kualitas 2",
+    "Telur Ayam Ras Segar",
+    "Bawang Merah Ukuran Sedang",
+    "Bawang Putih Ukuran Sedang",
+    "Cabai Merah Besar",
+    "Cabai Merah Keriting ",
+    "Cabai Rawit Hijau",
+    "Cabai Rawit Merah",
+    "Minyak Goreng Kemasan Bermerk 1",
+    "Minyak Goreng Kemasan Bermerk 2",
+    "Gula Pasir Kualitas Premium",
+    "Gula Pasir Lokal"
+   ]
+  },
+  {
+   "url": "https://www.bi.go.id/hargapangan/WebSite/TabelHarga/GetGridDataDaerah?price_type_id=3&comcat_id=&province_id=7&regency_id=&market_id=&tipe_laporan=1&start_date=2026-10-03&end_date=2026-10-10",
+   "status": 200,
+   "jenis": "application/json; charset=utf-8",
+   "byte": 4775,
+   "detik": 1.0,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"05/10/2026\":\"15,200\",\"06/10/2026\":\"15,200\",\"07/10/2026\":\"15,200\",\"08/10/2026\":\"15,200\",\"09/10/2026\":\"15,200\"},{\"no\":1,\"name\":\"Beras Kualitas Bawah I\",\"leve",
+   "catatan": "PIHPS jenis pasar 3 2026-10-03..2026-10-10",
+   "json": true,
+   "kunci": [
+    "data"
+   ],
+   "varian": 20,
+   "terisi": 100,
+   "nama": [
+    "Beras Kualitas Bawah I",
+    "Beras Kualitas Bawah II",
+    "Beras Kualitas Medium I",
+    "Beras Kualitas Medium II",
+    "Beras Kualitas Super I",
+    "Beras Kualitas Super II",
+    "Daging Ayam Ras Segar",
+    "Daging Sapi Kualitas 1",
+    "Daging Sapi Kualitas 2",
+    "Telur Ayam Ras Segar",
+    "Bawang Merah Ukuran Sedang",
+    "Bawang Putih Ukuran Sedang",
+    "Cabai Merah Besar",
+    "Cabai Merah Keriting ",
+    "Cabai Rawit Hijau",
+    "Cabai Rawit Merah",
+    "Minyak Goreng Curah",
+    "Minyak Goreng Kemasan Bermerk 1",
+    "Minyak Goreng Kemasan Bermerk 2",
+    "Gula Pasir Lokal"
+   ]
+  },
+  {
+   "url": "https://www.bi.go.id/hargapangan/WebSite/TabelHarga/GetGridDataDaerah?price_type_id=4&comcat_id=&province_id=7&regency_id=&market_id=&tipe_laporan=1&start_date=2026-10-03&end_date=2026-10-10",
+   "status": 200,
+   "jenis": "application/json; charset=utf-8",
+   "byte": 2853,
+   "detik": 1.0,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"05/10/2026\":\"15,150\",\"06/10/2026\":\"15,150\",\"07/10/2026\":\"15,150\",\"08/10/2026\":\"15,150\",\"09/10/2026\":\"15,150\"},{\"no\":1,\"name\":\"Beras Kualitas Bawah II\",\"lev",
+   "catatan": "PIHPS jenis pasar 4 2026-10-03..2026-10-10",
+   "json": true,
+   "kunci": [
+    "data"
+   ],
+   "varian": 12,
+   "terisi": 60,
+   "nama": [
+    "Beras Kualitas Bawah II",
+    "Beras Kualitas Medium I",
+    "Beras Kualitas Medium II",
+    "Beras Kualitas Super II",
+    "Daging Ayam Ras Segar",
+    "Daging Sapi Kualitas 1",
+    "Daging Sapi Kualitas 2",
+    "Telur Ayam Ras Segar",
+    "Cabai Merah Besar",
+    "Cabai Merah Keriting ",
+    "Cabai Rawit Hijau",
+    "Cabai Rawit Merah"
+   ]
+  }
+ ],
+ "lain": [
+  {
+   "url": "https://archive-api.open-meteo.com/v1/archive?latitude=-3.73&longitude=102.43&start_date=2021-10-01&end_date=2021-10-03&daily=precipitation_sum,temperature_2m_mean&timezone=Asia%2FJakarta",
+   "status": 200,
+   "jenis": "application/json; charset=utf-8",
+   "byte": 407,
+   "detik": 0.4,
+   "wilayah_disebut": [],
+   "cuplikan": "{\"latitude\":-3.7609842,\"longitude\":102.42892,\"generationtime_ms\":0.2225637435913086,\"utc_offset_seconds\":25200,\"timezone\":\"Asia/Jakarta\",\"timezone_abbreviation\":\"GMT+7\",\"elevation\":46.0,\"daily_units\":{\"time\":\"iso8601\",\"precipitation_sum\":\"mm\",\"temperature_2m_mean\":\"°C\"},\"daily\":{\"time\":[\"2021-10-01\"",
+   "catatan": "Open-Meteo arsip 2021",
+   "json": true,
+   "kunci": [
+    "latitude",
+    "longitude",
+    "generationtime_ms",
+    "utc_offset_seconds",
+    "timezone",
+    "timezone_abbreviation",
+    "elevation",
+    "daily_units",
+    "daily"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 150568,
+   "detik": 4.9,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=",
+   "catatan": "SISP Kemendag",
+   "json": false,
+   "tautan_harga": []
+  },
+  {
+   "url": "https://bengkulutengahkab.bps.go.id/id/statistics-table?subject=525",
+   "status": 403,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 5781,
+   "detik": 0.1,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal",
+   "galat": "HTTP 403",
+   "catatan": "BPS Bengkulu Tengah tabel harga",
+   "json": false
+  },
+  {
+   "url": "https://bengkulutengahkab.bps.go.id/",
+   "status": 403,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 5631,
+   "detik": 0.0,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal",
+   "galat": "HTTP 403",
+   "catatan": "BPS Bengkulu Tengah",
+   "json": false
+  },
+  {
+   "url": "https://kepahiangkab.bps.go.id/",
+   "status": 403,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 5604,
+   "detik": 0.1,
+   "wilayah_disebut": [
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal",
+   "galat": "HTTP 403",
+   "catatan": "BPS Kepahiang",
+   "json": false
+  },
+  {
+   "url": "https://bengkulu.bps.go.id/",
+   "status": 403,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 5600,
+   "detik": 0.1,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal",
+   "galat": "HTTP 403",
+   "catatan": "BPS Provinsi Bengkulu",
+   "json": false
+  },
+  {
+   "url": "https://disperindag.bengkuluprov.go.id/",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 148825,
+   "detik": 6.1,
+   "wilayah_disebut": [
+    "kota bengkulu"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Home - DISPERINDAG</title> <!-- Fonts --> <link rel=\"preconnect\" href=\"https://fonts.bunny.net\"> <link href=\"https://fonts.bunny.net/css?family=instrument-sans:4",
+   "catatan": "Disperindag Provinsi Bengkulu",
+   "json": false,
+   "tautan_harga": []
+  },
+  {
+   "url": "https://bengkulutengahkab.go.id/",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 98373,
+   "detik": 1.7,
+   "wilayah_disebut": [
+    "bengkulu tengah",
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\"> <title>Pemerintah Kabupaten Bengkulu Tengah</title> <meta name=\"description\" content=\"Website Resmi Pemerintah Kabupaten Bengkulu Tengah\"> <meta name=\"keywords\" conte",
+   "catatan": "Pemkab Bengkulu Tengah",
+   "json": false,
+   "tautan_harga": [
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/PEMKAB-BENGKULU-TENGAH-PERKUAT-SINERGI-ANTAR-DAERAH-DALAM-PENGENDALIAN-INFLASI-DAN-PERCEPATAN-DIGITALISASI",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+    "https://www.facebook.com/sharer.php?u=hhttps://bengkulutengahkab.go.id/postingan/detail_postingan/PEMKAB-BENGKULU-TENGAH-PERKUAT-SINERGI-ANTAR-DAERAH-DALAM-PENGENDALIAN-INFLASI-DAN-PERCEPATAN-DIGITALISASI",
+    "https://www.facebook.com/sharer.php?u=hhttps://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN"
+   ]
+  },
+  {
+   "url": "https://kepahiangkab.go.id/",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 40367,
+   "detik": 1.5,
+   "wilayah_disebut": [
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Beranda — Pemerintah Kabupaten Kepahiang</title> <meta name=\"description\" content=\"Portal resmi Pemerintah Kabupaten Kepahiang, Provinsi Bengkulu.\"> <link rel=",
+   "catatan": "Pemkab Kepahiang",
+   "json": false,
+   "tautan_harga": [
+    "https://kepahiangkab.go.id/info-pangan"
+   ]
+  },
+  {
+   "url": "https://ews.kemendag.go.id/",
+   "status": 0,
+   "jenis": "",
+   "byte": 0,
+   "detik": 4.0,
+   "wilayah_disebut": [],
+   "cuplikan": "",
+   "galat": "URLError: <urlopen error [Errno 111] Connection refused>",
+   "catatan": "EWS Kemendag",
+   "json": false
+  }
+ ]
+}
