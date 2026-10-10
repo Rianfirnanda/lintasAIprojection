@@ -30,7 +30,7 @@ def _gerbang(nama: str, lolos: bool | None, nilai, target: str) -> dict:
 
 
 def _status(gerbang: list[dict], ada_data: bool) -> str:
-    if not ada_data:
+    if not ada_data or (gerbang and all(g["lolos"] is None for g in gerbang)):
         return "menunggu"
     if any(g["lolos"] is False for g in gerbang):
         return "perlu_perhatian"

@@ -187,7 +187,7 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
         ews_hasil = modul_ews.evaluasi(
             {k: (hv.seri.tanggal, hv.seri.nilai) for k, hv in hasil_varian.items()},
             {k: (ambang_kelas[hv.kelas_volatilitas] if k in analisis.KELAS_VARIAN
-                 else float(konf.pengaturan["sinyal"]["ambang_persen"][konf.varian[k].kelompok])) for k in hasil_varian},
+                 else float(konf.pengaturan["sinyal"]["ambang_persen"][konf.varian[k].kelompok])) for k, hv in hasil_varian.items()},
             {k: hv.kelas_volatilitas for k, hv in hasil_varian.items()})
         if evaluasi_label.get("sinyal_berlabel"):
             evaluasi = {**evaluasi_label, "uji_historis": ews_hasil}

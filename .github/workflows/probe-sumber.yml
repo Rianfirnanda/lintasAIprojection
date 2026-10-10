@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       jenis:
-        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2 = tahap 2"
+        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2/lanjut3 = tahap 2/3; sp2kp = riwayat harga harian SP2KP 5 tahun"
         default: "lanjut"
 
 permissions:
@@ -20,13 +20,13 @@ concurrency:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install numpy openpyxl
+      - run: pip install -r requirements.txt
       - name: Jajaki sumber
         env:
           BPS_API_KEY: ${{ secrets.BPS_API_KEY }}
@@ -36,6 +36,7 @@ jobs:
             dasar) python -m pipeline probe-sumber ;;
             lanjut2) python -m pipeline probe-lanjut --tahap 2 ;;
             lanjut3) python -m pipeline probe-lanjut --tahap 3 ;;
+            sp2kp) python -m pipeline ambil-sp2kp --riwayat-hari 1830 && python -m pipeline sp2kp-ke-harga ;;
             *) python -m pipeline probe-lanjut ;;
           esac
       - name: Simpan hasil
@@ -43,6 +44,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/sumber/
+          if [ -d data/mentah ]; then git add data/mentah data/masuk/harga; fi
+          if [ -f config/peta_varian_sp2kp.csv ]; then git add config/peta_varian_sp2kp.csv; fi
           if git diff --cached --quiet; then echo "Tidak ada perubahan."; exit 0; fi
           git commit -m "data: hasil penjajakan sumber harga kabupaten/kota"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"

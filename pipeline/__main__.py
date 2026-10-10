@@ -4,6 +4,8 @@
   python -m pipeline periksa                 # validasi berkas di data/masuk tanpa publikasi (untuk PR data)
   python -m pipeline ambil-cuaca [--hari 30] # konektor Big Data cuaca (Open-Meteo)
   python -m pipeline ambil-resmi             # konektor Big Data resmi: prakiraan BMKG dan harga PIHPS Bank Indonesia
+  python -m pipeline ambil-sp2kp [--riwayat-hari 1830]   # harga harian pasar SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)
+  python -m pipeline sp2kp-ke-harga          # salin harga SP2KP yang pemetaan variannya disetujui menjadi berkas harga
   python -m pipeline berita [--tanpa-ai]      # berita lokal: cari, baca, ambil harga, ringkas (juga jalan otomatis tiap hari)
   python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
   python -m pipeline sandi ID SANDI [--nama "Nama"] [--peran petugas]   # cetak entri akun untuk config/pengguna.json
@@ -311,6 +313,10 @@ def main(argv: list[str] | None = None) -> int:
     pl.add_argument("--tahap", type=int, default=1)
 
     sub.add_parser("pihps-ke-harga", help="salin harga PIHPS Provinsi Bengkulu menjadi berkas harga utama sementara")
+    s2 = sub.add_parser("ambil-sp2kp", help="ambil harga harian pasar SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)")
+    s2.add_argument("--hari", type=int, default=30)
+    s2.add_argument("--riwayat-hari", type=int, default=None, help="ambil riwayat sejauh sekian hari ke belakang walau data sudah ada")
+    sub.add_parser("sp2kp-ke-harga", help="salin harga SP2KP yang pemetaan variannya disetujui menjadi berkas harga")
 
     f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini, Groq, Cerebras, OpenRouter, Mistral, Claude)")
     f.add_argument("--komoditas", required=True)
@@ -452,6 +458,21 @@ def main(argv: list[str] | None = None) -> int:
         from . import pihps_harga
 
         hasil = pihps_harga.ke_harga(konf)
+        print(json.dumps(hasil, ensure_ascii=False))
+        return 1 if hasil["galat"] else 0
+    if a.perintah == "ambil-sp2kp":
+        from . import konektor_sp2kp
+
+        if a.riwayat_hari:
+            hasil = konektor_sp2kp.perbarui(konf, hari_riwayat=a.riwayat_hari, paksa_riwayat=True)
+        else:
+            hasil = konektor_sp2kp.perbarui(konf, hari=a.hari)
+        print(json.dumps(hasil, ensure_ascii=False))
+        return 1 if hasil["galat"] and not hasil["baris"] else 0
+    if a.perintah == "sp2kp-ke-harga":
+        from . import konektor_sp2kp
+
+        hasil = konektor_sp2kp.ke_harga(konf)
         print(json.dumps(hasil, ensure_ascii=False))
         return 1 if hasil["galat"] else 0
     if a.perintah == "cari-sumber":
