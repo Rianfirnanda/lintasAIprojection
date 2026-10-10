@@ -307,7 +307,8 @@ def main(argv: list[str] | None = None) -> int:
                    help="hanya PIHPS: ambil riwayat sejauh sekian hari ke belakang (mis. 1460 = 4 tahun), walau data sudah ada")
 
     sub.add_parser("probe-sumber", help="penjajakan sumber harga tingkat kabupaten/kota (jalankan di GitHub Actions)")
-    sub.add_parser("probe-lanjut", help="penjajakan lanjutan: SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun")
+    pl = sub.add_parser("probe-lanjut", help="penjajakan lanjutan: SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun")
+    pl.add_argument("--tahap", type=int, default=1)
 
     sub.add_parser("pihps-ke-harga", help="salin harga PIHPS Provinsi Bengkulu menjadi berkas harga utama sementara")
 
@@ -425,6 +426,11 @@ def main(argv: list[str] | None = None) -> int:
     if a.perintah == "probe-lanjut":
         from . import probe_lanjut
 
+        if a.tahap == 2:
+            hasil = probe_lanjut.jalankan_tahap2(konf.akar)
+            for r in hasil["sp2kp"]["coba"] + hasil["daerah"]:
+                print(f"[tahap2] {r['status']} {r['byte']}B {r['url'][:120]} {r.get('jumlah', '')}")
+            return 0
         hasil = probe_lanjut.jalankan(konf.akar)
         sp = hasil["sp2kp"]
         print(f"[sp2kp] {sp['chunk']} potongan JS, {len(sp['api'])} alamat API, {len(sp['tableau'])} tampilan Tableau")

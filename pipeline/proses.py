@@ -23,6 +23,7 @@ from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
 from . import firestore_sinkron
 from . import berita
+from . import ews as modul_ews
 from . import konektor_resmi
 from . import kebijakan as modul_kebijakan
 
@@ -147,7 +148,7 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
         seri = analisis.bentuk_seri(data, akhir=tanggal_data)
         hasil_varian[v.kode] = analisis.analisis_varian(
             seri, v.kelompok, konf.hari_raya(), konf.pengaturan,
-            model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju)
+            model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju, kode=v.kode)
         for w in konf.wilayah:
             if w != target and harian.get((w, v.kode)):
                 seri_pembanding[v.kode][w] = analisis.bentuk_seri(harian[(w, v.kode)], akhir=tanggal_data)
@@ -178,7 +179,20 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     if pakai_demo:
         evaluasi = modul_sinyal.evaluasi_terhadap_kebenaran(hasil_varian, info_demo["kebenaran"], titik)
     else:
-        evaluasi = modul_sinyal.evaluasi_deteksi(daftar_sinyal, {s["id"]: s["status"] for s in daftar_sinyal}, terlewat, titik)
+        evaluasi_label = modul_sinyal.evaluasi_deteksi(daftar_sinyal, {s["id"]: s["status"] for s in daftar_sinyal}, terlewat, titik)
+        # Peringatan dini dinilai secara objektif pada riwayat harga (lonjakan di atas ambang kelas, masa uji tidak dipakai
+        # menala). Penilaian dari tindak lanjut analis tetap disimpan dan dipakai begitu ada label.
+        ambang_kelas = {"rendah": 5.0, "sedang": 10.0, "tinggi": 15.0}
+        ews_hasil = modul_ews.evaluasi(
+            {k: (hv.seri.tanggal, hv.seri.nilai) for k, hv in hasil_varian.items()},
+            {k: (ambang_kelas[hv.kelas_volatilitas] if k in analisis.KELAS_VARIAN
+                 else float(konf.pengaturan["sinyal"]["ambang_persen"][konf.varian[k].kelompok])) for k in hasil_varian},
+            {k: hv.kelas_volatilitas for k, hv in hasil_varian.items()})
+        if evaluasi_label.get("sinyal_berlabel"):
+            evaluasi = {**evaluasi_label, "uji_historis": ews_hasil}
+        else:
+            evaluasi = {**ews_hasil, "tindak_lanjut": evaluasi_label} if ews_hasil.get("f1") is not None or ews_hasil.get("recall") is not None \
+                else {**evaluasi_label, "uji_historis": ews_hasil}
     evaluasi["titik_dievaluasi"] = titik
 
     token = os.environ.get("GITHUB_TOKEN")

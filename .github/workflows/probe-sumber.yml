@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       jenis:
-        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun"
+        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2 = tahap 2"
         default: "lanjut"
 
 permissions:
@@ -32,7 +32,11 @@ jobs:
           BPS_API_KEY: ${{ secrets.BPS_API_KEY }}
           JENIS: ${{ inputs.jenis }}
         run: |
-          if [ "$JENIS" = "dasar" ]; then python -m pipeline probe-sumber; else python -m pipeline probe-lanjut; fi
+          case "$JENIS" in
+            dasar) python -m pipeline probe-sumber ;;
+            lanjut2) python -m pipeline probe-lanjut --tahap 2 ;;
+            *) python -m pipeline probe-lanjut ;;
+          esac
       - name: Simpan hasil
         run: |
           git config user.name "github-actions[bot]"

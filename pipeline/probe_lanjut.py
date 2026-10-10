@@ -350,3 +350,68 @@ def jalankan(akar: Path, ambil_fn=ambil) -> dict:
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_lanjut.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
     return hasil
+
+
+# ---------------------------------------------------------------- tahap 2: SP2KP (token publik, pasar kabupaten) dan situs daerah
+
+BERKAS_SP2KP = ("C3meC_C7.js", "BLLlR1YG.js", "DTQo9f0H.js", "CsgGO7qo.js", "B_8U66ad.js", "CAv3hkAC.js")
+POLA_SP2KP2 = re.compile(r"interceptors|Authorization|token-harga-public|average-price-public|fetchDataPublic|generatePerbandinganHarga|"
+                         r"getKotaByProv|getAllProv|auth/api/application|application[\"'`]|guest|anonymous|x-api-key|apiKey|api_key|"
+                         r"statistik/area|tabulasi-harga|skip_sat_sun|export-area-daily", re.I)
+
+
+def tahap2_sp2kp(ambil_fn=ambil) -> dict:
+    hasil: dict = {"konteks": [], "coba": []}
+    for nama in BERKAS_SP2KP:
+        h = ambil_fn(f"{SP2KP}/_nuxt/{nama}", 40, 4_000_000)
+        if h["status"] == 200:
+            hasil["konteks"] += [f"[{nama}] {c}" for c in konteks(teks(h), POLA_SP2KP2, 700, 40)]
+        time.sleep(JEDA)
+    api = "https://api-sp2kp.kemendag.go.id"
+    for jalur in ("report/api/tableau/token-harga-public", "auth/api/application", "master/api/wilayah/provinsi",
+                  "master/api/wilayah/kab-kota/17", "master/api/pasar?kode_kab_kota=1709", "master/api/pasar?kode_kab_kota=1708",
+                  "master/api/pasar?kode_kab_kota=1771", "master/api/pasar?kode_provinsi=17&take=500", "master/api/variant?take=500",
+                  "master/api/tipe-komoditas"):
+        h = ambil_fn(f"{api}/{jalur}", 40, 1_500_000, {"Origin": SP2KP, "Referer": SP2KP + "/"})
+        r = ringkas(h, "SP2KP tahap 2", 300)
+        try:
+            d = json.loads(teks(h))
+            isi = d.get("data") if isinstance(d, dict) else d
+            if isinstance(isi, list):
+                r["jumlah"] = len(isi)
+                r["contoh"] = [{k: x.get(k) for k in ("id", "kode", "nama", "kode_provinsi", "kode_kab_kota", "nama_kab_kota", "tipe_pasar_id",
+                                                     "satuan", "komoditas_id") if k in x} for x in isi[:60] if isinstance(x, dict)]
+            elif isinstance(isi, dict):
+                r["kunci_data"] = list(isi)[:20]
+        except (ValueError, AttributeError):
+            pass
+        hasil["coba"].append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
+def tahap2_daerah(ambil_fn=ambil) -> list[dict]:
+    calon = ["https://kepahiangkab.go.id/info-pangan", "https://bengkulutengahkab.go.id/info-pangan", "https://bengkulutengahkab.go.id/harga",
+             "https://bengkulutengahkab.go.id/harga-pangan", "https://disperindag.bengkuluprov.go.id/", "https://sisp.kemendag.go.id/"]
+    hasil = []
+    for u in calon:
+        h = ambil_fn(u, 30, 2_000_000)
+        r = ringkas(h, "situs daerah tahap 2", 300)
+        if h["status"] == 200:
+            t = teks(h)
+            r["tabel"] = [re.sub(r"<[^>]+>", " ", x)[:1500] for x in re.findall(r"<table.*?</table>", t, re.S | re.I)[:3]]
+            r["tautan"] = sorted(set(re.findall(r"""(?:href|src|action)=["']([^"']+)["']""", t)))[:120]
+            r["api"] = sorted(set(re.findall(r"""["'`]((?:https?:)?//[^"'`\s]*(?:api|json|harga|pangan)[^"'`\s]*)["'`]""", t, re.I)))[:40]
+            r["konteks"] = konteks(t, re.compile(r"harga|komoditas|fetch\(|ajax|\$\.get|axios", re.I), 250, 25)
+        hasil.append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
+def jalankan_tahap2(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sp2kp": tahap2_sp2kp(ambil_fn),
+             "daerah": tahap2_daerah(ambil_fn)}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap2.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
+    return hasil
