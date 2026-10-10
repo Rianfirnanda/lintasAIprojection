@@ -113,8 +113,8 @@ harga PIHPS".
 ## 4c. Data asli sementara: PIHPS Provinsi Bengkulu
 
 Harga tingkat Kabupaten Bengkulu Tengah hanya dimiliki BPS dan petugas lapangan. Sebelum datanya masuk, sistem berjalan dalam
-**mode data asli** memakai rata-rata harga pasar tradisional **Provinsi Bengkulu** dari PIHPS Bank Indonesia. Dashboard menampilkan
-pita "Data asli sementara" supaya tidak ada yang mengira ini harga Bengkulu Tengah.
+**mode data asli** memakai rata-rata harga pasar tradisional **Provinsi Bengkulu** dari PIHPS Bank Indonesia. Pada dashboard,
+kepala tetap menyebut wilayah sasaran proyek, wilayah asal data tercantum di judul tabel, dan sumbernya di bagian Data Lineage (tanpa pita keterangan).
 
 - **Alurnya.** Konektor mengambil PIHPS (`data/masuk/konteks/harga_pihps_*.csv`), lalu `python -m pipeline pihps-ke-harga` menyalinnya menjadi
   `data/masuk/harga/pihps_provinsi_<tahun>.csv` (pasar `PHP17`). Berkas hasil salinan selalu ditulis ulang otomatis; jangan diedit tangan.
@@ -124,14 +124,17 @@ pita "Data asli sementara" supaya tidak ada yang mengira ini harga Bengkulu Teng
   Ia mengambil per 90 hari dengan jeda, menyalin ke harga utama, lalu memperbarui dashboard. Pembaruan harian biasa hanya 45 hari terakhir.
   Bila ada periode yang gagal diambil, alasannya ada di log langkah "Ambil riwayat PIHPS".
 - **Beralih ke data BPS Bengkulu Tengah.** Unggah berkas harga BPS ke `data/masuk/harga/`, ubah `wilayah_target` menjadi `1709`, hapus berkas
-  `pihps_provinsi_*.csv`, dan hapus langkah "Salin harga PIHPS" di `.github/workflows/pipeline.yml`. Pita sementara hilang sendiri.
+  `pihps_provinsi_*.csv`, dan hapus langkah "Salin harga PIHPS" di `.github/workflows/pipeline.yml`. Judul tabel dan sumber di Data Lineage ikut berganti sendiri.
 - **Yang perlu dipahami saat membaca hasilnya.** Ini harga rata-rata provinsi, bukan Bengkulu Tengah. Harga PIHPS sangat mulus (sering sama
   berhari-hari), sehingga cara paling sederhana (harga terakhir) sulit dikalahkan model lain. Target "10% lebih baik dari cara sederhana" wajar
   tidak tercapai pada data ini, dan itu bukan kesalahan model.
 
 ## 4d. Proyeksi, status Valid/Eksperimen, dan Dasbor Analitik
 
-Halaman **Dasbor Analitik** (menu Analis, TPID, dan Admin) memuat semua yang diminta rancangan: indikator di atas, pilihan varian dan
+**Dashboard Internal BPS** adalah beranda Administrator dan Analis (juga halaman `dasbor.html` di menu Analis, TPID, dan Admin). Tata letaknya mengikuti gambar
+atasan: kepala biru, enam indikator, tabel 21 varian di kiri, grafik dan diagnostik di tengah dan kanan, lalu Data Lineage dan Rekomendasi Netral; di bawahnya
+"Analisis lanjutan". Tabel kedua indikator yang tidak ada padanannya di sistem tetap jujur: skor kesepakatan sumber "Menunggu data", keyakinan berupa persen syarat uji
+yang lolos (bukan angka karangan), dan faktor pendorong bukan SHAP. Isinya memuat semua yang diminta rancangan: indikator di atas, pilihan varian dan
 horizon 7/14/30 hari, tabel 21 varian (bisa diurutkan dan diekspor ke CSV), grafik tren dan proyeksi, diagnostik deret waktu, kinerja
 model, proyeksi hari raya, proyeksi triwulanan/semesteran/tahunan, rekomendasi netral, dan jejak data. Angkanya dibaca dari
 `analitik.json`, `proyeksi_acara.json`, dan `proyeksi_periodik.json` yang dibuat tiap pipeline jalan.

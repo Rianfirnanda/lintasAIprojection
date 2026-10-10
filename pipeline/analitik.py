@@ -152,18 +152,53 @@ def perbarui_registry(akar: Path, hasil: dict) -> dict:
     return keluar
 
 
-# Alasan yang sudah dipastikan dari penjajakan sumber (data/sumber/hasil_probe.json), per kode wilayah.
-CATATAN_SUMBER = {
-    "1708": "PIHPS di Provinsi Bengkulu hanya memantau Kota Bengkulu, dan Panel Harga Bapanas tidak bisa diakses dari server GitHub.",
-    "1709": "Harga Bengkulu Tengah hanya dimiliki BPS dan petugas lapangan (unggah berkas harga).",
-}
-
-
 def keterangan_pembanding(konf, tersedia: list[str]) -> str | None:
     kurang = [(k, w) for k, w in konf.wilayah.items() if w.peran.startswith("pembanding") and k != "17" and k not in tersedia]
     if not kurang:
         return None
-    return " ".join(f"{w.nama}: belum ada harga yang masuk. {CATATAN_SUMBER.get(k, '')}".strip() for k, w in kurang)
+    nama = " dan ".join(_bersih_wilayah(w.nama) for _, w in kurang)
+    return f"Harga {nama} belum masuk ke sistem. Koordinasikan dengan petugas lapangan dan pemerintah daerah untuk melengkapinya."
+
+
+def _bersih_wilayah(nama: str) -> str:
+    return nama.replace("Kabupaten ", "").replace("Provinsi ", "")
+
+
+def wilayah_proyek(konf) -> dict:
+    """Sasaran dan pembanding proyek menurut config/wilayah.csv (untuk kepala dasbor)."""
+    sasaran = [w.nama for w in konf.wilayah.values() if w.peran == "target"]
+    pembanding = [w.nama for w in konf.wilayah.values() if w.peran in ("pembanding_produksi", "pembanding_konsumsi")]
+    return {"sasaran": _bersih_wilayah(sasaran[0]) if sasaran else "", "pembanding": [_bersih_wilayah(n) for n in pembanding]}
+
+
+def status_audit(kpi: dict) -> dict:
+    """HIJAU: tidak ada isu. KUNING: ada model Eksperimen atau data menunggu validasi. MERAH: data terlambat atau ada yang ditolak."""
+    if kpi["kesegaran"] == "terlambat" or kpi["ditolak"]:
+        return {"status": "MERAH", "alasan": "Data terlambat atau ada baris yang ditolak pemeriksaan."}
+    isu = []
+    if kpi["varian_eksperimen"]:
+        isu.append(f"{kpi['varian_eksperimen']} varian masih Eksperimen")
+    if kpi["perlu_validasi"]:
+        isu.append(f"{kpi['perlu_validasi']} data menunggu validasi")
+    return {"status": "KUNING", "alasan": ", ".join(isu)} if isu else {"status": "HIJAU", "alasan": "Tidak ada isu kritis."}
+
+
+def rekomendasi_umum(varian: list[dict], kpi: dict, keterangan_pembanding_wilayah: str | None) -> list[dict]:
+    """Tiga rekomendasi netral berbasis aturan: apa yang dipantau, seberapa layak angkanya dipakai, dan data apa yang perlu dilengkapi."""
+    berubah = [x for x in varian if x.get("perubahan_30h_persen") is not None]
+    berubah.sort(key=lambda x: abs(x["perubahan_30h_persen"]), reverse=True)
+    besar = [x for x in berubah[:3] if abs(x["perubahan_30h_persen"]) >= 1]
+    if besar:
+        isi = "Perkiraan 30 hari paling bergerak: " + "; ".join(f"{x['nama']} {x['perubahan_30h_persen']:+.1f}%".replace(".", ",") for x in besar) + ". Pantau rutin komoditas ini."
+    else:
+        isi = "Perkiraan 30 hari relatif stabil untuk semua varian. Lanjutkan pemantauan rutin."
+    eksp = kpi["varian_eksperimen"]
+    isi2 = (f"{eksp} dari {kpi['varian_berdata']} varian masih berstatus Eksperimen. Angkanya bahan pertimbangan, bukan angka resmi."
+            if eksp else "Semua varian lolos protokol validasi.")
+    isi3 = keterangan_pembanding_wilayah or "Koordinasikan dengan petugas lapangan dan pemerintah daerah untuk menjaga kelengkapan data tiap wilayah."
+    return [{"judul": "Pantau perkembangan harga", "isi": isi, "warna": "hijau"},
+            {"judul": "Gunakan sesuai status validasi", "isi": isi2, "warna": "biru"},
+            {"judul": "Lengkapi data lintas wilayah", "isi": isi3, "warna": "oranye"}]
 
 
 def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date | None, pakai_demo: bool, daftar_sinyal: list,
@@ -186,6 +221,8 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
             "model": hv.model_terpilih, "nama_model": analisis.NAMA_MODEL.get(hv.model_terpilih or "", "-"),
             "jenis_model": "challenger" if hv.model_terpilih in analisis.MODEL_CHALLENGER else "baseline" if hv.model_terpilih else None,
             "status": status, "kepercayaan": kepercayaan(hv.validasi), "validasi": hv.validasi,
+            "syarat_lolos": sum(1 for x in (hv.validasi or {}).get("syarat", []) if x["lolos"] is True),
+            "syarat_total": len((hv.validasi or {}).get("syarat", [])),
             "holdout": {k: ho.get(k) for k in ("hari", "jumlah_origin", "n", "smape", "mae", "mase", "bias_persen", "akurasi_arah", "cakupan_persen",
                                                  "smape_naif", "perbaikan_vs_naif_persen", "menang_origin_vs_naif", "uji_dm", "per_horizon", "titik_h7")} if ho else None,
             "seleksi": {k: m.get(k) for k in ("smape", "mae", "mase", "bias_persen", "n")} if m else None,
@@ -206,6 +243,8 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
     repo, run = os.environ.get("GITHUB_REPOSITORY"), os.environ.get("GITHUB_RUN_ID")
     tertinggal = (konf.hari_ini - tanggal_data).days if tanggal_data else None
     pembanding_tersedia = sorted({w for per in seri_pembanding.values() for w in per} | set(wilayah_konteks or []))
+    kode_sumber_semua = kode_sumber | {k.kode_sumber for k in hasil_masuk.konteks}
+    sumber_nama = [konf.sumber[k].nama for k in sorted(kode_sumber_semua) if k in konf.sumber]
 
     kpi = {
         "varian_berdata": len(varian), "varian_aktif": len(konf.varian_aktif),
@@ -224,7 +263,9 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
         "dibuat_untuk": tanggal_data.isoformat() if tanggal_data else None,
         "wilayah": {"kode": konf.wilayah_target, "nama": konf.wilayah[konf.wilayah_target].nama, "peran": konf.wilayah[konf.wilayah_target].peran},
         "mode_demo": pakai_demo, "horizon": list(HORIZON_TAMPIL), "tingkat_interval": konf.pengaturan["analisis"]["tingkat_interval"],
-        "kpi": kpi, "varian": varian,
+        "kpi": kpi, "varian": varian, "wilayah_proyek": wilayah_proyek(konf), "audit": status_audit(kpi),
+        "sumber_nama": sumber_nama, "model_dipakai": ringkasan_model.get("model_dipakai", {}),
+        "rekomendasi_umum": rekomendasi_umum(varian, kpi, keterangan_pembanding(konf, pembanding_tersedia)),
         "pembanding_wilayah": {"tersedia": pembanding_tersedia,
                                 "keterangan": keterangan_pembanding(konf, pembanding_tersedia)},
         "target": {"smape_perbaikan": tk["perbaikan_smape_persen"], "bias": tk["bias_absolut_maks_persen"],

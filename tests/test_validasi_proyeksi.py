@@ -268,6 +268,18 @@ def test_kepercayaan_dan_rekomendasi_netral():
     assert "belum dapat disusun" in analitik.rekomendasi_netral("X", None, SimpleNamespace(), {}, "valid")
 
 
+def test_status_audit_dan_rekomendasi_netral_umum():
+    kpi = {"kesegaran": "segar", "ditolak": 0, "varian_eksperimen": 0, "perlu_validasi": 0, "varian_berdata": 21}
+    assert analitik.status_audit(kpi)["status"] == "HIJAU"
+    assert analitik.status_audit({**kpi, "varian_eksperimen": 3, "perlu_validasi": 2})["status"] == "KUNING"
+    assert analitik.status_audit({**kpi, "kesegaran": "terlambat"})["status"] == "MERAH"
+    varian = [{"nama": "Cabai", "perubahan_30h_persen": -12.0}, {"nama": "Beras", "perubahan_30h_persen": 0.0}]
+    r = analitik.rekomendasi_umum(varian, {**kpi, "varian_eksperimen": 2}, None)
+    assert [x["warna"] for x in r] == ["hijau", "biru", "oranye"]
+    assert "Cabai -12,0%" in r[0]["isi"] and "2 dari 21" in r[1]["isi"]
+    assert "stabil" in analitik.rekomendasi_umum([{"nama": "Beras", "perubahan_30h_persen": 0.1}], kpi, None)[0]["isi"]
+
+
 def test_hash_json_stabil_terhadap_urutan_kunci():
     assert analitik.hash_json({"a": 1, "b": [1, 2]}) == analitik.hash_json({"b": [1, 2], "a": 1})
     assert analitik.hash_json({"a": 1}) != analitik.hash_json({"a": 2})
@@ -298,6 +310,11 @@ def test_keluaran_pipeline_memuat_analitik_acara_dan_periodik(tmp_path):
     assert a["garis_data"]["berkas_mentah"] and "sha256" in a["garis_data"]["berkas_mentah"][0]
     assert a["kpi"]["varian_valid"] + a["kpi"]["varian_eksperimen"] == 21
     assert "1771" in a["pembanding_wilayah"]["tersedia"]
+    # bahan untuk Dashboard Internal BPS
+    assert a["wilayah_proyek"]["sasaran"] == "Bengkulu Tengah" and "Kepahiang" in a["wilayah_proyek"]["pembanding"]
+    assert a["audit"]["status"] in {"HIJAU", "KUNING", "MERAH"} and len(a["rekomendasi_umum"]) == 3
+    assert a["sumber_nama"] and sum(a["model_dipakai"].values()) == 21
+    assert all(0 <= x["syarat_lolos"] <= x["syarat_total"] for x in a["varian"])
     ac = json.loads((d / "proyeksi_acara.json").read_text(encoding="utf-8"))
     assert ac["tanggal_data"] and ac["evaluasi"] and "metode" in ac["aturan"]
     pe = json.loads((d / "proyeksi_periodik.json").read_text(encoding="utf-8"))
