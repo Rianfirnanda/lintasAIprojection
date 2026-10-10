@@ -1,0 +1,56 @@
+name: Riwayat harga PIHPS
+
+# Mengambil riwayat harga PIHPS Provinsi Bengkulu beberapa tahun ke belakang (sekali jalan, per 90 hari dengan jeda), menyalinnya
+# menjadi harga utama sementara, lalu memperbarui dashboard. Pembaruan harian biasa hanya mengambil 45 hari terakhir.
+on:
+  workflow_dispatch:
+    inputs:
+      hari:
+        description: "Berapa hari ke belakang (1460 = 4 tahun)"
+        default: "1460"
+
+permissions:
+  contents: write
+  actions: write
+
+# Kelompok yang sama dengan pembaruan harian agar tidak berebut menyimpan berkas data.
+concurrency:
+  group: pipeline-pages
+  cancel-in-progress: false
+
+jobs:
+  riwayat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Ambil riwayat PIHPS
+        env:
+          HARI: ${{ inputs.hari }}
+        run: python -m pipeline ambil-resmi --riwayat-hari "$HARI"
+
+      - name: Salin menjadi harga utama sementara
+        run: python -m pipeline pihps-ke-harga
+
+      - name: Simpan hasil
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/masuk/konteks data/masuk/harga
+          if git diff --cached --quiet; then echo "Tidak ada perubahan."; exit 0; fi
+          git commit -m "data: riwayat harga PIHPS Provinsi Bengkulu"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Perbarui dashboard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pipeline.yml --ref "${GITHUB_REF_NAME}"

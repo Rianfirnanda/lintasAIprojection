@@ -16,10 +16,10 @@ BERKAS = ["meta.json", "master.json", "ringkasan.json", "sinyal.json", "kualitas
 def keluaran_demo(tmp_path_factory):
     import shutil
     from pipeline import konfigurasi
-    from tests.conftest import AKAR, HARI_INI
+    from tests.conftest import AKAR, HARI_INI, salin_config
 
     akar = tmp_path_factory.mktemp("repo")
-    shutil.copytree(AKAR / "config", akar / "config")
+    salin_config(akar / "config")
     (akar / "data/masuk/harga").mkdir(parents=True)
     konf = konfigurasi.muat(akar, hari_ini=HARI_INI)
     keluaran = akar / "site/data"

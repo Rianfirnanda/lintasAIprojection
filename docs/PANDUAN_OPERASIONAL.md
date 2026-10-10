@@ -104,6 +104,25 @@ Setiap kali pipeline jalan, `python -m pipeline ambil-resmi` mengambil:
 Bila salah satu sumber gangguan, pipeline tetap jalan; galatnya tercatat di log langkah "Ambil prakiraan BMKG dan
 harga PIHPS".
 
+## 4c. Data asli sementara: PIHPS Provinsi Bengkulu
+
+Harga tingkat Kabupaten Bengkulu Tengah hanya dimiliki BPS dan petugas lapangan. Sebelum datanya masuk, sistem berjalan dalam
+**mode data asli** memakai rata-rata harga pasar tradisional **Provinsi Bengkulu** dari PIHPS Bank Indonesia. Dashboard menampilkan
+pita "Data asli sementara" supaya tidak ada yang mengira ini harga Bengkulu Tengah.
+
+- **Alurnya.** Konektor mengambil PIHPS (`data/masuk/konteks/harga_pihps_*.csv`), lalu `python -m pipeline pihps-ke-harga` menyalinnya menjadi
+  `data/masuk/harga/pihps_provinsi_<tahun>.csv` (pasar `PHP17`). Berkas hasil salinan selalu ditulis ulang otomatis; jangan diedit tangan.
+  Adanya berkas harga mematikan mode demo dengan sendirinya.
+- **Wilayah sasaran.** `wilayah_target` di `config/pengaturan.json` sementara bernilai `17` (Provinsi Bengkulu).
+- **Menambah riwayat beberapa tahun.** Jalankan alur kerja **Riwayat harga PIHPS** di GitHub Actions (isi jumlah hari, bawaan 1460 = 4 tahun).
+  Ia mengambil per 90 hari dengan jeda, menyalin ke harga utama, lalu memperbarui dashboard. Pembaruan harian biasa hanya 45 hari terakhir.
+  Bila ada periode yang gagal diambil, alasannya ada di log langkah "Ambil riwayat PIHPS".
+- **Beralih ke data BPS Bengkulu Tengah.** Unggah berkas harga BPS ke `data/masuk/harga/`, ubah `wilayah_target` menjadi `1709`, hapus berkas
+  `pihps_provinsi_*.csv`, dan hapus langkah "Salin harga PIHPS" di `.github/workflows/pipeline.yml`. Pita sementara hilang sendiri.
+- **Yang perlu dipahami saat membaca hasilnya.** Ini harga rata-rata provinsi, bukan Bengkulu Tengah. Harga PIHPS sangat mulus (sering sama
+  berhari-hari), sehingga cara paling sederhana (harga terakhir) sulit dikalahkan model lain. Target "10% lebih baik dari cara sederhana" wajar
+  tidak tercapai pada data ini, dan itu bukan kesalahan model.
+
 ## 5. AI Data Finder (gratis)
 
 1. (Disarankan) Buat kunci gratis Gemini di https://aistudio.google.com/apikey. Gemini satu-satunya AI gratis di sini

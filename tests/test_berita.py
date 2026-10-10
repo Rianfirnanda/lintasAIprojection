@@ -649,9 +649,9 @@ def test_pipeline_menulis_berita_json_untuk_situs(tmp_path):
     import shutil
 
     from pipeline import konfigurasi, proses
-    from tests.conftest import AKAR, HARI_INI
+    from tests.conftest import HARI_INI, salin_config
 
-    shutil.copytree(AKAR / "config", tmp_path / "config")
+    salin_config(tmp_path / "config")
     (tmp_path / "data/masuk/harga").mkdir(parents=True)
     konf = konfigurasi.muat(tmp_path, hari_ini=HARI_INI)
     kosong = berita.untuk_situs(konf)  # belum pernah dicari: struktur kosong yang valid, halaman tetap bisa dibuka
