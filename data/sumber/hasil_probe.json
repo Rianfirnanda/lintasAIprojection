@@ -1,12 +1,12 @@
 {
- "waktu": "2026-10-10T06:26:07+00:00",
+ "waktu": "2026-10-10T06:36:03+00:00",
  "pihps": [
   {
    "url": "https://www.bi.go.id/hargapangan/WebSite/Home/GetRefProvince",
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 1.1,
+   "detik": 0.8,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -18,7 +18,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.7,
+   "detik": 0.9,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -42,7 +42,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.7,
+   "detik": 0.8,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -66,7 +66,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.6,
+   "detik": 1.0,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -219,7 +219,7 @@
    "status": 200,
    "jenis": "application/json; charset=utf-8",
    "byte": 3041,
-   "detik": 1.0,
+   "detik": 1.4,
    "wilayah_disebut": [],
    "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"Sep 2026 (IV)\":\"15,950\",\"Oct 2026 (I)\":\"16,000\"},{\"no\":1,\"name\":\"Beras Kualitas Bawah I\",\"level\":2,\"Sep 2026 (IV)\":\"15,700\",\"Oct 2026 (I)\":\"15,700\"},{\"no\":2,\"name\":\"Beras Kualitas Bawah II\",\"level\":2,\"Sep 2026 (IV)\":\"12,650\",\"Oct 2026 (I)\":\"12,900\"},{\"no\":3,\"name\":\"Beras Kualitas Medium I\",\"level\":2,\"Sep 2026 (IV)\":\"16,300\",\"Oct 2026 (I)\":\"16,300\"},{\"no",
    "catatan": "tabel harga tipe_laporan=2",
@@ -503,7 +503,7 @@
    "status": 0,
    "jenis": "",
    "byte": 0,
-   "detik": 0.5,
+   "detik": 0.3,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
@@ -515,7 +515,7 @@
    "status": 0,
    "jenis": "",
    "byte": 0,
-   "detik": 0.8,
+   "detik": 0.4,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
@@ -551,7 +551,7 @@
    "status": 200,
    "jenis": "text/html",
    "byte": 15857,
-   "detik": 1.0,
+   "detik": 1.2,
    "wilayah_disebut": [],
    "cuplikan": "<!doctype html> <html lang=\"en\" data-critters-container> <head> <meta charset=\"utf-8\" /> <title>Panel Harga Pangan</title> <base href=\"/\" /> <meta name=\"color-scheme\" content=\"light\" /> <meta name=\"viewport\" content=\"viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no\" /> <meta name=\"format-detection\" content=\"telephone=no\" /> <meta nam",
    "catatan": "Panel Harga Bapanas (tebakan jalur; lihat status)",
@@ -564,7 +564,7 @@
    "status": 200,
    "jenis": "text/html;charset=utf-8",
    "byte": 137233,
-   "detik": 2.0,
+   "detik": 3.9,
    "wilayah_disebut": [],
    "cuplikan": "<!DOCTYPE html><html data-capo=\"\"><head><style type=\"text/css\" data-primevue-style-id=\"layer-order\" >@layer tailwind-base, primevue, tailwind-utilities</style><meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>SP2KP</title> <script src=\"https://www.google.com/recaptcha/api.js\"></script> <script src=\"https://www.google.com/recaptcha/enterprise.js\"></s",
    "catatan": "SP2KP halaman utama",
@@ -579,7 +579,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 2.2,
+   "detik": 3.0,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -591,7 +591,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.7,
+   "detik": 0.8,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -603,7 +603,7 @@
    "status": 200,
    "jenis": "text/html; charset=utf-8",
    "byte": 39824,
-   "detik": 2.7,
+   "detik": 3.4,
    "wilayah_disebut": [],
    "cuplikan": "<!DOCTYPE html> <html lang=\"id\" dir=\"ltr\"> <head> <meta charset=\"utf-8\" /> <link href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"apple-touch-icon\" sizes=\"76x76\"> <link type=\"image/png\" href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"icon\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\" /> <title> Open Data Badan Pangan Nasional | Open Data Badan Pangan Nasional",
    "catatan": "Bapanas satu data",
@@ -631,7 +631,7 @@
    "status": 200,
    "jenis": "text/html; charset=utf-8",
    "byte": 313680,
-   "detik": 4.8,
+   "detik": 5.5,
    "wilayah_disebut": [
     "bengkulu"
    ],
@@ -660,10 +660,10 @@
    "url": "https://webapi.bps.go.id/",
    "status": 200,
    "jenis": "text/html; charset=UTF-8",
-   "byte": 23791,
-   "detik": 2.7,
+   "byte": 22769,
+   "detik": 3.2,
    "wilayah_disebut": [],
-   "cuplikan": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\"> <head> <APM_DO_NOT_TOUCH> <script type=\"text/javascript\"> (function(){ window.VXN=!!window.VXN;try{(function(){(function lj(){var L=!1;function z(L){for(var z=0;L--;)z+=S(document.documentElement,null);return z}function S(",
+   "cuplikan": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\"> <head> <APM_DO_NOT_TOUCH> <script type=\"text/javascript\"> (function(){ window.jDOT=!!window.jDOT;try{(function(){(function(){})();var LJ=28;try{var oJ,ZJ,SJ=l(402)?1:0,iJ=l(611)?0:1,jJ=l(971)?0:1;for(var ol=(l(123),0);ol<Z",
    "catatan": "BPS Web API (butuh kunci)",
    "json": false,
    "tautan_menarik": [
@@ -731,9 +731,63 @@
       "url": "https://www.bi.go.id/hargapangan/js/devextreme/globalize/date.js",
       "status": 200,
       "byte": 75672
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/devextreme/jszip.js",
+      "status": 200,
+      "byte": 366262
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/devextreme/dx.all.js",
+      "status": 200,
+      "byte": 2500000
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/devextreme/vectormap-data/dataIndonesia.js",
+      "status": 200,
+      "byte": 1157568
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/devextreme/aspnet/dx.aspnet.data.js",
+      "status": 200,
+      "byte": 12817
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/devextreme/aspnet/dx.aspnet.mvc.js",
+      "status": 200,
+      "byte": 8937
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/devextreme/dx.messages.id.js",
+      "status": 200,
+      "byte": 18019
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/devextreme/Local_indo.js",
+      "status": 200,
+      "byte": 1058052
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/plugins.js",
+      "status": 200,
+      "byte": 607745
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/js/functions.js",
+      "status": 200,
+      "byte": 134604
+     },
+     {
+      "url": "https://www.bi.go.id/hargapangan/assets/js/sweetalert2.all.js",
+      "status": 200,
+      "byte": 104080
      }
     ],
     "endpoint": [
+     "//vimeo.com/api/v2/video/",
+     "//vzaar.com/api/videos/",
+     "//www.googleapis.com/youtube/v3/videos?id=",
+     "//www.youtube.com/iframe_api?v=",
      "/hargapangan/WebSite/TabelHarga/GetChartDaerah",
      "/hargapangan/WebSite/TabelHarga/GetGridDataDaerah",
      "/hargapangan/WebSite/TabelHarga/GetRefCommodityAndCategory",
@@ -741,28 +795,39 @@
      "/hargapangan/WebSite/TabelHarga/GetRefPriceType",
      "/hargapangan/WebSite/TabelHarga/GetRefProvince",
      "/hargapangan/WebSite/TabelHarga/GetRefRegency",
+     "https://api.dribbble.com/v1",
+     "https://api.flickr.com/services/feeds/",
+     "https://api.instagram.com/v1",
      "https://play.google.com/store/apps/details?id=com.pihps.hargapangan&hl=id"
     ],
     "konteks": [
      [
       "html",
-      "ipeLaporan\").dxSelectBox(\"instance\").option('displayValue'); $(\"#info\").empty(); $(\"#info\").append(\"<table>\"); $(\"#info\").append(\"<tr><td width=200>Periode</td><td>: \" + datemulaiStr + \" - \" + dateselesaiStr + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Provinsi</td><td>: \" + provinceName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Kabupaten/Kota</td><td>: \" + regencyName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Pasar</td><td>: \" + marketName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Tipe Laporan</td><td>: \" + tipelaporanStr + \"</td></tr></div>\"); $(\"#info\").append(\"</table>\"); } function provinceChanged(e) { if ($(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\""
+      "n\").dxSelectBox(\"instance\").option('displayValue'); $(\"#info\").empty(); $(\"#info\").append(\"<table>\"); $(\"#info\").append(\"<tr><td width=200>Periode</td><td>: \" + datemulaiStr + \" - \" + dateselesaiStr + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Provinsi</td><td>: \" + provinceName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Kabupaten/Kota</td><td>: \" + regencyName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Pasar</td><td>: \" + marketName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Tipe Laporan</td><td>: \" + tipelaporanStr + \"</td></tr></div>\"); $(\"#info\").append(\"</table>\"); } function provinceChanged(e) { if ($(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\""
      ],
      [
       "html",
-      " \" + tipelaporanStr + \"</td></tr></div>\"); $(\"#info\").append(\"</table>\"); } function provinceChanged(e) { if ($(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"inst"
+      "laporanStr + \"</td></tr></div>\"); $(\"#info\").append(\"</table>\"); } function provinceChanged(e) { if ($(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"inst"
      ],
      [
       "html",
-      "e().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeLi"
+      "d(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeLi"
      ],
      [
       "html",
-      "n('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeList(\"getSelectedRowKeys\").toString(); var province_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); var regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); var market_id = $(\"#cboMarket\").dxTreeList(\""
+      "ed', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeList(\"getSelectedRowKeys\").toString(); var province_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); var regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); var market_id = $(\"#cboMarket\").dxTreeList(\""
      ],
      [
       "html",
-      " $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeList(\"getSelectedRowKeys\").toString(); var province_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); var regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); var market_id = $(\"#cboMarket\").dxTreeList(\"getSelectedRowKeys\").toString(); var tipe_laporan = $(\"#cboTipeLaporan\").dxSelectBox(\"instance\").option('value'); var start_date = $(\"#dboDateMulai\").dxDateBox(\"instance\").option('value'); var end_date = $(\"#dboDateSelesai\").dxDateBox(\"ins"
+      "boMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeList(\"getSelectedRowKeys\").toString(); var province_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); var regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); var market_id = $(\"#cboMarket\").dxTreeList(\"getSelectedRowKeys\").toString(); var tipe_laporan = $(\"#cboTipeLaporan\").dxSelectBox(\"instance\").option('value'); var start_date = $(\"#dboDateMulai\").dxDateBox(\"instance\").option('value'); var end_date = $(\"#dboDateSelesai\").dxDateBox(\"ins"
+     ],
+     [
+      "html",
+      "arga/GetRefProvince\"})},\"showBorders\":false,\"showColumnHeaders\":false,\"selection\":{\"mode\":\"multiple\"},\"columns\":[{\"dataField\":\"name\"}],\"onSelectionChanged\":provinceChanged});}).bind(this, jQuery));</script> </div> </div> <div class=\"form-group\"> <label style=\"color: white;\">Kabupaten/Kota</label> <div style=\"height: 100px; overflow: auto;\"> <div id=\"cboRegency\"></div><script>DevExpress.utils.readyCallbacks.add((function($){$(\"#cboRegency\").dxTreeList({\"width\":\"100%\",\"dataSource\":{\"store\":DevExpress.data.AspNet.createStore({\"onBeforeSend\":beforesendRegency,\"key\":\"id\",\"loadUrl\":\"/hargapangan/WebSite/TabelHarga/GetRefRegency\"})},\"showBorders\":false,\"showColumnHeaders\":false,\"noDataText\":\"\",\"selection\":{\"mode\":\"multiple\"},\"disabled\":true,\"columns\":[{\"dataField\":\"name\"}],\"onSelectionChanged\":refreshPasar});}).bind(this, jQuery));</script> </div> </div> <div class=\"form-group\" style=\"display:none\"> <label style=\"color: white;\">Pasar</label> <div style=\"height: 100px; overflow: auto;\"> <div id=\"cboMarket\"></div><script>DevExpress.utils.readyCallbacks.add((functi"
+     ],
+     [
+      "html",
+      "encoded;charset=UTF-8\", success: function (response) { window.location = \"/hargapangan/Website\" }, error: function (response) { alert(response.responseText); } }); } } function PopupOnHiding(e) { document.getElementById('popupContainer').src = \"\"; } //important! to complement AutoValidateAntiforgeryTokenAttribute if ($('input:hidden[name=\"__RequestVerificationToken\"]').length) { $.ajaxSetup({ beforeSend: function (xhr) { xhr.setRequestHeader(\"XSRF-TOKEN\", $('input:hidden[name=\"__RequestVerificationToken\"]').val()); } }); } $(document).ready(function () { //Disable autocomplete throughout the site $(\"input:text,form\").attr(\"autocomplete\", \"off\"); }); </script> </body> </html>"
      ],
      [
       "html",
@@ -791,6 +856,38 @@
      [
       "html",
       "rt({\"size\":{\"height\":500.0},\"dataSource\":{\"store\":DevExpress.data.AspNet.createStore({\"onBeforeSend\":OnBeforeSend,\"key\":\"name\",\"loadUrl\":\"/hargapangan/WebSite/TabelHarga/GetChartDaerah\"})},\"onDrawn\":ChartReady,\"onDone\":ChartDone,\"palette\":\"Soft Blue\",\"resolveLabelOverlapping\":\"stack\",\"commonSeriesSettings\":{\"argumentField\":\"date\",\"valueField\":\"price\",\""
+     ],
+     [
+      "jquery.js",
+      "etag[ cacheURL ] ); } } // Set the correct header, if data is being sent if ( s.data && s.hasContent && s.contentType !== false || options.contentType ) { jqXHR.setRequestHeader( \"Content-Type\", s.contentType ); } // Set the Accepts header for the server, depending on the dataType jqXHR.setRequestHeader( \"Accept\", s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[ 0 ] ] ? s.accepts[ s.dataTypes[ 0 ] ] + ( s.dataTypes[ 0 ] !== \"*\" ? \", \" + allTypes + \"; q=0.01\" : \"\" ) : s.accepts[ \"*\" ] ); // Check for headers option for ( i in s.headers ) { jqXHR.setRequestHeader( i, s.headers[ i ] ); } // Allow custom headers/mimetypes and early abort if ( s.beforeSend && ( s.beforeSend.call( callbackContext, jqXHR, s ) === false || completed ) ) { // Abort if not done already and return return jqXHR.abort(); } // Aborting is no longer a cancellation strAbort = \"abort\"; // Install callbacks on deferreds completeDeferred.add( s.complete ); jqXHR.done( s.success ); jqXHR.fail( s.error ); // Get transport transport = inspectPrefiltersOrTransports( transports, s, options, jqXHR ); // If no transport, we auto-abort if ( !transport ) { done( -1, \"No Transport\" ); } else { jqXHR.readyState = 1; // Send global event if ( fireGlobals ) { globalEventContext.trigger( \"ajaxSend\", [ jqXHR, s ] ); } // If re"
+     ],
+     [
+      "dx.all.js",
+      "i.resolve(null,p,n)};return D(w).then(S,k),r}if(e.crossDomain&&!(\"withCredentials\"in n))return i.reject(n,g),r;if(n.open(o(e),w,l,e.username,e.password),l&&(n.timeout=d,t=P(d,n,i)),n.onreadystatechange=function(e){4===n.readyState&&(clearTimeout(t),y(n.status)?b(n.status)?E(i,n,u):i.resolve(null,m,n):i.reject(n,n.customStatus||g))},e.upload&&(n.upload.onprogress=e.upload.onprogress,n.upload.onloadstart=e.upload.onloadstart,n.upload.onabort=e.upload.onabort),e.xhrFields)for(var I in e.xhrFields)n[I]=e.xhrFields[I];\"arraybuffer\"===e.responseType&&(n.responseType=e.responseType);for(var T in v)Object.prototype.hasOwnProperty.call(v,T)&&(0,c.isDefined)(v[T])&&n.setRequestHeader(T,v[T]);return e.beforeSend&&e.beforeSend(n),n.send(C),r.abort=function(){n.abort()},r},F=(0,h.default)({sendRequest:V});t.default=F,e.exports=t.default},function(e,t,n){t.default=void 0;var i=n(6),o=n(7),a=(0,o.hasWindow)()?(0,o.getWindow)().Promise:Promise;a||(a=function(e){var t=new i.Deferred;return e(t.resolve.bind(this),t.reject.bind(this)),t.promise()},a.resolve=function(e){return(new i.Deferred).resolve(e).promise()},a.reject=function(e){return(new i.Deferred).reject(e).promise()},a.all=function(e){return i.when.apply(this,e).then(function(){return[].slice.call(arguments)})});var r=a;t.default=r,e.exports=t.default},function(e,t,n){function i(e){return e&&e.__esModule?e:{\"default\":e}}function o(){return c}t.or"
+     ],
+     [
+      "dx.all.js",
+      "(this),{chunkSize:0,value:[],selectButtonText:V.default.format(\"dxFileUploader-selectFile\"),uploadButtonText:V.default.format(\"dxFileUploader-upload\"),labelText:V.default.format(\"dxFileUploader-dropFile\"),name:\"files[]\",multiple:!1,accept:\"\",uploadUrl:\"/\",allowCanceling:!0,showFileList:!0,progress:0,dialogTrigger:void 0,dropZone:void 0,readyToUploadMessage:V.default.format(\"dxFileUploader-readyToUpload\"),uploadedMessage:V.default.format(\"dxFileUploader-uploaded\"),uploadFailedMessage:V.default.format(\"dxFileUploader-uploadFailedMessage\"),uploadAbortedMessage:V.default.format(\"dxFileUploader-uploadAbortedMessage\"),uploadMode:\"instantly\",uploadMethod:\"POST\",uploadHeaders:{},uploadCustomData:{},onBeforeSend:null,onUploadStarted:null,onUploaded:null,onFilesUploaded:null,onProgress:null,onUploadError:null,onUploadAborted:null,onDropZoneEnter:null,onDropZoneLeave:null,allowedFileExtensions:[],maxFileSize:0,minFileSize:0,inputAttr:{},invalidFileExtensionMessage:V.default.format(\"dxFileUploader-invalidFileExtension\"),invalidMaxFileSizeMessage:V.default.format(\"dxFileUploader-invalidMaxFileSize\"),invalidMinFileSizeMessage:V.default.format(\"dxFileUploader-invalidMinFileSize\"),extendSelection:!0,validationMessageMode:\"always\",uploadFile:null,uploadChunk:null,abortUpload:null,validationMessageOffset:{h:0,v:0},useNativeInputClick:!1,useDragOver:!0,nativeDropSupported:!0,_uploadButtonType:\"normal\"})}},{k"
+     ],
+     [
+      "dx.all.js",
+      "unction(){return\"desktop\"!==R.default.real().deviceType},options:{useDragOver:!1}},{device:function(){return!de()},options:{uploadMode:\"useForm\"}},{device:function(){return P.default.msie||\"desktop\"!==R.default.real().deviceType},options:{nativeDropSupported:!1}},{device:function(){return(0,F.isMaterial)()},options:{_uploadButtonType:\"default\"}}])}},{key:\"_initOptions\",value:function(e){var n=\"labelText\"in e;l(_(t.prototype),\"_initOptions\",this).call(this,e),n||this._shouldDragOverBeRendered()||this.option(\"labelText\",\"\")}},{key:\"_init\",value:function(){l(_(t.prototype),\"_init\",this).call(this),this._initFileInput(),this._initLabel(),this._setUploadStrategy(),this._createFiles(),this._createBeforeSendAction(),this._createUploadStartedAction(),this._createUploadedAction(),this._createFilesUploadedAction(),this._createProgressAction(),this._createUploadErrorAction(),this._createUploadAbortedAction(),this._createDropZoneEnterAction(),this._createDropZoneLeaveAction()}},{key:\"_setUploadStrategy\",value:function(){var e=null;if(this.option(\"chunkSize\")>0){var t=this.option(\"uploadChunk\");e=t&&(0,C.isFunction)(t)?new me(this):new _e(this)}else{var n=this.option(\"uploadFile\");e=n&&(0,C.isFunction)(n)?new be(this):new ye(this)}this._uploadStrategy=e}},{key:\"_initFileInput\",value:function(){var e=this;this._isCustomClickEvent=!1,this._$fileInput||(this._$fileInput=ce(),b.default.on(this._$fileInput,\"cha"
+     ],
+     [
+      "dx.all.js",
+      "ction(e){e.isValidFileExtension=this._validateFileExtension(e),e.isValidMinSize=this._validateMinFileSize(e),e.isValidMaxSize=this._validateMaxFileSize(e)}},{key:\"_validateFileExtension\",value:function(e){var t=this.option(\"allowedFileExtensions\"),n=e.value.name.substring(e.value.name.lastIndexOf(\".\")).toLowerCase();if(0===t.length)return!0;for(var i=0;i<t.length;i++)if(n===t[i].toLowerCase())return!0;return!1}},{key:\"_validateMaxFileSize\",value:function(e){var t=e.value.size,n=this.option(\"maxFileSize\");return!(n>0)||t<=n}},{key:\"_validateMinFileSize\",value:function(e){var t=e.value.size,n=this.option(\"minFileSize\");return!(n>0)||t>=n}},{key:\"_createBeforeSendAction\",value:function(){this._beforeSendAction=this._createActionByOption(\"onBeforeSend\",{excludeValidators:[\"readOnly\"]})}},{key:\"_createUploadStartedAction\",value:function(){this._uploadStartedAction=this._createActionByOption(\"onUploadStarted\",{excludeValidators:[\"readOnly\"]})}},{key:\"_createUploadedAction\",value:function(){this._uploadedAction=this._createActionByOption(\"onUploaded\",{excludeValidators:[\"readOnly\"]})}},{key:\"_createFilesUploadedAction\",value:function(){this._filesUploadedAction=this._createActionByOption(\"onFilesUploaded\",{excludeValidators:[\"readOnly\"]})}},{key:\"_createProgressAction\",value:function(){this._progressAction=this._createActionByOption(\"onProgress\",{excludeValidators:[\"readOnly\"]})}},{key:\"_createUpload"
+     ],
+     [
+      "dx.aspnet.data.js",
+      " CUSTOM_STORE_OPTIONS = [ \"onLoading\", \"onLoaded\", \"onInserting\", \"onInserted\", \"onUpdating\", \"onUpdated\", \"onRemoving\", \"onRemoved\", \"onModifying\", \"onModified\", \"onPush\", \"loadMode\", \"cacheRawData\", \"errorHandler\" ]; function createStoreConfig(options) { var keyExpr = options.key, loadUrl = options.loadUrl, loadMethod = options.loadMethod || \"GET\", loadParams = options.loadParams, isRawLoadMode = options.loadMode === \"raw\", updateUrl = options.updateUrl, insertUrl = options.insertUrl, deleteUrl = options.deleteUrl, onBeforeSend = options.onBeforeSend, onAjaxError = options.onAjaxError; function send(operation, requiresKey, ajaxSettings, customSuccessHandler) { var d = Deferred(), thenable, beforeSendResult; function sendCore() { ajaxUtility.sendRequest(ajaxSettings).then( function(res, textStatus, xhr) { if(customSuccessHandler) customSuccessHandler(d, res, xhr); else d.resolve(); }, function(xhr, textStatus) { var error = getErrorMessag"
+     ],
+     [
+      "dx.aspnet.data.js",
+      "acheRawData\", \"errorHandler\" ]; function createStoreConfig(options) { var keyExpr = options.key, loadUrl = options.loadUrl, loadMethod = options.loadMethod || \"GET\", loadParams = options.loadParams, isRawLoadMode = options.loadMode === \"raw\", updateUrl = options.updateUrl, insertUrl = options.insertUrl, deleteUrl = options.deleteUrl, onBeforeSend = options.onBeforeSend, onAjaxError = options.onAjaxError; function send(operation, requiresKey, ajaxSettings, customSuccessHandler) { var d = Deferred(), thenable, beforeSendResult; function sendCore() { ajaxUtility.sendRequest(ajaxSettings).then( function(res, textStatus, xhr) { if(customSuccessHandler) customSuccessHandler(d, res, xhr); else d.resolve(); }, function(xhr, textStatus) { var error = getErrorMessageFromXhr(xhr); if(onAjaxError) { var e = { xhr: xhr, error: error }; onAjaxError(e); error = e.error; } "
+     ],
+     [
+      "plugins.js",
+      "var t={};return e.forEach(function(e){t[e]=d.call(this,e)}.bind(this)),t},h=function(t){var r=e.param(t);return r?\"?\"+r:\"\"},a=function(e){if(0!==e.length){var t=e[0],r=typeof t,s={};if(\"number\"===r||\"string\"===r){var n=i.indexOf(t);n>-1?s.list=t:s.resource=t}else\"object\"===r&&(s=t);return s}},b=function(){var t=e.extend({},e.Deferred()),r=function(){return this.methods=[],this.response=null,this.flushed=!1,this.add=function(e){this.flushed?e(this.scope):this.methods.push(e)},this.flush=function(e){if(!this.flushed){for(this.scope=e,this.flushed=!0;this.methods[0];)this.methods.shift()(e);return e}},this};return t.queue=new r,t.url=o,t.get=function(){return n?(e.ajax({type:\"GET\",url:this.url,beforeSend:function(e){e.setRequestHeader(\"Authorization\",\"Bearer \"+n)},success:function(e){this.resolve(e)}.bind(this),error:function(e){this.reject(e)}.bind(this)}),this):(console.error(u.token),!1)},t},f=function(t){return function(r){return e.extend(this,b()),this.queue.add(function(e){e.url+=\"/\"+t+\"/\"+r}),setTimeout(function(){this.queue.flush(this).get()}.bind(this)),this}},d=function(e){return function(t){return this.queue.add(function(r){r.url+=\"/\"+e+\"/\"+h(t||{})}),this}};e.jribbble.shots=function(t,r){var s=a([].slice.call(arguments))||{},n=r||{},o=function(t){return function(r,s){var n=a([].slice.call(arguments))||{},o=s||{};return this.queue.add(function(r){if(!r.shotId)throw new Error(u.sh"
      ]
     ],
     "nama": "pihps"
@@ -1052,7 +1149,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 1097,
-    "detik": 0.6,
+    "detik": 0.8,
     "wilayah_disebut": [
      "bengkulu"
     ],
@@ -1104,7 +1201,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.6,
+    "detik": 0.8,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1119,7 +1216,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.6,
+    "detik": 0.8,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1134,7 +1231,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.6,
+    "detik": 0.8,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1164,7 +1261,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.7,
+    "detik": 0.8,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1179,7 +1276,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 1229,
-    "detik": 0.6,
+    "detik": 0.9,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[{\"id\":1,\"category_id\":1,\"name\":\"Beras Kualitas Bawah I\"},{\"id\":2,\"category_id\":1,\"name\":\"Beras Kualitas Bawah II\"},{\"id\":3,\"category_id\":1,\"name\":\"Beras Kualitas Medium I\"},{\"id\":4,\"category_id\":1,\"name\":\"Beras Kualitas Medium II\"},{\"id\":5,\"category_id\":1,\"name\":\"Beras Kualitas Super I\"},{\"id\":6,\"category_id\":1,\"name\":\"Beras Kualitas Super II\"},{\"id\":7,\"category_id\":2,\"name\":\"Daging Ayam ",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1216,7 +1313,7 @@
     "status": 404,
     "jenis": "",
     "byte": 0,
-    "detik": 0.8,
+    "detik": 0.9,
     "wilayah_disebut": [],
     "cuplikan": "",
     "galat": "HTTP 404",
@@ -1229,7 +1326,7 @@
     "status": 404,
     "jenis": "",
     "byte": 0,
-    "detik": 0.8,
+    "detik": 0.7,
     "wilayah_disebut": [],
     "cuplikan": "",
     "galat": "HTTP 404",
@@ -1242,7 +1339,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 2785,
-    "detik": 0.6,
+    "detik": 0.8,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[{\"id\":\"cat_1\",\"name\":\"Beras\",\"cat_id\":null,\"denomination\":\"kg\",\"sort\":1},{\"id\":\"com_1\",\"name\":\"Beras Kualitas Bawah I\",\"cat_id\":\"cat_1\",\"denomination\":\"kg\",\"sort\":1},{\"id\":\"cat_2\",\"name\":\"Daging Ayam\",\"cat_id\":null,\"denomination\":\"kg\",\"sort\":2},{\"id\":\"com_2\",\"name\":\"Beras Kualitas Bawah II\",\"cat_id\":\"cat_1\",\"denomination\":\"kg\",\"sort\":2},{\"id\":\"cat_3\",\"name\":\"Daging Sapi\",\"cat_id\":null,\"de",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1304,7 +1401,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.8,
+    "detik": 1.2,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1335,7 +1432,7 @@
     "status": 0,
     "jenis": "",
     "byte": 0,
-    "detik": 25.3,
+    "detik": 25.4,
     "wilayah_disebut": [],
     "cuplikan": "",
     "galat": "URLError: <urlopen error timed out>",
@@ -1348,7 +1445,7 @@
     "status": 0,
     "jenis": "",
     "byte": 0,
-    "detik": 25.3,
+    "detik": 25.0,
     "wilayah_disebut": [],
     "cuplikan": "",
     "galat": "URLError: <urlopen error timed out>",
@@ -1361,7 +1458,7 @@
     "status": 0,
     "jenis": "",
     "byte": 0,
-    "detik": 25.0,
+    "detik": 25.3,
     "wilayah_disebut": [],
     "cuplikan": "",
     "galat": "URLError: <urlopen error timed out>",
@@ -1374,7 +1471,7 @@
     "status": 0,
     "jenis": "",
     "byte": 0,
-    "detik": 26.1,
+    "detik": 25.4,
     "wilayah_disebut": [],
     "cuplikan": "",
     "galat": "URLError: <urlopen error timed out>",
