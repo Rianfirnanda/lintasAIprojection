@@ -94,11 +94,12 @@ def rekomendasi_netral(nama: str, harga_aktual: float | None, hv: analisis.Hasil
 
 def kartu_model(konf, v, hv: analisis.HasilVarian, harga: float | None) -> dict:
     """Kartu model per varian: tujuan, data, cara prakiraan, hasil uji, dan keterbatasan (disusun dari fakta yang ada)."""
-    w = konf.wilayah[konf.wilayah_target]
+    sumber = hv.sumber_seri or {}
+    w = konf.wilayah[sumber.get("kode_wilayah") or konf.wilayah_target]
     ho = hv.holdout
     batas = []
-    if w.peran != "target":
-        batas.append(f"Harga yang dipakai adalah {w.nama} (sementara), bukan harga Kabupaten Bengkulu Tengah.")
+    if sumber.get("pengganti") or w.peran != "target":
+        batas.append(sumber.get("catatan") or f"Harga yang dipakai adalah {w.nama} (sementara), bukan harga Kabupaten Bengkulu Tengah.")
     batas.append("Harga hanya tercatat pada hari kerja; akhir pekan dan hari libur tidak punya harga.")
     batas.append("Cara prakiraan hanya memakai riwayat harga dan kalender hari raya. Cuaca, kebijakan, dan harga wilayah lain belum ikut dihitung.")
     if hv.validasi.get("status") != "valid":
@@ -112,7 +113,7 @@ def kartu_model(konf, v, hv: analisis.HasilVarian, harga: float | None) -> dict:
         batas.append(f"Riwayat baru {hv.jumlah_obs} hari harga (protokol meminta minimal 730).")
     return {
         "tujuan": f"Prakiraan harga {v.nama} 7, 14, dan 30 hari ke depan beserta rentang {int(konf.pengaturan['analisis']['tingkat_interval'] * 100)}%.",
-        "data": {"wilayah": w.nama, "sumber": "PIHPS Bank Indonesia" if w.peran != "target" else "data harga yang masuk ke sistem",
+        "data": {"wilayah": w.nama, "sumber": sumber.get("label") or ("PIHPS Bank Indonesia" if w.peran != "target" else "data harga yang masuk ke sistem"),
                  "dari": hv.seri.tanggal[0].isoformat(), "sampai": hv.seri.tanggal[-1].isoformat(), "jumlah_hari_berharga": hv.jumlah_obs,
                  "kelengkapan_persen": hv.kelengkapan_persen, "harga_terakhir": round(harga) if harga else None},
         "model": {"dipakai": hv.model_terpilih, "nama": analisis.NAMA_MODEL.get(hv.model_terpilih or "", "-"),
@@ -231,7 +232,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
             "pendorong": pendorong(hv, harga, acara_berikut),
             "rekomendasi": rekomendasi_netral(v.nama, harga, hv, pr, status),
             "kartu_model": kartu_model(konf, v, hv, harga),
-            "catatan": hv.catatan,
+            "catatan": hv.catatan, "sumber": hv.sumber_seri,
         })
 
     n_valid = sum(1 for x in varian if x["status"] == "valid")

@@ -1,0 +1,412 @@
+{
+ "waktu": "2026-10-10T09:49:49+00:00",
+ "sp2kp": {
+  "konteks": [
+   "[ye4qepCu.js] f.setDate(f.getDate()+6),s.value=b(i,\"yyyy-MM-dd\")}else typeof O.value==\"object\"&&(s.value=b(O.value[0],\"yyyy-MM-dd\"))}),D(Y,()=>{if(Y.value){const t=new Date(Y.value);Y.value=b(t,\"yyyy\"),V.value=b(t,\"yyyy-MM-dd\")}N.value=null,s.value=null}),D(N,()=>{if(N.value){const t=le(new Date(N.value));N.value=b(t,\"yyyy\"),s.value=b(t,\"yyyy-MM-dd\")}K.value=null}),D(K,()=>{c.value!==null||(v.value=[],_.value=[])}),D(c,()=>{c.value!=null?Sa():A.value=null,pa(),ya()}),D(P,()=>{Ua(),ya()}),D(B,()=>{Ba()})});const wa=ga(()=>{const t=document.createElement(\"input\");return t.setAttribute(\"type\",\"month\"),t.type===\"month\"}),Da=ga(()=>{const t=document.createElement(\"input\");return t.setAttribute(\"type\",\"week\"),t.type===\"week\"}),Va=async()=>{const t={take:1e3};try{const l=(await a.fetchData(t)).data.data;for(const n of l){const i={id:n.id,nama:n.nama};M.value.push(i)}}catch{}},va=async()=>{const u={take:9999,tipe_komoditas_id:$.value??\"\",is_public:!0,sort:'[{\"selector\":\"nama\",\"desc\":false}]'};try{z.value=[];const n=(await e.fetchData(u)).data.data;for(const i of n){const f={id:i.id,nama:i.nama};z.value.push(f)}}catch{}},Ma=()=>{const t=new Date(V.value),u=oe(t,30),l=se(t,30);T.value=b(u,\"yyyy-MM-dd\"),G.value=b(l,\"yyyy-MM-dd\"),s.value!=null&&new Date(s.value)>new Date(l)&&(s.value=null)},Pa=async()=>{const t={take:9999};try{const l=(await q.getAllProv(t)).data.data;for(const n of l){const i={id:n.kode_provinsi,nama:n.nama_provinsi};L.value.push(i)}}catch{}},Sa=async()=>{if(c.value!=null&&c.value!=0)try{const t=await q.getProvByCode(c.value);A.value=t.data.data.nama_provinsi??null}catch(t){console.log(t)}else c.value==0?A.value=\"Nasional\":A.value=null},pa=async()=>{Q.value=[],P.value=null;const t={take:9999};la.value&&(t.is_ihk2024=!0);try{if(c.value!=null&&c.value!=0){const l=(await q.getKotaByProv(c.value",
+   "[ye4qepCu.js] =>{c.value==0&&(J.value=0),c.value!=0&&(J.value=1),P.value!==null&&(J.value=2),B.value!==null&&(J.value=3)},Ca=async()=>{fa(),V.value!=null&&s.value!==null&&c.value!=null&&(p.value==1?Ta():p.value==2?ja():p.value==3?Oa():p.value==4&&Wa())},Ha=()=>{const t=oa.value;oa.value=!t},Ka=()=>{sa.value=!0,fa(),Aa()},Aa=async()=>{let t=\"\";p.value==1?t=\"area-daily\":p.value==2?t=\"area-monthly\":p.value==3?t=\"area-weekly\":p.value==4&&(t=\"area-yearly\");const u={asal_lembaga:ra.value,nama:ua.value,email:da.value,no_hp:ma.value,peruntukan:ca.value,jenis_laporan:t,start_date:new Date(V.value),end_date:new Date(s.value)};try{await ia.create(u)&&(p.value==1?$a():p.value==2?Ea():p.value==3?Na():p.value==4&&La())}catch{}},W=()=>{let t=c.value;c.value==0&&(t=\"\");let u=\"\";if(K.value!==null)for(let l=0;l<K.value.length;l++){const n=K.value[l];u+=(l==0?\"\":\",\")+n}return{start_date:V.value??\"\",end_date:s.value??\"\",level:J.value,variant_ids:u,kode_provinsi:t,kode_kab_kota:P.value??\"\",pasar_id:B.value??\"\",tipe_komoditas:$.value??\"\",skip_sat_sun:!0}},Ta=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonHarian(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0].daftarHarga){const n={key:l.date,title:l.date,class:\"text-end\"};v.value.push(n)}for(const l of u){const n={variant:l.variant,satuan:l.satuan};for(const i of l.daftarHarga){const f=i.date;n[f]=i.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}_.value.push(n)}}catch{}g.value=!1},$a=async()=>{try{const t=await H.statistikExcelHarian(W());aa(t.data)}catch{}},ja=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonBulanan(W());v.value=[],_.value=[];let u=t.data.data;v.value.p",
+   "[ye4qepCu.js] &(J.value=0),c.value!=0&&(J.value=1),P.value!==null&&(J.value=2),B.value!==null&&(J.value=3)},Ca=async()=>{fa(),V.value!=null&&s.value!==null&&c.value!=null&&(p.value==1?Ta():p.value==2?ja():p.value==3?Oa():p.value==4&&Wa())},Ha=()=>{const t=oa.value;oa.value=!t},Ka=()=>{sa.value=!0,fa(),Aa()},Aa=async()=>{let t=\"\";p.value==1?t=\"area-daily\":p.value==2?t=\"area-monthly\":p.value==3?t=\"area-weekly\":p.value==4&&(t=\"area-yearly\");const u={asal_lembaga:ra.value,nama:ua.value,email:da.value,no_hp:ma.value,peruntukan:ca.value,jenis_laporan:t,start_date:new Date(V.value),end_date:new Date(s.value)};try{await ia.create(u)&&(p.value==1?$a():p.value==2?Ea():p.value==3?Na():p.value==4&&La())}catch{}},W=()=>{let t=c.value;c.value==0&&(t=\"\");let u=\"\";if(K.value!==null)for(let l=0;l<K.value.length;l++){const n=K.value[l];u+=(l==0?\"\":\",\")+n}return{start_date:V.value??\"\",end_date:s.value??\"\",level:J.value,variant_ids:u,kode_provinsi:t,kode_kab_kota:P.value??\"\",pasar_id:B.value??\"\",tipe_komoditas:$.value??\"\",skip_sat_sun:!0}},Ta=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonHarian(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0].daftarHarga){const n={key:l.date,title:l.date,class:\"text-end\"};v.value.push(n)}for(const l of u){const n={variant:l.variant,satuan:l.satuan};for(const i of l.daftarHarga){const f=i.date;n[f]=i.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}_.value.push(n)}}catch{}g.value=!1},$a=async()=>{try{const t=await H.statistikExcelHarian(W());aa(t.data)}catch{}},ja=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonBulanan(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",",
+   "[ye4qepCu.js] =>{fa(),V.value!=null&&s.value!==null&&c.value!=null&&(p.value==1?Ta():p.value==2?ja():p.value==3?Oa():p.value==4&&Wa())},Ha=()=>{const t=oa.value;oa.value=!t},Ka=()=>{sa.value=!0,fa(),Aa()},Aa=async()=>{let t=\"\";p.value==1?t=\"area-daily\":p.value==2?t=\"area-monthly\":p.value==3?t=\"area-weekly\":p.value==4&&(t=\"area-yearly\");const u={asal_lembaga:ra.value,nama:ua.value,email:da.value,no_hp:ma.value,peruntukan:ca.value,jenis_laporan:t,start_date:new Date(V.value),end_date:new Date(s.value)};try{await ia.create(u)&&(p.value==1?$a():p.value==2?Ea():p.value==3?Na():p.value==4&&La())}catch{}},W=()=>{let t=c.value;c.value==0&&(t=\"\");let u=\"\";if(K.value!==null)for(let l=0;l<K.value.length;l++){const n=K.value[l];u+=(l==0?\"\":\",\")+n}return{start_date:V.value??\"\",end_date:s.value??\"\",level:J.value,variant_ids:u,kode_provinsi:t,kode_kab_kota:P.value??\"\",pasar_id:B.value??\"\",tipe_komoditas:$.value??\"\",skip_sat_sun:!0}},Ta=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonHarian(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0].daftarHarga){const n={key:l.date,title:l.date,class:\"text-end\"};v.value.push(n)}for(const l of u){const n={variant:l.variant,satuan:l.satuan};for(const i of l.daftarHarga){const f=i.date;n[f]=i.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}_.value.push(n)}}catch{}g.value=!1},$a=async()=>{try{const t=await H.statistikExcelHarian(W());aa(t.data)}catch{}},ja=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonBulanan(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0",
+   "[ye4qepCu.js] ():p.value==3?Oa():p.value==4&&Wa())},Ha=()=>{const t=oa.value;oa.value=!t},Ka=()=>{sa.value=!0,fa(),Aa()},Aa=async()=>{let t=\"\";p.value==1?t=\"area-daily\":p.value==2?t=\"area-monthly\":p.value==3?t=\"area-weekly\":p.value==4&&(t=\"area-yearly\");const u={asal_lembaga:ra.value,nama:ua.value,email:da.value,no_hp:ma.value,peruntukan:ca.value,jenis_laporan:t,start_date:new Date(V.value),end_date:new Date(s.value)};try{await ia.create(u)&&(p.value==1?$a():p.value==2?Ea():p.value==3?Na():p.value==4&&La())}catch{}},W=()=>{let t=c.value;c.value==0&&(t=\"\");let u=\"\";if(K.value!==null)for(let l=0;l<K.value.length;l++){const n=K.value[l];u+=(l==0?\"\":\",\")+n}return{start_date:V.value??\"\",end_date:s.value??\"\",level:J.value,variant_ids:u,kode_provinsi:t,kode_kab_kota:P.value??\"\",pasar_id:B.value??\"\",tipe_komoditas:$.value??\"\",skip_sat_sun:!0}},Ta=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonHarian(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0].daftarHarga){const n={key:l.date,title:l.date,class:\"text-end\"};v.value.push(n)}for(const l of u){const n={variant:l.variant,satuan:l.satuan};for(const i of l.daftarHarga){const f=i.date;n[f]=i.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}_.value.push(n)}}catch{}g.value=!1},$a=async()=>{try{const t=await H.statistikExcelHarian(W());aa(t.data)}catch{}},ja=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonBulanan(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0].daftarHarga){const n={key:l.date,title:l.date,class:\"text-end\"};v.value.push(n)}for(const ",
+   "[ye4qepCu.js] t t=c.value;c.value==0&&(t=\"\");let u=\"\";if(K.value!==null)for(let l=0;l<K.value.length;l++){const n=K.value[l];u+=(l==0?\"\":\",\")+n}return{start_date:V.value??\"\",end_date:s.value??\"\",level:J.value,variant_ids:u,kode_provinsi:t,kode_kab_kota:P.value??\"\",pasar_id:B.value??\"\",tipe_komoditas:$.value??\"\",skip_sat_sun:!0}},Ta=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonHarian(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0].daftarHarga){const n={key:l.date,title:l.date,class:\"text-end\"};v.value.push(n)}for(const l of u){const n={variant:l.variant,satuan:l.satuan};for(const i of l.daftarHarga){const f=i.date;n[f]=i.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}_.value.push(n)}}catch{}g.value=!1},$a=async()=>{try{const t=await H.statistikExcelHarian(W());aa(t.data)}catch{}},ja=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonBulanan(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center\"});for(const l of u[0].daftarHarga){const n={key:l.date,title:l.date,class:\"text-end\"};v.value.push(n)}for(const l of u){const n={variant:l.variant,satuan:l.satuan};for(const i of l.daftarHarga){const f=i.date;n[f]=i.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}_.value.push(n)}}catch{}g.value=!1},Ea=async()=>{try{const t=await H.statistikExcelBulanan(W());aa(t.data)}catch{}},Oa=async()=>{g.value=!0,v.value=[],_.value=[];try{const t=await H.statistikJsonMingguan(W());v.value=[],_.value=[];let u=t.data.data;v.value.push({key:\"variant\",title:\"Variant\",class:\"text-start\"},{key:\"satuan\",title:\"Satuan\",class:\"text-center",
+   "[CZPh2H-T.js] lue=b(T.value[0],\"yyyy-MM-dd\"))}),M(J,()=>{if(J.value){const e=new Date(J.value);J.value=b(e,\"yyyy\"),n.value=b(e,\"yyyy-MM-dd\")}$.value=null,v.value=null}),M($,()=>{if($.value){const e=ne(new Date($.value));$.value=b(e,\"yyyy\"),v.value=b(e,\"yyyy-MM-dd\")}K.value=null}),M(K,()=>{Pa(),n.value!==null&&v.value!==null||(p.value=[],h.value=[])}),M(c,()=>{Ka(),fa(),c.value==null?y.value=null:ya()}),M(y,()=>{y.value!==null&&Object.entries(y.value).length==0&&(y.value=null),Ha(),fa()}),M(L,()=>{Aa()})});const Da=_a(()=>{const e=document.createElement(\"input\");return e.setAttribute(\"type\",\"month\"),e.type===\"month\"}),Va=_a(()=>{const e=document.createElement(\"input\");return e.setAttribute(\"type\",\"week\"),e.type===\"week\"}),Ma=async()=>{const e={take:1e3};try{const t=(await a.fetchData(e)).data.data;for(const s of t){const r={id:s.id,nama:s.nama};P.value.push(r)}}catch{}},pa=async()=>{const i={take:9999,tipe_komoditas_id:R.value??\"\",is_public:!0,sort:'[{\"selector\":\"nama\",\"desc\":false}]'};try{I.value=[];const s=(await l.fetchData(i)).data.data;for(const r of s){const k={id:r.id,nama:r.nama};I.value.push(k)}}catch{}},Pa=async()=>{try{if(K.value!==null){const e=await l.detail(K.value);j.value=e.data.data.nama}else j.value=null}catch{}},Sa=async()=>{const e={take:9999};try{const t=(await ea.getAllProv(e)).data.data;for(const s of t){const r={id:s.kode_provinsi,nama:s.nama_provinsi};A.value.push(r)}}catch{}},Ua=()=>{const e=new Date(n.value),i=se(e,30),t=ie(e,30);q.value=b(i,\"yyyy-MM-dd\"),X.value=b(t,\"yyyy-MM-dd\"),v.value!=null&&new Date(v.value)>new Date(t)&&(v.value=null)},Ka=async()=>{if(c.value!==null)try{let e=\"\";if(c.value!==null)for(let i=0;i<c.value.length;i++){const t=c.value[i],s=A.value.find(r=>r.id===t);e+=(i==0?\"\":\", \")+s.nama}N.value=e}catch(e){console.log(e)}else N.value=null},ya=async()=>{",
+   "[CZPh2H-T.js] )=>{E.value=0,c.value==null?E.value=1:E.value=2,y.value!==null&&(E.value=3)},Ca=async()=>{ga(),n.value!==null&&v.value!==null&&K.value!==null&&(g.value==1?Ea():g.value==2?Oa():g.value==3?ja():g.value==4&&Fa())},Ta=()=>{const e=na.value;na.value=!e},$a=()=>{sa.value=!0,ga(),Wa()},Wa=async()=>{let e=\"\";g.value==1?e=\"variant-daily\":g.value==2?e=\"variant-monthly\":g.value==3?e=\"variant-weekly\":g.value==4&&(e=\"variant-yearly\");const i={asal_lembaga:ua.value,nama:da.value,email:ma.value,no_hp:ca.value,peruntukan:va.value,jenis_laporan:e,start_date:new Date(n.value),end_date:new Date(v.value)};try{await ra.create(i)&&(g.value==1?Na():g.value==2?La():g.value==3?Ja():g.value==4&&Ia())}catch{}},W=()=>{let e=c.value;(c.value==0||c.value==null)&&(e=\"\");let i=\"\";if(y.value!==null)for(let t=0;t<y.value.length;t++){const s=y.value[t];i+=(t==0?\"\":\",\")+s}return{start_date:n.value??\"\",end_date:v.value??\"\",level:E.value,variant_id:K.value,kode_provinsi:e,kode_kab_kota:i,skip_sat_sun:!0}},Ea=async()=>{D.value=!0,p.value=[],h.value=[];try{const e=await B.statistikJsonHarianVariant(W());p.value=[],h.value=[];let i=e.data.data;p.value.push({key:\"wilayah\",title:\"Wilayah\",class:\"text-start\"});for(const t of i[0].daftarHarga){const s={key:t.date,title:t.date,class:\"text-end\"};p.value.push(s)}for(const t of i){const s={wilayah:t.wilayah};for(const r of t.daftarHarga){const k=r.date;s[k]=r.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}h.value.push(s)}}catch{}D.value=!1},Na=async()=>{try{const e=await B.statistikExcelHarianVariant(W());aa(e.data)}catch{}},Oa=async()=>{D.value=!0,p.value=[],h.value=[];try{const e=await B.statistikJsonBulananVariant(W());p.value=[],h.value=[];let i=e.data.data;p.value.push({key:\"wilayah\",title:\"Wilayah\",class:\"text-start\"});for(const t of i[0].daftarHarga){const s={",
+   "[CZPh2H-T.js] E.value=3)},Ca=async()=>{ga(),n.value!==null&&v.value!==null&&K.value!==null&&(g.value==1?Ea():g.value==2?Oa():g.value==3?ja():g.value==4&&Fa())},Ta=()=>{const e=na.value;na.value=!e},$a=()=>{sa.value=!0,ga(),Wa()},Wa=async()=>{let e=\"\";g.value==1?e=\"variant-daily\":g.value==2?e=\"variant-monthly\":g.value==3?e=\"variant-weekly\":g.value==4&&(e=\"variant-yearly\");const i={asal_lembaga:ua.value,nama:da.value,email:ma.value,no_hp:ca.value,peruntukan:va.value,jenis_laporan:e,start_date:new Date(n.value),end_date:new Date(v.value)};try{await ra.create(i)&&(g.value==1?Na():g.value==2?La():g.value==3?Ja():g.value==4&&Ia())}catch{}},W=()=>{let e=c.value;(c.value==0||c.value==null)&&(e=\"\");let i=\"\";if(y.value!==null)for(let t=0;t<y.value.length;t++){const s=y.value[t];i+=(t==0?\"\":\",\")+s}return{start_date:n.value??\"\",end_date:v.value??\"\",level:E.value,variant_id:K.value,kode_provinsi:e,kode_kab_kota:i,skip_sat_sun:!0}},Ea=async()=>{D.value=!0,p.value=[],h.value=[];try{const e=await B.statistikJsonHarianVariant(W());p.value=[],h.value=[];let i=e.data.data;p.value.push({key:\"wilayah\",title:\"Wilayah\",class:\"text-start\"});for(const t of i[0].daftarHarga){const s={key:t.date,title:t.date,class:\"text-end\"};p.value.push(s)}for(const t of i){const s={wilayah:t.wilayah};for(const r of t.daftarHarga){const k=r.date;s[k]=r.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\")}h.value.push(s)}}catch{}D.value=!1},Na=async()=>{try{const e=await B.statistikExcelHarianVariant(W());aa(e.data)}catch{}},Oa=async()=>{D.value=!0,p.value=[],h.value=[];try{const e=await B.statistikJsonBulananVariant(W());p.value=[],h.value=[];let i=e.data.data;p.value.push({key:\"wilayah\",title:\"Wilayah\",class:\"text-start\"});for(const t of i[0].daftarHarga){const s={key:t.date,title:t.date,class:\"text-end\"};p.value.push(s)}for(const t o",
+   "[B_8U66ad.js] rc:X2(t.url,{id:r.id}),\"data-gtag\":\"\"}]})}};function i(o){{const{tag:r}=n(o);r&&m0(r.id)}}function l(o){{const{tag:r}=n(o);r&&g0(r.id)}}return{gtag:a,initialize:s,disableAnalytics:i,enableAnalytics:l}}const v0=y1({components:{TabHargaBulanSebelumnya:G3,TabHetHa:s0,TabHnt:d0,ChartHntTrend:f0},setup(){const t=y2(),e=b2(),a=g1(),{gtag:n}=M2(),s=x([]),i=x(null),l=x(null),o=x([]),r=x(null),c=x(null),d=x(\"one\"),u=x(null),m=x(null);e1(async()=>{var v,f;const g=await a.getLatestPriceDates(1);(f=(v=g==null?void 0:g.data)==null?void 0:v.data)!=null&&f.tanggal?m.value=g.data.data.tanggal:m.value=K(new Date,\"yyyy-MM-dd\"),u.value=K(new Date(m.value),\"MMM yyyy\"),Y(m,()=>{u.value=K(new Date(m.value),\"MMM yyyy\"),r.value!==null&&_(r.value)}),Y(r,()=>{r.value!==null&&_(r.value)}),Y(i,()=>{i.value!==null&&b(i.value)}),h(),y()});const h=async()=>{const v={take:1e9,sort:'[{\"selector\":\"order\",\"desc\":false}]',tipe_komoditas_id:1,is_active:!0};await t.fetchData(v).then(f=>{var A;const w=(A=f==null?void 0:f.data)==null?void 0:A.data;Array.isArray(w)&&w.forEach((M,P)=>{P==0&&(i.value=M.id,l.value=M.nama),s.value.push({id:M.id,nama:M.nama})})})},b=async g=>{g!==null&&await t.detail(g).then(v=>{var w;const f=(w=v==null?void 0:v.data)==null?void 0:w.data;f&&(l.value=f.nama)})},y=async()=>{const v={take:99999,sort:'[{\"selector\":\"order_public\",\"desc\":false}]',tipe_komoditas_id:1,is_active:!0};await e.fetchData(v).then(f=>{var M;const w=(M=f==null?void 0:f.data)==null?void 0:M.data;if(!Array.isArray(w))return;let A=!1;w.forEach(P=>{P.order_public!=null&&(o.value.push({id:P.id,nama:P.nama}),A||(r.value=P.id,c.value=P.nama,A=!0))})})},_=async g=>{if(g!==null){const v=o.value.find(f=>f.id===g);if(!v)return;c.value=v.nama}};return{listKomoditas:s,komoditasId:i,komoditasName:l,listVariant:o,variantId:r,variantName:c,tab",
+   "[B_8U66ad.js] =S==null?void 0:S.data)!=null&&I.data&&(o.value=S.data.data.tanggal,r.value=S.data.data.tanggal_pembanding),f(),P(),Y(o,()=>{f()}),Y(r,()=>{f()}),Y(b,()=>{b.value!==null&&b.value!==-1&&E(),M(),_.value=null,y.value=[]}),Y(_,()=>{_.value!==null&&M()})});const f=async()=>{c.value=K(new Date(o.value),\"dd MMM\"),d.value=K(new Date(r.value),\"dd MMM\"),w(),M()},w=()=>{const S=[{key:\"nama\",title:\"Komoditas\"},{key:\"satuan\",title:\"Unit\"},{key:\"harga_pembanding\",title:`${d.value??\"\"}`},{key:\"harga\",title:`${c.value??\"\"}`},{key:\"perubahan\",title:\"Perubahan\"}];u.value=S},A=({page:S,itemsPerPage:I,sortBy:L,role_id:C,search:D})=>{i.value=!0,M()},M=async()=>{if(o.value!==null&&r.value!==null){m.value=[];const S=b.value==-1?null:b.value,I={tanggal:o.value,tanggal_pembanding:r.value};(S!=null||S!=\"\")&&(I.kode_provinsi=S),(_.value!=null||_.value!=\"\")&&(I.kode_kab_kota=_.value);let L=0,C=0;p.value=!0,await t.generatePerbandinganHarga(I).then(D=>{var B;const H=(B=D==null?void 0:D.data)==null?void 0:B.data;if(Array.isArray(H)){for(const z of H){L+=z.harga,C+=z.harga_pembanding;const N=(z.region||[]).map(t1=>{const b1=t1.harga!=null?\"Rp \"+t1.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,D1=t1.harga_pembanding!=null?\"Rp \"+t1.harga_pembanding.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null;return{nama:t1.region,satuan:t1.satuan_display,harga_pembanding:D1,harga:b1,perubahan:t1.status_perubahan,persen_perubahan:t1.persen_perubahan}}).sort((t1,b1)=>t1.nama.localeCompare(b1.nama));let W=z.harga!=null?\"Rp \"+z.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,U=z.harga_pembanding!=null?\"Rp \"+z.harga_pembanding.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,J=z.status_perubahan;z.variant_id==1&&N.length>0&&(W=null,U=null,J=null);const n1={nama:z.variant_nama,harga_pembanding:U,harga:W,perubahan:"
+  ],
+  "coba": [
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price-public?tanggal=2026-10-09&kode_provinsi=17&kode_kab_kota=1709",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 83,
+    "detik": 3.8,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[],\"totalCount\":0,\"summary\":null,\"meta\":{\"last_page\":1,\"page\":1,\"total\":0}}",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "GET publik",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price-public?start_date=2026-10-02&end_date=2026-10-09&kode_provinsi=17&kode_kab_kota=1709",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 83,
+    "detik": 1.0,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[],\"totalCount\":0,\"summary\":null,\"meta\":{\"last_page\":1,\"page\":1,\"total\":0}}",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "GET publik",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price-public?kode_provinsi=17&kode_kab_kota=1709",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 83,
+    "detik": 1.2,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[],\"totalCount\":0,\"summary\":null,\"meta\":{\"last_page\":1,\"page\":1,\"total\":0}}",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "GET publik",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price-public",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 27763,
+    "detik": 1.8,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[{\"id\":6962727,\"created_at\":\"2025-01-19T22:50:12.720825+07:00\",\"updated_at\":\"2025-01-19T22:50:12.720825+07:00\",\"created_by\":2399,\"creator\":{\"id\":2399,\"created_at\":\"2024-02-01T14:35:17.005095+07:00\",\"updated_at\":\"2026-08-19T09:22:42.560518+07:00\",\"first_name\":\"Indra\",\"last_name\":\"Developer\",\"user_name\":\"indra.dev\",\"email\":\"indra.oktaviano@mail.com\",\"nip\":\"superindra\",\"nik\":\"\",\"jabatan\":\"\",\"no_telp\":\"\",\"profile_path\":\"\",\"alamat\":\"\",\"kode_provinsi\":\"31\",\"kode_kab_kota\":\"3171\",\"kode_kecamatan\":\"3171011\",\"kode_kelurahan\":\"3171011001\",\"atasan_id\":null,\"atasan\":null,\"is_active\":true,\"role_id\":1,\"role\":{\"id\":0,\"created_at\":\"0001-01-01T00:00:00Z\",\"updated_at\":\"0001-01-01T00:00:00Z\",\"name\":\"\"},\"role_modul\":null},\"tanggal\":\"2024-01-03\",\"kode_provinsi\":\"11\",\"nama_provinsi\":\"Aceh\",\"kode_kab_kot",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "GET publik",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price-komoditas-public?tanggal=2026-10-09&kode_provinsi=17&kode_kab_kota=1709",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 83,
+    "detik": 6.2,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[],\"totalCount\":0,\"summary\":null,\"meta\":{\"last_page\":1,\"page\":1,\"total\":0}}",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "GET publik",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price-komoditas-public",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 4967,
+    "detik": 6.6,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[{\"tanggal\":\"2024-01-03\",\"kode_provinsi\":\"11\",\"nama_provinsi\":\"Aceh\",\"kode_kab_kota\":\"1171\",\"nama_kab_kota\":\"Kota Banda Aceh\",\"komoditas_id\":27,\"komoditas\":{\"id\":27,\"created_at\":\"2024-03-09T09:15:49.861+07:00\",\"updated_at\":\"2026-08-28T10:39:26.360019+07:00\",\"kode\":\"216\",\"nama\":\"Baja Ringan\",\"sequence\":0,\"tipe_komoditas_id\":2,\"is_active\":true,\"is_public\":true,\"deskripsi\":\"\",\"order\":0,\"order_komoditas\":0,\"kode_old\":\"37\"},\"level\":2,\"harga\":115000,\"harga_provinsi\":115000,\"harga_nasional\":115000},{\"tanggal\":\"2024-01-03\",\"kode_provinsi\":\"11\",\"nama_provinsi\":\"Aceh\",\"kode_kab_kota\":\"1171\",\"nama_kab_kota\":\"Kota Banda Aceh\",\"komoditas_id\":27,\"komoditas\":{\"id\":27,\"created_at\":\"2024-03-09T09:15:49.861+07:00\",\"updated_at\":\"2026-08-28T10:39:26.360019+07:00\",\"kode\":\"216\",\"nama\":\"Baja Ringan\",\"seq",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "GET publik",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price/generate-perbandingan-harga",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 4750,
+    "detik": 1.5,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"status\":\"success\",\"message\":\"Success retrieving record\",\"data\":[{\"variant_id\":52,\"variant_nama\":\"Beras Medium\",\"satuan_display\":\"kg\",\"tanggal\":\"2026-10-09\",\"harga\":14375,\"tanggal_pembanding\":\"2026-10-02\",\"harga_pembanding\":14375,\"delta_harga\":0,\"persen_perubahan\":0,\"status_perubahan\":\"Tidak Berubah\",\"is_regional\":true,\"region\":[]},{\"variant_id\":51,\"variant_nama\":\"Beras Premium\",\"satuan_display\":\"kg\",\"tanggal\":\"2026-10-09\",\"harga\":16500,\"tanggal_pembanding\":\"2026-10-02\",\"harga_pembanding\":16500,\"delta_harga\":0,\"persen_perubahan\":0,\"status_perubahan\":\"Tidak Berubah\",\"is_regional\":true,\"region\":[]},{\"variant_id\":1,\"variant_nama\":\"Beras SPHP Bulog\",\"satuan_display\":\"kg\",\"tanggal\":\"2026-10-09\",\"harga\":12000,\"tanggal_pembanding\":\"2026-10-02\",\"harga_pembanding\":12000,\"delta_harga\":0,\"persen_perubahan\":0,\"status_perubahan\":\"Tidak Berubah\",\"is_regional\":true,\"region\":[]},{\"variant_id\":14,\"variant_nama\":\"Gula Pasir Curah\",\"satuan_display\":\"kg\",\"tanggal\":\"2026-10-09\",\"harga\":18000,\"tanggal_pembanding\":\"2026-10-02\",\"harga_pembanding\":18000,\"delta_harga\":0,\"persen_perubahan\":0,\"status_perubahan\":\"Tidak Berubah\",\"is_regional\":false,\"region\":[]},{\"variant_id\":17,\"variant_nama\":\"Minyak Goreng Sawit Kemasan Premium\",\"satuan_display\":\"lt\",\"tanggal\":\"2026-10-09\",\"harga\":22000,\"tanggal_pembanding\":\"2026-10-02\",\"harga_pembanding\":22000,\"delta_harga\":0,\"persen_perubahan\":0,\"status_perubahan\":\"Tidak Berubah\",\"is_regional\":false,\"region\":[]},{\"variant_id\":16,\"variant_nama\":\"Minyak Goreng Sawit Cur",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "POST ",
+    "json": true,
+    "kunci": [
+     "status",
+     "message",
+     "data"
+    ],
+    "kirim": {
+     "tanggal": "2026-10-09",
+     "tanggal_pembanding": "2026-10-02",
+     "kode_provinsi": "17",
+     "kode_kab_kota": "1709"
+    }
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price/export-area-daily-json",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 13101,
+    "detik": 0.9,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"status\":\"success\",\"message\":\"Success retrieving record\",\"data\":[{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":14375},{\"date\":\"2026-10-05\",\"harga\":14375},{\"date\":\"2026-10-06\",\"harga\":14375},{\"date\":\"2026-10-07\",\"harga\":14375},{\"date\":\"2026-10-08\",\"harga\":14375},{\"date\":\"2026-10-09\",\"harga\":14375}],\"kuantitas\":1,\"order\":101,\"satuan\":\"kg\",\"variant\":\"Beras Medium\",\"variant_id\":52},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":16500},{\"date\":\"2026-10-05\",\"harga\":16500},{\"date\":\"2026-10-06\",\"harga\":16500},{\"date\":\"2026-10-07\",\"harga\":16500},{\"date\":\"2026-10-08\",\"harga\":16500},{\"date\":\"2026-10-09\",\"harga\":16500}],\"kuantitas\":1,\"order\":102,\"satuan\":\"kg\",\"variant\":\"Beras Premium\",\"variant_id\":51},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":12000},{\"date\":\"2026-10-05\",\"harga\":12000},{\"date\":\"2026-10-06\",\"harga\":12000},{\"date\":\"2026-10-07\",\"harga\":12000},{\"date\":\"2026-10-08\",\"harga\":12000},{\"date\":\"2026-10-09\",\"harga\":12000}],\"kuantitas\":1,\"order\":104,\"satuan\":\"kg\",\"variant\":\"Beras SPHP Bulog\",\"variant_id\":1},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":13000},{\"date\":\"2026-10-05\",\"harga\":13000},{\"date\":\"2026-10-06\",\"harga\":13000},{\"date\":\"2026-10-07\",\"harga\":13000},{\"date\":\"2026-10-08\",\"harga\":13000},{\"date\":\"2026-10-09\",\"harga\":13000}],\"kuantitas\":1,\"order\":202,\"satuan\":\"kg\",\"variant\":\"Kedelai Impor\",\"variant_id\":48},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":60000},{\"date\":\"2026-10-05\",\"harga\":60000},{\"date\":\"2026-10-06\",\"harga\":60000},{\"date\":\"2026-10-07\",\"harga\":60000},{\"date\":\"",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "POST 3",
+    "json": true,
+    "kunci": [
+     "status",
+     "message",
+     "data"
+    ],
+    "kirim": {
+     "start_date": "2026-10-02",
+     "end_date": "2026-10-09",
+     "level": "3",
+     "variant_ids": "",
+     "kode_provinsi": "17",
+     "kode_kab_kota": "1709",
+     "pasar_id": "117",
+     "skip_sat_sun": "true",
+     "tipe_komoditas": "1"
+    }
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/average-price/export-area-daily-json",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 13101,
+    "detik": 1.2,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"status\":\"success\",\"message\":\"Success retrieving record\",\"data\":[{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":14375},{\"date\":\"2026-10-05\",\"harga\":14375},{\"date\":\"2026-10-06\",\"harga\":14375},{\"date\":\"2026-10-07\",\"harga\":14375},{\"date\":\"2026-10-08\",\"harga\":14375},{\"date\":\"2026-10-09\",\"harga\":14375}],\"kuantitas\":1,\"order\":101,\"satuan\":\"kg\",\"variant\":\"Beras Medium\",\"variant_id\":52},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":16500},{\"date\":\"2026-10-05\",\"harga\":16500},{\"date\":\"2026-10-06\",\"harga\":16500},{\"date\":\"2026-10-07\",\"harga\":16500},{\"date\":\"2026-10-08\",\"harga\":16500},{\"date\":\"2026-10-09\",\"harga\":16500}],\"kuantitas\":1,\"order\":102,\"satuan\":\"kg\",\"variant\":\"Beras Premium\",\"variant_id\":51},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":12000},{\"date\":\"2026-10-05\",\"harga\":12000},{\"date\":\"2026-10-06\",\"harga\":12000},{\"date\":\"2026-10-07\",\"harga\":12000},{\"date\":\"2026-10-08\",\"harga\":12000},{\"date\":\"2026-10-09\",\"harga\":12000}],\"kuantitas\":1,\"order\":104,\"satuan\":\"kg\",\"variant\":\"Beras SPHP Bulog\",\"variant_id\":1},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":13000},{\"date\":\"2026-10-05\",\"harga\":13000},{\"date\":\"2026-10-06\",\"harga\":13000},{\"date\":\"2026-10-07\",\"harga\":13000},{\"date\":\"2026-10-08\",\"harga\":13000},{\"date\":\"2026-10-09\",\"harga\":13000}],\"kuantitas\":1,\"order\":202,\"satuan\":\"kg\",\"variant\":\"Kedelai Impor\",\"variant_id\":48},{\"daftarHarga\":[{\"date\":\"2026-10-02\",\"harga\":60000},{\"date\":\"2026-10-05\",\"harga\":60000},{\"date\":\"2026-10-06\",\"harga\":60000},{\"date\":\"2026-10-07\",\"harga\":60000},{\"date\":\"",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "POST 2",
+    "json": true,
+    "kunci": [
+     "status",
+     "message",
+     "data"
+    ],
+    "kirim": {
+     "start_date": "2026-10-02",
+     "end_date": "2026-10-09",
+     "level": "2",
+     "variant_ids": "",
+     "kode_provinsi": "17",
+     "kode_kab_kota": "1709",
+     "pasar_id": "",
+     "skip_sat_sun": "true",
+     "tipe_komoditas": "1"
+    }
+   }
+  ]
+ },
+ "lain": [
+  {
+   "url": "https://sisp.kemendag.go.id/public/bahan-pokok/json",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 36735,
+   "detik": 2.4,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/public/bahan-pokok-ews/json",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 38294,
+   "detik": 1.7,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/kab/json",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 36735,
+   "detik": 2.1,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/kab/json?prov=17",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 38294,
+   "detik": 1.2,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/pasar/json",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 38294,
+   "detik": 1.0,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/pasar/json?kab=1709",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 36735,
+   "detik": 1.8,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/public/bahan-pokok/json?kab=1709",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 38294,
+   "detik": 1.8,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/public/bahan-pokok/json?kode_kab=1709",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 38294,
+   "detik": 1.8,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta name=\"title\" content=\"404 Halaman Tidak Ditemukan | Sistem Informasi Sarana Perdagangan (SISP)\"> <meta name=\"description\" content=\"Website Sistem Informasi Sarana Perdagangan (SISP) Halaman 404 Halaman Tidak Ditemukan\"> <meta name=\"keywords\" content=\"pasar,dashboard,sisp,kementerian,perdagangan,kemendag,404 Halaman Tidak Ditemukan\"> <meta name=\"author\" content=\"Pusat Data dan Sistem Informasi Kementerian Perdagangan Republik Indonesia\"> <meta name=\"robots\" content=\"all,index,follow\"> <meta name=\"language\" content=\"Indonesia\"> <meta http-equiv=\"cache-control\" content=\"no-cache\" /> <meta http-equiv=\"Pragma\" content=\"no-cache\" /> <meta http-equiv=\"Expires\" content=\"-1\" /> <meta http-equiv=\"Content-Language\" content=\"id-ID\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <!-- Judul Halaman & Favicon --> <title>404 H",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [],
+   "api": [
+    "//sisp.kemendag.go.id/assets/frontend/json/animation-404-v1.json"
+   ],
+   "konteks": [
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script> <script src=\"https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/"
+   ]
+  },
+  {
+   "url": "https://disperindag.bengkuluprov.go.id/komoditas",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 106064,
+   "detik": 11.3,
+   "wilayah_disebut": [
+    "bengkulu tengah",
+    "kepahiang",
+    "kota bengkulu"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Harga Bahan Pokok - DISPERINDAG</title> <!-- Fonts --> <link rel=\"preconnect\" href=\"https://fonts.bunny.net\"> <link href=\"https://fonts.bunny.net/css?family=instrument-sans:400,500,600\" rel=\"stylesheet\" /> <!-- Styles / Scripts --> <link rel=\"preload\" as=\"style\" href=\"https://disperindag.bengkuluprov.go.id/build/assets/app-Dd-X7fge.css\" /><link rel=\"modulepreload\" as=\"script\" href=\"https://disperindag.bengkuluprov.go.id/build/assets/app-BmbMkWQG.js\" /><link rel=\"modulepreload\" as=\"script\" href=\"https://disperindag.bengkuluprov.go.id/build/assets/sweetalert2.esm.all-NNS-RXd7.js\" /><link rel=\"modulepreload\" as=\"script\" href=\"https://disperindag.bengkuluprov.go.id/build/assets/_commonjsHelpers-Cpj98o6Y.js\" /><link rel=\"stylesheet\" href=\"https://disperindag.bengkuluprov.go.id/build/assets/app-Dd-X7fge.css\" /><script type=\"module\" src=\"https://disperindag.bengkuluprov.go.id/build/assets/app-BmbMkWQG.js\"></script> </head> <body class=\"bg-white\" x-data=\"{ 'loaded': true, 'darkMode': false }\"> <!-- ===== Preloader Start ===== --> <div x-show=\"loaded\" x-",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [
+    " | | | | | | | Kabupaten/Kota | | | | | | Nama Variant | | | | | | Tanggal | | | | | | Harga | | | | | | | | | | | | kabupaten bengkulu selatan | | | | | | daging ayam kampung | | | | | | 6 October 2026 | | | | | | Rp. 90.000 / ekor | | | | | | | | kabupaten rejang lebong | | | | | | minyak goreng curah | | | | | | 6 October 2026 | | | | | | Rp. 18.300 / lt | | | | | | | | kabupaten kaur | | | | | | cabai merah besar | | | | | | 6 October 2026 | | | | | | Rp. 55.000 / kg | | | | | | | | kabupaten seluma | | | | | | minyak goreng curah | | | | | | 6 October 2026 | | | | | | Rp. 18.000 / lt | | | | | | | | kabupaten lebong | | | | | | daging sapi impor beku | | | | | | 6 October 2026 | | | | | | Rp. 105.000 / kg | | | | | | | | kabupaten kepahiang | | | | | | sawi hijau | | | | | | 6 October 2026 | | | | | | Rp. 8.000 / kg | | | | | | | | kota bengkulu | | | | | | daging ayam ras | | | | | | 6 October 2026 | | | | | | Rp. 39.333 / kg | | | | | | | | kabupaten bengkulu selatan | | | | | | daging ayam ras | | | | | | 6 October 2026 | | | | | | Rp. 45.000 / kg | | | | | | | | kabupaten rejang lebong | | | | | | minyak goreng kemasan | | | | | | 6 October 2026 | | | | | | Rp. 22.167 / lt | | | | | | | | kabupaten kaur | | | | | | cabai merah keriting | | | | | | 6 October 2026 | | | | | | Rp. 55.000 / kg | | | | | | | "
+   ],
+   "api": [],
+   "konteks": []
+  },
+  {
+   "url": "https://kepahiangkab.go.id/info-pangan",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 14503,
+   "detik": 0.9,
+   "wilayah_disebut": [
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Info Pangan — Pemerintah Kabupaten Kepahiang</title> <meta name=\"description\" content=\"Portal resmi Pemerintah Kabupaten Kepahiang, Provinsi Bengkulu.\"> <link rel=\"icon\" href=\"https://kepahiangkab.go.id/assets/img/logo.png\"> <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"> <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin> <link href=\"https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap\" rel=\"stylesheet\"> <link rel=\"stylesheet\" href=\"https://kepahiangkab.go.id/assets/css/style.css\"> </head> <body> <div class=\"site-header-sticky\"> <div class=\"topbar\"> <div class=\"wrap\"> <a class=\"brand\" href=\"https://kepahiangkab.go.id/\"> <img src=\"https://kepahiangkab.go.id/assets/img/logo.png\" alt=\"Lambang Kabupaten Kepahiang\"> <div class=\"brand-text\"> <div class=\"kop\">PORTAL RESMI PEMERINTAH</div> <div class=\"kab\">Kepahiang</div> </div> </a> <div class=\"top-actions\"> <form action=\"https://kepahiangkab.go.id/cari\" method=\"get\" style=\"display:flex;\"> <button type=\"submit\" class=\"icon\" style=\"border",
+   "catatan": "tahap 3 lain",
+   "json": false,
+   "tabel": [
+    " | | | | Komoditas | | Satuan | | Harga | | Perubahan | | | | | | Beras Medium | | Kg | | Rp13.500 | | | — Stabil | | | | | Gula Pasir | | Kg | | Rp18.000 | | | ▲ 1.50% | | | | | Minyak Goreng Curah | | Liter | | Rp16.500 | | | ▼ 2.00% | | | | | Cabai Merah Keriting | | Kg | | Rp45.000 | | | ▲ 8.00% | | | | | Cabai Rawit | | Kg | | Rp55.000 | | | ▲ 6.50% | | | | | Bawang Merah | | Kg | | Rp32.000 | | | ▼ 3.00% | | | | | Bawang Putih | | Kg | | Rp38.000 | | | — Stabil | | | | | Telur Ayam Ras | | Kg | | Rp28.000 | | | ▲ 2.50% | | | | | Daging Ayam Ras | | Kg | | Rp34.000 | | | — Stabil | | | | | Kopi Robusta Kepahiang | | Kg | | Rp62.000 | | | ▲ 4.00% | | | | | "
+   ],
+   "api": [
+    "https://fonts.googleapis.com",
+    "https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap"
+   ],
+   "konteks": []
+  }
+ ]
+}

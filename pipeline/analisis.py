@@ -1,20 +1,26 @@
 """Lapisan analisis: baseline, proyeksi, rolling-origin backtesting, interval prediksi, deteksi anomali, dan drift.
 
-Menerapkan arsitektur Champion vs Challenger sesuai pedoman Bab 6 dan Laporan Pengembangan:
+Menerapkan arsitektur Champion vs Challenger sesuai pedoman Bab 6 dan Laporan Pengembangan Model Prediksi:
   Champion Baseline (transparan, stabil, hemat komputasi):
     naif          : harga terakhir (persistence baseline / pembanding utama)
+    naif_musiman7 : harga pada hari yang sama minggu lalu (Seasonal Naive-7)
     rata7         : rerata bergerak 7 hari terakhir (MA-7)
-    holt_redam    : Holt linear trend dengan damping (pada log harga)
-    ses           : Simple Exponential Smoothing (level-only)
-    hari_raya     : naif x profil kenaikan historis sekitar hari raya (bila riwayat tersedia)
-  Challenger (diadu secara walk-forward point-in-time anti-leakage):
-    ml_challenger : direct multi-horizon point-in-time machine learning (lags, rolling stats, momentum)
-    ensemble      : dynamic ensemble adaptif (kombinasi 50% baseline juara + 50% ML)
+    holt_redam    : Holt linear trend dengan damping pada log harga; alpha, beta, phi ditala grid search per origin
+    ses           : Simple Exponential Smoothing (level-only); alpha ditala per origin
+    hari_raya     : naif x profil kenaikan historis H-14..H+3 sekitar hari raya (bila riwayat tersedia)
+  Challenger (diadu secara walk-forward point-in-time anti-leakage, lihat model_ml.py):
+    ml_challenger : Ridge direct multi-horizon (fitur lag, rolling, momentum, stabilitas, kalender)
+    ml_hgb        : Gradient Boosting berbasis histogram (setara LightGBM)
+    ml_rf         : Random Forest
+    ensemble      : dynamic ensemble: baseline juara + ML terbaik, bobot dipilih dari galat backtest (0,3/0,5/0,7)
+  Kandidat mengikuti kelas volatilitas (laporan, "Alur Pemilihan Model Berdasarkan Volatilitas"): kelas rendah menguji
+  baseline dan Ridge; kelas sedang dan tinggi juga menguji Gradient Boosting, Random Forest, dan ensemble.
 
-Syarat Promosi Challenger (Gerbang Bab 6):
+Syarat Promosi (Gerbang Bab 6):
+  Baseline selain naif hanya menjadi juara bila menang terhadap naif di >= 8 dari 12 origin (>= 67% bila origin lebih sedikit).
   ML hanya menggantikan baseline jika sMAPE membaik >= 5%, menang di >= 8 dari 12 origin,
-  MAE tidak memburuk > 2%, dan bias terkendali (<= 3% pangan pokok, <= 5% lainnya).
-  Ensemble hanya aktif jika memperbaiki sMAPE >= 2% dari model tunggal terbaik.
+  MAE tidak memburuk > 2%, dan bias terkendali (<= 3% kelas rendah, <= 5% lainnya).
+  Ensemble hanya aktif jika memperbaiki sMAPE >= 2% dari model tunggal terbaik dan MAE tidak memburuk > 2%.
 """
 
 from __future__ import annotations
@@ -26,8 +32,8 @@ from datetime import date, timedelta
 from typing import Callable
 
 import numpy as np
-from sklearn.linear_model import Ridge
 
+from . import model_ml
 from .konfigurasi import Acara
 
 
@@ -88,7 +94,9 @@ def model_rata7(y: np.ndarray, asal: date, h: int, _k: dict) -> np.ndarray:
     return np.full(h, float(np.mean(y[-7:])))
 
 
-_GRID_HOLT = [(a, b, phi) for a in (0.2, 0.4, 0.6, 0.8) for b in (0.05, 0.15) for phi in (0.8, 0.95)]
+# Ruang tuning sesuai Laporan Progres (alpha 0,1-0,5; beta 0,01-0,15; phi 0,80-0,98), dipilih per origin dari data latih saja.
+_GRID_HOLT = [(a, b, phi) for a in (0.1, 0.25, 0.4, 0.5) for b in (0.01, 0.05, 0.15) for phi in (0.8, 0.88, 0.95, 0.98)]
+_GRID_SES = (0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.7, 0.9)
 
 
 def _holt(y: np.ndarray, a: float, b: float, phi: float) -> tuple[float, float, float]:
@@ -103,35 +111,55 @@ def _holt(y: np.ndarray, a: float, b: float, phi: float) -> tuple[float, float, 
     return sse, level, tren
 
 
-def model_holt_redam(y: np.ndarray, asal: date, h: int, _k: dict) -> np.ndarray:
+def parameter_holt(y: np.ndarray) -> tuple[float, float, float, float, float] | None:
+    """(alpha, beta, phi, level, tren) terbaik pada log harga 180 hari terakhir (SSE satu langkah terkecil)."""
     log_y = np.log(y[-180:])
     if len(log_y) < 10:
+        return None
+    sse, level, tren, a, b, phi = min((_holt(log_y, *p) + p for p in _GRID_HOLT), key=lambda r: r[0])
+    return a, b, phi, level, tren
+
+
+def model_holt_redam(y: np.ndarray, asal: date, h: int, _k: dict) -> np.ndarray:
+    p = parameter_holt(y)
+    if p is None:
         return model_naif(y, asal, h, _k)
-    terbaik = min((_holt(log_y, *p) + p for p in _GRID_HOLT), key=lambda r: r[0])
-    _, level, tren, _, _, phi = terbaik
+    _, _, phi, level, tren = p
     langkah = np.cumsum(phi ** np.arange(1, h + 1))
     return np.exp(level + langkah * tren)
 
 
-def model_ses(y: np.ndarray, asal: date, h: int, _k: dict) -> np.ndarray:
-    """Simple Exponential Smoothing (SES) level-only untuk harga berfluktuasi stabil."""
+def parameter_ses(y: np.ndarray) -> tuple[float, float] | None:
+    """(alpha, level) terbaik pada log harga 120 hari terakhir."""
     log_y = np.log(y[-120:]) if len(y) >= 120 else np.log(y)
     if len(log_y) < 5:
-        return model_naif(y, asal, h, _k)
-    best_sse = float("inf")
-    best_level = log_y[0]
-    for alpha in (0.1, 0.2, 0.3, 0.5, 0.7, 0.9):
-        lvl = log_y[0]
-        sse = 0.0
+        return None
+    terbaik = (float("inf"), _GRID_SES[0], log_y[0])
+    for alpha in _GRID_SES:
+        lvl, sse = log_y[0], 0.0
         for obs in log_y[1:]:
-            pred = lvl
-            err = obs - pred
+            err = obs - lvl
             sse += err * err
             lvl = alpha * obs + (1 - alpha) * lvl
-        if sse < best_sse:
-            best_sse = sse
-            best_level = lvl
-    return np.full(h, float(np.exp(best_level)))
+        if sse < terbaik[0]:
+            terbaik = (sse, alpha, lvl)
+    return terbaik[1], float(terbaik[2])
+
+
+def model_ses(y: np.ndarray, asal: date, h: int, _k: dict) -> np.ndarray:
+    """Simple Exponential Smoothing (SES) level-only untuk harga berfluktuasi stabil."""
+    p = parameter_ses(y)
+    if p is None:
+        return model_naif(y, asal, h, _k)
+    return np.full(h, float(np.exp(p[1])))
+
+
+def model_naif_musiman7(y: np.ndarray, asal: date, h: int, _k: dict) -> np.ndarray:
+    """Seasonal Naive-7: harga t+j sama dengan harga pada hari yang sama di minggu terakhir yang sudah teramati."""
+    if len(y) < 7:
+        return model_naif(y, asal, h, _k)
+    n = len(y)
+    return np.array([y[n - 1 + j - 7 * math.ceil(j / 7)] for j in range(1, h + 1)])
 
 
 def profil_hari_raya(seri: SeriHarian, acara: list[Acara], sebelum: int, sesudah: int) -> dict[int, float] | None:
@@ -177,81 +205,61 @@ def model_hari_raya(y: np.ndarray, asal: date, h: int, k: dict) -> np.ndarray:
     return np.array([y[-1] * faktor(asal + timedelta(days=j)) / f_asal for j in range(1, h + 1)])
 
 
-def _buat_fitur_ml(y: np.ndarray, t: int) -> list[float]:
-    """Fitur point-in-time ketat anti-leakage dari riwayat harga hingga indeks t."""
-    m7 = float(np.mean(y[max(0, t - 6):t + 1]))
-    s7 = float(np.std(y[max(0, t - 6):t + 1])) if t >= 6 else 0.0
-    m28 = float(np.mean(y[max(0, t - 27):t + 1])) if t >= 14 else m7
-    lag1 = float(y[t])
-    lag2 = float(y[t - 1]) if t >= 1 else lag1
-    lag3 = float(y[t - 2]) if t >= 2 else lag2
-    lag7 = float(y[t - 6]) if t >= 6 else lag3
-    lag14 = float(y[t - 13]) if t >= 13 else lag7
-    return [
-        lag1, lag2, lag3, lag7, lag14,
-        m7, s7, m28,
-        lag1 - m7,
-        lag1 / (m7 + 1e-6),
-        s7 / (m7 + 1e-6),
-    ]
+def _model_ml(jenis: str) -> Callable:
+    def prakira(y: np.ndarray, asal: date, h: int, konteks: dict) -> np.ndarray:
+        p = model_ml.prediksi_direct(y, asal, h, jenis, konteks.get("acara"), konteks.get("_fitur"))
+        return p if p is not None else model_naif(y, asal, h, konteks)
+    return prakira
 
 
-def model_ml_challenger(y: np.ndarray, asal: date, h: int, konteks: dict) -> np.ndarray:
-    """Model Machine Learning direct multi-horizon berbasis Ridge log-returns dengan fitur anti-leakage."""
-    if len(y) < 30 or np.all(y == y[0]) or np.std(y) < 1e-6:
-        return model_naif(y, asal, h, konteks)
-
-    X = [_buat_fitur_ml(y, t) for t in range(14, len(y))]
-    X_arr = np.array(X)
-    preds = np.zeros(h)
-    last_feat = np.array([_buat_fitur_ml(y, len(y) - 1)])
-
-    for step in range(1, h + 1):
-        n_avail = len(y) - step - 14
-        if n_avail >= 15:
-            X_sub = X_arr[:n_avail]
-            y_base_sub = np.maximum(1e-6, y[14:14 + n_avail])
-            y_target_sub = np.maximum(1e-6, y[14 + step:14 + step + n_avail])
-            y_log_ret = np.log(y_target_sub / y_base_sub)
-            reg = Ridge(alpha=10.0)
-            reg.fit(X_sub, y_log_ret)
-            r_pred = float(reg.predict(last_feat)[0])
-            r_pred = np.clip(r_pred, -0.4, 0.4)
-            preds[step - 1] = max(1.0, y[-1] * math.exp(r_pred))
-        else:
-            preds[step - 1] = preds[step - 2] if step > 1 else y[-1]
-    return preds
+model_ml_challenger = _model_ml("ridge")
+model_ml_hgb = _model_ml("hgb")
+model_ml_rf = _model_ml("rf")
 
 
 def model_ensemble(y: np.ndarray, asal: date, h: int, konteks: dict) -> np.ndarray:
-    """Dynamic Ensemble: kombinasi adaptif 50% baseline (Damped Holt/Naive) + 50% ML Challenger."""
-    f_base = model_holt_redam(y, asal, h, konteks)
-    f_ml = model_ml_challenger(y, asal, h, konteks)
-    return 0.5 * f_base + 0.5 * f_ml
+    """Dynamic Ensemble: w x baseline juara + (1-w) x ML terbaik; komponen dan w dipilih dari backtest (konteks["ensemble"])."""
+    e = konteks.get("ensemble") or {"a": "holt_redam", "b": "ml_challenger", "w": 0.5}
+    return e["w"] * MODEL[e["a"]](y, asal, h, konteks) + (1 - e["w"]) * MODEL[e["b"]](y, asal, h, konteks)
 
 
 MODEL: dict[str, Callable] = {
     "naif": model_naif,
+    "naif_musiman7": model_naif_musiman7,
     "rata7": model_rata7,
     "holt_redam": model_holt_redam,
     "ses": model_ses,
     "hari_raya": model_hari_raya,
     "ml_challenger": model_ml_challenger,
+    "ml_hgb": model_ml_hgb,
+    "ml_rf": model_ml_rf,
     "ensemble": model_ensemble,
 }
 
 NAMA_MODEL = {
-    "naif": "Harga terakhir (Baseline Naive, jadi pembanding)",
+    "naif": "Harga terakhir (cara paling sederhana, jadi pembanding)",
+    "naif_musiman7": "Harga hari yang sama minggu lalu (Seasonal Naive-7)",
     "rata7": "Rata-rata 7 hari terakhir (MA-7)",
-    "holt_redam": "Holt linier dengan damping (tren melandai)",
-    "ses": "Simple Exponential Smoothing (penghalusan eksponensial)",
+    "holt_redam": "Tren melandai (Damped Holt)",
+    "ses": "Penghalusan eksponensial (SES)",
     "hari_raya": "Harga terakhir ditambah pola hari raya sebelumnya",
-    "ml_challenger": "Machine Learning Multi-Horizon (Challenger)",
-    "ensemble": "Dynamic Ensemble (Kombinasi Adaptif Baseline + ML)",
+    "ml_challenger": "Machine learning Ridge (regresi linear)",
+    "ml_hgb": "Machine learning Gradient Boosting (setara LightGBM)",
+    "ml_rf": "Machine learning Random Forest",
+    "ensemble": "Gabungan cara statistik dan machine learning (Dynamic Ensemble)",
 }
 
-MODEL_BASELINE = {"naif", "rata7", "holt_redam", "ses", "hari_raya"}
-MODEL_CHALLENGER = {"ml_challenger", "ensemble"}
+MODEL_BASELINE = {"naif", "naif_musiman7", "rata7", "holt_redam", "ses", "hari_raya"}
+MODEL_ML = ("ml_challenger", "ml_hgb", "ml_rf")
+MODEL_CHALLENGER = set(MODEL_ML) | {"ensemble"}
+URUT_BASELINE = ("naif", "naif_musiman7", "rata7", "ses", "holt_redam", "hari_raya")  # urutan kesederhanaan bila seri
+# Kandidat per kelas volatilitas (laporan: "Alur Pemilihan Model Berdasarkan Volatilitas").
+KANDIDAT_KELAS = {
+    "rendah": URUT_BASELINE + ("ml_challenger",),
+    "sedang": URUT_BASELINE + MODEL_ML,
+    "tinggi": URUT_BASELINE + MODEL_ML,
+}
+BOBOT_ENSEMBLE = (0.3, 0.5, 0.7)
 
 
 # ---------------------------------------------------------------- metrik
@@ -334,6 +342,29 @@ class HasilBacktest:
     asal_harga: np.ndarray = field(default_factory=lambda: np.array([]))
     metrik_per_origin: dict[int, dict] = field(default_factory=dict)
     metrik_per_horizon: dict[int, dict] = field(default_factory=dict)
+    skala_mase: np.ndarray = field(default_factory=lambda: np.array([]))
+
+
+def rangkum_backtest(nama_model: str, f_arr: np.ndarray, a_arr: np.ndarray, h_arr: np.ndarray, o_arr: np.ndarray,
+                     t_all: list[date], b_arr: np.ndarray, skala: np.ndarray, ambang_gejolak_persen: float = 5.0) -> HasilBacktest:
+    """Metrik agregat, per origin, dan per horizon dari pasangan (prediksi, aktual) hasil rolling-origin."""
+    m_all = metrik(f_arr, a_arr, b_arr, ambang_gejolak_persen, skala)
+    m_all["jumlah_origin"] = int(len(np.unique(o_arr)))
+    per_origin = {int(j): metrik(f_arr[o_arr == j], a_arr[o_arr == j], b_arr[o_arr == j], ambang_gejolak_persen)
+                  for j in np.unique(o_arr)}
+    m_all["smape_median_origin"] = round(float(np.median([m["smape"] for m in per_origin.values()])), 3) if per_origin else None
+    per_h = {int(hz): metrik(f_arr[h_arr == hz], a_arr[h_arr == hz], b_arr[h_arr == hz], ambang_gejolak_persen, skala[h_arr == hz])
+             for hz in np.unique(h_arr)}
+    return HasilBacktest(model=nama_model, prediksi=f_arr, aktual=a_arr, horizon=h_arr, origin=o_arr, tanggal=t_all, metrik=m_all,
+                         asal_harga=b_arr, metrik_per_origin=per_origin, metrik_per_horizon=per_h, skala_mase=skala)
+
+
+def gabung_ensemble(a: HasilBacktest, b: HasilBacktest, w: float, ambang_gejolak_persen: float = 5.0) -> HasilBacktest | None:
+    """Backtest ensemble w*a + (1-w)*b dari prediksi kedua model pada pasangan (origin, horizon) yang sama (tanpa melatih ulang)."""
+    if len(a.prediksi) != len(b.prediksi) or not (np.array_equal(a.origin, b.origin) and np.array_equal(a.horizon, b.horizon)):
+        return None
+    f = w * a.prediksi + (1 - w) * b.prediksi
+    return rangkum_backtest("ensemble", f, a.aktual, a.horizon, a.origin, a.tanggal, a.asal_harga, a.skala_mase, ambang_gejolak_persen)
 
 
 def backtest(seri: SeriHarian, terisi: np.ndarray, nama_model: str, konteks: dict,
@@ -343,7 +374,6 @@ def backtest(seri: SeriHarian, terisi: np.ndarray, nama_model: str, konteks: dic
     fungsi = MODEL[nama_model]
     akhir = seri.n - 1 - geser_akhir
     f_all, a_all, h_all, o_all, t_all, base_all = [], [], [], [], [], []
-    origin_metrics: dict[int, dict] = {}
     o_tertua = None
 
     for j in range(jumlah_origin):
@@ -357,7 +387,6 @@ def backtest(seri: SeriHarian, terisi: np.ndarray, nama_model: str, konteks: dic
         f = fungsi(y, seri.tanggal[o], horizon, konteks)
         o_tertua = o if o_tertua is None else min(o_tertua, o)
 
-        f_j, a_j, base_j = [], [], []
         for h in range(1, horizon + 1):
             a = seri.nilai[o + h]
             if not np.isnan(a):
@@ -367,22 +396,12 @@ def backtest(seri: SeriHarian, terisi: np.ndarray, nama_model: str, konteks: dic
                 o_all.append(j)
                 t_all.append(seri.tanggal[o + h])
                 base_all.append(y_o)
-                f_j.append(f[h - 1])
-                a_j.append(a)
-                base_j.append(y_o)
-        if a_j:
-            origin_metrics[j] = metrik(np.array(f_j), np.array(a_j), np.array(base_j), ambang_gejolak_persen)
 
     if not a_all:
         return None
 
-    f_arr = np.array(f_all)
-    a_arr = np.array(a_all)
-    h_arr = np.array(h_all)
-    o_arr = np.array(o_all)
-    b_arr = np.array(base_all)
-
     # Skala MASE per horizon: galat cara naif h hari pada data latih, yaitu data sampai origin tertua (point-in-time).
+    h_arr = np.array(h_all)
     latih = terisi[:o_tertua + 1] if o_tertua is not None else terisi
     skala_h: dict[int, float] = {}
     for hz in np.unique(h_arr):
@@ -390,35 +409,9 @@ def backtest(seri: SeriHarian, terisi: np.ndarray, nama_model: str, konteks: dic
         d = np.abs(latih[hz:] - latih[:-hz]) if len(latih) > hz else np.array([])
         d = d[~np.isnan(d)]
         skala_h[hz] = float(np.mean(d)) if len(d) else 0.0
-    diff_insample = np.array([skala_h[int(hz)] for hz in h_arr])
-
-    # Metrik agregat
-    m_all = metrik(f_arr, a_arr, b_arr, ambang_gejolak_persen, diff_insample)
-    m_all["jumlah_origin"] = int(len(set(o_all)))
-
-    # Metrik per-horizon direct (H+7, H+14, H+30, dsb.)
-    metrik_per_horizon: dict[int, dict] = {}
-    for hz in np.unique(h_arr):
-        idx_hz = h_arr == hz
-        if np.any(idx_hz):
-            metrik_per_horizon[int(hz)] = metrik(
-                f_arr[idx_hz], a_arr[idx_hz], b_arr[idx_hz],
-                ambang_gejolak_persen, diff_insample[idx_hz]
-            )
-
-    hasil = HasilBacktest(
-        model=nama_model,
-        prediksi=f_arr,
-        aktual=a_arr,
-        horizon=h_arr,
-        origin=o_arr,
-        tanggal=t_all,
-        metrik=m_all,
-        asal_harga=b_arr,
-        metrik_per_origin=origin_metrics,
-        metrik_per_horizon=metrik_per_horizon,
-    )
-    return hasil
+    skala = np.array([skala_h[int(hz)] for hz in h_arr])
+    return rangkum_backtest(nama_model, np.array(f_all), np.array(a_all), h_arr, np.array(o_all), t_all, np.array(base_all), skala,
+                            ambang_gejolak_persen)
 
 
 def _kuantil_residu(res: np.ndarray, hz: np.ndarray, h: int, alfa: float) -> tuple[float, float] | None:
@@ -461,6 +454,27 @@ def cakupan_interval(bt: HasilBacktest, tingkat: float) -> float | None:
                 continue
             total += 1
             kena += int(q[0] <= r <= q[1])
+    return round(kena / total * 100, 1) if total else None
+
+
+def cakupan_pit(res_kal: np.ndarray, h_kal: np.ndarray, res_uji: np.ndarray, h_uji: np.ndarray, alfa: float) -> float | None:
+    """Cakupan interval tengah (1-alfa) dengan PIT acak (Czado, Gneiting & Held, 2009) yang tahan terhadap nilai kembar.
+
+    Harga pangan sering tidak berubah berhari-hari, sehingga banyak selisih bernilai tepat nol. Pada data seperti itu cakupan
+    biasa selalu 100% (interval berapa pun lebarnya memuat nol) dan syarat 75-85% tidak bisa dinilai. PIT acak membagi rata
+    peluang pada nilai kembar, sehingga cakupan yang dihitung adalah cakupan yang diharapkan dari interval terkalibrasi.
+    Untuk data tanpa nilai kembar hasilnya sama dengan cakupan biasa."""
+    lo, hi = alfa / 2, 1 - alfa / 2
+    kena = total = 0.0
+    for r, h in zip(res_uji, h_uji):
+        pilih = res_kal[np.abs(h_kal - h) <= 2]
+        n = len(pilih)
+        if n < 10:
+            continue
+        f_lo = float(np.sum(pilih < r - 1e-12)) / (n + 1)
+        f_hi = (float(np.sum(pilih <= r + 1e-12)) + 1) / (n + 1)
+        kena += max(0.0, min(f_hi, hi) - max(f_lo, lo)) / (f_hi - f_lo)
+        total += 1
     return round(kena / total * 100, 1) if total else None
 
 
@@ -678,6 +692,10 @@ class HasilVarian:
     diagnostik: dict = field(default_factory=dict)
     kelengkapan_persen: float | None = None
     jumlah_obs: int = 0
+    kelas_volatilitas: str = "sedang"
+    parameter: dict = field(default_factory=dict)
+    terbaik_per_horizon: dict = field(default_factory=dict)
+    sumber_seri: dict = field(default_factory=dict)
 
 
 def smape_segmen(bt: HasilBacktest, acara: list[Acara], sebelum: int, sesudah: int) -> dict:
@@ -702,8 +720,20 @@ VALIDASI_BAWAAN = {
     "akurasi_arah_min_persen": {"tinggi": 60.0},
     "cakupan_min_persen": 75.0,
     "cakupan_maks_persen": 85.0,
+    # Rentang prakiraan dikalibrasi dari residu origin mingguan selama setahun sebelum holdout (bukan hanya origin seleksi),
+    # supaya mewakili beberapa musim harga. Model mesin belajar memakai setengahnya karena mahal dihitung.
+    "origin_kalibrasi": 52,
+    "jarak_origin_kalibrasi_hari": 7,
 }
 KELAS_VOLATILITAS = {"volatil": "tinggi", "protein": "sedang", "pokok": "rendah", "pabrikan": "rendah"}
+# Laporan Pengembangan Model, tabel "Rekomendasi Model dan Validasi per Varian": Bawang Putih berkelas volatilitas sedang
+# (sMAPE <= 10%) walaupun satu kelompok dengan cabai dan bawang merah.
+KELAS_VARIAN = {"BWP01": "sedang"}
+AMBANG_SMAPE_KELAS = {"rendah": 5.0, "sedang": 10.0, "tinggi": 15.0}
+
+
+def kelas_volatilitas(kelompok: str, kode: str | None = None) -> str:
+    return KELAS_VARIAN.get(kode or "", KELAS_VOLATILITAS.get(kelompok, "sedang"))
 
 
 def pengaturan_validasi(pengaturan: dict) -> dict:
@@ -741,11 +771,13 @@ def uji_diebold_mariano(galat_a: np.ndarray, galat_b: np.ndarray, horizon: int) 
     return {"n": int(n), "statistik": round(stat, 3), "p": round(p, 4)}
 
 
-def kelengkapan_seri(seri: SeriHarian, hari_catat: list[int], jendela: int = 365) -> float | None:
-    """Persen hari pencatatan (mis. Senin-Jumat) yang punya harga dalam jendela hari terakhir."""
+def kelengkapan_seri(seri: SeriHarian, hari_catat: list[int], jendela: int = 365, libur: set | None = None) -> float | None:
+    """Persen hari pencatatan (mis. Senin-Jumat, di luar libur pencatatan) yang punya harga dalam jendela hari terakhir."""
     n = min(seri.n, jendela)
-    diharapkan = sum(1 for t in seri.tanggal[-n:] if t.weekday() in hari_catat)
-    ada = sum(1 for t, x in zip(seri.tanggal[-n:], seri.nilai[-n:]) if t.weekday() in hari_catat and not np.isnan(x))
+    libur = libur or set()
+    wajib = lambda t: t.weekday() in hari_catat and t not in libur  # noqa: E731
+    diharapkan = sum(1 for t in seri.tanggal[-n:] if wajib(t))
+    ada = sum(1 for t, x in zip(seri.tanggal[-n:], seri.nilai[-n:]) if wajib(t) and not np.isnan(x))
     return round(ada / diharapkan * 100, 1) if diharapkan else None
 
 
@@ -789,11 +821,12 @@ def diagnostik_deret(seri: SeriHarian, terisi: np.ndarray) -> dict:
     return hasil
 
 
-def nilai_validasi(kelompok: str, v: dict, jumlah_obs: int, kelengkapan: float | None, holdout: dict | None) -> dict:
+def nilai_validasi(kelompok: str, v: dict, jumlah_obs: int, kelengkapan: float | None, holdout: dict | None,
+                   kode: str | None = None) -> dict:
     """Status model: "valid" hanya bila semua syarat Protokol Validasi terpenuhi pada holdout; selain itu "eksperimen"
     (tetap tampil, tetapi berlabel eksperimen dan tidak dipublikasikan sebagai proyeksi resmi)."""
-    ambang = v["ambang_smape_persen"][kelompok]
-    kelas = KELAS_VOLATILITAS[kelompok]
+    kelas = kelas_volatilitas(kelompok, kode)
+    ambang = AMBANG_SMAPE_KELAS[kelas] if kode in KELAS_VARIAN else v["ambang_smape_persen"][kelompok]
     bias_maks = v["bias_maks_persen"][kelas]
     arah_min = v["akurasi_arah_min_persen"].get(kelas)
     syarat: list[dict] = []
@@ -807,10 +840,16 @@ def nilai_validasi(kelompok: str, v: dict, jumlah_obs: int, kelengkapan: float |
     if holdout:
         cek("sMAPE holdout", holdout["smape"] <= ambang, holdout["smape"], f"<= {ambang:g}%")
         cek("Bias holdout", abs(holdout["bias_persen"]) <= bias_maks, holdout["bias_persen"], f"<= {bias_maks:g}%")
-        cek("Cakupan interval 80%", None if holdout["cakupan_persen"] is None else
+        cek("Cakupan interval 80% (PIT acak)", None if holdout["cakupan_persen"] is None else
             v["cakupan_min_persen"] <= holdout["cakupan_persen"] <= v["cakupan_maks_persen"], holdout["cakupan_persen"],
             f"{v['cakupan_min_persen']:g}-{v['cakupan_maks_persen']:g}%")
         cek("MASE holdout", None if holdout.get("mase") is None else holdout["mase"] < 1, holdout.get("mase"), "< 1")
+        if holdout.get("model") != "naif":
+            # Stabilitas (Protokol Validasi): menang terhadap cara naif pada sedikitnya 2/3 origin uji (8 dari 12).
+            beda = holdout.get("origin_berbeda_vs_naif") or 0
+            perlu = math.ceil(beda * 2 / 3)
+            cek("Stabil antar-origin", holdout.get("menang_origin_vs_naif", 0) >= perlu,
+                f"{holdout.get('menang_origin_vs_naif', 0)}/{beda}", f">= {perlu}/{beda} origin yang berbeda hasilnya")
         if arah_min is not None:
             cek("Akurasi arah", None if holdout.get("akurasi_arah") is None else holdout["akurasi_arah"] >= arah_min,
                 holdout.get("akurasi_arah"), f">= {arah_min:g}%")
@@ -845,10 +884,10 @@ def evaluasi_holdout(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: 
             continue
         total += 1
         kena += int(q[0] <= r <= q[1])
+    cak_pit = cakupan_pit(res_s, bt_seleksi.horizon, res_h, bt.horizon, alfa)
     m = dict(bt.metrik)
     mn = bt_naif.metrik
-    menang = sum(1 for j in bt.metrik_per_origin if j in bt_naif.metrik_per_origin
-                 and bt.metrik_per_origin[j]["smape"] < bt_naif.metrik_per_origin[j]["smape"])
+    menang, berbeda = _menang(bt, bt_naif)
     urut = np.lexsort((bt.horizon, bt.origin))
     dm = uji_diebold_mariano((bt.aktual - bt.prediksi)[urut], (bt_naif.aktual - bt_naif.prediksi)[urut], horizon) if model != "naif" else None
     lebar = [(math.exp(_kuantil_residu(res_s, bt_seleksi.horizon, h, alfa)[1]) - math.exp(_kuantil_residu(res_s, bt_seleksi.horizon, h, alfa)[0]))
@@ -856,11 +895,13 @@ def evaluasi_holdout(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: 
     hasil = {
         "model": model, "hari": hold, "jumlah_origin": int(len(np.unique(bt.origin))), "n": m["n"], "smape": m["smape"], "mae": m["mae"],
         "mase": m.get("mase"), "bias_persen": m["bias_persen"], "akurasi_arah": m.get("akurasi_arah"),
-        "cakupan_persen": round(kena / total * 100, 1) if total else None,
+        "cakupan_persen": cak_pit,
+        "cakupan_mentah_persen": round(kena / total * 100, 1) if total else None,
+        "porsi_harga_tetap_persen": round(float(np.mean(np.abs(res_h) < 1e-9)) * 100, 1) if len(res_h) else None,
         "lebar_interval_relatif_persen": round(100 * float(np.mean(lebar)), 1) if lebar else None,
         "smape_naif": mn["smape"], "mae_naif": mn["mae"], "perbaikan_vs_naif_persen":
             round((mn["smape"] - m["smape"]) / mn["smape"] * 100, 2) if mn["smape"] > 0 else None,
-        "menang_origin_vs_naif": int(menang), "uji_dm": dm,
+        "menang_origin_vs_naif": int(menang), "origin_berbeda_vs_naif": int(berbeda), "uji_dm": dm,
         "per_horizon": {str(h): {"n": bt.metrik_per_horizon[h]["n"], "smape": bt.metrik_per_horizon[h]["smape"],
                                  "mae": bt.metrik_per_horizon[h]["mae"], "bias_persen": bt.metrik_per_horizon[h]["bias_persen"]}
                         for h in (7, 14, 30) if h in bt.metrik_per_horizon},
@@ -871,8 +912,42 @@ def evaluasi_holdout(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: 
     return hasil, bt, bt_naif
 
 
+def _menang(bt: HasilBacktest, acuan: HasilBacktest) -> tuple[int, int]:
+    """(jumlah origin bt lebih tepat dari acuan, jumlah origin yang hasilnya berbeda). Origin seri (sMAPE sama persis, biasanya
+    karena harga tidak berubah sehingga semua cara sama tepat) tidak dihitung sebagai menang maupun kalah."""
+    bersama = set(bt.metrik_per_origin) & set(acuan.metrik_per_origin)
+    beda = [j for j in bersama if abs(bt.metrik_per_origin[j]["smape"] - acuan.metrik_per_origin[j]["smape"]) > 1e-9]
+    return sum(1 for j in beda if bt.metrik_per_origin[j]["smape"] < acuan.metrik_per_origin[j]["smape"]), len(beda)
+
+
+def _skor(bt: HasilBacktest) -> float:
+    """Skor seleksi: median sMAPE per origin (laporan: "pilih model dengan median sMAPE terendah")."""
+    m = bt.metrik
+    return m.get("smape_median_origin") if m.get("smape_median_origin") is not None else m["smape"]
+
+
+def simpanan_fitur(terisi: np.ndarray, tanggal: list[date], acara: list[Acara]) -> dict:
+    """Fitur ML per segmen data tanpa celah (kunci: tanggal awal segmen), dihitung sekali per varian lalu dipotong per origin."""
+    hasil: dict = {}
+    nan = np.isnan(terisi)
+    i = 0
+    while i < len(terisi):
+        if nan[i]:
+            i += 1
+            continue
+        j = i
+        while j < len(terisi) and not nan[j]:
+            j += 1
+        if j - i >= 120:
+            X, _, t0 = model_ml.fitur(terisi[i:j], tanggal[j - 1], acara)
+            hasil[tanggal[i]] = (X, t0)
+        i = j
+    return hasil
+
+
 def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengaturan: dict,
-                    model_disetujui: str | None = None, wajib_persetujuan: bool = False) -> HasilVarian:
+                    model_disetujui: str | None = None, wajib_persetujuan: bool = False, kode: str | None = None,
+                    libur_pasar: set | None = None) -> HasilVarian:
     a = pengaturan["analisis"]
     s = pengaturan["sinyal"]
     jhr = pengaturan["jendela_hari_raya"]
@@ -885,6 +960,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     anomali, dievaluasi = deteksi_anomali(seri, a["jendela_baseline_hari"], s["z_ambang"], s["ambang_persen"][kelompok])
     profil = profil_hari_raya(seri, acara, jhr["sebelum"], jhr["sesudah"])
     konteks = {"profil": profil or {}, "acara": acara, "sebelum": jhr["sebelum"], "sesudah": jhr["sesudah"], "kelompok": kelompok}
+    kelas = kelas_volatilitas(kelompok, kode)
+    kandidat = [m for m in KANDIDAT_KELAS[kelas] if a.get("model_pohon", True) or m not in ("ml_hgb", "ml_rf")]
 
     jumlah_obs = int(np.sum(~np.isnan(seri.nilai)))
     y_akhir = _riwayat_valid(terisi)
@@ -901,7 +978,9 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         catatan.append(f"Riwayat belum cukup untuk menyisihkan holdout {hold} hari; evaluasi memakai seluruh riwayat dan model berstatus eksperimen.")
 
     if jumlah_obs >= a["minimal_hari_riwayat"] and len(y_akhir) >= 14:
-        for nama in MODEL:
+        if any(m in MODEL_ML for m in kandidat):
+            konteks["_fitur"] = simpanan_fitur(terisi, seri.tanggal, acara)
+        for nama in kandidat:
             if nama == "hari_raya" and not profil:
                 continue
             bt = backtest(seri, terisi, nama, konteks, horizon, jumlah_origin,
@@ -915,73 +994,68 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         )
 
     # -------------------------------- Seleksi Champion vs Challenger Sesuai Bab 6
+    baseline_champion = None
     if not hasil_bt:
         rekomendasi = "naif" if len(y_akhir) else None
         baseline_champion = rekomendasi
     else:
-        # 1. Tentukan Champion Baseline
-        kandidat_base = [m for m in MODEL_BASELINE if m in hasil_bt]
-        if not kandidat_base:
-            kandidat_base = ["naif"] if "naif" in hasil_bt else list(hasil_bt.keys())
-        baseline_champion = min(kandidat_base, key=lambda m: hasil_bt[m].metrik["smape"])
+        naif_bt = hasil_bt.get("naif")
+        # 1. Champion baseline: median sMAPE terendah; selain naif wajib menang terhadap naif di >= 2/3 origin (8 dari 12).
+        lolos_base = []
+        for m in URUT_BASELINE:
+            if m not in hasil_bt:
+                continue
+            if m == "naif" or naif_bt is None:
+                lolos_base.append(m)
+                continue
+            menang, total = _menang(hasil_bt[m], naif_bt)
+            if total and menang >= math.ceil(total * 2 / 3):
+                lolos_base.append(m)
+        if not lolos_base:
+            lolos_base = [next(m for m in URUT_BASELINE if m in hasil_bt)] if any(m in hasil_bt for m in URUT_BASELINE) else list(hasil_bt)
+        baseline_champion = min(lolos_base, key=lambda m: (_skor(hasil_bt[m]), URUT_BASELINE.index(m) if m in URUT_BASELINE else 99))
         rekomendasi = baseline_champion
+        if baseline_champion != "naif" and naif_bt is not None:
+            menang, total = _menang(hasil_bt[baseline_champion], naif_bt)
+            catatan.append(f"Cara statistik '{baseline_champion}' lebih tepat dari harga terakhir di {menang} dari {total} titik uji.")
 
-        # 2. Uji Challenger ML terhadap Baseline Champion
-        if "ml_challenger" in hasil_bt and baseline_champion in hasil_bt and baseline_champion != "ml_challenger":
-            bt_base = hasil_bt[baseline_champion]
-            bt_ml = hasil_bt["ml_challenger"]
-            base_smape = bt_base.metrik.get("smape", 0.0)
-            ml_smape = bt_ml.metrik.get("smape", 0.0)
-            base_mae = bt_base.metrik.get("mae", 0.0)
-            ml_mae = bt_ml.metrik.get("mae", 0.0)
-
-            # Hitung kemenangan per origin
-            origin_bersama = set(bt_base.metrik_per_origin.keys()) & set(bt_ml.metrik_per_origin.keys())
-            total_origin = len(origin_bersama)
-            menang_ml = sum(
-                1 for o_idx in origin_bersama
-                if bt_ml.metrik_per_origin[o_idx].get("smape", 999) < bt_base.metrik_per_origin[o_idx].get("smape", 999)
-            )
-            # Syarat Bab 6: menang di >= 8 dari 12 origin (atau >= 67% jika origin < 12)
+        # 2. Challenger ML terbaik diadu dengan champion baseline.
+        ml_ada = [m for m in MODEL_ML if m in hasil_bt]
+        ml_terbaik = min(ml_ada, key=lambda m: _skor(hasil_bt[m])) if ml_ada else None
+        if ml_terbaik and baseline_champion in hasil_bt:
+            bt_base, bt_ml = hasil_bt[baseline_champion], hasil_bt[ml_terbaik]
+            base_s, ml_s = _skor(bt_base), _skor(bt_ml)
+            perbaikan_smape = ((base_s - ml_s) / base_s * 100) if base_s > 0 else 0.0
+            degradasi_mae = ((bt_ml.metrik["mae"] - bt_base.metrik["mae"]) / bt_base.metrik["mae"] * 100) if bt_base.metrik["mae"] > 0 else 0.0
+            menang_ml, total_origin = _menang(bt_ml, bt_base)
             ambang_menang = 8 if total_origin >= 12 else max(1, math.ceil(total_origin * 0.67))
-
-            perbaikan_smape = ((base_smape - ml_smape) / base_smape * 100) if base_smape > 0 else 0.0
-            degradasi_mae = ((ml_mae - base_mae) / base_mae * 100) if base_mae > 0 else 0.0
             bias_ml = abs(bt_ml.metrik.get("bias_persen", 0.0))
-            batas_bias = 3.0 if kelompok == "pokok" else 5.0
-
-            if (perbaikan_smape >= 5.0 and menang_ml >= ambang_menang and
-                    degradasi_mae <= 2.0 and bias_ml <= batas_bias):
-                rekomendasi = "ml_challenger"
-                catatan.append(
-                    f"Challenger ML lolos gerbang Bab 6: sMAPE membaik {perbaikan_smape:.1f}% vs baseline "
-                    f"({baseline_champion}), menang {menang_ml}/{total_origin} origin, bias {bias_ml:.2f}%."
-                )
+            batas_bias = 3.0 if kelas == "rendah" else 5.0
+            if perbaikan_smape >= 5.0 and menang_ml >= ambang_menang and degradasi_mae <= 2.0 and bias_ml <= batas_bias:
+                rekomendasi = ml_terbaik
+                catatan.append(f"Machine learning '{ml_terbaik}' lolos gerbang Bab 6: sMAPE membaik {perbaikan_smape:.1f}% terhadap "
+                               f"'{baseline_champion}', menang {menang_ml}/{total_origin} origin, bias {bias_ml:.2f}%.")
             else:
-                catatan.append(
-                    f"Challenger ML belum mengungguli baseline secara meyakinkan "
-                    f"(perbaikan: {perbaikan_smape:.1f}% vs target 5%, menang origin: {menang_ml}/{total_origin}); "
-                    f"Champion bertahan pada '{baseline_champion}'."
-                )
+                catatan.append(f"Machine learning terbaik ('{ml_terbaik}') belum mengungguli cara statistik secara meyakinkan "
+                               f"(perbaikan {perbaikan_smape:.1f}% dari target 5%, menang {menang_ml}/{total_origin} origin); "
+                               f"juara tetap '{baseline_champion}'.")
 
-        # 3. Uji Challenger Dynamic Ensemble terhadap juara sementara
-        if "ensemble" in hasil_bt and rekomendasi in hasil_bt and rekomendasi != "ensemble":
-            bt_terpilih = hasil_bt[rekomendasi]
-            bt_ens = hasil_bt["ensemble"]
-            cur_smape = bt_terpilih.metrik.get("smape", 0.0)
-            ens_smape = bt_ens.metrik.get("smape", 0.0)
-            cur_mae = bt_terpilih.metrik.get("mae", 0.0)
-            ens_mae = bt_ens.metrik.get("mae", 0.0)
-
-            perbaikan_ens = ((cur_smape - ens_smape) / cur_smape * 100) if cur_smape > 0 else 0.0
-            degradasi_mae_ens = ((ens_mae - cur_mae) / cur_mae * 100) if cur_mae > 0 else 0.0
-
-            if perbaikan_ens >= 2.0 and degradasi_mae_ens <= 2.0:
-                rekomendasi = "ensemble"
-                catatan.append(
-                    f"Dynamic Ensemble aktif: memperbaiki sMAPE {perbaikan_ens:.1f}% (target >= 2%) "
-                    f"terhadap model tunggal terbaik '{bt_terpilih.model}'."
-                )
+        # 3. Dynamic Ensemble: champion baseline + ML terbaik, bobot dipilih dari backtest; aktif hanya bila membaik >= 2%.
+        if ml_terbaik and kelas in ("sedang", "tinggi") and baseline_champion in hasil_bt and baseline_champion != ml_terbaik:
+            calon = [(w, gabung_ensemble(hasil_bt[baseline_champion], hasil_bt[ml_terbaik], w, ambang_gejolak)) for w in BOBOT_ENSEMBLE]
+            calon = [(w, bt) for w, bt in calon if bt is not None]
+            if calon:
+                w, bt_ens = min(calon, key=lambda x: _skor(x[1]))
+                bt_kini = hasil_bt[rekomendasi]
+                kini_s, ens_s = _skor(bt_kini), _skor(bt_ens)
+                perbaikan_ens = ((kini_s - ens_s) / kini_s * 100) if kini_s > 0 else 0.0
+                degradasi_mae_ens = ((bt_ens.metrik["mae"] - bt_kini.metrik["mae"]) / bt_kini.metrik["mae"] * 100) if bt_kini.metrik["mae"] > 0 else 0.0
+                konteks["ensemble"] = {"a": baseline_champion, "b": ml_terbaik, "w": w}
+                hasil_bt["ensemble"] = bt_ens
+                if perbaikan_ens >= 2.0 and degradasi_mae_ens <= 2.0:
+                    rekomendasi = "ensemble"
+                    catatan.append(f"Dynamic Ensemble aktif: {round(w * 100)}% '{baseline_champion}' + {round((1 - w) * 100)}% "
+                                   f"'{ml_terbaik}' memperbaiki sMAPE {perbaikan_ens:.1f}% (target >= 2%).")
 
     # Persetujuan manusia: model baseline (naif) selalu boleh; model lain perlu disetujui bila diwajibkan.
     if rekomendasi is None:
@@ -996,19 +1070,29 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         catatan.append(f"Model rekomendasi '{rekomendasi}' belum disetujui; proyeksi memakai '{terpilih}'.")
 
     holdout, bt_hold = None, None
+    kalibrasi: dict[str, HasilBacktest] = {}
+
+    def bt_kalibrasi(model: str) -> HasilBacktest:
+        if model not in kalibrasi:
+            n_kal = int(v["origin_kalibrasi"]) // (2 if model in MODEL_CHALLENGER else 1)
+            bt_k = backtest(seri, terisi, model, konteks, horizon, max(n_kal, jumlah_origin), int(v["jarak_origin_kalibrasi_hari"]),
+                            a["minimal_hari_riwayat"], ambang_gejolak, geser) if model in hasil_bt else None
+            kalibrasi[model] = bt_k if bt_k is not None and len(bt_k.aktual) >= len(hasil_bt[model].aktual) else hasil_bt[model]
+        return kalibrasi[model]
+
     if geser and terpilih in hasil_bt:
         holdout, bt_hold, _ = evaluasi_holdout(seri, terisi, terpilih, konteks, horizon, v, a["minimal_hari_riwayat"], ambang_gejolak,
-                                               hasil_bt[terpilih], a["tingkat_interval"])
+                                               bt_kalibrasi(terpilih), a["tingkat_interval"])
         dm = (holdout or {}).get("uji_dm") or {}
         if (holdout and terpilih in MODEL_CHALLENGER and dm.get("p") is not None and dm["p"] < 0.05 and (dm.get("statistik") or 0) > 0):
             catatan.append(f"Uji Diebold-Mariano pada holdout menunjukkan '{terpilih}' lebih buruk dari cara naif (p={dm['p']}); kembali ke '{baseline_champion}'.")
             rekomendasi = terpilih = baseline_champion
             holdout, bt_hold, _ = evaluasi_holdout(seri, terisi, terpilih, konteks, horizon, v, a["minimal_hari_riwayat"], ambang_gejolak,
-                                                   hasil_bt[terpilih], a["tingkat_interval"])
+                                                   bt_kalibrasi(terpilih), a["tingkat_interval"])
         if holdout is None:
             catatan.append("Holdout tidak dapat dihitung (origin tidak cukup); model berstatus eksperimen.")
-    kelengkapan = kelengkapan_seri(seri, list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4])))
-    validasi = nilai_validasi(kelompok, v, jumlah_obs, kelengkapan, holdout) if terpilih else {"status": "eksperimen", "syarat": [],
+    kelengkapan = kelengkapan_seri(seri, list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4])), libur=libur_pasar)
+    validasi = nilai_validasi(kelompok, v, jumlah_obs, kelengkapan, holdout, kode) if terpilih else {"status": "eksperimen", "syarat": [],
                                                                                               "gagal": ["Tidak ada model"], "belum_dinilai": []}
     diagnostik = diagnostik_deret(seri, terisi)
 
@@ -1034,7 +1118,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         _, r = log_return(seri)
         sigma = float(np.std(r[-90:])) if len(r) > 5 else 0.05
         if terpilih in hasil_bt:
-            iv = interval_empiris(gabung_backtest(hasil_bt[terpilih], bt_hold), horizon, a["tingkat_interval"], sigma)
+            iv = interval_empiris(gabung_backtest(bt_kalibrasi(terpilih), bt_hold), horizon, a["tingkat_interval"], sigma)
         else:
             lebar = 1.6449 * max(sigma, 0.01)
             iv = [(-lebar * math.sqrt(h), lebar * math.sqrt(h)) for h in range(1, horizon + 1)]
@@ -1057,6 +1141,27 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
 
     metrik_horizon = {m: bt.metrik_per_horizon for m, bt in hasil_bt.items()}
 
+    # Parameter hasil tuning pada data terakhir (untuk kartu model) dan model terbaik per horizon (laporan: champion per
+    # varian dan horizon; produksi memakai satu champion per varian, sisanya informasi).
+    parameter: dict = {}
+    if len(y_akhir):
+        ph = parameter_holt(y_akhir)
+        if ph:
+            parameter["holt_redam"] = {"alpha": ph[0], "beta": ph[1], "phi": ph[2]}
+        ps = parameter_ses(y_akhir)
+        if ps:
+            parameter["ses"] = {"alpha": ps[0]}
+        if konteks.get("ensemble"):
+            parameter["ensemble"] = dict(konteks["ensemble"])
+        if any(m in hasil_bt for m in MODEL_ML):
+            parameter["fitur_penting_h7"] = model_ml.pentingnya_fitur(y_akhir, seri.tanggal[-1], acara, 7)
+    terbaik_per_horizon = {}
+    for hz in (7, 14, 30):
+        ada = {m: bt.metrik_per_horizon[hz]["smape"] for m, bt in hasil_bt.items() if hz in bt.metrik_per_horizon}
+        if ada:
+            terbaik = min(ada, key=ada.get)
+            terbaik_per_horizon[str(hz)] = {"model": terbaik, "smape": ada[terbaik]}
+
     return HasilVarian(
         seri=seri, baseline=baseline, rata7=rata7, model_terpilih=terpilih,
         metrik_model={m: bt.metrik for m, bt in hasil_bt.items()},
@@ -1066,4 +1171,5 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         model_rekomendasi=rekomendasi, status_persetujuan=status, segmen=segmen, harga_acuan=harga_acuan(seri),
         metrik_horizon=metrik_horizon, proyeksi_multi_horizon=proyeksi_multi,
         holdout=holdout, validasi=validasi, diagnostik=diagnostik, kelengkapan_persen=kelengkapan, jumlah_obs=jumlah_obs,
+        kelas_volatilitas=kelas, parameter=parameter, terbaik_per_horizon=terbaik_per_horizon,
     )

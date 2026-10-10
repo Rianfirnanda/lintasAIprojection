@@ -88,6 +88,12 @@ class Konfigurasi:
         return self.pengaturan["wilayah_target"]
 
     @property
+    def wilayah_cadangan(self) -> str | None:
+        """Wilayah yang deretnya dipakai bila varian tidak punya harga di wilayah target (mis. Provinsi Bengkulu)."""
+        kode = self.pengaturan.get("wilayah_cadangan")
+        return kode if kode and kode != self.wilayah_target else None
+
+    @property
     def varian_aktif(self) -> list[Varian]:
         return [v for v in self.varian.values() if v.aktif]
 
@@ -194,6 +200,8 @@ def muat(akar: Path | str | None = None, hari_ini: date | None = None) -> Konfig
 
     if pengaturan["wilayah_target"] not in wilayah:
         raise ValueError("wilayah_target pada pengaturan.json tidak ada di wilayah.csv")
+    if pengaturan.get("wilayah_cadangan") and pengaturan["wilayah_cadangan"] not in wilayah:
+        raise ValueError("wilayah_cadangan pada pengaturan.json tidak ada di wilayah.csv")
 
     return Konfigurasi(
         akar=akar, pengaturan=pengaturan, varian=varian, wilayah=wilayah, pasar=pasar,

@@ -110,31 +110,44 @@ Setiap kali pipeline jalan, `python -m pipeline ambil-resmi` mengambil:
 Bila salah satu sumber gangguan, pipeline tetap jalan; galatnya tercatat di log langkah "Ambil prakiraan BMKG dan
 harga PIHPS".
 
-## 4c. Data asli sementara: PIHPS Provinsi Bengkulu
+## 4c. Harga harian Bengkulu Tengah: SP2KP Kemendag, dengan cadangan PIHPS Provinsi Bengkulu
 
-Harga tingkat Kabupaten Bengkulu Tengah hanya dimiliki BPS dan petugas lapangan. Sebelum datanya masuk, sistem berjalan dalam
-**mode data asli** memakai rata-rata harga pasar tradisional **Provinsi Bengkulu** dari PIHPS Bank Indonesia. Pada dashboard,
-kepala tetap menyebut wilayah sasaran proyek, wilayah asal data tercantum di judul tabel, dan sumbernya di bagian Data Lineage (tanpa pita keterangan).
+Sistem selalu memakai data asli (`mode_demo: tidak` di `config/pengaturan.json`) dan wilayah sasarannya **Kabupaten Bengkulu Tengah**
+(`wilayah_target: 1709`).
 
-- **Alurnya.** Konektor mengambil PIHPS (`data/masuk/konteks/harga_pihps_*.csv`), lalu `python -m pipeline pihps-ke-harga` menyalinnya menjadi
-  `data/masuk/harga/pihps_provinsi_<tahun>.csv` (pasar `PHP17`). Berkas hasil salinan selalu ditulis ulang otomatis; jangan diedit tangan.
-  Adanya berkas harga mematikan mode demo dengan sendirinya.
-- **Wilayah sasaran.** `wilayah_target` di `config/pengaturan.json` sementara bernilai `17` (Provinsi Bengkulu).
-- **Menambah riwayat beberapa tahun.** Jalankan alur kerja **Riwayat harga PIHPS** di GitHub Actions (isi jumlah hari, bawaan 1460 = 4 tahun).
-  Ia mengambil per 90 hari dengan jeda, menyalin ke harga utama, lalu memperbarui dashboard. Pembaruan harian biasa hanya 45 hari terakhir.
-  Bila ada periode yang gagal diambil, alasannya ada di log langkah "Ambil riwayat PIHPS".
-- **Beralih ke data BPS Bengkulu Tengah.** Unggah berkas harga BPS ke `data/masuk/harga/`, ubah `wilayah_target` menjadi `1709`, hapus berkas
-  `pihps_provinsi_*.csv`, dan hapus langkah "Salin harga PIHPS" di `.github/workflows/pipeline.yml`. Judul tabel dan sumber di Data Lineage ikut berganti sendiri.
-- **Yang perlu dipahami saat membaca hasilnya.** Ini harga rata-rata provinsi, bukan Bengkulu Tengah. Harga PIHPS sangat mulus (sering sama
-  berhari-hari), sehingga cara paling sederhana (harga terakhir) sulit dikalahkan model lain. Target "10% lebih baik dari cara sederhana" wajar
-  tidak tercapai pada data ini, dan itu bukan kesalahan model.
+- **Sumber harian Bengkulu Tengah.** SP2KP (Sistem Pemantauan Pasar dan Kebutuhan Pokok, Kementerian Perdagangan) mencatat harga eceran
+  harian di satu pasar acuan tiap kabupaten/kota: **Pasar Taba Penanjung** (Bengkulu Tengah, `PSR01`), **Pasar Kepahiang** (`PSR91`), dan
+  **Pasar Panorama** (Kota Bengkulu, `PSR92`). Datanya terbuka tanpa login dan tersedia sejak **1 Februari 2024** (sebelum itu SP2KP belum
+  memuat data pasar-pasar ini).
+- **Alurnya.** `python -m pipeline ambil-sp2kp` mengambil harga harian (per 30 hari, dengan jeda) dan menyimpannya apa adanya di
+  `data/mentah/sp2kp/harian_<tahun>.csv` (nama varian dan satuan asli SP2KP). `python -m pipeline sp2kp-ke-harga` lalu menyalin varian yang
+  pemetaannya **disetujui** di `config/peta_varian_sp2kp.csv` menjadi `data/masuk/harga/sp2kp_<tahun>.csv`. Keduanya berjalan otomatis di
+  pembaruan harian. Riwayat penuh bisa diambil ulang lewat alur kerja **Penjajakan sumber data** dengan pilihan `sp2kp`.
+- **Tabel pemetaan varian.** Setiap varian SP2KP punya status `setuju` (dipakai), `tinjau` (belum dipakai, perlu keputusan), `tolak`, atau
+  `baru` (varian yang baru muncul di SP2KP, otomatis ditambahkan dan tidak dipakai sampai ditinjau). Contoh keputusan: Beras Medium → BRS03,
+  Beras Premium → BRS05, Daging Sapi Paha Belakang → DSP01, Minyakita **tidak** disamakan dengan Minyak Goreng Kemasan Bermerek II.
+- **Cadangan per varian.** SP2KP tidak mencatat semua varian sistem (beras kualitas bawah I/II, medium II, super II, minyak goreng curah, dan
+  kemasan bermerek II). Untuk varian itu saja, sistem memakai rata-rata Provinsi Bengkulu dari PIHPS Bank Indonesia (`wilayah_cadangan: 17`),
+  dengan tanda "harga pengganti" di grafik, tabel model, dan kartu model. Deret dua wilayah **tidak** disambung.
+- **Pembanding.** Kepahiang dan Kota Bengkulu memakai SP2KP (sumber yang sama dengan Bengkulu Tengah) sehingga ukuran perbandingan
+  antarwilayah sebanding. PIHPS Provinsi dan PIHPS Kota Bengkulu tampil sebagai garis pembanding tambahan.
+- **Kecocokan antar-sumber.** Untuk Kota Bengkulu, harga SP2KP Pasar Panorama dibandingkan dengan PIHPS Kota Bengkulu pada tanggal dan varian
+  yang sama (skor konsensus, target ≥ 0,80). Ini ukuran keandalan SP2KP karena Bengkulu Tengah sendiri baru punya satu sumber harian.
+- **Libur pencatatan.** Hari kerja ketika ketiga pasar SP2KP sama-sama tidak mencatat (libur nasional, cuti bersama) dikenali dari data dan
+  tidak dihitung sebagai data hilang.
+- **Yang perlu dipahami.** Riwayat SP2KP baru sekitar 637 hari pencatatan; syarat status Valid adalah 730, jadi varian Bengkulu Tengah
+  berstatus **Eksperimen** sampai sekitar awal 2027 meskipun angkanya sudah bisa dipakai sebagai bahan pertimbangan. Harga pasar acuan sering
+  sama berhari-hari, sehingga cara paling sederhana (harga terakhir) sulit dikalahkan; mesin belajar hanya dipakai bila terbukti lebih tepat.
+- **Data petugas BPS.** Bila petugas mencatat harga di Taba Penanjung atau Karang Tinggi (formulir Input Harga), datanya otomatis didahulukan
+  (urutan prioritas di `config/sumber.csv`: BPS dan petugas di atas SP2KP).
 
 ## 4d. Proyeksi, status Valid/Eksperimen, dan Dasbor Analitik
 
 **Dashboard Internal BPS** adalah beranda Administrator dan Analis (juga halaman `dasbor.html` di menu Analis, TPID, dan Admin). Tata letaknya mengikuti gambar
 atasan: kepala biru, enam indikator, tabel 21 varian di kiri, grafik dan diagnostik di tengah dan kanan, lalu Data Lineage dan Rekomendasi Netral; di bawahnya
-"Analisis lanjutan". Tabel kedua indikator yang tidak ada padanannya di sistem tetap jujur: skor kesepakatan sumber "Menunggu data", keyakinan berupa persen syarat uji
-yang lolos (bukan angka karangan), dan faktor pendorong bukan SHAP. Isinya memuat semua yang diminta rancangan: indikator di atas, pilihan varian dan
+"Analisis lanjutan" dan "Mutu data, peringatan dini, dan perbandingan wilayah" (10 pencari data, 8 tahap pembersihan, peringatan dini lonjakan harga,
+perbandingan Bengkulu Tengah dengan Kepahiang dan Kota Bengkulu, kecocokan antar-sumber, rantai harga). Indikator yang belum bisa dihitung tetap jujur:
+keyakinan berupa persen syarat uji yang lolos (bukan angka karangan), dan faktor pendorong bukan SHAP. Isinya memuat semua yang diminta rancangan: indikator di atas, pilihan varian dan
 horizon 7/14/30 hari, tabel 21 varian (bisa diurutkan dan diekspor ke CSV), grafik tren dan proyeksi, diagnostik deret waktu, kinerja
 model, proyeksi hari raya, proyeksi triwulanan/semesteran/tahunan, rekomendasi netral, dan jejak data. Angkanya dibaca dari
 `analitik.json`, `proyeksi_acara.json`, dan `proyeksi_periodik.json` yang dibuat tiap pipeline jalan.

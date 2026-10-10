@@ -1,12 +1,13 @@
-"""PIHPS Provinsi Bengkulu sebagai harga utama sementara.
+"""PIHPS Provinsi Bengkulu sebagai harga cadangan dan pembanding.
 
-Harga tingkat Kabupaten Bengkulu Tengah hanya dimiliki BPS dan petugas lapangan, jadi sebelum datanya masuk, sistem
-berjalan dalam mode data asli memakai rata-rata harga pasar tradisional Provinsi Bengkulu dari PIHPS Bank Indonesia
-(`data/masuk/konteks/harga_pihps_*.csv`, diambil otomatis oleh konektor). Modul ini menyalinnya menjadi berkas harga biasa
-`data/masuk/harga/pihps_provinsi_<tahun>.csv` dengan kode pasar PHP17 supaya melewati quality gate dan analisis yang sama.
+Harga harian Bengkulu Tengah diambil dari SP2KP Kemendag (Pasar Taba Penanjung, lihat konektor_sp2kp.py). SP2KP tidak
+mencatat semua varian sistem (mis. beras kualitas bawah, minyak goreng curah), jadi untuk varian itu sistem memakai
+rata-rata harga pasar tradisional Provinsi Bengkulu dari PIHPS Bank Indonesia (`data/masuk/konteks/harga_pihps_*.csv`)
+dengan penanda jelas di dashboard (wilayah_cadangan di config/pengaturan.json). Untuk varian lain, deret provinsi ini
+tampil sebagai garis pembanding. Modul ini menyalinnya menjadi berkas harga biasa `data/masuk/harga/pihps_provinsi_<tahun>.csv`
+dengan kode pasar PHP17 supaya melewati quality gate yang sama.
 
-Berkas hasilnya selalu ditulis ulang dari berkas konteks (bukan diedit tangan). Saat data BPS Bengkulu Tengah sudah masuk,
-ubah `wilayah_target` di config/pengaturan.json menjadi 1709 dan hapus berkas pihps_provinsi_*.csv.
+Berkas hasilnya selalu ditulis ulang dari berkas konteks (bukan diedit tangan).
 """
 
 from __future__ import annotations

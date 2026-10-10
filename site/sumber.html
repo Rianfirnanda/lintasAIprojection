@@ -167,8 +167,8 @@ if (!pencarian.length) {
     const kandidat = h.kandidat || [];
     return `<details ${p === pencarian[0] ? "open" : ""} style="margin-bottom:12px">
       <summary><strong>${esc(p.permintaan.komoditas)}</strong> · ${esc(p.permintaan.periode)} · ${esc(waktu(p.waktu))} · ${kandidat.length} kandidat · ${esc(p.penyedia || "anthropic")}</summary>
-      <p class="meta-kecil" style="margin:6px 0">Model: ${esc(p.model)}${p.pencarian_web ? ` · dari pencarian web (${esc(p.pencarian_web)})` : ""}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web, jadi semua URL perlu dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
-      <p class="meta-kecil" style="margin:6px 0">Prompt: ${esc(p.permintaan.prompt)}</p>
+      <p class="meta-kecil" style="margin:6px 0;overflow-wrap:anywhere">Model: ${esc(p.model)}${p.pencarian_web ? ` · dari pencarian web (${esc(p.pencarian_web)})` : ""}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web, jadi semua URL perlu dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
+      <p class="meta-kecil" style="margin:6px 0;overflow-wrap:anywhere">Prompt: ${esc(p.permintaan.prompt)}</p>
       <div class="gulir-tabel"><table><thead><tr><th>Sumber</th><th>Keputusan analis</th><th>Wilayah</th><th>Periode</th><th>Komoditas/satuan</th><th>Frekuensi</th>
         <th>Akses</th><th>URL di hasil pencarian?</th><th>URL dapat dibuka? (bukti akses)</th><th>Perlu izin?</th><th>Catatan</th></tr></thead><tbody>
       ${kandidat.map((k) => {

@@ -116,7 +116,7 @@ def test_status_valid_bila_semua_syarat_lolos():
 def test_status_eksperimen_per_syarat(ubah, gagal):
     v = analisis.pengaturan_validasi({})
     hasil = analisis.nilai_validasi("pokok", v, 900, 98.0, holdout_baik(**ubah))
-    assert hasil["status"] == "eksperimen" and gagal in hasil["gagal"]
+    assert hasil["status"] == "eksperimen" and any(g.startswith(gagal) for g in hasil["gagal"])
 
 
 def test_syarat_riwayat_kelengkapan_dan_akurasi_arah_volatil():

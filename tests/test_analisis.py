@@ -175,8 +175,11 @@ def test_model_ses_dan_ml_challenger_dan_ensemble():
     assert np.all(f_ses > 0)
     assert abs(f_ses[0] - y[-1]) < 500
 
-    # 2. Test ML Challenger (Ridge direct multi-horizon)
-    f_ml = analisis.model_ml_challenger(y, asal, 14, {})
+    # 2. Test ML Challenger (Ridge direct multi-horizon). Butuh sedikitnya 120 hari riwayat; kurang dari itu memakai harga terakhir.
+    f_pendek = analisis.model_ml_challenger(y, asal, 14, {})
+    assert np.allclose(f_pendek, y[-1])
+    y_panjang = np.array([10000.0 + 50.0 * i + 10.0 * (i % 3) for i in range(200)])
+    f_ml = analisis.model_ml_challenger(y_panjang, asal, 14, {})
     assert len(f_ml) == 14
     assert np.all(f_ml > 0)
     assert f_ml[-1] > f_ml[0]  # Menangkap pola kenaikan linier
@@ -223,8 +226,46 @@ def test_seleksi_champion_vs_challenger_bab6():
     # Model naif atau ses harus menang/bertahan atas ML
     assert hv.model_terpilih in analisis.MODEL_BASELINE
     # Catatan audit harus mendokumentasikan seleksi model
-    assert any("Champion" in c or "baseline" in c for c in hv.catatan)
+    assert any("juara tetap" in c for c in hv.catatan) and any("Cara statistik" in c for c in hv.catatan)
     # Proyeksi multi-horizon harus terisi
     assert 7 in hv.proyeksi_multi_horizon
     assert 14 in hv.proyeksi_multi_horizon
 
+
+
+def test_model_pohon_direct_multi_horizon_dan_tanpa_kebocoran():
+    """Gradient Boosting dan Random Forest (Challenger laporan) memakai fitur point-in-time: menambah data masa depan
+    tidak mengubah fitur hari origin, dan prediksinya positif serta mengikuti arah tren."""
+    from pipeline import model_ml
+
+    rng = np.random.default_rng(7)
+    y = 20000 * np.exp(np.cumsum(0.002 + rng.normal(0, 0.004, 260)))
+    asal = date(2026, 6, 30)
+    X_pendek, _, _ = model_ml.fitur(y[:200], asal - timedelta(days=60))
+    X_penuh, _, _ = model_ml.fitur(y, asal)
+    assert np.allclose(X_pendek, X_penuh[:200])
+    for jenis in ("hgb", "rf"):
+        f = model_ml.prediksi_direct(y, asal, 30, jenis)
+        assert f is not None and len(f) == 30 and np.all(f > 0)
+        assert f[-1] > y[-1] * 0.97
+    assert model_ml.prediksi_direct(y[:100], asal, 14, "hgb") is None  # riwayat < 120 hari: pemanggil memakai cara naif
+
+
+def test_penyusutan_ml_mendekati_naif_bila_fitur_tidak_berdaya_prediksi():
+    """Deret acak murni (jalan acak): faktor penyusut hasil validasi dalam data latih kecil, sehingga ML tidak jauh dari harga
+    terakhir. Deret dengan pola kuat: faktornya besar."""
+    from pipeline import model_ml
+
+    rng = np.random.default_rng(3)
+    y = 30000 * np.exp(np.cumsum(rng.normal(0, 0.02, 400)))
+    X, _, t0 = model_ml.fitur(y, date(2026, 6, 30))
+    ly = np.log(y)
+    t = np.arange(t0, len(y) - 7)
+    assert model_ml.faktor_susut("ridge", X[t], ly[t + 7] - ly[t], 7) <= 0.5
+    p = model_ml.prediksi_direct(y, date(2026, 6, 30), 7, "ridge")
+    assert abs(p[-1] / y[-1] - 1) < 0.05
+    tren = 20000 * np.exp(0.003 * np.arange(400))
+    Xt, _, t0 = model_ml.fitur(tren, date(2026, 6, 30))
+    lt = np.log(tren)
+    tt = np.arange(t0, len(tren) - 7)
+    assert model_ml.faktor_susut("ridge", Xt[tt], lt[tt + 7] - lt[tt], 7) >= 0.75

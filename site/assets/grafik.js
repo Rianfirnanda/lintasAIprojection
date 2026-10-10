@@ -20,6 +20,13 @@ const garisPenunjuk = {
   },
 };
 
+// Nama garis harga utama: Bengkulu Tengah, atau wilayah cadangan bila pasar Bengkulu Tengah belum mencatat varian ini.
+export function namaAktual(seri) {
+  const s = seri.sumber_seri;
+  const wil = s?.pengganti ? String(s.wilayah || "wilayah cadangan") : "Bengkulu Tengah";
+  return `${wil} (harga tercatat)`;
+}
+
 export function potongSeri(seri, hari) {
   if (!hari) return seri;
   const n = seri.tanggal.length;
@@ -72,16 +79,16 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
   });
 
   const datasets = [
-    garis("Batas bawah interval", bawah, "transparent", { borderWidth: 0, pointHoverRadius: 0, _interval: true }),
-    garis(`Interval proyeksi ${tingkat}%`, atas, "transparent", {
+    garis("Batas bawah rentang", bawah, "transparent", { borderWidth: 0, pointHoverRadius: 0, _interval: true }),
+    garis(`Rentang perkiraan ${tingkat}%`, atas, "transparent", {
       borderWidth: 0, pointHoverRadius: 0, fill: "-1", backgroundColor: dash ? "rgba(128,138,152,0.24)" : c.s2 + "22", _interval: true,
     }),
     dash
-      ? garis("Baseline (median 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.s1, { borderWidth: 1.6, borderDash: [5, 4] })
-      : garis("Baseline (median 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.base, { borderWidth: 1.5 }),
+      ? garis("Harga normal (nilai tengah 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.s1, { borderWidth: 1.6, borderDash: [5, 4] })
+      : garis("Harga normal (nilai tengah 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.base, { borderWidth: 1.5 }),
     dash
-      ? garis("Proyeksi", proyeksi, c.s2, { borderDash: [5, 4], borderWidth: 2, pointRadius: 2, pointBackgroundColor: c.s2 })
-      : garis("Proyeksi", proyeksi, c.s2, { borderDash: [6, 4] }),
+      ? garis("Perkiraan", proyeksi, c.s2, { borderDash: [5, 4], borderWidth: 2, pointRadius: 2, pointBackgroundColor: c.s2 })
+      : garis("Perkiraan", proyeksi, c.s2, { borderDash: [6, 4] }),
   ];
   const warnaPembanding = [c.s3, c.s4];
   if (tampilPembanding) {
@@ -89,11 +96,11 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
       datasets.push(garis(p.nama, [...p.nilai, ...kosong(tanggalProyeksi.length)], warnaPembanding[i % 2], { borderWidth: 1.5 }));
     });
   }
-  datasets.push(garis(dash ? "Harga aktual" : "Bengkulu Tengah (aktual)", [...seri.aktual, ...kosong(tanggalProyeksi.length)], c.s1,
+  datasets.push(garis(dash ? "Harga tercatat" : namaAktual(seri), [...seri.aktual, ...kosong(tanggalProyeksi.length)], c.s1,
     dash ? { borderWidth: 2.4, pointRadius: n > 45 ? 0 : 3, pointBackgroundColor: c.s1 } : {}));
   if (tipe !== "garis") {
     const aktualDs = datasets[datasets.length - 1];
-    const proyDs = datasets.find((d) => d.label === "Proyeksi");
+    const proyDs = datasets.find((d) => d.label === "Perkiraan");
     if (tipe === "area") {
       Object.assign(aktualDs, { fill: "origin", backgroundColor: c.s1 + "26", pointRadius: 0 });
       Object.assign(proyDs, { fill: "origin", backgroundColor: c.s2 + "1f" });
@@ -106,7 +113,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
     }
   }
   datasets.push({
-    label: "Anomali terdeteksi", data: anomali, showLine: false, pointRadius: 5, pointHoverRadius: 7,
+    label: "Harga janggal", data: anomali, showLine: false, pointRadius: 5, pointHoverRadius: 7,
     pointBackgroundColor: c.kritis, pointBorderColor: c.surface, pointBorderWidth: 2, borderColor: c.kritis,
   });
 
@@ -124,13 +131,13 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
           callbacks: {
             title: (items) => {
               const t = items[0]?.label;
-              return tgl(t) + (tanggalProyeksi.includes(t) ? " (proyeksi)" : "");
+              return tgl(t) + (tanggalProyeksi.includes(t) ? " (perkiraan)" : "");
             },
             label: (item) => `${rp(item.raw)}  ${item.dataset.label}`,
             afterBody: (items) => {
               const i = items[0]?.dataIndex;
               if (i === undefined || i < n) return [];
-              return [`Interval ${tingkat}%: ${rp(bawah[i])} – ${rp(atas[i])}`];
+              return [`Rentang ${tingkat}%: ${rp(bawah[i])} – ${rp(atas[i])}`];
             },
           },
         },
@@ -153,11 +160,11 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
 
 export function legendaHarga(seri, tampilPembanding = true) {
   const item = [
-    ['<span class="kunci-garis" style="border-color:var(--series-1)"></span>', "Bengkulu Tengah (aktual)"],
-    ['<span class="kunci-garis" style="border-color:var(--baseline)"></span>', "Baseline (median 28 hari)"],
-    ['<span class="kunci-garis putus" style="border-color:var(--series-2)"></span>', "Proyeksi"],
-    ['<span class="kunci-pita" style="background:color-mix(in srgb, var(--series-2) 18%, transparent)"></span>', "Interval proyeksi 80%"],
-    ['<span class="kunci-titik" style="background:var(--critical)"></span>', "Anomali terdeteksi"],
+    ['<span class="kunci-garis" style="border-color:var(--series-1)"></span>', esc(namaAktual(seri))],
+    ['<span class="kunci-garis" style="border-color:var(--baseline)"></span>', "Harga normal (nilai tengah 28 hari)"],
+    ['<span class="kunci-garis putus" style="border-color:var(--series-2)"></span>', "Perkiraan"],
+    ['<span class="kunci-pita" style="background:color-mix(in srgb, var(--series-2) 18%, transparent)"></span>', "Rentang perkiraan 80%"],
+    ['<span class="kunci-titik" style="background:var(--critical)"></span>', "Harga janggal"],
   ];
   if (tampilPembanding) {
     const w = ["var(--series-3)", "var(--series-4)"];
@@ -168,10 +175,10 @@ export function legendaHarga(seri, tampilPembanding = true) {
 
 export function legendaDashboard() {
   return [
-    ['<span class="kunci-garis" style="border-color:var(--series-1)"></span>', "Harga aktual"],
-    ['<span class="kunci-garis putus" style="border-color:var(--series-1)"></span>', "Baseline"],
-    ['<span class="kunci-garis putus" style="border-color:var(--series-2)"></span>', "Proyeksi"],
-    ['<span class="kunci-pita" style="background:rgba(128,138,152,0.32)"></span>', "Interval prediksi"],
-    ['<span class="kunci-titik" style="background:var(--critical)"></span>', "Anomali"],
+    ['<span class="kunci-garis" style="border-color:var(--series-1)"></span>', "Harga tercatat"],
+    ['<span class="kunci-garis putus" style="border-color:var(--series-1)"></span>', "Harga normal"],
+    ['<span class="kunci-garis putus" style="border-color:var(--series-2)"></span>', "Perkiraan"],
+    ['<span class="kunci-pita" style="background:rgba(128,138,152,0.32)"></span>', "Rentang perkiraan"],
+    ['<span class="kunci-titik" style="background:var(--critical)"></span>', "Harga janggal"],
   ].map(([k, t]) => `<span>${k}${t}</span>`).join("");
 }

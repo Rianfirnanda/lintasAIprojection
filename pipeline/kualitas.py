@@ -45,6 +45,7 @@ class HasilKualitas:
     jumlah_duplikat: int = 0
     rekonsiliasi: list[dict] = field(default_factory=list)
     ketepatan: dict = field(default_factory=dict)
+    libur: set = field(default_factory=set)  # hari kerja tanpa pencatatan di semua pasar satu sumber (libur nasional, cuti bersama)
 
     def dipakai(self) -> list[Observasi]:
         return [o for o in self.observasi if o.status in DIPAKAI]
@@ -194,8 +195,32 @@ def jalankan(observasi: list[Observasi], konf: Konfigurasi, keputusan: dict[str,
 
     hasil = HasilKualitas(observasi=unik, jumlah_duplikat=duplikat)
     hasil.rekonsiliasi = rekonsiliasi(hasil.dipakai(), konf)
-    hasil.ketepatan = ketepatan_waktu(unik, konf)
+    hasil.libur = libur_pencatatan(unik)
+    hasil.ketepatan = ketepatan_waktu(unik, konf, hasil.libur)
     return hasil
+
+
+def libur_pencatatan(observasi: list[Observasi]) -> set[date]:
+    """Hari kerja (Senin-Jumat) tanpa satu pun catatan dari sumber yang mencatat di beberapa pasar (mis. SP2KP: tiga pasar
+    di tiga kabupaten/kota), dalam rentang data sumber itu. Bila semua pasar sumber yang sama kosong pada hari yang sama,
+    hari itu libur pencatatan (libur nasional atau cuti bersama), bukan data hilang. Terdeteksi dari data, tanpa daftar manual."""
+    pasar: dict[str, set] = defaultdict(set)
+    tanggal: dict[str, set] = defaultdict(set)
+    for o in observasi:
+        if o.status != "ditolak_validator":
+            pasar[o.kode_sumber].add(o.kode_pasar)
+            tanggal[o.kode_sumber].add(o.tanggal)
+    libur: set[date] = set()
+    for sumber, ps in pasar.items():
+        if len(ps) < 2:
+            continue
+        ada = tanggal[sumber]
+        d, akhir = min(ada), max(ada)
+        while d <= akhir:
+            if d.weekday() < 5 and d not in ada:
+                libur.add(d)
+            d += timedelta(days=1)
+    return libur
 
 
 def rekonsiliasi(observasi: list[Observasi], konf: Konfigurasi) -> list[dict]:
@@ -222,9 +247,9 @@ def rekonsiliasi(observasi: list[Observasi], konf: Konfigurasi) -> list[dict]:
     return hasil
 
 
-def hari_wajib(konf: Konfigurasi, mulai: date, akhir: date) -> list[date]:
+def hari_wajib(konf: Konfigurasi, mulai: date, akhir: date, libur_data: set[date] | None = None) -> list[date]:
     hari = konf.pengaturan["hari_pencatatan"]
-    libur = {a.tanggal for a in konf.kalender if a.jenis in ("hari_raya", "libur_nasional")}
+    libur = {a.tanggal for a in konf.kalender if a.jenis in ("hari_raya", "libur_nasional")} | (libur_data or set())
     hasil = []
     d = mulai
     while d <= akhir:
@@ -234,13 +259,13 @@ def hari_wajib(konf: Konfigurasi, mulai: date, akhir: date) -> list[date]:
     return hasil
 
 
-def ketepatan_waktu(observasi: list[Observasi], konf: Konfigurasi) -> dict:
+def ketepatan_waktu(observasi: list[Observasi], konf: Konfigurasi, libur_data: set[date] | None = None) -> dict:
     """Kelengkapan & ketepatan waktu pengiriman per pasar di wilayah target (jendela N hari terakhir)."""
     jendela = konf.pengaturan["kualitas"]["jendela_evaluasi_ketepatan_hari"]
     jam_batas = konf.pengaturan["jam_batas_tepat_waktu"]
     akhir = konf.hari_ini - timedelta(days=1)  # hari ini belum selesai
     mulai = akhir - timedelta(days=jendela - 1)
-    wajib = set(hari_wajib(konf, mulai, akhir))
+    wajib = set(hari_wajib(konf, mulai, akhir, libur_data))
     varian = [v.kode for v in konf.varian_aktif]
 
     diterima: dict[tuple, Observasi] = {}
@@ -256,7 +281,16 @@ def ketepatan_waktu(observasi: list[Observasi], konf: Konfigurasi) -> dict:
 
     per_pasar = []
     total_harap = total_terima = total_tepat = total_diketahui = 0
+    tanpa_sumber = []
     for p in konf.pasar_di(konf.wilayah_target):
+        if p.kode not in terakhir:
+            # Pasar belum punya sumber data sama sekali (mis. menunggu pencatatan petugas): dicatat terpisah, tidak
+            # dirata-rata, supaya kelengkapan pasar yang sudah dicatat tidak tertutup angka nol.
+            tanpa_sumber.append(p.nama)
+            per_pasar.append({"kode_pasar": p.kode, "nama_pasar": p.nama, "blank_spot": p.blank_spot, "diharapkan": len(wajib) * len(varian),
+                              "diterima": 0, "kelengkapan_persen": 0.0, "ketepatan_persen": None, "waktu_input_tercatat": 0,
+                              "tanggal_terakhir": None, "belum_ada_sumber": True})
+            continue
         harap = len(wajib) * len(varian)
         obs = [o for (kp, _, _), o in diterima.items() if kp == p.kode]
         terima = len(obs)
@@ -281,5 +315,6 @@ def ketepatan_waktu(observasi: list[Observasi], konf: Konfigurasi) -> dict:
         "periode": {"mulai": mulai.isoformat(), "akhir": akhir.isoformat(), "hari_wajib": len(wajib)},
         "kelengkapan_persen": round(total_terima / total_harap * 100, 1) if total_harap else None,
         "ketepatan_persen": round(total_tepat / total_diketahui * 100, 1) if total_diketahui else None,
-        "per_pasar": per_pasar,
+        "per_pasar": per_pasar, "pasar_tanpa_sumber": tanpa_sumber, "hari_libur_terdeteksi": sorted(d.isoformat() for d in (libur_data or set())
+                                                                                             if mulai <= d <= akhir),
     }

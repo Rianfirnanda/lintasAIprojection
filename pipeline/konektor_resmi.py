@@ -141,7 +141,11 @@ def _angka(x) -> float | None:
         return None
 
 
-def ubah_pihps(data: dict, peta: dict[str, str], kode_wilayah: str = WILAYAH_PIHPS) -> tuple[list[dict], list[str]]:
+# Jenis pasar PIHPS: 1 pasar tradisional (eceran), 2 pasar modern, 3 pedagang besar (grosir), 4 produsen.
+INDIKATOR_JENIS = {1: "harga_pihps", 2: "harga_pihps_modern", 3: "harga_pihps_grosir", 4: "harga_pihps_produsen"}
+
+
+def ubah_pihps(data: dict, peta: dict[str, str], kode_wilayah: str = WILAYAH_PIHPS, indikator: str = "harga_pihps") -> tuple[list[dict], list[str]]:
     """Baris tabel PIHPS (level 2 = varian; kolom tanggal dd/mm/yyyy, angka '15,950') -> baris konteks."""
     baris, tak_dikenal = [], []
     for r in data.get("data") or []:
@@ -158,7 +162,7 @@ def ubah_pihps(data: dict, peta: dict[str, str], kode_wilayah: str = WILAYAH_PIH
             if nilai is None:
                 continue
             t = datetime.strptime(k, "%d/%m/%Y").date().isoformat()
-            baris.append({"tanggal": t, "kode_wilayah": kode_wilayah, "indikator": "harga_pihps", "nilai": nilai,
+            baris.append({"tanggal": t, "kode_wilayah": kode_wilayah, "indikator": indikator, "nilai": nilai,
                           "satuan": "Rp", "kode_varian": kode, "kode_sumber": "BD-PIHPS"})
     return baris, tak_dikenal
 
@@ -208,9 +212,9 @@ def _kunci_nama(nama: str) -> str:
     return " ".join(x for x in n.split() if x not in ("kabupaten", "kab", "kota", "provinsi", "prov"))
 
 
-def daftar_kabupaten_pihps(pengambil=None) -> list[dict]:
-    """Kabupaten/kota Provinsi Bengkulu yang punya data pasar tradisional di PIHPS (parameter sesuai halaman PIHPS)."""
-    data = _ambil_json(URL_PIHPS_KABUPATEN, {"price_type_id": 1, "ref_prov_id": PROVINSI_PIHPS}, pengambil)
+def daftar_kabupaten_pihps(pengambil=None, jenis: int = 1) -> list[dict]:
+    """Kabupaten/kota Provinsi Bengkulu yang punya data di PIHPS untuk jenis pasar `jenis` (parameter sesuai halaman PIHPS)."""
+    data = _ambil_json(URL_PIHPS_KABUPATEN, {"price_type_id": jenis, "ref_prov_id": PROVINSI_PIHPS}, pengambil)
     return [{"id": x["id"], "nama": str(x.get("name", ""))} for x in data.get("data") or [] if x.get("id") is not None]
 
 
@@ -227,42 +231,48 @@ def petakan_kabupaten(daftar: list[dict], konf: Konfigurasi) -> dict[str, dict]:
 
 
 def perbarui_pihps_kota(konf: Konfigurasi, hari: int = 45, hari_riwayat: int = 400, pengambil=None, tidur=time.sleep,
-                        paksa_riwayat: bool = False) -> dict:
-    """Harga PIHPS per kabupaten/kota (pembanding Kota Bengkulu dan Kepahiang bila PIHPS memilikinya).
-    Disimpan sebagai konteks di data/masuk/konteks/pihps_kota_<tahun>.csv; tidak masuk berkas harga utama."""
+                        paksa_riwayat: bool = False, jenis_pasar: tuple[int, ...] = (1, 2, 3, 4)) -> dict:
+    """Harga PIHPS per kabupaten/kota untuk tiap jenis pasar (tradisional, modern, pedagang besar, produsen) bila PIHPS
+    memilikinya (untuk Provinsi Bengkulu baru Kota Bengkulu). Disimpan sebagai konteks di data/masuk/konteks/pihps_kota_<tahun>.csv
+    dengan indikator berbeda per jenis pasar; tidak masuk berkas harga utama. Jenis selain tradisional dipakai untuk melihat
+    rantai harga (produsen -> pedagang besar -> eceran) dan sebagai pembanding."""
     folder = konf.akar / "data" / "masuk" / "konteks"
     folder.mkdir(parents=True, exist_ok=True)
     galat: list[str] = []
-    try:
-        daftar = daftar_kabupaten_pihps(pengambil)
-    except Exception as e:  # noqa: BLE001
-        log.warning("daftar kabupaten PIHPS gagal: %s", e)
-        return {"wilayah": {}, "tidak_ditemukan": [], "baris_baru": 0, "galat": [f"daftar kabupaten PIHPS: {e}"]}
-    peta_w = petakan_kabupaten(daftar, konf)
-    tidak = sorted(w.nama for k, w in konf.wilayah.items() if k != WILAYAH_PIHPS and k not in peta_w)
     sudah_ada = any(folder.glob("pihps_kota_*.csv"))
     akhir = konf.hari_ini
     mulai = akhir - timedelta(days=hari if sudah_ada and not paksa_riwayat else hari_riwayat)
     peta = peta_varian(konf)
-    baris, per_wilayah = [], {}
-    for kode, kab in peta_w.items():
-        n_awal = len(baris)
-        awal = mulai
-        while awal <= akhir:
-            ujung = min(akhir, awal + timedelta(days=89))
-            try:
-                data = _ambil_json(URL_PIHPS, {"price_type_id": 1, "comcat_id": "", "province_id": PROVINSI_PIHPS,
-                                               "regency_id": kab["id"], "market_id": "", "tipe_laporan": 1,
-                                               "start_date": awal.isoformat(), "end_date": ujung.isoformat()}, pengambil)
-                b, _ = ubah_pihps(data, peta, kode)
-                baris += b
-            except Exception as e:  # noqa: BLE001
-                log.warning("PIHPS %s %s..%s gagal: %s", kab["nama"], awal, ujung, e)
-                galat.append(f"PIHPS {kab['nama']} {awal}..{ujung}: {e}")
-            awal = ujung + timedelta(days=1)
-            if awal <= akhir:
-                tidur(JEDA_PIHPS)
-        per_wilayah[kode] = {"nama": kab["nama"], "id": kab["id"], "baris": len(baris) - n_awal}
+    baris, per_wilayah, tidak = [], {}, []
+    for jenis in jenis_pasar:
+        try:
+            daftar = daftar_kabupaten_pihps(pengambil, jenis)
+        except Exception as e:  # noqa: BLE001
+            log.warning("daftar kabupaten PIHPS jenis %s gagal: %s", jenis, e)
+            galat.append(f"daftar kabupaten PIHPS jenis {jenis}: {e}")
+            continue
+        peta_w = petakan_kabupaten(daftar, konf)
+        if jenis == 1:
+            tidak = sorted(w.nama for k, w in konf.wilayah.items() if k != WILAYAH_PIHPS and k not in peta_w)
+        for kode, kab in peta_w.items():
+            n_awal = len(baris)
+            awal = mulai
+            while awal <= akhir:
+                ujung = min(akhir, awal + timedelta(days=89))
+                try:
+                    data = _ambil_json(URL_PIHPS, {"price_type_id": jenis, "comcat_id": "", "province_id": PROVINSI_PIHPS,
+                                                   "regency_id": kab["id"], "market_id": "", "tipe_laporan": 1,
+                                                   "start_date": awal.isoformat(), "end_date": ujung.isoformat()}, pengambil)
+                    b, _ = ubah_pihps(data, peta, kode, INDIKATOR_JENIS[jenis])
+                    baris += b
+                except Exception as e:  # noqa: BLE001
+                    log.warning("PIHPS %s jenis %s %s..%s gagal: %s", kab["nama"], jenis, awal, ujung, e)
+                    galat.append(f"PIHPS {kab['nama']} jenis {jenis} {awal}..{ujung}: {e}")
+                awal = ujung + timedelta(days=1)
+                if awal <= akhir:
+                    tidur(JEDA_PIHPS)
+            kunci = kode if jenis == 1 else f"{kode}:{INDIKATOR_JENIS[jenis]}"
+            per_wilayah[kunci] = {"nama": kab["nama"], "id": kab["id"], "baris": len(baris) - n_awal}
     return {"wilayah": per_wilayah, "tidak_ditemukan": tidak, "galat": galat,
             "baris_baru": _gabung_tulis(folder, "pihps_kota", baris) if baris else 0}
 

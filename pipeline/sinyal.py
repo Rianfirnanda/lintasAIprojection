@@ -58,8 +58,11 @@ class IndeksKonteks:
 
 
 def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float | None,
-                   indeks: IndeksKonteks, seri_pembanding: dict[str, SeriHarian]) -> tuple[dict, str]:
+                   indeks: IndeksKonteks, seri_pembanding: dict[str, SeriHarian], wilayah_seri: str | None = None) -> tuple[dict, str]:
     wil = konf.wilayah_target
+    # Nama wilayah deret yang dinilai: biasanya Bengkulu Tengah; varian tanpa harga Bengkulu Tengah memakai wilayah cadangan.
+    wilayah_seri = wilayah_seri or wil
+    nama_seri = konf.wilayah[wilayah_seri].nama.replace("Kabupaten ", "").replace("Provinsi ", "provinsi ")
     konteks: dict = {}
     kalimat: list[str] = []
 
@@ -114,19 +117,19 @@ def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float 
     if pembanding_info:
         konteks["wilayah_pembanding"] = pembanding_info
         bagian = [
-            f"{i['wilayah']} {_rp(i['harga'])}" + (f" (selisih Bengkulu Tengah {i['selisih_persen']:+.0f}%)" if "selisih_persen" in i else "")
+            f"{i['wilayah']} {_rp(i['harga'])}" + (f" (selisih harga {nama_seri} {i['selisih_persen']:+.0f}%)" if "selisih_persen" in i else "")
             for i in pembanding_info.values()
         ]
         kalimat.append("Harga terakhir di wilayah pembanding: " + "; ".join(bagian) + ".")
 
     # Harga pasar tradisional tingkat provinsi (PIHPS Bank Indonesia).
     pihps = indeks.terakhir(WILAYAH_PROVINSI, "harga_pihps", tgl, kode_varian)
-    if pihps and (tgl - pihps[0]).days <= 7 and pihps[1]:
+    if pihps and (tgl - pihps[0]).days <= 7 and pihps[1] and wilayah_seri != WILAYAH_PROVINSI and WILAYAH_PROVINSI not in pembanding_info:
         info = {"tanggal": pihps[0].isoformat(), "harga": round(pihps[1])}
         teks = f"Rata-rata pasar tradisional Provinsi Bengkulu (PIHPS Bank Indonesia) {_rp(pihps[1])}"
         if nilai:
             info["selisih_persen"] = round((nilai / pihps[1] - 1) * 100, 1)
-            teks += f"; harga Bengkulu Tengah {info['selisih_persen']:+.0f}% dari angka itu"
+            teks += f"; harga {nama_seri} {info['selisih_persen']:+.0f}% dari angka itu"
         konteks["pihps_provinsi"] = info
         kalimat.append(teks + ".")
 
@@ -170,6 +173,9 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
     for kode, hv in hasil.items():
         v = konf.varian[kode]
         ambang = s_cfg["ambang_persen"][v.kelompok]
+        # Varian tanpa harga di wilayah target memakai deret wilayah cadangan; sinyalnya menyebut wilayah itu.
+        wil = hv.sumber_seri.get("kode_wilayah") or konf.wilayah_target
+        nama_wil = konf.wilayah[wil].nama
         dasar = {"kode_varian": kode, "varian": v.nama, "komoditas": v.komoditas, "kode_wilayah": wil, "kode_pasar": None}
 
         # 1. Anomali harga (per episode).
@@ -179,7 +185,8 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
                 continue
             puncak = max(ep, key=lambda a: abs(a.deviasi_persen))
             keparahan = "tinggi" if any(a.keparahan == "tinggi" for a in ep) else "sedang"
-            konteks, narasi = konteks_sinyal(konf, akhir.tanggal, kode, akhir.nilai, indeks, seri_pembanding.get(kode, {}))
+            konteks, narasi = konteks_sinyal(konf, akhir.tanggal, kode, akhir.nilai, indeks, seri_pembanding.get(kode, {}),
+                                             hv.sumber_seri.get("kode_wilayah"))
             aktif = tanggal_data is not None and (tanggal_data - akhir.tanggal).days <= 3
             sinyal.append({
                 "id": id_sinyal("anomali_harga", kode, wil, ep[0].tanggal.isoformat()),
@@ -202,7 +209,8 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
         if terakhir and h7 and h7["prediksi"] >= terakhir * (1 + ambang / 100):
             naik = (h7["prediksi"] / terakhir - 1) * 100
             iso = tanggal_data.isocalendar()
-            konteks, narasi = konteks_sinyal(konf, tanggal_data, kode, terakhir, indeks, seri_pembanding.get(kode, {}))
+            konteks, narasi = konteks_sinyal(konf, tanggal_data, kode, terakhir, indeks, seri_pembanding.get(kode, {}),
+                                             hv.sumber_seri.get("kode_wilayah"))
             sinyal.append({
                 "id": id_sinyal("proyeksi_naik", kode, wil, f"{iso.year}-W{iso.week:02d}"),
                 "jenis": "proyeksi_naik", **dasar,

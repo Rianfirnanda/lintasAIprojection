@@ -99,18 +99,20 @@ def test_pihps_kota_hanya_mengisi_wilayah_yang_ada_di_pihps(konf):
     def pengambil(url):
         panggil.append(url)
         if "GetRefRegency" in url:
-            assert "ref_prov_id=7" in url and "price_type_id=1" in url
-            return daftar
+            assert "ref_prov_id=7" in url
+            # pasar tradisional (1) dan pedagang besar (3) punya Kota Bengkulu; pasar modern (2) dan produsen (4) kosong
+            return daftar if ("price_type_id=1" in url or "price_type_id=3" in url) else {"data": []}
         assert "regency_id=71" in url  # hanya Kota Bengkulu yang cocok dengan wilayah sistem
         return PIHPS
 
     h = konektor_resmi.perbarui_pihps_kota(konf, pengambil=pengambil, tidur=lambda s: None)
-    assert list(h["wilayah"]) == ["1771"] and h["wilayah"]["1771"]["id"] == 71 and h["galat"] == []
+    assert list(h["wilayah"]) == ["1771", "1771:harga_pihps_grosir"] and h["wilayah"]["1771"]["id"] == 71 and h["galat"] == []
     assert sorted(h["tidak_ditemukan"]) == ["Kabupaten Bengkulu Tengah", "Kabupaten Kepahiang"]
     folder = konf.akar / "data/masuk/konteks"
     with (folder / "pihps_kota_2026.csv").open() as f:
         baris = list(csv.DictReader(f))
     assert baris and {b["kode_wilayah"] for b in baris} == {"1771"} and {b["kode_sumber"] for b in baris} == {"BD-PIHPS"}
+    assert {b["indikator"] for b in baris} == {"harga_pihps", "harga_pihps_grosir"}  # jenis pasar dibedakan lewat indikator
     # tidak boleh bocor ke harga utama sementara (provinsi)
     from pipeline import pihps_harga
     assert pihps_harga._baca_konteks(folder) == {}
@@ -123,4 +125,4 @@ def test_pihps_kota_tahan_galat_daftar_kabupaten(konf):
         raise OSError("tidak terjangkau")
 
     h = konektor_resmi.perbarui_pihps_kota(konf, pengambil=gagal, tidur=lambda s: None)
-    assert h["wilayah"] == {} and h["baris_baru"] == 0 and "daftar kabupaten PIHPS" in h["galat"][0]
+    assert h["wilayah"] == {} and h["baris_baru"] == 0 and all("daftar kabupaten PIHPS" in g for g in h["galat"]) and len(h["galat"]) == 4

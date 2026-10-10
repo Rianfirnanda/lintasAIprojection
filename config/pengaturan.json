@@ -1,7 +1,8 @@
 {
   "zona_waktu": "Asia/Jakarta",
-  "wilayah_target": "17",
-  "mode_demo": "otomatis",
+  "wilayah_target": "1709",
+  "wilayah_cadangan": "17",
+  "mode_demo": "tidak",
   "hari_pencatatan": [0, 1, 2, 3, 4],
   "jam_batas_tepat_waktu": 14,
   "jendela_hari_raya": {"sebelum": 14, "sesudah": 3},
@@ -83,8 +84,8 @@
     "bias_absolut_maks_persen": 5,
     "cakupan_interval_min_persen": 75,
     "cakupan_interval_maks_persen": 85,
-    "f1_min": 0.8,
-    "recall_min": 0.85,
+    "f1_min": 0.88,
+    "recall_min": 0.88,
     "fpr_maks": 0.1,
     "tindak_lanjut_sinyal_persen": 75,
     "penurunan_metrik_drift_maks_persen": 10
