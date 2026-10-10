@@ -11,8 +11,12 @@ pada dirinya sendiri, kejadian gejolak (kebenaran) dan alarm (detektor) didefini
                      sebelumnya), z >= ambang z dan kenaikan >= 1%, serta harga sudah >= (1 + porsi x ambang kelas) x median
                      28 hari (porsi 0; 0,25; 0,5 ikut ditala). Alarm berdekatan (<= 3 hari) digabung.
   Cocok            : episode tertangkap bila ada alarm dalam [awal - toleransi, akhir]; alarm di luar semua episode = alarm palsu.
-  Penalaan         : ambang z {1,5; 2,0; 2,5; 3,0}, porsi level, dan toleransi {1..4 hari} dipilih dari F1 pada 70% awal masa riwayat;
-                     angka yang dilaporkan dihitung pada 30% akhir (tidak dipakai menala), jadi tidak bocor.
+  Penalaan         : ambang z {1,5; 2,0; 2,5; 3,0}, porsi level {0; 0,25; 0,5; 0,75; 0,9}, dan toleransi {1..4 hari} dipilih
+                     PER KELAS VOLATILITAS (rendah, sedang, tinggi) dari F1 pada 70% awal masa riwayat; angka yang dilaporkan
+                     dihitung pada 30% akhir (tidak dipakai menala), jadi tidak bocor. Porsi level paling tinggi 0,9 supaya
+                     peringatan tetap bisa muncul sebelum harga melewati batas lonjakan penuh.
+  Waktu peringatan : untuk tiap lonjakan yang tertangkap dicatat apakah peringatan pertama muncul sebelum, pada, atau sesudah
+                     hari pertama lonjakan (hari pencatatan), supaya terlihat seberapa "dini" peringatannya.
 """
 
 from __future__ import annotations
@@ -23,7 +27,7 @@ import numpy as np
 
 GRID_Z = (1.5, 2.0, 2.5, 3.0)
 GRID_TOLERANSI = (1, 2, 3, 4)
-GRID_PORSI_LEVEL = (0.0, 0.25, 0.5)  # alarm juga mensyaratkan harga sudah naik sekian bagian dari ambang gejolak
+GRID_PORSI_LEVEL = (0.0, 0.25, 0.5, 0.75, 0.9)  # alarm juga mensyaratkan harga sudah naik sekian bagian dari ambang gejolak
 JENDELA_MEDIAN = 28
 JENDELA_MAD = 90
 KENAIKAN_MIN = 0.01
@@ -108,8 +112,26 @@ def _jumlah(daftar: list[dict]) -> dict:
     return {k: sum(d[k] for d in daftar) for k in kunci}
 
 
+def waktu_peringatan(episode: list[tuple[date, date]], alarm_tgl: list[date], toleransi: int, mulai: date, akhir: date,
+                     hari_obs: list[date]) -> dict:
+    """Untuk lonjakan yang tertangkap: peringatan pertama sebelum hari pertama lonjakan, pada hari itu, atau sesudahnya."""
+    hasil = {"sebelum": 0, "tepat": 0, "sesudah": 0, "selisih_hari_kerja": []}
+    for a0, a1 in episode:
+        if not mulai <= a0 <= akhir:
+            continue
+        cocok = [a for a in alarm_tgl if a0 - timedelta(days=toleransi) <= a <= a1]
+        if not cocok:
+            continue
+        pertama = min(cocok)
+        hasil["sebelum" if pertama < a0 else "tepat" if pertama == a0 else "sesudah"] += 1
+        arah = 1 if pertama >= a0 else -1
+        hasil["selisih_hari_kerja"].append(arah * sum(1 for d in hari_obs if min(pertama, a0) < d <= max(pertama, a0)))
+    return hasil
+
+
 def evaluasi(seri: dict[str, tuple[list[date], np.ndarray]], ambang_varian: dict[str, float], kelas_varian: dict[str, str]) -> dict:
-    """Evaluasi EWS seluruh varian. `seri`: kode -> (tanggal kalender, nilai dengan NaN). `ambang_varian`: kode -> ambang (%)."""
+    """Evaluasi EWS seluruh varian. `seri`: kode -> (tanggal kalender, nilai dengan NaN). `ambang_varian`: kode -> ambang (%).
+    Parameter ditala per kelas volatilitas pada 70% masa awal, lalu dinilai pada 30% masa akhir."""
     data = {}
     for kode, (tanggal, nilai) in seri.items():
         tgl, p = _obs(tanggal, nilai)
@@ -121,42 +143,64 @@ def evaluasi(seri: dict[str, tuple[list[date], np.ndarray]], ambang_varian: dict
     awal = min(d[0][0] for d in data.values())
     akhir = max(d[0][-1] for d in data.values())
     batas = awal + timedelta(days=int((akhir - awal).days * PORSI_LATIH))
-    alarm_z = {(z, pl): {k: alarm(d[0], d[1], z, pl * ambang_varian[k] / 100) for k, d in data.items()}
-               for z in GRID_Z for pl in GRID_PORSI_LEVEL}
+    mulai_uji = batas + timedelta(days=1)
+    alarm_z = {(z, pl, k): alarm(d[0], d[1], z, pl * ambang_varian[k] / 100)
+               for z in GRID_Z for pl in GRID_PORSI_LEVEL for k, d in data.items()}
+    kelas_dari = {k: kelas_varian.get(k, "sedang") for k in data}
 
-    def skor(kunci: tuple, tol: int, a: date, b: date, kode: str | None = None) -> dict:
-        pilih = [kode] if kode else list(data)
-        return ringkas(_jumlah([cocokkan(data[k][2], alarm_z[kunci][k], tol, a, b, data[k][0]) for k in pilih]))
+    def skor(z: float, pl: float, tol: int, a: date, b: date, kode: list[str]) -> dict:
+        return ringkas(_jumlah([cocokkan(data[k][2], alarm_z[(z, pl, k)], tol, a, b, data[k][0]) for k in kode]))
 
-    tuning = []
-    for z in GRID_Z:
-        for pl in GRID_PORSI_LEVEL:
-            for tol in GRID_TOLERANSI:
-                s = skor((z, pl), tol, awal, batas)
-                tuning.append({"z": z, "porsi_level": pl, "toleransi_hari": tol, "f1": s["f1"], "recall": s["recall"],
-                               "precision": s["precision"], "false_positive_rate": s["false_positive_rate"]})
-    terbaik = max(tuning, key=lambda x: (x["f1"] or -1, -(x["false_positive_rate"] or 0), -x["z"]))
-    z, pl, tol = terbaik["z"], terbaik["porsi_level"], terbaik["toleransi_hari"]
-    kunci = (z, pl)
-    uji = skor(kunci, tol, batas + timedelta(days=1), akhir)
-    per_kelas: dict[str, dict] = {}
-    for kelas in sorted(set(kelas_varian.get(k, "sedang") for k in data)):
-        kode_kelas = [k for k in data if kelas_varian.get(k, "sedang") == kelas]
-        per_kelas[kelas] = ringkas(_jumlah([cocokkan(data[k][2], alarm_z[kunci][k], tol, batas + timedelta(days=1), akhir, data[k][0])
-                                            for k in kode_kelas]))
-    per_varian = {k: {kk: v for kk, v in skor(kunci, tol, batas + timedelta(days=1), akhir, k).items()
-                      if kk in ("episode", "tertangkap", "alarm", "fp", "recall", "precision")} for k in data}
+    tuning, parameter_kelas = [], {}
+    for kelas in sorted(set(kelas_dari.values())):
+        kode = [k for k in data if kelas_dari[k] == kelas]
+        calon = []
+        for z in GRID_Z:
+            for pl in GRID_PORSI_LEVEL:
+                for tol in GRID_TOLERANSI:
+                    s = skor(z, pl, tol, awal, batas, kode)
+                    calon.append({"kelas": kelas, "z": z, "porsi_level": pl, "toleransi_hari": tol, "f1": s["f1"], "recall": s["recall"],
+                                  "precision": s["precision"], "false_positive_rate": s["false_positive_rate"]})
+        tuning += calon
+        t = max(calon, key=lambda x: (x["f1"] or -1, -(x["false_positive_rate"] or 0), -x["z"]))
+        parameter_kelas[kelas] = {"z_ambang": t["z"], "porsi_level": t["porsi_level"], "toleransi_hari": t["toleransi_hari"],
+                                  "f1_latih": t["f1"]}
+
+    def param(k: str) -> tuple[float, float, int]:
+        pk = parameter_kelas[kelas_dari[k]]
+        return pk["z_ambang"], pk["porsi_level"], pk["toleransi_hari"]
+
+    def cocok_uji(k: str) -> dict:
+        z, pl, tol = param(k)
+        return cocokkan(data[k][2], alarm_z[(z, pl, k)], tol, mulai_uji, akhir, data[k][0])
+
+    uji = ringkas(_jumlah([cocok_uji(k) for k in data]))
+    per_kelas = {kelas: {**ringkas(_jumlah([cocok_uji(k) for k in data if kelas_dari[k] == kelas])), **parameter_kelas[kelas]}
+                 for kelas in parameter_kelas}
+    per_varian = {k: {kk: v for kk, v in ringkas(cocok_uji(k)).items() if kk in ("episode", "tertangkap", "alarm", "fp", "recall", "precision")}
+                  for k in data}
+    waktu = {"sebelum": 0, "tepat": 0, "sesudah": 0, "selisih_hari_kerja": []}
+    for k in data:
+        z, pl, tol = param(k)
+        w = waktu_peringatan(data[k][2], alarm_z[(z, pl, k)], tol, mulai_uji, akhir, data[k][0])
+        for kk in ("sebelum", "tepat", "sesudah"):
+            waktu[kk] += w[kk]
+        waktu["selisih_hari_kerja"] += w["selisih_hari_kerja"]
+    sel = waktu.pop("selisih_hari_kerja")
+    waktu["median_selisih_hari_kerja"] = float(np.median(sel)) if sel else None
+    # Ringkasan parameter untuk tampilan lama: kelas tinggi (paling sering bergejolak), atau kelas pertama.
+    utama = parameter_kelas.get("tinggi") or next(iter(parameter_kelas.values()))
     return {
         **{k: uji[k] for k in ("precision", "recall", "f1", "false_positive_rate")},
         "tp": uji["alarm_tepat"], "fp": uji["fp"], "fn": uji["fn"], "episode_uji": uji["episode"], "episode_tertangkap": uji["tertangkap"],
-        "alarm_uji": uji["alarm"], "hari_negatif_uji": uji["negatif"],
-        "parameter": {"z_ambang": z, "porsi_level": pl, "toleransi_hari": tol, "jendela_mad_hari": JENDELA_MAD,
-                      "kenaikan_min_persen": KENAIKAN_MIN * 100,
+        "alarm_uji": uji["alarm"], "hari_negatif_uji": uji["negatif"], "waktu_peringatan": waktu,
+        "parameter": {"z_ambang": utama["z_ambang"], "porsi_level": utama["porsi_level"], "toleransi_hari": utama["toleransi_hari"],
+                      "per_kelas": parameter_kelas, "jendela_mad_hari": JENDELA_MAD, "kenaikan_min_persen": KENAIKAN_MIN * 100,
                       "ambang_gejolak_persen": {k: ambang_varian[k] for k in data}},
-        "periode_latih": [awal.isoformat(), batas.isoformat()], "periode_uji": [(batas + timedelta(days=1)).isoformat(), akhir.isoformat()],
+        "periode_latih": [awal.isoformat(), batas.isoformat()], "periode_uji": [mulai_uji.isoformat(), akhir.isoformat()],
         "tuning": tuning, "per_kelas": per_kelas, "per_varian": per_varian, "varian_dinilai": len(data),
         "sumber_label": "uji historis objektif: lonjakan harga di atas ambang kelas, diuji pada 30% masa akhir yang tidak dipakai menala",
-        "metode": "Robust z-score MAD kenaikan harian, ambang z dan toleransi hari dipilih dari F1 pada 70% masa awal",
+        "metode": "Robust z-score MAD kenaikan harian; ambang z, porsi kenaikan, dan toleransi hari dipilih per kelas volatilitas dari F1 pada 70% masa awal",
     }
 
 

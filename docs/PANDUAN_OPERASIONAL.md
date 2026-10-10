@@ -135,6 +135,12 @@ Sistem selalu memakai data asli (`mode_demo: tidak` di `config/pengaturan.json`)
   yang sama (skor konsensus, target ≥ 0,80). Ini ukuran keandalan SP2KP karena Bengkulu Tengah sendiri baru punya satu sumber harian.
 - **Libur pencatatan.** Hari kerja ketika ketiga pasar SP2KP sama-sama tidak mencatat (libur nasional, cuti bersama) dikenali dari data dan
   tidak dihitung sebagai data hilang.
+- **Isian hari kosong.** Hari kosong diisi harga terakhir paling banyak 3 hari pencatatan (sesuai rancangan; akhir pekan dan libur pencatatan
+  tidak dihitung). Celah lebih panjang (mis. libur Lebaran 2022 dan 2024) dibiarkan kosong, dan model memakai data sesudahnya.
+- **Syarat rentang 80%.** Dinilai tiap minggu selama setahun terakhir (52 titik uji, kalibrasi selalu dari masa sebelumnya). Penilaian 90 hari
+  terakhir saja (13 titik yang saling tumpang tindih) tetap ditampilkan, tetapi terlalu sedikit untuk dijadikan syarat.
+- **Peringatan dini.** Ambang ditala per kelompok gejolak (rendah, sedang, tinggi) pada 70% masa awal riwayat, dinilai pada 30% masa akhir.
+  Dasbor juga menampilkan seberapa dini peringatan muncul (sebelum, pada, atau sesudah hari pertama lonjakan).
 - **Yang perlu dipahami.** Riwayat SP2KP baru sekitar 637 hari pencatatan; syarat status Valid adalah 730, jadi varian Bengkulu Tengah
   berstatus **Eksperimen** sampai sekitar awal 2027 meskipun angkanya sudah bisa dipakai sebagai bahan pertimbangan. Harga pasar acuan sering
   sama berhari-hari, sehingga cara paling sederhana (harga terakhir) sulit dikalahkan; mesin belajar hanya dipakai bila terbukti lebih tepat.

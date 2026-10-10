@@ -74,8 +74,25 @@ export function gambarEws(el, A) {
     ${baris.map(([n, istilah, nilai, sub, ok, tgt]) => `<tr><td>${esc(n)} <span class="meta-kecil">(${esc(istilah)})</span><div class="meta-kecil">${esc(sub)}</div></td>
       <td class="angka"><b>${nilai}</b></td><td class="meta-kecil">${esc(tgt)}</td><td>${tanda(ok)}</td></tr>`).join("")}</tbody></table>
     <p class="meta-kecil">Lonjakan dihitung bila harga naik melewati batas kelompoknya (5%, 10%, atau 15% di atas harga normal 28 hari).
-    Pengaturan terpilih: ambang z ${esc(String(p.z_ambang ?? "-"))}, toleransi ${esc(String(p.toleransi_hari ?? "-"))} hari kerja.
-    ${e.f1 !== null && e.f1 < TARGET_EWS.f1 ? "Peringatan masih cukup sering muncul tanpa lonjakan sungguhan, jadi setiap peringatan perlu dicek ke pasar sebelum ditindaklanjuti." : ""}</p>`;
+    ${p.per_kelas ? "" : `Pengaturan terpilih: ambang z ${esc(String(p.z_ambang ?? "-"))}, toleransi ${esc(String(p.toleransi_hari ?? "-"))} hari kerja.`}
+    ${e.f1 !== null && e.f1 < TARGET_EWS.f1 ? "Peringatan masih cukup sering muncul tanpa lonjakan sungguhan, jadi setiap peringatan perlu dicek ke pasar sebelum ditindaklanjuti." : ""}</p>
+    ${waktuPeringatan(e.waktu_peringatan)}
+    ${p.per_kelas ? `<details><summary class="meta-kecil">Pengaturan per kelompok gejolak (dipilih dari masa latih)</summary><div class="gulir-tabel"><table class="tabel-kecil">
+      <thead><tr><th>Kelompok</th><th class="angka">Ambang z</th><th class="angka">Sudah naik</th><th class="angka">Toleransi</th><th class="angka">Nilai gabungan uji</th></tr></thead><tbody>
+      ${Object.entries(p.per_kelas).map(([k, x]) => `<tr><td>${esc(NAMA_KELAS[k] || k)}</td><td class="angka">${angka(x.z_ambang, 1)}</td>
+        <td class="angka">${angka(x.porsi_level * 100, 0)}% dari batas</td><td class="angka">${angka(x.toleransi_hari)} hari</td>
+        <td class="angka">${e.per_kelas?.[k]?.f1 == null ? "–" : persen0(e.per_kelas[k].f1)}</td></tr>`).join("")}</tbody></table></div></details>` : ""}`;
+}
+
+const NAMA_KELAS = { rendah: "Gejolak rendah (beras, gula, minyak)", sedang: "Gejolak sedang (daging, telur, bawang putih)", tinggi: "Gejolak tinggi (cabai, bawang merah)" };
+
+function waktuPeringatan(w) {
+  if (!w) return "";
+  const total = (w.sebelum || 0) + (w.tepat || 0) + (w.sesudah || 0);
+  if (!total) return "";
+  return `<p class="meta-kecil"><b>Seberapa dini?</b> Dari ${angka(total)} lonjakan yang tertangkap, peringatan muncul ${angka(w.sebelum)} kali sebelum harga melonjak,
+    ${angka(w.tepat)} kali pada hari pertama lonjakan, dan ${angka(w.sesudah)} kali sesudahnya. Harga pasar biasanya naik sekaligus dalam satu hari,
+    jadi peringatan paling cepat datang pada hari harga mulai naik, sebelum lonjakan terbukti berlanjut.</p>`;
 }
 
 const SATU = (nama) => String(nama || "").replace("Kabupaten ", "").replace("Provinsi ", "");

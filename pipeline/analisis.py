@@ -63,8 +63,9 @@ def bentuk_seri(pasangan: dict[date, float], akhir: date | None = None) -> SeriH
     return SeriHarian(tanggal, nilai)
 
 
-def isi_celah(nilai: np.ndarray, maks: int) -> np.ndarray:
-    """Forward-fill celah hingga `maks` hari. Celah lebih panjang dibiarkan NaN."""
+def isi_celah(nilai: np.ndarray, maks: int, wajib: np.ndarray | None = None) -> np.ndarray:
+    """Forward-fill celah hingga `maks` hari. Celah lebih panjang dibiarkan NaN. Bila `wajib` (penanda hari pencatatan) diberikan,
+    yang dihitung hanya hari pencatatan yang kosong: akhir pekan dan libur pencatatan ikut terisi tanpa menambah umur celah."""
     hasil = nilai.copy()
     terakhir = np.nan
     umur = 0
@@ -72,7 +73,7 @@ def isi_celah(nilai: np.ndarray, maks: int) -> np.ndarray:
         if not np.isnan(v):
             terakhir, umur = v, 0
         else:
-            umur += 1
+            umur += 1 if wajib is None or wajib[i] else 0
             if not np.isnan(terakhir) and umur <= maks:
                 hasil[i] = terakhir
     return hasil
@@ -840,8 +841,13 @@ def nilai_validasi(kelompok: str, v: dict, jumlah_obs: int, kelengkapan: float |
     if holdout:
         cek("sMAPE holdout", holdout["smape"] <= ambang, holdout["smape"], f"<= {ambang:g}%")
         cek("Bias holdout", abs(holdout["bias_persen"]) <= bias_maks, holdout["bias_persen"], f"<= {bias_maks:g}%")
-        cek("Cakupan interval 80% (PIT acak)", None if holdout["cakupan_persen"] is None else
-            v["cakupan_min_persen"] <= holdout["cakupan_persen"] <= v["cakupan_maks_persen"], holdout["cakupan_persen"],
+        # Cakupan dinilai pada 52 origin mingguan setahun terakhir (kalibrasi selalu dari masa sebelumnya) bila tersedia: 13 origin
+        # holdout yang saling tumpang tindih terlalu sedikit untuk menilai rentang 80% (galat bakunya sekitar 10-15 poin).
+        # Cakupan holdout 90 hari tetap dilaporkan di holdout["cakupan_persen"].
+        setahun = holdout.get("cakupan_setahun") or {}
+        nilai_cak = setahun.get("persen", holdout["cakupan_persen"])
+        cek("Cakupan interval 80% (setahun, PIT acak)" if setahun else "Cakupan interval 80% (PIT acak)",
+            None if nilai_cak is None else v["cakupan_min_persen"] <= nilai_cak <= v["cakupan_maks_persen"], nilai_cak,
             f"{v['cakupan_min_persen']:g}-{v['cakupan_maks_persen']:g}%")
         cek("MASE holdout", None if holdout.get("mase") is None else holdout["mase"] < 1, holdout.get("mase"), "< 1")
         if holdout.get("model") != "naif":
@@ -860,6 +866,34 @@ def nilai_validasi(kelompok: str, v: dict, jumlah_obs: int, kelengkapan: float |
     status = "valid" if not gagal and not belum else "eksperimen"
     return {"status": status, "syarat": syarat, "gagal": gagal, "belum_dinilai": belum, "ambang_smape": ambang,
             "kelas_volatilitas": kelas}
+
+
+def cakupan_bergulir(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: dict, horizon: int, minimal: int,
+                     tingkat: float, minggu_uji: int = 52, minggu_kalibrasi: int = 52) -> dict | None:
+    """Cakupan rentang dinilai tiap minggu selama setahun terakhir: rentang untuk origin minggu j hanya dikalibrasi dari origin
+    yang targetnya sudah terjadi sebelum origin j (point-in-time). Keterangan pendamping, bukan syarat status Valid: masa
+    uji 90 hari terlalu pendek untuk menilai rentang bila tingkat gejolak harga sedang berubah."""
+    if model not in MODEL_BASELINE:
+        return None  # mesin belajar terlalu mahal untuk 100+ origin; cukup syarat holdout
+    jeda = math.ceil(horizon / 7)
+    bt = backtest(seri, terisi, model, konteks, horizon, minggu_uji + jeda + minggu_kalibrasi, 7, minimal)
+    if bt is None:
+        return None
+    res = np.log(bt.aktual / bt.prediksi)
+    alfa = 1 - tingkat
+    cak = []
+    for j in range(minggu_uji):
+        uji = bt.origin == j
+        kal = (bt.origin > j + jeda) & (bt.origin <= j + jeda + minggu_kalibrasi)
+        if not uji.any() or kal.sum() < 100:
+            continue
+        c = cakupan_pit(res[kal], bt.horizon[kal], res[uji], bt.horizon[uji], alfa)
+        if c is not None:
+            cak.append(c)
+    if len(cak) < 12:
+        return None
+    return {"persen": round(float(np.mean(cak)), 1), "minggu": len(cak),
+            "minggu_dalam_75_85": int(sum(1 for c in cak if 75 <= c <= 85))}
 
 
 def evaluasi_holdout(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: dict, horizon: int, v: dict, minimal: int,
@@ -954,7 +988,11 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     horizon = a["horizon_hari"]
     catatan: list[str] = []
 
-    terisi = isi_celah(seri.nilai, a["maks_celah_isi_hari"])
+    # Isian maju dibatasi `maks_celah_isi_hari` HARI PENCATATAN (rancangan: <= 3 hari); akhir pekan dan libur pencatatan tidak dihitung.
+    hari_catat = list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4]))
+    libur = libur_pasar or set()
+    wajib = np.array([t.weekday() in hari_catat and t not in libur for t in seri.tanggal], dtype=bool)
+    terisi = isi_celah(seri.nilai, a["maks_celah_isi_hari"], wajib)
     baseline = baseline_bergulir(seri, a["jendela_baseline_hari"])
     rata7 = rata_bergerak(seri)
     anomali, dievaluasi = deteksi_anomali(seri, a["jendela_baseline_hari"], s["z_ambang"], s["ambang_persen"][kelompok])
@@ -1091,6 +1129,9 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
                                                    bt_kalibrasi(terpilih), a["tingkat_interval"])
         if holdout is None:
             catatan.append("Holdout tidak dapat dihitung (origin tidak cukup); model berstatus eksperimen.")
+        else:
+            holdout["cakupan_setahun"] = cakupan_bergulir(seri, terisi, terpilih, konteks, horizon, a["minimal_hari_riwayat"],
+                                                          a["tingkat_interval"])
     kelengkapan = kelengkapan_seri(seri, list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4])), libur=libur_pasar)
     validasi = nilai_validasi(kelompok, v, jumlah_obs, kelengkapan, holdout, kode) if terpilih else {"status": "eksperimen", "syarat": [],
                                                                                               "gagal": ["Tidak ada model"], "belum_dinilai": []}
@@ -1103,6 +1144,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         if naif and naif.metrik["smape"] > 0 and terpilih in hasil_bt:
             perbaikan = round((naif.metrik["smape"] - hasil_bt[terpilih].metrik["smape"]) / naif.metrik["smape"] * 100, 2)
         cakupan = cakupan_interval(hasil_bt[terpilih], a["tingkat_interval"]) if terpilih in hasil_bt else None
+        if holdout and (holdout.get("cakupan_setahun") or {}).get("persen") is not None:
+            cakupan = holdout["cakupan_setahun"]["persen"]  # sama dengan yang dipakai syarat status Valid
         info_drift_model = penurunan_metrik(hasil_bt[terpilih]) if terpilih in hasil_bt else {}
         segmen = {"terpilih": smape_segmen(hasil_bt[terpilih], acara, jhr["sebelum"], jhr["sesudah"])} if terpilih in hasil_bt else {}
         if naif:

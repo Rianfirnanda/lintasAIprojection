@@ -304,7 +304,7 @@ def tahap_pembersihan(konf, hasil_masuk, hasil_qc, hasil_varian: dict, konsensus
          [_gerbang("Kelengkapan target (varian terendah)", None if keleng_min is None else keleng_min >= 95,
                    f"{keleng_min}%" if keleng_min is not None else "-", ">= 95%"),
           _gerbang("Target uji tidak diisi", True, "ya", "100%"),
-          _gerbang("Isian maju untuk fitur", maks_isi <= 3, f"<= {maks_isi} hari", "<= 3 hari (rancangan)")]),
+          _gerbang("Isian maju untuk fitur", maks_isi <= 3, f"<= {maks_isi} hari pencatatan", "<= 3 hari (rancangan)")]),
         ("Outlier & Anomaly Detector", "MAD, robust z-score, perubahan harian ekstrem; ditandai, tidak dihapus otomatis.",
          [_gerbang("Porsi data yang ditandai", porsi(perlu, len(obs)) <= 5, f"{porsi(perlu, len(obs))}%", "<= 5%")]),
         ("Cross-Source Reconciler", "Membandingkan sumber dengan bobot kualitas, kesegaran, dan definisi.",
