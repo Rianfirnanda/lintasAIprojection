@@ -1,21 +1,19 @@
 {
- "diperbarui": "2026-10-10T09:19:11+07:00",
+ "diperbarui": "2026-10-10T09:50:56+07:00",
  "kesimpulan": [
   {
    "tanggal": "2026-10-10",
    "metode": "ai",
    "penyedia": "gemini",
-   "ringkas": "Di Bengkulu Tengah, penyaluran bantuan pangan beras telah mencapai 99,26 persen dan pemerintah daerah memperkuat sinergi antardaerah untuk pengendalian inflasi, meski dampak langsungnya terhadap harga belum tertera jelas karena keterbatasan isi berita. Di luar wilayah target, harga cabai rawit di Bengkulu Selatan melonjak hingga Rp80 ribu akibat peralihan musim kemarau ke hujan, sementara Jawa Barat mencatat kenaikan harga cabai merah dan penurunan harga bawang. Mengingat data perkembangan harga lokal Bengkulu Tengah masih sangat terbatas, TPID perlu terus memantau potensi rambatan harga cabai dari daerah tetangga serta dampak pasokan beras bantuan terhadap stabilitas harga setempat.",
+   "ringkas": "Informasi pergerakan harga komoditas di Kabupaten Bengkulu Tengah tidak dilaporkan secara spesifik pada periode ini. Dari sisi pasokan, penyaluran Bantuan Pangan Beras alokasi Juli–September 2026 di Bengkulu Tengah telah mencapai 99,26 persen dari target 459.390 kilogram untuk 15.314 penerima. Selain itu, Pemkab Bengkulu Tengah memperkuat koordinasi dengan menandatangani Kerja Sama Antar Daerah saat rakor TPID di Bengkulu Utara. Ke depan, penyelesaian sisa bantuan beras dan implementasi kerja sama tersebut perlu dipantau bersama.",
    "poin": [
-    "Penyaluran Bantuan Pangan Beras (PBP) di Bengkulu Tengah tercatat mencapai 99,26 persen.",
-    "Pemkab Bengkulu Tengah melakukan penguatan sinergi antardaerah dalam pengendalian inflasi dan percepatan digitalisasi.",
-    "Di Bengkulu Selatan, harga cabai rawit menembus Rp80 ribu dampak peralihan musim kemarau ke hujan.",
-    "Di Jawa Barat, komoditas cabai merah mengalami kenaikan harga, sedangkan harga bawang mengalami penurunan."
+    "Penyaluran Bantuan Pangan Beras Juli–September 2026 di Kabupaten Bengkulu Tengah mencapai 99,26 persen (target 15.314 penerima dan 459.390 kg beras).",
+    "Pemkab Bengkulu Tengah menandatangani Kerja Sama Antar Daerah (KAD) pada Rakor TPID dan TP2DD di Bengkulu Utara untuk pengendalian inflasi dan percepatan digitalisasi.",
+    "Kondisi pergerakan harga komoditas di wilayah Bengkulu Tengah tidak dijelaskan dalam ringkasan berita."
    ],
    "perlu_dipantau": [
-    "Potensi kenaikan harga komoditas aneka cabai (cabai rawit dan cabai merah) di Bengkulu Tengah menyusul lonjakan harga di wilayah sekitar.",
-    "Dampak capaian penyaluran bantuan pangan beras terhadap stabilitas pasokan dan harga beras lokal di Bengkulu Tengah.",
-    "Perkembangan harga bawang di tingkat pasar lokal."
+    "Penyelesaian sisa penyaluran Bantuan Pangan Beras di Kabupaten Bengkulu Tengah.",
+    "Tindak lanjut implementasi Kerja Sama Antar Daerah (KAD) dengan Bengkulu Utara dalam pengendalian inflasi."
    ],
    "kalimat_dibuang": 0
   }
@@ -188,6 +186,43 @@
      "status": "kandidat"
     }
    ],
+   "baru": false,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "2588ff2f795a",
+   "url": "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+   "judul": "RAPAT EVALUASI PBP, PENYALURAN BANTUAN PANGAN BERAS DI BENGKULU TENGAH CAPAI 99,26 PERSEN",
+   "sumber": "bengkulutengahkab.go.id",
+   "tanggal": "2026-10-07",
+   "diakses": "2026-10-10T09:50:56+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 6221,
+   "sidik_sha256": "9afe8319a4a6374f57f818f521d2dbc55d714c81443afe06e73ee5164db807f8",
+   "kutipan": "Khusus Kabupaten Bengkulu Tengah, pagu penerima bantuan untuk periode Juli–September 2026 sebanyak 15.314 PBP dengan kuantum 459.390 kilogram. Hingga periode tersebut, bantuan telah diterima oleh 15.200 PBP dengan kuantu",
+   "ringkasan": "Penyaluran Bantuan Pangan Beras alokasi Juli–September 2026 di Kabupaten Bengkulu Tengah telah mencapai 99,26 persen. Di Kabupaten Bengkulu Tengah, bantuan ini ditargetkan untuk 15.314 penerima dengan kuantum mencapai 459.390 kilogram beras.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [],
    "baru": true,
    "penyedia_ai": "gemini"
   },
@@ -224,7 +259,47 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
+  },
+  {
+   "id": "a27fa613f7dc",
+   "url": "https://bengkulutengahkab.go.id/postingan/detail_postingan/PEMKAB-BENGKULU-TENGAH-PERKUAT-SINERGI-ANTAR-DAERAH-DALAM-PENGENDALIAN-INFLASI-DAN-PERCEPATAN-DIGITALISASI",
+   "judul": "PEMKAB BENGKULU TENGAH PERKUAT SINERGI ANTAR DAERAH DALAM PENGENDALIAN INFLASI DAN PERCEPATAN DIGITALISASI",
+   "sumber": "bengkulutengahkab.go.id",
+   "tanggal": "2026-10-06",
+   "diakses": "2026-10-10T09:50:56+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 8,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kepahiang"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Cabai Merah"
+   ],
+   "tag": [
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 6403,
+   "sidik_sha256": "3178f0541951a09dd4a465128d7dea37ea32472ae8886475409e110c4fab1162",
+   "kutipan": "##### Pemkab Bengkulu Tengah Ikuti Uji Publik Keterbukaan Informasi Publik Tahun 2026 08 Oktober 2026 • 12:23 Berita dan Informasi ##### RAPAT EVALUASI PBP, PENYALURAN BANTUAN PANGAN BERAS DI BENGKULU TENGAH CAPAI 99,26 ",
+   "ringkasan": "Pemerintah Kabupaten Bengkulu Tengah menghadiri Rapat Koordinasi TPID dan TP2DD yang digelar di Command Center Kabupaten Bengkulu Utara. Pertemuan tersebut mencakup penandatanganan Kerja Sama Antar Daerah (KAD) untuk memperkuat sinergi pengendalian inflasi dan percepatan digitalisasi.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
   },
   {
    "id": "b41535e6cc9f",
@@ -261,7 +336,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "536293a6ddc3",
@@ -292,16 +367,16 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   }
  ],
  "statistik": {
-  "hasil_pencarian": 110,
-  "setelah_duplikat": 86,
-  "berita_baru": 4,
-  "total_arsip": 4,
-  "kandidat_harga_baru": 12,
-  "isi_tidak_terbaca": 3,
+  "hasil_pencarian": 111,
+  "setelah_duplikat": 85,
+  "berita_baru": 2,
+  "total_arsip": 6,
+  "kandidat_harga_baru": 0,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
   "model_ai": "gemini-3.8-flash"
  },
