@@ -1,0 +1,1304 @@
+{
+ "waktu": "2026-10-10T09:36:46+00:00",
+ "sp2kp": {
+  "konteks": [
+   "[C3meC_C7.js] 31,38,119,206,78,25,100,71,26,205,1,5,197,27,303]),import.meta.url)},{name:\"login\",path:\"/login\",meta:dj||{},component:()=>U(()=>import(\"./C6dsxnJG.js\"),__vite__mapDeps([304,299,305,22,266,306]),import.meta.url)},{name:\"login-index2\",path:\"/login/index2\",meta:mj||{},component:()=>U(()=>import(\"./CkxIBJAc.js\"),__vite__mapDeps([307,305,22,299,308]),import.meta.url)},{name:\"maintenance\",path:\"/maintenance\",meta:vj||{},component:()=>U(()=>import(\"./D1LUxdr9.js\"),__vite__mapDeps([309,305,22,299,310]),import.meta.url)},{name:\"reset-password\",path:\"/reset-password\",meta:hj||{},component:()=>U(()=>import(\"./OxLT89X_.js\"),__vite__mapDeps([311,299,312]),import.meta.url)},{name:\"statistik-area\",path:\"/statistik/area\",component:()=>U(()=>import(\"./ye4qepCu.js\"),__vite__mapDeps([313,35,36,37,38,39,40,41,42,43,44,45,46,26,22,21,314,315,23,24,50,25,31,14,15,316,69,70,317]),import.meta.url)},{name:\"statistik-tabulasi-harga\",path:\"/statistik/tabulasi-harga\",component:()=>U(()=>import(\"./BP3Cl6Ng.js\"),__vite__mapDeps([318,30,31,32,143,10]),import.meta.url)},{name:\"statistik-variant\",path:\"/statistik/variant\",component:()=>U(()=>import(\"./CZPh2H-T.js\"),__vite__mapDeps([319,35,36,37,38,39,40,41,42,43,44,45,46,22,21,314,315,23,24,50,25,31,14,15,316,69,70,320]),import.meta.url)}],zb=(e,t,n)=>(t=t===!0?{}:t,{default:()=>{var a;return t?J2(e,t,n):(a=n.default)==null?void 0:a.call(n)}}),pj=/(:\\w+)\\([^)]+\\)/g,gj=/(:\\",
+   "[C3meC_C7.js] .url)},{name:\"login-index2\",path:\"/login/index2\",meta:mj||{},component:()=>U(()=>import(\"./CkxIBJAc.js\"),__vite__mapDeps([307,305,22,299,308]),import.meta.url)},{name:\"maintenance\",path:\"/maintenance\",meta:vj||{},component:()=>U(()=>import(\"./D1LUxdr9.js\"),__vite__mapDeps([309,305,22,299,310]),import.meta.url)},{name:\"reset-password\",path:\"/reset-password\",meta:hj||{},component:()=>U(()=>import(\"./OxLT89X_.js\"),__vite__mapDeps([311,299,312]),import.meta.url)},{name:\"statistik-area\",path:\"/statistik/area\",component:()=>U(()=>import(\"./ye4qepCu.js\"),__vite__mapDeps([313,35,36,37,38,39,40,41,42,43,44,45,46,26,22,21,314,315,23,24,50,25,31,14,15,316,69,70,317]),import.meta.url)},{name:\"statistik-tabulasi-harga\",path:\"/statistik/tabulasi-harga\",component:()=>U(()=>import(\"./BP3Cl6Ng.js\"),__vite__mapDeps([318,30,31,32,143,10]),import.meta.url)},{name:\"statistik-variant\",path:\"/statistik/variant\",component:()=>U(()=>import(\"./CZPh2H-T.js\"),__vite__mapDeps([319,35,36,37,38,39,40,41,42,43,44,45,46,22,21,314,315,23,24,50,25,31,14,15,316,69,70,320]),import.meta.url)}],zb=(e,t,n)=>(t=t===!0?{}:t,{default:()=>{var a;return t?J2(e,t,n):(a=n.default)==null?void 0:a.call(n)}}),pj=/(:\\w+)\\([^)]+\\)/g,gj=/(:\\w+)[?+*]/g,yj=/:\\w+/g;function Km(e){const t=(e==null?void 0:e.meta.key)??e.path.replace(pj,\"$1\").replace(gj,\"$1\").replace(yj,n=>{var a;return((a=e.params[n.slice(1)])==null?void 0:a.toString())||\"\"});retur",
+   "[C3meC_C7.js] etOrCreateInstance(this,w);if(typeof w==\"string\"){if(typeof T[w]>\"u\")throw new TypeError(`No method named \"${w}\"`);T[w]()}})}static clearMenus(w){if(w.button===ll||w.type===\"keyup\"&&w.key!==lo)return;const T=oe.find(pl);for(const W of T){const _e=Q1.getInstance(W);if(!_e||_e._config.autoClose===!1)continue;const Ue=w.composedPath(),Fe=Ue.includes(_e._menu);if(Ue.includes(_e._element)||_e._config.autoClose===\"inside\"&&!Fe||_e._config.autoClose===\"outside\"&&Fe||_e._menu.contains(w.target)&&(w.type===\"keyup\"&&w.key===lo||/input|select|option|textarea|form/i.test(w.target.tagName)))continue;const m2={relatedTarget:_e._element};w.type===\"click\"&&(m2.clickEvent=w),_e._completeHide(m2)}}static dataApiKeydownHandler(w){const T=/input|textarea/i.test(w.target.tagName),W=w.key===sl,_e=[wa,uo].includes(w.key);if(!_e&&!W||T&&!W)return;w.preventDefault();const Ue=this.matches(En)?this:oe.prev(this,En)[0]||oe.next(this,En)[0]||oe.findOne(En,w.delegateTarget.parentNode),Fe=Q1.getOrCreateInstance(Ue);if(_e){w.stopPropagation(),Fe.show(),Fe._selectMenuItem(w);return}Fe._isShown()&&(w.stopPropagation(),Fe.hide(),Ue.focus())}}Q.on(document,_a,En,Q1.dataApiKeydownHandler),Q.on(document,_a,l4,Q1.dataApiKeydownHandler),Q.on(document,Ur,Q1.clearMenus),Q.on(document,dl,Q1.clearMenus),Q.on(document,Ur,En,function(F){F.preventDefault(),Q1.getOrCreateInstance(this).toggle()}),E(Q1);const Gr=\"backdrop\",qr=\"fade",
+   "[C3meC_C7.js] =this.responseType===\"json\";if(t&&ze.isString(t)&&(a&&!this.responseType||r)){const i=!(n&&n.silentJSONParsing)&&r;try{return JSON.parse(t)}catch(o){if(i)throw o.name===\"SyntaxError\"?_2.from(o,_2.ERR_BAD_RESPONSE,this,null,this.response):o}}return t}],timeout:0,xsrfCookieName:\"XSRF-TOKEN\",xsrfHeaderName:\"X-XSRF-TOKEN\",maxContentLength:-1,maxBodyLength:-1,env:{FormData:pn.classes.FormData,Blob:pn.classes.Blob},validateStatus:function(t){return t>=200&&t<300},headers:{common:{Accept:\"application/json, text/plain, */*\"}}};ze.forEach([\"delete\",\"get\",\"head\"],function(t){vr.headers[t]={}});ze.forEach([\"post\",\"put\",\"patch\"],function(t){vr.headers[t]=ze.merge(vhe)});const phe=ze.toObjectSet([\"age\",\"authorization\",\"content-length\",\"content-type\",\"etag\",\"expires\",\"from\",\"host\",\"if-modified-since\",\"if-unmodified-since\",\"last-modified\",\"location\",\"max-forwards\",\"proxy-authorization\",\"referer\",\"retry-after\",\"user-agent\"]),ghe=e=>{const t={};let n,a,r;return e&&e.split(` `).forEach(function(i){r=i.indexOf(\":\"),n=i.substring(0,r).trim().toLowerCase(),a=i.substring(r+1).trim(),!(!n||t[n]&&phe[n])&&(n===\"set-cookie\"?t[n]?t[n].push(a):t[n]=[a]:t[n]=t[n]?t[n]+\", \"+a:a)}),t},ph=Symbol(\"internals\");function uc(e){return e&&String(e).trim().toLowerCase()}function Bs(e){return e===!1||e==null?e:ze.isArray(e)?e.map(Bs):String(e)}function yhe(e){const t=Object.create(null),n=/([^\\s,;=]+)\\s*(?:=\\s*([^,;]+))?/g;let a",
+   "[C3meC_C7.js] l);return ze.forEach(this,(a,r)=>{a!=null&&a!==!1&&(n[r]=t&&ze.isArray(a)?a.join(\", \"):a)}),n}[Symbol.iterator](){return Object.entries(this.toJSON())[Symbol.iterator]()}toString(){return Object.entries(this.toJSON()).map(([t,n])=>t+\": \"+n).join(` `)}get[Symbol.toStringTag](){return\"AxiosHeaders\"}static from(t){return t instanceof this?t:new this(t)}static concat(t,...n){const a=new this(t);return n.forEach(r=>a.set(r)),a}static accessor(t){const a=(this[ph]=this[ph]={accessors:{}}).accessors,r=this.prototype;function c(i){const o=uc(i);a[o]||(Vhe(r,i),a[o]=!0)}return ze.isArray(t)?t.forEach(c):c(t),this}};Et.accessor([\"Content-Type\",\"Content-Length\",\"Accept\",\"Accept-Encoding\",\"User-Agent\",\"Authorization\"]);ze.freezeMethods(Et.prototype);ze.freezeMethods(Et);function Y8(e,t){const n=this||vr,a=t||n,r=Et.from(a.headers);let c=a.data;return ze.forEach(e,function(o){c=o.call(n,c,r.normalize(),t?t.status:void 0)}),r.normalize(),c}function VL(e){return!!(e&&e.__CANCEL__)}function Gi(e,t,n){_2.call(this,e??\"canceled\",_2.ERR_CANCELED,t,n),this.name=\"CanceledError\"}ze.inherits(Gi,_2,{__CANCEL__:!0});function whe(e,t,n){const a=n.config.validateStatus;!n.status||!a||a(n.status)?e(n):t(new _2(\"Request failed with status code \"+n.status,[_2.ERR_BAD_REQUEST,_2.ERR_BAD_RESPONSE][Math.floor(n.status/100)-4],n.config,n.request,n))}const _he=pn.isStandardBrowserEnv?(function(){return{write:function(n,a,r,c",
+   "[C3meC_C7.js] {if(t===!1)throw new _2(r(i,\" has been removed\"+(n?\" in \"+n:\"\")),_2.ERR_DEPRECATED);return n&&!Ch[i]&&(Ch[i]=!0,console.warn(r(i,\" has been deprecated since v\"+n+\" and will be removed in the near future\"))),t?t(c,i,o):!0}};function Ehe(e,t,n){if(typeof e!=\"object\")throw new _2(\"options must be an object\",_2.ERR_BAD_OPTION_VALUE);const a=Object.keys(e);let r=a.length;for(;r-- >0;){const c=a[r],i=t[c];if(i){const o=e[c],s=o===void 0||i(o,c,e);if(s!==!0)throw new _2(\"option \"+c+\" must be \"+s,_2.ERR_BAD_OPTION_VALUE);continue}if(n!==!0)throw new _2(\"Unknown option \"+c,_2.ERR_BAD_OPTION)}}const w7={assertOptions:Ehe,validators:p9},Ea=w7.validators;let A3=class{constructor(t){this.defaults=t,this.interceptors={request:new hh,response:new hh}}request(t,n){typeof t==\"string\"?(n=n||{},n.url=t):n=t||{},n=Z4(this.defaults,n);const{transitional:a,paramsSerializer:r,headers:c}=n;a!==void 0&&w7.assertOptions(a,{silentJSONParsing:Ea.transitional(Ea.boolean),forcedJSONParsing:Ea.transitional(Ea.boolean),clarifyTimeoutError:Ea.transitional(Ea.boolean)},!1),r!=null&&(ze.isFunction(r)?n.paramsSerializer={serialize:r}:w7.assertOptions(r,{encode:Ea.function,serialize:Ea.function},!0)),n.method=(n.method||this.defaults.method||\"get\").toLowerCase();let i;i=c&&ze.merge(c.common,c[n.method]),i&&ze.forEach([\"delete\",\"get\",\"head\",\"post\",\"put\",\"patch\",\"common\"],m=>{delete c[m]}),n.headers=Et.concat(i,c);const o=[];le",
+   "[C3meC_C7.js] {computed:{$vuetify(){return $2({defaults:_4.call(this,nr),display:_4.call(this,T7),theme:_4.call(this,di),icons:_4.call(this,P7),locale:_4.call(this,ar),date:_4.call(this,Xh)})}}})},defaults:o,display:s,theme:u,icons:l,locale:d,date:v,goTo:p}}const Gge=\"3.5.8\";ux.version=Gge;function _4(e){var a,r;const t=this.$,n=((a=t.parent)==null?void 0:a.provides)??((r=t.vnode.appContext)==null?void 0:r.provides);if(n&&e in n)return n[e]}const qge=te({...We(),...sx({fullHeight:!0}),...g2()},\"VApp\"),Kge=he()({name:\"VApp\",props:qge(),setup(e,t){let{slots:n}=t;const a=M2(e),{layoutClasses:r,getLayoutItem:c,items:i,layoutRef:o}=lx(e),{rtlClasses:s}=M1();return Ve(()=>{var u;return V(\"div\",{ref:o,class:[\"v-application\",a.themeClasses.value,r.value,s.value,e.class],style:[e.style]},[V(\"div\",{class:\"v-application__wrap\"},[(u=n.default)==null?void 0:u.call(n)])])}),{getLayoutItem:c,items:i,theme:a}}}),r2=te({tag:{type:String,default:\"div\"}},\"tag\"),fx=te({text:String,...We(),...r2()},\"VToolbarTitle\"),x9=he()({name:\"VToolbarTitle\",props:fx(),setup(e,t){let{slots:n}=t;return Ve(()=>{const a=!!(n.default||n.text||e.text);return V(e.tag,{class:[\"v-toolbar-title\",e.class],style:e.style},{default:()=>{var r;return[a&&V(\"div\",{class:\"v-toolbar-title__placeholder\"},[n.text?n.text():e.text,(r=n.default)==null?void 0:r.call(n)])]}})}),{}}}),Yge=te({disabled:Boolean,group:Boolean,hideOnLeave:Boolean,leaveAbsolute:Boolea",
+   "[BLLlR1YG.js] import{m as s,p as n,s as o}from\"./C3meC_C7.js\";const t=\"https://api-sp2kp.kemendag.go.id/report/api\",c=s(\"harga_rata_rata\",{actions:{async fetchData(a){const r=o(a);try{return await n.get(`${t}/average-price?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async fetchDataPublic(a){const r=o(a);try{return await n.get(`${t}/average-price-public?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async komoditasPublic(a){const r=o(a);try{return await n.get(`${t}/average-price-komoditas-public?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async perbandinganHarga(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generatePerbandinganHarga(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generat",
+   "[BLLlR1YG.js] import{m as s,p as n,s as o}from\"./C3meC_C7.js\";const t=\"https://api-sp2kp.kemendag.go.id/report/api\",c=s(\"harga_rata_rata\",{actions:{async fetchData(a){const r=o(a);try{return await n.get(`${t}/average-price?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async fetchDataPublic(a){const r=o(a);try{return await n.get(`${t}/average-price-public?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async komoditasPublic(a){const r=o(a);try{return await n.get(`${t}/average-price-komoditas-public?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async perbandinganHarga(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generatePerbandinganHarga(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generatePerbandinganHargaBanting(a){try{return await n.post(`${t}/average",
+   "[BLLlR1YG.js] p2kp.kemendag.go.id/report/api\",c=s(\"harga_rata_rata\",{actions:{async fetchData(a){const r=o(a);try{return await n.get(`${t}/average-price?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async fetchDataPublic(a){const r=o(a);try{return await n.get(`${t}/average-price-public?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async komoditasPublic(a){const r=o(a);try{return await n.get(`${t}/average-price-komoditas-public?${r}`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async perbandinganHarga(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generatePerbandinganHarga(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generatePerbandinganHargaBanting(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga-banting`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generatePerbandinganHargaHetHa(a){try{return await n.post(`${t}/average-price/generate-perbandingan-harga-het-ha`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(r){console.error(\"Terjadi kesalahan:\",r)}},async generatePerbandinganHargaByKomoditas(a){const r=o(a);try{return await n",
+   "[DTQo9f0H.js] t a=new FormData;return a.append(\"tahun\",Number(e.tahun)),a.append(\"bulan\",Number(e.bulan)),a.append(\"kode_provinsi\",e.kode_provinsi),e.kode_kab_kota&&a.append(\"kode_kab_kota\",e.kode_kab_kota),await n.post(`${p}/harga-harian/laporan-kinerja-kontributor-excel`,a,{headers:{\"Content-Type\":\"multipart/form-data\"},responseType:\"blob\"})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},async statistikJsonHarian(e){try{const a=new FormData;return a.append(\"start_date\",e.start_date),a.append(\"end_date\",e.end_date),a.append(\"level\",e.level),a.append(\"variant_ids\",e.variant_ids),a.append(\"kode_provinsi\",e.kode_provinsi),a.append(\"kode_kab_kota\",e.kode_kab_kota),a.append(\"pasar_id\",e.pasar_id),a.append(\"skip_sat_sun\",e.skip_sat_sun),a.append(\"tipe_komoditas\",e.tipe_komoditas),await n.post(`${p}/average-price/export-area-daily-json`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},async statistikExcelHarian(e){try{const a=new FormData;return a.append(\"start_date\",e.start_date),a.append(\"end_date\",e.end_date),a.append(\"level\",e.level),a.append(\"variant_ids\",e.variant_ids),a.append(\"kode_provinsi\",e.kode_provinsi),a.append(\"kode_kab_kota\",e.kode_kab_kota),a.append(\"pasar_id\",e.pasar_id),a.append(\"skip_sat_sun\",e.skip_sat_sun),a.append(\"tipe_komoditas\",e.tipe_komoditas),await n.post(`${p}/average-price/export-area-daily-excel`,a,{headers:{\"Content-Type\":\"",
+   "[DTQo9f0H.js] provinsi\",e.kode_provinsi),e.kode_kab_kota&&a.append(\"kode_kab_kota\",e.kode_kab_kota),await n.post(`${p}/harga-harian/laporan-kinerja-kontributor-excel`,a,{headers:{\"Content-Type\":\"multipart/form-data\"},responseType:\"blob\"})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},async statistikJsonHarian(e){try{const a=new FormData;return a.append(\"start_date\",e.start_date),a.append(\"end_date\",e.end_date),a.append(\"level\",e.level),a.append(\"variant_ids\",e.variant_ids),a.append(\"kode_provinsi\",e.kode_provinsi),a.append(\"kode_kab_kota\",e.kode_kab_kota),a.append(\"pasar_id\",e.pasar_id),a.append(\"skip_sat_sun\",e.skip_sat_sun),a.append(\"tipe_komoditas\",e.tipe_komoditas),await n.post(`${p}/average-price/export-area-daily-json`,a,{headers:{\"Content-Type\":\"multipart/form-data\"}})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},async statistikExcelHarian(e){try{const a=new FormData;return a.append(\"start_date\",e.start_date),a.append(\"end_date\",e.end_date),a.append(\"level\",e.level),a.append(\"variant_ids\",e.variant_ids),a.append(\"kode_provinsi\",e.kode_provinsi),a.append(\"kode_kab_kota\",e.kode_kab_kota),a.append(\"pasar_id\",e.pasar_id),a.append(\"skip_sat_sun\",e.skip_sat_sun),a.append(\"tipe_komoditas\",e.tipe_komoditas),await n.post(`${p}/average-price/export-area-daily-excel`,a,{headers:{\"Content-Type\":\"multipart/form-data\"},responseType:\"arraybuffer\"})}catch(a){console.error(\"Terjadi kesalahan:\",a)}},async statis",
+   "[CsgGO7qo.js] import{d as o}from\"./BaQLsbE6.js\";import{_ as s,a as n,c,b as p,r as u,m as i,p as r}from\"./C3meC_C7.js\";const l=o({props:{url:String},setup(e){return{url:u(e.url)}}},\"$5pFGk0mVfi\"),d=[\"src\"];function _(e,a,m,f,h,k){return n(),c(\"div\",null,[p(\"iframe\",{src:e.url,width:\"100%\",height:\"1000\",frameborder:\"0\"},null,8,d)])}const $=s(l,[[\"render\",_],[\"__scopeId\",\"data-v-93c4e7cd\"]]),t=\"https://api-sp2kp.kemendag.go.id/report/api\",T=i(\"tableau\",{actions:{async getToken(){try{return await r.get(`${t}/tableau/token`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}},async getTokenPublic(){try{return await r.get(`${t}/tableau/token-harga-public`)}catch(e){console.error(\"Terjadi kesalahan:\",e)}}}});export{$ as _,T as u}; ",
+   "[B_8U66ad.js] =null,y.value=[]}),Y(_,()=>{_.value!==null&&M()})});const f=async()=>{c.value=K(new Date(o.value),\"dd MMM\"),d.value=K(new Date(r.value),\"dd MMM\"),w(),M()},w=()=>{const S=[{key:\"nama\",title:\"Komoditas\"},{key:\"satuan\",title:\"Unit\"},{key:\"harga_pembanding\",title:`${d.value??\"\"}`},{key:\"harga\",title:`${c.value??\"\"}`},{key:\"perubahan\",title:\"Perubahan\"}];u.value=S},A=({page:S,itemsPerPage:I,sortBy:L,role_id:C,search:D})=>{i.value=!0,M()},M=async()=>{if(o.value!==null&&r.value!==null){m.value=[];const S=b.value==-1?null:b.value,I={tanggal:o.value,tanggal_pembanding:r.value};(S!=null||S!=\"\")&&(I.kode_provinsi=S),(_.value!=null||_.value!=\"\")&&(I.kode_kab_kota=_.value);let L=0,C=0;p.value=!0,await t.generatePerbandinganHarga(I).then(D=>{var B;const H=(B=D==null?void 0:D.data)==null?void 0:B.data;if(Array.isArray(H)){for(const z of H){L+=z.harga,C+=z.harga_pembanding;const N=(z.region||[]).map(t1=>{const b1=t1.harga!=null?\"Rp \"+t1.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,D1=t1.harga_pembanding!=null?\"Rp \"+t1.harga_pembanding.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null;return{nama:t1.region,satuan:t1.satuan_display,harga_pembanding:D1,harga:b1,perubahan:t1.status_perubahan,persen_perubahan:t1.persen_perubahan}}).sort((t1,b1)=>t1.nama.localeCompare(b1.nama));let W=z.harga!=null?\"Rp \"+z.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,U=z.harga_pembanding!=null?\"Rp \"+z.harga_pem",
+   "[B_8U66ad.js] on,satuan:t1.satuan_display,harga_pembanding:D1,harga:b1,perubahan:t1.status_perubahan,persen_perubahan:t1.persen_perubahan}}).sort((t1,b1)=>t1.nama.localeCompare(b1.nama));let W=z.harga!=null?\"Rp \"+z.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,U=z.harga_pembanding!=null?\"Rp \"+z.harga_pembanding.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,J=z.status_perubahan;z.variant_id==1&&N.length>0&&(W=null,U=null,J=null);const n1={nama:z.variant_nama,harga_pembanding:U,harga:W,perubahan:J,persen_perubahan:z.persen_perubahan,satuan:z.satuan_display,hasChildren:z.is_regional&&N.length>0,children:N};m.value.push(n1)}s.value=(H==null?void 0:H.totalCount)??0}}),p.value=!1}},P=()=>{e.getAllProv().then(S=>{var L;const I=(L=S==null?void 0:S.data)==null?void 0:L.data;Array.isArray(I)&&I.forEach((C,D)=>{const H={id:C.kode_provinsi,nama:C.nama_provinsi};h.value.push(H)})})},E=()=>{e.getKotaByProv(b.value).then(S=>{var L;const I=(L=S==null?void 0:S.data)==null?void 0:L.data;y.value=[],Array.isArray(I)&&I.forEach((C,D)=>{const H={id:C.kode_kab_kota,nama:C.nama_kab_kota};y.value.push(H)})})};return{take:n,search_komoditas_bapok:l,komoditasHeaders:u,tableRows:m,totalItems:s,today:a,date1:o,date2:r,listProvinsi:h,provinsiId:b,listKota:y,kotaId:_,load_data:p,loadItems:A,expandedItems:g,toggleRow:v}}}),M0={class:\"row p-3\"},k0={class:\"col-12 mb-3\"},I0={class:\"col-12 row justify-content-between",
+   "[B_8U66ad.js] +z.harga.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,U=z.harga_pembanding!=null?\"Rp \"+z.harga_pembanding.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g,\".\"):null,J=z.status_perubahan;z.variant_id==1&&N.length>0&&(W=null,U=null,J=null);const n1={nama:z.variant_nama,harga_pembanding:U,harga:W,perubahan:J,persen_perubahan:z.persen_perubahan,satuan:z.satuan_display,hasChildren:z.is_regional&&N.length>0,children:N};m.value.push(n1)}s.value=(H==null?void 0:H.totalCount)??0}}),p.value=!1}},P=()=>{e.getAllProv().then(S=>{var L;const I=(L=S==null?void 0:S.data)==null?void 0:L.data;Array.isArray(I)&&I.forEach((C,D)=>{const H={id:C.kode_provinsi,nama:C.nama_provinsi};h.value.push(H)})})},E=()=>{e.getKotaByProv(b.value).then(S=>{var L;const I=(L=S==null?void 0:S.data)==null?void 0:L.data;y.value=[],Array.isArray(I)&&I.forEach((C,D)=>{const H={id:C.kode_kab_kota,nama:C.nama_kab_kota};y.value.push(H)})})};return{take:n,search_komoditas_bapok:l,komoditasHeaders:u,tableRows:m,totalItems:s,today:a,date1:o,date2:r,listProvinsi:h,provinsiId:b,listKota:y,kotaId:_,load_data:p,loadItems:A,expandedItems:g,toggleRow:v}}}),M0={class:\"row p-3\"},k0={class:\"col-12 mb-3\"},I0={class:\"col-12 row justify-content-between\"},D0={class:\"col-12 col-md-6 mb-0\"},L0={class:\"col-12 col-md-6\"},$0={class:\"col-12\"},O0={class:\"my-0\"},N0=[\"onClick\"],H0={class:\"my-0\"},B0={class:\"my-0 text-no-wrap text-end\"},R0={class:\"my-0 text-no-"
+  ],
+  "coba": [
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/report/api/tableau/token-harga-public",
+    "status": 200,
+    "jenis": "text/plain; charset=utf-8",
+    "byte": 49,
+    "detik": 2.5,
+    "wilayah_disebut": [],
+    "cuplikan": "AyTF6qz3TAykXxDgDAq-hQ==:ex0Oxwy5wv2zVCCLL93NXRqv",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": false
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/auth/api/application",
+    "status": 401,
+    "jenis": "application/json",
+    "byte": 73,
+    "detik": 1.6,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"code\":\"unauthorized\",\"message\":\"Invalid or expired token\",\"status\":401}",
+    "cors": {
+     "Access-Control-Allow-Origin": "https://sp2kp.kemendag.go.id",
+     "Access-Control-Allow-Credentials": "true"
+    },
+    "galat": "HTTP 401",
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "code",
+     "message",
+     "status"
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/wilayah/provinsi",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 4084,
+    "detik": 1.1,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"status\":\"success\",\"message\":\"Successfully getting records\",\"data\":[{\"kode_provinsi\":\"11\",\"nama_provinsi\":\"Aceh\",\"nama_singkat_provinsi\":\"Aceh\",\"wilayah\":\"Barat\"},{\"kode_provinsi\":\"12\",\"nama_provinsi\":\"Sumatera Utara\",\"nama_singkat_provinsi\":\"Sumut\",\"wilayah\":\"Barat\"},{\"kode_provinsi\":\"13\",\"nama_pr",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "status",
+     "message",
+     "data"
+    ],
+    "jumlah": 38,
+    "contoh": [
+     {
+      "kode_provinsi": "11"
+     },
+     {
+      "kode_provinsi": "12"
+     },
+     {
+      "kode_provinsi": "13"
+     },
+     {
+      "kode_provinsi": "14"
+     },
+     {
+      "kode_provinsi": "15"
+     },
+     {
+      "kode_provinsi": "16"
+     },
+     {
+      "kode_provinsi": "17"
+     },
+     {
+      "kode_provinsi": "18"
+     },
+     {
+      "kode_provinsi": "19"
+     },
+     {
+      "kode_provinsi": "21"
+     },
+     {
+      "kode_provinsi": "31"
+     },
+     {
+      "kode_provinsi": "32"
+     },
+     {
+      "kode_provinsi": "33"
+     },
+     {
+      "kode_provinsi": "34"
+     },
+     {
+      "kode_provinsi": "35"
+     },
+     {
+      "kode_provinsi": "36"
+     },
+     {
+      "kode_provinsi": "51"
+     },
+     {
+      "kode_provinsi": "52"
+     },
+     {
+      "kode_provinsi": "53"
+     },
+     {
+      "kode_provinsi": "61"
+     },
+     {
+      "kode_provinsi": "62"
+     },
+     {
+      "kode_provinsi": "63"
+     },
+     {
+      "kode_provinsi": "64"
+     },
+     {
+      "kode_provinsi": "65"
+     },
+     {
+      "kode_provinsi": "71"
+     },
+     {
+      "kode_provinsi": "72"
+     },
+     {
+      "kode_provinsi": "73"
+     },
+     {
+      "kode_provinsi": "74"
+     },
+     {
+      "kode_provinsi": "75"
+     },
+     {
+      "kode_provinsi": "76"
+     },
+     {
+      "kode_provinsi": "81"
+     },
+     {
+      "kode_provinsi": "82"
+     },
+     {
+      "kode_provinsi": "91"
+     },
+     {
+      "kode_provinsi": "92"
+     },
+     {
+      "kode_provinsi": "93"
+     },
+     {
+      "kode_provinsi": "94"
+     },
+     {
+      "kode_provinsi": "95"
+     },
+     {
+      "kode_provinsi": "96"
+     }
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/wilayah/kab-kota/17",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 660,
+    "detik": 1.5,
+    "wilayah_disebut": [
+     "bengkulu tengah",
+     "kepahiang",
+     "kota bengkulu"
+    ],
+    "cuplikan": "{\"status\":\"success\",\"message\":\"Successfully getting records\",\"data\":[{\"kode_kab_kota\":\"1701\",\"nama_kab_kota\":\"Kab. Bengkulu Selatan\"},{\"kode_kab_kota\":\"1702\",\"nama_kab_kota\":\"Kab. Rejang Lebong\"},{\"kode_kab_kota\":\"1703\",\"nama_kab_kota\":\"Kab. Bengkulu Utara\"},{\"kode_kab_kota\":\"1704\",\"nama_kab_kota\":\"",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "status",
+     "message",
+     "data"
+    ],
+    "jumlah": 10,
+    "contoh": [
+     {
+      "kode_kab_kota": "1701",
+      "nama_kab_kota": "Kab. Bengkulu Selatan"
+     },
+     {
+      "kode_kab_kota": "1702",
+      "nama_kab_kota": "Kab. Rejang Lebong"
+     },
+     {
+      "kode_kab_kota": "1703",
+      "nama_kab_kota": "Kab. Bengkulu Utara"
+     },
+     {
+      "kode_kab_kota": "1704",
+      "nama_kab_kota": "Kab. Kaur"
+     },
+     {
+      "kode_kab_kota": "1705",
+      "nama_kab_kota": "Kab. Seluma"
+     },
+     {
+      "kode_kab_kota": "1706",
+      "nama_kab_kota": "Kab. Muko Muko"
+     },
+     {
+      "kode_kab_kota": "1707",
+      "nama_kab_kota": "Kab. Lebong"
+     },
+     {
+      "kode_kab_kota": "1708",
+      "nama_kab_kota": "Kab. Kepahiang"
+     },
+     {
+      "kode_kab_kota": "1709",
+      "nama_kab_kota": "Kab. Bengkulu Tengah"
+     },
+     {
+      "kode_kab_kota": "1771",
+      "nama_kab_kota": "Kota Bengkulu"
+     }
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/pasar?kode_kab_kota=1709",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 469,
+    "detik": 1.6,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[{\"id\":117,\"created_at\":\"2024-01-17T05:44:57.271088Z\",\"updated_at\":\"2024-01-17T05:44:57.271088Z\",\"kode\":1709001,\"nama\":\"Pasar Taba Penanjung\",\"kode_provinsi\":\"17\",\"kode_kab_kota\":\"1709\",\"kode_kecamatan\":\"\",\"kode_kelurahan\":\"\",\"tipe_pasar_id\":8,\"lat\":-3.705079223494886,\"lon\":102.4990306539795",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ],
+    "jumlah": 1,
+    "contoh": [
+     {
+      "id": 117,
+      "kode": 1709001,
+      "nama": "Pasar Taba Penanjung",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1709",
+      "tipe_pasar_id": 8
+     }
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/pasar?kode_kab_kota=1708",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 449,
+    "detik": 1.1,
+    "wilayah_disebut": [
+     "kepahiang"
+    ],
+    "cuplikan": "{\"data\":[{\"id\":116,\"created_at\":\"2024-01-17T05:44:57.271088Z\",\"updated_at\":\"2024-01-17T05:44:57.271088Z\",\"kode\":1708001,\"nama\":\"Pasar Kepahiang \",\"kode_provinsi\":\"17\",\"kode_kab_kota\":\"1708\",\"kode_kecamatan\":\"\",\"kode_kelurahan\":\"\",\"tipe_pasar_id\":8,\"lat\":-3.644155,\"lon\":102.577338,\"is_active\":true,\"i",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ],
+    "jumlah": 1,
+    "contoh": [
+     {
+      "id": 116,
+      "kode": 1708001,
+      "nama": "Pasar Kepahiang ",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1708",
+      "tipe_pasar_id": 8
+     }
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/pasar?kode_kab_kota=1771",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 3640,
+    "detik": 0.9,
+    "wilayah_disebut": [
+     "kota bengkulu"
+    ],
+    "cuplikan": "{\"data\":[{\"id\":118,\"created_at\":\"2024-01-17T05:44:57.271088Z\",\"updated_at\":\"2026-04-13T07:29:32.05397Z\",\"kode\":1771002,\"nama\":\"Pasar Panorama \",\"kode_provinsi\":\"17\",\"kode_kab_kota\":\"1771\",\"kode_kecamatan\":\"\",\"kode_kelurahan\":\"\",\"tipe_pasar_id\":8,\"lat\":-3.814966924755635,\"lon\":102.29980725397951,\"is_",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ],
+    "jumlah": 10,
+    "contoh": [
+     {
+      "id": 118,
+      "kode": 1771002,
+      "nama": "Pasar Panorama ",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 1089,
+      "kode": 1771170,
+      "nama": "Titik Banting - Kota Bengkulu",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 17
+     },
+     {
+      "id": 784,
+      "kode": 1700122,
+      "nama": "Herman Sk",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 12
+     },
+     {
+      "id": 787,
+      "kode": 1700132,
+      "nama": "Tabina Tani",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 13
+     },
+     {
+      "id": 786,
+      "kode": 1700131,
+      "nama": "BIM",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 13
+     },
+     {
+      "id": 785,
+      "kode": 1700123,
+      "nama": "Yuniarti",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 12
+     },
+     {
+      "id": 781,
+      "kode": 1700111,
+      "nama": "Depo Tunas Jaya",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 11
+     },
+     {
+      "id": 782,
+      "kode": 1700112,
+      "nama": "TB. Sumber Makmur",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 11
+     },
+     {
+      "id": 788,
+      "kode": 1700133,
+      "nama": "Toko Puteri Tani/ Salak Tani Jaya",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 13
+     },
+     {
+      "id": 783,
+      "kode": 1700121,
+      "nama": "Fransca Eko Putra S",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 12
+     }
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/pasar?kode_provinsi=17&take=500",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 8484,
+    "detik": 1.6,
+    "wilayah_disebut": [
+     "kepahiang",
+     "kota bengkulu"
+    ],
+    "cuplikan": "{\"data\":[{\"id\":69,\"created_at\":\"2024-01-17T05:44:57.271088Z\",\"updated_at\":\"2024-01-17T05:44:57.271088Z\",\"kode\":1701001,\"nama\":\"Pasar Ampera\",\"kode_provinsi\":\"17\",\"kode_kab_kota\":\"1701\",\"kode_kecamatan\":\"\",\"kode_kelurahan\":\"\",\"tipe_pasar_id\":8,\"lat\":-4.469098,\"lon\":102.90730427,\"is_active\":true,\"is_n",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ],
+    "jumlah": 23,
+    "contoh": [
+     {
+      "id": 69,
+      "kode": 1701001,
+      "nama": "Pasar Ampera",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1701",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 71,
+      "kode": 1703001,
+      "nama": "Pasar Purwodadi",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1703",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 70,
+      "kode": 1702001,
+      "nama": "Pasar Atas",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1702",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 112,
+      "kode": 1704001,
+      "nama": "Pasar Rakyat Inpres Bintuhan",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1704",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 113,
+      "kode": 1705001,
+      "nama": "Pasar Sembayat",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1705",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 116,
+      "kode": 1708001,
+      "nama": "Pasar Kepahiang ",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1708",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 117,
+      "kode": 1709001,
+      "nama": "Pasar Taba Penanjung",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1709",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 118,
+      "kode": 1771002,
+      "nama": "Pasar Panorama ",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 115,
+      "kode": 1707001,
+      "nama": "Pasar Rakyat Lebong",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1707",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 1089,
+      "kode": 1771170,
+      "nama": "Titik Banting - Kota Bengkulu",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 17
+     },
+     {
+      "id": 784,
+      "kode": 1700122,
+      "nama": "Herman Sk",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 12
+     },
+     {
+      "id": 787,
+      "kode": 1700132,
+      "nama": "Tabina Tani",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 13
+     },
+     {
+      "id": 786,
+      "kode": 1700131,
+      "nama": "BIM",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 13
+     },
+     {
+      "id": 785,
+      "kode": 1700123,
+      "nama": "Yuniarti",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 12
+     },
+     {
+      "id": 781,
+      "kode": 1700111,
+      "nama": "Depo Tunas Jaya",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 11
+     },
+     {
+      "id": 782,
+      "kode": 1700112,
+      "nama": "TB. Sumber Makmur",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 11
+     },
+     {
+      "id": 788,
+      "kode": 1700133,
+      "nama": "Toko Puteri Tani/ Salak Tani Jaya",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 13
+     },
+     {
+      "id": 783,
+      "kode": 1700121,
+      "nama": "Fransca Eko Putra S",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 12
+     },
+     {
+      "id": 990,
+      "kode": 1771110,
+      "nama": "Depo - Kota Bengkulu",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 11
+     },
+     {
+      "id": 991,
+      "kode": 1771120,
+      "nama": "Toko LPG - Kota Bengkulu",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 12
+     },
+     {
+      "id": 992,
+      "kode": 1771130,
+      "nama": "Toko Tani - Kota Bengkulu",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 13
+     },
+     {
+      "id": 119,
+      "kode": 1771001,
+      "nama": "Pasar Minggu Bengkulu",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1771",
+      "tipe_pasar_id": 8
+     },
+     {
+      "id": 114,
+      "kode": 1706001,
+      "nama": "Pasar Koto Jaya",
+      "kode_provinsi": "17",
+      "kode_kab_kota": "1706",
+      "tipe_pasar_id": 8
+     }
+    ]
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/variant?take=500",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 1500000,
+    "detik": 19.6,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[{\"id\":8,\"created_at\":\"2024-01-17T10:07:59.452189Z\",\"updated_at\":\"2024-01-17T10:07:59.452189Z\",\"tipe_komoditas_id\":1,\"tipe_komoditas\":{\"id\":1,\"created_at\":\"2023-08-31T09:37:17.735065Z\",\"updated_at\":\"2023-11-15T07:53:20.013117Z\",\"nama\":\"Barang Kebutuhan Pokok\",\"is_active\":true,\"tipe_pasar\":nu",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": false
+   },
+   {
+    "url": "https://api-sp2kp.kemendag.go.id/master/api/tipe-komoditas",
+    "status": 200,
+    "jenis": "application/json",
+    "byte": 859,
+    "detik": 1.6,
+    "wilayah_disebut": [],
+    "cuplikan": "{\"data\":[{\"id\":3,\"created_at\":\"2023-10-19T07:31:12.629214Z\",\"updated_at\":\"2023-10-19T07:33:32.880593Z\",\"nama\":\"Barang Pasar Induk\",\"is_active\":true,\"tipe_pasar\":null},{\"id\":2,\"created_at\":\"2023-08-31T09:37:17.735065Z\",\"updated_at\":\"2023-08-31T09:37:17.735065Z\",\"nama\":\"Barang Penting\",\"is_active\":tru",
+    "cors": {
+     "Access-Control-Allow-Origin": "*"
+    },
+    "catatan": "SP2KP tahap 2",
+    "json": true,
+    "kunci": [
+     "data",
+     "totalCount",
+     "summary",
+     "meta"
+    ],
+    "jumlah": 5,
+    "contoh": [
+     {
+      "id": 3,
+      "nama": "Barang Pasar Induk"
+     },
+     {
+      "id": 2,
+      "nama": "Barang Penting"
+     },
+     {
+      "id": 4,
+      "nama": "Barang Retail"
+     },
+     {
+      "id": 1,
+      "nama": "Barang Kebutuhan Pokok"
+     },
+     {
+      "id": 9,
+      "nama": "Barang Kopti"
+     }
+    ]
+   }
+  ]
+ },
+ "daerah": [
+  {
+   "url": "https://kepahiangkab.go.id/info-pangan",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 14503,
+   "detik": 1.0,
+   "wilayah_disebut": [
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Info Pangan — Pemerintah Kabupaten Kepahiang</title> <meta name=\"description\" content=\"Portal resmi Pemerintah Kabupaten Kepahiang, Provinsi Bengkulu.\"> <link ",
+   "catatan": "situs daerah tahap 2",
+   "json": false,
+   "tabel": [
+    " \n         \n            Komoditas  Satuan  Harga  Perubahan  \n         \n         \n                       \n               Beras Medium \n               Kg \n               Rp13.500 \n               \n                                   — Stabil \n                               \n             \n                       \n               Gula Pasir \n               Kg \n               Rp18.000 \n               \n                                   ▲ 1.50% \n                               \n             \n                       \n               Minyak Goreng Curah \n               Liter \n               Rp16.500 \n               \n                                   ▼ 2.00% \n                               \n             \n                       \n               Cabai Merah Keriting \n               Kg \n               Rp45.000 \n               \n                                   ▲ 8.00% \n                               \n             \n                       \n               Cabai Rawit \n               Kg \n               Rp55.000 \n               \n                                   ▲ 6.50% \n                               \n             \n                       \n               Bawang Merah \n               Kg \n               Rp32.000 \n               \n                                   ▼ 3.00% \n                               \n             \n                       \n               Bawang Putih \n               Kg \n               Rp38.000 \n               \n                                   — Stabil \n                          "
+   ],
+   "tautan": [
+    "#",
+    "https://bappeda.kepahiangkab.go.id",
+    "https://bkd.kepahiangkab.go.id",
+    "https://data.kepahiangkab.go.id",
+    "https://dpkd.kepahiangkab.go.id",
+    "https://fonts.googleapis.com",
+    "https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap",
+    "https://fonts.gstatic.com",
+    "https://jdih.kepahiangkab.go.id",
+    "https://kepahiangkab.go.id/",
+    "https://kepahiangkab.go.id/assets/css/style.css",
+    "https://kepahiangkab.go.id/assets/img/logo.png",
+    "https://kepahiangkab.go.id/assets/js/main.js",
+    "https://kepahiangkab.go.id/berita",
+    "https://kepahiangkab.go.id/cari",
+    "https://kepahiangkab.go.id/galeri",
+    "https://kepahiangkab.go.id/kontak",
+    "https://kepahiangkab.go.id/lambang-daerah",
+    "https://kepahiangkab.go.id/layanan",
+    "https://kepahiangkab.go.id/pengumuman",
+    "https://kepahiangkab.go.id/potensi-daerah",
+    "https://kepahiangkab.go.id/profil-daerah",
+    "https://kepahiangkab.go.id/profil-kepala-daerah",
+    "https://kepahiangkab.go.id/struktur-organisasi",
+    "https://kepahiangkab.go.id/visi-misi",
+    "https://ppid.kepahiangkab.go.id",
+    "https://www.facebook.com/diskominfokph/",
+    "https://www.instagram.com/diskominfosantikkph/",
+    "https://www.youtube.com/@diskominfosantikkph"
+   ],
+   "api": [
+    "https://fonts.googleapis.com",
+    "https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap"
+   ],
+   "konteks": [
+    "s://kepahiangkab.go.id/kontak\" class=\"\">Kontak</a> </nav> </aside> <section class=\"page-hero\"> <div class=\"wrap\"> <div class=\"breadcrumb\"><a href=\"https://kepahiangkab.go.id/\">Beranda</a> / Data dan Informasi / Info Pangan</div> <h1>Info Harga Pangan</h1> <p class=\"lede\">Pemantauan harga kebutuhan pokok di pasar Kabupaten Kepahiang untuk menjaga stabilitas dan keterjangkauan bahan pangan masyarakat.</p> </div> </section> <section class=\"content-sec\"> <div class=\"wrap\"> ",
+    "> </nav> </aside> <section class=\"page-hero\"> <div class=\"wrap\"> <div class=\"breadcrumb\"><a href=\"https://kepahiangkab.go.id/\">Beranda</a> / Data dan Informasi / Info Pangan</div> <h1>Info Harga Pangan</h1> <p class=\"lede\">Pemantauan harga kebutuhan pokok di pasar Kabupaten Kepahiang untuk menjaga stabilitas dan keterjangkauan bahan pangan masyarakat.</p> </div> </section> <section class=\"content-sec\"> <div class=\"wrap\"> <span class=\"pangan-updated\">Diperbarui: Friday, ",
+    "masyarakat.</p> </div> </section> <section class=\"content-sec\"> <div class=\"wrap\"> <span class=\"pangan-updated\">Diperbarui: Friday, 25 September 2026</span> <table class=\"pangan-table\"> <thead> <tr><th>Komoditas</th><th>Satuan</th><th>Harga</th><th>Perubahan</th></tr> </thead> <tbody> <tr> <td>Beras Medium</td> <td>Kg</td> <td class=\"harga\">Rp13.500</td> <td> "
+   ]
+  },
+  {
+   "url": "https://bengkulutengahkab.go.id/info-pangan",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 54076,
+   "detik": 1.4,
+   "wilayah_disebut": [
+    "bengkulu tengah",
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\"> <title>Pemerintah Kabupaten Bengkulu Tengah</title> <meta name=\"description\" content=\"Website Resmi Pemerintah Kabupaten Bengkulu Tengah\"> <meta name=\"keywords\" conte",
+   "catatan": "situs daerah tahap 2",
+   "json": false,
+   "tabel": [],
+   "tautan": [
+    "#",
+    "http://litbang.kemendagri.go.id/website/",
+    "https://bengkulu.bawaslu.go.id",
+    "https://bengkulu.polri.go.id/",
+    "https://bengkuluprov.go.id/",
+    "https://bengkulutengahkab.bps.go.id/",
+    "https://bengkulutengahkab.go.id",
+    "https://bengkulutengahkab.go.id/",
+    "https://bengkulutengahkab.go.id/#",
+    "https://bengkulutengahkab.go.id/Kontak",
+    "https://bengkulutengahkab.go.id/android/download",
+    "https://bengkulutengahkab.go.id/assets/fr/css/owl.carousel.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/css/owl.theme.default.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/css/style2.css",
+    "https://bengkulutengahkab.go.id/assets/fr/img/apple-touch-icon.png",
+    "https://bengkulutengahkab.go.id/assets/fr/img/button/download-button.png",
+    "https://bengkulutengahkab.go.id/assets/fr/js/main.js",
+    "https://bengkulutengahkab.go.id/assets/fr/js/pages/",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap-icons/bootstrap-icons.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap/css/bootstrap.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap/js/bootstrap.bundle.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/boxicons/css/boxicons.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/glightbox/css/glightbox.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/glightbox/js/glightbox.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/isotope-layout/isotope.pkgd.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/php-email-form/validate.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/purecounter/purecounter_vanilla.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/remixicon/remixicon.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/swiper/swiper-bundle.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/swiper/swiper-bundle.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/youtube-background/jquery.youtube-background.js",
+    "https://bengkulutengahkab.go.id/assets/images/err404.png",
+    "https://bengkulutengahkab.go.id/assets/plugins/sweetalert/sweetalert2.js",
+    "https://bengkulutengahkab.go.id/dokumen",
+    "https://bengkulutengahkab.go.id/galeri/semua_galeri",
+    "https://bengkulutengahkab.go.id/halaman/kepala-daerah-terdahulu",
+    "https://bengkulutengahkab.go.id/halaman/kode-dan-data-wilayah",
+    "https://bengkulutengahkab.go.id/halaman/lambang-daerah",
+    "https://bengkulutengahkab.go.id/halaman/organisasi-perangkat-daerah",
+    "https://bengkulutengahkab.go.id/halaman/profil-kepala-daerah",
+    "https://bengkulutengahkab.go.id/halaman/sejarah-singkat-daerah",
+    "https://bengkulutengahkab.go.id/halaman/visi-dan-misi/",
+    "https://bengkulutengahkab.go.id/infografis/semua_infografis",
+    "https://bengkulutengahkab.go.id/pariwisata/semua_pariwisata",
+    "https://bengkulutengahkab.go.id/pengumuman/semua_pengumuman",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/BUPATI-RACHMAT-RIYANTO-TINJAU-RENOVASI-SDN-14-DAN-TINJAU-PELAYANAN-DOKTER-MASUK-DESA-DI-KERTAPATI-MUDIK-KECAMATAN-PAGAR-JATI",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Forum-Komunikasi-Dinas-Dukcapil-Se-Provinsi-Bengkulu-Resmi-Dibuka-di-Bengkulu-Tengah",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Pemkab-Bengkulu-Tengah-Ikuti-Uji-Publik-Keterbukaan-Informasi-Publik-Tahun-2026",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/TINJAU-ASET-PPI-DAN-ABRASI-BUPATI-RACHMAT-RIYANTO-JUGA-RESMIKAN-JALAN-DESA-YANG-DINANTIKAN-WARGA-TALANG-PAUH-SELAMA-35-TAHUN",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/10",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/15",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/20",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/2015",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/25",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/5",
+    "https://bengkulutengahkab.go.id/postingan/kategori/kegiatan-bupati",
+    "https://bengkulutengahkab.go.id/postingan/kategori/pariwisata",
+    "https://bengkulutengahkab.go.id/postingan/kategori/pemerintahan",
+    "https://bengkulutengahkab.go.id/postingan/kategori/potensi-daerah",
+    "https://bengkulutengahkab.go.id/postingan/semua_kategori",
+    "https://bengkulutengahkab.go.id/sublink",
+    "https://bengkulutengahkab.go.id/upload/images/halaman/inner/cropped-logoweb-1.png",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026015313.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026070223.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026071906.jpg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-081026122312.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-091026114055.jpg",
+    "https://bengkulutengahkab.go.id/upload/images/profil/Head_2.png",
+    "https://bengkulutengahkab.go.id/upload/images/profil/Hut_14_x_Pemkab_Benteng.png",
+    "https://bengkulutengahkab.go.id/upload/images/profil/logo_benteng.png",
+    "https://bssn.go.id/",
+    "https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css",
+    "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css",
+    "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js",
+    "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css",
+    "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js",
+    "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i",
+    "https://kab-bengkulutengah.atrbpn.go.id/",
+    "https://kab-bengkulutengah.kpu.go.id/",
+    "https://kejati-bengkulu.go.id/",
+    "https://kominfo.go.id/",
+    "https://widget.kominfo.go.id/gpr-widget-kominfo.min.js",
+    "https://www.bankbengkulu.co.id/",
+    "https://www.facebook.com/MediaCenterBengkuluTengah/",
+    "https://www.googletagmanager.com/gtag/js?id=G-2WQSSSCJ3Y",
+    "https://www.instagram.com/pemkab_benteng/",
+    "https://www.kemendagri.go.id/",
+    "https://www.penrem-041-gamas.mil.id/",
+    "https://www.pn-argamakmur.go.id/",
+    "https://www.youtube.com/channel/UCeAk7BLSevtAsw1cQ804yaQ",
+    "index.html#"
+   ],
+   "api": [
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Forum-Komunikasi-Dinas-Dukcapil-Se-Provinsi-Bengkulu-Resmi-Dibuka-di-Bengkulu-Tengah",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+    "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+   ],
+   "konteks": [
+    "gahkab.go.id/upload/images/halaman/inner/cropped-logoweb-1.png\" rel=\"icon\"> <link href=\"https://bengkulutengahkab.go.id/assets/fr/img/apple-touch-icon.png\" rel=\"apple-touch-icon\"> --> <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css\" integrity=\"sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" /> <!-- Google Fonts --> <link href=\"h"
+   ]
+  },
+  {
+   "url": "https://bengkulutengahkab.go.id/harga",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 54076,
+   "detik": 1.5,
+   "wilayah_disebut": [
+    "bengkulu tengah",
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\"> <title>Pemerintah Kabupaten Bengkulu Tengah</title> <meta name=\"description\" content=\"Website Resmi Pemerintah Kabupaten Bengkulu Tengah\"> <meta name=\"keywords\" conte",
+   "catatan": "situs daerah tahap 2",
+   "json": false,
+   "tabel": [],
+   "tautan": [
+    "#",
+    "http://litbang.kemendagri.go.id/website/",
+    "https://bengkulu.bawaslu.go.id",
+    "https://bengkulu.polri.go.id/",
+    "https://bengkuluprov.go.id/",
+    "https://bengkulutengahkab.bps.go.id/",
+    "https://bengkulutengahkab.go.id",
+    "https://bengkulutengahkab.go.id/",
+    "https://bengkulutengahkab.go.id/#",
+    "https://bengkulutengahkab.go.id/Kontak",
+    "https://bengkulutengahkab.go.id/android/download",
+    "https://bengkulutengahkab.go.id/assets/fr/css/owl.carousel.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/css/owl.theme.default.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/css/style2.css",
+    "https://bengkulutengahkab.go.id/assets/fr/img/apple-touch-icon.png",
+    "https://bengkulutengahkab.go.id/assets/fr/img/button/download-button.png",
+    "https://bengkulutengahkab.go.id/assets/fr/js/main.js",
+    "https://bengkulutengahkab.go.id/assets/fr/js/pages/",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap-icons/bootstrap-icons.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap/css/bootstrap.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap/js/bootstrap.bundle.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/boxicons/css/boxicons.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/glightbox/css/glightbox.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/glightbox/js/glightbox.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/isotope-layout/isotope.pkgd.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/php-email-form/validate.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/purecounter/purecounter_vanilla.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/remixicon/remixicon.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/swiper/swiper-bundle.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/swiper/swiper-bundle.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/youtube-background/jquery.youtube-background.js",
+    "https://bengkulutengahkab.go.id/assets/images/err404.png",
+    "https://bengkulutengahkab.go.id/assets/plugins/sweetalert/sweetalert2.js",
+    "https://bengkulutengahkab.go.id/dokumen",
+    "https://bengkulutengahkab.go.id/galeri/semua_galeri",
+    "https://bengkulutengahkab.go.id/halaman/kepala-daerah-terdahulu",
+    "https://bengkulutengahkab.go.id/halaman/kode-dan-data-wilayah",
+    "https://bengkulutengahkab.go.id/halaman/lambang-daerah",
+    "https://bengkulutengahkab.go.id/halaman/organisasi-perangkat-daerah",
+    "https://bengkulutengahkab.go.id/halaman/profil-kepala-daerah",
+    "https://bengkulutengahkab.go.id/halaman/sejarah-singkat-daerah",
+    "https://bengkulutengahkab.go.id/halaman/visi-dan-misi/",
+    "https://bengkulutengahkab.go.id/infografis/semua_infografis",
+    "https://bengkulutengahkab.go.id/pariwisata/semua_pariwisata",
+    "https://bengkulutengahkab.go.id/pengumuman/semua_pengumuman",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/BUPATI-RACHMAT-RIYANTO-TINJAU-RENOVASI-SDN-14-DAN-TINJAU-PELAYANAN-DOKTER-MASUK-DESA-DI-KERTAPATI-MUDIK-KECAMATAN-PAGAR-JATI",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Forum-Komunikasi-Dinas-Dukcapil-Se-Provinsi-Bengkulu-Resmi-Dibuka-di-Bengkulu-Tengah",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Pemkab-Bengkulu-Tengah-Ikuti-Uji-Publik-Keterbukaan-Informasi-Publik-Tahun-2026",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/TINJAU-ASET-PPI-DAN-ABRASI-BUPATI-RACHMAT-RIYANTO-JUGA-RESMIKAN-JALAN-DESA-YANG-DINANTIKAN-WARGA-TALANG-PAUH-SELAMA-35-TAHUN",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/10",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/15",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/20",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/2015",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/25",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/5",
+    "https://bengkulutengahkab.go.id/postingan/kategori/kegiatan-bupati",
+    "https://bengkulutengahkab.go.id/postingan/kategori/pariwisata",
+    "https://bengkulutengahkab.go.id/postingan/kategori/pemerintahan",
+    "https://bengkulutengahkab.go.id/postingan/kategori/potensi-daerah",
+    "https://bengkulutengahkab.go.id/postingan/semua_kategori",
+    "https://bengkulutengahkab.go.id/sublink",
+    "https://bengkulutengahkab.go.id/upload/images/halaman/inner/cropped-logoweb-1.png",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026015313.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026070223.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026071906.jpg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-081026122312.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-091026114055.jpg",
+    "https://bengkulutengahkab.go.id/upload/images/profil/Head_2.png",
+    "https://bengkulutengahkab.go.id/upload/images/profil/Hut_14_x_Pemkab_Benteng.png",
+    "https://bengkulutengahkab.go.id/upload/images/profil/logo_benteng.png",
+    "https://bssn.go.id/",
+    "https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css",
+    "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css",
+    "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js",
+    "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css",
+    "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js",
+    "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i",
+    "https://kab-bengkulutengah.atrbpn.go.id/",
+    "https://kab-bengkulutengah.kpu.go.id/",
+    "https://kejati-bengkulu.go.id/",
+    "https://kominfo.go.id/",
+    "https://widget.kominfo.go.id/gpr-widget-kominfo.min.js",
+    "https://www.bankbengkulu.co.id/",
+    "https://www.facebook.com/MediaCenterBengkuluTengah/",
+    "https://www.googletagmanager.com/gtag/js?id=G-2WQSSSCJ3Y",
+    "https://www.instagram.com/pemkab_benteng/",
+    "https://www.kemendagri.go.id/",
+    "https://www.penrem-041-gamas.mil.id/",
+    "https://www.pn-argamakmur.go.id/",
+    "https://www.youtube.com/channel/UCeAk7BLSevtAsw1cQ804yaQ",
+    "index.html#"
+   ],
+   "api": [
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Forum-Komunikasi-Dinas-Dukcapil-Se-Provinsi-Bengkulu-Resmi-Dibuka-di-Bengkulu-Tengah",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+    "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+   ],
+   "konteks": [
+    "gahkab.go.id/upload/images/halaman/inner/cropped-logoweb-1.png\" rel=\"icon\"> <link href=\"https://bengkulutengahkab.go.id/assets/fr/img/apple-touch-icon.png\" rel=\"apple-touch-icon\"> --> <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css\" integrity=\"sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" /> <!-- Google Fonts --> <link href=\"h"
+   ]
+  },
+  {
+   "url": "https://bengkulutengahkab.go.id/harga-pangan",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 54076,
+   "detik": 1.5,
+   "wilayah_disebut": [
+    "bengkulu tengah",
+    "kepahiang"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\"> <title>Pemerintah Kabupaten Bengkulu Tengah</title> <meta name=\"description\" content=\"Website Resmi Pemerintah Kabupaten Bengkulu Tengah\"> <meta name=\"keywords\" conte",
+   "catatan": "situs daerah tahap 2",
+   "json": false,
+   "tabel": [],
+   "tautan": [
+    "#",
+    "http://litbang.kemendagri.go.id/website/",
+    "https://bengkulu.bawaslu.go.id",
+    "https://bengkulu.polri.go.id/",
+    "https://bengkuluprov.go.id/",
+    "https://bengkulutengahkab.bps.go.id/",
+    "https://bengkulutengahkab.go.id",
+    "https://bengkulutengahkab.go.id/",
+    "https://bengkulutengahkab.go.id/#",
+    "https://bengkulutengahkab.go.id/Kontak",
+    "https://bengkulutengahkab.go.id/android/download",
+    "https://bengkulutengahkab.go.id/assets/fr/css/owl.carousel.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/css/owl.theme.default.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/css/style2.css",
+    "https://bengkulutengahkab.go.id/assets/fr/img/apple-touch-icon.png",
+    "https://bengkulutengahkab.go.id/assets/fr/img/button/download-button.png",
+    "https://bengkulutengahkab.go.id/assets/fr/js/main.js",
+    "https://bengkulutengahkab.go.id/assets/fr/js/pages/",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap-icons/bootstrap-icons.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap/css/bootstrap.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/bootstrap/js/bootstrap.bundle.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/boxicons/css/boxicons.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/glightbox/css/glightbox.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/glightbox/js/glightbox.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/isotope-layout/isotope.pkgd.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/php-email-form/validate.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/purecounter/purecounter_vanilla.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/remixicon/remixicon.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/swiper/swiper-bundle.min.css",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/swiper/swiper-bundle.min.js",
+    "https://bengkulutengahkab.go.id/assets/fr/vendor/youtube-background/jquery.youtube-background.js",
+    "https://bengkulutengahkab.go.id/assets/images/err404.png",
+    "https://bengkulutengahkab.go.id/assets/plugins/sweetalert/sweetalert2.js",
+    "https://bengkulutengahkab.go.id/dokumen",
+    "https://bengkulutengahkab.go.id/galeri/semua_galeri",
+    "https://bengkulutengahkab.go.id/halaman/kepala-daerah-terdahulu",
+    "https://bengkulutengahkab.go.id/halaman/kode-dan-data-wilayah",
+    "https://bengkulutengahkab.go.id/halaman/lambang-daerah",
+    "https://bengkulutengahkab.go.id/halaman/organisasi-perangkat-daerah",
+    "https://bengkulutengahkab.go.id/halaman/profil-kepala-daerah",
+    "https://bengkulutengahkab.go.id/halaman/sejarah-singkat-daerah",
+    "https://bengkulutengahkab.go.id/halaman/visi-dan-misi/",
+    "https://bengkulutengahkab.go.id/infografis/semua_infografis",
+    "https://bengkulutengahkab.go.id/pariwisata/semua_pariwisata",
+    "https://bengkulutengahkab.go.id/pengumuman/semua_pengumuman",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/BUPATI-RACHMAT-RIYANTO-TINJAU-RENOVASI-SDN-14-DAN-TINJAU-PELAYANAN-DOKTER-MASUK-DESA-DI-KERTAPATI-MUDIK-KECAMATAN-PAGAR-JATI",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Forum-Komunikasi-Dinas-Dukcapil-Se-Provinsi-Bengkulu-Resmi-Dibuka-di-Bengkulu-Tengah",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Pemkab-Bengkulu-Tengah-Ikuti-Uji-Publik-Keterbukaan-Informasi-Publik-Tahun-2026",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/TINJAU-ASET-PPI-DAN-ABRASI-BUPATI-RACHMAT-RIYANTO-JUGA-RESMIKAN-JALAN-DESA-YANG-DINANTIKAN-WARGA-TALANG-PAUH-SELAMA-35-TAHUN",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/10",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/15",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/20",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/2015",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/25",
+    "https://bengkulutengahkab.go.id/postingan/kategori/berita-dan-informasi/5",
+    "https://bengkulutengahkab.go.id/postingan/kategori/kegiatan-bupati",
+    "https://bengkulutengahkab.go.id/postingan/kategori/pariwisata",
+    "https://bengkulutengahkab.go.id/postingan/kategori/pemerintahan",
+    "https://bengkulutengahkab.go.id/postingan/kategori/potensi-daerah",
+    "https://bengkulutengahkab.go.id/postingan/semua_kategori",
+    "https://bengkulutengahkab.go.id/sublink",
+    "https://bengkulutengahkab.go.id/upload/images/halaman/inner/cropped-logoweb-1.png",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026015313.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026070223.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-071026071906.jpg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-081026122312.jpeg",
+    "https://bengkulutengahkab.go.id/upload/images/postingan/2026/10/thumbnail/web-img-091026114055.jpg",
+    "https://bengkulutengahkab.go.id/upload/images/profil/Head_2.png",
+    "https://bengkulutengahkab.go.id/upload/images/profil/Hut_14_x_Pemkab_Benteng.png",
+    "https://bengkulutengahkab.go.id/upload/images/profil/logo_benteng.png",
+    "https://bssn.go.id/",
+    "https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css",
+    "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css",
+    "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js",
+    "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css",
+    "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js",
+    "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i",
+    "https://kab-bengkulutengah.atrbpn.go.id/",
+    "https://kab-bengkulutengah.kpu.go.id/",
+    "https://kejati-bengkulu.go.id/",
+    "https://kominfo.go.id/",
+    "https://widget.kominfo.go.id/gpr-widget-kominfo.min.js",
+    "https://www.bankbengkulu.co.id/",
+    "https://www.facebook.com/MediaCenterBengkuluTengah/",
+    "https://www.googletagmanager.com/gtag/js?id=G-2WQSSSCJ3Y",
+    "https://www.instagram.com/pemkab_benteng/",
+    "https://www.kemendagri.go.id/",
+    "https://www.penrem-041-gamas.mil.id/",
+    "https://www.pn-argamakmur.go.id/",
+    "https://www.youtube.com/channel/UCeAk7BLSevtAsw1cQ804yaQ",
+    "index.html#"
+   ],
+   "api": [
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/Forum-Komunikasi-Dinas-Dukcapil-Se-Provinsi-Bengkulu-Resmi-Dibuka-di-Bengkulu-Tengah",
+    "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
+    "https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+   ],
+   "konteks": [
+    "gahkab.go.id/upload/images/halaman/inner/cropped-logoweb-1.png\" rel=\"icon\"> <link href=\"https://bengkulutengahkab.go.id/assets/fr/img/apple-touch-icon.png\" rel=\"apple-touch-icon\"> --> <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css\" integrity=\"sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" /> <!-- Google Fonts --> <link href=\"h"
+   ]
+  },
+  {
+   "url": "https://disperindag.bengkuluprov.go.id/",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 148825,
+   "detik": 20.8,
+   "wilayah_disebut": [
+    "kota bengkulu"
+   ],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Home - DISPERINDAG</title> <!-- Fonts --> <link rel=\"preconnect\" href=\"https://fonts.bunny.net\"> <link href=\"https://fonts.bunny.net/css?family=instrument-sans:4",
+   "catatan": "situs daerah tahap 2",
+   "json": false,
+   "tabel": [],
+   "tautan": [
+    "/",
+    "berita",
+    "dokumen",
+    "galeri",
+    "https://diskominfotik.bengkuluprov.go.id",
+    "https://disperindag.bengkuluprov.go.id/assets/img/logo/logo-prov-cc-edit.png",
+    "https://disperindag.bengkuluprov.go.id/assets/img/logo/pemprov.png",
+    "https://disperindag.bengkuluprov.go.id/berita",
+    "https://disperindag.bengkuluprov.go.id/berita/audiensi-pembahasan-kawasan-industri-pulau-baai",
+    "https://disperindag.bengkuluprov.go.id/berita/data-stok-bahan-pokok",
+    "https://disperindag.bengkuluprov.go.id/berita/ngopi-khas-bengkulu-jelang-nataru",
+    "https://disperindag.bengkuluprov.go.id/berita/pembahasan-roadmap-dinas-perindustrian-dan-perdagangan-provinsi-bengkulu",
+    "https://disperindag.bengkuluprov.go.id/berita/reakreditasi-uptd-pembinaan-dan-pengawasan-mutu-barang-ppmb-tahun-2025-2030",
+    "https://disperindag.bengkuluprov.go.id/berita/serah-terima-jabatan-kepala-dinas",
+    "https://disperindag.bengkuluprov.go.id/build/assets/_commonjsHelpers-Cpj98o6Y.js",
+    "https://disperindag.bengkuluprov.go.id/build/assets/app-BmbMkWQG.js",
+    "https://disperindag.bengkuluprov.go.id/build/assets/app-Dd-X7fge.css",
+    "https://disperindag.bengkuluprov.go.id/build/assets/commodity-charts-D2o8HYLa.js",
+    "https://disperindag.bengkuluprov.go.id/build/assets/sweetalert2.esm.all-NNS-RXd7.js",
+    "https://disperindag.bengkuluprov.go.id/daftar-informasi-publik",
+    "https://disperindag.bengkuluprov.go.id/dokumen",
+    "https://disperindag.bengkuluprov.go.id/galeri",
+    "https://disperindag.bengkuluprov.go.id/komoditas",
+    "https://disperindag.bengkuluprov.go.id/kontak",
+    "https://disperindag.bengkuluprov.go.id/profile-pimpinan",
+    "https://disperindag.bengkuluprov.go.id/sambutan-kepala-dinas",
+    "https://disperindag.bengkuluprov.go.id/storage/documents/i6egGman9yfTQGlzfVNB1u7opfrdVRGtyOsF2pbt.pdf",
+    "https://disperindag.bengkuluprov.go.id/storage/documents/mGfbf5btYSrpAnwasqOAe1T3GiFpTMvzt7ciQavI.pdf",
+    "https://disperindag.bengkuluprov.go.id/storage/documents/nTrRqLoUPK3PsA47ipB8oySKiy54tolKULjiU2If.pdf",
+    "https://disperindag.bengkuluprov.go.id/storage/documents/o0up7GxGScvht5UnG6FOqTsL6VBVNIlpsdGviEAK.pdf",
+    "https://disperindag.bengkuluprov.go.id/storage/documents/tAmONdeK5RQhw0CzPZcyRzPCYfOLQq237rvVQCt0.pdf",
+    "https://disperindag.bengkuluprov.go.id/storage/documents/x467aUeuDoNaPzMZcw8n84G48H2x5ZULKg2LAY2p.pdf",
+    "https://disperindag.bengkuluprov.go.id/storage/galleries/Ebp5c6bKuJui2FUPTVpAjlhFEOadVtLdm41Yzlpb.jpg",
+    "https://disperindag.bengkuluprov.go.id/struktur-organisasi",
+    "https://disperindag.bengkuluprov.go.id/tentang-kami",
+    "https://disperindag.bengkuluprov.go.id/tupoksi",
+    "https://disperindag.bengkuluprov.go.id/visi-dan-misi",
+    "https://disperindag.bengkuluprov.go.id?page=2",
+    "https://disperindag.bengkuluprov.go.id?page=3",
+    "https://disperindag.bengkuluprov.go.id?page=4",
+    "https://disperindag.bengkuluprov.go.id?page=5",
+    "https://disperindag.bengkuluprov.go.id?page=7",
+    "https://facebook.com/people/Dinas-Perindustrian-dan-Perdagangan-Provinsi-Bengkulu/100070069277642/?sk=about",
+    "https://fonts.bunny.net",
+    "https://fonts.bunny.net/css?family=instrument-sans:400,500,600",
+    "https://instagram.com/disperindagprovbkl/",
+    "https://www.tiktok.com/@disperindagprovbe",
+    "https://x.com/ProvDisperindag",
+    "https://youtube.com/channel/UCZLQmH_oTWko6xlTkRjYlqA",
+    "komoditas",
+    "mailto:perindagprovbkl@gmail.com",
+    "news.image",
+    "news.url",
+    "profile-pimpinan",
+    "slides[active].image",
+    "slides[nextIndex()].image",
+    "slides[prevIndex()].image",
+    "tel:07362127521227"
+   ],
+   "api": [],
+   "konteks": [
+    " </div> </div> </div> <a href=\"https://disperindag.bengkuluprov.go.id/komoditas\" class=\"rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200 text-white hover:bg-white/20 hover:text-white\"> Komoditas ",
+    ".id/komoditas\" class=\"rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200 text-white hover:bg-white/20 hover:text-white\"> Komoditas </a> <a href=\"https://disperindag.bengkuluprov.go.id/galeri\" class=\"r",
+    " <div class=\"flex flex-col lg:flex-row items-center justify-between gap-8 mb-10\"> <!-- Bagian Kiri (Judul dan Deskripsi) --> <div class=\"lg:w-1/2 text-center lg:text-left\"> <h3 class=\"text-3xl font-bold mb-3\">Harga Bahan Pokok</h3> <p class=\"text-gray-600\">Menampilkan harga rata-rata di Provinsi Bengkulu.</p> </div> <!-- Bagian Kanan (Tombol) --> <div class=\"lg:w-1/2 text-center lg:text-right\"> ",
+    "b-10\"> <!-- Bagian Kiri (Judul dan Deskripsi) --> <div class=\"lg:w-1/2 text-center lg:text-left\"> <h3 class=\"text-3xl font-bold mb-3\">Harga Bahan Pokok</h3> <p class=\"text-gray-600\">Menampilkan harga rata-rata di Provinsi Bengkulu.</p> </div> <!-- Bagian Kanan (Tombol) --> <div class=\"lg:w-1/2 text-center lg:text-right\"> <a href=\"https://disperindag.bengkuluprov.go.id/komodita"
+   ]
+  },
+  {
+   "url": "https://sisp.kemendag.go.id/",
+   "status": 200,
+   "jenis": "text/html; charset=UTF-8",
+   "byte": 149009,
+   "detik": 3.5,
+   "wilayah_disebut": [],
+   "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <!-- Sistem Informasi Sarana Perdagangan (SISP) Developed by Pusat Data & Sistem Informasi Kementerian Perdagangan RI --> <head> <!-- Meta Tag & SEO --> <meta charset=\"utf-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=",
+   "catatan": "situs daerah tahap 2",
+   "json": false,
+   "tabel": [
+    " \n                                 \n                                     \n                                         Komoditas \n                                         Satuan \n                                         09 Oct 2026 (Rp.) \n                                         08 Oct 2026 (Rp.) \n                                         (%) \n                                         Ket \n                                     \n                                 \n                                  \n                             "
+   ],
+   "tautan": [
+    "#about",
+    "#home",
+    "#modalpasar",
+    "#top",
+    "${detailUrl}",
+    "${imgFallback}",
+    "${imgSrc}",
+    "//sisp.kemendag.go.id/",
+    "//sisp.kemendag.go.id/#sec_perbandingan",
+    "//sisp.kemendag.go.id/#sec_statistik",
+    "//sisp.kemendag.go.id/assets/brand/favicon.png",
+    "//sisp.kemendag.go.id/assets/brand/load-datatable.json",
+    "//sisp.kemendag.go.id/assets/brand/logo-dark.svg",
+    "//sisp.kemendag.go.id/assets/brand/logo.svg",
+    "//sisp.kemendag.go.id/assets/brand/migrasi-sipr-ke-sisp.png",
+    "//sisp.kemendag.go.id/assets/frontend/css/custom/beranda.css",
+    "//sisp.kemendag.go.id/assets/frontend/img/brands/app-hero.svg",
+    "//sisp.kemendag.go.id/assets/frontend/img/brands/app-kemendag.svg",
+    "//sisp.kemendag.go.id/assets/frontend/img/brands/app-kudagang.svg",
+    "//sisp.kemendag.go.id/assets/frontend/img/brands/app-satudata.svg",
+    "//sisp.kemendag.go.id/assets/frontend/img/brands/app-sp2kp.svg",
+    "//sisp.kemendag.go.id/assets/frontend/img/harga-naik.json",
+    "//sisp.kemendag.go.id/assets/frontend/img/harga-sama.json",
+    "//sisp.kemendag.go.id/assets/frontend/img/harga-turun.json",
+    "//sisp.kemendag.go.id/assets/frontend/img/pasar-banner-1.png",
+    "//sisp.kemendag.go.id/assets/frontend/img/pasar-banner-2.png",
+    "//sisp.kemendag.go.id/assets/frontend/img/pasar-banner-3.png",
+    "//sisp.kemendag.go.id/assets/frontend/js/theme.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/bootstrap/dist/js/bootstrap.bundle.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/imageuploader/image-uploader.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/jpreview/bootstrap-prettyfile.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/jpreview/jpreview.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/lightgallery/lightgallery.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/lightgallery/plugins/fullscreen/lg-fullscreen.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/lightgallery/plugins/thumbnail/lg-thumbnail.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/lightgallery/plugins/video/lg-video.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/lightgallery/plugins/zoom/lg-zoom.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/parallax-js/dist/parallax.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/rellax/rellax.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/smartwizard/js/jquery.smartWizard.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js",
+    "//sisp.kemendag.go.id/assets/frontend/vendor/swiper/swiper-bundle.min.js",
+    "//sisp.kemendag.go.id/e-komplain",
+    "//sisp.kemendag.go.id/user/sign_in",
+    "https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13.2/af-2.5.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/b-print-2.3.4/cr-1.6.1/date-1.3.0/fc-4.2.1/fh-3.3.1/kt-2.8.1/r-2.4.0/rg-1.3.0/rr-1.3.2/sc-2.1.0/sb-1.4.0/sp-2.1.1/sl-1.6.0/sr-1.2.1/datatables.min.js",
+    "https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player/dist/lottie-player.min.js",
+    "https://cdn.jsdelivr.net/npm/@selectize/selectize/dist/js/selectize.min.js",
+    "https://cdn.jsdelivr.net/npm/boxicons/dist/boxicons.min.js",
+    "https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2/js/leaflet-sidebar.min.js",
+    "https://cdn.jsdelivr.net/npm/leaflet.markercluster/dist/leaflet.markercluster.min.js",
+    "https://cdn.jsdelivr.net/npm/leaflet/dist/leaflet.min.js",
+    "https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js",
+    "https://cdn.jsdelivr.net/npm/sweetalert2@11",
+    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js",
+    "https://code.jquery.com/jquery-3.6.3.min.js",
+    "https://hero.kemendag.go.id/",
+    "https://id-id.facebook.com/contents/Kementerian-Perdagangan/608925165792115",
+    "https://kudagang.kemendag.go.id/",
+    "https://satudata.kemendag.go.id/",
+    "https://sp2kp.kemendag.go.id/",
+    "https://twitter.com/Kemendag",
+    "https://unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.js",
+    "https://www.googletagmanager.com/gtag/js?id=UA-240649515-1",
+    "https://www.instagram.com/kemendag/",
+    "https://www.instagram.com/pdsi.kemendag/",
+    "https://www.kemendag.go.id/",
+    "https://www.youtube.com/channel/UCalluXk_8NlP5xxj4cHcMJA"
+   ],
+   "api": [
+    "//sisp.kemendag.go.id/assets/brand/load-datatable.json",
+    "//sisp.kemendag.go.id/assets/frontend/img/bg-perbandinganharga.jpg",
+    "//sisp.kemendag.go.id/assets/frontend/img/harga-naik.json",
+    "//sisp.kemendag.go.id/assets/frontend/img/harga-sama.json",
+    "//sisp.kemendag.go.id/assets/frontend/img/harga-turun.json",
+    "//sisp.kemendag.go.id/kab/json",
+    "//sisp.kemendag.go.id/pasar/json",
+    "//sisp.kemendag.go.id/public/bahan-pokok-ews/json",
+    "//sisp.kemendag.go.id/public/bahan-pokok/json"
+   ],
+   "konteks": [
+    "oard Logic --> <li class=\"nav-item\"><a href=\"//sisp.kemendag.go.id/#sec_statistik\" class=\"nav-link\">Sebaran Pasar</a></li><li class=\"nav-item\"><a href=\"//sisp.kemendag.go.id/#sec_perbandingan\" class=\"nav-link\">Harga Bapok</a></li> <li class=\"nav-item\"><a href=\"//sisp.kemendag.go.id/e-komplain\" class=\"nav-link\">Kritik Saran</a></li> </ul> </div> ",
+    "old sr-fade-up text-body\"> Perbandingan Harga<br>Barang Kebutuhan Pokok </h2> <div class=\"tab-content bg-secondary rounded-3 py-4 bg-custom\" style=\"--bob-image: url('//sisp.kemendag.go.id/assets/frontend/img/bg-perbandinganharga.jpg'); --bob-opacity: 1;\"> <button type=\"button\" id=\"sisp-expand-btn\" class=\"sisp-expand-btn position-absolute top-0 end-0 mt-3 me-3\" title=\"Perluas tampilan\" aria-label=\"Perluas tampilan\"> <i class=\"bx bx-fullscreen\"></i> ",
+    "sisp-table-wrap\"> <table class=\"table table-bapok mb-0\"> <thead class=\"align-middle\"> <tr> <th class=\"text-start\">Komoditas</th> <th class=\"text-center\">Satuan</th> <th id=\"date1-ews\" class=\"text-center\">09 Oct 2026 (Rp.)</th> <th id=\"date2-ews\" class=\"",
+    "ttiefiles/lottie-player/dist/lottie-player.min.js\"></script> <script src=\"https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js\"></script> <!-- Datatables Bootstrap 5 --> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js\"></script> <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js\"></script> <script type=\"text/javascript\" src=\"https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.13."
+   ]
+  }
+ ]
+}
