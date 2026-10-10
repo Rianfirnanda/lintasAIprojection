@@ -279,9 +279,16 @@ def test_keluaran_pipeline_memuat_analitik_acara_dan_periodik(tmp_path):
 
     salin_config(tmp_path / "config")
     (tmp_path / "data/masuk/harga").mkdir(parents=True)
+    # harga PIHPS Kota Bengkulu (konteks) harus muncul sebagai pembanding wilayah
+    (tmp_path / "data/masuk/konteks").mkdir(parents=True)
+    (tmp_path / "data/masuk/konteks/pihps_kota_2026.csv").write_text(
+        "tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber\n"
+        "2026-09-28,1771,harga_pihps,65000,Rp,CRW02,BD-PIHPS\n2026-09-29,1771,harga_pihps,66000,Rp,CRW02,BD-PIHPS\n", encoding="utf-8")
     konf = konfigurasi.muat(tmp_path, hari_ini=HARI_INI)
     proses.jalankan(konf, tmp_path / "site/data", sinkron_github=False)
     d = tmp_path / "site/data"
+    seri = json.loads((d / "seri/CRW02.json").read_text(encoding="utf-8"))
+    assert seri["pembanding"]["PIHPS-1771"]["nama"] == "Kota Bengkulu (PIHPS BI)" and 66000 in seri["pembanding"]["PIHPS-1771"]["nilai"]
     a = json.loads((d / "analitik.json").read_text(encoding="utf-8"))
     assert len(a["varian"]) == 21 and a["horizon"] == [7, 14, 30] and a["kpi"]["varian_berdata"] == 21
     v = a["varian"][0]
@@ -290,6 +297,7 @@ def test_keluaran_pipeline_memuat_analitik_acara_dan_periodik(tmp_path):
     assert len(a["garis_data"]["versi_data"]) == 64 and len(a["garis_data"]["versi_konfigurasi"]) == 64
     assert a["garis_data"]["berkas_mentah"] and "sha256" in a["garis_data"]["berkas_mentah"][0]
     assert a["kpi"]["varian_valid"] + a["kpi"]["varian_eksperimen"] == 21
+    assert "1771" in a["pembanding_wilayah"]["tersedia"]
     ac = json.loads((d / "proyeksi_acara.json").read_text(encoding="utf-8"))
     assert ac["tanggal_data"] and ac["evaluasi"] and "metode" in ac["aturan"]
     pe = json.loads((d / "proyeksi_periodik.json").read_text(encoding="utf-8"))

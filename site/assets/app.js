@@ -361,7 +361,7 @@ export async function pasangKerangka(aktif) {
     const b = document.createElement("div");
     b.className = "pita-contoh";
     b.setAttribute("role", "status");
-    b.innerHTML = `<b>Data asli sementara.</b> Harga di sini adalah ${esc(meta.data_sementara.sumber)} untuk ${esc(meta.data_sementara.wilayah)}, bukan harga Kabupaten Bengkulu Tengah. Berganti sendiri setelah data BPS Bengkulu Tengah masuk.`;
+    b.innerHTML = `<b>Data asli sementara.</b> Harga di sini adalah ${esc(meta.data_sementara.sumber)} untuk ${esc(meta.data_sementara.wilayah)}, bukan harga Kabupaten Bengkulu Tengah.${meta.data_sementara.catatan ? ` ${esc(meta.data_sementara.catatan)}` : ""} Berganti sendiri setelah data BPS Bengkulu Tengah masuk.`;
     kepala.after(b);
   }
   const layanan = tautanLayanan(meta.layanan);

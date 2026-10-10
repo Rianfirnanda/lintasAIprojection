@@ -77,7 +77,9 @@ def test_dashboard_mode_asli_dengan_penanda_data_sementara(tmp_path):
     proses.jalankan(konf, keluaran, sinkron_github=False)
     meta = json.loads((keluaran / "meta.json").read_text(encoding="utf-8"))
     assert meta["mode_demo"] is False and meta["wilayah_target"]["nama"] == "Provinsi Bengkulu"
-    assert meta["data_sementara"] == {"wilayah": "Provinsi Bengkulu", "sumber": "PIHPS Bank Indonesia (rata-rata pasar tradisional)"}
+    assert meta["data_sementara"]["wilayah"] == "Provinsi Bengkulu"
+    assert meta["data_sementara"]["sumber"] == "PIHPS Bank Indonesia (rata-rata pasar tradisional)"
+    assert "Kota Bengkulu" in meta["data_sementara"]["catatan"]
     ringkas = json.loads((keluaran / "ringkasan.json").read_text(encoding="utf-8"))
     assert ringkas["kpi"]["varian_berdata"] == 2
 

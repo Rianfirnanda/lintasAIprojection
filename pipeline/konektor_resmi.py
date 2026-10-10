@@ -197,5 +197,76 @@ def perbarui_pihps(konf: Konfigurasi, hari: int = 45, hari_riwayat: int = 400, p
             "tak_dikenal": sorted(tak_dikenal)}
 
 
+# ---------------------------------------------------------------- PIHPS tingkat kabupaten/kota
+
+URL_PIHPS_KABUPATEN = "https://www.bi.go.id/hargapangan/WebSite/TabelHarga/GetRefRegency"
+
+
+def _kunci_nama(nama: str) -> str:
+    """'Kota Bengkulu' dan 'Kab. Bengkulu Tengah' -> 'bengkulu' dan 'bengkulu tengah' (jenis wilayah dibuang)."""
+    n = re.sub(r"[^a-z0-9 ]+", " ", nama.lower())
+    return " ".join(x for x in n.split() if x not in ("kabupaten", "kab", "kota", "provinsi", "prov"))
+
+
+def daftar_kabupaten_pihps(pengambil=None) -> list[dict]:
+    """Kabupaten/kota Provinsi Bengkulu yang punya data pasar tradisional di PIHPS (parameter sesuai halaman PIHPS)."""
+    data = _ambil_json(URL_PIHPS_KABUPATEN, {"price_type_id": 1, "ref_prov_id": PROVINSI_PIHPS}, pengambil)
+    return [{"id": x["id"], "nama": str(x.get("name", ""))} for x in data.get("data") or [] if x.get("id") is not None]
+
+
+def petakan_kabupaten(daftar: list[dict], konf: Konfigurasi) -> dict[str, dict]:
+    """kode_wilayah sistem -> kabupaten/kota PIHPS yang namanya sama. Wilayah yang tidak ada di PIHPS tidak diisi (tidak ditebak)."""
+    hasil = {}
+    for kode, w in konf.wilayah.items():
+        if kode == WILAYAH_PIHPS:
+            continue
+        cocok = [d for d in daftar if _kunci_nama(d["nama"]) == _kunci_nama(w.nama)]
+        if len(cocok) == 1:
+            hasil[kode] = cocok[0]
+    return hasil
+
+
+def perbarui_pihps_kota(konf: Konfigurasi, hari: int = 45, hari_riwayat: int = 400, pengambil=None, tidur=time.sleep,
+                        paksa_riwayat: bool = False) -> dict:
+    """Harga PIHPS per kabupaten/kota (pembanding Kota Bengkulu dan Kepahiang bila PIHPS memilikinya).
+    Disimpan sebagai konteks di data/masuk/konteks/pihps_kota_<tahun>.csv; tidak masuk berkas harga utama."""
+    folder = konf.akar / "data" / "masuk" / "konteks"
+    folder.mkdir(parents=True, exist_ok=True)
+    galat: list[str] = []
+    try:
+        daftar = daftar_kabupaten_pihps(pengambil)
+    except Exception as e:  # noqa: BLE001
+        log.warning("daftar kabupaten PIHPS gagal: %s", e)
+        return {"wilayah": {}, "tidak_ditemukan": [], "baris_baru": 0, "galat": [f"daftar kabupaten PIHPS: {e}"]}
+    peta_w = petakan_kabupaten(daftar, konf)
+    tidak = sorted(w.nama for k, w in konf.wilayah.items() if k != WILAYAH_PIHPS and k not in peta_w)
+    sudah_ada = any(folder.glob("pihps_kota_*.csv"))
+    akhir = konf.hari_ini
+    mulai = akhir - timedelta(days=hari if sudah_ada and not paksa_riwayat else hari_riwayat)
+    peta = peta_varian(konf)
+    baris, per_wilayah = [], {}
+    for kode, kab in peta_w.items():
+        n_awal = len(baris)
+        awal = mulai
+        while awal <= akhir:
+            ujung = min(akhir, awal + timedelta(days=89))
+            try:
+                data = _ambil_json(URL_PIHPS, {"price_type_id": 1, "comcat_id": "", "province_id": PROVINSI_PIHPS,
+                                               "regency_id": kab["id"], "market_id": "", "tipe_laporan": 1,
+                                               "start_date": awal.isoformat(), "end_date": ujung.isoformat()}, pengambil)
+                b, _ = ubah_pihps(data, peta, kode)
+                baris += b
+            except Exception as e:  # noqa: BLE001
+                log.warning("PIHPS %s %s..%s gagal: %s", kab["nama"], awal, ujung, e)
+                galat.append(f"PIHPS {kab['nama']} {awal}..{ujung}: {e}")
+            awal = ujung + timedelta(days=1)
+            if awal <= akhir:
+                tidur(JEDA_PIHPS)
+        per_wilayah[kode] = {"nama": kab["nama"], "id": kab["id"], "baris": len(baris) - n_awal}
+    return {"wilayah": per_wilayah, "tidak_ditemukan": tidak, "galat": galat,
+            "baris_baru": _gabung_tulis(folder, "pihps_kota", baris) if baris else 0}
+
+
 def perbarui(konf: Konfigurasi, pengambil=None, tidur=time.sleep) -> dict:
-    return {"bmkg": perbarui_bmkg(konf, pengambil), "pihps": perbarui_pihps(konf, pengambil=pengambil, tidur=tidur)}
+    return {"bmkg": perbarui_bmkg(konf, pengambil), "pihps": perbarui_pihps(konf, pengambil=pengambil, tidur=tidur),
+            "pihps_kota": perbarui_pihps_kota(konf, pengambil=pengambil, tidur=tidur)}
