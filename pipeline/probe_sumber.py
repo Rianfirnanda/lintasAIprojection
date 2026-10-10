@@ -140,9 +140,12 @@ KUNCI_NAMA = ("text", "name", "nama", "label", "regency_name", "market_name", "p
 
 
 POLA_KONTEKS = {
-    "pihps": re.compile(r"GetRef\w+|GetGrid\w+|GetChart\w+"),
-    "bapanas": re.compile(r"""["'`][\w\-/{}$.:]*(?:front|kabkota|kabupaten|harga-peta|harga-rata|rata-rata|komoditas|provinsi|wilayah)[\w\-/{}$.:?=&]*["'`]""", re.I),
-    "sp2kp": re.compile(r"""["'`]/?[\w\-/]*(?:harga|kabupaten|kota|provinsi|komoditas|pasar)[\w\-/?=&]*["'`]""", re.I),
+    # (pola, lebar potongan, maksimal potongan): fungsi inline PIHPS yang mengisi parameter, dan nama parameter API Panel Harga
+    "pihps": [(re.compile(r"function\s+(?:beforesend\w+|provinceChanged|OnBeforeSend|refreshPasar|regencyChanged)"), 700, 12),
+              (re.compile(r"GetRef\w+|GetGrid\w+|GetChart\w+"), 170, 20)],
+    "bapanas": [(re.compile(r"period_date|level_harga_id|kode_provinsi|province_id|provinsi_id|kabkota|kab_kota|city_id|kota_id|kode_kab"), 280, 60),
+                (re.compile(r"""["'`][\w\-/{}$.:]*(?:front)/[\w\-/{}$.:?=&]*["'`]"""), 120, 40)],
+    "sp2kp": [(re.compile(r"""["'`]https://api-sp2kp[\w\-/.:?=&{}$]*["'`]|["'`]/(?:report|master|public|front)/api[\w\-/?=&{}$]*["'`]"""), 160, 40)],
 }
 
 
@@ -160,7 +163,7 @@ def cari_konteks(teks: str, pola: re.Pattern, lebar: int = 170, maks: int = 45) 
     return hasil
 
 
-def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10, pola_konteks: re.Pattern | None = None) -> dict:
+def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10, pola_konteks: list | None = None) -> dict:
     """Membuka halaman, lalu berkas JavaScript-nya, untuk membaca alamat API yang dipakai situs itu sendiri."""
     h = ambil_fn(url, 30, 2_500_000) if ambil_fn is ambil else ambil_fn(url)
     hasil = {"halaman": url, "status": h["status"], "skrip": [], "endpoint": [], "konteks": []}
@@ -169,8 +172,8 @@ def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10, pola_konteks
         return hasil
     html = _teks(h)
     hasil["endpoint"] = sorted(set(POLA_ENDPOINT.findall(html)))[:80]
-    if pola_konteks:
-        hasil["konteks"] += [("html", c) for c in cari_konteks(html, pola_konteks)]
+    for pola, lebar, maks in pola_konteks or []:
+        hasil["konteks"] += [("html", c) for c in cari_konteks(html, pola, lebar, maks)]
     srcs = re.findall(r"""<script[^>]+src=["']([^"']+\.js[^"']*)["']""", html, re.I)
     for src in srcs[:maks_skrip]:
         alamat = urllib.parse.urljoin(url, src)
@@ -179,7 +182,8 @@ def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10, pola_konteks
         if hs["status"] == 200:
             hasil["endpoint"] = sorted(set(hasil["endpoint"]) | set(POLA_ENDPOINT.findall(_teks(hs))))[:120]
             if pola_konteks and hs["byte"] > 100_000:  # berkas aplikasi utama, bukan pustaka kecil
-                hasil["konteks"] += [(src.rsplit("/", 1)[-1], c) for c in cari_konteks(_teks(hs), pola_konteks)]
+                for pola, lebar, maks in pola_konteks:
+                    hasil["konteks"] += [(src.rsplit("/", 1)[-1], c) for c in cari_konteks(_teks(hs), pola, lebar, maks)]
         time.sleep(JEDA)
     return hasil
 
@@ -242,10 +246,27 @@ def coba_kabupaten_pihps(ambil_fn=ambil) -> list[dict]:
     return hasil
 
 
+BAPANAS_V2 = "https://api-panelhargav2.badanpangan.go.id/api"
+
+
+def coba_bapanas_v2(ambil_fn=ambil) -> list[dict]:
+    """Panel Harga Bapanas versi 2: alamat yang dipakai situs publiknya sendiri (ditemukan di JavaScript-nya). Hanya membaca."""
+    hasil = []
+    for jalur in ("/front/komoditas?level_harga_id=3", "/front/komoditas?level_harga_id=1", "/front/harga-pangan-table-province",
+                  "/front/harga-pangan-table-v2", "/front/table-rekapitulasi"):
+        h = ambil_fn(BAPANAS_V2 + jalur)
+        r = ringkas(h, "Panel Harga Bapanas v2")
+        r["nama"] = nama_dari_json(_teks(h)) if h["status"] == 200 else []
+        hasil.append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
 def penjajakan_lanjutan(ambil_fn=ambil) -> dict:
-    halaman = [jelajah_halaman(u, ambil_fn, pola_konteks=POLA_KONTEKS.get(n)) | {"nama": n} for n, u in HALAMAN_JELAJAH]
+    halaman = [jelajah_halaman(u, ambil_fn, pola_konteks=POLA_KONTEKS.get(n, [])) | {"nama": n} for n, u in HALAMAN_JELAJAH]
     pihps = next((x["endpoint"] for x in halaman if x["nama"] == "pihps"), [])
-    return {"halaman": halaman, "acuan_pihps": coba_daftar_acuan_pihps(ambil_fn, pihps), "kabupaten_pihps": coba_kabupaten_pihps(ambil_fn)}
+    return {"halaman": halaman, "acuan_pihps": coba_daftar_acuan_pihps(ambil_fn, pihps), "kabupaten_pihps": coba_kabupaten_pihps(ambil_fn),
+            "bapanas_v2": coba_bapanas_v2(ambil_fn)}
 
 
 def jalankan(akar: Path, ambil_fn=ambil) -> dict:
