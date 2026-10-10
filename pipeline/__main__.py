@@ -428,7 +428,7 @@ def main(argv: list[str] | None = None) -> int:
 
         if a.tahap == 3:
             hasil = probe_lanjut.jalankan_tahap3(konf.akar)
-            for r in hasil["sp2kp"]["coba"]:
+            for r in hasil["sp2kp"]["coba"] + hasil["lain"]:
                 print(f"[tahap3] {r['status']} {r['byte']}B {r['url'][:140]}")
             return 0
         if a.tahap == 2:

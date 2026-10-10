@@ -477,8 +477,30 @@ def tahap3_sp2kp(ambil_fn=ambil, hari: date | None = None) -> dict:
     return hasil
 
 
+def tahap3_lain(ambil_fn=ambil) -> list[dict]:
+    """SISP (JSON harga bahan pokok, kab, pasar), Disperindag Provinsi Bengkulu (komoditas), dan info pangan Kepahiang."""
+    calon = ["https://sisp.kemendag.go.id/public/bahan-pokok/json", "https://sisp.kemendag.go.id/public/bahan-pokok-ews/json",
+             "https://sisp.kemendag.go.id/kab/json", "https://sisp.kemendag.go.id/kab/json?prov=17",
+             "https://sisp.kemendag.go.id/pasar/json", "https://sisp.kemendag.go.id/pasar/json?kab=1709",
+             "https://sisp.kemendag.go.id/public/bahan-pokok/json?kab=1709", "https://sisp.kemendag.go.id/public/bahan-pokok/json?kode_kab=1709",
+             "https://disperindag.bengkuluprov.go.id/komoditas", "https://kepahiangkab.go.id/info-pangan"]
+    hasil = []
+    for u in calon:
+        h = ambil_fn(u, 40, 2_000_000, {"X-Requested-With": "XMLHttpRequest", "Referer": u.split("/")[0] + "//" + u.split("/")[2] + "/"})
+        r = ringkas(h, "tahap 3 lain", 1200)
+        if h["status"] == 200 and "html" in (h["jenis"] or "").lower():
+            t = teks(h)
+            r["tabel"] = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", x))[:2500] for x in re.findall(r"<table.*?</table>", t, re.S | re.I)[:2]]
+            r["api"] = sorted(set(re.findall(r"""["'`]((?:https?:)?//[^"'`\s]*(?:api|json)[^"'`\s]*|/[\w\-/]*json[\w\-/?=&]*)["'`]""", t, re.I)))[:40]
+            r["konteks"] = konteks(t, re.compile(r"ajax|fetch\(|\$\.get|\$\.post|url\s*:|data\s*:\s*\{", re.I), 350, 15)
+        hasil.append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
 def jalankan_tahap3(akar: Path, ambil_fn=ambil) -> dict:
-    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sp2kp": tahap3_sp2kp(ambil_fn)}
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sp2kp": tahap3_sp2kp(ambil_fn),
+             "lain": tahap3_lain(ambil_fn)}
     folder = akar / "data" / "sumber"
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_tahap3.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
