@@ -273,6 +273,14 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         nilai_pihps = [round(pihps[t]) if t in pihps else None for t in tanggal]
         if any(x is not None for x in nilai_pihps):
             pembanding["PIHPS"] = {"nama": "Provinsi Bengkulu (PIHPS BI)", "peran": "pembanding_provinsi", "nilai": nilai_pihps}
+        # Pembanding kabupaten/kota dari PIHPS (mis. Kota Bengkulu), bila PIHPS memilikinya dan datanya sudah diambil.
+        for w, wil in konf.wilayah.items():
+            if w in (target, konektor_resmi.WILAYAH_PIHPS):
+                continue
+            pk = indeks_konteks.data.get((w, "harga_pihps", kode), {})
+            nilai_w = [round(pk[t]) if t in pk else None for t in tanggal]
+            if any(x is not None for x in nilai_w):
+                pembanding[f"PIHPS-{w}"] = {"nama": f"{wil.nama} (PIHPS BI)", "peran": wil.peran, "nilai": nilai_w}
         per_pasar = {}
         for p in konf.pasar_di(target):
             data_p = harian_pasar.get((p.kode, kode), {})
@@ -505,7 +513,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     hasil_analitik = analitik.bentuk(
         konf, hasil_varian, hasil_qc, hasil_masuk, tanggal_data, pakai_demo, daftar_sinyal,
         {"nama": berikut.nama, "hari_menuju": (berikut.tanggal - konf.hari_ini).days} if berikut else None,
-        seri_pembanding, ringkasan_model)
+        seri_pembanding, ringkasan_model, sorted({w for (w, ind, _) in indeks_konteks.data if ind == "harga_pihps"
+                                                  and w not in (target, konektor_resmi.WILAYAH_PIHPS)}))
     # Registri model dicatat ke repositori hanya untuk data asli (data contoh bukan jejak audit).
     registry = analitik.perbarui_registry(konf.akar, hasil_analitik) if not pakai_demo else {"riwayat": [], "terkini": {}}
     hasil_analitik["registry_riwayat"] = registry["riwayat"][-40:]

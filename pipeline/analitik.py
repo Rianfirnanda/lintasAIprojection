@@ -153,7 +153,7 @@ def perbarui_registry(akar: Path, hasil: dict) -> dict:
 
 
 def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date | None, pakai_demo: bool, daftar_sinyal: list,
-           acara_berikut: dict | None, seri_pembanding: dict, ringkasan_model: dict) -> dict:
+           acara_berikut: dict | None, seri_pembanding: dict, ringkasan_model: dict, wilayah_konteks: list[str] | None = None) -> dict:
     tk = konf.pengaturan["target_kinerja"]
     varian = []
     for kode, hv in hasil_varian.items():
@@ -191,7 +191,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
     server = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
     repo, run = os.environ.get("GITHUB_REPOSITORY"), os.environ.get("GITHUB_RUN_ID")
     tertinggal = (konf.hari_ini - tanggal_data).days if tanggal_data else None
-    pembanding_tersedia = sorted({w for per in seri_pembanding.values() for w in per})
+    pembanding_tersedia = sorted({w for per in seri_pembanding.values() for w in per} | set(wilayah_konteks or []))
 
     kpi = {
         "varian_berdata": len(varian), "varian_aktif": len(konf.varian_aktif),

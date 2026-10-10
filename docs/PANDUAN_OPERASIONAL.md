@@ -98,6 +98,9 @@ Setiap kali pipeline jalan, `python -m pipeline ambil-resmi` mengambil:
   daftar varian sistem. Disimpan di `data/masuk/konteks/harga_pihps_<tahun>.csv` (riwayat sekitar setahun diambil
   sekali, lalu 45 hari terakhir tiap jalan). Tampil sebagai garis pembanding "Provinsi Bengkulu (PIHPS BI)" di grafik
   harga dan disebut di peringatan ("harga Bengkulu Tengah +x% dari rata-rata provinsi").
+- **PIHPS tingkat kabupaten/kota.** Daftar kabupaten/kota PIHPS Provinsi Bengkulu dibaca otomatis (`GetRefRegency`), lalu yang namanya sama dengan
+  wilayah di `config/wilayah.csv` (mis. Kota Bengkulu) diambil harganya ke `data/masuk/konteks/pihps_kota_<tahun>.csv`. Wilayah yang tidak ada di PIHPS
+  dilewati, tidak ditebak. Hasilnya muncul sebagai garis pembanding di grafik dan panel perbandingan wilayah di Dasbor Analitik, tanpa masuk ke harga utama.
 - **Panel Harga Bapanas** belum bisa diambil otomatis: server datanya tidak menjawab permintaan dari luar Indonesia
   (server GitHub ada di luar negeri). Perlu akses API resmi dari Bapanas, atau unduh tabelnya dan unggah manual.
 

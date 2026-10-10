@@ -407,7 +407,8 @@ def main(argv: list[str] | None = None) -> int:
         from . import konektor_resmi
 
         if a.riwayat_hari:
-            hasil = {"pihps": konektor_resmi.perbarui_pihps(konf, hari_riwayat=a.riwayat_hari, paksa_riwayat=True)}
+            hasil = {"pihps": konektor_resmi.perbarui_pihps(konf, hari_riwayat=a.riwayat_hari, paksa_riwayat=True),
+                     "pihps_kota": konektor_resmi.perbarui_pihps_kota(konf, hari_riwayat=a.riwayat_hari, paksa_riwayat=True)}
         else:
             hasil = konektor_resmi.perbarui(konf)
         print(json.dumps(hasil, ensure_ascii=False))

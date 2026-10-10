@@ -84,3 +84,43 @@ def test_konteks_sinyal_menyebut_pihps(konf):
     k, kalimat = sinyal.konteks_sinyal(konf, date(2026, 9, 30), "CRW02", 60000, indeks, {})
     assert k["pihps_provinsi"] == {"tanggal": "2026-09-29", "harga": 50000, "selisih_persen": 20.0}
     assert "PIHPS Bank Indonesia" in kalimat and "+20%" in kalimat
+
+
+def test_kunci_nama_membuang_jenis_wilayah():
+    k = konektor_resmi._kunci_nama
+    assert k("Kota Bengkulu") == "bengkulu" and k("Kab. Bengkulu Tengah") == "bengkulu tengah" and k("Kabupaten Kepahiang") == "kepahiang"
+    assert k("Kota Bengkulu") != k("Kabupaten Bengkulu Utara")
+
+
+def test_pihps_kota_hanya_mengisi_wilayah_yang_ada_di_pihps(konf):
+    daftar = {"data": [{"id": 71, "name": "Kota Bengkulu"}, {"id": 72, "name": "Kabupaten Bengkulu Utara"}]}
+    panggil = []
+
+    def pengambil(url):
+        panggil.append(url)
+        if "GetRefRegency" in url:
+            assert "ref_prov_id=7" in url and "price_type_id=1" in url
+            return daftar
+        assert "regency_id=71" in url  # hanya Kota Bengkulu yang cocok dengan wilayah sistem
+        return PIHPS
+
+    h = konektor_resmi.perbarui_pihps_kota(konf, pengambil=pengambil, tidur=lambda s: None)
+    assert list(h["wilayah"]) == ["1771"] and h["wilayah"]["1771"]["id"] == 71 and h["galat"] == []
+    assert sorted(h["tidak_ditemukan"]) == ["Kabupaten Bengkulu Tengah", "Kabupaten Kepahiang"]
+    folder = konf.akar / "data/masuk/konteks"
+    with (folder / "pihps_kota_2026.csv").open() as f:
+        baris = list(csv.DictReader(f))
+    assert baris and {b["kode_wilayah"] for b in baris} == {"1771"} and {b["kode_sumber"] for b in baris} == {"BD-PIHPS"}
+    # tidak boleh bocor ke harga utama sementara (provinsi)
+    from pipeline import pihps_harga
+    assert pihps_harga._baca_konteks(folder) == {}
+    hasil = masukan.baca_semua(konf.akar / "data/masuk", konf, akar_relatif=konf.akar)
+    assert not hasil.penolakan and any(k.kode_wilayah == "1771" for k in hasil.konteks)
+
+
+def test_pihps_kota_tahan_galat_daftar_kabupaten(konf):
+    def gagal(url):
+        raise OSError("tidak terjangkau")
+
+    h = konektor_resmi.perbarui_pihps_kota(konf, pengambil=gagal, tidur=lambda s: None)
+    assert h["wilayah"] == {} and h["baris_baru"] == 0 and "daftar kabupaten PIHPS" in h["galat"][0]
