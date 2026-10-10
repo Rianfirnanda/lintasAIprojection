@@ -146,7 +146,7 @@ menyusun kesimpulan harian. Hasilnya tampil di halaman **Berita Lokal** (menu La
 
 **Jadwal.** Berjalan sendiri sekali sehari. Penjaga (`antrean.yml`) melihat bahwa jam 07.00 WIB sudah lewat dan berita hari
 ini belum dicari, lalu memicu pembaruan harian yang memuat langkah ini. Jam mulainya bisa diubah di **Pengaturan → Berita lokal**.
-Mau hasilnya sekarang: **Actions → Berita lokal → Run workflow** (atau Pengaturan → Jalankan → *Cari berita lokal sekarang*).
+Mau hasilnya sekarang: **Actions → Berita lokal → Run workflow** (atau, tanpa GitHub, Pengaturan → Jalankan → *Cari berita lokal sekarang*; permintaan dari panel tetap berjalan walau hari ini sudah dicari).
 Prosesnya tercatat di **Log proses AI** (halaman Sumber Data) dengan keterangan "Berita lokal harian".
 
 **Yang dikerjakan setiap hari:**

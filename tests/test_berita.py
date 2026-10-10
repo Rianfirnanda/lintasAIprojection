@@ -581,6 +581,37 @@ def test_berita_harian_tercatat_dan_tidak_diulang(akar_sementara, monkeypatch):
     assert m._berita_harian(akar_sementara) == [] and len(panggil) == 1  # hari yang sama tidak diulang
 
 
+def test_berita_diminta_dari_panel_jalan_walau_hari_ini_sudah_dicari(akar_sementara, monkeypatch):
+    db = DBTiruan()
+    _pasang_firestore(monkeypatch, db)
+    fs.catat_berita_harian(db, "2026-10-09")  # sudah dicari hari ini
+    hasil = {"statistik": {"berita_baru": 1, "kandidat_harga_baru": 0, "penyedia_ai": "", "model_ai": ""},
+             "kesimpulan": [{"metode": "ekstraktif", "ringkas": "x"}], "berita": [], "log": []}
+    panggil = []
+    monkeypatch.setattr(berita, "jalankan", lambda konf, **k: panggil.append(1) or hasil)
+    assert m._berita_harian(akar_sementara) == [] and not panggil
+    assert m._berita_harian(akar_sementara, paksa=True) == ["Berita lokal harian: 1 berita baru, 0 kandidat harga (ekstraktif)."]
+    assert len(panggil) == 1
+
+
+def test_perintah_berita_dikenal_panel_aturan_dan_mesin(konf):
+    """Tiap tombol Jalankan di skema harus punya jenis perintah di panel (JS), aturan Firestore, dan mesin; kalau tidak,
+    panel Pengaturan gagal dimuat (dulu: 'Cannot read properties of undefined (reading indexOf)')."""
+    import re
+
+    from tests.conftest import AKAR
+
+    js = (AKAR / "site/assets/pengaturan-firestore.js").read_text(encoding="utf-8")
+    rules = (AKAR / "firestore.rules").read_text(encoding="utf-8")
+    peta = dict(re.findall(r'"([\w.-]+\.yml)":\s*"(\w+)"', re.search(r"JENIS_PERINTAH = \{(.*?)\};", js, re.S).group(1)))
+    skema = json.loads((AKAR / "config/skema_pengaturan.json").read_text(encoding="utf-8"))
+    for a in skema["alur_kerja"]:
+        assert a["berkas"] in peta, f"{a['berkas']} belum punya jenis perintah di pengaturan-firestore.js"
+        assert peta[a["berkas"]] in fs.JENIS_PERINTAH, f"mesin belum mengenal perintah {peta[a['berkas']]}"
+        assert f"'{peta[a['berkas']]}'" in re.search(r"jenis in \[(.*?)\]\s*&&\s*baru\(\)\.keys", rules, re.S).group(1), \
+            f"aturan Firestore belum mengizinkan perintah {peta[a['berkas']]}"
+
+
 def test_berita_harian_gagal_dicatat_dan_tidak_mengulang_hari_itu(akar_sementara, monkeypatch):
     db = DBTiruan()
     _pasang_firestore(monkeypatch, db)

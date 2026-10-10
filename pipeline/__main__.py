@@ -103,8 +103,20 @@ def _firestore(a) -> int:
         print(f"{n} hasil AI Data Finder dari situs digabung ke kandidat sumber.")
     for pesan in _ai_harian(akar):
         print(pesan)
-    for pesan in _berita_harian(akar):
+    # "Cari berita lokal sekarang" dari panel Pengaturan mengabaikan jadwal harian; tanpa permintaan, berita jalan sekali sehari.
+    diminta_berita = any(x["jenis"] == "berita" for x in ringkas["perintah"])
+    pesan_berita = _berita_harian(akar, paksa=diminta_berita)
+    for pesan in pesan_berita:
         print(pesan)
+    if diminta_berita:
+        gagal = not pesan_berita or pesan_berita[0].startswith("::warning::")
+        try:
+            kolom = {"pesan": (pesan_berita[0] if pesan_berita else "Berita lokal tidak dijalankan (Firebase belum aktif).")[:500]}
+            if gagal:
+                kolom.update(status="gagal", hasil="failure")
+            firestore_sinkron.catat_perintah("berita", a.url, **kolom)
+        except Exception as e:  # noqa: BLE001
+            print(f"::warning::Status berita tidak tercatat di situs: {e}")
     if ringkas.get("peringatan"):
         print(f"::warning::{ringkas['peringatan']}")
     keluaran = {"perintah": ",".join(x["jenis"] for x in ringkas["perintah"]) or "-"}
@@ -167,9 +179,10 @@ BULAN_ID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agu
             "November", "Desember"]
 
 
-def _berita_harian(akar: Path) -> list[str]:
+def _berita_harian(akar: Path, paksa: bool = False) -> list[str]:
     """Berita lokal harian: sekali sehari mulai pukul 07.00 WIB. Hasil ditulis ke data/berita/berita.json (ikut dikirim ke
-    repositori oleh alur kerja) dan prosesnya tercatat di Log proses AI. Gagal tidak menghentikan pembaruan dashboard."""
+    repositori oleh alur kerja) dan prosesnya tercatat di Log proses AI. Gagal tidak menghentikan pembaruan dashboard.
+    `paksa` (permintaan dari panel Pengaturan) menjalankannya sekarang walaupun hari ini sudah dicari."""
     from datetime import datetime, timezone
 
     from . import firestore_sinkron
@@ -179,7 +192,7 @@ def _berita_harian(akar: Path) -> list[str]:
     try:
         db = firestore_sinkron.klien()
         sekarang = datetime.now(timezone.utc)
-        if not firestore_sinkron.berita_jatuh_tempo(akar, db, sekarang):
+        if not paksa and not firestore_sinkron.berita_jatuh_tempo(akar, db, sekarang):
             return []
         konf = konfigurasi.muat(akar)
         hari = sekarang.astimezone(firestore_sinkron.WIB)
