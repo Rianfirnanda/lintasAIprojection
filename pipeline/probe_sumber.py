@@ -128,9 +128,88 @@ def penjajakan_lain(ambil_fn=ambil) -> list[dict]:
     return out
 
 
+POLA_ENDPOINT = re.compile(
+    r"""["'`]((?:https?:)?//[^"'`\s<>]*(?:api|hargapangan|badanpangan|sp2kp)[^"'`\s<>]*|/[A-Za-z0-9_\-./]*(?:Get[A-Za-z]+|api/[A-Za-z0-9_\-./]+)[A-Za-z0-9_\-./?=&%]*)["'`]""",
+    re.I)
+HALAMAN_JELAJAH = (
+    ("pihps", "https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah"),
+    ("bapanas", "https://panelharga.badanpangan.go.id/"),
+    ("sp2kp", "https://sp2kp.kemendag.go.id/"),
+)
+KUNCI_NAMA = ("text", "name", "nama", "label", "regency_name", "market_name", "province_name", "nama_kabupaten", "nama_kota")
+
+
+def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10) -> dict:
+    """Membuka halaman, lalu berkas JavaScript-nya, untuk membaca alamat API yang dipakai situs itu sendiri."""
+    h = ambil_fn(url, 30, 2_500_000) if ambil_fn is ambil else ambil_fn(url)
+    hasil = {"halaman": url, "status": h["status"], "skrip": [], "endpoint": []}
+    if h["status"] != 200:
+        hasil["galat"] = h.get("galat", "")
+        return hasil
+    html = _teks(h)
+    hasil["endpoint"] = sorted(set(POLA_ENDPOINT.findall(html)))[:80]
+    srcs = re.findall(r"""<script[^>]+src=["']([^"']+\.js[^"']*)["']""", html, re.I)
+    for src in srcs[:maks_skrip]:
+        alamat = urllib.parse.urljoin(url, src)
+        hs = ambil_fn(alamat, 30, 2_500_000) if ambil_fn is ambil else ambil_fn(alamat)
+        hasil["skrip"].append({"url": alamat, "status": hs["status"], "byte": hs["byte"]})
+        if hs["status"] == 200:
+            hasil["endpoint"] = sorted(set(hasil["endpoint"]) | set(POLA_ENDPOINT.findall(_teks(hs))))[:120]
+        time.sleep(JEDA)
+    return hasil
+
+
+def nama_dari_json(teks: str, batas: int = 80) -> list[str]:
+    try:
+        d = json.loads(teks)
+    except ValueError:
+        return []
+    if isinstance(d, dict):
+        d = d.get("data") or d.get("result") or d.get("items") or []
+    nama = []
+    for item in d if isinstance(d, list) else []:
+        if isinstance(item, dict):
+            n = next((str(item[k]) for k in KUNCI_NAMA if k in item), None)
+            if n:
+                nama.append(n)
+        elif isinstance(item, str):
+            nama.append(item)
+    return nama[:batas]
+
+
+def coba_daftar_acuan_pihps(ambil_fn=ambil, endpoint: list[str] | None = None) -> list[dict]:
+    """Mencoba alamat daftar provinsi, kabupaten/kota, dan pasar PIHPS (dugaan umum + yang ditemukan di JavaScript situsnya)."""
+    dasar = "https://www.bi.go.id/hargapangan/WebSite/TabelHarga"
+    calon = [f"{dasar}/GetRefProvince", f"{dasar}/GetRefRegency?ref_prov_id=7", f"{dasar}/GetRefRegency?province_id=7",
+             f"{dasar}/GetRefRegency?provId=7", f"{dasar}/GetRefMarket?ref_regency_id=", f"{dasar}/GetRefMarket?regency_id=",
+             f"{dasar}/GetRefCommodity", "https://www.bi.go.id/hargapangan/WebSite/Home/GetProvince",
+             "https://www.bi.go.id/hargapangan/WebSite/Home/GetRegency?province_id=7"]
+    for e in endpoint or []:
+        if re.search(r"Get(Ref)?(Province|Regency|City|Market|Komoditas|Commodity)", e, re.I) and "/hargapangan/" in e:
+            calon.append(urllib.parse.urljoin("https://www.bi.go.id", e) if e.startswith("/") else e)
+    hasil, dilihat = [], set()
+    for u in calon:
+        if u in dilihat:
+            continue
+        dilihat.add(u)
+        h = ambil_fn(u)
+        r = ringkas(h, "daftar acuan PIHPS (lanjutan)")
+        r["nama"] = nama_dari_json(_teks(h)) if h["status"] == 200 else []
+        hasil.append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
+def penjajakan_lanjutan(ambil_fn=ambil) -> dict:
+    halaman = [jelajah_halaman(u, ambil_fn) | {"nama": n} for n, u in HALAMAN_JELAJAH]
+    pihps = next((x["endpoint"] for x in halaman if x["nama"] == "pihps"), [])
+    return {"halaman": halaman, "acuan_pihps": coba_daftar_acuan_pihps(ambil_fn, pihps)}
+
+
 def jalankan(akar: Path, ambil_fn=ambil) -> dict:
     hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "pihps": penjajakan_pihps(ambil_fn),
-             "bapanas": penjajakan_bapanas(ambil_fn), "lain": penjajakan_lain(ambil_fn)}
+             "bapanas": penjajakan_bapanas(ambil_fn), "lain": penjajakan_lain(ambil_fn),
+             "lanjutan": penjajakan_lanjutan(ambil_fn)}
     folder = akar / "data" / "sumber"
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
