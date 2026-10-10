@@ -76,7 +76,7 @@ WIB = timezone(timedelta(hours=7))
 JAM_AI_HARIAN = 8  # AI Data Finder harian mulai pukul 08.00 WIB
 JAM_BERITA = 7  # berita lokal harian mulai pukul 07.00 WIB (bisa diubah di pengaturan berita.jam_mulai)
 
-JENIS_PERINTAH = ("perbarui", "cari_sumber")
+JENIS_PERINTAH = ("perbarui", "cari_sumber", "berita")
 
 
 # ---------------------------------------------------------------- sambungan

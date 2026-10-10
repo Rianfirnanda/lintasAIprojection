@@ -353,7 +353,7 @@ service cloud.firestore {
     // mengisi status, waktu, dan alamat proses.
     match /lbp_perintah/{jenis} {
       allow read: if kelolaSistem();
-      allow create, update: if kelolaSistem() && jenis in ['perbarui', 'cari_sumber']
+      allow create, update: if kelolaSistem() && jenis in ['perbarui', 'cari_sumber', 'berita']
         && baru().keys().hasOnly(['jenis', 'masukan', 'status', 'diminta_oleh', 'diminta_pada'])
         && baru().jenis == jenis && baru().masukan is map && baru().masukan.size() <= 10
         && baru().status == 'menunggu'

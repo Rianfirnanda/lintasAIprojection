@@ -7,7 +7,7 @@
 import { firebaseSiap, penggunaKini } from "./firebase-klien.js";
 import { GalatGitHub } from "./github.js";
 
-export const JENIS_PERINTAH = { "pipeline.yml": "perbarui", "ai-data-finder.yml": "cari_sumber" };
+export const JENIS_PERINTAH = { "pipeline.yml": "perbarui", "ai-data-finder.yml": "cari_sumber", "berita.yml": "berita" };
 const NAMA_RAHASIA = /^[A-Z][A-Z0-9_]{1,79}$/;
 const iso = (t) => (t?.toDate ? t.toDate().toISOString() : t || null);
 const objek = (x) => x && typeof x === "object" && !Array.isArray(x);
