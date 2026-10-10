@@ -13,7 +13,7 @@
     "jarak_origin_hari": 7,
     "jendela_baseline_hari": 28,
     "tingkat_interval": 0.8,
-    "maks_celah_isi_hari": 7,
+    "maks_celah_isi_hari": 3,
     "wajib_persetujuan_model": false
   },
   "kualitas": {

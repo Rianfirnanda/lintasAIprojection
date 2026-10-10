@@ -624,7 +624,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     hasil_analitik["banding_wilayah"] = banding
     if evaluasi.get("parameter"):
         hasil_analitik["ews"] = {k: evaluasi.get(k) for k in ("precision", "recall", "f1", "false_positive_rate", "episode_uji",
-                                                              "episode_tertangkap", "alarm_uji", "parameter", "periode_uji", "per_kelas",
+                                                              "episode_tertangkap", "alarm_uji", "parameter", "periode_uji", "per_kelas", "waktu_peringatan",
                                                               "sumber_label", "metode")}
     _tulis_json(keluaran / "analitik.json", hasil_analitik)
 

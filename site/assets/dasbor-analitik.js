@@ -374,7 +374,7 @@ export async function pasangDasborInternal(wadah, meta) {
       ${ubin("Rata-rata meleset (sMAPE)", ho.smape == null ? "–" : `${angka(ho.smape, 1)}%`, ket(syarat("sMAPE"), "baik", `di atas ${ambang ?? ""}%`), syarat("sMAPE"))}
       ${ubin("Dibanding perubahan biasa (MASE)", ho.mase == null ? "–" : angka(ho.mase, 2), ket(syarat("MASE"), "baik", "belum lolos"), syarat("MASE"))}
       ${ubin("Condong (bias)", ho.bias_persen == null ? "–" : `${angka(ho.bias_persen, 1)}%`, ket(syarat("Bias"), "rendah", "tinggi"), syarat("Bias"))}
-      ${ubin(`Masuk rentang ${persenTingkat}% (coverage)`, ho.cakupan_persen == null ? "–" : `${angka(ho.cakupan_persen, 1)}%`, ket(syarat("Cakupan"), "sesuai", "di luar 75-85%"), syarat("Cakupan"))}
+      ${ubin(`Masuk rentang ${persenTingkat}% (coverage)`, (ho.cakupan_setahun?.persen ?? ho.cakupan_persen) == null ? "–" : `${angka(ho.cakupan_setahun?.persen ?? ho.cakupan_persen, 1)}%`, ket(syarat("Cakupan"), "sesuai", "di luar 75-85%") + (ho.cakupan_setahun && ho.cakupan_persen != null ? `<br>90 hari: ${angka(ho.cakupan_persen, 0)}%` : ""), syarat("Cakupan"))}
       ${ubin("Pola bergeser (PSI)", nilaiPsi == null ? "–" : angka(nilaiPsi, 2), nilaiPsi == null ? "menunggu data" : nilaiPsi > 0.25 ? "(bergeser)" : "(stabil)", nilaiPsi == null ? null : nilaiPsi <= 0.25)}
     </div>`;
   }
@@ -402,6 +402,7 @@ export async function pasangDasborInternal(wadah, meta) {
       const dm = ho.uji_dm, ph = ho.per_horizon || {};
       isi += `<dl class="dl" style="margin-top:10px">
         <dt>Lebih baik dari harga terakhir</dt><dd>${nilaiAtau(ho.perbaikan_vs_naif_persen, (x) => persen(x, 1, true))} <span class="meta-kecil">(menang di ${ho.menang_origin_vs_naif} dari ${ho.jumlah_origin} titik awal)</span></dd>
+        ${ho.cakupan_setahun ? `<dt>Masuk rentang ${persenTingkat}%, dinilai setahun</dt><dd>${angka(ho.cakupan_setahun.persen, 1)}% <span class="meta-kecil">(rata-rata ${ho.cakupan_setahun.minggu} minggu, dipakai sebagai syarat; 90 hari terakhir saja ${angka(ho.cakupan_persen, 1)}%)</span></dd>` : ""}
         <dt>Uji Diebold-Mariano</dt><dd>${dm && dm.p !== null ? `p = ${angka(dm.p, 3)} (n = ${dm.n})` : '<span class="menunggu">tidak berlaku untuk cara pembanding</span>'}</dd>
         ${["7", "14", "30"].filter((h) => ph[h]).map((h) => `<dt>Meleset ${h} hari</dt><dd>${persen(ph[h].smape, 2)} <span class="meta-kecil">(bias ${persen(ph[h].bias_persen, 2, true)}, n = ${ph[h].n})</span></dd>`).join("")}
       </dl>`;

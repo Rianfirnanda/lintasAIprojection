@@ -269,3 +269,15 @@ def test_penyusutan_ml_mendekati_naif_bila_fitur_tidak_berdaya_prediksi():
     lt = np.log(tren)
     tt = np.arange(t0, len(tren) - 7)
     assert model_ml.faktor_susut("ridge", Xt[tt], lt[tt + 7] - lt[tt], 7) >= 0.75
+
+
+def test_isi_celah_hanya_menghitung_hari_pencatatan():
+    """Batas isian maju dihitung dalam hari pencatatan: akhir pekan tidak menambah umur celah (rancangan: <= 3 hari)."""
+    nilai = np.array([100.0, np.nan, np.nan, np.nan, np.nan, np.nan, 110.0])
+    wajib = np.array([True, True, False, False, True, True, True])  # dua hari libur di tengah celah
+    terisi = analisis.isi_celah(nilai, 3, wajib)
+    assert np.allclose(terisi[:6], 100.0)  # 3 hari pencatatan kosong + 2 hari libur tetap terisi
+    tanpa_libur = analisis.isi_celah(nilai, 3)
+    assert np.isnan(tanpa_libur[4]) and np.isnan(tanpa_libur[5])
+    panjang = np.array([100.0] + [np.nan] * 5 + [110.0])
+    assert np.isnan(analisis.isi_celah(panjang, 3, np.ones(7, dtype=bool))[4])
