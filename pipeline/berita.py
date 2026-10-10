@@ -48,6 +48,7 @@ MAKS_BYTE_HALAMAN = 2 * 1024 * 1024
 MAKS_BYTE_ROBOTS = 200 * 1024
 MAKS_TEKS = 30_000
 MIN_TEKS_TERBACA = 200
+AWAL_TEKS = 1500
 MAKS_ARSIP = 300
 MAKS_KESIMPULAN = 30
 MAKS_HARGA_PER_BERITA = 12
@@ -478,7 +479,9 @@ def analisis_isi(judul: str, teks: str, konf: Konfigurasi) -> dict:
     target_j = any(_punya(k, j) for k in w["target"])
     target_t = any(_punya(k, t) for k in w["target"])
     pembanding = sorted({k for k in w["pembanding"] if _punya(k, j) or _punya(k, t)})
-    bengkulu = _punya("bengkulu", j) or _punya("bengkulu", t)
+    # Kata "Bengkulu" saja (tanpa nama kabupaten) hanya dihitung di judul dan awal teks. Di bagian bawah halaman ia sering
+    # muncul dalam daftar provinsi atau menu, padahal beritanya tentang daerah lain.
+    bengkulu = _punya("bengkulu", j) or _punya("bengkulu", t[:AWAL_TEKS])
     komoditas_j, komoditas_t = [], []
     for nama, kata in _kata_komoditas(konf).items():
         if any(_punya(k, j) for k in kata):
@@ -790,6 +793,23 @@ def kesimpulan_dengan_ai(konf: Konfigurasi, baru: list[dict], arsip: list[dict],
 
 # ---------------------------------------------------------------- jalankan
 
+def _huruf_dominan(s: str) -> bool:
+    """Kalimat biasa: sebagian besar huruf, bukan tabel angka atau kurs."""
+    return bool(s) and sum(c.isalpha() for c in s) / len(s) >= 0.6 and sum(c.isdigit() for c in s) / len(s) <= 0.2
+
+
+def kutipan_dari(cuplikan: str, teks: str) -> str:
+    """Kutipan pendek untuk daftar berita: cuplikan penerbit bila berupa kalimat, kalau tidak kalimat pertama isi yang wajar."""
+    c = _bersih(cuplikan)
+    if len(c) >= 40 and _huruf_dominan(c):
+        return c[:220]
+    for k in re.split(r"(?<=[.!?])\s+|\n+", teks):
+        k = _bersih(k)
+        if 40 <= len(k) <= 400 and _huruf_dominan(k):
+            return k[:220]
+    return ""
+
+
 def _entri(b: dict, analisis: dict, harga: list[dict], waktu: datetime) -> dict:
     teks = b["teks"]
     return {
@@ -799,7 +819,7 @@ def _entri(b: dict, analisis: dict, harga: list[dict], waktu: datetime) -> dict:
         "komoditas": analisis["komoditas"], "tag": analisis["tag"], "isi_terbaca": bool(teks and len(teks) >= MIN_TEKS_TERBACA),
         "catatan_baca": b.get("catatan_baca", ""), "panjang_teks": len(teks),
         "sidik_sha256": hashlib.sha256(teks.encode()).hexdigest() if teks else "",
-        "kutipan": _bersih(b["cuplikan"] or teks)[:220], "ringkasan": "", "metode_ringkas": "", "dampak_harga": "tidak jelas",
+        "kutipan": kutipan_dari(b["cuplikan"], teks), "ringkasan": "", "metode_ringkas": "", "dampak_harga": "tidak jelas",
         "tindak_lanjut": False, "harga": harga, "baru": True,
     }
 
