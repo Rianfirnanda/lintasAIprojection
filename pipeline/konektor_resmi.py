@@ -163,15 +163,16 @@ def ubah_pihps(data: dict, peta: dict[str, str], kode_wilayah: str = WILAYAH_PIH
     return baris, tak_dikenal
 
 
-def perbarui_pihps(konf: Konfigurasi, hari: int = 45, hari_riwayat: int = 400, pengambil=None, tidur=time.sleep) -> dict:
-    """Ambil 45 hari terakhir; bila riwayat belum ada, ambil sampai 400 hari ke belakang per 90 hari."""
+def perbarui_pihps(konf: Konfigurasi, hari: int = 45, hari_riwayat: int = 400, pengambil=None, tidur=time.sleep,
+                   paksa_riwayat: bool = False) -> dict:
+    """Ambil 45 hari terakhir; bila riwayat belum ada (atau paksa_riwayat), ambil sampai hari_riwayat ke belakang per 90 hari."""
     folder = konf.akar / "data" / "masuk" / "konteks"
     folder.mkdir(parents=True, exist_ok=True)
     if WILAYAH_PIHPS not in konf.wilayah:
         return {"baris_baru": 0, "baris": 0, "galat": [f"wilayah {WILAYAH_PIHPS} belum ada di config/wilayah.csv"]}
     sudah_ada = any(folder.glob("harga_pihps_*.csv"))
     akhir = konf.hari_ini
-    mulai = akhir - timedelta(days=hari if sudah_ada else hari_riwayat)
+    mulai = akhir - timedelta(days=hari if sudah_ada and not paksa_riwayat else hari_riwayat)
     peta = peta_varian(konf)
     baris, galat, tak_dikenal = [], [], set()
     awal = mulai

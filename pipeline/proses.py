@@ -511,6 +511,10 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "dibuat": datetime.now(zona).isoformat(timespec="seconds"), "versi": VERSI, "mode_demo": pakai_demo,
         "hari_ini": konf.hari_ini, "tanggal_data_terakhir": tanggal_data,
         "wilayah_target": konf.wilayah[target].__dict__,
+        # Bukan wilayah sasaran (Bengkulu Tengah): harga sementara memakai wilayah lain (mis. PIHPS Provinsi Bengkulu).
+        "data_sementara": (None if pakai_demo or konf.wilayah[target].peran == "target" else {
+            "wilayah": konf.wilayah[target].nama,
+            "sumber": "PIHPS Bank Indonesia (rata-rata pasar tradisional)"}),
         "repo": repo, "url_repo": f"{server}/{repo}" if repo else None,
         "url_run": f"{server}/{repo}/actions/runs/{run}" if repo and run else None,
         "commit": os.environ.get("GITHUB_SHA"),

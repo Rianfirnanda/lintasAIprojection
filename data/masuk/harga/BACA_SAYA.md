@@ -6,3 +6,5 @@ Unggah berkas CSV/Excel hasil pencatatan harga ke folder ini (tombol **Add file 
 - Satu berkas boleh berisi banyak pasar/tanggal. Jangan mengubah berkas lama; unggah berkas baru (koreksi dilakukan lewat `data/validasi`).
 - **Dilarang** memuat nama, NIK, nomor HP, atau alamat pedagang — berkas akan ditolak.
 - Selama folder ini belum berisi berkas CSV/Excel, dashboard berjalan dalam **mode demo**.
+- Berkas `pihps_provinsi_<tahun>.csv` dibuat otomatis dari data PIHPS Provinsi Bengkulu (harga utama sementara, lihat panduan bagian 4c). Jangan diedit
+  tangan; berkas ini ditulis ulang tiap pembaruan.

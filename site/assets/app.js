@@ -357,6 +357,13 @@ export async function pasangKerangka(aktif) {
     b.innerHTML = `<b>Data contoh.</b> Angka di sini masih untuk uji coba, bukan angka resmi. Tanda ini hilang sendiri setelah harga asli pertama dari petugas masuk.`;
     kepala.after(b);
   }
+  if (meta.data_sementara && !wajibMasuk) {
+    const b = document.createElement("div");
+    b.className = "pita-contoh";
+    b.setAttribute("role", "status");
+    b.innerHTML = `<b>Data asli sementara.</b> Harga di sini adalah ${esc(meta.data_sementara.sumber)} untuk ${esc(meta.data_sementara.wilayah)}, bukan harga Kabupaten Bengkulu Tengah. Berganti sendiri setelah data BPS Bengkulu Tengah masuk.`;
+    kepala.after(b);
+  }
   const layanan = tautanLayanan(meta.layanan);
   kaki.innerHTML = `
     <div class="kaki-baris">

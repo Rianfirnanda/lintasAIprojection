@@ -302,7 +302,11 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--hari", type=int, default=30)
     c.add_argument("--riwayat", type=int, default=400)
 
-    sub.add_parser("ambil-resmi", help="ambil prakiraan cuaca BMKG dan harga PIHPS Bank Indonesia")
+    r = sub.add_parser("ambil-resmi", help="ambil prakiraan cuaca BMKG dan harga PIHPS Bank Indonesia")
+    r.add_argument("--riwayat-hari", type=int, default=None,
+                   help="hanya PIHPS: ambil riwayat sejauh sekian hari ke belakang (mis. 1460 = 4 tahun), walau data sudah ada")
+
+    sub.add_parser("pihps-ke-harga", help="salin harga PIHPS Provinsi Bengkulu menjadi berkas harga utama sementara")
 
     f = sub.add_parser("cari-sumber", help="AI Data Finder (Gemini, Groq, Cerebras, OpenRouter, Mistral, Claude)")
     f.add_argument("--komoditas", required=True)
@@ -400,9 +404,18 @@ def main(argv: list[str] | None = None) -> int:
     if a.perintah == "ambil-resmi":
         from . import konektor_resmi
 
-        hasil = konektor_resmi.perbarui(konf)
+        if a.riwayat_hari:
+            hasil = {"pihps": konektor_resmi.perbarui_pihps(konf, hari_riwayat=a.riwayat_hari, paksa_riwayat=True)}
+        else:
+            hasil = konektor_resmi.perbarui(konf)
         print(json.dumps(hasil, ensure_ascii=False))
         return 0
+    if a.perintah == "pihps-ke-harga":
+        from . import pihps_harga
+
+        hasil = pihps_harga.ke_harga(konf)
+        print(json.dumps(hasil, ensure_ascii=False))
+        return 1 if hasil["galat"] else 0
     if a.perintah == "cari-sumber":
         from . import firestore_sinkron
 
