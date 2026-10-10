@@ -173,7 +173,7 @@ jobs:
           EMAIL_KE: ${{ secrets.EMAIL_KE }}
           EMAIL_DARI: ${{ secrets.EMAIL_DARI }}
           FIREBASE_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG }}
-        run: python -m pipeline jalankan --keluaran site/data --demo "$MODE_DEMO"
+        run: python -m pipeline jalankan --keluaran site/data ${MODE_DEMO:+--demo "$MODE_DEMO"}
 
       # Situs dengan login Firebase membaca data dashboard langsung dari Firestore (lbp_data): langsung terlihat begitu
       # langkah ini selesai, dan berkas berisi harga tidak ikut terbit terbuka di hosting. Bila langkah ini gagal,
