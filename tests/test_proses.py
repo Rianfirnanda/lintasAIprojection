@@ -159,3 +159,11 @@ def test_mode_data_asli_tanpa_data_tidak_gagal_dan_tidak_memakai_data_contoh(tmp
     meta = baca(keluaran, "meta.json")
     assert meta["mode_demo"] is False and meta["jumlah"]["observasi_total"] == 0
     assert baca(keluaran, "ringkasan.json")["kpi"]["varian_berdata"] == 0
+
+
+def test_alur_kerja_tidak_mengirim_mode_demo_kosong():
+    """Bila mode demo tidak dipilih, pipeline.yml tidak boleh mengirim --demo "" (ditolak argparse); pengaturan yang berlaku."""
+    from tests.conftest import AKAR
+
+    baris = [b for b in (AKAR / ".github/workflows/pipeline.yml").read_text(encoding="utf-8").splitlines() if "pipeline jalankan" in b]
+    assert baris and all('${MODE_DEMO:+--demo "$MODE_DEMO"}' in b for b in baris)
