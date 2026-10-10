@@ -141,7 +141,7 @@ KUNCI_NAMA = ("text", "name", "nama", "label", "regency_name", "market_name", "p
 
 POLA_KONTEKS = {
     # (pola, lebar potongan, maksimal potongan): fungsi inline PIHPS yang mengisi parameter, dan nama parameter API Panel Harga
-    "pihps": [(re.compile(r"function\s+(?:beforesend\w+|provinceChanged|OnBeforeSend|refreshPasar|regencyChanged)"), 700, 12),
+    "pihps": [(re.compile(r"beforesend\w*|provinceChanged|regencyChanged|refreshPasar|OnBeforeSend", re.I), 700, 14),
               (re.compile(r"GetRef\w+|GetGrid\w+|GetChart\w+"), 170, 20)],
     "bapanas": [(re.compile(r"period_date|level_harga_id|kode_provinsi|province_id|provinsi_id|kabkota|kab_kota|city_id|kota_id|kode_kab"), 280, 60),
                 (re.compile(r"""["'`][\w\-/{}$.:]*(?:front)/[\w\-/{}$.:?=&]*["'`]"""), 120, 40)],
@@ -181,7 +181,7 @@ def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10, pola_konteks
         hasil["skrip"].append({"url": alamat, "status": hs["status"], "byte": hs["byte"]})
         if hs["status"] == 200:
             hasil["endpoint"] = sorted(set(hasil["endpoint"]) | set(POLA_ENDPOINT.findall(_teks(hs))))[:120]
-            if pola_konteks and hs["byte"] > 100_000:  # berkas aplikasi utama, bukan pustaka kecil
+            if pola_konteks and (hs["byte"] > 100_000 or "hargapangan" in alamat.lower()):  # berkas aplikasi, bukan pustaka kecil
                 for pola, lebar, maks in pola_konteks:
                     hasil["konteks"] += [(src.rsplit("/", 1)[-1], c) for c in cari_konteks(_teks(hs), pola, lebar, maks)]
         time.sleep(JEDA)
@@ -263,7 +263,8 @@ def coba_bapanas_v2(ambil_fn=ambil) -> list[dict]:
 
 
 def penjajakan_lanjutan(ambil_fn=ambil) -> dict:
-    halaman = [jelajah_halaman(u, ambil_fn, pola_konteks=POLA_KONTEKS.get(n, [])) | {"nama": n} for n, u in HALAMAN_JELAJAH]
+    halaman = [jelajah_halaman(u, ambil_fn, maks_skrip=40 if n == "pihps" else 10, pola_konteks=POLA_KONTEKS.get(n, [])) | {"nama": n}
+               for n, u in HALAMAN_JELAJAH]
     pihps = next((x["endpoint"] for x in halaman if x["nama"] == "pihps"), [])
     return {"halaman": halaman, "acuan_pihps": coba_daftar_acuan_pihps(ambil_fn, pihps), "kabupaten_pihps": coba_kabupaten_pihps(ambil_fn),
             "bapanas_v2": coba_bapanas_v2(ambil_fn)}
