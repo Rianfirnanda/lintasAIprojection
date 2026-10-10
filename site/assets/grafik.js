@@ -141,7 +141,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
           ticks: { color: c.muted, font: huruf, maxRotation: 0, autoSkipPadding: 24, callback(v) { return tgl(this.getLabelForValue(v)); } },
         },
         y: {
-          grid: { color: c.grid }, border: { display: false }, beginAtZero: dash,
+          grid: { color: c.grid }, border: { display: false }, beginAtZero: opsi.dariNol ?? dash,
           ticks: { color: c.muted, font: huruf, callback: (v) => (dash ? new Intl.NumberFormat("id-ID").format(v) : rp(v)) },
         },
       },

@@ -13,7 +13,7 @@ const M = {
   laporan: ["laporan.html", "Laporan"],
   capaian: ["kinerja.html", "Capaian"],
   cek: ["kualitas.html", "Cek Data"],
-  dasbor: ["dasbor.html", "Dasbor Analitik"],
+  dasbor: ["dasbor.html", "Dashboard Internal"],
   akurasi: ["model.html", "Akurasi"],
   sumber: ["sumber.html", "Sumber"],
   berita: ["berita.html", "Berita Lokal"],

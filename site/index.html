@@ -9,11 +9,13 @@
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/dasbor.css">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <script src="vendor/chart.umd.js"></script>
   <script src="vendor/leaflet/leaflet.js"></script>
 </head>
 <body class="halaman-dash">
+<main class="utama dsb" id="beranda-internal" hidden></main>
 <main class="utama" id="beranda-peran" hidden></main>
 <main class="utama dash" id="beranda-tpid" hidden>
 
@@ -129,6 +131,12 @@ const utamaPeran = document.getElementById("beranda-peran");
 const utama = document.getElementById(tampilanTpid ? "beranda-tpid" : "beranda-peran");
 utamaPeran.hidden = !tampilanPeran;
 document.getElementById("beranda-tpid").hidden = !tampilanTpid;
+// Administrator dan analis membuka beranda dengan Dashboard Internal BPS (padat, sesuai gambar atasan); ringkasan peran dan tampilan TPID ada di bawahnya.
+if (["admin", "analis"].includes(peran)) {
+  const wadahInternal = document.getElementById("beranda-internal");
+  wadahInternal.hidden = false;
+  import("./assets/dasbor-analitik.js").then((m) => m.pasangDasborInternal(wadahInternal, meta)).catch((e) => { console.error(e); tampilkanGalat(wadahInternal, e); });
+}
 if (!tampilanTpid) document.body.classList.remove("halaman-dash");
 document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 26));

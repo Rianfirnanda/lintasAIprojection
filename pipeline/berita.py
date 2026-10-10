@@ -75,6 +75,21 @@ BAWAAN = {
         "operasi pasar pasar murah TPID Bengkulu Tengah",
         "banjir gagal panen distribusi pangan Bengkulu",
     ],
+    # Kueri tambahan hanya dicari lewat Google Berita (gratis, tidak memakai kredit Tavily): komoditas di luar 21 varian, nama pasar,
+    # dan pencarian per portal berita Bengkulu (operator site: milik Google Berita, jadi tidak perlu menebak alamat RSS tiap portal).
+    "kueri_tambahan": [
+        "harga LPG 3 kg Bengkulu Tengah",
+        "harga susu kental manis garam Bengkulu",
+        "harga pasar Taba Penanjung",
+        "harga pasar Karang Tinggi Bengkulu Tengah",
+        "harga sembako Lebaran Bengkulu Tengah",
+        "harga bahan pokok site:bengkulu.antaranews.com",
+        "harga pangan site:bengkulu.tribunnews.com",
+        "harga pangan site:radarbengkulu.bacakoran.co",
+        "harga pangan site:rakyatbengkulu.bacakoran.co",
+        "harga pangan site:bengkuluekspress.disway.id",
+        "harga pangan site:bengkulutengahkab.go.id",
+    ],
     "umpan_rss": [],  # [{"nama": "...", "url": "https://.../rss.xml", "aktif": true}]
     "domain_diabaikan": ["facebook.com", "instagram.com", "tiktok.com", "youtube.com", "youtu.be", "x.com", "twitter.com"],
 }
@@ -111,7 +126,15 @@ SINONIM_VARIAN = {
     "gula pasir lokal": "GLP01", "gula pasir premium": "GLP02", "ikan kembung": "IKN01", "ikan tongkol": "IKN02",
 }
 SATUAN_SAH = {"kg": "kg", "kilo": "kg", "kilogram": "kg", "liter": "liter", "ltr": "liter", "l": "liter"}
-SATUAN_LAIN = {"butir", "ikat", "biji", "bungkus", "sak", "karung", "pak", "ekor", "buah", "pcs", "kaleng", "botol"}
+SATUAN_LAIN = {"butir", "ikat", "biji", "bungkus", "sak", "karung", "pak", "ekor", "buah", "pcs", "kaleng", "botol", "tabung", "karpet"}
+# Bahan pokok yang disebut di laporan tetapi tidak termasuk 21 varian: harganya per tabung, kaleng, atau bungkus. Hanya menjadi kandidat berita.
+KOMODITAS_TAMBAHAN = {
+    "LPG": {"nama": "Gas LPG 3 kg", "alias": ["lpg 3 kg", "gas lpg 3 kg", "gas elpiji 3 kg", "elpiji 3 kg", "gas melon", "gas lpg", "gas elpiji", "elpiji", "lpg"],
+            "satuan": {"tabung"}, "batas": (15_000, 60_000)},
+    "SKM": {"nama": "Susu Kental Manis", "alias": ["susu kental manis", "kental manis"], "satuan": {"kaleng"}, "batas": (7_000, 25_000)},
+    "GRM": {"nama": "Garam Beryodium", "alias": ["garam beryodium", "garam"], "satuan": {"bungkus", "pak"}, "batas": (1_500, 10_000)},
+}
+BATAS_TELUR_KARPET = (35_000, 100_000)  # telur ayam ras dijual per karpet (30 butir); bukan harga per kg, jadi tidak dibanding dengan data utama
 PERUBAHAN = re.compile(r"(naik|turun|kenaikan|penurunan|selisih|bertambah|berkurang)\s+(sebesar|senilai)\s*$", re.I)
 RE_HARGA = re.compile(
     r"Rp\.?\s?(?:(?P<titik>\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?|(?P<desimal>\d+(?:,\d{1,2})?)\s*(?P<skala>ribu|rb|juta)\b|(?P<polos>\d+))",
@@ -303,7 +326,8 @@ def temukan(cfg: dict, umur: int, ambil=ambil_http, kirim_tavily=None) -> tuple[
     h, g = cari_tavily(cfg["kueri"], umur, kirim_tavily)
     kandidat += h
     galat += g
-    umpan = [{"nama": f"Google Berita: {q}", "url": url_google_berita(q, umur), "via": "google_berita"} for q in cfg["kueri"]]
+    semua_kueri = list(dict.fromkeys([*cfg["kueri"], *cfg.get("kueri_tambahan", [])]))
+    umpan = [{"nama": f"Google Berita: {q}", "url": url_google_berita(q, umur), "via": "google_berita"} for q in semua_kueri]
     umpan += [{"nama": u.get("nama") or u["url"], "url": u["url"], "via": "rss"} for u in cfg.get("umpan_rss", [])
               if isinstance(u, dict) and u.get("aktif", True) and str(u.get("url", "")).startswith("http")]
     for u in umpan:
@@ -465,6 +489,8 @@ def _kata_komoditas(konf: Konfigurasi) -> dict[str, list[str]]:
     for v in konf.varian.values():
         kata = hasil.setdefault(v.komoditas, [v.komoditas.lower()])
         kata += [k for k in SINONIM_KOMODITAS.get(v.kode_komoditas, []) if k not in kata]
+    for info in KOMODITAS_TAMBAHAN.values():
+        hasil.setdefault(info["nama"], list(info["alias"]))
     return hasil
 
 
@@ -518,6 +544,9 @@ def _alias_harga(konf: Konfigurasi) -> list[tuple[str, str | None, str]]:
     for a, kode in SINONIM_VARIAN.items():
         if kode in konf.varian:
             alias[a] = (kode, konf.varian[kode].kode_komoditas)
+    for kode_k, info in KOMODITAS_TAMBAHAN.items():
+        for a in info["alias"]:
+            alias[a] = (None, kode_k)
     return sorted(((a, v, k) for a, (v, k) in alias.items()), key=lambda x: -len(x[0]))
 
 
@@ -580,8 +609,25 @@ def _peran_kalimat(kalimat: str, w: dict[str, list[str]]) -> str:
     return "tidak jelas"
 
 
+def _pasar_dalam(kalimat: str, konf: Konfigurasi) -> str | None:
+    """Nama pasar yang dikenal sistem bila disebut di kalimat (mis. Pasar Taba Penanjung)."""
+    k = _norm(kalimat)
+    for p in konf.pasar.values():
+        inti = re.sub(r"\(.*?\)", "", p.nama).lower().replace("pasar", "").strip()
+        if inti and _punya(inti, k):
+            return re.sub(r"\s*\(.*?\)", "", p.nama).strip()
+    return None
+
+
+def _arah_kalimat(kalimat: str) -> str:
+    """'naik', 'turun', atau '' (tidak ada atau bertentangan) menurut kata di kalimat bukti."""
+    k = _norm(kalimat)
+    naik, turun = bool(re.search(TAG["harga_naik"][1], k)), bool(re.search(TAG["harga_turun"][1], k))
+    return "naik" if naik and not turun else "turun" if turun and not naik else ""
+
+
 def ekstrak_harga(teks: str, konf: Konfigurasi, alias=None) -> list[dict]:
-    """Harga per kg atau liter dari kalimat berita. Tiap hasil membawa kalimat bukti dan status; yang di luar batas wajar ditolak."""
+    """Harga per kg atau liter (dan per tabung, kaleng, bungkus, atau karpet untuk komoditas tambahan) dari kalimat berita. Tiap hasil membawa kalimat bukti dan status; yang di luar batas wajar ditolak."""
     alias = alias or _alias_harga(konf)
     w = kata_wilayah(konf)
     hasil, lihat = [], set()
@@ -597,7 +643,7 @@ def ekstrak_harga(teks: str, konf: Konfigurasi, alias=None) -> list[dict]:
                 if m2:
                     harga.append((_nilai_rupiah(m2), m2.end()))
             satuan = _satuan_setelah(kalimat, harga[-1][1])
-            if satuan not in ("kg", "liter"):
+            if satuan is None:
                 continue
             if PERUBAHAN.search(kalimat[max(0, m.start() - 30):m.start()]):
                 continue  # selisih kenaikan atau penurunan, bukan harga
@@ -605,18 +651,28 @@ def ekstrak_harga(teks: str, konf: Konfigurasi, alias=None) -> list[dict]:
             if not ketemu:
                 continue
             varian, kode_k = ketemu
+            tambahan = KOMODITAS_TAMBAHAN.get(kode_k)
+            if tambahan:
+                if satuan not in tambahan["satuan"]:
+                    continue
+                batas, nama_k = tambahan["batas"], tambahan["nama"]
+            elif satuan == "karpet" and kode_k == "TLR":
+                varian, batas, nama_k = None, BATAS_TELUR_KARPET, "Telur Ayam"
+            elif satuan in ("kg", "liter"):
+                batas = _batas(konf, varian, kode_k)
+                nama_k = next((v.komoditas for v in konf.varian.values() if v.kode_komoditas == kode_k), kode_k)
+            else:
+                continue
             for nilai, _ in harga:
-                kunci = (kode_k, varian, nilai)
+                kunci = (kode_k, varian, nilai, satuan)
                 if kunci in lihat:
                     continue
                 lihat.add(kunci)
-                batas = _batas(konf, varian, kode_k)
                 wajar = batas is not None and batas[0] <= nilai <= batas[1]
                 hasil.append({
-                    "komoditas": next((v.komoditas for v in konf.varian.values() if v.kode_komoditas == kode_k), kode_k),
-                    "kode_komoditas": kode_k, "kode_varian": varian, "nilai": round(nilai), "satuan": satuan,
-                    "peran_wilayah": _peran_kalimat(kalimat, w), "bukti": kalimat.strip()[:300],
-                    "status": "kandidat" if wajar else "ditolak: di luar batas wajar",
+                    "komoditas": nama_k, "kode_komoditas": kode_k, "kode_varian": varian, "nilai": round(nilai), "satuan": satuan,
+                    "peran_wilayah": _peran_kalimat(kalimat, w), "pasar": _pasar_dalam(kalimat, konf), "arah": _arah_kalimat(kalimat),
+                    "bukti": kalimat.strip()[:300], "status": "kandidat" if wajar else "ditolak: di luar batas wajar",
                 })
                 if len(hasil) >= MAKS_HARGA_PER_BERITA:
                     return hasil
@@ -841,7 +897,7 @@ def jalankan(konf: Konfigurasi, *, klien: dict | None = None, tanpa_ai: bool = F
             catat(teks, jenis)
 
     umur = int(cfg["umur_maks_hari"])
-    tulis(f"Mulai mencari berita lokal ({len(cfg['kueri'])} kueri, {umur} hari terakhir).")
+    tulis(f"Mulai mencari berita lokal ({len(cfg['kueri'])} kueri Tavily dan Google Berita, {len(cfg.get('kueri_tambahan', []))} kueri tambahan Google Berita, {umur} hari terakhir).")
     mentah, galat = temukan(cfg, umur, ambil, klien.get("tavily"))
     for g in galat:
         tulis(g, "peringatan")
@@ -966,10 +1022,63 @@ def simpan(konf: Konfigurasi, hasil: dict) -> Path:
     return p
 
 
-def untuk_situs(konf: Konfigurasi) -> dict:
+URUT_PERAN = ["target", "pembanding", "provinsi", "nasional", "tidak jelas"]
+AMBANG_BEDA_JAUH_PERSEN = 15.0
+
+
+def ringkasan_harga(konf: Konfigurasi, berita: list[dict], harga_utama: dict[str, float] | None, hari: date, umur: int = 14) -> list[dict]:
+    """Harga kandidat dari berita, dikelompokkan per komoditas: rentang, wilayah paling relevan, arah, alasan di berita, dan (bila ada)
+    selisih terhadap harga utama sistem. Hanya penunjuk; tidak pernah masuk deret harga resmi."""
+    batas = (hari - timedelta(days=umur)).isoformat()
+    kelompok: dict[tuple[str, str], list[dict]] = {}
+    for b in berita:
+        tgl = b.get("tanggal") or (b.get("diakses") or "")[:10]
+        if tgl < batas:
+            continue
+        for h in b.get("harga", []):
+            if h.get("status") == "kandidat":
+                kelompok.setdefault((h["kode_komoditas"], h["satuan"]), []).append(
+                    {**h, "tanggal": tgl, "judul": b.get("judul", ""), "url": b.get("url", ""), "sumber": b.get("sumber", ""), "tag": b.get("tag", [])})
+    hasil = []
+    for (kode_k, satuan), daftar in kelompok.items():
+        nilai = sorted(x["nilai"] for x in daftar)
+        peran = lambda x: URUT_PERAN.index(x["peran_wilayah"]) if x.get("peran_wilayah") in URUT_PERAN else len(URUT_PERAN)  # noqa: E731
+        terbaik = sorted(daftar, key=lambda x: (peran(x), [-ord(c) for c in x["tanggal"]]))[0]
+        sebanding = [x for x in daftar if peran(x) == peran(terbaik)]
+        nilai_w = sorted(x["nilai"] for x in sebanding)
+        median = nilai_w[len(nilai_w) // 2] if len(nilai_w) % 2 else (nilai_w[len(nilai_w) // 2 - 1] + nilai_w[len(nilai_w) // 2]) / 2
+        naik, turun = sum(1 for x in daftar if x.get("arah") == "naik"), sum(1 for x in daftar if x.get("arah") == "turun")
+        alasan = [TAG[t][0] for t in dict.fromkeys(t for x in daftar for t in x["tag"]) if t in TAG and t not in ("harga_naik", "harga_turun")]
+        banding = None
+        if harga_utama and satuan in ("kg", "liter"):
+            varian = sorted({x["kode_varian"] for x in daftar if x.get("kode_varian")})
+            acuan = [harga_utama[v] for v in varian if v in harga_utama] or \
+                    [harga_utama[v.kode] for v in konf.varian.values() if v.kode_komoditas == kode_k and v.kode in harga_utama]
+            if acuan:
+                acuan.sort()
+                utama = acuan[len(acuan) // 2] if len(acuan) % 2 else (acuan[len(acuan) // 2 - 1] + acuan[len(acuan) // 2]) / 2
+                selisih = round((median / utama - 1) * 100, 1)
+                banding = {"dasar": varian[0] if len(varian) == 1 else "median varian komoditas", "harga_utama": round(utama), "selisih_persen": selisih,
+                           "beda_jauh": abs(selisih) > AMBANG_BEDA_JAUH_PERSEN}
+        hasil.append({
+            "kode_komoditas": kode_k, "komoditas": terbaik["komoditas"], "satuan": satuan, "jumlah_kandidat": len(daftar),
+            "jumlah_berita": len({x["url"] for x in daftar}), "wilayah": terbaik.get("peran_wilayah", "tidak jelas"),
+            "median": round(median), "minimum": nilai[0], "maksimum": nilai[-1], "tanggal_terbaru": max(x["tanggal"] for x in daftar),
+            "arah": "naik" if naik > turun else "turun" if turun > naik else "belum jelas", "alasan": alasan[:3], "banding": banding,
+            "contoh": {k: terbaik.get(k) for k in ("nilai", "bukti", "url", "judul", "sumber", "pasar", "tanggal")},
+        })
+    hasil.sort(key=lambda x: (URUT_PERAN.index(x["wilayah"]) if x["wilayah"] in URUT_PERAN else 9, -x["jumlah_berita"], x["komoditas"]))
+    return hasil
+
+
+def untuk_situs(konf: Konfigurasi, harga_utama: dict[str, float] | None = None, hari: date | None = None) -> dict:
     """Data untuk halaman Berita Lokal (site/data/berita.json): arsip, kesimpulan, statistik, dan penjelasan batasnya."""
     d = muat(konf)
+    hari = hari or datetime.now(WIB).date()
+    umur = int(pengaturan_berita(konf)["umur_maks_hari"])
     return {"diperbarui": d.get("diperbarui"), "kesimpulan": d.get("kesimpulan", []), "berita": d.get("berita", []),
             "statistik": d.get("statistik", {}), "galat": d.get("galat", []),
+            "ringkasan_harga": ringkasan_harga(konf, d.get("berita", []), harga_utama, hari, umur),
+            "ambang_beda_jauh_persen": AMBANG_BEDA_JAUH_PERSEN,
             "label_tag": {k: v[0] for k, v in TAG.items()},
             "catatan": "Harga di berita hanyalah penunjuk. Angkanya belum diverifikasi dan tidak masuk deret harga resmi."}
