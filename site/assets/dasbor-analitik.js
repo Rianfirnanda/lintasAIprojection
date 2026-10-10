@@ -175,11 +175,17 @@ function kartuModel(v) {
 function wilayah(v) {
   const seri = S.seri[v.kode];
   // Saat harga utama sementara adalah PIHPS Provinsi, garis pembanding PIHPS sama dengan target, jadi tidak ditampilkan dua kali.
-  const pembanding = Object.entries(seri?.pembanding || {}).filter(([k]) => !(meta?.data_sementara && k === "PIHPS")).map(([, p]) => p);
+  // Garis yang nilainya persis sama dengan data utama tidak ditampilkan lagi (mis. PIHPS Kota Bengkulu = harga utama sementara).
+  const samaDenganUtama = (p) => {
+    const pasang = (seri?.aktual || []).map((a, i) => [a, p.nilai[i]]).filter(([a, b]) => a !== null && a !== undefined && b !== null && b !== undefined);
+    return pasang.length >= 10 && pasang.every(([a, b]) => a === b);
+  };
+  const pembanding = Object.values(seri?.pembanding || {}).filter((p) => !samaDenganUtama(p));
   const terakhir = (arr) => { for (let i = arr.length - 1; i >= 0; i--) if (arr[i] !== null && arr[i] !== undefined) return arr[i]; return null; };
   const target = { nama: A.wilayah.nama, nilai: v.harga_aktual };
   const lain = pembanding.map((p) => ({ nama: p.nama, nilai: terakhir(p.nilai) })).filter((p) => p.nilai !== null);
-  const kosong = ["Kepahiang", "Kota Bengkulu"].filter((n) => !lain.some((p) => p.nama.toLowerCase().includes(n.toLowerCase())));
+  const adaSama = (n) => Object.values(seri?.pembanding || {}).some((p) => p.nama.toLowerCase().includes(n.toLowerCase()));
+  const kosong = ["Kepahiang", "Kota Bengkulu"].filter((n) => !adaSama(n));
   const semua = [target, ...lain];
   const maks = Math.max(...semua.map((x) => x.nilai || 0), 1);
   const batang = semua.map((x) => `<div class="bar-baris"><span class="bar-nama">${esc(x.nama)}</span><div class="bar"><span style="width:${(x.nilai / maks * 100).toFixed(1)}%"></span></div><span class="bar-nilai">${rp(x.nilai)}</span></div>`).join("");

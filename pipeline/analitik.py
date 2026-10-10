@@ -152,6 +152,20 @@ def perbarui_registry(akar: Path, hasil: dict) -> dict:
     return keluar
 
 
+# Alasan yang sudah dipastikan dari penjajakan sumber (data/sumber/hasil_probe.json), per kode wilayah.
+CATATAN_SUMBER = {
+    "1708": "PIHPS di Provinsi Bengkulu hanya memantau Kota Bengkulu, dan Panel Harga Bapanas tidak bisa diakses dari server GitHub.",
+    "1709": "Harga Bengkulu Tengah hanya dimiliki BPS dan petugas lapangan (unggah berkas harga).",
+}
+
+
+def keterangan_pembanding(konf, tersedia: list[str]) -> str | None:
+    kurang = [(k, w) for k, w in konf.wilayah.items() if w.peran.startswith("pembanding") and k != "17" and k not in tersedia]
+    if not kurang:
+        return None
+    return " ".join(f"{w.nama}: belum ada harga yang masuk. {CATATAN_SUMBER.get(k, '')}".strip() for k, w in kurang)
+
+
 def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date | None, pakai_demo: bool, daftar_sinyal: list,
            acara_berikut: dict | None, seri_pembanding: dict, ringkasan_model: dict, wilayah_konteks: list[str] | None = None) -> dict:
     tk = konf.pengaturan["target_kinerja"]
@@ -212,8 +226,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
         "mode_demo": pakai_demo, "horizon": list(HORIZON_TAMPIL), "tingkat_interval": konf.pengaturan["analisis"]["tingkat_interval"],
         "kpi": kpi, "varian": varian,
         "pembanding_wilayah": {"tersedia": pembanding_tersedia,
-                                "keterangan": None if pembanding_tersedia else
-                                "Belum ada harga untuk Kepahiang dan Kota Bengkulu. Panel perbandingan terisi otomatis begitu datanya masuk."},
+                                "keterangan": keterangan_pembanding(konf, pembanding_tersedia)},
         "target": {"smape_perbaikan": tk["perbaikan_smape_persen"], "bias": tk["bias_absolut_maks_persen"],
                    "cakupan": [tk["cakupan_interval_min_persen"], tk["cakupan_interval_maks_persen"]]},
         "protokol": analisis.pengaturan_validasi(konf.pengaturan),

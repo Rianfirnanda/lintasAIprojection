@@ -543,7 +543,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         # Bukan wilayah sasaran (Bengkulu Tengah): harga sementara memakai wilayah lain (mis. PIHPS Provinsi Bengkulu).
         "data_sementara": (None if pakai_demo or konf.wilayah[target].peran == "target" else {
             "wilayah": konf.wilayah[target].nama,
-            "sumber": "PIHPS Bank Indonesia (rata-rata pasar tradisional)"}),
+            "sumber": "PIHPS Bank Indonesia (rata-rata pasar tradisional)",
+            "catatan": "Di PIHPS, Provinsi Bengkulu baru memantau satu kota: Kota Bengkulu. Jadi angka ini sebenarnya harga pasar Kota Bengkulu."}),
         "repo": repo, "url_repo": f"{server}/{repo}" if repo else None,
         "url_run": f"{server}/{repo}/actions/runs/{run}" if repo and run else None,
         "commit": os.environ.get("GITHUB_SHA"),
