@@ -139,15 +139,38 @@ HALAMAN_JELAJAH = (
 KUNCI_NAMA = ("text", "name", "nama", "label", "regency_name", "market_name", "province_name", "nama_kabupaten", "nama_kota")
 
 
-def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10) -> dict:
+POLA_KONTEKS = {
+    "pihps": re.compile(r"GetRef\w+|GetGrid\w+|GetChart\w+"),
+    "bapanas": re.compile(r"""["'`][\w\-/{}$.:]*(?:front|kabkota|kabupaten|harga-peta|harga-rata|rata-rata|komoditas|provinsi|wilayah)[\w\-/{}$.:?=&]*["'`]""", re.I),
+    "sp2kp": re.compile(r"""["'`]/?[\w\-/]*(?:harga|kabupaten|kota|provinsi|komoditas|pasar)[\w\-/?=&]*["'`]""", re.I),
+}
+
+
+def cari_konteks(teks: str, pola: re.Pattern, lebar: int = 170, maks: int = 45) -> list[str]:
+    """Potongan teks di sekitar kata kunci, supaya terlihat parameter apa yang dipakai situs saat memanggil alamat itu."""
+    hasil, lihat = [], set()
+    for m in pola.finditer(teks):
+        kunci = m.group(0)
+        if kunci in lihat:
+            continue
+        lihat.add(kunci)
+        hasil.append(re.sub(r"\s+", " ", teks[max(0, m.start() - lebar): m.end() + lebar]))
+        if len(hasil) >= maks:
+            break
+    return hasil
+
+
+def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10, pola_konteks: re.Pattern | None = None) -> dict:
     """Membuka halaman, lalu berkas JavaScript-nya, untuk membaca alamat API yang dipakai situs itu sendiri."""
     h = ambil_fn(url, 30, 2_500_000) if ambil_fn is ambil else ambil_fn(url)
-    hasil = {"halaman": url, "status": h["status"], "skrip": [], "endpoint": []}
+    hasil = {"halaman": url, "status": h["status"], "skrip": [], "endpoint": [], "konteks": []}
     if h["status"] != 200:
         hasil["galat"] = h.get("galat", "")
         return hasil
     html = _teks(h)
     hasil["endpoint"] = sorted(set(POLA_ENDPOINT.findall(html)))[:80]
+    if pola_konteks:
+        hasil["konteks"] += [("html", c) for c in cari_konteks(html, pola_konteks)]
     srcs = re.findall(r"""<script[^>]+src=["']([^"']+\.js[^"']*)["']""", html, re.I)
     for src in srcs[:maks_skrip]:
         alamat = urllib.parse.urljoin(url, src)
@@ -155,6 +178,8 @@ def jelajah_halaman(url: str, ambil_fn=ambil, maks_skrip: int = 10) -> dict:
         hasil["skrip"].append({"url": alamat, "status": hs["status"], "byte": hs["byte"]})
         if hs["status"] == 200:
             hasil["endpoint"] = sorted(set(hasil["endpoint"]) | set(POLA_ENDPOINT.findall(_teks(hs))))[:120]
+            if pola_konteks and hs["byte"] > 100_000:  # berkas aplikasi utama, bukan pustaka kecil
+                hasil["konteks"] += [(src.rsplit("/", 1)[-1], c) for c in cari_konteks(_teks(hs), pola_konteks)]
         time.sleep(JEDA)
     return hasil
 
@@ -200,10 +225,27 @@ def coba_daftar_acuan_pihps(ambil_fn=ambil, endpoint: list[str] | None = None) -
     return hasil
 
 
+def coba_kabupaten_pihps(ambil_fn=ambil) -> list[dict]:
+    """Daftar kabupaten/kota dan pasar PIHPS untuk Provinsi Bengkulu (id 7): mencoba nama parameter yang mungkin dipakai situsnya."""
+    dasar = "https://www.bi.go.id/hargapangan/WebSite/TabelHarga"
+    hasil = []
+    for jalur, nama_param in (("GetRefRegency", ("prov_id", "provinceId", "ProvinceId", "province", "id", "ref_province_id", "idProv", "provid", "ProvId")),
+                              ("GetRefMarket", ("regency_id", "regencyId", "RegencyId", "city_id", "id", "ref_regency_id", "idKab", "regid"))):
+        for nama in nama_param:
+            for tambah in ("", "&price_type_id=1"):
+                u = f"{dasar}/{jalur}?{nama}={7 if jalur == 'GetRefRegency' else ''}{tambah}"
+                h = ambil_fn(u)
+                n = nama_dari_json(_teks(h)) if h["status"] == 200 else []
+                if n:
+                    hasil.append({"url": u, "status": h["status"], "nama": n})
+                time.sleep(JEDA * 0.2)
+    return hasil
+
+
 def penjajakan_lanjutan(ambil_fn=ambil) -> dict:
-    halaman = [jelajah_halaman(u, ambil_fn) | {"nama": n} for n, u in HALAMAN_JELAJAH]
+    halaman = [jelajah_halaman(u, ambil_fn, pola_konteks=POLA_KONTEKS.get(n)) | {"nama": n} for n, u in HALAMAN_JELAJAH]
     pihps = next((x["endpoint"] for x in halaman if x["nama"] == "pihps"), [])
-    return {"halaman": halaman, "acuan_pihps": coba_daftar_acuan_pihps(ambil_fn, pihps)}
+    return {"halaman": halaman, "acuan_pihps": coba_daftar_acuan_pihps(ambil_fn, pihps), "kabupaten_pihps": coba_kabupaten_pihps(ambil_fn)}
 
 
 def jalankan(akar: Path, ambil_fn=ambil) -> dict:
