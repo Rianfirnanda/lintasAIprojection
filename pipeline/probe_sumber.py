@@ -229,20 +229,44 @@ def coba_daftar_acuan_pihps(ambil_fn=ambil, endpoint: list[str] | None = None) -
     return hasil
 
 
-def coba_kabupaten_pihps(ambil_fn=ambil) -> list[dict]:
-    """Daftar kabupaten/kota dan pasar PIHPS untuk Provinsi Bengkulu (id 7): mencoba nama parameter yang mungkin dipakai situsnya."""
+def coba_kabupaten_pihps(ambil_fn=ambil, hari: date | None = None) -> dict:
+    """Kabupaten/kota dan pasar PIHPS untuk Provinsi Bengkulu (id 7). Nama parameter dibaca dari fungsi beforesendRegency dan
+    beforesendMarket di halaman PIHPS: GetRefRegency(price_type_id, ref_prov_id), GetRefMarket(price_type_id, ref_regency_id)."""
+    hari = hari or date.today()
     dasar = "https://www.bi.go.id/hargapangan/WebSite/TabelHarga"
-    hasil = []
-    for jalur, nama_param in (("GetRefRegency", ("prov_id", "provinceId", "ProvinceId", "province", "id", "ref_province_id", "idProv", "provid", "ProvId")),
-                              ("GetRefMarket", ("regency_id", "regencyId", "RegencyId", "city_id", "id", "ref_regency_id", "idKab", "regid"))):
-        for nama in nama_param:
-            for tambah in ("", "&price_type_id=1"):
-                u = f"{dasar}/{jalur}?{nama}={7 if jalur == 'GetRefRegency' else ''}{tambah}"
-                h = ambil_fn(u)
-                n = nama_dari_json(_teks(h)) if h["status"] == 200 else []
-                if n:
-                    hasil.append({"url": u, "status": h["status"], "nama": n})
-                time.sleep(JEDA * 0.2)
+    hasil: dict = {"kabupaten": [], "tabel": []}
+    for tipe_pasar in (1, 2, 3, 4):
+        h = ambil_fn(f"{dasar}/GetRefRegency?" + urllib.parse.urlencode({"price_type_id": tipe_pasar, "ref_prov_id": 7}))
+        try:
+            daftar = (json.loads(_teks(h)).get("data") or []) if h["status"] == 200 else []
+        except ValueError:
+            daftar = []
+        time.sleep(JEDA * 0.5)
+        for k in daftar:
+            pasar = []
+            hm = ambil_fn(f"{dasar}/GetRefMarket?" + urllib.parse.urlencode({"price_type_id": tipe_pasar, "ref_regency_id": k.get("id")}))
+            try:
+                pasar = [{"id": m.get("id"), "nama": m.get("name")} for m in (json.loads(_teks(hm)).get("data") or [])] if hm["status"] == 200 else []
+            except ValueError:
+                pass
+            hasil["kabupaten"].append({"jenis_pasar": tipe_pasar, "id": k.get("id"), "nama": k.get("name"), "pasar": pasar})
+            time.sleep(JEDA * 0.5)
+    # tabel harian 7 hari terakhir untuk tiap kabupaten/kota pasar tradisional: seberapa lengkap datanya
+    mulai = (hari - timedelta(days=6)).isoformat()
+    for k in [x for x in hasil["kabupaten"] if x["jenis_pasar"] == 1]:
+        q = {"price_type_id": 1, "comcat_id": "", "province_id": 7, "regency_id": k["id"], "market_id": "", "tipe_laporan": 1,
+             "start_date": mulai, "end_date": hari.isoformat()}
+        h = ambil_fn(f"{PIHPS}?{urllib.parse.urlencode(q)}")
+        ringkas_tabel = {"kabupaten": k["nama"], "id": k["id"], "status": h["status"], "byte": h["byte"]}
+        try:
+            baris = [b for b in (json.loads(_teks(h)).get("data") or []) if b.get("level") == 2]
+            ringkas_tabel["varian"] = len(baris)
+            ringkas_tabel["contoh"] = {b.get("name"): {t: v for t, v in b.items() if re.fullmatch(r"\d{2}/\d{2}/\d{4}", t)} for b in baris[:3]}
+            ringkas_tabel["terisi"] = sum(1 for b in baris for t, v in b.items() if re.fullmatch(r"\d{2}/\d{2}/\d{4}", t) and str(v).strip() not in ("", "-", "0"))
+        except (ValueError, AttributeError):
+            pass
+        hasil["tabel"].append(ringkas_tabel)
+        time.sleep(JEDA)
     return hasil
 
 

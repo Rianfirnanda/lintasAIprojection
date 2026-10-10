@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 
 from pipeline import probe_sumber as p
 
@@ -50,3 +51,23 @@ def test_nama_dari_json_membaca_daftar_wilayah():
     isi = json.dumps({"data": [{"id": 1, "text": "Kota Bengkulu"}, {"id": 2, "text": "Kepahiang"}]})
     assert p.nama_dari_json(isi) == ["Kota Bengkulu", "Kepahiang"]
     assert p.nama_dari_json("bukan json") == []
+
+
+def test_kabupaten_pihps_memakai_nama_parameter_dari_halaman(monkeypatch):
+    monkeypatch.setattr(p, "JEDA", 0)
+    dipanggil = []
+
+    def palsu(url, *a, **k):
+        dipanggil.append(url)
+        if "GetRefRegency" in url and "price_type_id=1" in url and "ref_prov_id=7" in url:
+            isi = json.dumps({"data": [{"id": 71, "name": "Kota Bengkulu"}]})
+        elif "GetRefMarket" in url and "ref_regency_id=71" in url:
+            isi = json.dumps({"data": [{"id": 5, "name": "Pasar Panorama"}]})
+        elif "GetGridDataDaerah" in url and "regency_id=71" in url:
+            isi = json.dumps({"data": [{"level": 2, "name": "Beras Kualitas Medium I", "05/10/2026": "16,000", "06/10/2026": "-"}]})
+        else:
+            isi = json.dumps({"data": []})
+        return {"url": url, "status": 200, "jenis": "application/json", "byte": len(isi), "detik": 0.1, "isi": isi.encode()}
+    h = p.coba_kabupaten_pihps(palsu, hari=date(2026, 10, 10))
+    assert h["kabupaten"] == [{"jenis_pasar": 1, "id": 71, "nama": "Kota Bengkulu", "pasar": [{"id": 5, "nama": "Pasar Panorama"}]}]
+    assert h["tabel"][0]["kabupaten"] == "Kota Bengkulu" and h["tabel"][0]["varian"] == 1 and h["tabel"][0]["terisi"] == 1
