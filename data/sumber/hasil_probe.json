@@ -1,12 +1,12 @@
 {
- "waktu": "2026-10-10T06:20:54+00:00",
+ "waktu": "2026-10-10T06:26:07+00:00",
  "pihps": [
   {
    "url": "https://www.bi.go.id/hargapangan/WebSite/Home/GetRefProvince",
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.9,
+   "detik": 1.1,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -18,7 +18,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.8,
+   "detik": 0.7,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -42,7 +42,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.8,
+   "detik": 0.7,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -54,7 +54,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.9,
+   "detik": 0.8,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -66,7 +66,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.8,
+   "detik": 0.6,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -219,7 +219,7 @@
    "status": 200,
    "jenis": "application/json; charset=utf-8",
    "byte": 3041,
-   "detik": 1.2,
+   "detik": 1.0,
    "wilayah_disebut": [],
    "cuplikan": "{\"data\":[{\"no\":\"I\",\"name\":\"Beras\",\"level\":1,\"Sep 2026 (IV)\":\"15,950\",\"Oct 2026 (I)\":\"16,000\"},{\"no\":1,\"name\":\"Beras Kualitas Bawah I\",\"level\":2,\"Sep 2026 (IV)\":\"15,700\",\"Oct 2026 (I)\":\"15,700\"},{\"no\":2,\"name\":\"Beras Kualitas Bawah II\",\"level\":2,\"Sep 2026 (IV)\":\"12,650\",\"Oct 2026 (I)\":\"12,900\"},{\"no\":3,\"name\":\"Beras Kualitas Medium I\",\"level\":2,\"Sep 2026 (IV)\":\"16,300\",\"Oct 2026 (I)\":\"16,300\"},{\"no",
    "catatan": "tabel harga tipe_laporan=2",
@@ -503,7 +503,7 @@
    "status": 0,
    "jenis": "",
    "byte": 0,
-   "detik": 0.3,
+   "detik": 0.5,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
@@ -515,7 +515,7 @@
    "status": 0,
    "jenis": "",
    "byte": 0,
-   "detik": 0.3,
+   "detik": 0.8,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
@@ -527,7 +527,7 @@
    "status": 0,
    "jenis": "",
    "byte": 0,
-   "detik": 0.4,
+   "detik": 0.3,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "URLError: <urlopen error [Errno -2] Name or service not known>",
@@ -551,7 +551,7 @@
    "status": 200,
    "jenis": "text/html",
    "byte": 15857,
-   "detik": 1.3,
+   "detik": 1.0,
    "wilayah_disebut": [],
    "cuplikan": "<!doctype html> <html lang=\"en\" data-critters-container> <head> <meta charset=\"utf-8\" /> <title>Panel Harga Pangan</title> <base href=\"/\" /> <meta name=\"color-scheme\" content=\"light\" /> <meta name=\"viewport\" content=\"viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no\" /> <meta name=\"format-detection\" content=\"telephone=no\" /> <meta nam",
    "catatan": "Panel Harga Bapanas (tebakan jalur; lihat status)",
@@ -564,7 +564,7 @@
    "status": 200,
    "jenis": "text/html;charset=utf-8",
    "byte": 137233,
-   "detik": 4.2,
+   "detik": 2.0,
    "wilayah_disebut": [],
    "cuplikan": "<!DOCTYPE html><html data-capo=\"\"><head><style type=\"text/css\" data-primevue-style-id=\"layer-order\" >@layer tailwind-base, primevue, tailwind-utilities</style><meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>SP2KP</title> <script src=\"https://www.google.com/recaptcha/api.js\"></script> <script src=\"https://www.google.com/recaptcha/enterprise.js\"></s",
    "catatan": "SP2KP halaman utama",
@@ -579,7 +579,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 2.8,
+   "detik": 2.2,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -591,7 +591,7 @@
    "status": 404,
    "jenis": "",
    "byte": 0,
-   "detik": 0.8,
+   "detik": 0.7,
    "wilayah_disebut": [],
    "cuplikan": "",
    "galat": "HTTP 404",
@@ -603,7 +603,7 @@
    "status": 200,
    "jenis": "text/html; charset=utf-8",
    "byte": 39824,
-   "detik": 3.1,
+   "detik": 2.7,
    "wilayah_disebut": [],
    "cuplikan": "<!DOCTYPE html> <html lang=\"id\" dir=\"ltr\"> <head> <meta charset=\"utf-8\" /> <link href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"apple-touch-icon\" sizes=\"76x76\"> <link type=\"image/png\" href=\"https://data.badanpangan.go.id/img/favicon.ico\" rel=\"icon\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\" /> <title> Open Data Badan Pangan Nasional | Open Data Badan Pangan Nasional",
    "catatan": "Bapanas satu data",
@@ -631,7 +631,7 @@
    "status": 200,
    "jenis": "text/html; charset=utf-8",
    "byte": 313680,
-   "detik": 5.7,
+   "detik": 4.8,
    "wilayah_disebut": [
     "bengkulu"
    ],
@@ -660,10 +660,10 @@
    "url": "https://webapi.bps.go.id/",
    "status": 200,
    "jenis": "text/html; charset=UTF-8",
-   "byte": 24728,
-   "detik": 3.4,
+   "byte": 23791,
+   "detik": 2.7,
    "wilayah_disebut": [],
-   "cuplikan": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\"> <head> <APM_DO_NOT_TOUCH> <script type=\"text/javascript\"> (function(){ window.Klm=!!window.Klm;try{(function(){(function(){var J=-1,J={__:++J,oZ:\"false\"[J],_:++J,SJ:\"false\"[J],Z_:++J,lJ_:\"[object Object]\"[J],oL:(J[J]+\"\")[J",
+   "cuplikan": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\"> <head> <APM_DO_NOT_TOUCH> <script type=\"text/javascript\"> (function(){ window.VXN=!!window.VXN;try{(function(){(function lj(){var L=!1;function z(L){for(var z=0;L--;)z+=S(document.documentElement,null);return z}function S(",
    "catatan": "BPS Web API (butuh kunci)",
    "json": false,
    "tautan_menarik": [
@@ -744,6 +744,26 @@
      "https://play.google.com/store/apps/details?id=com.pihps.hargapangan&hl=id"
     ],
     "konteks": [
+     [
+      "html",
+      "ipeLaporan\").dxSelectBox(\"instance\").option('displayValue'); $(\"#info\").empty(); $(\"#info\").append(\"<table>\"); $(\"#info\").append(\"<tr><td width=200>Periode</td><td>: \" + datemulaiStr + \" - \" + dateselesaiStr + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Provinsi</td><td>: \" + provinceName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Kabupaten/Kota</td><td>: \" + regencyName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Pasar</td><td>: \" + marketName + \"</td></tr></div>\"); $(\"#info\").append(\"<tr><td>Tipe Laporan</td><td>: \" + tipelaporanStr + \"</td></tr></div>\"); $(\"#info\").append(\"</table>\"); } function provinceChanged(e) { if ($(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\""
+     ],
+     [
+      "html",
+      " \" + tipelaporanStr + \"</td></tr></div>\"); $(\"#info\").append(\"</table>\"); } function provinceChanged(e) { if ($(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboRegency\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboRegency\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"inst"
+     ],
+     [
+      "html",
+      "e().reload(); $(\"#cboRegency\").dxTreeList(\"instance\").deselectAll(); } } function refreshPasar(e) { if ($(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").length >= 1) { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeLi"
+     ],
+     [
+      "html",
+      "n('disabled', false) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } else { $(\"#cboMarket\").dxTreeList(\"instance\").option('disabled', true) $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeList(\"getSelectedRowKeys\").toString(); var province_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); var regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); var market_id = $(\"#cboMarket\").dxTreeList(\""
+     ],
+     [
+      "html",
+      " $(\"#cboMarket\").dxTreeList(\"instance\").getDataSource().reload(); $(\"#cboMarket\").dxTreeList(\"instance\").deselectAll(); } } function beforesendRegency(method, ajaxOptions) { ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); ajaxOptions.data.ref_prov_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); } function beforesendMarket(method, ajaxOptions) { ajaxOptions.data.ref_regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); ajaxOptions.data.price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); } function OnBeforeSend(method, ajaxOptions) { var price_type_id = $(\"#cboPriceType\").dxSelectBox(\"instance\").option('value'); var comcat_id = $(\"#CommodityTree\").dxTreeList(\"getSelectedRowKeys\").toString(); var province_id = $(\"#cboProvince\").dxTreeList(\"getSelectedRowKeys\").toString(); var regency_id = $(\"#cboRegency\").dxTreeList(\"getSelectedRowKeys\").toString(); var market_id = $(\"#cboMarket\").dxTreeList(\"getSelectedRowKeys\").toString(); var tipe_laporan = $(\"#cboTipeLaporan\").dxSelectBox(\"instance\").option('value'); var start_date = $(\"#dboDateMulai\").dxDateBox(\"instance\").option('value'); var end_date = $(\"#dboDateSelesai\").dxDateBox(\"ins"
+     ],
      [
       "html",
       "allbacks.add((function($){$(\"#cboPriceType\").dxSelectBox({\"dataSource\":{\"store\":DevExpress.data.AspNet.createStore({\"key\":\"id\",\"loadUrl\":\"/hargapangan/WebSite/TabelHarga/GetRefPriceType\"})},\"width\":\"100%\",\"valueExpr\":\"id\",\"displayExpr\":\"name\",\"onValueChanged\":refreshPasar,\"value\":1});}).bind(this, jQuery));</script> </div> "
@@ -840,184 +860,120 @@
     ],
     "konteks": [
      [
-      "scripts.59b677dfe8464c21.js",
-      "te:-90,offsetY:0,offsetX:0,style:{color:void 0,fontSize:\"11px\",fontWeight:900,fontFamily:void 0,cssClass:\"\"}},tooltip:{enabled:!1,offsetX:0},crosshairs:{show:!0,position:\"front\",stroke:{color:\"#b6b6b6\",width:1,dashArray:0}}},this.pointAnnotation={id:void 0,x:0,y:null,yAxisIndex:0,seriesIndex:void 0,mouseEnter:void 0,mouseLeave:void 0,click:void "
+      "main.69d329b558fe5803.js",
+      "unction*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/config/nama-sektor`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getEnumerators(G,K,q,Ie,ht,xe){return(0,h.c)(function*(){const Xe=new URLSearchParams;return null!==K&&Xe.append(\"province_id\",K.toString()),null!==q&&Xe.append(\"city_id\",q.toString()),null!==Ie&&Xe.append(\"enumerator_id\",Ie.toString()),null!==ht&&Xe.append(\"kategori_enumerator\",ht),null!==xe&&Xe.append(\"cari\",xe),yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/enumerator?${Xe.toString()}`,he"
      ],
      [
       "main.69d329b558fe5803.js",
-      "horization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:K})})()}storeKomoditasStatus(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.apiURL}/cms/komoditas-status/store`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:K})})()}updateKomoditas(G,K,q){return(0,h.c)(function*(){return yi"
+      "T\",url:`${te.OU.apiURL}/cms/config/nama-sektor`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getEnumerators(G,K,q,Ie,ht,xe){return(0,h.c)(function*(){const Xe=new URLSearchParams;return null!==K&&Xe.append(\"province_id\",K.toString()),null!==q&&Xe.append(\"city_id\",q.toString()),null!==Ie&&Xe.append(\"enumerator_id\",Ie.toString()),null!==ht&&Xe.append(\"kategori_enumerator\",ht),null!==xe&&Xe.append(\"cari\",xe),yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/enumerator?${Xe.toString()}`,headers:{Accept:\"application/json\",Authorizati"
      ],
      [
       "main.69d329b558fe5803.js",
-      "rodusen`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getProdusenByUser(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/report/produsen/list-komoditas-user`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}storeProdusen(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU."
+      "(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap-month`,params:G,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_7(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=7`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_1(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=1`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_3(){return(0,h.c)(function*(){return "
      ],
      [
       "main.69d329b558fe5803.js",
-      "eran/delete/${K}`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getPusat(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/komoditas-pusat`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getPusatByUser(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.ap"
+      "ization:`Bearer ${G}`}})})()}getRekapKomoditas(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi-komoditas`,params:G,headers:{Accept:\"application/json\"}})})()}getExportRekapKomoditas(G){return(0,h.c)(function*(){return yield M."
      ],
      [
       "main.69d329b558fe5803.js",
-      "itas-pusat`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getPusatByUser(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/report/pusat/list-komoditas-user`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}storePusat(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.api"
+      "plication/json\"}})})()}getExportRekapKomoditas(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi-komoditas/export`,params:G,headers:{Accept:\"application/json\"}})})()}getGrafikFE(G){return(0,h.c)(function*(){return yield M.wr.request({"
      ],
      [
       "main.69d329b558fe5803.js",
-      "oditas-user`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}storePusat(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.apiURL}/cms/komoditas-pusat/store`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:K})})()}updatePusat(G,K,q){return(0,h.c)(function*(){return yield "
+      ":{Accept:\"application/json\"}})})()}getGrafikFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-bulanan-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getMapsFE(G){return(0,h.c)(function*(){return yield M.wr.request({me"
      ],
      [
       "main.69d329b558fe5803.js",
-      "on\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:K})})()}updatePusat(G,K,q){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.apiURL}/cms/komoditas-pusat/update/${K}`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:q})})()}deletePusat(G,K){return(0,h.c)(function*(){return yield M."
+      "rs:{Accept:\"application/json\"}})})()}getMapsFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-peta-provinsi`,params:G,headers:{Accept:\"application/json\",\"x-api-key\":\"zHWbt7U2qvPoUDkiUgvnOqYrtj3zClR7unnH2G4apE7HcMV4QyNC6BSD0yV3uv"
      ],
      [
       "main.69d329b558fe5803.js",
-      "on\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:q})})()}deletePusat(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"DELETE\",url:`${te.OU.apiURL}/cms/komoditas-pusat/delete/${K}`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getGrosir(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}"
+      "nfuFyurSQQv9BhueMJ0HJ778oD\"}})})()}getHetHapFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/grafik-total-het-hap`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHapFE_Total(G){return(0,h.c)(function*(){return yield M.wr.req"
      ],
      [
       "main.69d329b558fe5803.js",
-      "params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getRekapKomoditas(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi-komoditas`,params:G,headers:{Accept:\"application/json\"}})})()}getExportRekapKomoditas(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/fron"
+      "pt:\"application/json\"}})})()}getHetHapFE_Total(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/grafik-total-het-hap-month-keterangan`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHapFE_tabel(G){return(0,h.c)(function*(){return yield M.wr.req"
      ],
      [
       "main.69d329b558fe5803.js",
-      "kapitulasi-komoditas`,params:G,headers:{Accept:\"application/json\"}})})()}getExportRekapKomoditas(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi-komoditas/export`,params:G,headers:{Accept:\"application/json\"}})})()}getGrafikFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pang"
+      "pt:\"application/json\"}})})()}getHetHapFE_tabel(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHap_WeekFE(G){return(0,h.c)(function*(){return yield M.wr.requ"
      ],
      [
       "main.69d329b558fe5803.js",
-      "le-rekapitulasi-komoditas/export`,params:G,headers:{Accept:\"application/json\"}})})()}getGrafikFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-bulanan-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getMapsFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-peta-p"
+      "ept:\"application/json\"}})})()}getHetHap_WeekFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/grafik-total-het-hap-month`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHap_WeekFE_tabel(G){return(0,h.c)(function*(){return yield M.w"
      ],
      [
       "main.69d329b558fe5803.js",
-      "URL}/front/harga-pangan-bulanan-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getMapsFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-peta-provinsi`,params:G,headers:{Accept:\"application/json\",\"x-api-key\":\"zHWbt7U2qvPoUDkiUgvnOqYrtj3zClR7unnH2G4apE7HcMV4QyNC6BSD0yV3uvSHqS91TxwE8aMDTiCznmGceEX3zQmO1Xwq7TJblotIt2CpwvK6"
+      "pplication/json\"}})})()}getHetHap_WeekFE_tabel(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap-month`,params:G,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_7(){return(0,h.c)(function*(){return yield M.wr.reque"
      ],
      [
       "main.69d329b558fe5803.js",
-      "eEX3zQmO1Xwq7TJblotIt2CpwvK6YjRKDJwcgMJwav9p4RshM3nfuFyurSQQv9BhueMJ0HJ778oD\"}})})()}getHetHapFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/grafik-total-het-hap`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHapFE_Total(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/graf"
+      "cept:\"application/json\"}})})()}getKomoditasFE_7(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=7`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_1(){return(0,h.c)(function*(){return yield M.wr.request({metho"
      ],
      [
       "main.69d329b558fe5803.js",
-      "front/grafik-total-het-hap`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHapFE_Total(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/grafik-total-het-hap-month-keterangan`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHapFE_tabel(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/tabl"
+      "cept:\"application/json\"}})})()}getKomoditasFE_1(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=1`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_3(){return(0,h.c)(function*(){return yield M.wr.request({metho"
      ],
      [
       "main.69d329b558fe5803.js",
-      "l-het-hap-month-keterangan`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHapFE_tabel(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHap_WeekFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/grafi"
+      "cept:\"application/json\"}})})()}getKomoditasFE_3(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=3`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_ALL(G){return(0,h.c)(function*(){return yield M.wr.request({me"
      ],
      [
       "main.69d329b558fe5803.js",
-      "}/front/table-total-het-hap`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHap_WeekFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/grafik-total-het-hap-month`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHap_WeekFE_tabel(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front"
+      "t:\"application/json\"}})})()}getKomoditasFE_ALL(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas`,params:G,headers:{Accept:\"application/json\"}})})()}getGrafikFEinternasional(G){return(0,h.c)(function*(){return yield M"
      ],
      [
       "main.69d329b558fe5803.js",
-      "k-total-het-hap-month`,params:G,headers:{Accept:\"application/json\"}})})()}getHetHap_WeekFE_tabel(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap-month`,params:G,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_7(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komodi"
+      "lication/json\"}})})()}getGrafikFEinternasional(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/international/harga-pangan-bulanan-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getArtikel(G,K={}){return(0,h.c)(function*(){return yield M.wr.reque"
      ],
      [
       "main.69d329b558fe5803.js",
-      "nt/table-total-het-hap-month`,params:G,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_7(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=7`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_1(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level"
+      ",Authorization:`Bearer ${G}`}})})()}getTableFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_v2(G){return(0,h.c)(function*(){return yield M.wr.request"
      ],
      [
       "main.69d329b558fe5803.js",
-      "URL}/front/komoditas?level_harga_id=7`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_1(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=1`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_3(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level"
+      "Accept:\"application/json\"}})})()}getTableFE_v2(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_rekap(G){return(0,h.c)(function*(){return yield M.wr.requ"
      ],
      [
       "main.69d329b558fe5803.js",
-      "URL}/front/komoditas?level_harga_id=1`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_3(){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas?level_harga_id=3`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_ALL(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas`,p"
+      "ept:\"application/json\"}})})()}getTableFE_rekap(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_prov(G){return(0,h.c)(function*(){return yield M.wr.reque"
      ],
      [
       "main.69d329b558fe5803.js",
-      "}/front/komoditas?level_harga_id=3`,headers:{Accept:\"application/json\"}})})()}getKomoditasFE_ALL(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/komoditas`,params:G,headers:{Accept:\"application/json\"}})})()}getGrafikFEinternasional(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/fro"
+      "cept:\"application/json\"}})})()}getTableFE_prov(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table-province`,params:G,headers:{Accept:\"application/json\"}})})()}getCutOf(G){return(0,h.c)(function*(){return yield M.wr.request({met"
      ],
      [
       "main.69d329b558fe5803.js",
-      "RL}/front/komoditas`,params:G,headers:{Accept:\"application/json\"}})})()}getGrafikFEinternasional(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/international/harga-pangan-bulanan-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getArtikel(G,K={}){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/articles"
+      "horization:`Bearer ${G}`}})})()}GetCheckSurvey(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/survey/answer/check`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}SubmitSurvey(G,K){return(0,h.c)(function*(){retur"
      ],
      [
       "main.69d329b558fe5803.js",
-      "grafik-sliders`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getTableFE(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_v2(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pa"
+      "orization:`Bearer ${G}`}})})()}SubmitSurvey(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.apiURL}/front/survey/answer/store`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:K})})()}GetAnswa"
      ],
      [
       "main.69d329b558fe5803.js",
-      "iURL}/front/harga-pangan-table`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_v2(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_rekap(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table"
+      "er ${G}`},data:q})})()}tabel_provinsi_export(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table-province/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}tabel_provinsi_export_rekap(G,K){return("
      ],
      [
       "main.69d329b558fe5803.js",
-      "front/harga-pangan-table-v2`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_rekap(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_prov(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-"
+      "rer ${G}`}})})()}tabel_provinsi_export_rekap(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}tabel_dinamis_export_rekap(G,K){return(0"
      ],
      [
       "main.69d329b558fe5803.js",
-      "RL}/front/table-rekapitulasi`,params:G,headers:{Accept:\"application/json\"}})})()}getTableFE_prov(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table-province`,params:G,headers:{Accept:\"application/json\"}})})()}getCutOf(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/cut-off`,header"
+      "arer ${G}`}})})()}tabel_dinamis_export_rekap(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}exportTableHarian(G,K){return(0,h.c)(fun"
      ],
      [
       "main.69d329b558fe5803.js",
-      "cms/survey`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}GetCheckSurvey(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/survey/answer/check`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}SubmitSurvey(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.a"
+      "ation:`Bearer ${G}`}})})()}exportTableHarian(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}exportTableMingguan(G,K){return(0,h.c)(f"
      ],
      [
       "main.69d329b558fe5803.js",
-      "wer/check`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}SubmitSurvey(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.apiURL}/front/survey/answer/store`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:K})})()}GetAnsware(G){return(0,h.c)(function*(){return yield M.wr."
+      "ion:`Bearer ${G}`}})})()}exportTableMingguan(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap-month/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}GetRekapWilayahProdusen(G,K){return(0,h."
      ],
      [
       "main.69d329b558fe5803.js",
-      "ers:{Accept:\"application/json\",Authorization:`Bearer ${G}`},data:q})})()}tabel_provinsi_export(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table-province/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}tabel_provinsi_export_rekap(G,K){return(0,h.c)(function*(){return yield M.wr.request({meth"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "ders:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}tabel_provinsi_export_rekap(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-rekapitulasi/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}tabel_dinamis_export_rekap(G,K){return(0,h.c)(function*(){return yield M.wr.request({metho"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "aders:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}tabel_dinamis_export_rekap(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-table/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}exportTableHarian(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",u"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "rams:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}exportTableHarian(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}exportTableMingguan(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\""
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "ms:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}exportTableMingguan(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/table-total-het-hap-month/export`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}GetRekapWilayahProdusen(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\""
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      ",headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}GetRekapWilayahProdusen(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/report/produsen/rekapitulasi-total-wilayah`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"}})})()}GetRekapWilayahPusat(G,K){return(0,h.c)(function*(){retu"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "son\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"}})})()}GetRekapWilayahPusat(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/report/pusat/rekapitulasi-total-wilayah`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"}})})()}GetRekapWilayahKonsumen(G,K){return(0,h.c)(function*(){r"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"}})})()}GetRekapWilayahKonsumen(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/report/eceran/rekapitulasi-total-wilayah`,params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"}})})()}getDashbord_Report(G,K){return(0,h.c)(function*(){return"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      ",params:K,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getInternational(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/cms/komoditas-internasional`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}storeInternational(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${t"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "nal`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}storeInternational(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.apiURL}/cms/komoditas-internasional/store`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:K})})()}StoreUsahaFile(G,K){return(0,h.c)(function*(){const q=new "
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "rs:{Accept:\"application/json\",Authorization:`Bearer ${G}`},data:q})})()}updateInternational(G,K,q){return(0,h.c)(function*(){return yield M.wr.request({method:\"POST\",url:`${te.OU.apiURL}/cms/komoditas-internasional/update/${K}`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:q})})()}deleteInternational(G,K){return(0,h.c)(function*(){return "
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "orization:`Bearer ${G}`,\"Content-Type\":\"application/json\"},data:q})})()}deleteInternational(G,K){return(0,h.c)(function*(){return yield M.wr.request({method:\"DELETE\",url:`${te.OU.apiURL}/cms/komoditas-internasional/delete/${K}`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getSumberInternational(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "}`,headers:{Accept:\"application/json\",Authorization:`Bearer ${G}`}})})()}getHargaPanganBulananV2(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-informasi`,params:G,headers:{Accept:\"application/json\",\"x-api-key\":\"zHWbt7U2qvPoUDkiUgvnOqYrtj3zClR7unnH2G4apE7HcMV4QyNC6BSD0yV3uvSHqS91TxwE8aMDTiCznmGceEX3zQmO1Xwq7TJblotIt2CpwvK6"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "=\"5400000\" rotWithShape=\"0\"><a:srgbClr val=\"000000\"><a:alpha val=\"35000\"/></a:srgbClr></a:outerShdw>',a[a.length]=\"</a:effectLst>\",a[a.length]='<a:scene3d><a:camera prst=\"orthographicFront\"><a:rot lat=\"0\" lon=\"0\" rev=\"0\"/></a:camera><a:lightRig rig=\"threePt\" dir=\"t\"><a:rot lat=\"0\" lon=\"0\" rev=\"1200000\"/></a:lightRig></a:scene3d>',a[a.length]='<a:sp3d><a:bev"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "\",164:\"WINDOW.MAXIMIZE\",166:\"CHANGE.LINK\",167:\"CALCULATE.DOCUMENT\",168:\"ON.KEY\",169:\"APP.RESTORE\",170:\"APP.MOVE\",171:\"APP.SIZE\",172:\"APP.MINIMIZE\",173:\"APP.MAXIMIZE\",174:\"BRING.TO.FRONT\",175:\"SEND.TO.BACK\",185:\"MAIN.CHART.TYPE\",186:\"OVERLAY.CHART.TYPE\",187:\"SELECT.END\",188:\"OPEN.MAIL\",189:\"SEND.MAIL\",190:\"STANDARD.FONT\",191:\"CONSOLIDATE\",192:\"SORT.SPECIA"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "return\"admin_sistem\"===(null==x?void 0:x.kategori_level)})()}isAdminProv(){var u=this;return(0,h.c)(function*(){const d=yield u.getUserData(),x=JSON.parse(d||\"{}\");return\"admin_provinsi\"===(null==x?void 0:x.kategori_level)})()}isVerifikator(){var u=this;return(0,h.c)(function*(){const d=yield u.getUserData(),x=JSON.parse(d||\"{}\");return\"verifikator\"===(n"
-     ],
-     [
-      "main.69d329b558fe5803.js",
-      "te:-90,offsetY:0,offsetX:0,style:{color:void 0,fontSize:\"11px\",fontWeight:900,fontFamily:void 0,cssClass:\"\"}},tooltip:{enabled:!1,offsetX:0},crosshairs:{show:!0,position:\"front\",stroke:{color:\"#b6b6b6\",width:1,dashArray:0}}},this.pointAnnotation={id:void 0,x:0,y:null,yAxisIndex:0,seriesIndex:void 0,mouseEnter:void 0,mouseLeave:void 0,click:void "
+      "n:`Bearer ${G}`}})})()}getHargaPanganBulananV2(G){return(0,h.c)(function*(){return yield M.wr.request({method:\"GET\",url:`${te.OU.apiURL}/front/harga-pangan-informasi`,params:G,headers:{Accept:\"application/json\",\"x-api-key\":\"zHWbt7U2qvPoUDkiUgvnOqYrtj3zClR7unnH2G4apE7HcMV4QyNC6BSD0yV3uv"
      ]
     ],
     "nama": "bapanas"
@@ -1080,183 +1036,11 @@
     "konteks": [
      [
       "C3meC_C7.js",
-      "\",meta:n$||{},component:()=>U(()=>import(\"./COVWvlze.js\"),__vite__mapDeps([54,48,6,5,7,49,50,35,36,37,38,39,40,41,42,43,44,45,46,51,33,16,10,55]),import.meta.url)},{name:\"admin-laporan-data-harga-kontributor\",path:\"/admin/laporan-data/harga-kontributor\",meta:a$||{},component:()=>U(()=>import(\"./hurIJ0TB.js\"),__vite__mapDeps([56,48,6,5,7,49,57,20,25,21,24,35,36,37,38,39,40,41,"
+      "}}])),Q8}var Whe=Uhe();const cze=ur(Whe),Fn=N2.create({headers:{\"Content-type\":\"application/json\",Accept:\"application/json\"}});async function Ghe(){try{const e=\"https://api-sp2kp.kemendag.go.id/auth/api\",t=localStorage.getItem(\"token_refresh\"),n=`${e}/token/refresh`,a={headers:{Authorization:`${t}`,\"Content-Type\":\"application/json\"}},c=(await N2.post(n,{},a)).d"
      ],
      [
       "C3meC_C7.js",
-      "COVWvlze.js\"),__vite__mapDeps([54,48,6,5,7,49,50,35,36,37,38,39,40,41,42,43,44,45,46,51,33,16,10,55]),import.meta.url)},{name:\"admin-laporan-data-harga-kontributor\",path:\"/admin/laporan-data/harga-kontributor\",meta:a$||{},component:()=>U(()=>import(\"./hurIJ0TB.js\"),__vite__mapDeps([56,48,6,5,7,49,57,20,25,21,24,35,36,37,38,39,40,41,42,43,44,45,46,23,33,16,10,58]),import.meta.u"
-     ],
-     [
-      "C3meC_C7.js",
-      "},component:()=>U(()=>import(\"./hurIJ0TB.js\"),__vite__mapDeps([56,48,6,5,7,49,57,20,25,21,24,35,36,37,38,39,40,41,42,43,44,45,46,23,33,16,10,58]),import.meta.url)},{name:\"admin-laporan-data-pasar-induk\",path:\"/admin/laporan-data/pasar-induk\",meta:r$||{},component:()=>U(()=>import(\"./CigkyoHc.js\"),__vite__mapDeps([59,48,6,5,7,49,50,35,36,37,38,39,40,41,42,43,44,45,46,51,"
-     ],
-     [
-      "C3meC_C7.js",
-      "TB.js\"),__vite__mapDeps([56,48,6,5,7,49,57,20,25,21,24,35,36,37,38,39,40,41,42,43,44,45,46,23,33,16,10,58]),import.meta.url)},{name:\"admin-laporan-data-pasar-induk\",path:\"/admin/laporan-data/pasar-induk\",meta:r$||{},component:()=>U(()=>import(\"./CigkyoHc.js\"),__vite__mapDeps([59,48,6,5,7,49,50,35,36,37,38,39,40,41,42,43,44,45,46,51,33,16,10,60]),import.meta.url)},{name:\""
-     ],
-     [
-      "C3meC_C7.js",
-      "ries\",path:\"/admin/laporan-data/series\",meta:i$||{},component:()=>U(()=>import(\"./B1KMCeqH.js\"),__vite__mapDeps([63,5,20,64,33,16,57,65,10,66,7]),import.meta.url)},{name:\"admin-laporan-harga-nasional-tertimbang\",path:\"/admin/laporan/harga-nasional-tertimbang\",meta:o$||{},component:()=>U(()=>import(\"./-cVOKOL4.js\"),__vite__mapDeps([67,51,10,14,15,68,69,70,71]),import.meta.url)},{"
-     ],
-     [
-      "C3meC_C7.js",
-      "||{},component:()=>U(()=>import(\"./B1KMCeqH.js\"),__vite__mapDeps([63,5,20,64,33,16,57,65,10,66,7]),import.meta.url)},{name:\"admin-laporan-harga-nasional-tertimbang\",path:\"/admin/laporan/harga-nasional-tertimbang\",meta:o$||{},component:()=>U(()=>import(\"./-cVOKOL4.js\"),__vite__mapDeps([67,51,10,14,15,68,69,70,71]),import.meta.url)},{name:\"admin-master-bobot-create\",path:\"/admin/ma"
-     ],
-     [
-      "C3meC_C7.js",
-      "i-libur\",path:\"/admin/master-hari-libur\",meta:m$||{},component:()=>U(()=>import(\"./UmaZ_0ew.js\"),__vite__mapDeps([80,5,6,7,78,33,16,10,14,15,81]),import.meta.url)},{name:\"admin-master-komoditi-komoditas-create\",path:\"/admin/master-komoditi/komoditas/create\",meta:v$||{},component:()=>U(()=>import(\"./CIt9uhN9.js\"),__vite__mapDeps([82,6,5,7,22,24,33,16,10]),import.meta.url)},{name"
-     ],
-     [
-      "C3meC_C7.js",
-      "m$||{},component:()=>U(()=>import(\"./UmaZ_0ew.js\"),__vite__mapDeps([80,5,6,7,78,33,16,10,14,15,81]),import.meta.url)},{name:\"admin-master-komoditi-komoditas-create\",path:\"/admin/master-komoditi/komoditas/create\",meta:v$||{},component:()=>U(()=>import(\"./CIt9uhN9.js\"),__vite__mapDeps([82,6,5,7,22,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-komoditas-edit-id\",path"
-     ],
-     [
-      "C3meC_C7.js",
-      "path:\"/admin/master-komoditi/komoditas/create\",meta:v$||{},component:()=>U(()=>import(\"./CIt9uhN9.js\"),__vite__mapDeps([82,6,5,7,22,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-komoditas-edit-id\",path:\"/admin/master-komoditi/komoditas/edit/:id()\",meta:h$||{},component:()=>U(()=>import(\"./BtuFQOYl.js\"),__vite__mapDeps([83,6,5,7,22,24,33,16,10]),import.meta.url)},{"
-     ],
-     [
-      "C3meC_C7.js",
-      ":\"/admin/master-komoditi/komoditas/edit/:id()\",meta:h$||{},component:()=>U(()=>import(\"./BtuFQOYl.js\"),__vite__mapDeps([83,6,5,7,22,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-komoditas\",path:\"/admin/master-komoditi/komoditas\",meta:p$||{},component:()=>U(()=>import(\"./DxBSDQF0.js\"),__vite__mapDeps([84,5,6,7,85,16,86,22,24,20,33,10,87]),import.meta.url)},"
-     ],
-     [
-      "C3meC_C7.js",
-      "/:id()\",meta:h$||{},component:()=>U(()=>import(\"./BtuFQOYl.js\"),__vite__mapDeps([83,6,5,7,22,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-komoditas\",path:\"/admin/master-komoditi/komoditas\",meta:p$||{},component:()=>U(()=>import(\"./DxBSDQF0.js\"),__vite__mapDeps([84,5,6,7,85,16,86,22,24,20,33,10,87]),import.meta.url)},{name:\"admin-master-komoditi-order-komod"
-     ],
-     [
-      "C3meC_C7.js",
-      "\"/admin/master-komoditi/komoditas\",meta:p$||{},component:()=>U(()=>import(\"./DxBSDQF0.js\"),__vite__mapDeps([84,5,6,7,85,16,86,22,24,20,33,10,87]),import.meta.url)},{name:\"admin-master-komoditi-order-komoditas-create\",path:\"/admin/master-komoditi/order-komoditas/create\",meta:g$||{},component:()=>U(()=>import(\"./FgsjGmBy.js\"),__vite__mapDeps([88,6,5,7,10]),import.meta.url)},{name:\"admi"
-     ],
-     [
-      "C3meC_C7.js",
-      "nent:()=>U(()=>import(\"./DxBSDQF0.js\"),__vite__mapDeps([84,5,6,7,85,16,86,22,24,20,33,10,87]),import.meta.url)},{name:\"admin-master-komoditi-order-komoditas-create\",path:\"/admin/master-komoditi/order-komoditas/create\",meta:g$||{},component:()=>U(()=>import(\"./FgsjGmBy.js\"),__vite__mapDeps([88,6,5,7,10]),import.meta.url)},{name:\"admin-master-komoditi-order-komoditas-edit-id\",path:\"/adm"
-     ],
-     [
-      "C3meC_C7.js",
-      "eate\",path:\"/admin/master-komoditi/order-komoditas/create\",meta:g$||{},component:()=>U(()=>import(\"./FgsjGmBy.js\"),__vite__mapDeps([88,6,5,7,10]),import.meta.url)},{name:\"admin-master-komoditi-order-komoditas-edit-id\",path:\"/admin/master-komoditi/order-komoditas/edit/:id()\",meta:y$||{},component:()=>U(()=>import(\"./tTpWplF-.js\"),__vite__mapDeps([89,6,5,7,10]),import.meta.url)},{name:\""
-     ],
-     [
-      "C3meC_C7.js",
-      "\",path:\"/admin/master-komoditi/order-komoditas/edit/:id()\",meta:y$||{},component:()=>U(()=>import(\"./tTpWplF-.js\"),__vite__mapDeps([89,6,5,7,10]),import.meta.url)},{name:\"admin-master-komoditi-order-komoditas\",path:\"/admin/master-komoditi/order-komoditas\",meta:b$||{},component:()=>U(()=>import(\"./Bfaj83Bt.js\"),__vite__mapDeps([90,5,91,6,7,92,8,9,85,16,86,10,93]),import.meta.ur"
-     ],
-     [
-      "C3meC_C7.js",
-      "s/edit/:id()\",meta:y$||{},component:()=>U(()=>import(\"./tTpWplF-.js\"),__vite__mapDeps([89,6,5,7,10]),import.meta.url)},{name:\"admin-master-komoditi-order-komoditas\",path:\"/admin/master-komoditi/order-komoditas\",meta:b$||{},component:()=>U(()=>import(\"./Bfaj83Bt.js\"),__vite__mapDeps([90,5,91,6,7,92,8,9,85,16,86,10,93]),import.meta.url)},{name:\"admin-master-komoditi-tipe-komodita"
-     ],
-     [
-      "C3meC_C7.js",
-      "min/master-komoditi/order-komoditas\",meta:b$||{},component:()=>U(()=>import(\"./Bfaj83Bt.js\"),__vite__mapDeps([90,5,91,6,7,92,8,9,85,16,86,10,93]),import.meta.url)},{name:\"admin-master-komoditi-tipe-komoditas-create\",path:\"/admin/master-komoditi/tipe-komoditas/create\",meta:C$||{},component:()=>U(()=>import(\"./B996P19L.js\"),__vite__mapDeps([94,6,5,7,24,33,16,10]),import.meta.url)},{na"
-     ],
-     [
-      "C3meC_C7.js",
-      "mponent:()=>U(()=>import(\"./Bfaj83Bt.js\"),__vite__mapDeps([90,5,91,6,7,92,8,9,85,16,86,10,93]),import.meta.url)},{name:\"admin-master-komoditi-tipe-komoditas-create\",path:\"/admin/master-komoditi/tipe-komoditas/create\",meta:C$||{},component:()=>U(()=>import(\"./B996P19L.js\"),__vite__mapDeps([94,6,5,7,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-tipe-komoditas-edit-id\",pa"
-     ],
-     [
-      "C3meC_C7.js",
-      "th:\"/admin/master-komoditi/tipe-komoditas/create\",meta:C$||{},component:()=>U(()=>import(\"./B996P19L.js\"),__vite__mapDeps([94,6,5,7,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-tipe-komoditas-edit-id\",path:\"/admin/master-komoditi/tipe-komoditas/edit/:id()\",meta:V$||{},component:()=>U(()=>import(\"./C7c_l0Wc.js\"),__vite__mapDeps([95,6,5,7,24,33,16,10]),import.meta.url)}"
-     ],
-     [
-      "C3meC_C7.js",
-      "/admin/master-komoditi/tipe-komoditas/edit/:id()\",meta:V$||{},component:()=>U(()=>import(\"./C7c_l0Wc.js\"),__vite__mapDeps([95,6,5,7,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-tipe-komoditas\",path:\"/admin/master-komoditi/tipe-komoditas\",meta:w$||{},component:()=>U(()=>import(\"./B1Vwp-AR.js\"),__vite__mapDeps([96,5,91,6,7,92,85,16,86,24,33,10,97]),import.meta.u"
-     ],
-     [
-      "C3meC_C7.js",
-      "id()\",meta:V$||{},component:()=>U(()=>import(\"./C7c_l0Wc.js\"),__vite__mapDeps([95,6,5,7,24,33,16,10]),import.meta.url)},{name:\"admin-master-komoditi-tipe-komoditas\",path:\"/admin/master-komoditi/tipe-komoditas\",meta:w$||{},component:()=>U(()=>import(\"./B1Vwp-AR.js\"),__vite__mapDeps([96,5,91,6,7,92,85,16,86,24,33,10,97]),import.meta.url)},{name:\"admin-master-komoditi-variant-cre"
-     ],
-     [
-      "C3meC_C7.js",
-      "\"/admin/master-komoditi/variant\",meta:z$||{},component:()=>U(()=>import(\"./BO_J3UR0.js\"),__vite__mapDeps([102,5,6,7,85,16,86,50,99,22,33,10,103]),import.meta.url)},{name:\"admin-master-pasar-create\",path:\"/admin/master-pasar/create\",meta:M$||{},component:()=>U(()=>import(\"./CnyXDT-V.js\"),__vite__mapDeps([104,6,5,7,21,105,25,20,106,24,107,33,16,10]),import.meta.url)}"
-     ],
-     [
-      "C3meC_C7.js",
-      "meta:z$||{},component:()=>U(()=>import(\"./BO_J3UR0.js\"),__vite__mapDeps([102,5,6,7,85,16,86,50,99,22,33,10,103]),import.meta.url)},{name:\"admin-master-pasar-create\",path:\"/admin/master-pasar/create\",meta:M$||{},component:()=>U(()=>import(\"./CnyXDT-V.js\"),__vite__mapDeps([104,6,5,7,21,105,25,20,106,24,107,33,16,10]),import.meta.url)},{name:\"admin-master-pasar-edit-id"
-     ],
-     [
-      "C3meC_C7.js",
-      "/admin/master-pasar/create\",meta:M$||{},component:()=>U(()=>import(\"./CnyXDT-V.js\"),__vite__mapDeps([104,6,5,7,21,105,25,20,106,24,107,33,16,10]),import.meta.url)},{name:\"admin-master-pasar-edit-id\",path:\"/admin/master-pasar/edit/:id()\",meta:S$||{},component:()=>U(()=>import(\"./CDFj3UgJ.js\"),__vite__mapDeps([108,6,5,7,21,105,25,20,106,24,107,33,16,10]),import.meta.u"
-     ],
-     [
-      "C3meC_C7.js",
-      "in/master-pasar/edit/:id()\",meta:S$||{},component:()=>U(()=>import(\"./CDFj3UgJ.js\"),__vite__mapDeps([108,6,5,7,21,105,25,20,106,24,107,33,16,10]),import.meta.url)},{name:\"admin-master-pasar\",path:\"/admin/master-pasar\",meta:L$||{},component:()=>U(()=>import(\"./Mk5SdEtX.js\"),__vite__mapDeps([109,110,5,16,86,6,7,21,25,24,105,111,33,10,14,15,112]),import.meta.ur"
-     ],
-     [
-      "C3meC_C7.js",
-      "\",meta:S$||{},component:()=>U(()=>import(\"./CDFj3UgJ.js\"),__vite__mapDeps([108,6,5,7,21,105,25,20,106,24,107,33,16,10]),import.meta.url)},{name:\"admin-master-pasar\",path:\"/admin/master-pasar\",meta:L$||{},component:()=>U(()=>import(\"./Mk5SdEtX.js\"),__vite__mapDeps([109,110,5,16,86,6,7,21,25,24,105,111,33,10,14,15,112]),import.meta.url)},{name:\"admin-master-ped"
-     ],
-     [
-      "C3meC_C7.js",
-      "mber-data\",path:\"/admin/master-sumber-data\",meta:I$||{},component:()=>U(()=>import(\"./BAl9P42X.js\"),__vite__mapDeps([127,5,6,7,106,33,16,10,128]),import.meta.url)},{name:\"admin-master-tipe-referensi-harga\",path:\"/admin/master-tipe-referensi-harga\",meta:R$||{},component:()=>U(()=>import(\"./kY_bQKCr.js\"),__vite__mapDeps([129,6,5,7,130,33,16,10,131]),import.meta.url)},{name:\""
-     ],
-     [
-      "C3meC_C7.js",
-      "a\",meta:I$||{},component:()=>U(()=>import(\"./BAl9P42X.js\"),__vite__mapDeps([127,5,6,7,106,33,16,10,128]),import.meta.url)},{name:\"admin-master-tipe-referensi-harga\",path:\"/admin/master-tipe-referensi-harga\",meta:R$||{},component:()=>U(()=>import(\"./kY_bQKCr.js\"),__vite__mapDeps([129,6,5,7,130,33,16,10,131]),import.meta.url)},{name:\"admin-master-titik-banting-create\",path:\"/"
-     ],
-     [
-      "C3meC_C7.js",
-      "path:\"/admin/master-visualisasi\",meta:G$||{},component:()=>U(()=>import(\"./CS5wjTx9.js\"),__vite__mapDeps([148,140,5,86,6,7,143,144,33,16,10,149]),import.meta.url)},{name:\"admin-master-wilayah-kabupaten-create\",path:\"/admin/master-wilayah/kabupaten/create\",meta:q$||{},component:()=>U(()=>import(\"./PZwcIlkp.js\"),__vite__mapDeps([150,48,6,5,7,49,10,151]),import.meta.url)},{name:\""
-     ],
-     [
-      "C3meC_C7.js",
-      "component:()=>U(()=>import(\"./CS5wjTx9.js\"),__vite__mapDeps([148,140,5,86,6,7,143,144,33,16,10,149]),import.meta.url)},{name:\"admin-master-wilayah-kabupaten-create\",path:\"/admin/master-wilayah/kabupaten/create\",meta:q$||{},component:()=>U(()=>import(\"./PZwcIlkp.js\"),__vite__mapDeps([150,48,6,5,7,49,10,151]),import.meta.url)},{name:\"admin-master-wilayah-kabupaten\",path:\"/admin/m"
-     ],
-     [
-      "C3meC_C7.js",
-      "\",path:\"/admin/master-wilayah/kabupaten/create\",meta:q$||{},component:()=>U(()=>import(\"./PZwcIlkp.js\"),__vite__mapDeps([150,48,6,5,7,49,10,151]),import.meta.url)},{name:\"admin-master-wilayah-kabupaten\",path:\"/admin/master-wilayah/kabupaten\",meta:K$||{},component:()=>U(()=>import(\"./lBldJ47l.js\"),__vite__mapDeps([152,5,57,25,33,16,10,153,7]),import.meta.url)},{name:\"adm"
-     ],
-     [
-      "C3meC_C7.js",
-      "n/create\",meta:q$||{},component:()=>U(()=>import(\"./PZwcIlkp.js\"),__vite__mapDeps([150,48,6,5,7,49,10,151]),import.meta.url)},{name:\"admin-master-wilayah-kabupaten\",path:\"/admin/master-wilayah/kabupaten\",meta:K$||{},component:()=>U(()=>import(\"./lBldJ47l.js\"),__vite__mapDeps([152,5,57,25,33,16,10,153,7]),import.meta.url)},{name:\"admin-master-wilayah-kecamatan-create\",pat"
-     ],
-     [
-      "C3meC_C7.js",
-      "han\",path:\"/admin/master-wilayah/kelurahan\",meta:Q$||{},component:()=>U(()=>import(\"./Dlv5imPi.js\"),__vite__mapDeps([160,5,25,57,33,16,10,161,7]),import.meta.url)},{name:\"admin-master-wilayah-provinsi-create\",path:\"/admin/master-wilayah/provinsi/create\",meta:Z$||{},component:()=>U(()=>import(\"./BJingtQQ.js\"),__vite__mapDeps([162,48,6,5,7,49,10,163]),import.meta.url)},{name:\"a"
-     ],
-     [
-      "C3meC_C7.js",
-      "meta:Q$||{},component:()=>U(()=>import(\"./Dlv5imPi.js\"),__vite__mapDeps([160,5,25,57,33,16,10,161,7]),import.meta.url)},{name:\"admin-master-wilayah-provinsi-create\",path:\"/admin/master-wilayah/provinsi/create\",meta:Z$||{},component:()=>U(()=>import(\"./BJingtQQ.js\"),__vite__mapDeps([162,48,6,5,7,49,10,163]),import.meta.url)},{name:\"admin-master-wilayah-provinsi\",path:\"/admin/ma"
-     ],
-     [
-      "C3meC_C7.js",
-      "e\",path:\"/admin/master-wilayah/provinsi/create\",meta:Z$||{},component:()=>U(()=>import(\"./BJingtQQ.js\"),__vite__mapDeps([162,48,6,5,7,49,10,163]),import.meta.url)},{name:\"admin-master-wilayah-provinsi\",path:\"/admin/master-wilayah/provinsi\",meta:eF||{},component:()=>U(()=>import(\"./CRPmNdIq.js\"),__vite__mapDeps([164,5,33,16,57,10,165]),import.meta.url)},{name:\"admin-men"
-     ],
-     [
-      "C3meC_C7.js",
-      "si/create\",meta:Z$||{},component:()=>U(()=>import(\"./BJingtQQ.js\"),__vite__mapDeps([162,48,6,5,7,49,10,163]),import.meta.url)},{name:\"admin-master-wilayah-provinsi\",path:\"/admin/master-wilayah/provinsi\",meta:eF||{},component:()=>U(()=>import(\"./CRPmNdIq.js\"),__vite__mapDeps([164,5,33,16,57,10,165]),import.meta.url)},{name:\"admin-menu-create\",path:\"/admin/menu/create\",me"
-     ],
-     [
-      "C3meC_C7.js",
-      "l)},{name:\"admin-modul\",path:\"/admin/modul\",meta:iF||{},component:()=>U(()=>import(\"./BWioF44K.js\"),__vite__mapDeps([177,5,6,7,33,16,173,10,178]),import.meta.url)},{name:\"admin-pedagang-pasar\",path:\"/admin/pedagang-pasar\",meta:oF||{},component:()=>U(()=>import(\"./CUVLnBCT.js\"),__vite__mapDeps([179,25,21,111,33,16,10]),import.meta.url)},{name:\"admin-pedagang-pr"
-     ],
-     [
-      "C3meC_C7.js",
-      ":\"/admin/modul\",meta:iF||{},component:()=>U(()=>import(\"./BWioF44K.js\"),__vite__mapDeps([177,5,6,7,33,16,173,10,178]),import.meta.url)},{name:\"admin-pedagang-pasar\",path:\"/admin/pedagang-pasar\",meta:oF||{},component:()=>U(()=>import(\"./CUVLnBCT.js\"),__vite__mapDeps([179,25,21,111,33,16,10]),import.meta.url)},{name:\"admin-pedagang-produk\",path:\"/admin/pedagang-p"
-     ],
-     [
-      "C3meC_C7.js",
-      "-produk\",path:\"/admin/pedagang-produk\",meta:sF||{},component:()=>U(()=>import(\"./Ddxz1E0q.js\"),__vite__mapDeps([180,25,21,111,22,50,99,33,16,10]),import.meta.url)},{name:\"admin-penutupan-harga-penutupan-harga-nasional\",path:\"/admin/penutupan-harga/penutupan-harga-nasional\",meta:lF||{},component:()=>U(()=>import(\"./CuyZLZ6J.js\"),__vite__mapDeps([181,182,35,36,37,38,39,40,41,42,43,44,45,"
-     ],
-     [
-      "C3meC_C7.js",
-      "ponent:()=>U(()=>import(\"./Ddxz1E0q.js\"),__vite__mapDeps([180,25,21,111,22,50,99,33,16,10]),import.meta.url)},{name:\"admin-penutupan-harga-penutupan-harga-nasional\",path:\"/admin/penutupan-harga/penutupan-harga-nasional\",meta:lF||{},component:()=>U(()=>import(\"./CuyZLZ6J.js\"),__vite__mapDeps([181,182,35,36,37,38,39,40,41,42,43,44,45,46,10,183]),import.meta.url)},{name:\"admin-penutupan-ha"
-     ],
-     [
-      "C3meC_C7.js",
-      "pan-harga-nasional\",meta:lF||{},component:()=>U(()=>import(\"./CuyZLZ6J.js\"),__vite__mapDeps([181,182,35,36,37,38,39,40,41,42,43,44,45,46,10,183]),import.meta.url)},{name:\"admin-penutupan-harga-penutupan-semua-harga-banting\",path:\"/admin/penutupan-harga/penutupan-semua-harga-banting\",meta:uF||{},component:()=>U(()=>import(\"./BSnLKPa-.js\"),__vite__mapDeps([184,35,36,37,38,39,40,41,42,43,44,45"
-     ],
-     [
-      "C3meC_C7.js",
-      "\"./CuyZLZ6J.js\"),__vite__mapDeps([181,182,35,36,37,38,39,40,41,42,43,44,45,46,10,183]),import.meta.url)},{name:\"admin-penutupan-harga-penutupan-semua-harga-banting\",path:\"/admin/penutupan-harga/penutupan-semua-harga-banting\",meta:uF||{},component:()=>U(()=>import(\"./BSnLKPa-.js\"),__vite__mapDeps([184,35,36,37,38,39,40,41,42,43,44,45,46,185,182,23,33,16,51,186,14,15,187,10]),import.meta.url)}"
-     ],
-     [
-      "C3meC_C7.js",
-      "F||{},component:()=>U(()=>import(\"./BSnLKPa-.js\"),__vite__mapDeps([184,35,36,37,38,39,40,41,42,43,44,45,46,185,182,23,33,16,51,186,14,15,187,10]),import.meta.url)},{name:\"admin-penutupan-harga-penutupan-semua-harga-bapok\",path:\"/admin/penutupan-harga/penutupan-semua-harga-bapok\",meta:fF||{},component:()=>U(()=>import(\"./6Hdfo03Q.js\"),__vite__mapDeps([188,35,36,37,38,39,40,41,42,43,44,45,4"
-     ],
-     [
-      "C3meC_C7.js",
-      "_mapDeps([184,35,36,37,38,39,40,41,42,43,44,45,46,185,182,23,33,16,51,186,14,15,187,10]),import.meta.url)},{name:\"admin-penutupan-harga-penutupan-semua-harga-bapok\",path:\"/admin/penutupan-harga/penutupan-semua-harga-bapok\",meta:fF||{},component:()=>U(()=>import(\"./6Hdfo03Q.js\"),__vite__mapDeps([188,35,36,37,38,39,40,41,42,43,44,45,46,185,182,23,33,16,51,186,14,15,187,10]),import.meta.url)}"
-     ],
-     [
-      "C3meC_C7.js",
-      ".url)},{name:\"admin-role\",path:\"/admin/role\",meta:LF||{},component:()=>U(()=>import(\"./DC8KlYjI.js\"),__vite__mapDeps([226,5,6,7,64,33,16,10,227]),import.meta.url)},{name:\"admin-tipe-pasar-create\",path:\"/admin/tipe-pasar/create\",meta:xF||{},component:()=>U(()=>import(\"./FDuqHu9a.js\"),__vite__mapDeps([228,6,5,7,105,24,33,16,10]),import.meta.url)},{name:\"admin-tipe-"
+      "=(e,t,n)=>{let a;return function(...r){const c=this,i=function(){a=null,e.apply(c,r)};clearTimeout(a),a=setTimeout(i,t)}},oze=async()=>{try{return(await N2.get(\"https://api-sp2kp.kemendag.go.id/master/api/waktu-server\")).data.data.time}catch(e){console.log(e)}},Dn=\"https://api-sp2kp.kemendag.go.id/auth/api\",qhe=mR(\"auth\",{actions:{async login(e){return await Fn.post(`${Dn}/au"
      ]
     ],
     "nama": "sp2kp"
@@ -1268,7 +1052,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 1097,
-    "detik": 0.8,
+    "detik": 0.6,
     "wilayah_disebut": [
      "bengkulu"
     ],
@@ -1320,7 +1104,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.8,
+    "detik": 0.6,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1335,7 +1119,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.8,
+    "detik": 0.6,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1350,7 +1134,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.8,
+    "detik": 0.6,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1380,7 +1164,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 11,
-    "detik": 0.8,
+    "detik": 0.7,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[]}",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1395,7 +1179,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 1229,
-    "detik": 0.8,
+    "detik": 0.6,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[{\"id\":1,\"category_id\":1,\"name\":\"Beras Kualitas Bawah I\"},{\"id\":2,\"category_id\":1,\"name\":\"Beras Kualitas Bawah II\"},{\"id\":3,\"category_id\":1,\"name\":\"Beras Kualitas Medium I\"},{\"id\":4,\"category_id\":1,\"name\":\"Beras Kualitas Medium II\"},{\"id\":5,\"category_id\":1,\"name\":\"Beras Kualitas Super I\"},{\"id\":6,\"category_id\":1,\"name\":\"Beras Kualitas Super II\"},{\"id\":7,\"category_id\":2,\"name\":\"Daging Ayam ",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1432,7 +1216,7 @@
     "status": 404,
     "jenis": "",
     "byte": 0,
-    "detik": 0.9,
+    "detik": 0.8,
     "wilayah_disebut": [],
     "cuplikan": "",
     "galat": "HTTP 404",
@@ -1458,7 +1242,7 @@
     "status": 200,
     "jenis": "application/json; charset=utf-8",
     "byte": 2785,
-    "detik": 0.8,
+    "detik": 0.6,
     "wilayah_disebut": [],
     "cuplikan": "{\"data\":[{\"id\":\"cat_1\",\"name\":\"Beras\",\"cat_id\":null,\"denomination\":\"kg\",\"sort\":1},{\"id\":\"com_1\",\"name\":\"Beras Kualitas Bawah I\",\"cat_id\":\"cat_1\",\"denomination\":\"kg\",\"sort\":1},{\"id\":\"cat_2\",\"name\":\"Daging Ayam\",\"cat_id\":null,\"denomination\":\"kg\",\"sort\":2},{\"id\":\"com_2\",\"name\":\"Beras Kualitas Bawah II\",\"cat_id\":\"cat_1\",\"denomination\":\"kg\",\"sort\":2},{\"id\":\"cat_3\",\"name\":\"Daging Sapi\",\"cat_id\":null,\"de",
     "catatan": "daftar acuan PIHPS (lanjutan)",
@@ -1531,6 +1315,73 @@
     "nama": []
    }
   ],
-  "kabupaten_pihps": []
+  "kabupaten_pihps": [],
+  "bapanas_v2": [
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/komoditas?level_harga_id=3",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 25.3,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Panel Harga Bapanas v2",
+    "json": false,
+    "nama": []
+   },
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/komoditas?level_harga_id=1",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 25.3,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Panel Harga Bapanas v2",
+    "json": false,
+    "nama": []
+   },
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/harga-pangan-table-province",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 25.3,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Panel Harga Bapanas v2",
+    "json": false,
+    "nama": []
+   },
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/harga-pangan-table-v2",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 25.0,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Panel Harga Bapanas v2",
+    "json": false,
+    "nama": []
+   },
+   {
+    "url": "https://api-panelhargav2.badanpangan.go.id/api/front/table-rekapitulasi",
+    "status": 0,
+    "jenis": "",
+    "byte": 0,
+    "detik": 26.1,
+    "wilayah_disebut": [],
+    "cuplikan": "",
+    "galat": "URLError: <urlopen error timed out>",
+    "catatan": "Panel Harga Bapanas v2",
+    "json": false,
+    "nama": []
+   }
+  ]
  }
 }
