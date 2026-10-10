@@ -1,13 +1,14 @@
 name: Riwayat harga PIHPS
 
-# Mengambil riwayat harga PIHPS Provinsi Bengkulu beberapa tahun ke belakang (sekali jalan, per 90 hari dengan jeda), menyalinnya
-# menjadi harga utama sementara, lalu memperbarui dashboard. Pembaruan harian biasa hanya mengambil 45 hari terakhir.
+# Mengambil riwayat 5 tahun: harga PIHPS Provinsi Bengkulu dan Kota Bengkulu (pasar tradisional, modern, pedagang besar,
+# produsen; per 90 hari dengan jeda) serta arsip cuaca harian Open-Meteo, menyalin harga PIHPS menjadi harga utama, lalu
+# memperbarui dashboard (hanya bila dijalankan dari cabang utama). Pembaruan harian biasa hanya mengambil 45 hari terakhir.
 on:
   workflow_dispatch:
     inputs:
       hari:
-        description: "Berapa hari ke belakang (1460 = 4 tahun)"
-        default: "1460"
+        description: "Berapa hari ke belakang (1830 = 5 tahun)"
+        default: "1830"
 
 permissions:
   contents: write
@@ -21,7 +22,7 @@ concurrency:
 jobs:
   riwayat:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,6 +38,11 @@ jobs:
           HARI: ${{ inputs.hari }}
         run: python -m pipeline ambil-resmi --riwayat-hari "$HARI"
 
+      - name: Ambil arsip cuaca
+        env:
+          HARI: ${{ inputs.hari }}
+        run: python -m pipeline ambil-cuaca --riwayat "$HARI"
+
       - name: Salin menjadi harga utama sementara
         run: python -m pipeline pihps-ke-harga
 
@@ -51,6 +57,7 @@ jobs:
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Perbarui dashboard
+        if: github.ref_name == github.event.repository.default_branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run pipeline.yml --ref "${GITHUB_REF_NAME}"
