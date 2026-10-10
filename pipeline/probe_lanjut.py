@@ -415,3 +415,71 @@ def jalankan_tahap2(akar: Path, ambil_fn=ambil) -> dict:
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_tahap2.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
     return hasil
+
+
+# ---------------------------------------------------------------- tahap 3: alamat harga publik SP2KP untuk Bengkulu Tengah
+
+API_SP2KP = "https://api-sp2kp.kemendag.go.id"
+HALAMAN_STATISTIK = ("ye4qepCu.js", "CZPh2H-T.js", "BP3Cl6Ng.js", "B_8U66ad.js")
+POLA_SP2KP3 = re.compile(r"fetchDataPublic\(|komoditasPublic\(|statistikJsonHarian\(|statistikExcelHarian\(|generatePerbandinganHarga\(|"
+                         r"perbandinganHarga\(|average-price-public|level:|variant_ids|skip_sat_sun|tipe_komoditas", re.I)
+
+
+def multipart(data: dict) -> tuple[bytes, str]:
+    batas = "----lintasbenteng7c1f"
+    isi = b""
+    for k, v in data.items():
+        isi += f"--{batas}\r\nContent-Disposition: form-data; name=\"{k}\"\r\n\r\n{v}\r\n".encode()
+    isi += f"--{batas}--\r\n".encode()
+    return isi, f"multipart/form-data; boundary={batas}"
+
+
+def tahap3_sp2kp(ambil_fn=ambil, hari: date | None = None) -> dict:
+    hari = hari or date.today()
+    kemarin = (hari - timedelta(days=1)).isoformat()
+    minggu_lalu = (hari - timedelta(days=8)).isoformat()
+    hasil: dict = {"konteks": [], "coba": []}
+    for nama in HALAMAN_STATISTIK:
+        h = ambil_fn(f"{SP2KP}/_nuxt/{nama}", 40, 3_000_000)
+        if h["status"] == 200:
+            hasil["konteks"] += [f"[{nama}] {c}" for c in konteks(teks(h), POLA_SP2KP3, 900, 20)]
+        time.sleep(JEDA)
+    tajuk = {"Origin": SP2KP, "Referer": SP2KP + "/"}
+    get = [
+        f"report/api/average-price-public?tanggal={kemarin}&kode_provinsi=17&kode_kab_kota=1709",
+        f"report/api/average-price-public?start_date={minggu_lalu}&end_date={kemarin}&kode_provinsi=17&kode_kab_kota=1709",
+        f"report/api/average-price-public?kode_provinsi=17&kode_kab_kota=1709",
+        "report/api/average-price-public",
+        f"report/api/average-price-komoditas-public?tanggal={kemarin}&kode_provinsi=17&kode_kab_kota=1709",
+        "report/api/average-price-komoditas-public",
+    ]
+    for j in get:
+        h = ambil_fn(f"{API_SP2KP}/{j}", 40, 1_500_000, tajuk)
+        hasil["coba"].append(ringkas(h, "GET publik", 800))
+        time.sleep(JEDA)
+    post = [
+        ("report/api/average-price/generate-perbandingan-harga",
+         {"tanggal": kemarin, "tanggal_pembanding": minggu_lalu, "kode_provinsi": "17", "kode_kab_kota": "1709"}),
+        ("report/api/average-price/export-area-daily-json",
+         {"start_date": minggu_lalu, "end_date": kemarin, "level": "3", "variant_ids": "", "kode_provinsi": "17", "kode_kab_kota": "1709",
+          "pasar_id": "117", "skip_sat_sun": "true", "tipe_komoditas": "1"}),
+        ("report/api/average-price/export-area-daily-json",
+         {"start_date": minggu_lalu, "end_date": kemarin, "level": "2", "variant_ids": "", "kode_provinsi": "17", "kode_kab_kota": "1709",
+          "pasar_id": "", "skip_sat_sun": "true", "tipe_komoditas": "1"}),
+    ]
+    for j, data in post:
+        isi, jenis = multipart(data)
+        h = ambil_fn(f"{API_SP2KP}/{j}", 60, 2_000_000, {**tajuk, "Content-Type": jenis}, isi, "POST")
+        r = ringkas(h, f"POST {data.get('level', '')}", 1500)
+        r["kirim"] = data
+        hasil["coba"].append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
+def jalankan_tahap3(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sp2kp": tahap3_sp2kp(ambil_fn)}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap3.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
+    return hasil

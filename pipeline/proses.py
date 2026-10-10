@@ -24,6 +24,7 @@ from . import firebase as modul_firebase
 from . import firestore_sinkron
 from . import berita
 from . import ews as modul_ews
+from . import tata_data
 from . import konektor_resmi
 from . import kebijakan as modul_kebijakan
 
@@ -533,6 +534,35 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     # Registri model dicatat ke repositori hanya untuk data asli (data contoh bukan jejak audit).
     registry = analitik.perbarui_registry(konf.akar, hasil_analitik) if not pakai_demo else {"riwayat": [], "terkini": {}}
     hasil_analitik["registry_riwayat"] = registry["riwayat"][-40:]
+    # Tata kelola data (laporan: 10 AI Data Finder dan 8 tahap pembersihan), perbandingan antarwilayah, rantai harga, EWS.
+    finder = tata_data.status_finder(konf, hasil_masuk, hasil_qc, tanggal_data)
+    pembersihan = tata_data.tahap_pembersihan(konf, hasil_masuk, hasil_qc, hasil_varian)
+    hasil_analitik["finder"] = finder
+    hasil_analitik["finder_ringkas"] = tata_data.ringkas(finder)
+    hasil_analitik["pembersihan"] = pembersihan
+    hasil_analitik["kpi"]["sumber_aktif"] = hasil_analitik["finder_ringkas"]["aktif"]
+    hasil_analitik["kpi"]["sumber_terdaftar"] = len(finder)
+    hasil_analitik["kpi"]["tahap_lulus"] = sum(1 for t in pembersihan if t["status"] == "lulus")
+    hasil_analitik["kpi"]["tahap_total"] = len(pembersihan)
+    hasil_analitik["rantai_harga"] = tata_data.rantai_harga(hasil_masuk.konteks)
+    banding = {}
+    for kode in hasil_varian:
+        utama = harian.get((target, kode)) or {}
+        per = {}
+        for w in ("1771", "1708"):
+            if w == target:
+                continue
+            pk = indeks_konteks.data.get((w, "harga_pihps", kode)) or {}
+            hasil_b = tata_data.banding_wilayah(utama, pk) if pk else None
+            if hasil_b:
+                per[w] = {"nama": konf.wilayah[w].nama, **hasil_b}
+        if per:
+            banding[kode] = per
+    hasil_analitik["banding_wilayah"] = banding
+    if evaluasi.get("parameter"):
+        hasil_analitik["ews"] = {k: evaluasi.get(k) for k in ("precision", "recall", "f1", "false_positive_rate", "episode_uji",
+                                                              "episode_tertangkap", "alarm_uji", "parameter", "periode_uji", "per_kelas",
+                                                              "sumber_label", "metode")}
     _tulis_json(keluaran / "analitik.json", hasil_analitik)
 
     # ---------- unduh/harga_harian.csv

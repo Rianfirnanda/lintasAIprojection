@@ -35,6 +35,7 @@ jobs:
           case "$JENIS" in
             dasar) python -m pipeline probe-sumber ;;
             lanjut2) python -m pipeline probe-lanjut --tahap 2 ;;
+            lanjut3) python -m pipeline probe-lanjut --tahap 3 ;;
             *) python -m pipeline probe-lanjut ;;
           esac
       - name: Simpan hasil
