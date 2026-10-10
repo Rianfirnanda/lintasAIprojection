@@ -396,11 +396,16 @@ def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
                         _tidur(JEDA_ULANG_DETIK)
         raise galat
 
+    # Tugas lain (misalnya meringkas berita) memakai pesan sistem dan format sendiri lewat cfg["_sistem"] dan
+    # cfg["_format_json"]; tanpa itu perilakunya sama seperti AI Data Finder.
+    sistem_khusus = cfg.get("_sistem")
+    format_json = cfg.get("_format_json", FORMAT_JSON)
+
     def tanya(pakai_google: bool) -> dict:
         tambahan = TAMBAHAN_PENCARIAN if pakai_google else (TAMBAHAN_HASIL_WEB if web else TAMBAHAN_TANPA_PENCARIAN)
         isi = {
-            "system_instruction": {"parts": [{"text": SISTEM + tambahan}]},
-            "contents": [{"role": "user", "parts": [{"text": teks + FORMAT_JSON}]}],
+            "system_instruction": {"parts": [{"text": sistem_khusus or (SISTEM + tambahan)}]},
+            "contents": [{"role": "user", "parts": [{"text": teks + format_json}]}],
             "generationConfig": {"temperature": 0.2},
         }
         if pakai_google:
@@ -408,7 +413,7 @@ def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
         return kirim_ulang(isi)
 
     # Hasil Tavily sudah ada: tidak perlu pencarian Google (yang tidak tersedia di kuota gratis Gemini 3.x).
-    pakai_google = not web
+    pakai_google = not web and not sistem_khusus
     try:
         data = tanya(pakai_google)
     except PenyediaTidakTersedia as e:
@@ -456,8 +461,8 @@ def _cari_sejenis_openai(nama: str, teks: str, cfg: dict, klien=None) -> dict:
             "model": model,
             "temperature": 0.2,
             "messages": [
-                {"role": "system", "content": SISTEM + (TAMBAHAN_HASIL_WEB if cfg.get("_hasil_web") else TAMBAHAN_TANPA_PENCARIAN)},
-                {"role": "user", "content": teks + FORMAT_JSON},
+                {"role": "system", "content": cfg.get("_sistem") or SISTEM + (TAMBAHAN_HASIL_WEB if cfg.get("_hasil_web") else TAMBAHAN_TANPA_PENCARIAN)},
+                {"role": "user", "content": teks + cfg.get("_format_json", FORMAT_JSON)},
             ],
         },
     )

@@ -94,7 +94,7 @@ document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) =>
 
 // Log proses AI (langsung dari Firestore) untuk akun yang boleh melihatnya.
 if (meta?.login === "firebase") {
-  const SUMBER = { situs: "Tombol di situs", mesin: "Mesin (antrean)", harian: "Jadwal harian" };
+  const SUMBER = { berita: "Berita lokal harian", situs: "Tombol di situs", mesin: "Mesin (antrean)", harian: "Jadwal harian" };
   const LENCANA = { berhasil: "baik", gagal: "tinggi", dialihkan: "info" };
   const kartuLog = document.getElementById("kartu-log");
   import("./assets/ai-situs.js").then((ai) => ai.pantauLog((daftar) => {
@@ -102,7 +102,7 @@ if (meta?.login === "firebase") {
     document.getElementById("log-ai").innerHTML = daftar.length ? daftar.map((l, i) => `<details class="log-entri" ${i === 0 ? "open" : ""}>
       <summary><b>${esc(l.komoditas)}</b> <small>${esc(l.periode || "")}</small>
         <span class="lencana ${LENCANA[l.hasil] || "polos"}">${esc(l.hasil)}</span>
-        <small>${esc(SUMBER[l.sumber] || l.sumber)} · ${l.diperbarui ? esc(waktu(l.diperbarui.toISOString())) : ""}${l.penyedia ? ` · ${esc(l.penyedia)}` : ""}${l.hasil === "berhasil" ? ` · ${l.jumlah_kandidat} kandidat` : ""}${l.pencarian_web ? ` · ${esc(l.pencarian_web)}` : ""}${l.oleh_email ? ` · ${esc(l.oleh_email)}` : ""}</small></summary>
+        <small>${esc(SUMBER[l.sumber] || l.sumber)} · ${l.diperbarui ? esc(waktu(l.diperbarui.toISOString())) : ""}${l.penyedia ? ` · ${esc(l.penyedia)}` : ""}${l.hasil === "berhasil" ? ` · ${l.jumlah_kandidat} ${l.sumber === "berita" ? "berita baru" : "kandidat"}` : ""}${l.pencarian_web ? ` · ${esc(l.pencarian_web)}` : ""}${l.oleh_email ? ` · ${esc(l.oleh_email)}` : ""}</small></summary>
       <ol class="log-ai">${(l.langkah || []).map((x) => `<li class="log-${esc(x.jenis || "info")}"><time>${esc(x.waktu || "")}</time><span>${esc(x.teks)}</span></li>`).join("")}</ol></details>`).join("")
       : '<p class="kosong">Belum ada proses AI yang tercatat.</p>';
   }, () => { kartuLog.hidden = true; })).catch(() => {});

@@ -43,6 +43,20 @@
     "model_mistral": "mistral-small-latest",
     "model_anthropic": "claude-opus-5-5"
   },
+  "berita": {
+    "aktif": true,
+    "jam_mulai": 7,
+    "umur_maks_hari": 14,
+    "simpan_hari": 60,
+    "maks_berita": 40,
+    "maks_diringkas": 12,
+    "pakai_ai": true,
+    "hormati_robots": true,
+    "jeda_detik": 2,
+    "maks_menit": 8,
+    "kueri": ["harga pangan Bengkulu Tengah", "harga cabai bawang Bengkulu", "harga beras telur daging ayam Bengkulu", "harga minyak goreng gula pasir Bengkulu", "operasi pasar pasar murah TPID Bengkulu Tengah", "banjir gagal panen distribusi pangan Bengkulu"],
+    "umpan_rss": []
+  },
   "notifikasi": {
     "aktif": true,
     "keparahan_minimal": "sedang",

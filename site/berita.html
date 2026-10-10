@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Berita Lokal · Lintas Benteng Projection</title>
+  <meta name="description" content="Berita lokal tentang harga pangan di Bengkulu yang dicari dan dibaca otomatis tiap hari, lengkap dengan kesimpulan harian dan kandidat harga untuk diperiksa analis.">
+  <meta name="theme-color" content="#0e1114">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+  <style>
+    .berita-daftar { list-style: none; margin: 0; padding: 0; }
+    .berita-daftar > li { border-top: 1px solid var(--rule); padding: 16px 0; }
+    .berita-daftar > li:first-child { border-top: 0; padding-top: 4px; }
+    .berita-judul { font-weight: 600; font-size: 1rem; line-height: 1.4; color: var(--ink); text-decoration: none; }
+    .berita-judul:hover { text-decoration: underline; color: var(--aksen); }
+    .berita-atas { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin: 4px 0 8px; }
+    .berita-ringkas { margin: 6px 0 8px; color: var(--ink-2); max-width: 880px; }
+    .berita-catatan { font-size: 0.82rem; color: var(--muted); margin: 4px 0; }
+    .berita-harga { margin: 10px 0 4px; }
+    .berita-harga table { font-size: 0.85rem; }
+    .berita-harga blockquote { margin: 0; padding: 0; color: var(--muted); font-size: 0.82rem; max-width: 520px; }
+    .kesimpulan-isi { font-size: 1rem; line-height: 1.6; max-width: 880px; margin: 0 0 10px; }
+    .kesimpulan-isi + ul, .kesimpulan-kolom ul { margin: 4px 0 10px; padding-left: 1.2em; }
+    .kesimpulan-kolom { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px 24px; }
+    .kesimpulan-kolom h3 { font-size: 0.84rem; margin: 0 0 4px; color: var(--muted); font-weight: 600; text-transform: none; }
+    .penting { padding: 12px 14px; border-radius: 12px; background: var(--demo-bg, var(--surface-3)); border: 1px solid var(--demo-garis, var(--rule-2)); font-size: 0.88rem; margin-bottom: 16px; }
+    .penting b { font-weight: 600; }
+    .saring { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; margin-bottom: 14px; }
+    .saring label { display: grid; gap: 4px; font-size: 0.8rem; color: var(--muted); }
+    .saring .cek { display: flex; align-items: center; gap: 6px; padding-bottom: 8px; color: var(--ink-2); font-size: 0.86rem; }
+    .riwayat-k { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .riwayat-k li { border-top: 1px solid var(--rule); padding-top: 10px; font-size: 0.9rem; }
+    .sidik { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; color: var(--muted); word-break: break-all; }
+  </style>
+</head>
+<body>
+<main class="utama">
+  <div class="judul-halaman">
+    <div>
+      <h1>Berita Lokal</h1>
+      <p>Berita tentang harga pangan di Bengkulu, dicari dan dibaca otomatis tiap hari. Angka harga di sini hanya penunjuk, bukan data resmi.</p>
+    </div>
+  </div>
+
+  <div class="ind-baris" id="kpi"></div>
+
+  <div class="penting" role="note">
+    <b>Cara membaca halaman ini.</b> Mesin mencari berita, membaca isinya, lalu menandai kejadian dan harga yang disebut. Ringkasan dan kesimpulan
+    disusun AI gratis atau, bila AI sedang tidak bisa dipakai, disusun otomatis dari kalimat berita. Harga dari berita adalah <b>kandidat</b>:
+    belum diverifikasi, tidak masuk deret harga resmi, dan sering berlaku untuk pasar atau wilayah lain. Selalu buka tautan beritanya sebelum memakai angkanya.
+  </div>
+
+  <section class="kartu" aria-labelledby="j-kes">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-kes">Kesimpulan hari ini</h2>
+        <p id="ket-kes"></p>
+      </div>
+    </div>
+    <div id="kesimpulan"></div>
+    <details id="riwayat" style="margin-top:12px" hidden><summary>Kesimpulan hari-hari sebelumnya</summary>
+      <ul class="riwayat-k" id="riwayat-isi" style="margin-top:10px"></ul>
+    </details>
+  </section>
+
+  <section class="kartu" aria-labelledby="j-daftar">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-daftar">Berita yang ditemukan</h2>
+        <p id="ket-daftar"></p>
+      </div>
+    </div>
+    <div class="saring" role="search">
+      <label>Cari kata<input type="search" id="f-kata" maxlength="80" placeholder="mis. cabai, banjir"></label>
+      <label>Kejadian<select id="f-tag"></select></label>
+      <label>Komoditas<select id="f-kom"></select></label>
+      <label>Kecocokan<select id="f-rel">
+        <option value="">Semua yang relevan</option>
+        <option value="tinggi">Tinggi saja</option>
+        <option value="sedang">Sedang ke atas</option>
+      </select></label>
+      <label class="cek"><input type="checkbox" id="f-target"> Menyebut Bengkulu Tengah</label>
+      <label class="cek"><input type="checkbox" id="f-harga"> Ada kandidat harga</label>
+    </div>
+    <ul class="berita-daftar" id="daftar"></ul>
+    <div class="baris-kontrol" style="margin-top:12px"><button class="tombol" type="button" id="lagi" hidden>Tampilkan lebih banyak</button></div>
+  </section>
+
+  <section class="kartu" aria-labelledby="j-proses">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-proses">Catatan proses terakhir</h2>
+        <p>Untuk memeriksa apa yang berhasil dan apa yang tidak pada pencarian terakhir.</p>
+      </div>
+    </div>
+    <div id="proses"></div>
+    <details style="margin-top:12px"><summary>Cara kerja dan batasnya</summary>
+      <div class="prosa" style="margin-top:8px;font-size:0.88rem">
+        <ul>
+          <li><strong>Sumber.</strong> Pencarian berita Tavily, umpan RSS Google Berita untuk beberapa kata kunci pangan Bengkulu, dan umpan RSS portal berita yang diisi admin.</li>
+          <li><strong>Sopan terhadap situs.</strong> Mesin memeriksa <code>robots.txt</code> tiap situs dan tidak membaca halaman yang melarang, memberi jeda antar permintaan, dan memakai nama bot yang jelas.</li>
+          <li><strong>Yang disimpan.</strong> Tautan, judul, ringkasan, kutipan pendek, kalimat bukti harga, dan sidik SHA-256 isi artikel. Isi lengkap artikel tidak disimpan karena hak ciptanya milik penerbit.</li>
+          <li><strong>Harga dari berita.</strong> Diambil dengan aturan baku dari kalimat yang menyebut komoditas, angka rupiah, dan satuan kg atau liter. Angka di luar batas wajar komoditas ditolak. Hasilnya tetap kandidat sampai analis memeriksanya.</li>
+          <li><strong>Ringkasan AI.</strong> AI hanya boleh memakai fakta dari teks berita. Kalimat yang memuat angka yang tidak ada di berita dibuang otomatis.</li>
+          <li><strong>Batas.</strong> Tidak semua berita bisa dibaca isinya (situs berbayar, memakai JavaScript, atau melarang robot). Yang begini hanya tampil dengan judulnya. Berita sering menyebut harga di wilayah lain atau harga rata-rata nasional.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+</main>
+
+<script type="module">
+import { ind } from "./assets/peran.js";
+import { pasangKerangka, muatJSON, esc, rp, tgl, tampilkanGalat } from "./assets/app.js";
+
+const meta = await pasangKerangka("berita.html");
+let data;
+try {
+  data = await muatJSON("berita.json");
+} catch (e) {
+  tampilkanGalat(document.querySelector("main"), e);
+  throw e;
+}
+const $ = (id) => document.getElementById(id);
+const LABEL_TAG = data.label_tag || {};
+const KELAS_TAG = { harga_naik: "tinggi", harga_turun: "baik", pasokan: "sedang", cuaca: "rendah", intervensi: "info" };
+const KELAS_REL = { tinggi: "baik", sedang: "info", rendah: "polos" };
+const LABEL_METODE = { ai: "diringkas AI", ekstraktif: "ringkasan otomatis", judul: "hanya judul" };
+const LABEL_WILAYAH = { target: "Bengkulu Tengah", pembanding: "wilayah pembanding", provinsi: "Provinsi Bengkulu", nasional: "nasional", "tidak jelas": "wilayah tidak jelas" };
+const LABEL_DAMPAK = { naik: "harga naik", turun: "harga turun", stabil: "harga stabil" };
+const amanUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : "#");
+const berita = (data.berita || []).slice();
+const tglBerita = (b) => b.tanggal || (b.diakses || "").slice(0, 10);
+berita.sort((a, b) => (tglBerita(b) > tglBerita(a) ? 1 : tglBerita(b) < tglBerita(a) ? -1 : b.skor - a.skor));
+
+/* ---------- ringkasan */
+const st = data.statistik || {};
+const kes = (data.kesimpulan || [])[0];
+const baru = berita.filter((b) => b.baru).length;
+const target = berita.filter((b) => b.wilayah && b.wilayah.target).length;
+const jumlahTag = (k) => berita.filter((b) => (b.tag || []).includes(k)).length;
+const kandidat = berita.flatMap((b) => (b.harga || []).filter((h) => h.status === "kandidat"));
+$("kpi").innerHTML = [
+  ind({ i: "dokumen", label: "Berita tersimpan", nilai: berita.length, kecil: "berita", sub: baru ? `${baru} baru pada pencarian terakhir` : "belum ada yang baru" }),
+  ind({ i: "pin", warna: target ? "oranye" : "biru", label: "Menyebut Bengkulu Tengah", nilai: target, kecil: "berita", sub: "dari semua berita tersimpan" }),
+  ind({ i: "peringatan", warna: jumlahTag("harga_naik") + jumlahTag("pasokan") ? "merah" : "hijau", label: "Kejadian terpantau",
+    nilai: jumlahTag("harga_naik") + jumlahTag("pasokan") + jumlahTag("cuaca"), kecil: "berita",
+    sub: `${jumlahTag("harga_naik")} harga naik · ${jumlahTag("pasokan")} pasokan · ${jumlahTag("cuaca")} cuaca` }),
+  ind({ i: "tren", label: "Kandidat harga", nilai: kandidat.length, kecil: "angka", sub: "belum diverifikasi analis" }),
+].join("");
+
+/* ---------- kesimpulan */
+const metodeKes = (k) => (k.metode === "ai" ? `disusun AI${k.penyedia ? ` (${esc(k.penyedia)})` : ""}` : "disusun otomatis tanpa AI");
+const daftar = (x) => (x && x.length ? `<ul>${x.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : "");
+if (kes) {
+  $("ket-kes").textContent = `${tgl(kes.tanggal, true)} · ${kes.metode === "ai" ? "disusun AI" : "disusun otomatis tanpa AI"}`;
+  $("kesimpulan").innerHTML = `<p class="kesimpulan-isi">${esc(kes.ringkas)}</p>
+    <div class="kesimpulan-kolom">
+      ${kes.poin && kes.poin.length ? `<div><h3>Berita yang paling relevan</h3>${daftar(kes.poin)}</div>` : ""}
+      ${kes.perlu_dipantau && kes.perlu_dipantau.length ? `<div><h3>Perlu dipantau</h3>${daftar(kes.perlu_dipantau)}</div>` : ""}
+    </div>
+    <p class="meta-kecil">Pembaruan terakhir ${data.diperbarui ? esc(data.diperbarui.slice(0, 16).replace("T", " ")) + " WIB" : "–"}. Kesimpulan memuat angka hanya bila angka itu ada di beritanya.</p>`;
+  const lama = (data.kesimpulan || []).slice(1, 8);
+  if (lama.length) {
+    $("riwayat").hidden = false;
+    $("riwayat-isi").innerHTML = lama.map((k) => `<li><b>${esc(tgl(k.tanggal, true))}</b> <span class="meta-kecil">${metodeKes(k)}</span><br>${esc(k.ringkas)}</li>`).join("");
+  }
+} else {
+  $("ket-kes").textContent = "Belum ada.";
+  $("kesimpulan").innerHTML = '<p class="kosong">Pencarian berita belum pernah berjalan. Pencarian otomatis berjalan sekali sehari mulai pukul 07.00 WIB; admin juga bisa menjalankannya dari halaman Pengaturan (Cari berita lokal sekarang).</p>';
+}
+
+/* ---------- daftar berita dengan saringan */
+const komoditas = [...new Set(berita.flatMap((b) => b.komoditas || []))].sort();
+$("f-tag").innerHTML = '<option value="">Semua</option>' + Object.entries(LABEL_TAG).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("");
+$("f-kom").innerHTML = '<option value="">Semua</option>' + komoditas.map((k) => `<option value="${esc(k)}">${esc(k)}</option>`).join("");
+let tampil = 20;
+
+function lencanaTag(b) {
+  return (b.tag || []).map((t) => `<span class="lencana ${KELAS_TAG[t] || "polos"}">${esc(LABEL_TAG[t] || t)}</span>`).join(" ");
+}
+
+function tabelHarga(b) {
+  const h = b.harga || [];
+  if (!h.length) return "";
+  const baris = h.map((x) => `<tr>
+    <td>${esc(x.komoditas)}${x.kode_varian ? ` <span class="meta-kecil">(${esc(x.kode_varian)})</span>` : ""}</td>
+    <td class="angka"><b>${rp(x.nilai)}</b>/${esc(x.satuan)}</td>
+    <td>${esc(LABEL_WILAYAH[x.peran_wilayah] || x.peran_wilayah)}</td>
+    <td>${x.status === "kandidat" ? '<span class="lencana info">kandidat, belum diverifikasi</span>' : `<span class="lencana polos">${esc(x.status)}</span>`}</td>
+    <td><blockquote>“${esc(x.bukti)}”</blockquote></td></tr>`).join("");
+  return `<div class="berita-harga"><div class="gulir-tabel"><table><thead><tr><th>Komoditas</th><th class="angka">Harga disebut</th><th>Berlaku untuk</th><th>Status</th><th>Kalimat di berita</th></tr></thead><tbody>${baris}</tbody></table></div></div>`;
+}
+
+function itemBerita(b) {
+  const w = b.wilayah || {};
+  const wil = w.target ? "Bengkulu Tengah" : (w.pembanding || []).length ? (w.pembanding || []).map((x) => x.replace(/\b\w/g, (c) => c.toUpperCase())).join(", ") : w.provinsi ? "Bengkulu" : "";
+  const catatan = !b.isi_terbaca && b.catatan_baca ? `<p class="berita-catatan">Alasan isinya tidak terbaca: ${esc(b.catatan_baca)}.</p>` : "";
+  return `<li>
+    <a class="berita-judul" href="${esc(amanUrl(b.url))}" target="_blank" rel="noopener noreferrer">${esc(b.judul)}</a>
+    <div class="berita-atas">
+      <span class="meta-kecil">${esc(b.sumber || "sumber tidak diketahui")} · ${b.tanggal ? esc(tgl(b.tanggal)) : "tanggal tidak diketahui"}</span>
+      ${b.baru ? '<span class="lencana baik">baru</span>' : ""}
+      <span class="lencana ${KELAS_REL[b.relevansi] || "polos"}">kecocokan ${esc(b.relevansi)}</span>
+      ${wil ? `<span class="lencana polos">${esc(wil)}</span>` : ""}
+      ${lencanaTag(b)}
+    </div>
+    <p class="berita-ringkas">${esc(b.ringkasan)}</p>
+    <div class="meta-kecil">${esc(LABEL_METODE[b.metode_ringkas] || "")}${LABEL_DAMPAK[b.dampak_harga] ? ` · menurut berita: ${LABEL_DAMPAK[b.dampak_harga]}` : ""}${b.tindak_lanjut ? " · perlu tindak lanjut" : ""}${(b.komoditas || []).length ? ` · ${esc(b.komoditas.join(", "))}` : ""}</div>
+    ${catatan}
+    ${tabelHarga(b)}
+    ${b.sidik_sha256 ? `<details style="margin-top:6px"><summary class="meta-kecil">Bukti isi yang dibaca</summary><p class="sidik">Dibaca ${esc((b.diakses || "").slice(0, 16).replace("T", " "))} WIB · ${b.panjang_teks} karakter · SHA-256 ${esc(b.sidik_sha256)}</p></details>` : ""}
+  </li>`;
+}
+
+function gambar() {
+  const kata = $("f-kata").value.trim().toLowerCase();
+  const tag = $("f-tag").value, kom = $("f-kom").value, rel = $("f-rel").value;
+  const hasil = berita.filter((b) =>
+    (!kata || `${b.judul} ${b.ringkasan} ${b.sumber}`.toLowerCase().includes(kata))
+    && (!tag || (b.tag || []).includes(tag))
+    && (!kom || (b.komoditas || []).includes(kom))
+    && (!rel || (rel === "tinggi" ? b.relevansi === "tinggi" : ["tinggi", "sedang"].includes(b.relevansi)))
+    && (!$("f-target").checked || (b.wilayah && b.wilayah.target))
+    && (!$("f-harga").checked || (b.harga || []).some((h) => h.status === "kandidat")));
+  $("ket-daftar").textContent = berita.length
+    ? `${hasil.length} dari ${berita.length} berita tersimpan (paling lama ${tgl(tglBerita(berita[berita.length - 1]))}). Urut dari yang terbaru.`
+    : "Belum ada berita tersimpan.";
+  $("daftar").innerHTML = hasil.length ? hasil.slice(0, tampil).map(itemBerita).join("")
+    : `<li class="kosong">${berita.length ? "Tidak ada berita yang cocok dengan saringan." : "Belum ada berita. Pencarian pertama berjalan otomatis, atau admin bisa menjalankannya dari halaman Pengaturan."}</li>`;
+  $("lagi").hidden = hasil.length <= tampil;
+}
+for (const id of ["f-kata", "f-tag", "f-kom", "f-rel", "f-target", "f-harga"]) {
+  $(id).addEventListener("input", () => { tampil = 20; gambar(); });
+}
+$("lagi").addEventListener("click", () => { tampil += 20; gambar(); });
+gambar();
+
+/* ---------- catatan proses */
+const ada = (n) => (n === undefined || n === null ? "–" : n);
+$("proses").innerHTML = st.hasil_pencarian === undefined ? '<p class="kosong">Belum ada catatan.</p>' : `
+  <div class="gulir-tabel"><table><tbody>
+    <tr><th>Hasil pencarian mentah</th><td class="angka">${ada(st.hasil_pencarian)}</td><th>Setelah duplikat dibuang</th><td class="angka">${ada(st.setelah_duplikat)}</td></tr>
+    <tr><th>Berita baru yang relevan</th><td class="angka">${ada(st.berita_baru)}</td><th>Isinya tidak terbaca</th><td class="angka">${ada(st.isi_tidak_terbaca)}</td></tr>
+    <tr><th>Kandidat harga baru</th><td class="angka">${ada(st.kandidat_harga_baru)}</td><th>AI yang dipakai</th><td class="angka">${esc(st.penyedia_ai || "tidak ada (ringkasan otomatis)")}</td></tr>
+  </tbody></table></div>
+  ${(data.galat || []).length ? `<details style="margin-top:10px" open><summary><b>${data.galat.length} peringatan</b> dari pencarian terakhir</summary>
+    <ul class="meta-kecil" style="margin-top:6px">${data.galat.map((g) => `<li>${esc(g)}</li>`).join("")}</ul></details>` : '<p class="meta-kecil" style="margin-top:8px">Tidak ada peringatan pada pencarian terakhir.</p>'}`;
+</script>
+</body>
+</html>
