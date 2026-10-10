@@ -217,7 +217,9 @@ Prosesnya tercatat di **Log proses AI** (halaman Sumber Data) dengan keterangan 
 **Yang dikerjakan setiap hari:**
 
 1. **Mencari.** Pencarian berita Tavily (hasilnya sudah memuat isi artikel), umpan RSS Google Berita untuk tiap kata kunci,
-   dan umpan RSS portal berita yang diisi admin (`berita.umpan_rss` di `config/pengaturan.json`).
+   dan umpan RSS portal berita yang diisi admin (`berita.umpan_rss` di `config/pengaturan.json`). Kata kunci tambahan
+   (`berita.kueri_tambahan`: LPG, susu kental manis, garam, nama pasar Taba Penanjung dan Karang Tinggi, serta pencarian per portal Bengkulu)
+   hanya dicari lewat Google Berita supaya kredit Tavily tidak terpakai.
 2. **Menyaring.** Duplikat dibuang (tautan yang sama, atau judul yang sama dari portal lain), begitu pula berita lebih lama
    dari `umur_maks_hari` dan yang berasal dari media sosial atau video. Berita yang tidak menyebut wilayah Bengkulu
    beserta topik pangan dibuang.
@@ -225,9 +227,15 @@ Prosesnya tercatat di **Log proses AI** (halaman Sumber Data) dengan keterangan 
    dan nama bot yang jelas (`LintasBentengBot`). Halaman yang melarang, berbayar, atau memakai JavaScript hanya tampil dengan judulnya.
 4. **Mengambil harga.** Dengan aturan baku (bukan AI): kalimat yang memuat komoditas, angka rupiah, dan satuan kg atau liter.
    Selisih kenaikan ("naik Rp 5.000"), harga per butir atau ikat, dan angka di luar batas wajar komoditas tidak dihitung
-   sebagai harga. Setiap kandidat membawa kalimat buktinya dan wilayah yang disebut (Bengkulu Tengah, pembanding, provinsi,
-   nasional, atau tidak jelas).
-5. **Meringkas dan menyimpulkan.** AI gratis (rotasi yang sama dengan AI Data Finder) meringkas berita yang paling relevan dan menyusun
+   sebagai harga. Setiap kandidat membawa kalimat buktinya, wilayah yang disebut (Bengkulu Tengah, pembanding, provinsi,
+   nasional, atau tidak jelas), nama pasar bila disebut (mis. Pasar Taba Penanjung), dan arah perubahan (naik atau turun) bila
+   kalimatnya tegas. Selain 21 varian, dibaca juga gas LPG 3 kg (per tabung), susu kental manis (per kaleng), garam (per bungkus),
+   dan telur ayam ras per karpet; keempatnya hanya penunjuk dan tidak dibandingkan dengan data utama.
+5. **Menyimpulkan per komoditas.** Kandidat 14 hari terakhir dikelompokkan per komoditas: median, rentang, jumlah berita, wilayah yang
+   paling dekat dengan Bengkulu Tengah, dan selisihnya terhadap harga terakhir di sistem (hanya per kg atau liter). Selisih lebih dari 15%
+   diberi tanda "beda jauh" supaya dicek ke petugas lapangan. Hasilnya tampil di kartu **Harga dari berita dan internet (kandidat)** pada
+   Dashboard Internal (`ringkasan_harga` di `berita.json`).
+6. **Meringkas dan menyimpulkan.** AI gratis (rotasi yang sama dengan AI Data Finder) meringkas berita yang paling relevan dan menyusun
    kesimpulan harian. AI hanya boleh memakai fakta dari teks berita, dan kalimat yang memuat angka yang tidak ada di berita
    dibuang otomatis. Bila semua AI sedang tidak bisa dipakai, ringkasan dan kesimpulan disusun otomatis dari kalimat berita
    dan ditandai "ringkasan otomatis".

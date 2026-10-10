@@ -81,6 +81,7 @@ const KERANGKA = `
   <section class="dsb-kartu"><div class="dsb-kartu-kepala"><h2>Kinerja model pada data uji akhir</h2></div><p class="dsb-catatan" id="dsb-sub-kinerja"></p><div id="dsb-kinerja"></div></section>
   <section class="dsb-kartu"><div class="dsb-kartu-kepala"><h2>Prakiraan 7 hari lawan kenyataan</h2></div><div class="dsb-kanvas pendek" id="dsb-uji-wadah"><canvas id="dsb-grafik-uji" role="img" aria-label="Prakiraan lawan kenyataan pada masa uji"></canvas></div></section>
   <section class="dsb-kartu dsb-lebar"><div class="dsb-kartu-kepala"><h2>Proyeksi hari raya</h2></div><p class="dsb-catatan" id="dsb-sub-acara"></p><div id="dsb-acara"></div></section>
+  <section class="dsb-kartu dsb-lebar"><div class="dsb-kartu-kepala"><h2>Harga dari berita dan internet (kandidat)</h2></div><p class="dsb-catatan" id="dsb-sub-berita"></p><div id="dsb-berita"></div></section>
   <section class="dsb-kartu dsb-lebar"><div class="dsb-kartu-kepala"><h2>Proyeksi triwulanan, semesteran, dan tahunan</h2>
     <div class="segmen" id="dsb-periode" role="group" aria-label="Jenis periode"><button type="button" data-p="triwulanan" aria-pressed="true">Triwulanan</button><button type="button" data-p="semesteran" aria-pressed="false">Semesteran</button><button type="button" data-p="tahunan" aria-pressed="false">Tahunan</button></div></div>
     <div id="dsb-periodik"></div></section>
@@ -478,6 +479,35 @@ export async function pasangDasborInternal(wadah, meta) {
     });
   }
 
+  /* ---------- harga dari berita (kandidat, tidak masuk model) */
+  const NAMA_PERAN = { target: "Bengkulu Tengah", pembanding: "Wilayah pembanding", provinsi: "Provinsi Bengkulu", nasional: "Nasional", "tidak jelas": "Wilayah tidak jelas" };
+  async function hargaBerita() {
+    let B = null;
+    try { B = await muatJSON("berita.json"); } catch { B = null; }
+    const daftar = B?.ringkasan_harga || [];
+    $("dsb-sub-berita").textContent = "Harga yang disebut di berita 14 hari terakhir, dibaca otomatis tiap hari. Angkanya belum diverifikasi dan tidak masuk ke deret harga maupun model prakiraan; fungsinya hanya sebagai petunjuk awal.";
+    if (!daftar.length) {
+      $("dsb-berita").innerHTML = `<p class="menunggu">${B ? "Belum ada harga yang dapat dibaca dari berita pada periode ini." : "Data berita belum tersedia."} Pencarian berjalan otomatis setiap hari.</p>`;
+      return;
+    }
+    const tautan = (u) => (/^https?:\/\//i.test(u || "") ? u : "");
+    const baris = daftar.map((x) => {
+      const c = x.contoh || {}, bd = x.banding;
+      const link = tautan(c.url);
+      const satuan = x.satuan === "kg" || x.satuan === "liter" ? `/${x.satuan}` : ` per ${esc(x.satuan)}`;
+      const rentang = x.minimum === x.maksimum ? "" : `<div class="meta-kecil">${angkaRp(x.minimum)} sampai ${angkaRp(x.maksimum)}</div>`;
+      const arah = x.arah === "naik" ? ' <span class="dsb-ubah naik">naik</span>' : x.arah === "turun" ? ' <span class="dsb-ubah turun">turun</span>' : "";
+      const selisih = bd ? `<span class="dsb-ubah ${bd.beda_jauh ? "turun" : ""}">${persen(bd.selisih_persen, 1, true)}</span>${bd.beda_jauh ? ' <span class="lencana sedang">beda jauh</span>' : ""}` : '<span class="menunggu">tidak dibanding</span>';
+      const utama = bd ? `${angkaRp(bd.harga_utama)}<div class="meta-kecil">${esc(bd.dasar)}</div>` : "–";
+      return `<tr><td><strong>${esc(x.komoditas)}</strong>${arah}</td><td>${esc(NAMA_PERAN[x.wilayah] || x.wilayah)}${c.pasar ? `<div class="meta-kecil">${esc(c.pasar)}</div>` : ""}</td>
+        <td class="angka"><strong>${angkaRp(x.median)}</strong>${satuan}${rentang}</td><td class="angka">${utama}</td><td class="angka">${selisih}</td>
+        <td class="angka">${angka(x.jumlah_berita)} berita<div class="meta-kecil">terbaru ${esc(tgl(x.tanggal_terbaru))}</div></td>
+        <td class="dsb-bukti">${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer">${esc(c.sumber || "sumber")}</a>` : esc(c.sumber || "")}<div class="meta-kecil">${esc(c.bukti || "")}</div></td></tr>`;
+    }).join("");
+    $("dsb-berita").innerHTML = `<div class="gulir-tabel"><table class="tabel-kecil dsb-tabel-berita"><thead><tr><th>Komoditas</th><th>Rujukan wilayah</th><th class="angka">Harga di berita (median, Rp)</th><th class="angka">Data utama sistem (Rp)</th><th class="angka">Selisih</th><th class="angka">Sumber</th><th>Kalimat bukti</th></tr></thead><tbody>${baris}</tbody></table></div>
+      <p class="dsb-catatan">${B?.diperbarui ? `Diperbarui ${esc(tgl(String(B.diperbarui).slice(0, 10)))}. ` : ""}Selisih dihitung dari median harga di berita terhadap harga terakhir sistem, hanya untuk harga per kg atau liter. Tanda "beda jauh" berarti selisihnya lebih dari ${B?.ambang_beda_jauh_persen ?? 15}%, jadi perlu dicek ke petugas lapangan sebelum dipercaya.</p>`;
+  }
+
   /* ---------- rekomendasi, lineage, jejak */
   function rekomUmum() {
     const r = A.rekomendasi_umum || [];
@@ -547,6 +577,7 @@ export async function pasangDasborInternal(wadah, meta) {
   lineage();
   rekomUmum();
   jejak();
+  hargaBerita();
   atur("dsb-horizon", "data-h", (h) => { S.h = Number(h); gambarTabel(); const v = varianTerpilih(); gambarTren(v); ringkasVarian(v); });
   atur("dsb-rentang", "data-hari", (h) => { S.hari = Number(h); gambarTren(varianTerpilih()); });
   atur("dsb-periode", "data-p", (p) => { S.periode = p; periodik(varianTerpilih()); });

@@ -180,3 +180,9 @@
 .dsb-lanjut .dsb-kartu-kepala .segmen { background: rgba(255, 255, 255, 0.18); }
 .dsb-lanjut .dsb-kartu-kepala .segmen button { color: #dbe8ff; }
 .dsb-lanjut .dsb-kartu-kepala .segmen button[aria-pressed="true"] { background: #fff; color: #0b3f8f; }
+
+/* ---------- harga dari berita (kandidat) */
+.dsb-tabel-berita { min-width: 760px; }
+.dsb-tabel-berita td { vertical-align: top; }
+.dsb-tabel-berita .dsb-bukti { max-width: 340px; white-space: normal; }
+.dsb-tabel-berita .dsb-bukti .meta-kecil { margin-top: 2px; }

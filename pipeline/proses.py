@@ -463,7 +463,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     })
 
     # ---------- berita.json (halaman Berita Lokal; hasil pencarian harian di data/berita/berita.json)
-    _tulis_json(keluaran / "berita.json", berita.untuk_situs(konf))
+    _tulis_json(keluaran / "berita.json", berita.untuk_situs(
+        konf, {x["kode"]: x["harga_terakhir"] for x in ringkasan_varian if x.get("harga_terakhir")}, tanggal_data or konf.hari_ini))
 
     # ---------- ringkasan.json (dashboard utama)
     jhr = konf.pengaturan["jendela_hari_raya"]

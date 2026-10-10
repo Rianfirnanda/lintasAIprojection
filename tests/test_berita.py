@@ -305,6 +305,98 @@ def test_harga_duplikat_dalam_satu_berita_digabung(konf):
     assert len(_harga(teks, konf)) == 1
 
 
+def test_harga_komoditas_tambahan_lpg_susu_garam(konf):
+    (h,) = _harga("Gas LPG 3 kg di Bengkulu Tengah dijual Rp 25.000 per tabung.", konf)
+    assert (h["kode_komoditas"], h["kode_varian"], h["nilai"], h["satuan"], h["status"]) == ("LPG", None, 25000, "tabung", "kandidat")
+    (h,) = _harga("Susu kental manis Rp 12.500 per kaleng di Kepahiang.", konf)
+    assert (h["kode_komoditas"], h["satuan"], h["status"]) == ("SKM", "kaleng", "kandidat")
+    (h,) = _harga("Garam beryodium Rp 3.000 per bungkus di Bengkulu Tengah.", konf)
+    assert (h["kode_komoditas"], h["satuan"]) == ("GRM", "bungkus")
+    # LPG Rp 90.000 per tabung di luar batas wajar: ditolak, tidak dibuang diam-diam
+    (h,) = _harga("Gas LPG 3 kg Rp 90.000 per tabung di Bengkulu Tengah.", konf)
+    assert h["status"] == "ditolak: di luar batas wajar"
+
+
+def test_harga_telur_per_karpet_bukan_varian_dan_batasnya_sendiri(konf):
+    (h,) = _harga("Telur ayam ras di Pasar Taba Penanjung Rp 62.000 per karpet.", konf)
+    assert (h["kode_komoditas"], h["kode_varian"], h["nilai"], h["satuan"], h["status"]) == ("TLR", None, 62000, "karpet", "kandidat")
+    (h,) = _harga("Telur ayam ras Rp 5.000 per karpet.", konf)
+    assert h["status"] == "ditolak: di luar batas wajar"
+
+
+def test_harga_menyebut_pasar_dan_arah_perubahan(konf):
+    (h,) = _harga("Harga cabai rawit merah di Pasar Taba Penanjung naik menjadi Rp 85.000 per kg.", konf)
+    assert h["pasar"] == "Pasar Taba Penanjung" and h["arah"] == "naik"
+    (h,) = _harga("Harga bawang merah turun ke Rp 30.000 per kg di Pasar Karang Tinggi, Bengkulu Tengah.", konf)
+    assert h["pasar"] == "Pasar Karang Tinggi" and h["arah"] == "turun"
+    (h,) = _harga("Harga beras medium Rp 14.000 per kg.", konf)
+    assert h["pasar"] is None and h["arah"] == ""
+    (h,) = _harga("Harga beras medium naik lalu turun, kini Rp 14.000 per kg.", konf)
+    assert h["arah"] == ""  # kata bertentangan: arah tidak ditebak
+
+
+def _berita_harga(url, tanggal, harga, tag=()):
+    return {"url": url, "judul": f"Berita {url}", "sumber": "Portal", "tanggal": tanggal, "tag": list(tag), "harga": harga}
+
+
+def _h(kode, nilai, wilayah, varian=None, satuan="kg", status="kandidat", arah=""):
+    return {"komoditas": kode, "kode_komoditas": kode, "kode_varian": varian, "nilai": nilai, "satuan": satuan, "peran_wilayah": wilayah,
+            "pasar": None, "arah": arah, "bukti": f"bukti {kode} {nilai}", "status": status}
+
+
+def test_ringkasan_harga_wilayah_terdekat_median_dan_banding_dengan_data_utama(konf):
+    hari = date(2026, 10, 9)
+    daftar = [
+        _berita_harga("a", "2026-10-08", [_h("CRW", 85000, "target", "CRW02", arah="naik"), _h("BWM", 30000, "nasional", "BWM01")], ["harga_naik"]),
+        _berita_harga("b", "2026-10-07", [_h("CRW", 95000, "target", "CRW02", arah="naik"), _h("CRW", 40000, "nasional", "CRW02")]),
+        _berita_harga("c", "2026-10-06", [_h("CRW", 999, "target", "CRW02", status="ditolak: di luar batas wajar")]),
+        _berita_harga("lama", "2026-08-01", [_h("CRW", 10000, "target", "CRW02")]),
+    ]
+    hasil = {x["kode_komoditas"]: x for x in berita.ringkasan_harga(konf, daftar, {"CRW02": 60000}, hari, 14)}
+    crw = hasil["CRW"]
+    assert crw["wilayah"] == "target" and crw["median"] == 90000  # hanya rujukan Bengkulu Tengah; angka nasional tidak dicampur
+    assert (crw["minimum"], crw["maksimum"], crw["jumlah_kandidat"], crw["jumlah_berita"]) == (40000, 95000, 3, 2)
+    assert crw["arah"] == "naik"
+    assert crw["banding"] == {"dasar": "CRW02", "harga_utama": 60000, "selisih_persen": 50.0, "beda_jauh": True}
+    assert hasil["BWM"]["banding"] is None  # tanpa harga utama BWM01: tidak membandingkan
+    assert hasil["BWM"]["wilayah"] == "nasional"
+    # urutan: rujukan wilayah target lebih dulu daripada nasional
+    assert [x["kode_komoditas"] for x in berita.ringkasan_harga(konf, daftar, None, hari, 14)] == ["CRW", "BWM"]
+
+
+def test_ringkasan_harga_lpg_tidak_dibanding_dan_selisih_kecil_bukan_beda_jauh(konf):
+    hari = date(2026, 10, 9)
+    daftar = [_berita_harga("a", "2026-10-08", [_h("LPG", 25000, "target", satuan="tabung"), _h("BRS", 14500, "pembanding", "BRS02")])]
+    hasil = {x["kode_komoditas"]: x for x in berita.ringkasan_harga(konf, daftar, {"BRS02": 14000}, hari, 14)}
+    assert hasil["LPG"]["banding"] is None and hasil["LPG"]["satuan"] == "tabung"
+    assert hasil["BRS"]["banding"]["selisih_persen"] == 3.6 and hasil["BRS"]["banding"]["beda_jauh"] is False
+
+
+def test_kueri_tambahan_hanya_lewat_google_berita_bukan_tavily(konf):
+    cfg = {"kueri": ["harga cabai Bengkulu"], "kueri_tambahan": ["harga LPG 3 kg Bengkulu Tengah"], "umpan_rss": []}
+    tavily_kueri, google_url = [], []
+
+    def kirim_tavily(url, header, isi):
+        tavily_kueri.append(isi.get("query") if isinstance(isi, dict) else isi)
+        return {"results": []}
+
+    def ambil(url, batas, maks):
+        google_url.append(url)
+        return url, b"<rss><channel></channel></rss>", "application/rss+xml"
+
+    berita.temukan(cfg, 14, ambil=ambil, kirim_tavily=kirim_tavily)
+    assert all("LPG" not in str(q) for q in tavily_kueri)
+    assert len(google_url) == 2 and any("LPG" in u for u in google_url)
+
+
+def test_data_untuk_situs_memuat_ringkasan_harga(konf):
+    konf.pengaturan["berita"] = {"kueri": [], "jeda_detik": 0}
+    berita.simpan(konf, {"diperbarui": "2026-10-09", "kesimpulan": [], "statistik": {}, "galat": [],
+                         "berita": [_berita_harga("a", "2026-10-08", [_h("CRW", 85000, "target", "CRW02")])]})
+    d = berita.untuk_situs(konf, {"CRW02": 80000}, date(2026, 10, 9))
+    assert d["ringkasan_harga"][0]["banding"]["harga_utama"] == 80000
+
+
 # ---------------------------------------------------------------- pemeriksaan angka dan ringkasan
 
 def test_ringkasan_ai_dengan_angka_karangan_dibuang():
