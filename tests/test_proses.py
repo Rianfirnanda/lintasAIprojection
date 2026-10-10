@@ -86,7 +86,7 @@ def test_seri_konsisten(keluaran_demo):
     n = len(s["tanggal"])
     assert len(s["aktual"]) == len(s["baseline"]) == len(s["rata7"]) == n
     assert all(len(p["nilai"]) == n for p in s["pembanding"].values())
-    assert len(s["proyeksi"]) == 14
+    assert len(s["proyeksi"]) == 30
     assert all(p["bawah"] <= p["prediksi"] <= p["atas"] for p in s["proyeksi"])
 
 

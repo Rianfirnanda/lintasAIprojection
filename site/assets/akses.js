@@ -13,6 +13,7 @@ const M = {
   laporan: ["laporan.html", "Laporan"],
   capaian: ["kinerja.html", "Capaian"],
   cek: ["kualitas.html", "Cek Data"],
+  dasbor: ["dasbor.html", "Dasbor Analitik"],
   akurasi: ["model.html", "Akurasi"],
   sumber: ["sumber.html", "Sumber"],
   berita: ["berita.html", "Berita Lokal"],
@@ -39,16 +40,16 @@ export const PERAN = {
   },
   analis: {
     nama: "Analis", ikon: "cari", ringkas: "Periksa data, peringatan, dan model", judulBeranda: "Meja Analis",
-    menu: ["beranda", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["berita", "kebijakan", "sumber", "kamus", "tentang"],
+    menu: ["beranda", "dasbor", "peringatan", "cek", "akurasi", "laporan", "harga"], lainnya: ["berita", "kebijakan", "sumber", "kamus", "tentang"],
   },
   tpid: {
     nama: "TPID", ikon: "tim", ringkas: "Pantau harga dan ambil keputusan", judulBeranda: "Dashboard TPID",
-    menu: ["beranda", "peringatan", "kebijakan", "laporan", "capaian", "harga"], lainnya: ["berita", "alur", "kamus", "tentang"],
+    menu: ["beranda", "dasbor", "peringatan", "kebijakan", "laporan", "capaian", "harga"], lainnya: ["berita", "alur", "kamus", "tentang"],
   },
   admin: {
     nama: "Administrator", ikon: "gembokPerisai", ringkas: "Kelola seluruh sistem", judulBeranda: "Kondisi Sistem",
     menu: ["beranda", "pengaturan", "pengguna", "peringatan", "laporan", "cek"],
-    lainnya: ["berita", "kebijakan", "akurasi", "harga", "capaian", "sumber", "catat", "alur", "kamus", "tentang"],
+    lainnya: ["dasbor", "berita", "kebijakan", "akurasi", "harga", "capaian", "sumber", "catat", "alur", "kamus", "tentang"],
   },
 };
 

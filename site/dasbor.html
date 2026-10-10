@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dasbor Analitik · Lintas Benteng Projection</title>
+  <meta name="description" content="Dasbor internal BPS: proyeksi harga pangan 21 varian untuk 7, 14, dan 30 hari, status validasi model, diagnostik deret waktu, proyeksi hari raya dan periodik, serta jejak data.">
+  <meta name="theme-color" content="#0e1114">
+  <link rel="icon" href="assets/ikon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/dasbor.css">
+  <script src="vendor/chart.umd.js"></script>
+</head>
+<body>
+<main class="utama dasbor">
+  <header class="dasbor-kepala">
+    <div>
+      <p class="dasbor-atas">Hasil akhir · Dasbor internal BPS</p>
+      <h1>Proyeksi Harga Pangan</h1>
+      <p class="dasbor-wilayah" id="wilayah">Bengkulu Tengah <span>Pembanding: Kepahiang dan Kota Bengkulu</span></p>
+    </div>
+    <div class="dasbor-cap" id="cap"></div>
+  </header>
+
+  <div class="ind-baris dasbor-kpi" id="kpi"></div>
+
+  <section class="kartu dasbor-kontrol" aria-label="Pilihan tampilan">
+    <label>Periode origin
+      <select id="origin" aria-label="Periode origin"></select>
+    </label>
+    <label>Pilih varian
+      <select id="varian" aria-label="Pilih varian"></select>
+    </label>
+    <div>
+      <span class="label-kecil">Horizon proyeksi</span>
+      <div class="segmen" id="horizon" role="group" aria-label="Horizon proyeksi">
+        <button type="button" data-h="7" aria-pressed="false">7 hari</button>
+        <button type="button" data-h="14" aria-pressed="false">14 hari</button>
+        <button type="button" data-h="30" aria-pressed="true">30 hari</button>
+      </div>
+    </div>
+    <label>Kelompok
+      <select id="kelompok" aria-label="Kelompok komoditas">
+        <option value="">Semua</option><option value="pokok">Pokok</option><option value="protein">Protein</option>
+        <option value="volatil">Volatil</option><option value="pabrikan">Pabrikan</option>
+      </select>
+    </label>
+    <label>Status validasi
+      <select id="status" aria-label="Status validasi">
+        <option value="">Semua</option><option value="valid">Valid</option><option value="eksperimen">Eksperimen</option>
+      </select>
+    </label>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div>
+        <h2>Proyeksi 21 varian</h2>
+        <p id="info-tabel">Klik satu baris untuk melihat grafik dan rinciannya di bawah. Klik judul kolom untuk mengurutkan.</p>
+      </div>
+      <button class="tombol" type="button" id="ekspor">Ekspor CSV</button>
+    </div>
+    <div class="gulir-tabel">
+      <table id="tabel" class="tabel-dasbor">
+        <thead><tr>
+          <th data-urut="nama">Varian</th>
+          <th class="angka" data-urut="harga">Harga aktual</th>
+          <th class="angka" data-urut="h7">Prediksi 7 hari</th>
+          <th class="angka" data-urut="h14">Prediksi 14 hari</th>
+          <th class="angka" data-urut="h30">Prediksi 30 hari</th>
+          <th class="angka" data-urut="rentang">Rentang 80%</th>
+          <th class="angka" data-urut="ubah">Perubahan 30 hari</th>
+          <th data-urut="model">Cara prakiraan</th>
+          <th data-urut="status">Status validasi</th>
+          <th data-urut="percaya">Tingkat keyakinan</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="meta-kecil" id="catatan-status"></p>
+  </section>
+
+  <div class="grid dua-kolom">
+    <section class="kartu">
+      <div class="kartu-kepala">
+        <div><h2 id="judul-tren">Tren dan proyeksi</h2><p id="sub-tren"></p></div>
+        <div class="segmen" id="rentang-waktu" role="group" aria-label="Rentang waktu grafik">
+          <button type="button" data-hari="90" aria-pressed="false">3 bulan</button>
+          <button type="button" data-hari="180" aria-pressed="true">6 bulan</button>
+          <button type="button" data-hari="365" aria-pressed="false">1 tahun</button>
+          <button type="button" data-hari="0" aria-pressed="false">Semua</button>
+        </div>
+      </div>
+      <div class="kanvas-tinggi"><canvas id="grafik-tren" role="img" aria-label="Grafik harga aktual dan proyeksi"></canvas></div>
+      <div class="legenda" id="legenda"></div>
+    </section>
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Ringkasan varian terpilih</h2><p id="sub-ringkas"></p></div></div>
+      <div id="ringkas"></div>
+    </section>
+  </div>
+
+  <div class="grid dua-sama">
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Harga terkini antar wilayah</h2><p>Bengkulu Tengah dibandingkan Kepahiang dan Kota Bengkulu.</p></div></div>
+      <div id="wilayah-banding"></div>
+    </section>
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Selisih harga antar wilayah</h2><p>Selisih terhadap wilayah target, dalam persen.</p></div></div>
+      <div id="disparitas"></div>
+    </section>
+  </div>
+
+  <div class="grid dua-sama">
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Diagnostik deret waktu</h2><p>Sifat data harga varian terpilih.</p></div></div>
+      <div id="diagnostik"></div>
+    </section>
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Kinerja model pada data uji akhir</h2><p id="sub-kinerja"></p></div></div>
+      <div id="kinerja"></div>
+    </section>
+  </div>
+
+  <div class="grid dua-sama">
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Prakiraan 7 hari lawan kenyataan</h2><p>Selama masa uji akhir. Makin berimpit makin tepat.</p></div></div>
+      <div class="kanvas-tinggi kecil" id="grafik-uji-wadah"><canvas id="grafik-uji" role="img" aria-label="Prakiraan lawan kenyataan pada masa uji"></canvas></div>
+    </section>
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Faktor yang terukur</h2><p>Dihitung dari data sendiri. Ini bukan SHAP: model yang dipakai belum menghasilkan penjelasan per fitur.</p></div></div>
+      <div id="pendorong"></div>
+    </section>
+  </div>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div><h2>Proyeksi hari raya</h2><p id="sub-acara"></p></div>
+    </div>
+    <div id="acara"></div>
+  </section>
+
+  <section class="kartu">
+    <div class="kartu-kepala">
+      <div><h2>Proyeksi triwulanan, semesteran, dan tahunan</h2><p>Rata-rata harga bulanan dengan tiga skenario: rendah, dasar, tinggi.</p></div>
+      <div class="segmen" id="periode" role="group" aria-label="Jenis periode">
+        <button type="button" data-p="triwulanan" aria-pressed="true">Triwulanan</button>
+        <button type="button" data-p="semesteran" aria-pressed="false">Semesteran</button>
+        <button type="button" data-p="tahunan" aria-pressed="false">Tahunan</button>
+      </div>
+    </div>
+    <div id="periodik"></div>
+  </section>
+
+  <div class="grid dua-sama">
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Rekomendasi netral</h2><p>Hanya menyebut apa yang perlu dipantau. Keputusan kebijakan tetap di tim.</p></div></div>
+      <div id="rekomendasi"></div>
+    </section>
+    <section class="kartu">
+      <div class="kartu-kepala"><div><h2>Jejak data dan versi</h2><p>Dari berkas sumber sampai angka yang tampil.</p></div></div>
+      <div id="jejak"></div>
+    </section>
+  </div>
+</main>
+
+<script type="module" src="assets/dasbor-analitik.js"></script>
+</body>
+</html>

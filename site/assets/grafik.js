@@ -35,7 +35,9 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
   const dash = opsi.gaya === "dashboard";
   const tipe = opsi.tipe || "garis"; // "garis", "area", atau "batang"
   const tampilPembanding = dash ? false : (opsi.pembanding ?? true);
-  const tanggalProyeksi = (seri.proyeksi || []).map((p) => p.tanggal);
+  const proy = opsi.horizon ? (seri.proyeksi || []).slice(0, opsi.horizon) : (seri.proyeksi || []);
+  const tingkat = Math.round((opsi.tingkat ?? 0.8) * 100);
+  const tanggalProyeksi = proy.map((p) => p.tanggal);
   const label = [...seri.tanggal, ...tanggalProyeksi];
   const n = seri.tanggal.length;
   const kosong = (k) => Array(k).fill(null);
@@ -45,11 +47,11 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
   const proyeksi = kosong(label.length);
   const bawah = kosong(label.length);
   const atas = kosong(label.length);
-  if (nilaiAkhir !== null && seri.proyeksi?.length) {
+  if (nilaiAkhir !== null && proy.length) {
     proyeksi[n - 1] = nilaiAkhir;
     bawah[n - 1] = nilaiAkhir;
     atas[n - 1] = nilaiAkhir;
-    seri.proyeksi.forEach((p, i) => {
+    proy.forEach((p, i) => {
       proyeksi[n + i] = p.prediksi;
       bawah[n + i] = p.bawah;
       atas[n + i] = p.atas;
@@ -71,7 +73,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
 
   const datasets = [
     garis("Batas bawah interval", bawah, "transparent", { borderWidth: 0, pointHoverRadius: 0, _interval: true }),
-    garis("Interval proyeksi 90%", atas, "transparent", {
+    garis(`Interval proyeksi ${tingkat}%`, atas, "transparent", {
       borderWidth: 0, pointHoverRadius: 0, fill: "-1", backgroundColor: dash ? "rgba(128,138,152,0.24)" : c.s2 + "22", _interval: true,
     }),
     dash
@@ -128,7 +130,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
             afterBody: (items) => {
               const i = items[0]?.dataIndex;
               if (i === undefined || i < n) return [];
-              return [`Interval 90%: ${rp(bawah[i])} – ${rp(atas[i])}`];
+              return [`Interval ${tingkat}%: ${rp(bawah[i])} – ${rp(atas[i])}`];
             },
           },
         },
@@ -154,7 +156,7 @@ export function legendaHarga(seri, tampilPembanding = true) {
     ['<span class="kunci-garis" style="border-color:var(--series-1)"></span>', "Bengkulu Tengah (aktual)"],
     ['<span class="kunci-garis" style="border-color:var(--baseline)"></span>', "Baseline (median 28 hari)"],
     ['<span class="kunci-garis putus" style="border-color:var(--series-2)"></span>', "Proyeksi"],
-    ['<span class="kunci-pita" style="background:color-mix(in srgb, var(--series-2) 18%, transparent)"></span>', "Interval proyeksi 90%"],
+    ['<span class="kunci-pita" style="background:color-mix(in srgb, var(--series-2) 18%, transparent)"></span>', "Interval proyeksi 80%"],
     ['<span class="kunci-titik" style="background:var(--critical)"></span>', "Anomali terdeteksi"],
   ];
   if (tampilPembanding) {
