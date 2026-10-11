@@ -1,6 +1,23 @@
 {
- "diperbarui": "2026-10-10T09:50:56+07:00",
+ "diperbarui": "2026-10-11T07:07:44+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-11",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Pemerintah Kabupaten Bengkulu Tengah saat ini tengah mempercepat vaksinasi PMK terhadap 4.000 hewan ternak untuk menjaga kesehatan populasi ternak, meskipun dampak langsungnya terhadap harga daging belum dijelaskan. Sementara itu, di tingkat Provinsi Bengkulu, BULOG memastikan stok aman dengan realisasi penyaluran bantuan beras mencapai 97,45 persen, namun rincian beritanya tidak dapat dibaca lebih lanjut dan tidak secara khusus menyebut Bengkulu Tengah. Secara keseluruhan, informasi mengenai pergerakan harga komoditas pangan dari sumber yang tersedia masih sangat minim dan tidak jelas. Oleh karena itu, TPID perlu memantau kelancaran vaksinasi ternak di Bengkulu Tengah serta memastikan ketersediaan pasokan beras di tingkat lokal.",
+   "poin": [
+    "Dinas Pertanian Kabupaten Bengkulu Tengah mengerahkan lima tim untuk vaksinasi PMK jemput bola pada 4.000 sapi, kerbau, dan kambing dengan target rampung akhir Oktober 2026.",
+    "BULOG memastikan stok aman dan penyaluran bantuan beras di wilayah Bengkulu mencapai 97,45 persen, tetapi isi detail berita tidak bisa dibaca otomatis dan tidak menyebut Bengkulu Tengah secara khusus.",
+    "Dampak kedua isu terhadap harga komoditas ternak maupun beras tidak dijelaskan dalam ringkasan berita."
+   ],
+   "perlu_dipantau": [
+    "Pelaksanaan dan penyelesaian vaksinasi PMK pada 4.000 hewan ternak di Bengkulu Tengah.",
+    "Ketersediaan stok dan penyaluran beras dari BULOG untuk wilayah Bengkulu Tengah.",
+    "Perkembangan harga beras dan ternak di pasar karena ketiadaan data harga pada laporan saat ini."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-10",
    "metode": "ai",
@@ -19,6 +36,71 @@
   }
  ],
  "berita": [
+  {
+   "id": "9124477efb47",
+   "url": "https://koran-jakarta.com/2026-10-08/hindari-penyebaran-pmk-pemkab-bengkulu-tengah-akselerasi-vaksinasi-pada-ternak/amp",
+   "judul": "Hindari Penyebaran PMK, Pemkab Bengkulu Tengah Akselerasi Vaksinasi pada Ternak",
+   "sumber": "koran-jakarta.com",
+   "tanggal": "2026-10-09",
+   "diakses": "2026-10-11T07:07:44+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Telur Ayam",
+    "Cabai Merah",
+    "Cabai Rawit"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 8433,
+   "sidik_sha256": "c3203b32b83737efc19d0ab798247203e30f47568fddb807a0c694c8105ca34d",
+   "kutipan": "151 Ribu Kasus ISPA Akibat Karhutla, Kemenkes Kerahkan 1.898 Nakes Tanam 700 Bibit Mangrove untuk Pulihkan Ekosistem Pesisir Panda Memperingati Hari Amal Bakti dengan Khitanan Massal Gratis Perkuat Wisata dan Jaga Warisa",
+   "ringkasan": "Pemerintah Kabupaten Bengkulu Tengah mempercepat vaksinasi jemput bola terhadap 4.000 hewan ternak seperti sapi, kerbau, dan kambing untuk mencegah penyebaran Penyakit Mulut dan Kuku (PMK). Dinas Pertanian Kabupaten Bengkulu Tengah mengerahkan lima tim ke berbagai wilayah dan menargetkan vaksinasi selesai pada akhir Oktober 2026.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": null,
+     "nilai": 83050,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "* [Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg](/2026-09-04/harga-cabai-rawit-masih-melambung-rp83050kg-dan-telur-ayam-stabil-rp29650kg/amp \"Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg\")",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 29650,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "* [Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg](/2026-09-04/harga-cabai-rawit-masih-melambung-rp83050kg-dan-telur-ayam-stabil-rp29650kg/amp \"Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg\")",
+     "status": "kandidat"
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "a491bf1851e4",
    "url": "https://databoks.katadata.co.id/ekonomi-makro/statistik/c8a619a9690db51/harga-pangan-hari-ini-08-oktober-di-jawa-barat-cabai-merah-naik-bawang-turun",
@@ -190,6 +272,39 @@
    "penyedia_ai": "gemini"
   },
   {
+   "id": "7979eac47ca7",
+   "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOQ0dCTTFOV2wtdVdmN1I1V3JCU1EyOUFTRUxqUVB4QUZZMksxbXZEZFFPWmJkWVktTEhLaDd2R2tPdDBfRFgzMlI0dXF4SDFMamdCaEU4LXRMQW9Tc3YyY3ppUzBHdF9sY3JFc0ZUbS1FYjFNQTNxd0FBeEt1NTZiMGh1NW1QbDVLaTVvMDF4T0QwS2JqS0V4am5PUGNZbTk0M29xZ0NLaXZrYkl5UkRqUW40d010NGtiTXV6MkkxOW1YU2c?oc=5",
+   "judul": "BULOG Pastikan Stok Aman, Penyaluran Bantuan Beras Bengkulu Capai 97,45 Persen",
+   "sumber": "Tribunbengkulu.com",
+   "tanggal": "2026-10-08",
+   "diakses": "2026-10-11T07:07:44+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "2588ff2f795a",
    "url": "https://bengkulutengahkab.go.id/postingan/detail_postingan/RAPAT-EVALUASI-PBP-PENYALURAN-BANTUAN-PANGAN-BERAS-DI-BENGKULU-TENGAH-CAPAI-9926-PERSEN",
    "judul": "RAPAT EVALUASI PBP, PENYALURAN BANTUAN PANGAN BERAS DI BENGKULU TENGAH CAPAI 99,26 PERSEN",
@@ -223,7 +338,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -298,7 +413,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -371,12 +486,12 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 111,
-  "setelah_duplikat": 85,
+  "hasil_pencarian": 161,
+  "setelah_duplikat": 131,
   "berita_baru": 2,
-  "total_arsip": 6,
-  "kandidat_harga_baru": 0,
-  "isi_tidak_terbaca": 0,
+  "total_arsip": 8,
+  "kandidat_harga_baru": 2,
+  "isi_tidak_terbaca": 1,
   "penyedia_ai": "gemini",
   "model_ai": "gemini-3.8-flash"
  },
