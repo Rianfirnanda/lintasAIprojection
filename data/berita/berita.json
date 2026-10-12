@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-10-11T07:07:44+07:00",
+ "diperbarui": "2026-10-12T07:11:39+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-12",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Informasi harian yang tersedia saat ini terbatas pada wilayah Kota Bengkulu, sementara laporan khusus untuk Kabupaten Bengkulu Tengah tidak ditemukan. Pemerintah Kota Bengkulu bersama TPID setempat berencana menggelar Bazar Pasar Murah pada 13 Oktober 2026 di halaman Kantor Wali Kota. Program tersebut menyediakan bahan pokok seperti beras dengan harga terjangkau guna menjaga kestabilan harga dan pasokan serta mengendalikan inflasi daerah. TPID Kabupaten Bengkulu Tengah perlu tetap memantau perkembangan pasokan dan harga bahan pokok di wilayah sendiri mengingat minimnya data lokal pada laporan ini.",
+   "poin": [
+    "Pemkot Bengkulu bersama TPID menggelar Bazar Pasar Murah pada 13 Oktober 2026 di halaman Kantor Wali Kota Bengkulu.",
+    "Kegiatan pasar murah menyediakan sembako seperti beras dengan harga terjangkau guna menjaga stabilitas harga dan mengendalikan inflasi.",
+    "Tidak terdapat laporan atau data perkembangan harga dan pasokan untuk wilayah Kabupaten Bengkulu Tengah."
+   ],
+   "perlu_dipantau": [
+    "Pelaksanaan kegiatan Bazar Pasar Murah di Kota Bengkulu pada 13 Oktober 2026.",
+    "Kondisi pasokan dan kestabilan harga bahan pokok, khususnya beras, di wilayah Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-11",
    "metode": "ai",
@@ -36,6 +52,55 @@
   }
  ],
  "berita": [
+  {
+   "id": "80463d472960",
+   "url": "https://www.teropongpublik.co.id/index.php/pemkot-bengkulu-gelar-bazar-pasar-murah-13-oktober-2026-sediakan-sembako-harga-terjangkau",
+   "judul": "Pemkot Bengkulu Gelar Bazar Pasar Murah 13 Oktober 2026, Sediakan Sembako Harga Terjangkau",
+   "sumber": "teropongpublik.co.id",
+   "tanggal": "2026-10-11",
+   "diakses": "2026-10-12T07:11:39+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "pasokan",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 4731,
+   "sidik_sha256": "8b5f7e71e82cc4c4160a9f720cf05752fe50b3fec028336812afdc0779380235",
+   "kutipan": "Pj Sekda Kota Bengkulu Medy Pebriansyah bersama jajaran terkait menyiapkan pelaksanaan Bazar Pasar Murah yang dijadwalkan berlangsung pada Selasa",
+   "ringkasan": "Pemerintah Kota Bengkulu bersama TPID akan menggelar Bazar Pasar Murah di halaman Kantor Wali Kota Bengkulu pada 13 Oktober 2026. Kegiatan ini menyediakan bahan pokok seperti beras dengan harga terjangkau guna menjaga kestabilan harga dan mengendalikan inflasi daerah.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "9124477efb47",
    "url": "https://koran-jakarta.com/2026-10-08/hindari-penyebaran-pmk-pemkab-bengkulu-tengah-akselerasi-vaksinasi-pada-ternak/amp",
@@ -98,7 +163,7 @@
      "status": "kandidat"
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -302,7 +367,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "2588ff2f795a",
@@ -486,12 +551,12 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 161,
+  "hasil_pencarian": 166,
   "setelah_duplikat": 131,
-  "berita_baru": 2,
-  "total_arsip": 8,
-  "kandidat_harga_baru": 2,
-  "isi_tidak_terbaca": 1,
+  "berita_baru": 1,
+  "total_arsip": 9,
+  "kandidat_harga_baru": 0,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
   "model_ai": "gemini-3.8-flash"
  },
