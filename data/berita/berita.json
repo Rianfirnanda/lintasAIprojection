@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-10-12T07:11:39+07:00",
+ "diperbarui": "2026-10-13T07:06:07+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-13",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Laporan berita saat ini hanya memuat informasi dari Kota Bengkulu dan belum ada berita yang menyebutkan kondisi di Kabupaten Bengkulu Tengah. Di Kota Bengkulu, terjadi kenaikan harga cabai setan, cabai rawit hijau, dan cabai merah di Pasar Pagar Dewa, sedangkan komoditas unggas dan bawang dilaporkan turun. Sebagai langkah pengendalian inflasi, Pemerintah Kota Bengkulu bersama TPID menggelar Bazar Pasar Murah sembako pada 13 Oktober 2026. TPID Kabupaten Bengkulu Tengah perlu memantau potensi rambatan pergerakan harga aneka cabai dari wilayah tetangga tersebut.",
+   "poin": [
+    "Harga cabai setan, cabai rawit hijau, dan cabai merah naik di Pasar Pagar Dewa Kota Bengkulu, sementara komoditas unggas dan bawang turun.",
+    "Pemerintah Kota Bengkulu bersama TPID menggelar Bazar Pasar Murah untuk menyediakan sembako harga terjangkau dan mengendalikan inflasi.",
+    "Tidak terdapat laporan spesifik mengenai perkembangan harga maupun pasokan di Kabupaten Bengkulu Tengah."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga komoditas cabai (cabai setan, cabai rawit hijau, dan cabai merah)",
+    "Potensi dampak pergerakan harga komoditas dari Kota Bengkulu ke Bengkulu Tengah"
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-12",
    "metode": "ai",
@@ -53,6 +69,201 @@
  ],
  "berita": [
   {
+   "id": "fd9c041f521a",
+   "url": "https://www.teropongpublik.co.id/pemkot-bengkulu-gelar-bazar-pasar-murah-13-oktober-2026-sediakan-sembako-harga-terjangkau",
+   "judul": "Pemkot Bengkulu Gelar Bazar Pasar Murah 13 Oktober 2026, Sediakan Sembako Harga Terjangkau | Teropong Publik",
+   "sumber": "teropongpublik.co.id",
+   "tanggal": "2026-10-12",
+   "diakses": "2026-10-13T07:06:07+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "pasokan",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 14155,
+   "sidik_sha256": "4056f1b0487f919113341c2b8fbd0b686474a779542475277f0e54f1c757780b",
+   "kutipan": "Menurut Medy, Minggu (11/10/2026), kegiatan tersebut merupakan bagian dari sinergi lintas sektor untuk mengantisipasi gejolak harga pangan yang berpotensi memengaruhi pengeluaran rumah tangga. “Melalui sinergi kuat antar",
+   "ringkasan": "Pemerintah Kota Bengkulu bersama TPID menggelar Bazar Pasar Murah untuk membantu masyarakat mendapatkan bahan pokok dengan harga terjangkau dan mengendalikan inflasi daerah.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "edb7c7c1d463",
+   "url": "https://satujuang.com/harga-cabai-meroket-komoditas-unggas-dan-bawang-turun",
+   "judul": "Harga Cabai Meroket, Komoditas Unggas Dan Bawang Turun | Satujuang",
+   "sumber": "satujuang.com",
+   "tanggal": "2026-10-11",
+   "diakses": "2026-10-13T07:06:07+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 9,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Ikan",
+    "Kedelai",
+    "Tempe"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 11843,
+   "sidik_sha256": "ef5f99e64b1919af4820493de51202cf7d6960578f5d2713680e45d2a542fd4c",
+   "kutipan": "Sebaliknya, komoditas unggas justru mengalami penurunan harga yang cukup signifikan di lapak pedagang. Daging ayam potong merosot tajam ke angka Rp36 ribu dari harga sebelumnya yang sempat menembus Rp45 ribu per kilogram",
+   "ringkasan": "Di Kota Bengkulu, harga cabai setan, cabai rawit hijau, dan cabai merah mengalami kenaikan di Pasar Pagar Dewa.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 60000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Kelompok cabai terpantau meroket tanpa hambatan, dengan cabai setan melompat ke angka Rp75 ribu dari semula Rp60 ribu per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW01",
+     "nilai": 70000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Tren kenaikan turut mengerek cabai rawit hijau dari posisi Rp60 ribu menjadi Rp70 ribu per kilogram, sementara cabai merah bertahan di level tinggi Rp75 ribu per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 75000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Tren kenaikan turut mengerek cabai rawit hijau dari posisi Rp60 ribu menjadi Rp70 ribu per kilogram, sementara cabai merah bertahan di level tinggi Rp75 ribu per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": null,
+     "nilai": 45000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Daging ayam potong merosot tajam ke angka Rp36 ribu dari harga sebelumnya yang sempat menembus Rp45 ribu per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 50000,
+     "satuan": "karpet",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Penurunan serupa menyentuh komoditas telur ayam ras yang kini dilepas Rp50 ribu per karpet dari patokan lama Rp60 ribu.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 40000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Sektor bumbu dapur utama ikut melandai, di mana bawang merah dan bawang putih kompak turun ke Rp30 ribu dari sebelumnya Rp40 ribu per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Daging Sapi",
+     "kode_komoditas": "DSP",
+     "kode_varian": null,
+     "nilai": 150000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Kendati demikian, kelompok protein hewani lain seperti daging sapi segar belum bergeming dan masih bertengger di angka Rp150 ribu per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Ikan",
+     "kode_komoditas": "IKN",
+     "kode_varian": null,
+     "nilai": 30000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Kenaikan tipis juga merembet pada komoditas perikanan dan olahan nabati, seperti ikan nila yang naik menjadi Rp30 ribu per kilogram serta ikan teri menjadi Rp12 ribu per ons.",
+     "status": "kandidat"
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "80463d472960",
    "url": "https://www.teropongpublik.co.id/index.php/pemkot-bengkulu-gelar-bazar-pasar-murah-13-oktober-2026-sediakan-sembako-harga-terjangkau",
    "judul": "Pemkot Bengkulu Gelar Bazar Pasar Murah 13 Oktober 2026, Sediakan Sembako Harga Terjangkau",
@@ -98,7 +309,7 @@
    "dampak_harga": "stabil",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -551,14 +762,14 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 166,
-  "setelah_duplikat": 131,
-  "berita_baru": 1,
-  "total_arsip": 9,
-  "kandidat_harga_baru": 0,
+  "hasil_pencarian": 175,
+  "setelah_duplikat": 147,
+  "berita_baru": 2,
+  "total_arsip": 11,
+  "kandidat_harga_baru": 8,
   "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "model_ai": "gemini-3.5-flash-lite"
  },
  "galat": []
 }
