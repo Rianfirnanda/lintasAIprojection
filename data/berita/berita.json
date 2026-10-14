@@ -1,6 +1,23 @@
 {
- "diperbarui": "2026-10-13T07:06:07+07:00",
+ "diperbarui": "2026-10-14T07:04:55+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-14",
+   "metode": "ai",
+   "penyedia": "openrouter",
+   "ringkas": "Berita yang tersedia mencakup pasar murah lima hari di Pekanbaru, Riau, dan bazar pasar murah di Kota Bengkulu yang bertujuan menjaga stabilitas harga pangan serta menekan inflasi. Selain itu, disebutkan pasokan daging ayam terbatas yang disuplai dari Lampung ke Bengkulu.",
+   "poin": [
+    "Pemprov Riau mengadakan pasar murah di Pekanbaru selama lima hari.",
+    "Pemkot Bengkulu menggelar bazar pasar murah untuk menjaga stabilitas harga pangan.",
+    "Pemkot Bengkulu juga melaksanakan bazar pangan murah minimal dua kali sebulan untuk menekan inflasi.",
+    "Pasokan daging ayam di Bengkulu terbatas dan disuplai dari Lampung."
+   ],
+   "perlu_dipantau": [
+    "Pengaruh pasar murah dan bazar pangan murah terhadap harga dan stabilitas pangan di wilayah terkait.",
+    "Kondisi pasokan daging ayam yang terbatas dan ketergantungan pada suplai dari Lampung."
+   ],
+   "kalimat_dibuang": 1
+  },
   {
    "tanggal": "2026-10-13",
    "metode": "ai",
@@ -69,6 +86,203 @@
  ],
  "berita": [
   {
+   "id": "0ee73bb1a64a",
+   "url": "https://rri.co.id/bengkulu/regional/2804059/pemkot-bengkulu-akan-gelar-bazar-pasar-murah-jaga-stabilitas-harga-pangan",
+   "judul": "Pemkot Bengkulu Akan Gelar Bazar Pasar Murah, Jaga Stabilitas Harga Pangan - RRI.co.id",
+   "sumber": "rri.co.id",
+   "tanggal": "2026-10-13",
+   "diakses": "2026-10-14T07:04:55+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 5511,
+   "sidik_sha256": "32a79da56163a1d632e53483410ba34e8accb444b6044159b1c3d38e0ca2e441",
+   "kutipan": "Berbagai komoditas pangan disiapkan dalam bazar tersebut, mulai dari beras Stabilisasi Pasokan dan Harga Pangan (SPHP) dari Bulog, minyak goreng, telur ayam, gula pasir, tepung terigu, daging ayam, hingga bawang merah da",
+   "ringkasan": "Pemerintah Kota Bengkulu berencana menyelenggarakan bazar pasar murah guna menjaga stabilitas harga pangan.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "d76728afd347",
+   "url": "https://bengkulu.antaranews.com/amp/berita/482062/pemkot-bengkulu-gelar-bazar-pangan-murah-guna-tekan-inflasi",
+   "judul": "Pemkot Bengkulu gelar bazar pangan murah guna tekan inflasi",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-13",
+   "diakses": "2026-10-14T07:04:55+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 2434,
+   "sidik_sha256": "79f17c7ab4bd0f06348c6d30f3bdecdbd0632e7a6c035db09cd502d0381e37f2",
+   "kutipan": "Pemerintah Kota (Pemkot) Bengkulu, Provinsi Bengkulu melaksanakan bazar pangan murah yang dilaksanakan dua kali selama satu bulan sebagai salah satu upaya .",
+   "ringkasan": "Pemerintah Kota Bengkulu melaksanakan bazar pangan murah minimal dua kali sebulan untuk menekan inflasi dan menjaga stabilitas harga. Berbagai komoditas yang dijual di bawah harga pasaran meliputi beras SPHP, minyak goreng, telur ayam, gula pasir, tepung terigu, daging ayam, bawang merah, dan bawang putih.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "14cda0d2cdd5",
+   "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQSnpQazE5anJNU2NLbUlpNFo4SDdXaHlOTGxlRGo5UXYtdFJ1bjNJOGI1SjBaZElYakNNZVBNMXlkWWhQOXVLeHREQXN1OHhaNkNTU21qczJ3T3U3NE9YUVVlMVlrOUkwVnVMZVd5NmhZbXROT3RjQ3N2R0hwQ0R6Wi1rVUEtQ1dtUC03elpUQnRyMFpnSVF0bnFxNEhkZG1kUW9aM2otelhGYTQ?oc=5",
+   "judul": "Pasokan Bengkulu Terbatas, Daging Ayam MBG Disuplai dari Lampung",
+   "sumber": "RRI.co.id",
+   "tanggal": "2026-10-13",
+   "diakses": "2026-10-14T07:04:55+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Daging Ayam"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "755a6efe48a3",
+   "url": "https://amirariau.com/mulai-hari-ini-hingga-lima-hari-ke-depan-pemprov-riau-gelar-pasar-murah-di-pekanbaru",
+   "judul": "Mulai Hari Ini Hingga Lima Hari ke Depan, Pemprov Riau Gelar Pasar Murah di Pekanbaru - AmiraRiau.Com | Berita Riau Terkini & Informasi Terpercaya",
+   "sumber": "amirariau.com",
+   "tanggal": "2026-10-12",
+   "diakses": "2026-10-14T07:04:55+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": false
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Garam",
+    "Garam Beryodium"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 11870,
+   "sidik_sha256": "160341642e47d6c35879dff17acc982765471646c04d534071f6ff11de61950f",
+   "kutipan": "Mulai Hari Ini Hingga Lima Hari ke Depan, Pemprov Riau Gelar Pasar Murah di Pekanbaru Plt Gubernur Riau SF Hariyanto di salah satu pasar murah beberapa waktu lalu. Share Share Share PEKANBARU, AmiraRiau.com - Pemerintah ",
+   "ringkasan": "Pemerintah Provinsi Riau mengadakan pasar murah di Pekanbaru yang berlangsung selama lima hari.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": null,
+     "nilai": 18000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Masyarakat dapat memperoleh berbagai kebutuhan pokok dengan harga terjangkau yang berada di bawah harga pasar, di antaranya beras SPHP Rp60.000/5 kg, beras Anak Daro & Sokan (Premium) Rp84.500/5 kg dan Rp169.000/10 kg, gula pasir Rp18.000 / kg, minyak goreng Minyakita Rp15.500/kemasan, telur ayam ra",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Garam Beryodium",
+     "kode_komoditas": "GRM",
+     "kode_varian": null,
+     "nilai": 2000,
+     "satuan": "bungkus",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Masyarakat dapat memperoleh berbagai kebutuhan pokok dengan harga terjangkau yang berada di bawah harga pasar, di antaranya beras SPHP Rp60.000/5 kg, beras Anak Daro & Sokan (Premium) Rp84.500/5 kg dan Rp169.000/10 kg, gula pasir Rp18.000 / kg, minyak goreng Minyakita Rp15.500/kemasan, telur ayam ra",
+     "status": "kandidat"
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "fd9c041f521a",
    "url": "https://www.teropongpublik.co.id/pemkot-bengkulu-gelar-bazar-pasar-murah-13-oktober-2026-sediakan-sembako-harga-terjangkau",
    "judul": "Pemkot Bengkulu Gelar Bazar Pasar Murah 13 Oktober 2026, Sediakan Sembako Harga Terjangkau | Teropong Publik",
@@ -114,7 +328,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -260,7 +474,7 @@
      "status": "kandidat"
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -763,13 +977,13 @@
  ],
  "statistik": {
   "hasil_pencarian": 175,
-  "setelah_duplikat": 147,
-  "berita_baru": 2,
-  "total_arsip": 11,
-  "kandidat_harga_baru": 8,
-  "isi_tidak_terbaca": 0,
+  "setelah_duplikat": 139,
+  "berita_baru": 4,
+  "total_arsip": 15,
+  "kandidat_harga_baru": 2,
+  "isi_tidak_terbaca": 1,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.5-flash-lite"
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
