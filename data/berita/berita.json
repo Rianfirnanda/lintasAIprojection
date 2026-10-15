@@ -1,6 +1,24 @@
 {
- "diperbarui": "2026-10-14T07:04:55+07:00",
+ "diperbarui": "2026-10-15T07:08:35+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-15",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Laporan hari ini hanya mencakup wilayah Kota Bengkulu dan Bengkulu secara umum, tanpa menyebutkan kondisi di Kabupaten Bengkulu Tengah. Di pasar Kota Bengkulu, harga cabai merah berada pada kisaran Rp70–85 ribu per kilogram, sementara harga beras dilaporkan naik dengan dugaan pengaruh kemarau. Untuk menjaga keterjangkauan bahan pokok, Pemerintah Kota Bengkulu menyelenggarakan bazar pangan murah. Mengingat sebagian isi rincian berita tidak terbaca lengkap, TPID Bengkulu Tengah perlu memantau potensi rambatan harga beras dan cabai merah ke wilayah setempat.",
+   "poin": [
+    "Pemkot Bengkulu menggelar bazar pangan murah guna menyediakan bahan pokok harga terjangkau bagi warga.",
+    "Harga cabai merah di pasar Kota Bengkulu terpantau berada di angka Rp70–85 ribu per kilogram.",
+    "Pedagang menyebut kemarau diduga memicu kenaikan harga beras di Bengkulu.",
+    "Seluruh berita berasal dari luar Kabupaten Bengkulu Tengah dan rincian berita terkait beras serta cabai tidak dapat dibaca otomatis."
+   ],
+   "perlu_dipantau": [
+    "Kenaikan harga beras yang diduga terpengaruh kondisi kemarau.",
+    "Tingginya harga cabai merah di pasar sekitar.",
+    "Potensi rembetan perubahan harga komoditas dari Kota Bengkulu ke Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-14",
    "metode": "ai",
@@ -86,6 +104,143 @@
  ],
  "berita": [
   {
+   "id": "cb8c638e7dd9",
+   "url": "https://bengkulu.antaranews.com/berita/482077/pemkot-bengkulu-bazar-murah-sediakan-pangan-harga-terjangkau-bagi-warga",
+   "judul": "Pemkot Bengkulu bazar murah sediakan pangan harga terjangkau bagi warga - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-14",
+   "diakses": "2026-10-15T07:08:35+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Cabai Merah",
+    "Minyak Goreng"
+   ],
+   "tag": [
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 8322,
+   "sidik_sha256": "11f4eea8eabe537b3b8bcf358f25488f4489932f694c3dac66dad16d7b556c42",
+   "kutipan": "\"Harganya Rp75.000 di sini, kalau di pasar sekitar Rp85.000. Memang itu tujuannya, untuk biar terjangkau oleh masyarakat,\" kata Defri. Selain menyediakan pasokan pangan murah, kegiatan ini dimanfaatkan para pelaku UMKM u",
+   "ringkasan": "Pemerintah Kota Bengkulu menyelenggarakan bazar pangan murah untuk membantu masyarakat mendapatkan bahan pokok dengan harga terjangkau. Kegiatan yang disambut antusias warga ini juga menjadi wadah promosi bagi pelaku UMKM lokal.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 75000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 85000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
+     "status": "kandidat"
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "f94463302112",
+   "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQX05QNkVfazF5TjdFeTd6NXhZamwwZUkySlZmSVBqUVVZN3hiUDd0Mnk5N0tFcVg0OEtMOC0wOWVIdm1GS0twZ0JHR2xUd1ZVVy1NVWMzN2RpYjdIQ00wZ2xJSkVESlhNbWhNRzVJbHNvcW1tS0dUbWw3WWdmU1pQUVVsa0l3UVhZVExLR0xCN2ZneEViRDNiTUVTQV9ybng1M1otNndPN0NCeDVxaU5oUk1mVTk4dFhIY2p2bDN3Y9IBxAFBVV95cUxOcmZGUTAwbzE0eFFTSDdVenZtWTZBa3VFdDl4VFRzLXVoMmJGanFkMjBZM21qZWpJNnhCUU5XMTZOVEhJR2Y2b0xWRndCTnJMaEJtVTc5OFY5NjV4bUFDcHZ6ajlFRjFFSW5iZkozS2hyRW44bE5lOXZ5Y0w1VGV0V0lhc1FoTUx4OEw0YWx0MjFoenU4RDNjbnU5ekVsV1ZiVHFVa2xEdTdLLTY4STN6dmZFa2ZxWlRXSUxGQ3dGRkJhWDFp?oc=5",
+   "judul": "Harga cabai merah di pasar Kota Bengkulu berada di Rp70-85 ribu per kilogram",
+   "sumber": "ANTARA News",
+   "tanggal": "2026-10-14",
+   "diakses": "2026-10-15T07:08:35+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "3482d435ca0e",
+   "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQc2RiRzl4VnpmX09kMXdQWkZnSkVvQ2R2ek52UjA1eWxYOWhMeE9NSzFjTFRKMDBfSGNWUktOemtHLWo5Rm5SZ3V4RVVjdTZuWTBDY0xQOGxBWjMxby1FSDZtQUp0em50VkRUaE9zVEx6eFFoVlo1cDlpU0ZGdldjNWctRHlIdEZIa3lSd291N2NKWTgxTFcyYmNXZ3JPMS1qY0YxbFNVdk9xLVlRMkZpUHQycU5JN2lEb3lKb1NXWdIBvwFBVV95cUxQc2RiRzl4VnpmX09kMXdQWkZnSkVvQ2R2ek52UjA1eWxYOWhMeE9NSzFjTFRKMDBfSGNWUktOemtHLWo5Rm5SZ3V4RVVjdTZuWTBDY0xQOGxBWjMxby1FSDZtQUp0em50VkRUaE9zVEx6eFFoVlo1cDlpU0ZGdldjNWctRHlIdEZIa3lSd291N2NKWTgxTFcyYmNXZ3JPMS1qY0YxbFNVdk9xLVlRMkZpUHQycU5JN2lEb3lKb1NXWQ?oc=5",
+   "judul": "Pedagang sebut kemarau diduga pengaruhi kenaikan harga beras di Bengkulu",
+   "sumber": "ANTARA News Bengkulu",
+   "tanggal": "2026-10-14",
+   "diakses": "2026-10-15T07:08:35+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "harga_naik",
+    "cuaca"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "0ee73bb1a64a",
    "url": "https://rri.co.id/bengkulu/regional/2804059/pemkot-bengkulu-akan-gelar-bazar-pasar-murah-jaga-stabilitas-harga-pangan",
    "judul": "Pemkot Bengkulu Akan Gelar Bazar Pasar Murah, Jaga Stabilitas Harga Pangan - RRI.co.id",
@@ -129,7 +284,7 @@
    "dampak_harga": "stabil",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -177,7 +332,7 @@
    "dampak_harga": "stabil",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -211,7 +366,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "755a6efe48a3",
@@ -279,7 +434,7 @@
      "status": "kandidat"
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -976,12 +1131,12 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 175,
-  "setelah_duplikat": 139,
-  "berita_baru": 4,
-  "total_arsip": 15,
+  "hasil_pencarian": 180,
+  "setelah_duplikat": 158,
+  "berita_baru": 3,
+  "total_arsip": 18,
   "kandidat_harga_baru": 2,
-  "isi_tidak_terbaca": 1,
+  "isi_tidak_terbaca": 2,
   "penyedia_ai": "gemini",
   "model_ai": "gemini-3.8-flash"
  },
