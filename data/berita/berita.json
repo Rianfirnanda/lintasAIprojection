@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-10-16T07:12:16+07:00",
+ "diperbarui": "2026-10-17T03:42:34+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-17",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Seluruh pantauan berita saat ini berasal dari wilayah Kota Bengkulu dan tidak ada berita yang menyebutkan Kabupaten Bengkulu Tengah secara langsung. Di Kota Bengkulu, pasokan telur dan ayam potong dilaporkan lancar dengan harga yang relatif stabil, sedangkan harga beras mengalami kenaikan akibat dampak musim kemarau. Pemerintah Kota Bengkulu berupaya menekan inflasi dengan menggelar kegiatan bazar pangan murah untuk komoditas pokok. Perkembangan harga beras dan pasokan pangan antarwilayah perlu dipantau agar dampaknya tidak merambat ke Bengkulu Tengah.",
+   "poin": [
+    "Pasokan ayam potong dan telur di Pasar Minggu Kota Bengkulu dilaporkan lancar dan harganya relatif stabil.",
+    "Pemerintah Kota Bengkulu menggelar bazar pangan murah untuk menekan inflasi dan menyediakan bahan pokok terjangkau.",
+    "Tidak terdapat laporan harga maupun pasokan pangan yang spesifik menyebutkan Kabupaten Bengkulu Tengah."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga beras akibat pengaruh musim kemarau.",
+    "Potensi rembetan kenaikan harga bahan pangan dari Kota Bengkulu ke pasar di Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-16",
    "metode": "ai",
@@ -118,6 +134,111 @@
  ],
  "berita": [
   {
+   "id": "545210d7b2f7",
+   "url": "https://bengkulu.antaranews.com/berita/482401/pasokan-lancar-harga-ayam-dan-telur-di-pasar-kota-bengkulu-relatif-stabil",
+   "judul": "Pasokan lancar, harga ayam dan telur di Pasar Kota Bengkulu relatif stabil - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-16",
+   "diakses": "2026-10-17T03:42:34+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 8,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Telur Ayam",
+    "Beras",
+    "Daging Ayam"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "pasokan",
+    "cuaca",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 8008,
+   "sidik_sha256": "771ce94b9d1446c0410a0b92beec8fbc511d1df47f43bf7903bc30019472cc4d",
+   "kutipan": "Eki mengatakan harga telur saat ini masih tergolong normal setelah sebelumnya sempat mengalami kenaikan hingga Rp56.000-Rp57.000 per karpet, bahkan mencapai Rp60.000 per karpet pada periode tertentu. Menurut dia perubaha",
+   "ringkasan": "Pedagang telur dan ayam potong di Pasar Minggu Kota Bengkulu menyampaikan bahwa pasokan telur dan ayam potong menjelang akhir tahun masih lancar dan normal, sehingga harga kedua komoditas tersebut relatif stabil.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 56000,
+     "satuan": "karpet",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Eki mengatakan harga telur saat ini masih tergolong normal setelah sebelumnya sempat mengalami kenaikan hingga Rp56.000-Rp57.000 per karpet, bahkan mencapai Rp60.000 per karpet pada periode tertentu.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga telur pada waktu sebelumnya di pasar Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 57000,
+     "satuan": "karpet",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Eki mengatakan harga telur saat ini masih tergolong normal setelah sebelumnya sempat mengalami kenaikan hingga Rp56.000-Rp57.000 per karpet, bahkan mencapai Rp60.000 per karpet pada periode tertentu.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga telur pada waktu sebelumnya di pasar Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 60000,
+     "satuan": "karpet",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Eki mengatakan harga telur saat ini masih tergolong normal setelah sebelumnya sempat mengalami kenaikan hingga Rp56.000-Rp57.000 per karpet, bahkan mencapai Rp60.000 per karpet pada periode tertentu.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga telur pada periode waktu sebelumnya di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "openrouter"
+  },
+  {
    "id": "33118b7ff7bf",
    "url": "https://bengkulu.antaranews.com/berita/482273/harga-cabai-merah-di-pasar-kota-bengkulu-berada-di-rp70-85-ribu-per-kilogram",
    "judul": "Harga cabai merah di pasar Kota Bengkulu berada di Rp70-85 ribu per kilogram",
@@ -167,7 +288,15 @@
      "pasar": "Pasar Panorama",
      "arah": "",
      "bukti": "Bengkulu (ANTARA) - Harga cabai merah di pasar tradisional Kota Bengkulu, Pasar Panorama dijual pada rentang Rp70.000 hingga Rp85.000 per kilogram pada 14 Oktober 2026.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual cabai merah saat ini di pasar tradisional Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -179,7 +308,15 @@
      "pasar": "Pasar Panorama",
      "arah": "",
      "bukti": "Bengkulu (ANTARA) - Harga cabai merah di pasar tradisional Kota Bengkulu, Pasar Panorama dijual pada rentang Rp70.000 hingga Rp85.000 per kilogram pada 14 Oktober 2026.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Batas atas harga jual cabai merah di pasar Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -191,7 +328,15 @@
      "pasar": null,
      "arah": "",
      "bukti": "Fiki mengatakan harga cabai merah besar dan cabai merah keriting sebelumnya berkisar Rp40.000 hingga Rp50.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah pada waktu sebelumnya di pasar Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -203,11 +348,19 @@
      "pasar": null,
      "arah": "",
      "bukti": "Fiki mengatakan harga cabai merah besar dan cabai merah keriting sebelumnya berkisar Rp40.000 hingga Rp50.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah pada waktu sebelumnya di pasar Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
-     "komoditas": "Cabai Merah",
-     "kode_komoditas": "CMR",
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
      "kode_varian": null,
      "nilai": 80000,
      "satuan": "kg",
@@ -215,7 +368,21 @@
      "pasar": null,
      "arah": "",
      "bukti": "Selain cabai merah besar dan cabai merah keriting, cabai rawit dan cabai setan juga dijual sekitar Rp80.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "asal_mesin": {
+      "komoditas": "Cabai Merah",
+      "kode_komoditas": "CMR",
+      "kode_varian": null
+     },
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Angka tersebut merupakan harga cabai rawit dan cabai setan.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17",
+      "dikoreksi": true
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -227,11 +394,190 @@
      "pasar": null,
      "arah": "",
      "bukti": "Khusus cabai setan, harga jualnya berkisar Rp80.000 hingga Rp90.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Angka tersebut merupakan harga jual cabai setan bukan cabai merah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
+  },
+  {
+   "id": "946436ad93c7",
+   "url": "https://bengkulu.antaranews.com/amp/berita/482285/pedagang-sebut-kemarau-diduga-pengaruhi-kenaikan-harga-beras-di-bengkulu",
+   "judul": "Pedagang sebut kemarau diduga pengaruhi kenaikan harga beras di Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-15",
+   "diakses": "2026-10-17T03:42:34+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "cuaca"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 1747,
+   "sidik_sha256": "1a4aa965bc2a406c34728a0d6c722e0c0f69d49c880dbea9d27ec37203e7d420",
+   "kutipan": "Pedagang beras di Kota Bengkulu menduga kondisi musim kemarau turut memengaruhi kenaikan harga sejumlah jenis beras yang dijual kepada",
+   "ringkasan": "Pedagang beras di Pasar Panorama Kota Bengkulu menduga kondisi musim kemarau memengaruhi kenaikan harga beras dan bahan pokok lain seperti ayam dan cabai. Kenaikan harga beras berkisar Rp10.000 hingga Rp15.000 per kemasan, dengan contoh harga beras merek Manggis naik dari Rp85.000 menjadi Rp95.000 per kemasan lima kilogram.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "openrouter"
+  },
+  {
+   "id": "e83d0b8341c4",
+   "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQTXpSQTZYaFlYT09mWV9BUTE4bExUd3BwcGZUU21odU1SRVFuSDZzdVRZNUcyZG9GemZya0R3RFZQNEF2cGQtdUs2amNBbElEWEw0aGRTc1ZZZXJHbXdZcHBTVUVjZ2J4ZlBKTFJEN01ray0zSkdtVS1jd0szZE9PTEVrVWhkNGtKNDFhUm4tYzlUc0dFamU3Rk52MVU1eUlVT083cnNkNFFzRHZaNE9RaDlIeWdnYmo1bmxv0gHAAUFVX3lxTE5KVldtcmp0eEk5elo4ZmVCbkI3bmNVWERqZG9BdHBGakZIN1JETUc4M0IyUFRaN3BwTTd3WXdLOGZqVVM5bXdmZmZaWURUR3pGSnBrQWJrNVBfdmdrUVladWJSaDJodHlaSmx4VWphQngwX0FXZnJOU3Y5cHR6eC1ueF9ZdGlfTUV6ZS1zQm1MRjRzNEtjQTYzZzk2WUtJQmE0THN3VHJxcVQ4RzdCcXBaeXRpaFlocDhfZ1I1RER2Tg?oc=5",
+   "judul": "Pasokan lancar, harga ayam dan telur di Pasar Kota Bengkulu relatif stabil",
+   "sumber": "ANTARA News Bengkulu",
+   "tanggal": "2026-10-15",
+   "diakses": "2026-10-17T03:42:34+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Telur Ayam"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "d6071fa1ab17",
+   "url": "https://prudensi.com/pasar-murah-bengkulu-digelar-13-oktober-2026-beras-hingga-daging-ayam-disiapkan",
+   "judul": "Pasar Murah Bengkulu Digelar 13 Oktober 2026, Beras hingga Daging Ayam Disiapkan",
+   "sumber": "prudensi.com",
+   "tanggal": "2026-10-14",
+   "diakses": "2026-10-17T03:42:34+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 11,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 4097,
+   "sidik_sha256": "b545414fd2d4abea50bc88d162847acdaea2b9e7dd288b3264fc9073f11fc3cb",
+   "kutipan": "BENGKULU – Pemerintah Kota (Pemkot) Bengkulu menggelar bazar pasar murah pada Selasa, 13 Oktober 2026, di halaman Kantor Wali Kota Bengkulu, Bentiring,",
+   "ringkasan": "Pemerintah Kota Bengkulu menggelar bazar pasar murah pada 13 Oktober 2026 di halaman Kantor Wali Kota Bengkulu, Bentiring, untuk membantu masyarakat memperoleh bahan pangan dengan harga lebih terjangkau dan menekan tekanan inflasi daerah. Bazar ini diselenggarakan bersama Tim Pengendalian Inflasi Daerah (TPID) dan menyediakan berbagai kebutuhan pokok seperti beras, minyak goreng, telur ayam, gula pasir, tepung terigu, daging ayam, bawang merah, dan bawang putih dengan harga yang diupayakan lebih rendah dibandingkan pasaran.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "turun",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "openrouter"
+  },
+  {
+   "id": "9b8b0b448cef",
+   "url": "https://bengkulu.antaranews.com/berita/482062/pemkot-bengkulu-gelar-bazar-pangan-murah-guna-tekan-inflasi",
+   "judul": "Pemkot Bengkulu gelar bazar pangan murah guna tekan inflasi - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-14",
+   "diakses": "2026-10-17T03:42:34+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9070,
+   "sidik_sha256": "88597be3dd31e527948a40ca789ad5984ffc796480c9105966195634b7ce2c6e",
+   "kutipan": "\"Kami dari pemerintah kota melaksanakan bazar pangan murah di halaman Kantor Wali Kota Bengkulu dan dilaksanakan minimal dua kali dalam satu bulan,\" kata Kepala Dinas Perdagangan dan Perindustrian (Disperindagrin) Kota B",
+   "ringkasan": "Pemerintah Kota Bengkulu, Provinsi Bengkulu, melaksanakan bazar pangan murah dua kali sebulan untuk menekan angka inflasi dan membantu masyarakat mendapatkan kebutuhan pokok dengan harga terjangkau sekaligus menjaga stabilitas harga bahan pangan di pasaran.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "turun",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "openrouter"
   },
   {
    "id": "1010f18c0b37",
@@ -281,7 +627,15 @@
      "pasar": null,
      "arah": "",
      "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah keriting pada kegiatan bazar murah Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -293,10 +647,18 @@
      "pasar": null,
      "arah": "",
      "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah keriting yang berlaku di pasaran umum saat ini.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -347,7 +709,15 @@
      "pasar": null,
      "arah": "",
      "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah keriting pada kegiatan bazar murah Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -359,7 +729,15 @@
      "pasar": null,
      "arah": "",
      "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah keriting yang berlaku di pasaran umum saat ini.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     }
    ],
    "baru": false,
@@ -615,7 +993,15 @@
      "pasar": null,
      "arah": "",
      "bukti": "Masyarakat dapat memperoleh berbagai kebutuhan pokok dengan harga terjangkau yang berada di bawah harga pasar, di antaranya beras SPHP Rp60.000/5 kg, beras Anak Daro & Sokan (Premium) Rp84.500/5 kg dan Rp169.000/10 kg, gula pasir Rp18.000 / kg, minyak goreng Minyakita Rp15.500/kemasan, telur ayam ra",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga gula pasir pada program pasar murah di Pekanbaru Riau.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Garam Beryodium",
@@ -627,7 +1013,15 @@
      "pasar": null,
      "arah": "",
      "bukti": "Masyarakat dapat memperoleh berbagai kebutuhan pokok dengan harga terjangkau yang berada di bawah harga pasar, di antaranya beras SPHP Rp60.000/5 kg, beras Anak Daro & Sokan (Premium) Rp84.500/5 kg dan Rp169.000/10 kg, gula pasir Rp18.000 / kg, minyak goreng Minyakita Rp15.500/kemasan, telur ayam ra",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Komoditas dan harga tersebut tidak tercantum pada kalimat berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     }
    ],
    "baru": false,
@@ -738,7 +1132,15 @@
      "pasar": null,
      "arah": "naik",
      "bukti": "Kelompok cabai terpantau meroket tanpa hambatan, dengan cabai setan melompat ke angka Rp75 ribu dari semula Rp60 ribu per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Harga lama untuk komoditas cabai setan di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Rawit",
@@ -750,7 +1152,15 @@
      "pasar": null,
      "arah": "naik",
      "bukti": "Tren kenaikan turut mengerek cabai rawit hijau dari posisi Rp60 ribu menjadi Rp70 ribu per kilogram, sementara cabai merah bertahan di level tinggi Rp75 ribu per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar terkini cabai rawit hijau di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -762,7 +1172,15 @@
      "pasar": null,
      "arah": "naik",
      "bukti": "Tren kenaikan turut mengerek cabai rawit hijau dari posisi Rp60 ribu menjadi Rp70 ribu per kilogram, sementara cabai merah bertahan di level tinggi Rp75 ribu per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar terkini cabai merah di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Daging Ayam",
@@ -774,7 +1192,15 @@
      "pasar": null,
      "arah": "turun",
      "bukti": "Daging ayam potong merosot tajam ke angka Rp36 ribu dari harga sebelumnya yang sempat menembus Rp45 ribu per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga lama daging ayam potong di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Telur Ayam",
@@ -786,7 +1212,15 @@
      "pasar": null,
      "arah": "turun",
      "bukti": "Penurunan serupa menyentuh komoditas telur ayam ras yang kini dilepas Rp50 ribu per karpet dari patokan lama Rp60 ribu.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar terkini telur ayam ras di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Bawang Putih",
@@ -798,7 +1232,15 @@
      "pasar": null,
      "arah": "turun",
      "bukti": "Sektor bumbu dapur utama ikut melandai, di mana bawang merah dan bawang putih kompak turun ke Rp30 ribu dari sebelumnya Rp40 ribu per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga lama bawang putih di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Daging Sapi",
@@ -810,7 +1252,15 @@
      "pasar": null,
      "arah": "",
      "bukti": "Kendati demikian, kelompok protein hewani lain seperti daging sapi segar belum bergeming dan masih bertengger di angka Rp150 ribu per kilogram.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar terkini daging sapi di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Ikan",
@@ -822,7 +1272,15 @@
      "pasar": null,
      "arah": "naik",
      "bukti": "Kenaikan tipis juga merembet pada komoditas perikanan dan olahan nabati, seperti ikan nila yang naik menjadi Rp30 ribu per kilogram serta ikan teri menjadi Rp12 ribu per ons.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar terkini ikan nila di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     }
    ],
    "baru": false,
@@ -924,7 +1382,15 @@
      "pasar": null,
      "arah": "naik",
      "bukti": "* [Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg](/2026-09-04/harga-cabai-rawit-masih-melambung-rp83050kg-dan-telur-ayam-stabil-rp29650kg/amp \"Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg\")",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Judul tautan artikel lain, bukan harga isi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Telur Ayam",
@@ -936,7 +1402,15 @@
      "pasar": null,
      "arah": "naik",
      "bukti": "* [Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg](/2026-09-04/harga-cabai-rawit-masih-melambung-rp83050kg-dan-telur-ayam-stabil-rp29650kg/amp \"Harga Cabai Rawit Masih Melambung, Rp83.050/kg, dan Telur Ayam Stabil Rp29.650/kg\")",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Judul tautan artikel lain, bukan harga isi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     }
    ],
    "baru": false,
@@ -996,7 +1470,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Komoditas cabai merah keriting naik paling tinggi Rp1.673 (2,61%) menjadi Rp65.790 per kg.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata panel pangan cabai merah keriting di Jawa Barat.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Bawang Merah",
@@ -1006,7 +1488,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Adapun harga bawang merah turun paling dalam Rp333 (1,07%) menjadi Rp30.784 per kg.",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata panel pangan bawang merah di Jawa Barat.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Daging Sapi",
@@ -1016,7 +1506,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Daging Sapi Paha Belakang: Rp144.296 per kg (turun 0,04%)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata panel pangan daging sapi di Jawa Barat.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Rawit",
@@ -1026,7 +1524,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Cabai Rawit Merah: Rp77.269 per kg (naik 0,57%)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata panel pangan cabai rawit merah di Jawa Barat.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Cabai Merah",
@@ -1036,7 +1542,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Cabai Merah Besar: Rp50.080 per kg (naik 0,45%)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata panel pangan cabai merah besar di Jawa Barat.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Daging Ayam",
@@ -1046,7 +1560,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Daging Ayam Ras: Rp39.704 per kg (naik 0,71%)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data panel harga agregasi dan terdapat pertentangan wilayah pada informasi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Bawang Putih",
@@ -1056,7 +1578,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Bawang Putih Honan: Rp32.643 per kg (turun 0,17%)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data panel harga agregasi dan terdapat pertentangan wilayah pada informasi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Telur Ayam",
@@ -1066,7 +1596,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Telur Ayam Ras: Rp25.569 per kg (naik 0,02%)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data panel harga agregasi dan terdapat pertentangan wilayah pada informasi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Minyak Goreng",
@@ -1076,7 +1614,15 @@
      "satuan": "liter",
      "peran_wilayah": "tidak jelas",
      "bukti": "Minyak Goreng Sawit Kemasan Premium: Rp21.324 per liter (tetap)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data panel harga agregasi dan terdapat pertentangan wilayah pada informasi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Minyak Goreng",
@@ -1086,7 +1632,15 @@
      "satuan": "liter",
      "peran_wilayah": "tidak jelas",
      "bukti": "Minyak Goreng Sawit Curah: Rp19.951 per liter (turun 0,11%)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data panel harga agregasi dan terdapat pertentangan wilayah pada informasi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Gula Pasir",
@@ -1096,7 +1650,15 @@
      "satuan": "kg",
      "peran_wilayah": "tidak jelas",
      "bukti": "Gula Pasir Curah: Rp17.926 per kg (tetap)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data panel harga agregasi dan terdapat pertentangan wilayah pada informasi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     },
     {
      "komoditas": "Minyak Goreng",
@@ -1106,7 +1668,15 @@
      "satuan": "liter",
      "peran_wilayah": "tidak jelas",
      "bukti": "Minyakita: Rp15.700 per liter (tetap)",
-     "status": "kandidat"
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data panel harga agregasi dan terdapat pertentangan wilayah pada informasi berita.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
     }
    ],
    "baru": false,
@@ -1327,14 +1897,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 159,
-  "setelah_duplikat": 137,
-  "berita_baru": 2,
-  "total_arsip": 20,
-  "kandidat_harga_baru": 8,
-  "isi_tidak_terbaca": 0,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "hasil_pencarian": 163,
+  "setelah_duplikat": 136,
+  "berita_baru": 5,
+  "total_arsip": 25,
+  "kandidat_harga_baru": 3,
+  "harga_dinilai_ai": 37,
+  "isi_tidak_terbaca": 1,
+  "penyedia_ai": "openrouter",
+  "model_ai": "poolside/laguna-s-2.1:free"
  },
  "galat": []
 }
