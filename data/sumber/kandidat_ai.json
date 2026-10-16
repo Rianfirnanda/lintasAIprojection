@@ -1,6 +1,225 @@
 {
   "pencarian": [
     {
+      "waktu": "2026-10-16T08:06:48+07:00",
+      "permintaan": {
+        "komoditas": "Telur Ayam",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Telur Ayam, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Harga telur ayam dan daging ayam di Pasar Minggu, Bengkulu ...\nURL: https://www.facebook.com/KompasTV/videos/harga-telur-ayam-dan-daging-ayam-di-pasar-minggu-bengkulu-mengalami-penurunan-da/1636834530711076\nCuplikan: Harga telur ayam ras kini berada di kisaran Rp23 ribu hingga Rp28 ribu per kilogram, turun dari sebelumnya Rp26 ribu hingga Rp32 ribu per\n\n[2] Umur dan Berat Telur Ayam Ras yang Beredar di Kota Bengkulu | Jurnal Sain Peternakan Indonesia\nURL: https://ejournal.unib.ac.id/jspi/article/view/259\nCuplikan: pengumpul di luar Provinsi Bengkulu, ada 31,6% pengecer yang langsung mendapatkan telur dari produsen di luar Provinsi Bengkulu umur telur rata-rata untuk tingkat distributor adalah 6,69 hari dan tingkat pengecer 9,78 hari. Berat telur rata-rata mengalami penurunan dari tingkat distributor ke pengecer, yaitu dari 65,6 gram menjadi 62,8 gram. [...] Penelitian ini dilakukan untuk mengetahui umur, berat dan asal telur ayam ras yang beredar di pasaran Kota Bengkulu dengan melibatkan 8 responden distributor telur dan 10 orang responden pedagang pengecer Pasar Pagar Dewa, 12 responden pengecer Pasar\n\n[3] Pantau Harga Bahan Pokok Anda!\nURL: https://sigahada.bengkulukota.go.id\nCuplikan: | Tepung | Terigu | 1 kg | Rp 15.000,- | Rp 15.000,- Rp 15.000,- | Rp 15.000,- Rp 15.000,- | Rp 16.000,- | Rp 1.000,- | | Peternakan dan Perikanan | Daging Ayam | Daging Ayam Ras | 1 kg | Rp 38.000,- | Rp 38.000,- Rp 40.000,- | Rp 40.000,- Rp 38.000,- | Rp 38.000,- | Telur Ayam | Telur Ayam Ras | 1 kg | Rp 30.400,- | Rp 30.400,- Rp 30.400,- | Rp 30.400,- Rp 30.400,- | Rp 30.400,- [...] | Ayam Kampung | Kampung Ukuran Sedang | 1 pak | Rp 70.000,- | Rp 70.000,- Rp 70.000,- | Rp 70.000,- Rp 70.000,- | Rp 70.000,- | Telur Ayam Kampung | 1 kg | Rp 63.000,- | Rp 63.000,- Rp 63.000,- | Rp 63.000,- Rp\n\n[4] Harga Telur Ayam di Bengkulu Tak Kunjung Turun Sudah 4 ...\nURL: https://www.youtube.com/watch?v=HYqznpNUQ4A&xstg=CAMSBhUDzO3xHw%3D%3D\nCuplikan: BENGKULU, KOMPAS.TV - Di Kota Bengkulu sudah hampir empat bulan terakhir harga telur ayam ras di pasar tradisional tak kunjung turun.\n\n[5] Pasokan lancar harga ayam dan telur di Pasar Kota ...\nURL: https://bengkulu.antaranews.com/berita/482401/pasokan-lancar-harga-ayam-dan-telur-di-pasar-kota-bengkulu-relatif-stabil\nCuplikan: \"Untuk harga telur per karpet (30 butir), yang ukuran besar itu Rp55.000, sedangkan yang sedang Rp54.000,\" kata pedagang telur di Pasar Minggu\n\n[6] ANALISIS TREN HARGA TELUR AYAM RAS DI KOTA ...\nURL: https://jurnal.um-palembang.ac.id/suluh_abdi/article/view/3972\nCuplikan: by R Reflis · 2021 · Cited by 2 — riset ini bertujuan untuk mengetahui pola perkembangan harga telur ayam ras di kota bengkulu, dan untuk mengetahui tren harga telur ayam ras di kota bengkulu.\n\n[7] VARIABILITAS HARGA TELUR AYAM RAS DI INDONESIA | Buletin Ilmiah Litbang Perdagangan\nURL: https://jurnal.kemendag.go.id/bilp/article/view/133\nCuplikan: # VARIABILITAS HARGA TELUR AYAM RAS DI INDONESIA. Telur, Disparitas, Fluktuasi Harga, Koefisien Keragaman, Egg, Price Disparity, Price Ffluctuation, Coefficient of variation. Tulisan ini menganalisis fluktuasi dan disparitas harga telur ayam di berbagai wilayah di Indonesia dengan menggunakan data berkala bulanan untuk periode 2008-2011 dan metode statistik deskriptif (koefisien keragaman). Hasil analisis menunjukkan bahwa dalam kurun waktu 2008-2011 terdapat kecenderungan penurunan fluktuasi harga telur. Wilayah yang mengalami fluktuasi harga yang tinggi adalah Maluku Utara, Jayapura, Manado \n\n[8] Satu Data Indonesia- Pemerintah Kabupaten Bengkulu Tengah\nURL: https://satudata.bengkulutengahkab.go.id/metadata/detail/dmVyMlAxMTc2dHNwMzEwMjA3MDQwMzE5MEZzQm5BQkNORFBPV0VSVEhF/dmVyMlAxMTc2dHNwNjYxMjA1MDAxMjE5MEZzQm5BQkNORFBPV0VSVEhF\nCuplikan: | Definisi Nilai Produksi adalah Nilai produk (barang atau jasa) yang dihasilkan dari proses produksi, dihitung berdasarkan banyaknya produksi dan harga per unit produksi. Produk yang dinilai mencakup produk yang dijual, disimpan sebagai stok, digunakan sendiri, dan yang diberikan kepada pihak lain. [sdsn:K01227] Dataset ini Menggambarkan Nilai Produksi Telur Hewan Ternak di Wilayah Kabupaten Bengkulu Tengah Dimana Nilai Produksi Telur yang dimaksud disini adalah Nilai Produksi Telur Ayam, [...] Telur Ayam, itik, ternak lainnya. | [...] Metadata || Tanggal Upload 31 Maret 2024 | | Perubahan Te\n\n[9] Berita - Harga Ayam dan Telur Stabil, Peternak Diuntungkan\nURL: https://bpmsph.ditjenpkh.pertanian.go.id/berita/harga-ayam-dan-telur-stabil-peternak-diuntungkan\nCuplikan: # Harga Ayam dan Telur Stabil, Peternak Diuntungkan. Jakarta — Harga ayam broiler (livebird) dan telur ayam ras di tingkat peternak dalam sepekan terakhir menunjukkan tren stabil mendekati harga acuan pembelian (HAP) pemerintah. Kondisi ini menjadi sinyal positif setelah sebelumnya sektor perunggasan kerap menghadapi gejolak harga akibat dinamika pasokan, biaya produksi, maupun permintaan pasar. Berdasarkan laporan Asosiasi Perunggasan Nasional (Pinsar), Muhlis Wahyudi, Sekjen PINSAR menjelaskan bahwa harga ayam broiler hidup saat ini di kandang berkisar Rp 23.000–Rp 24.000 per kilogram. \"Hal \n\n[10] Berita - Harga Ayam dan Telur Stabil, Peternak Diuntungkan\nURL: https://ditjenpkh.pertanian.go.id/berita/harga-ayam-dan-telur-stabil-peternak-diuntungkan\nCuplikan: Title: Berita - Harga Ayam dan Telur Stabil, Peternak Diuntungkan # Harga Ayam dan Telur Stabil, Peternak Diuntungkan. Jakarta — Harga ayam broiler (livebird) dan telur ayam ras di tingkat peternak dalam sepekan terakhir menunjukkan tren stabil mendekati harga acuan pembelian (HAP) pemerintah. Kondisi ini menjadi sinyal positif setelah sebelumnya sektor perunggasan kerap menghadapi gejolak harga akibat dinamika pasokan, biaya produksi, maupun permintaan pasar. Berdasarkan laporan Asosiasi Perunggasan Nasional (Pinsar), Muhlis Wahyudi, Sekjen PINSAR menjelaskan bahwa harga ayam broiler hidup sa\n\n[11] Berita - Harga Daging Ayam Ras dan Telur Naik, Kementan: Bukan Lonjakan, tapi Penyesuaian Harga Acuan\nURL: https://bvetsubang.ditjenpkh.pertanian.go.id/berita/harga-daging-ayam-ras-dan-telur-naik-kementan-bukan-lonjakan-tapi-penyesuaian-harga-acuan\nCuplikan: Title: Berita - Harga Daging Ayam Ras dan Telur Naik, Kementan: Bukan Lonjakan, tapi Penyesuaian Harga Acuan - Prosedur Permohonan Informasi Publik dan Waktu Layanan. + Alur Standar Pelayanan Pengamatan, Identifikasi dan Diagnosa Penyakit Hewan, dan Pengujian Veteriner dan Produk Hewan. + Alur Pelayanan Sewa Ruang Pertemuan dan Guest House. + Alur Pelayanan Dokumentasi dan Informasi Publik. + Peraturan, Keputusan dan Kebijakan yang Telah Dikeluarkan. ## Berita - Harga Daging Ayam Ras dan Telur Naik, Kementan: Bukan Lonjakan, tapi Penyesuaian Harga Acuan. * Kementan dan Komisi IV DPR RI Perkuat\n\n[12] Harga Telur Ayam Ras Petelur\nURL: https://data.go.id/dataset/dataset/harga-telur-ayam-ras-petelur\nCuplikan: Image ### Provinsi Jawa Timur Informasi Dataset 05-03-2025 05-03-2025 0c86b4b5-f6c9-46e0-93f2-f497c246e7d2 INFORMASI: Data berikut ini masih dalam proses pemenuhan Prinsip SDI. # Harga Telur Ayam Ras Petelur Terbuka Harga Telur Ayam Ras Petelur adala nilai sejumlah uang yang dibayarkan untuk membeli 1 Kg telur ayam ras patelur ## Data and Resources ### Harga Telur Ayam Ras Petelur Harga Telur Ayam Ras Harga Telur Ayam Ras Petelur ## Metadata Source Nama Data Kode Instansi [...] Kode Instansi Nama Instansi ID DDP Nama DDP Sumber Referensi Tahun Tersedia Kode SDS Type SDS Versi SDS Definisi Ukur\n\n[13] Harga Telur Ayam Ras Segar di Pasar Modern Periode Mei 2025-2026\nURL: https://databoks.katadata.co.id/ekonomi-makro/statistik/c7e668883aee8f5/harga-telur-ayam-ras-segar-harian-di-pasar-modern-provinsi-bengkulu\nCuplikan: (Baca: Harga Minyak Goreng di Pasar Tradisional Periode Mei 2025-2026) Sedangkan harga telur ayam ras segar harian di pasar modern dalam tiga bulan terakhir di Bengkulu terlihat turun 3,38%. Menurut catatan historis harga pangan di panel harga PIHPS, harga telur ayam ras segar harian di pasar modern provinsi Bengkulu diperdagangkan di harga Rp29,55 ribu per kg. [...] Informasi terbaru panel Pusat Informasi Harga Pangan Strategis Nasional, harga telur ayam ras segar harian di pasar modern provinsi Bengkulu tercatat Rp28,55 ribu per kg. Harga ini terlihat tidak berubah dibandingkan hari sebelumn\n\n[14] Harga Telur Ayam di Bengkulu Tak Kunjung Turun Sudah 4 Bulan\nURL: https://www.youtube.com/watch?v=HYqznpNUQ4A\nCuplikan: ### Transcript [0:00] ke sorotan selanjutnya saudara di Kota Bengkulu sudah hampir 4 bulan harga telur ayam ras di pasar tradisional [0:07] tidak kunjung turun saat ini harga telur bertahan di sekitar 28.000 hingga 32.000 per kg [0:17] tingginya harga telur sudah dirasakan warga Sejak hari raya Idul Fitri lalu hal ini berimbas pada warga yang terpaksa mengurangi jumlah pembelian [...] [1:18] sekarang Berapa sih harganya sekarang yang paling kecil itu 52.000 [1:25] itu yang paling mahal relatif besar kecil telurnya juga kan Yang jelas kita masih [1:32] menggunakan karpetan itu rata-rata kita 60\n\n[15] Jual Teh Telur Terlengkap & Harga Terbaru Oktober 2026\nURL: https://shopee.co.id/list/Teh/Telur\nCuplikan: Teh Tjap Solo Jumbo (Teh Tubruk Instan) Renceng - 35gr x 10pcs · 13.795. Rp15.676. -12% ; Teh Hijau Aroma Vanilla Green Tea 200 Gr - By Teh Raja · 32.851. Rp49.000."
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.8-flash",
+      "request_id": "k3jRati-M72Ez7IPss3FqQ8",
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "SiGaHaDa (Sistem Informasi Perdagangan dan Harga Daerah) Kota Bengkulu",
+            "penyedia": "Pemerintah Kota Bengkulu",
+            "url": "https://sigahada.bengkulukota.go.id",
+            "wilayah": "Kota Bengkulu",
+            "peran_wilayah": "pembanding",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Telur Ayam Ras, Telur Ayam Kampung",
+            "satuan": "1 kg",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Memantau perkembangan harga eceran harian pangan pokok di pasar Kota Bengkulu yang berfungsi sebagai sentra distribusi dan pasar pembanding terdekat untuk Kabupaten Bengkulu Tengah.",
+            "catatan_keandalan": "Portal resmi pemerintah daerah, menampilkan rincian komoditas pangan harian. Namun cakupan wilayah terbatas pada pasar di Kota Bengkulu, bukan Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": null,
+            "keterangan_url": "HTTP 403 (situs menolak akses otomatis)",
+            "url_diakses": "2026-10-16T08:06:46+07:00",
+            "url_sha256": "",
+            "url_ukuran_byte": null,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "8ed8a0ad4e8f"
+          },
+          {
+            "nama_sumber": "Statistik Harga Telur Ayam Ras Segar Harian di Pasar Modern Provinsi Bengkulu (Databoks / PIHPS)",
+            "penyedia": "Katadata Databoks / Bank Indonesia (PIHPS)",
+            "url": "https://databoks.katadata.co.id/ekonomi-makro/statistik/c7e668883aee8f5/harga-telur-ayam-ras-segar-harian-di-pasar-modern-provinsi-bengkulu",
+            "wilayah": "Provinsi Bengkulu",
+            "peran_wilayah": "provinsi",
+            "periode_data": "Mei 2025-2026",
+            "komoditas_varian": "Telur Ayam Ras Segar (Pasar Modern)",
+            "satuan": "kg",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Menyajikan data deret waktu harga telur ayam ras eceran tingkat Provinsi Bengkulu berbasis panel PIHPS, berguna sebagai acuan umum inflasi pangan tingkat provinsi.",
+            "catatan_keandalan": "Data merupakan kompilasi sekunder oleh Katadata yang bersumber dari PIHPS Bank Indonesia; data berada pada level agregat provinsi dan pasar modern, bukan pasar tradisional eceran Kabupaten Bengkulu Tengah.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-16T08:06:47+07:00",
+            "url_sha256": "94805605fdf315348cfb6e56c04025835f4e911e53563ab1e0c5f1d25a7f7e31",
+            "url_ukuran_byte": 1109618,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "361864075fd9"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Sumber data harga eceran harian resmi khusus wilayah Kabupaten Bengkulu Tengah untuk komoditas telur ayam tidak ditemukan di hasil pencarian.",
+          "Portal Satu Data Kabupaten Bengkulu Tengah (satudata.bengkulutengahkab.go.id) memuat metadata terkait 'Nilai Produksi Telur Hewan Ternak', namun bukan merupakan data pemantauan harga eceran harian pasar.",
+          "Data untuk periode masa depan (Oktober 2026) tidak tersedia secara historis maupun real-time di portal manapun."
+        ],
+        "catatan": "Disarankan untuk memantau langsung melalui sistem resmi nasional seperti Panel Harga Pangan Badan Pangan Nasional (panelharga.badanpangan.go.id) atau SP2KP Kementerian Perdagangan jika terdapat enumerator aktif di pasar Kabupaten Bengkulu Tengah saat periode pemantauan berlangsung."
+      },
+      "url_hasil_pencarian": [
+        "https://bengkulu.antaranews.com/berita/482401/pasokan-lancar-harga-ayam-dan-telur-di-pasar-kota-bengkulu-relatif-stabil",
+        "https://bpmsph.ditjenpkh.pertanian.go.id/berita/harga-ayam-dan-telur-stabil-peternak-diuntungkan",
+        "https://bvetsubang.ditjenpkh.pertanian.go.id/berita/harga-daging-ayam-ras-dan-telur-naik-kementan-bukan-lonjakan-tapi-penyesuaian-harga-acuan",
+        "https://data.go.id/dataset/dataset/harga-telur-ayam-ras-petelur",
+        "https://databoks.katadata.co.id/ekonomi-makro/statistik/c7e668883aee8f5/harga-telur-ayam-ras-segar-harian-di-pasar-modern-provinsi-bengkulu",
+        "https://ditjenpkh.pertanian.go.id/berita/harga-ayam-dan-telur-stabil-peternak-diuntungkan",
+        "https://ejournal.unib.ac.id/jspi/article/view/259",
+        "https://jurnal.kemendag.go.id/bilp/article/view/133",
+        "https://jurnal.um-palembang.ac.id/suluh_abdi/article/view/3972",
+        "https://satudata.bengkulutengahkab.go.id/metadata/detail/dmVyMlAxMTc2dHNwMzEwMjA3MDQwMzE5MEZzQm5BQkNORFBPV0VSVEhF/dmVyMlAxMTc2dHNwNjYxMjA1MDAxMjE5MEZzQm5BQkNORFBPV0VSVEhF",
+        "https://shopee.co.id/list/Teh/Telur",
+        "https://sigahada.bengkulukota.go.id",
+        "https://www.facebook.com/KompasTV/videos/harga-telur-ayam-dan-daging-ayam-di-pasar-minggu-bengkulu-mengalami-penurunan-da/1636834530711076",
+        "https://www.youtube.com/watch?v=HYqznpNUQ4A",
+        "https://www.youtube.com/watch?v=HYqznpNUQ4A&xstg=CAMSBhUDzO3xHw%3D%3D"
+      ],
+      "log": [
+        {
+          "waktu": "08.06.19",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Telur Ayam (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.06.27",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.06.46",
+          "teks": "gemini (gemini-3.8-flash) menjawab: 2 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
+      "waktu": "2026-10-16T08:06:19+07:00",
+      "permintaan": {
+        "komoditas": "Minyak Goreng",
+        "periode": "Oktober 2026",
+        "kebutuhan": "harga eceran harian",
+        "wilayah": "Kabupaten Bengkulu Tengah, Provinsi Bengkulu",
+        "prompt": "Cari sumber data harga eceran harian untuk komoditas: Minyak Goreng, wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu, periode: Oktober 2026. Untuk setiap sumber tampilkan: nama sumber, penyedia, URL, wilayah dan perannya, periode data, komoditas/varian, satuan, frekuensi pembaruan, metode akses (API/file/web), lisensi/ketentuan, apakah perlu izin, relevansi, dan catatan keandalan. Jangan mengarang data atau URL. Jika sumber tidak tersedia, nyatakan tidak tersedia.\n\nHASIL PENCARIAN WEB (diambil hari ini):\n[1] Minyak Goreng Rp 11 Ribu Mulai Berlaku Hari Ini - Bengkulu News\nURL: https://www.bengkulunews.co.id/minyak-goreng-rp-11-ribu-mulai-berlaku-hari-ini\nCuplikan: Minyak goreng kemasan BENGKULU – Minyak goreng seharga Rp 11 ribu per liter mulai berlaku hari ini, Selasa (1/02/2022). Ketetapan dari kementerian perdagangan ini menghapus kebijakan minyak goreng satu harga Rp 14 ribu. Rinciannya, harga eceran tertinggi (HET) untuk minyak goreng yaitu di kemasan curah Rp 11.500/liter, kemasan sederhana Rp 13.500/liter, dan kemasan premium Rp 14.000/liter. [...] Menteri Perdagangan Muhammad Lutfi mengatakan, ketetapan harga eceran tertinggi tersebut telah termasuk dengan pajak. Ia mengimbau masyarakat untuk tidak ‘panic buying’. “Kami menjamin stok minyak gore\n\n[2] Data Komoditas | BEN CONNECT PROVINSI BENGKULU\nURL: https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas\nCuplikan: | Kabupaten Bengkulu Tengah | Minyak Goreng Kemasan | Rp.20,000 | Rp.20,000 | Rp.20,000 | Rp.20,000 | | Kabupaten Bengkulu Tengah | Minyakita | Rp.17,000 | Rp.17,000 | Rp.17,000 | Rp.17,000 | | Kabupaten Bengkulu Tengah | Pisang Lokal | Rp.10,000 | Rp.10,000 | Rp.10,000 | Rp.10,000 | | Kabupaten Bengkulu Tengah | Sawi Hijau | Rp.8,000 | Rp.8,000 | Rp.8,000 | Rp.8,000 | | Kabupaten Bengkulu Tengah | Susu Bubuk | Rp.53,000 | Rp.53,000 | Rp.53,000 | Rp.53,000 | [...] | Kabupaten Bengkulu Selatan | Minyak Goreng Kemasan | Rp.18,000 | Rp.21,000 | Rp.21,000 | Rp.21,000 | | Kabupaten Bengkulu Selatan\n\n[3] Kelangkaan Minyakita di Bengkulu Tengah: Dampak & Harga ...\nURL: https://www.tiktok.com/@tribunbengkulu/video/7639623381150731538\nCuplikan: Harga Eceran Tertinggi (HET) sebesar Rp 15.700 per liter. masih bisa menjual Minyakita sesuai HET yaitu Rp 15.700. Harga Eceran Tertinggi.\n\n[4] Pemprov Bengkulu Luncurkan Minyak Goreng Lokal, Kualitas ...\nURL: https://www.facebook.com/KompasTV/videos/pemprov-bengkulu-luncurkan-minyak-goreng-lokal-kualitas-diklaim-setara-premium/943531675328050\nCuplikan: dengan harga jual berkisar Rp16.000 hingga Rp16.500 per liter. Kenaikan harga minyak goreng mulai dikeluhkan para pedagang di Pasar Ampera,\n\n[5] Kelangkaan minyak goreng subsidi merek Minyakita mulai ...\nURL: https://www.instagram.com/reel/DYTuZQIRUMJ\nCuplikan: Harga Eceran Tertinggi (HET) sebesar Rp 15.700 per liter. Namun kini, stok barang benar-benar tidak tersedia. tersedia di 15 indomaret dan 70\n\n[6] Pemkot Pastikan Harga Minyak Goreng Sesuai HET ...\nURL: https://www.facebook.com/mediacenterkotabengkulu/posts/pemkot-pastikan-harga-minyak-goreng-sesuai-het-bengkulu-infopublik-dinas-perindu/1193746516091397\nCuplikan: Harga Eceran Tertinggi (HET) Rp15.700 per liter, pengecer di Pasar Guntur Ciawitali, Kabupaten Garut, Jawa Barat. Eceran Tertinggi (HET) yang\n\n[7] november 2024 - BKPerdag - Kementerian Perdagangan\nURL: https://bkperdag.kemendag.go.id/storage/publikasi/120-221-file_kajian_analisis_harga_pangan_pokok_20241209142155q4woe39fvr.pdf\nCuplikan: meningkat selama November 2024 dibandingkan dengan harga di bulan sebelumnya. Harga minyak goreng curah naik 2,31% dari Rp 17.382/lt menjadi Rp 17.783/lt, harga minyak goreng kemasan naik 0,58% dari Rp 21.562/lt menjadi Rp 21.686/lt, dan harga MinyaKita naik 0,57% dari Rp. 17.692/lt menjadi Rp 17.793/lt. [...] • Nilai disparitas antar wilayah untuk seluruh minyak goreng selama November 2024 lebih tinggi dari nilai CV target Kementerian Perdagangan. Wilayah Papua Pegunungan menunjukkan perbedaan harga yang signifikan dengan harga rata-rata minyak goreng curah mencapai Rp. 39.625/lt, harga minya\n\n[8] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id/faq\nCuplikan: | 6 | Bengkulu | | | | | v | | | | | | 7 | Sumatera Selatan | v | v | | | v | | v | v | v | | 8 | Lampung | v | v | | | v | | v | v | v | | 9 | Banten | v | | | | | | v | v | v | | 10 | Jawa Barat | v | v | v | v | v | v | v | v | v | | 11 | Jawa Tengah | v | v | v | v | v | v | v | v | v | | 12 | Jawa Timur | v | v | v | v | v | v | v | v | v | | 13 | DI Yogyakarta | v | | | | v | v | | | | | 14 | Bali | v | | | v | | v | v | v | | [...] 9. Telur Ayam Ras, harga di Pedagang Grosir (Rp/Kg) 10. Gula Pasir Lokal, harga di Pedagang Grosir (Rp/Kg) 11. Minyak Goreng Kemasan Sederhana, harga di Peda\n\n[9] Panel Harga | Sistem Monitoring Harga Pangan\nURL: https://dev-panelharga.badanpangan.go.id\nCuplikan: # Harga Rata Rata Nasional Jenis Data Panel Tanggal \\ Disclaimer: Lokasi pemantauan harga tingkat produsen (provinsi/kabupaten kota) merupakan wilayah sentra produksi yang ditetapkan berdasarkan sebaran tingkat produksi 3 tahun terakhir yang dirilis oleh BPS Memuat data nasional. # Perkembangan Harga Pangan Pokok Strategis Jenis Data Panel Memuat harga historis. # Harga Rata-Rata Provinsi Jenis Data Panel Komoditas Tanggal Maps Histogram Alternative content for the map [...] Memuat data provinsi. Memuat data nasional. Memuat detail harga provinsi. Panel Harga Pangan - Badan Pangan Nasional / N\n\n[10] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/hargapangan/TabelHarga/PasarModernDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[11] Panel Harga Pangan\nURL: https://panelharga.badanpangan.go.id\nCuplikan: Logo # Panel Harga Pangan Badan Pangan Nasional ## Website Sedang Dalam Pemeliharaan Mohon maaf atas ketidaknyamanannya. Saat ini kami sedang melakukan pemeliharaan dan peningkatan sistem untuk memberikan layanan yang lebih baik kepada Anda. Untuk informasi lebih lanjut, silakan hubungi: support@badanpangan.go.id\n\n[12] Harga Minyak Goreng Indonesia — MINYAKITA, Premium, Curah - GIMNI\nURL: https://gimni.org/harga-minyak-goreng\nCuplikan: Harga eceran rata-rata nasional MinyaKita adalah Rp 15.713 per liter (per 09 Oct 2026), bersumber dari SP2KP Kementerian Perdagangan. Grafik tren dan harga per provinsi ada di halaman ini. Apa itu HET MINYAKITA dan berapa nilainya? HET (Harga Eceran Tertinggi) adalah batas harga jual eceran MINYAKITA yang ditetapkan pemerintah: Rp 15.700 per liter — Permendag 43/2025 (HET MINYAKITA). Baca penjelasan lengkapnya. Apa itu DMO minyak goreng? [...] | Produk | SP2KP Kemendag | PIHPS — Bank Indonesia | --- | MINYAKITA / MGR | Rp 15.713 Rp/liter per 09 Oct 2026 | — | | Minyak Goreng Premium | Rp 23.89\n\n[13] Analisis harga Stacks (STX) Terbaru\nURL: https://coinmarketcap.com/id/cmc-ai/stacks/price-analysis\nCuplikan: Image 58SpotImage 59Derivatif Komunitas Image 60BerandaImage 61TopikImage 62LiveImage 63Artikel Lainnya Showing 5 of 7 items. 2 items are hidden. Portofolio Watchlist Cari / Masuk Image 64 # Analisis harga Stacks (STX) Terbaru Bagikan Oleh CMC AI 14 October 2026 12:15AM (UTC+0) Tanya CMC AI Lihat STX Grafik Harga ## Mengapa harga STX naik? (14/10/2026) TLDR [...] Kenaikan ini didukung oleh permintaan staking Bitcoin, yang menghubungkan nilai STX secara langsung dengan modal BTC dari institusi. Meski indikator teknikal menunjukkan kondisi jenuh beli, narasi ini memberi dukungan fundamental bagi\n\n[14] Berdasarkan Daerah - PIHPS\nURL: https://www.bi.go.id/hargapangan/TabelHarga/ProdusenDaerah\nCuplikan: Canvas Logo Pusat Informasi Harga Pangan Strategis Nasional # Tabel Harga Berdasarkan Daerah #### Perkembangan Harga Pangan ##### Memuat Data...\n\n[15] Instagram\nURL: https://www.instagram.com/reel/DT4r4chkXQX?hl=en\nCuplikan: Photo by MOOD KALBAR on October 10, 2026. Photo by MOOD KALBAR on October 10, 2026. Photo by MOOD KALBAR on October 10, 2026. Photo by MOOD KALBAR on October 10, 2026. May be an image of poster and text. Photo by MOOD KALBAR on October 10, 2026. [...] moodkalbar's profile picture Video by MOOD KALBAR on January 23, 2026. moodkalbar's profile picture moodkalbar's profile picture sandypalhadi's profile picture perwira.14's profile picture hazimialmahdaly's profile picture nurhasanah_9629's profile picture andri_auto_car's profile picture Photo by MOOD KALBAR on October 12, 2026. Photo by MOOD KA"
+      },
+      "penyedia": "gemini",
+      "punya_pencarian_web": true,
+      "pencarian_web": "Tavily, 15 hasil",
+      "penyedia_dilewati": [],
+      "model": "gemini-3.8-flash",
+      "request_id": "eXjRauX0NP-sz7IPzvKN-A8",
+      "hasil": {
+        "kandidat": [
+          {
+            "nama_sumber": "Data Komoditas - BEN CONNECT PROVINSI BENGKULU",
+            "penyedia": "Pemerintah Provinsi Bengkulu",
+            "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+            "wilayah": "Kabupaten Bengkulu Tengah",
+            "peran_wilayah": "target",
+            "periode_data": "tidak diketahui",
+            "komoditas_varian": "Minyak Goreng Kemasan, Minyakita",
+            "satuan": "tidak diketahui",
+            "frekuensi_pembaruan": "tidak diketahui",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Memuat data harga komoditas Minyak Goreng Kemasan dan Minyakita khusus wilayah Kabupaten Bengkulu Tengah, namun tanggal/periode spesifik tidak tercantum pada cuplikan.",
+            "catatan_keandalan": "Portal resmi Pemerintah Provinsi Bengkulu. Perlu verifikasi analis untuk memastikan apakah data diperbarui harian dan mencakup periode target Oktober 2026.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-16T08:06:15+07:00",
+            "url_sha256": "cf639a78863474a458db7caf91c112c47d008a07d977938dd6864b501617d904",
+            "url_ukuran_byte": 503499,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "b9b539804a2c"
+          },
+          {
+            "nama_sumber": "Harga Minyak Goreng Indonesia — MINYAKITA, Premium, Curah (GIMNI)",
+            "penyedia": "Gabungan Industri Minyak Nabati Indonesia (mengutip SP2KP Kementerian Perdagangan dan PIHPS Bank Indonesia)",
+            "url": "https://gimni.org/harga-minyak-goreng",
+            "wilayah": "Nasional / Provinsi",
+            "peran_wilayah": "nasional",
+            "periode_data": "09 Oct 2026",
+            "komoditas_varian": "MinyaKita / MGR, Minyak Goreng Premium, Curah",
+            "satuan": "Rp/liter",
+            "frekuensi_pembaruan": "harian",
+            "metode_akses": "web",
+            "lisensi_atau_ketentuan": "tidak diketahui",
+            "perlu_izin": true,
+            "relevansi": "Memuat data harga eceran minyak goreng untuk periode Oktober 2026, tetapi tingkat wilayah berupa agregasi nasional dan provinsi, bukan spesifik Kabupaten Bengkulu Tengah.",
+            "catatan_keandalan": "Merupakan agregator asosiasi industri yang mengutip SP2KP Kemendag dan PIHPS BI; disarankan verifikasi langsung ke portal primer SP2KP/PIHPS.",
+            "url_ada_di_hasil_pencarian": true,
+            "url_dapat_diakses": true,
+            "keterangan_url": "HTTP 200",
+            "url_diakses": "2026-10-16T08:06:18+07:00",
+            "url_sha256": "197a82a101056fd5c7ffee9f73170ea51e72670db2df540d7c5961c71ecde930",
+            "url_ukuran_byte": 46915,
+            "url_sidik_terpotong": false,
+            "status_verifikasi": "kandidat",
+            "id": "f7bc977c2f65"
+          }
+        ],
+        "tidak_ditemukan": [
+          "Data harga eceran harian spesifik Kabupaten Bengkulu Tengah untuk periode Oktober 2026 pada portal resmi primer (SP2KP Kemendag, PIHPS Bank Indonesia, dan Panel Harga Bapanas) tidak tersedia dalam cuplikan pencarian.",
+          "Portal Panel Harga Badan Pangan Nasional (https://panelharga.badanpangan.go.id) pada hasil pencarian terdeteksi dalam status pemeliharaan sistem sehingga rincian datanya belum dapat diakses."
+        ],
+        "catatan": "BEN CONNECT Provinsi Bengkulu merupakan sumber paling tepat untuk wilayah Kabupaten Bengkulu Tengah, tetapi periode data pada tabel web perlu dicek manual. Tautan PIHPS BI (Pasar Modern dan Produsen) muncul pada pencarian namun cuplikan hanya menampilkan status pemuatan data ('Memuat Data...')."
+      },
+      "url_hasil_pencarian": [
+        "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+        "https://bkperdag.kemendag.go.id/storage/publikasi/120-221-file_kajian_analisis_harga_pangan_pokok_20241209142155q4woe39fvr.pdf",
+        "https://coinmarketcap.com/id/cmc-ai/stacks/price-analysis",
+        "https://dev-panelharga.badanpangan.go.id",
+        "https://dev-panelharga.badanpangan.go.id/faq",
+        "https://gimni.org/harga-minyak-goreng",
+        "https://panelharga.badanpangan.go.id",
+        "https://www.bengkulunews.co.id/minyak-goreng-rp-11-ribu-mulai-berlaku-hari-ini",
+        "https://www.bi.go.id/hargapangan/TabelHarga/PasarModernDaerah",
+        "https://www.bi.go.id/hargapangan/TabelHarga/ProdusenDaerah",
+        "https://www.facebook.com/KompasTV/videos/pemprov-bengkulu-luncurkan-minyak-goreng-lokal-kualitas-diklaim-setara-premium/943531675328050",
+        "https://www.facebook.com/mediacenterkotabengkulu/posts/pemkot-pastikan-harga-minyak-goreng-sesuai-het-bengkulu-infopublik-dinas-perindu/1193746516091397",
+        "https://www.instagram.com/reel/DT4r4chkXQX?hl=en",
+        "https://www.instagram.com/reel/DYTuZQIRUMJ",
+        "https://www.tiktok.com/@tribunbengkulu/video/7639623381150731538"
+      ],
+      "log": [
+        {
+          "waktu": "08.05.56",
+          "teks": "Mulai mencari sumber data harga eceran harian untuk Minyak Goreng (Oktober 2026).",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.06.01",
+          "teks": "Pencarian web Tavily: 15 halaman ditemukan.",
+          "jenis": "info"
+        },
+        {
+          "waktu": "08.06.15",
+          "teks": "gemini (gemini-3.8-flash) menjawab: 2 kandidat sumber.",
+          "jenis": "info"
+        }
+      ]
+    },
+    {
       "waktu": "2026-10-15T08:05:20+07:00",
       "permintaan": {
         "komoditas": "Gula Pasir",
