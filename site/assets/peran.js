@@ -217,12 +217,14 @@ async function berandaAdmin(el, meta) {
   ];
   const repo = meta.url_repo;
   const repoBerkas = (nama) => (repo ? `${repo}/blob/main/config/${nama}` : "");
+  // Sama dengan halaman Sumber Data: sumber aktif yang mengirim data (saluran isian petugas dihitung setelah ada isinya).
+  const sumberAktif = (sumber?.sumber || []).filter((x) => x.status === "aktif" && x.jumlah_observasi > 0);
   const aksi = tombol("pengaturan.html", "Pengaturan", true) + tombol("pengguna.html", "Pengguna dan peran") + tombol("#beranda-tpid", "Ke dashboard TPID") +
     (meta.url_run ? tombol(meta.url_run, "Log proses", false, ' target="_blank" rel="noopener"') : "");
   const ubinStatis = `        ${ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: `${master.varian.filter((v) => v.aktif !== false).length} varian aktif`, href: repoBerkas("komoditas.csv") })}
         ${ind({ i: "toko", label: "Pasar", nilai: master.pasar.length, sub: `${master.pasar.filter((x) => x.blank_spot).length} blank spot`, href: repoBerkas("pasar.csv") })}
         ${ind({ i: "peta", label: "Wilayah", nilai: master.wilayah.length, sub: "target dan pembanding", href: repoBerkas("wilayah.csv") })}
-        ${ind({ i: "database", label: "Sumber data", nilai: sumber ? sumber.sumber.length : "–", sub: sumber ? `${sumber.sumber.filter((x) => x.status === "aktif").length} aktif` : "belum ada", href: repoBerkas("sumber.csv") })}
+        ${ind({ i: "database", label: "Sumber data aktif", nilai: sumberAktif.length || "–", sub: sumber ? "semua mengirim data" : "belum ada", href: "sumber.html" })}
         ${ind({ i: "kalender", label: "Hari raya", nilai: master.kalender.length, sub: "tanggal terjadwal", href: repoBerkas("kalender.csv") })}
         ${ind({ i: "orang", label: "Akun", nilai: jumlahAkun, sub: meta.login === "firebase" ? "diatur di Firebase" : "akun contoh", href: "pengguna.html" })}`;
   const ubinDinamis = `        ${ind({ i: "kalender", label: "Harga terakhir", nilai: tgl(meta.tanggal_data_terakhir), sub: jamLalu })}
@@ -297,7 +299,7 @@ function pasangPanelData(el, { ubinStatis, ubinDinamis, master, sumber, ringkasa
         pasar: ["Pasar", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Pasar", (x) => esc(x.nama)], ["Kecamatan", (x) => esc(x.kecamatan || "–")],
           ["Blank spot", (x) => (x.blank_spot ? "Ya" : "Tidak")], ["Titik peta", (x) => (x.koordinat_terverifikasi ? "Sudah dicek" : "Perkiraan")]], master.pasar)],
         wilayah: ["Wilayah", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Wilayah", (x) => esc(x.nama)], ["Peran", (x) => (x.peran === "target" ? "Sasaran" : "Pembanding")]], master.wilayah)],
-        sumber: ["Sumber", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Sumber", (x) => esc(x.nama)], ["Status", (x) => esc(String(x.status).replace(/_/g, " "))], ["Prioritas", (x) => x.prioritas, true]], sumber?.sumber || [])],
+        sumber: ["Sumber", () => tabel([["Kode", (x) => `<code>${esc(x.kode)}</code>`], ["Sumber", (x) => esc(x.nama)], ["Status", (x) => esc(String(x.status).replace(/_/g, " "))], ["Prioritas", (x) => x.prioritas, true], ["Jumlah data", (x) => angka(x.jumlah_observasi), true]], (sumber?.sumber || []).filter((x) => x.status === "aktif" && x.jumlah_observasi > 0))],
         hariraya: ["Hari raya", () => tabel([["Tanggal", (x) => esc(tgl(x.tanggal))], ["Nama", (x) => esc(x.nama)], ["Status", (x) => esc(x.status)]], master.kalender)],
       },
     },

@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sumber Data · Takar Pangan 10•21</title>
   <meta name="description" content="Inventaris sumber data (BPS, pasar/pedagang, Pemda, AI Data Finder, Big Data) beserta metode akses, status, dan kandidat hasil AI Data Finder.">
-  <meta name="theme-color" content="#0e1114">
+  <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
+  <script src="assets/tema-awal.js"></script>
 </head>
 <body>
 <main class="utama">
@@ -38,11 +39,13 @@
 
   <section class="kartu">
     <div class="kartu-kepala">
-      <div><h2>Daftar sumber</h2><p>Kalau dua sumber beda angka, yang nomor prioritasnya lebih kecil dipakai.</p></div>
+      <div><h2>Sumber yang mengalirkan data</h2><p>Semua sumber di bawah ini sedang dipakai. Kalau dua sumber beda angka, yang nomor prioritasnya lebih kecil dipakai.</p></div>
     </div>
     <div class="gulir-tabel"><table id="tabel-sumber" class="tabel-sumber"><thead><tr>
       <th>Sumber</th><th>Kelompok</th><th>Cara ambil</th><th>Status</th>
-      <th class="angka">Prioritas</th><th class="angka">Jumlah data</th></tr></thead><tbody></tbody></table></div>
+      <th class="angka">Prioritas</th><th class="angka">Jumlah data</th><th class="angka">Data terakhir</th></tr></thead><tbody></tbody></table></div>
+    <div id="saluran" class="saluran-isian" hidden></div>
+    <p class="meta-kecil" id="ket-sumber-lain" style="margin-top:12px" hidden></p>
   </section>
 
   <section class="kartu" aria-labelledby="j-ai">
@@ -80,7 +83,7 @@
 
 <script type="module">
 import { ind } from "./assets/peran.js";
-import { pasangKerangka, muatJSON, esc, angka, waktu, tampilkanGalat } from "./assets/app.js";
+import { pasangKerangka, muatJSON, esc, angka, waktu, tgl, tampilkanGalat } from "./assets/app.js";
 import { sesi } from "./assets/akses.js";
 
 const meta = await pasangKerangka("sumber.html");
@@ -91,20 +94,42 @@ try {
   tampilkanGalat(document.querySelector("main"), e);
   throw e;
 }
-const nAktif = data.sumber.filter((x) => x.status === "aktif").length;
+// Tiga kelompok: sumber otomatis yang mengalirkan data (tabel), saluran isian petugas (formulir dan unggahan berkas, yang
+// datanya muncul setelah petugas mengisi), dan sumber yang belum tersambung (hanya disebut singkat, tidak masuk tabel).
+const SALURAN = new Set(["BPS", "PASAR"]);
+const aktif = data.sumber.filter((x) => x.status === "aktif");
+const mengalir = aktif.filter((x) => !(SALURAN.has(x.kelompok) && !x.jumlah_observasi));
+const saluran = aktif.filter((x) => SALURAN.has(x.kelompok) && !x.jumlah_observasi);
+const belum = data.sumber.filter((x) => x.status !== "aktif" && x.status !== "ditolak" && x.kelompok !== "AI_FINDER");
+// Prakiraan cuaca BMKG bertanggal hari depan; untuk "data terbaru" hanya tanggal sampai hari ini yang dihitung.
+const hariIni = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" });
+const terbaru = mengalir.map((x) => x.terakhir).filter((t) => t && t <= hariIni).sort().pop();
 document.getElementById("kpi").innerHTML = [
-  ind({ i: "database", label: "Sumber", nilai: data.sumber.length, sub: "terdaftar" }),
-  ind({ i: "centang", warna: "hijau", label: "Sumber aktif", nilai: nAktif, sub: "sedang dipakai", warnaNilai: "hijau", meter: data.sumber.length ? nAktif / data.sumber.length * 100 : 0, meterWarna: "hijau" }),
-  ind({ i: "lampu", warna: "oranye", label: "Masih kandidat", nilai: data.sumber.filter((x) => x.status !== "aktif" && x.status !== "ditolak").length, sub: "menunggu dicek" }),
-  ind({ i: "dokumen", label: "Data terkumpul", nilai: angka(data.sumber.reduce((a, x) => a + (x.jumlah_observasi || 0), 0)), sub: "baris data" }),
+  ind({ i: "centang", warna: "hijau", label: "Sumber aktif", nilai: mengalir.length, sub: "semua sedang dipakai", warnaNilai: "hijau" }),
+  ind({ i: "dokumen", label: "Data terkumpul", nilai: angka(mengalir.reduce((a, x) => a + (x.jumlah_observasi || 0), 0)), sub: "baris dari semua sumber" }),
+  ind({ i: "jam", warna: "hijau", label: "Data terbaru", nilai: terbaru ? tgl(terbaru) : "–", sub: "tanggal data paling baru" }),
+  ind({ i: "lampu", label: "Kandidat AI Data Finder", nilai: angka((data.katalog_ai || []).length), sub: "calon sumber baru" }),
 ].join("");
-const KELAS_STATUS = { aktif: "baik", kandidat: "info", diterima: "info", menunggu_konfirmasi: "rendah", ditolak: "polos" };
-document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) => `<tr>
+document.querySelector("#tabel-sumber tbody").innerHTML = mengalir.map((s) => `<tr>
   <td class="sumber-nama">${s.url ? `<a href="${esc(s.url)}" rel="noopener">${esc(s.nama)}</a>` : esc(s.nama)}<code>${esc(s.kode)}</code>
     ${s.lisensi || s.catatan ? `<details><summary>Ketentuan dan catatan</summary>${s.lisensi ? `<p><b>Izin:</b> ${esc(s.lisensi)}</p>` : ""}${s.catatan ? `<p>${esc(s.catatan)}</p>` : ""}</details>` : ""}</td>
   <td>${esc(s.kelompok)}</td><td>${esc(s.metode_akses.replace(/_/g, " "))}<br><span class="meta-kecil">${esc(s.frekuensi.replace(/_/g, " "))}</span></td>
-  <td><span class="lencana ${KELAS_STATUS[s.status] || "polos"}">${esc(s.status.replace(/_/g, " "))}</span></td>
-  <td class="angka">${s.prioritas}</td><td class="angka">${angka(s.jumlah_observasi)}</td></tr>`).join("");
+  <td>${s.jumlah_observasi ? '<span class="lencana baik">aktif</span>' : '<span class="lencana tinggi" title="Sumber otomatis ini belum mengirim data. Periksa log proses.">belum ada data</span>'}</td>
+  <td class="angka">${s.prioritas}</td><td class="angka">${angka(s.jumlah_observasi)}<br><span class="meta-kecil">${esc(s.satuan_jumlah || "baris")}</span></td>
+  <td class="angka">${!s.terakhir ? "–" : s.terakhir > hariIni ? `${esc(tgl(s.terakhir))}<br><span class="meta-kecil">prakiraan sampai</span>` : esc(tgl(s.terakhir))}</td></tr>`).join("");
+if (saluran.length) {
+  const el = document.getElementById("saluran");
+  el.hidden = false;
+  el.innerHTML = `<h3>Saluran isian petugas</h3><p class="meta-kecil">Siap dipakai. Angkanya muncul di tabel setelah petugas mengisi.</p>
+    <div class="saluran-daftar">${saluran.map((s) => `<div class="saluran-kartu"><b>${esc(s.nama)}</b><span class="meta-kecil">${esc(s.catatan || "")}</span>
+      ${s.metode_akses === "offline_ke_online" ? '<a class="tombol" href="input.html">Buka formulir Catat Harga</a>'
+        : '<a class="tombol" href="kualitas.html#kartu-unggah">Unggah lewat Cek Data</a>'}</div>`).join("")}</div>`;
+}
+if (belum.length) {
+  const el = document.getElementById("ket-sumber-lain");
+  el.hidden = false;
+  el.textContent = `Belum tersambung, jadi tidak ditampilkan: ${belum.map((x) => x.nama).join("; ")}.`;
+}
 
 // Log proses AI (langsung dari Firestore) untuk akun yang boleh melihatnya.
 if (meta?.login === "firebase") {

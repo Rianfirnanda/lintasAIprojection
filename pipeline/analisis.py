@@ -868,32 +868,123 @@ def nilai_validasi(kelompok: str, v: dict, jumlah_obs: int, kelengkapan: float |
             "kelas_volatilitas": kelas}
 
 
-def cakupan_bergulir(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: dict, horizon: int, minimal: int,
-                     tingkat: float, minggu_uji: int = 52, minggu_kalibrasi: int = 52) -> dict | None:
-    """Cakupan rentang dinilai tiap minggu selama setahun terakhir: rentang untuk origin minggu j hanya dikalibrasi dari origin
-    yang targetnya sudah terjadi sebelum origin j (point-in-time). Keterangan pendamping, bukan syarat status Valid: masa
-    uji 90 hari terlalu pendek untuk menilai rentang bila tingkat gejolak harga sedang berubah."""
-    if model not in MODEL_BASELINE:
-        return None  # mesin belajar terlalu mahal untuk 100+ origin; cukup syarat holdout
-    jeda = math.ceil(horizon / 7)
-    bt = backtest(seri, terisi, model, konteks, horizon, minggu_uji + jeda + minggu_kalibrasi, 7, minimal)
-    if bt is None:
+# Kalibrasi rentang adaptif. Pengujian pada dua tahun terpisah (Oktober 2024 sampai Oktober 2025 untuk memilih setelan,
+# Oktober 2025 sampai Oktober 2026 untuk memeriksa) menunjukkan kalibrasi tetap dari 52 minggu sebelumnya terlalu lambat
+# mengikuti perubahan gejolak harga: cakupan beberapa varian jatuh ke 65-72%. Dua perbaikan dipakai bersama:
+#   1. Residu lama diberi bobot makin kecil (separuh setiap 8 minggu, paling kecil 0,1), jadi rentang lebih cepat menyesuaikan
+#      diri dengan gejolak terkini tanpa melupakan lonjakan besar di masa lalu (weighted conformal, Barber dkk. 2023).
+#   2. Adaptive Conformal Inference (Gibbs & Candes 2021): tingkat alfa dikoreksi tiap minggu memakai harga sebenarnya yang
+#      sudah terjadi. Bila rentang sering kebobolan, alfa diturunkan (rentang melebar); bila terlalu longgar, alfa dinaikkan.
+# Sasaran ACI 2 poin di atas tingkat rentang (82% untuk rentang 80%), karena galat lebih sering menurunkan cakupan daripada
+# menaikkannya. Semua langkah point-in-time: rentang minggu j hanya memakai harga sebelum minggu j.
+PARUH_BOBOT_MINGGU = 8.0
+LANTAI_BOBOT = 0.1
+GAMMA_ACI = 0.2
+GESER_SASARAN_ACI = 0.02
+MINGGU_PEMANASAN_ACI = 26
+MINGGU_KALIBRASI = 104
+ALFA_MAKS = 0.6
+
+
+def _bobot_umur(umur_minggu: np.ndarray) -> np.ndarray:
+    return np.maximum(0.5 ** (np.asarray(umur_minggu, dtype=float) / PARUH_BOBOT_MINGGU), LANTAI_BOBOT)
+
+
+def cakupan_pit_berbobot(res_kal: np.ndarray, h_kal: np.ndarray, w_kal: np.ndarray, r: float, h: int, alfa: float) -> float | None:
+    """Peluang residu r jatuh di rentang tengah (1-alfa) dari residu kalibrasi berbobot (PIT acak, tahan nilai kembar)."""
+    pilih = np.abs(h_kal - h) <= 2
+    pr, pw = res_kal[pilih], w_kal[pilih]
+    if len(pr) < 10:
+        return None
+    total = float(pw.sum()) + 1.0
+    f_lo = float(pw[pr < r - 1e-12].sum()) / total
+    f_hi = (float(pw[pr <= r + 1e-12].sum()) + 1.0) / total
+    lo, hi = alfa / 2, 1 - alfa / 2
+    return max(0.0, min(f_hi, hi) - max(f_lo, lo)) / (f_hi - f_lo)
+
+
+def kuantil_berbobot(res: np.ndarray, hz: np.ndarray, w: np.ndarray, h: int, alfa: float) -> tuple[float, float] | None:
+    """Batas bawah dan atas residu log untuk rentang (1-alfa) pada horizon h±2, dengan bobot umur dan koreksi konformal."""
+    pilih = np.abs(hz - h) <= 2
+    pr, pw = res[pilih], w[pilih]
+    if len(pr) < 10:
+        return None
+    urut = np.argsort(pr)
+    pr, kum = pr[urut], np.cumsum(pw[urut]) / (float(pw.sum()) + 1.0)
+    i_lo = int(np.searchsorted(kum, alfa / 2, side="left"))
+    i_hi = int(np.searchsorted(kum, 1 - alfa / 2, side="left"))
+    return float(pr[min(i_lo, len(pr) - 1)]), float(pr[min(i_hi, len(pr) - 1)])
+
+
+def kalibrasi_adaptif(bt: HasilBacktest, tingkat: float, minggu_uji: int = 52) -> dict | None:
+    """Uji rentang adaptif tiap minggu selama `minggu_uji` minggu terakhir, sekaligus menghasilkan alfa ACI terakhir untuk
+    rentang prakiraan yang terbit. `bt` = backtest origin mingguan (origin 0 = paling baru)."""
+    if bt is None or not len(bt.aktual):
         return None
     res = np.log(bt.aktual / bt.prediksi)
-    alfa = 1 - tingkat
-    cak = []
-    for j in range(minggu_uji):
-        uji = bt.origin == j
-        kal = (bt.origin > j + jeda) & (bt.origin <= j + jeda + minggu_kalibrasi)
-        if not uji.any() or kal.sum() < 100:
+    horizon = int(bt.horizon.max())
+    jeda = math.ceil(horizon / 7)
+    sasaran = max(0.01, (1 - tingkat) - GESER_SASARAN_ACI)
+    tgl_target = np.array([t.toordinal() for t in bt.tanggal])
+    origin = sorted({int(j) for j in bt.origin}, reverse=True)  # dari yang paling lama
+    tgl_origin = {j: int((tgl_target[bt.origin == j] - bt.horizon[bt.origin == j]).min()) for j in origin}
+    alfa = sasaran
+    galat: list[tuple[int, float]] = []  # (tanggal harga sebenarnya, porsi di luar rentang)
+    terakhir = -1
+    cak: list[float] = []
+
+    def perbarui(sampai: int) -> None:
+        nonlocal alfa, terakhir
+        baru = [(t, e) for t, e in galat if terakhir < t <= sampai]
+        if baru:
+            alfa = min(max(alfa + GAMMA_ACI * (sasaran - float(np.mean([e for _, e in baru]))), 0.01), ALFA_MAKS)
+            terakhir = max(t for t, _ in baru)
+
+    for j in origin:
+        if j >= minggu_uji + MINGGU_PEMANASAN_ACI:
             continue
-        c = cakupan_pit(res[kal], bt.horizon[kal], res[uji], bt.horizon[uji], alfa)
-        if c is not None:
-            cak.append(c)
+        uji = bt.origin == j
+        kal = bt.origin > j + jeda
+        if kal.sum() < 100:
+            continue
+        w = _bobot_umur(bt.origin[kal] - j - jeda)
+        perbarui(tgl_origin[j])
+        nilai = []
+        for r, h, t in zip(res[uji], bt.horizon[uji], tgl_target[uji]):
+            c = cakupan_pit_berbobot(res[kal], bt.horizon[kal], w, float(r), int(h), alfa)
+            if c is not None:
+                nilai.append(c)
+                galat.append((int(t), 1.0 - c))
+        if nilai and j < minggu_uji:
+            cak.append(float(np.mean(nilai)) * 100)
+    perbarui(int(tgl_target.max()))
     if len(cak) < 12:
         return None
     return {"persen": round(float(np.mean(cak)), 1), "minggu": len(cak),
-            "minggu_dalam_75_85": int(sum(1 for c in cak if 75 <= c <= 85))}
+            "minggu_dalam_75_85": int(sum(1 for c in cak if 75 <= c <= 85)),
+            "alfa_akhir": round(alfa, 4), "metode": "adaptif"}
+
+
+def interval_adaptif(bt: HasilBacktest, horizon: int, alfa: float, sigma_harian: float) -> list[tuple[float, float]]:
+    """Rentang prakiraan terbit: residu origin mingguan berbobot umur (origin 0 = paling baru) dengan alfa hasil ACI."""
+    res = np.log(bt.aktual / bt.prediksi)
+    w = _bobot_umur(bt.origin)
+    z = NormalDist().inv_cdf(1 - alfa / 2)
+    hasil = []
+    for h in range(1, horizon + 1):
+        q = kuantil_berbobot(res, bt.horizon, w, h, alfa)
+        if q is None:
+            lebar = z * sigma_harian * math.sqrt(h)
+            q = (-lebar, lebar)
+        hasil.append(q)
+    return hasil
+
+
+def backtest_kalibrasi(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: dict, horizon: int, minimal: int,
+                       minggu_uji: int = 52) -> HasilBacktest | None:
+    """Backtest origin mingguan untuk kalibrasi adaptif: minggu uji, jeda sepanjang horizon, dan dua tahun kalibrasi."""
+    jeda = math.ceil(horizon / 7)
+    return backtest(seri, terisi, model, konteks, horizon, minggu_uji + jeda + MINGGU_KALIBRASI, 7, minimal)
 
 
 def evaluasi_holdout(seri: SeriHarian, terisi: np.ndarray, model: str, konteks: dict, horizon: int, v: dict, minimal: int,
@@ -1107,7 +1198,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         terpilih = model_disetujui if model_disetujui in hasil_bt else "naif"
         catatan.append(f"Model rekomendasi '{rekomendasi}' belum disetujui; proyeksi memakai '{terpilih}'.")
 
-    holdout, bt_hold = None, None
+    holdout, bt_hold, bt_adaptif = None, None, None
     kalibrasi: dict[str, HasilBacktest] = {}
 
     def bt_kalibrasi(model: str) -> HasilBacktest:
@@ -1130,8 +1221,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         if holdout is None:
             catatan.append("Holdout tidak dapat dihitung (origin tidak cukup); model berstatus eksperimen.")
         else:
-            holdout["cakupan_setahun"] = cakupan_bergulir(seri, terisi, terpilih, konteks, horizon, a["minimal_hari_riwayat"],
-                                                          a["tingkat_interval"])
+            bt_adaptif = backtest_kalibrasi(seri, terisi, terpilih, konteks, horizon, a["minimal_hari_riwayat"])
+            holdout["cakupan_setahun"] = kalibrasi_adaptif(bt_adaptif, a["tingkat_interval"])
     kelengkapan = kelengkapan_seri(seri, list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4])), libur=libur_pasar)
     validasi = nilai_validasi(kelompok, v, jumlah_obs, kelengkapan, holdout, kode) if terpilih else {"status": "eksperimen", "syarat": [],
                                                                                               "gagal": ["Tidak ada model"], "belum_dinilai": []}
@@ -1160,7 +1251,10 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         f = MODEL[terpilih](y_akhir, asal, horizon, konteks)
         _, r = log_return(seri)
         sigma = float(np.std(r[-90:])) if len(r) > 5 else 0.05
-        if terpilih in hasil_bt:
+        adaptif = (holdout or {}).get("cakupan_setahun") or {}
+        if bt_adaptif is not None and adaptif.get("alfa_akhir") is not None:
+            iv = interval_adaptif(bt_adaptif, horizon, adaptif["alfa_akhir"], sigma)
+        elif terpilih in hasil_bt:
             iv = interval_empiris(gabung_backtest(bt_kalibrasi(terpilih), bt_hold), horizon, a["tingkat_interval"], sigma)
         else:
             lebar = 1.6449 * max(sigma, 0.01)

@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Akurasi Prakiraan · Takar Pangan 10•21</title>
   <meta name="description" content="Evaluasi model proyeksi harga (rolling-origin backtesting), interval prediksi, deteksi anomali, dan drift terhadap target Rancangan Aksi Perubahan.">
-  <meta name="theme-color" content="#0e1114">
+  <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
+  <script src="assets/tema-awal.js"></script>
 </head>
 <body>
 <main class="utama">
@@ -25,6 +26,7 @@
     <section class="kartu">
       <div class="kartu-kepala"><div><h2>Sudah sesuai target?</h2><p>Target ini disusun bersama dalam rancangan proyek.</p></div></div>
       <div class="gulir-tabel"><table id="tabel-target"><thead><tr><th>Yang dinilai</th><th>Target</th><th>Hasil</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      <p class="meta-kecil" id="ket-target" style="margin-top:10px" hidden></p>
     </section>
     <section class="kartu">
       <div class="kartu-kepala"><div><h2>Ketepatan peringatan harga janggal</h2><p>Seberapa baik sistem menangkap lonjakan harga.</p></div></div>
@@ -100,8 +102,9 @@ document.getElementById("kpi").innerHTML = [
 const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum bisa dinilai</span>'
   : ok ? '<span class="lencana baik">tercapai</span>' : '<span class="lencana sedang">belum tercapai</span>';
 const n = r.varian_dinilai || 0;
+const nSmape = n - (r.smape_tak_dinilai || 0);
 const baris = [
-  ["Rata-rata meleset", `minimal ${t.perbaikan_smape_persen}% lebih kecil dari cara sederhana`, `${r.lolos_smape}/${n} varian`, n ? r.lolos_smape === n : null],
+  ["Rata-rata meleset", `minimal ${t.perbaikan_smape_persen}% lebih kecil dari cara sederhana`, `${r.lolos_smape}/${nSmape} varian`, nSmape ? r.lolos_smape === nSmape : null],
   ["Condong terlalu tinggi atau rendah", `paling banyak ${t.bias_absolut_maks_persen}%`, `${r.lolos_bias}/${n} varian`, n ? r.lolos_bias === n : null],
   ["Harga sebenarnya masuk rentang prakiraan", `${t.cakupan_interval_min_persen} sampai ${t.cakupan_interval_maks_persen}%`, `${r.lolos_cakupan}/${n} varian`, n ? r.lolos_cakupan === n : null],
   ["Nilai gabungan peringatan (F1)", `minimal ${t.f1_min}`, ev.f1 ?? "–", ev.f1 === undefined || ev.f1 === null ? null : ev.f1 >= t.f1_min],
@@ -110,6 +113,17 @@ const baris = [
 ];
 document.querySelector("#tabel-target tbody").innerHTML = baris.map(([a, b, c, ok]) =>
   `<tr><td>${a}</td><td>${esc(b)}</td><td>${esc(c)}</td><td>${status(ok)}</td></tr>`).join("");
+// Alasan singkat bila target rata-rata meleset belum tercapai: varian yang kembali ke harga terakhir dan yang tidak bisa dinilai.
+const pakaiNaif = m.per_varian.filter((v) => v.model_terpilih === "naif").length;
+const jarang = m.per_varian.filter((v) => (v.holdout?.porsi_harga_tetap_persen ?? 0) >= 50).length;
+if (nSmape && r.lolos_smape < nSmape) {
+  const ket = document.getElementById("ket-target");
+  ket.hidden = false;
+  ket.textContent = `Rata-rata meleset: ${pakaiNaif} dari ${n} varian memakai harga terakhir karena belum ada cara lain yang terbukti lebih tepat pada uji data lama. ` +
+    (jarang ? `${jarang} varian harganya tidak berubah pada lebih dari separuh hari uji, jadi harga terakhir memang tebakan terbaik untuknya. ` : "") +
+    (r.smape_tak_dinilai ? `${r.smape_tak_dinilai} varian tidak bisa dinilai karena harganya sama sekali tidak berubah selama masa uji. ` : "") +
+    "Sesuai rancangan, bila prakiraan AI tidak lebih tepat, sistem kembali ke cara sederhana.";
+}
 
 document.getElementById("evaluasi").innerHTML = ev.episode_uji !== undefined ? `
   <dl class="dl">
@@ -205,7 +219,7 @@ document.getElementById("metodologi").innerHTML = [
   `Mesin belajar (Ridge, Boosting, Random Forest) dan gabungan hanya menggantikan cara sederhana bila lebih tepat sedikitnya 5% dan menang di sedikitnya 8 dari 12 titik uji. Bila polanya lemah, prakiraan mesin belajar disusutkan mendekati harga terakhir.`,
   `Harga normal adalah nilai tengah ${a.jendela_baseline_hari} hari sebelumnya. Cara prakiraan yang dicoba: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
   `Ujinya memakai data lama: ${a.jumlah_origin_backtest} titik awal yang berjarak ${a.jarak_origin_hari} hari, prakiraan sejauh ${a.horizon_hari} hari, dan butuh minimal ${a.minimal_hari_riwayat} hari data.`,
-  `Rentang prakiraan ${Math.round(a.tingkat_interval * 100)}%: dihitung dari selisih harga sebenarnya dan prakiraan pada uji data lama (52 titik uji mingguan sebelum masa uji akhir). Ketepatannya dinilai tiap minggu selama setahun, selalu hanya memakai data sebelum minggu itu; syarat lolos: 75 sampai 85% harga sebenarnya masuk rentang.`,
+  `Rentang prakiraan ${Math.round(a.tingkat_interval * 100)}%: dihitung dari selisih harga sebenarnya dan prakiraan pada uji data lama mingguan selama dua tahun. Selisih yang lebih baru diberi bobot lebih besar (separuh setiap 8 minggu), dan lebar rentang dikoreksi tiap minggu memakai harga yang sudah terjadi: kalau sering kebobolan rentang dilebarkan, kalau terlalu longgar dipersempit. Ketepatannya dinilai tiap minggu selama setahun, selalu hanya memakai data sebelum minggu itu; syarat lolos: 75 sampai 85% harga sebenarnya masuk rentang.`,
   `Peringatan dini: ambang lonjakan, seberapa jauh harga sudah naik, dan toleransi hari dipilih untuk tiap kelompok gejolak (rendah, sedang, tinggi) dari 70% masa awal riwayat, lalu dinilai pada 30% masa akhir.`,
   `Hari kosong diisi dengan harga terakhir paling banyak ${a.maks_celah_isi_hari} hari pencatatan (akhir pekan dan libur tidak dihitung). Isian ini hanya dipakai sebagai masukan, tidak pernah untuk menilai ketepatan.`,
   `Harga janggal: harga menyimpang jauh dari kebiasaan ${a.jendela_baseline_hari} hari terakhir (skor ${s.z_ambang} atau lebih) dan selisihnya melewati batas tiap kelompok (${Object.entries(s.ambang_persen).map(([k, v]) => `${k} ${v}%`).join(", ")}). Hari janggal berturut-turut dihitung satu kejadian.`,

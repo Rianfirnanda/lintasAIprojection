@@ -107,6 +107,12 @@ export function rp(x) {
   return "Rp" + Math.round(x).toLocaleString("id-ID");
 }
 
+/** Rentang prakiraan dalam rupiah. Bila batas bawah dan atas sama, harga diperkirakan tetap (harga yang jarang berubah). */
+export function rentangRp(bawah, atas, pemisah = "–") {
+  if (bawah === null || bawah === undefined || atas === null || atas === undefined) return "–";
+  return Math.round(bawah) === Math.round(atas) ? `tetap ${rp(bawah)}` : `${rp(bawah)}${pemisah}${rp(atas)}`;
+}
+
 export function angka(x, digit = 0) {
   if (x === null || x === undefined || Number.isNaN(x)) return "–";
   return Number(x).toLocaleString("id-ID", { minimumFractionDigits: digit, maximumFractionDigits: digit });
@@ -150,10 +156,10 @@ export function kelasPerubahan(x, ambang = 5) {
   return "";
 }
 
-// ---------- tema: "light" (bawaan), "dark", atau "auto" (mengikuti perangkat)
+// ---------- tema: "dark" (bawaan), "light", atau "auto" (mengikuti perangkat). Pemasangan awal ada di tema-awal.js.
 const KUNCI_TEMA = "tema-tampilan";
 export function modeTema() {
-  try { const t = localStorage.getItem(KUNCI_TEMA); return ["light", "dark", "auto"].includes(t) ? t : "light"; } catch { return "light"; }
+  try { const t = localStorage.getItem(KUNCI_TEMA); return ["light", "dark", "auto"].includes(t) ? t : "dark"; } catch { return "dark"; }
 }
 const gelapPerangkat = () => matchMedia("(prefers-color-scheme: dark)").matches;
 function terapkanTema() {
@@ -202,6 +208,22 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
 });
 
 // ---------- kerangka halaman
+/** Kelompok menu bilah atas. Isi tiap kelompok disaring sesuai halaman yang boleh dibuka peran. */
+const GRUP_MENU = [
+  { label: "Pantau", isi: ["dasbor.html", "harga.html", "sinyal.html", "berita.html"] },
+  { label: "Data", isi: ["input.html", "kualitas.html", "sumber.html", "kamus.html"] },
+  { label: "Laporan", isi: ["laporan.html", "kebijakan.html", "kinerja.html", "model.html"] },
+  { label: "Kelola", isi: ["pengaturan.html", "pengguna.html"] },
+  { label: "Info", isi: ["alur.html", "tentang.html"] },
+];
+const KET_MENU = {
+  "dasbor.html": "Ringkasan untuk rapat", "harga.html": "Harga tiap komoditas", "sinyal.html": "Harga yang perlu diwaspadai",
+  "berita.html": "Kabar harga dari media lokal", "input.html": "Isi harga dari pasar", "kualitas.html": "Periksa data sebelum dipakai",
+  "sumber.html": "Asal data dan AI Data Finder", "kamus.html": "Arti istilah dan satuan", "laporan.html": "Mingguan sampai tahunan",
+  "kebijakan.html": "Rekomendasi dan tindak lanjut TPID", "kinerja.html": "Target kinerja program", "model.html": "Ketepatan prakiraan",
+  "pengaturan.html": "Atur sistem dan jalankan proses", "pengguna.html": "Akun, peran, dan izin",
+};
+
 export const NAMA_SISTEM = "Takar Pangan 10•21";
 // Untuk tampilan: titik di antara 10 dan 21 dikecilkan supaya mirip titik pada logo.
 const NAMA_TAMPIL = 'Takar Pangan 10<span class="titik-merek">•</span>21';
@@ -256,7 +278,19 @@ export async function pasangKerangka(aktif) {
   const peran = peranAktif();
   const pengguna = sesi();
   const { utama: menuUtama, lainnya } = menuPeran(peran, izinAktif());
-  const tautan = (m) => `<a href="${m.href}"${m.href === aktif ? ' aria-current="page"' : ""}>${m.label}</a>`;
+  const boleh = new Set([...menuUtama, ...lainnya].map((m) => m.href));
+  const LABEL = Object.fromEntries([...menuUtama, ...lainnya].map((m) => [m.href, m.label]));
+  // Menu dikelompokkan supaya bilah atas ringkas: paling banyak lima tombol. Kelompok yang isinya satu halaman tampil
+  // sebagai tautan biasa; halaman Info masuk ke menu akun bila sudah masuk.
+  const masuk = Boolean(pengguna);
+  const grup = GRUP_MENU.map((g) => ({ ...g, isi: g.isi.filter((h) => boleh.has(h)) }))
+    .filter((g) => g.isi.length && !(masuk && g.label === "Info"));
+  const info = masuk ? GRUP_MENU.find((g) => g.label === "Info").isi.filter((h) => boleh.has(h)) : [];
+  const tautanMenu = (h) => `<a href="${h}"${h === aktif ? ' aria-current="page"' : ""}><b>${esc(LABEL[h])}</b>${KET_MENU[h] ? `<small>${esc(KET_MENU[h])}</small>` : ""}</a>`;
+  const tombolGrup = (g) => g.isi.length === 1
+    ? `<a class="nav-tautan" href="${g.isi[0]}"${g.isi[0] === aktif ? ' aria-current="page"' : ""}>${esc(LABEL[g.isi[0]])}</a>`
+    : `<div class="grup-nav"><button class="grup-tombol${g.isi.includes(aktif) ? " aktif" : ""}" type="button" aria-expanded="false" aria-haspopup="true">${esc(g.label)}<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+        <div class="menu-jatuh grup-menu" hidden><span class="grup-judul">${esc(g.label)}</span>${g.isi.map(tautanMenu).join("")}</div></div>`;
 
   const kepala = document.createElement("header");
   kepala.className = "kepala";
@@ -266,13 +300,13 @@ export async function pasangKerangka(aktif) {
         ${LOGO}
         <span class="merek-teks"><span class="merek-nama">${NAMA_TAMPIL}</span><span class="merek-sub">powered by ${LOGO_MINI} Lintas Benteng</span></span>
       </a>
-      <nav class="navigasi" aria-label="Menu utama">
-        ${menuUtama.map(tautan).join("")}
-        ${lainnya.length ? `<div class="lainnya"><button class="lainnya-tombol" type="button" aria-expanded="false" aria-haspopup="true">Lainnya ▾</button>
-          <div class="menu-jatuh lainnya-menu" hidden>${lainnya.map(tautan).join("")}</div></div>` : ""}
+      <nav class="navigasi" id="navigasi" aria-label="Menu utama">
+        <a class="nav-tautan" href="index.html"${aktif === "index.html" ? ' aria-current="page"' : ""}>Beranda</a>
+        ${grup.map(tombolGrup).join("")}
       </nav>
       <div class="kepala-kanan">
         <span class="status-mini" id="status-mini" hidden><i></i><span></span></span>
+        <button class="menu-ponsel" type="button" aria-expanded="false" aria-controls="navigasi"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg><span>Menu</span></button>
         ${pengguna ? `<div class="akun"><button class="akun-tombol" type="button" aria-expanded="false" aria-haspopup="true" title="${esc(pengguna.nama)} · ${esc(PERAN[peran].nama)}">
             <span class="avatar" data-huruf="${esc((pengguna.nama || "?").trim().charAt(0).toUpperCase())}">${pengguna.foto
               ? `<img src="${esc(pengguna.foto)}" alt="" width="30" height="30" referrerpolicy="no-referrer" decoding="async">`
@@ -280,6 +314,7 @@ export async function pasangKerangka(aktif) {
             <span class="akun-nama"><span class="akun-label">${esc(pengguna.nama)}</span><small>${esc(PERAN[peran].nama)}</small></span></button>
           <div class="menu-jatuh" hidden>
             <div class="kepala-menu"><b>${esc(pengguna.nama)}</b><span>${esc(pengguna.id && pengguna.id !== pengguna.nama ? `${pengguna.id} · ` : "")}${esc(PERAN[peran].nama)}</span></div>
+            ${info.map((h) => `<a href="${h}"${h === aktif ? ' aria-current="page"' : ""}>${esc(LABEL[h])}</a>`).join("")}
             <button type="button" data-keluar>Keluar</button>
           </div></div>`
         : `<a class="tombol utama-aksi tombol-masuk" href="masuk.html?lanjut=${encodeURIComponent(aktif)}">Masuk</a>`}
@@ -298,19 +333,30 @@ export async function pasangKerangka(aktif) {
       tombol.setAttribute("aria-expanded", String(buka));
     });
   };
-  kepala.querySelectorAll(".akun-tombol, .lainnya-tombol").forEach(pasangMenu);
+  kepala.querySelectorAll(".akun-tombol, .grup-tombol").forEach(pasangMenu);
+  // Ponsel: semua kelompok menu tampil dalam satu panel yang dibuka tombol Menu.
+  const tombolPonsel = kepala.querySelector(".menu-ponsel");
+  tombolPonsel.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const buka = !kepala.classList.contains("nav-buka");
+    kepala.classList.toggle("nav-buka", buka);
+    tombolPonsel.setAttribute("aria-expanded", String(buka));
+  });
+  kepala.querySelector(".navigasi").addEventListener("click", (e) => e.stopPropagation());
   // Foto akun Google gagal dimuat (luring atau tautan kedaluwarsa): kembali ke huruf awal nama.
   kepala.querySelector(".avatar img")?.addEventListener("error", (e) => {
     const av = e.target.parentElement;
     av.textContent = av.dataset.huruf;
   }, { once: true });
-  document.addEventListener("click", () => kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; }); });
+  const tutupSemua = () => {
+    kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; });
+    kepala.querySelectorAll("[aria-expanded]").forEach((b) => b.setAttribute("aria-expanded", "false"));
+    kepala.classList.remove("nav-buka");
+  };
+  document.addEventListener("click", tutupSemua);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") tutupSemua(); });
   // Keluar lewat halaman Masuk (yang membersihkan sesi lalu kembali ke beranda), supaya halaman dengan CSP ketat tidak perlu memuat pustaka pihak lain.
   kepala.querySelector("[data-keluar]")?.addEventListener("click", () => { location.href = "masuk.html?keluar=1"; });
-  const navAktif = kepala.querySelector('.navigasi [aria-current="page"]');
-  const navEl = navAktif?.parentElement;
-  if (navEl && navAktif.offsetLeft + navAktif.offsetWidth > navEl.clientWidth) navEl.scrollLeft = Math.max(0, navAktif.offsetLeft - 16);
 
   const kaki = document.createElement("footer");
   kaki.className = "kaki";

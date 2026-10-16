@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Laporan · Takar Pangan 10•21</title>
   <meta name="description" content="Buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan, evaluasi semesteran, dan laporan tahunan harga pangan Kabupaten Bengkulu Tengah.">
-  <meta name="theme-color" content="#0e1114">
+  <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
+  <script src="assets/tema-awal.js"></script>
   <style>
     .dokumen { max-width: 980px; margin: 0 auto; padding: 34px 40px 38px; }
     @media (max-width: 640px) { .dokumen { padding: 20px 16px 24px; } }
@@ -67,7 +68,7 @@
 </main>
 
 <script type="module">
-import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, waktu, lencanaKeparahan, lencanaStatus, kelasPerubahan,
+import { pasangKerangka, muatJSON, esc, rp, rentangRp, persen, tgl, angka, waktu, lencanaKeparahan, lencanaStatus, kelasPerubahan,
          JENIS_SINYAL, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
 
 const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
@@ -103,7 +104,7 @@ function tabelVarian(p) {
         <td class="angka ${kelasPerubahan(v.vs_sebelumnya_persen, AMBANG[v.kelompok])}">${persen(v.vs_sebelumnya_persen, 1, true)}</td>
         <td class="angka ${kelasPerubahan(v.vs_tahun_lalu_persen, AMBANG[v.kelompok])}">${persen(v.vs_tahun_lalu_persen, 1, true)}</td>
         <td class="angka">${persen(v.volatilitas_harian_persen, 2)}</td>
-        ${adaProyeksi ? `<td class="angka">${v.proyeksi_h7 ? `${rp(v.proyeksi_h7.prediksi)}<br><span class="meta-kecil">${rp(v.proyeksi_h7.bawah)}–${rp(v.proyeksi_h7.atas)}</span>` : "–"}</td>` : ""}</tr>`;
+        ${adaProyeksi ? `<td class="angka">${v.proyeksi_h7 ? `${rp(v.proyeksi_h7.prediksi)}<br><span class="meta-kecil">${rentangRp(v.proyeksi_h7.bawah, v.proyeksi_h7.atas)}</span>` : "–"}</td>` : ""}</tr>`;
     }
   }
   return html + "</tbody></table></div>";

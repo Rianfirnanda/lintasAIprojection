@@ -306,6 +306,9 @@ button.dsb-arah-angka:focus-visible { outline: 2px solid var(--aksen); }
 .dsb-titik-ket i.baik, .dsb-titik-status.baik { background: var(--dsb-hijau); } .dsb-titik-ket i.sedang, .dsb-titik-status.sedang { background: #e08c00; }
 .dsb-titik-ket i.tinggi, .dsb-titik-status.tinggi { background: var(--dsb-merah); }
 .dsb-ubin-finder { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 10px; align-items: start; }
+.dsb-finder-belum { margin-top: 12px; padding: 10px 14px; border-radius: 12px; border: 1px dashed var(--rule-2); color: var(--ink-2); font-size: 0.84rem; }
+.dsb-finder-belum summary { cursor: pointer; color: var(--muted); }
+.dsb-finder-belum ul { margin: 8px 0 2px; padding-left: 18px; display: grid; gap: 6px; }
 .dsb-finder { padding: 10px 12px; border-radius: 12px; background: var(--dsb-ubin); border-left: 3px solid #9aaabd; }
 .dsb-finder.baik { border-left-color: var(--dsb-hijau); } .dsb-finder.sedang { border-left-color: #e08c00; } .dsb-finder.tinggi { border-left-color: var(--dsb-merah); }
 .dsb-finder summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 8px; align-items: center; }

@@ -21,6 +21,13 @@ tombol **Masuk dengan Google**. Akun baru menunggu persetujuan admin, lalu admin
 
 Ingat: login dan persetujuan dijaga aturan Firestore, tetapi berkas data dashboard tetap terbuka bagi umum.
 
+**Menu.** Bilah atas berisi paling banyak lima menu: **Beranda**, **Pantau** (Dashboard Internal, Harga, Peringatan, Berita Lokal),
+**Data** (Catat Harga, Cek Data, Sumber, Kamus Data), **Laporan** (Laporan, Kebijakan, Capaian, Akurasi), dan **Kelola** (Pengaturan,
+Pengguna). Isi tiap menu menyesuaikan peran; menu yang isinya satu halaman tampil langsung sebagai tautan. **Alur** dan **Tentang** ada di
+menu akun (klik nama Anda). Di ponsel semua menu dibuka lewat tombol **Menu**.
+
+**Tampilan.** Bawaannya mode gelap. Tombol bulan/matahari di kaki halaman mengganti ke mode terang, dan pilihan itu diingat di perangkat.
+
 ## 1. Petugas lapangan (pencatat harga)
 
 1. Masuk sebagai petugas, lalu buka halaman **Catat Harga** di dashboard satu kali saat ada sinyal (halaman tersimpan untuk dipakai luring).
@@ -139,6 +146,14 @@ Sistem selalu memakai data asli (`mode_demo: tidak` di `config/pengaturan.json`)
   tidak dihitung). Celah lebih panjang (mis. libur Lebaran 2022 dan 2024) dibiarkan kosong, dan model memakai data sesudahnya.
 - **Syarat rentang 80%.** Dinilai tiap minggu selama setahun terakhir (52 titik uji, kalibrasi selalu dari masa sebelumnya). Penilaian 90 hari
   terakhir saja (13 titik yang saling tumpang tindih) tetap ditampilkan, tetapi terlalu sedikit untuk dijadikan syarat.
+- **Kalibrasi rentang adaptif.** Selisih prakiraan dan kenyataan dari dua tahun uji mingguan diberi bobot menurut umur (separuh tiap 8 minggu,
+  paling kecil 0,1), lalu lebar rentang dikoreksi tiap minggu memakai harga yang sudah terjadi (Adaptive Conformal Inference, sasaran 82%).
+  Setelan ini dipilih dari uji Oktober 2024 sampai Oktober 2025 dan diperiksa pada Oktober 2025 sampai Oktober 2026: cakupan 21 dari 21 varian
+  masuk 75 sampai 85% pada kedua tahun (cara lama 14 dari 21). Untuk harga yang jarang berubah, rentang bisa berupa satu angka; situs
+  menulisnya "tetap Rp…" karena harga itu paling mungkin tidak berubah.
+- **Target rata-rata meleset 10% lebih kecil.** Untuk harga yang jarang berubah, harga terakhir sudah tebakan terbaik, sehingga sebagian besar
+  varian memakai cara itu dan target ini belum tercapai. Sesuai Tabel 5 rancangan, bila AI tidak lebih tepat sistem kembali ke cara sederhana.
+  Varian yang harganya sama sekali tidak berubah selama masa uji dicatat "tidak dapat dinilai", karena 10% dari nol tidak bisa dihitung.
 - **Peringatan dini.** Ambang ditala per kelompok gejolak (rendah, sedang, tinggi) pada 70% masa awal riwayat, dinilai pada 30% masa akhir.
   Dasbor juga menampilkan seberapa dini peringatan muncul (sebelum, pada, atau sesudah hari pertama lonjakan).
 - **Yang perlu dipahami.** Riwayat SP2KP baru sekitar 637 hari pencatatan; syarat status Valid adalah 730, jadi varian Bengkulu Tengah
@@ -168,7 +183,7 @@ Tabel bisa diurutkan dan diekspor ke CSV, termasuk kolom tanggal pilihan. Angkan
 `analitik.json`, `proyeksi_acara.json`, dan `proyeksi_periodik.json` yang dibuat tiap pipeline jalan.
 
 - **Proyeksi harian.** 7, 14, dan 30 hari ke depan dengan rentang 80%. Rentang dibentuk dari selisih prakiraan dan kenyataan pada uji data
-  lama (konformal), bukan dari rumus tebakan.
+  lama (konformal adaptif, lihat bagian 4c), bukan dari rumus tebakan.
 - **Uji akhir (holdout).** 90 hari terakhir disisihkan dan tidak dipakai memilih cara prakiraan. Hasilnya dinilai dengan sMAPE, MASE, bias,
   akurasi arah, dan cakupan rentang 80%. MASE memakai skala galat cara naif pada horizon yang sama, dihitung dari data sebelum masa uji.
 - **Status.** **Valid** hanya bila semua syarat Protokol Validasi lolos: riwayat minimal 730 hari, kelengkapan minimal 95%, sMAPE di bawah
@@ -244,7 +259,7 @@ Tabel bisa diurutkan dan diekspor ke CSV, termasuk kolom tanggal pilihan. Angkan
 ## 5b. Berita lokal harian
 
 Mesin mencari berita lokal tentang harga pangan, membaca isinya, mengambil harga yang disebut sebagai **kandidat**, lalu
-menyusun kesimpulan harian. Hasilnya tampil di halaman **Berita Lokal** (menu Lainnya untuk analis, TPID, operator, dan admin).
+menyusun kesimpulan harian. Hasilnya tampil di halaman **Berita Lokal** (menu Pantau untuk analis, TPID, operator, dan admin).
 
 **Jadwal.** Berjalan sendiri sekali sehari. Penjaga (`antrean.yml`) melihat bahwa jam 07.00 WIB sudah lewat dan berita hari
 ini belum dicari, lalu memicu pembaruan harian yang memuat langkah ini. Jam mulainya bisa diubah di **Pengaturan → Berita lokal**.
