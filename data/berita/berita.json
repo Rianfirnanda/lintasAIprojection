@@ -1,6 +1,20 @@
 {
- "diperbarui": "2026-10-15T07:08:35+07:00",
+ "diperbarui": "2026-10-16T07:12:16+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-16",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Berdasarkan ringkasan berita, tidak ada informasi spesifik mengenai perkembangan harga dan pasokan yang terjadi di wilayah Kabupaten Bengkulu Tengah. Informasi yang tersedia hanya mencakup wilayah Kota Bengkulu, di mana harga cabai merah di Pasar Panorama mengalami kenaikan signifikan dari Rp40.000-Rp50.000 menjadi Rp70.000-Rp85.000 per kilogram akibat berkurangnya pasokan dari Kabupaten Kepahiang karena musim kemarau dan gagal panen, serta adanya kegiatan bazar pangan murah oleh Pemerintah Kota Bengkulu.",
+   "poin": [
+    "Harga cabai merah di Kota Bengkulu naik menjadi Rp70.000-Rp85.000 per kg karena pasokan dari Kabupaten Kepahiang berkurang akibat kemarau dan gagal panen.",
+    "Pemerintah Kota Bengkulu mengadakan bazar pangan murah untuk menyediakan kebutuhan dengan harga terjangkau."
+   ],
+   "perlu_dipantau": [
+    "Karena bahan berita tidak menyebutkan kondisi di Kabupaten Bengkulu Tengah, perlu dilakukan pemantauan langsung di pasar-pasar dalam wilayah Bengkulu Tengah untuk memastikan apakah kenaikan harga cabai merah dan kendala pasokan dari Kepahiang juga berdampak ke daerah ini."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-15",
    "metode": "ai",
@@ -104,6 +118,188 @@
  ],
  "berita": [
   {
+   "id": "33118b7ff7bf",
+   "url": "https://bengkulu.antaranews.com/berita/482273/harga-cabai-merah-di-pasar-kota-bengkulu-berada-di-rp70-85-ribu-per-kilogram",
+   "judul": "Harga cabai merah di pasar Kota Bengkulu berada di Rp70-85 ribu per kilogram",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-15",
+   "diakses": "2026-10-16T07:12:16+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 8,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kepahiang",
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Cabai Rawit"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "cuaca"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 1744,
+   "sidik_sha256": "67a729f89dc629c5989f9fd42a9d6276cfecf00cdf1224721a5ef1ef8c50fad9",
+   "kutipan": "Harga cabai merah di pasar tradisional Kota Bengkulu Pasar Panorama dijual pada rentang Rp70.000 hingga Rp85.000 per kilogram pada 14 Oktober",
+   "ringkasan": "Harga cabai merah di Pasar Panorama Kota Bengkulu mengalami kenaikan menjadi Rp70.000 hingga Rp85.000 per kilogram dari sebelumnya Rp40.000 hingga Rp50.000 per kilogram. Lonjakan harga ini terjadi karena berkurangnya pasokan dari sentra pertanian Kabupaten Kepahiang akibat musim kemarau dan gagal panen.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 70000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": "Pasar Panorama",
+     "arah": "",
+     "bukti": "Bengkulu (ANTARA) - Harga cabai merah di pasar tradisional Kota Bengkulu, Pasar Panorama dijual pada rentang Rp70.000 hingga Rp85.000 per kilogram pada 14 Oktober 2026.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 85000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": "Pasar Panorama",
+     "arah": "",
+     "bukti": "Bengkulu (ANTARA) - Harga cabai merah di pasar tradisional Kota Bengkulu, Pasar Panorama dijual pada rentang Rp70.000 hingga Rp85.000 per kilogram pada 14 Oktober 2026.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 40000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Fiki mengatakan harga cabai merah besar dan cabai merah keriting sebelumnya berkisar Rp40.000 hingga Rp50.000 per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 50000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Fiki mengatakan harga cabai merah besar dan cabai merah keriting sebelumnya berkisar Rp40.000 hingga Rp50.000 per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 80000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selain cabai merah besar dan cabai merah keriting, cabai rawit dan cabai setan juga dijual sekitar Rp80.000 per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 90000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Khusus cabai setan, harga jualnya berkisar Rp80.000 hingga Rp90.000 per kilogram.",
+     "status": "kandidat"
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "1010f18c0b37",
+   "url": "https://bengkulu.antaranews.com/amp/berita/482077/pemkot-bengkulu-bazar-murah-sediakan-pangan-harga-terjangkau-bagi-warga",
+   "judul": "Pemkot Bengkulu bazar murah sediakan pangan harga terjangkau bagi warga - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-14",
+   "diakses": "2026-10-16T07:12:16+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Cabai Merah",
+    "Minyak Goreng"
+   ],
+   "tag": [
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9548,
+   "sidik_sha256": "9ecaa0b0d22368bc85252fa33e5e9f932d4ca293021d5007e596de979f905108",
+   "kutipan": "Salah seorang pedagang telur, Novi (32), mengatakan harga telur yang dijual selama bazar dipatok Rp50.000 per 30 butir, lebih murah dibandingkan harga normal di pasaran yang mencapai Rp54.000 per 30 butir. Salah seorang ",
+   "ringkasan": "Pemerintah Kota Bengkulu menyelenggarakan bazar pangan murah guna menyediakan kebutuhan pangan dengan harga terjangkau bagi warga.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 75000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
+     "status": "kandidat"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 85000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Salah seorang warga Kota Bengkulu yang ikut berbelanja Defri (48) menyebutkan harga cabai merah keriting di bazar dijual seharga Rp75.000 per kilogram, sedangkan harga di pasaran saat ini berkisar Rp85.000 per kilogram.",
+     "status": "kandidat"
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "cb8c638e7dd9",
    "url": "https://bengkulu.antaranews.com/berita/482077/pemkot-bengkulu-bazar-murah-sediakan-pangan-harga-terjangkau-bagi-warga",
    "judul": "Pemkot Bengkulu bazar murah sediakan pangan harga terjangkau bagi warga - ANTARA News Bengkulu",
@@ -166,7 +362,7 @@
      "status": "kandidat"
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -202,7 +398,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "3482d435ca0e",
@@ -238,7 +434,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "0ee73bb1a64a",
@@ -1131,12 +1327,12 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 180,
-  "setelah_duplikat": 158,
-  "berita_baru": 3,
-  "total_arsip": 18,
-  "kandidat_harga_baru": 2,
-  "isi_tidak_terbaca": 2,
+  "hasil_pencarian": 159,
+  "setelah_duplikat": 137,
+  "berita_baru": 2,
+  "total_arsip": 20,
+  "kandidat_harga_baru": 8,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
   "model_ai": "gemini-3.8-flash"
  },
