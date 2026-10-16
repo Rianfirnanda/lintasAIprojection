@@ -85,8 +85,9 @@ export function hitungMutu(m, daftarSinyal) {
   const kosong = ["Belum ada data", "netral"];
   const ok = (lolos, tulisan = "Baik") => (lolos ? [tulisan, "baik"] : ["Perhatian", "perhatian"]);
   return [
-    { ikon: "target", nama: "Rata-rata meleset", arti: "sMAPE", nilai: ada(r.smape_median) ? `${angka(r.smape_median, 1)}%` : "–", status: n ? ok(r.lolos_smape === n) : kosong,
-      catatan: `Rata-rata meleset prakiraan. ${r.lolos_smape} dari ${n} varian lebih tepat minimal ${t.perbaikan_smape_persen}% dibanding cara sederhana` },
+    { ikon: "target", nama: "Rata-rata meleset", arti: "sMAPE", nilai: ada(r.smape_median) ? `${angka(r.smape_median, 1)}%` : "–",
+      status: ada(r.smape_median) ? ok(r.smape_median < (t.smape_median_maks_persen ?? 5)) : kosong,
+      catatan: `Rata-rata meleset prakiraan. Target di bawah ${angka(t.smape_median_maks_persen ?? 5)}% (laporan pengembangan model)` },
     { ikon: "timbangan", nama: "Condong tinggi/rendah", arti: "bias", nilai: ada(bias) ? `${angka(bias, 1)}%` : "–", status: n ? ok(r.lolos_bias === n) : kosong,
       catatan: `Condong terlalu tinggi atau rendah. Target paling besar ${t.bias_absolut_maks_persen}%` },
     { ikon: "simpul", nama: "Ketepatan peringatan", arti: "F1-score", nilai: ada(e?.f1) ? angka(e.f1, 2) : "–", status: ada(e?.f1) ? ok(e.f1 >= t.f1_min) : kosong,

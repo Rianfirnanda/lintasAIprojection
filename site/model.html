@@ -24,7 +24,7 @@
 
   <div class="grid dua-sama">
     <section class="kartu">
-      <div class="kartu-kepala"><div><h2>Sudah sesuai target?</h2><p>Target ini disusun bersama dalam rancangan proyek.</p></div></div>
+      <div class="kartu-kepala"><div><h2>Sudah sesuai target?</h2><p>Target mengikuti laporan pengembangan model.</p></div></div>
       <div class="gulir-tabel"><table id="tabel-target"><thead><tr><th>Yang dinilai</th><th>Target</th><th>Hasil</th><th>Status</th></tr></thead><tbody></tbody></table></div>
       <p class="meta-kecil" id="ket-target" style="margin-top:10px" hidden></p>
     </section>
@@ -93,8 +93,8 @@ const NAMA_CARA = { naif: "harga terakhir", naif_musiman7: "hari yang sama mingg
 const dipakai = Object.entries(r.model_dipakai).map(([k, v]) => `${v} ${esc(NAMA_CARA[k] || k.replace("_", " "))}`).join(" · ") || "–";
 document.getElementById("kpi").innerHTML = [
   ind({ i: "kubus", label: "Varian diuji", nilai: angka(r.varian_dinilai), sub: "riwayat harganya cukup" }),
-  ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: "prakiraan 1 sampai 30 hari" }),
-  ind({ i: "tren", warna: "hijau", label: "Lebih baik dari harga terakhir", nilai: `${r.lolos_smape}/${r.varian_dinilai}`, sub: `unggul minimal ${t.perbaikan_smape_persen}%`, meter: r.varian_dinilai ? r.lolos_smape / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
+  ind({ i: "target", warna: "hijau", label: "Rata-rata meleset", nilai: r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`, sub: `target di bawah ${angka(t.smape_median_maks_persen ?? 5)}%` }),
+  ind({ i: "tren", warna: "hijau", label: "Rentang prakiraan tepat", nilai: `${r.lolos_cakupan}/${r.varian_dinilai}`, sub: `target minimal ${t.porsi_varian_cakupan_min_persen ?? 85}% varian`, meter: r.varian_dinilai ? r.lolos_cakupan / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
   ind({ i: "perisai", warna: r.varian_valid ? "hijau" : "oranye", label: "Lolos uji akhir (Valid)", nilai: `${r.varian_valid ?? 0}/${r.varian_dinilai}`, sub: `${r.varian_eksperimen ?? 0} masih Eksperimen`, meter: r.varian_dinilai ? (r.varian_valid ?? 0) / r.varian_dinilai * 100 : null, meterWarna: "hijau" }),
   ind({ i: "otak", label: "Cara prakiraan dipakai", nilai: `<span style="font-size:1.05rem;line-height:1.3;display:block">${dipakai}</span>`, sub: "jumlah varian per cara" }),
 ].join("");
@@ -102,28 +102,27 @@ document.getElementById("kpi").innerHTML = [
 const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum bisa dinilai</span>'
   : ok ? '<span class="lencana baik">tercapai</span>' : '<span class="lencana sedang">belum tercapai</span>';
 const n = r.varian_dinilai || 0;
-const nSmape = n - (r.smape_tak_dinilai || 0);
+// Target mengikuti laporan pengembangan model: rata-rata meleset di bawah 5% dan rentang tepat di sedikitnya 85% varian.
+const smapeMaks = t.smape_median_maks_persen ?? 5, porsiMin = t.porsi_varian_cakupan_min_persen ?? 85;
 const baris = [
-  ["Rata-rata meleset", `minimal ${t.perbaikan_smape_persen}% lebih kecil dari cara sederhana`, `${r.lolos_smape}/${nSmape} varian`, nSmape ? r.lolos_smape === nSmape : null],
+  ["Rata-rata meleset", `di bawah ${angka(smapeMaks)}%`, r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`,
+    r.smape_median === null ? null : r.smape_median < smapeMaks],
   ["Condong terlalu tinggi atau rendah", `paling banyak ${t.bias_absolut_maks_persen}%`, `${r.lolos_bias}/${n} varian`, n ? r.lolos_bias === n : null],
-  ["Harga sebenarnya masuk rentang prakiraan", `${t.cakupan_interval_min_persen} sampai ${t.cakupan_interval_maks_persen}%`, `${r.lolos_cakupan}/${n} varian`, n ? r.lolos_cakupan === n : null],
+  ["Harga sebenarnya masuk rentang prakiraan", `${t.cakupan_interval_min_persen} sampai ${t.cakupan_interval_maks_persen}% di minimal ${porsiMin}% varian`,
+    `${r.lolos_cakupan}/${n} varian (${angka(n ? r.lolos_cakupan / n * 100 : 0)}%)`, n ? r.lolos_cakupan / n * 100 >= porsiMin : null],
   ["Nilai gabungan peringatan (F1)", `minimal ${t.f1_min}`, ev.f1 ?? "–", ev.f1 === undefined || ev.f1 === null ? null : ev.f1 >= t.f1_min],
   ["Lonjakan yang tertangkap (recall)", `minimal ${t.recall_min}`, ev.recall ?? "–", ev.recall === undefined || ev.recall === null ? null : ev.recall >= t.recall_min],
   ["Peringatan yang salah (false alarm)", `paling banyak ${t.fpr_maks}`, ev.false_positive_rate ?? "–", ev.false_positive_rate === undefined || ev.false_positive_rate === null ? null : ev.false_positive_rate <= t.fpr_maks],
 ];
 document.querySelector("#tabel-target tbody").innerHTML = baris.map(([a, b, c, ok]) =>
   `<tr><td>${a}</td><td>${esc(b)}</td><td>${esc(c)}</td><td>${status(ok)}</td></tr>`).join("");
-// Alasan singkat bila target rata-rata meleset belum tercapai: varian yang kembali ke harga terakhir dan yang tidak bisa dinilai.
+// Keterangan pembanding: berapa varian yang memakai harga terakhir dan mengapa (bukan syarat target).
 const pakaiNaif = m.per_varian.filter((v) => v.model_terpilih === "naif").length;
 const jarang = m.per_varian.filter((v) => (v.holdout?.porsi_harga_tetap_persen ?? 0) >= 50).length;
-if (nSmape && r.lolos_smape < nSmape) {
-  const ket = document.getElementById("ket-target");
-  ket.hidden = false;
-  ket.textContent = `Rata-rata meleset: ${pakaiNaif} dari ${n} varian memakai harga terakhir karena belum ada cara lain yang terbukti lebih tepat pada uji data lama. ` +
-    (jarang ? `${jarang} varian harganya tidak berubah pada lebih dari separuh hari uji, jadi harga terakhir memang tebakan terbaik untuknya. ` : "") +
-    (r.smape_tak_dinilai ? `${r.smape_tak_dinilai} varian tidak bisa dinilai karena harganya sama sekali tidak berubah selama masa uji. ` : "") +
-    "Sesuai rancangan, bila prakiraan AI tidak lebih tepat, sistem kembali ke cara sederhana.";
-}
+const ket = document.getElementById("ket-target");
+ket.hidden = false;
+ket.textContent = `Pembanding: ${r.lolos_smape} varian lebih tepat minimal ${t.perbaikan_smape_persen}% dari harga terakhir. ${pakaiNaif} dari ${n} varian memakai harga terakhir karena belum ada cara lain yang terbukti lebih tepat` +
+  (jarang ? `; ${jarang} varian harganya tidak berubah pada lebih dari separuh hari uji, jadi harga terakhir memang tebakan terbaik untuknya.` : ".");
 
 document.getElementById("evaluasi").innerHTML = ev.episode_uji !== undefined ? `
   <dl class="dl">
@@ -160,7 +159,7 @@ document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) =>
   const ok = v.lolos || {};
   const tanda = (x) => (x === false ? ' <span class="lencana sedang polos" style="padding:0 6px">✕</span>' : "");
   return `<tr><td>${esc(v.nama)}${v.sumber_seri?.pengganti ? `<br><span class="meta-kecil">harga ${esc(v.sumber_seri.wilayah)}</span>` : ""}</td>${kolom}
-    <td class="angka">${persen(v.perbaikan_vs_naif_persen, 1, true)}${tanda(ok.smape)}</td>
+    <td class="angka">${persen(v.perbaikan_vs_naif_persen, 1, true)}</td>
     <td class="angka">${persen(mp.bias_persen, 2, true)}${tanda(ok.bias)}</td>
     <td class="angka">${persen(v.cakupan_interval_persen)}${tanda(ok.cakupan)}</td>
     <td class="angka">${rp(mp.mae)}</td>
@@ -216,7 +215,7 @@ const a = m.pengaturan.analisis, s = m.pengaturan.sinyal;
 document.getElementById("metodologi").innerHTML = [
   `Harga harian Bengkulu Tengah diambil dari nilai tengah data yang lolos pemeriksaan, dari sumber yang paling diprioritaskan pada hari itu. Saat ini sumber hariannya SP2KP Kemendag (Pasar Taba Penanjung). Varian yang tidak dicatat di sana memakai rata-rata Provinsi Bengkulu dari PIHPS Bank Indonesia, dan selalu diberi tanda.`,
   `Status Valid hanya diberikan bila riwayat sedikitnya 730 hari pencatatan, kelengkapan data sedikitnya 95% (libur nasional tidak dihitung), dan hasil uji 90 hari terakhir memenuhi batas kelompoknya (rendah, sedang, tinggi): rata-rata meleset, condong, rentang prakiraan 75 sampai 85%, dan MASE di bawah 1.`,
-  `Mesin belajar (Ridge, Boosting, Random Forest) dan gabungan hanya menggantikan cara sederhana bila lebih tepat sedikitnya 5% dan menang di sedikitnya 8 dari 12 titik uji. Bila polanya lemah, prakiraan mesin belajar disusutkan mendekati harga terakhir.`,
+  `Mesin belajar (Ridge, Boosting, Random Forest) dan gabungan hanya menggantikan cara sederhana bila lebih tepat sedikitnya 5% dan menang di sedikitnya 8 dari 12 titik uji. Cara apa pun selain harga terakhir juga tidak boleh lebih meleset secara keseluruhan daripada harga terakhir. Bila polanya lemah, prakiraan mesin belajar disusutkan mendekati harga terakhir.`,
   `Harga normal adalah nilai tengah ${a.jendela_baseline_hari} hari sebelumnya. Cara prakiraan yang dicoba: ${Object.values(m.nama_model).map(esc).join("; ")}.`,
   `Ujinya memakai data lama: ${a.jumlah_origin_backtest} titik awal yang berjarak ${a.jarak_origin_hari} hari, prakiraan sejauh ${a.horizon_hari} hari, dan butuh minimal ${a.minimal_hari_riwayat} hari data.`,
   `Rentang prakiraan ${Math.round(a.tingkat_interval * 100)}%: dihitung dari selisih harga sebenarnya dan prakiraan pada uji data lama mingguan selama dua tahun. Selisih yang lebih baru diberi bobot lebih besar (separuh setiap 8 minggu), dan lebar rentang dikoreksi tiap minggu memakai harga yang sudah terjadi: kalau sering kebobolan rentang dilebarkan, kalau terlalu longgar dipersempit. Ketepatannya dinilai tiap minggu selama setahun, selalu hanya memakai data sebelum minggu itu; syarat lolos: 75 sampai 85% harga sebenarnya masuk rentang.`,

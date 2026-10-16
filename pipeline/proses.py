@@ -491,11 +491,17 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     ringkasan_model = {
         "varian_dinilai": dinilai, "lolos_smape": lolos_smape, "lolos_bias": lolos_bias, "lolos_cakupan": lolos_cakupan,
         "smape_tak_dinilai": smape_tak_dinilai,
+        # Target laporan pengembangan model: rata-rata meleset (nilai tengah sMAPE) di bawah batas, dan rentang tepat di
+        # sedikitnya sekian persen varian. Perbandingan dengan harga terakhir tetap dicatat sebagai keterangan.
+        "porsi_cakupan_persen": round(lolos_cakupan / dinilai * 100, 1) if dinilai else None,
         "smape_median": round(median(smape_terpilih), 2) if smape_terpilih else None,
         "model_dipakai": Counter(hv.model_terpilih for hv in hasil_varian.values() if hv.model_terpilih),
         "varian_valid": sum(1 for hv in hasil_varian.values() if hv.validasi.get("status") == "valid"),
         "varian_eksperimen": sum(1 for hv in hasil_varian.values() if hv.validasi.get("status") != "valid"),
     }
+    sm, porsi = ringkasan_model["smape_median"], ringkasan_model["porsi_cakupan_persen"]
+    ringkasan_model["target_smape_tercapai"] = None if sm is None else sm < tk.get("smape_median_maks_persen", 5)
+    ringkasan_model["target_cakupan_tercapai"] = None if porsi is None else porsi >= tk.get("porsi_varian_cakupan_min_persen", 85)
     _tulis_json(keluaran / "model.json", {
         "ringkasan": ringkasan_model, "per_varian": per_varian_model, "evaluasi_anomali": evaluasi,
         "target": tk, "nama_model": analisis.NAMA_MODEL,

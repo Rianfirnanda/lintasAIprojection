@@ -84,6 +84,8 @@
     "bias_absolut_maks_persen": 5,
     "cakupan_interval_min_persen": 75,
     "cakupan_interval_maks_persen": 85,
+    "smape_median_maks_persen": 5,
+    "porsi_varian_cakupan_min_persen": 85,
     "f1_min": 0.88,
     "recall_min": 0.88,
     "fpr_maks": 0.1,

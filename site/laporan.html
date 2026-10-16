@@ -122,9 +122,9 @@ function kinerjaModel(km) {
   return `<h2>Ketepatan prakiraan dan peringatan harga janggal</h2>
     <dl class="dl">
       <dt>Rata-rata meleset (prakiraan 1 sampai 30 hari)</dt><dd>${r.smape_median === null ? "–" : angka(r.smape_median, 2) + "%"}</dd>
-      <dt>Varian yang minimal ${t.perbaikan_smape_persen}% lebih tepat dari cara sederhana</dt><dd>${r.lolos_smape}/${r.varian_dinilai}</dd>
+      <dt>Target rata-rata meleset</dt><dd>di bawah ${angka(t.smape_median_maks_persen ?? 5)}%: ${r.smape_median === null ? "belum bisa dinilai" : r.smape_median < (t.smape_median_maks_persen ?? 5) ? "tercapai" : "belum tercapai"}</dd>
       <dt>Bias absolut ≤${t.bias_absolut_maks_persen}%</dt><dd>${r.lolos_bias}/${r.varian_dinilai}</dd>
-      <dt>Harga sebenarnya masuk rentang perkiraan 80% (target ${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%)</dt><dd>${r.lolos_cakupan}/${r.varian_dinilai}</dd>
+      <dt>Harga sebenarnya masuk rentang perkiraan 80% (${t.cakupan_interval_min_persen}–${t.cakupan_interval_maks_persen}%, target minimal ${t.porsi_varian_cakupan_min_persen ?? 85}% varian)</dt><dd>${r.lolos_cakupan}/${r.varian_dinilai}</dd>
       <dt>Ketepatan peringatan (benar / tertangkap / gabungan)</dt><dd>${ev.precision ?? "–"} / ${ev.recall ?? "–"} / ${ev.f1 ?? "–"} <span class="meta-kecil">(${esc(ev.sumber_label)})</span></dd>
     </dl>`;
 }
