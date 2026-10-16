@@ -726,7 +726,8 @@ export async function pasangDasborInternal(wadah, meta) {
       const rentang = x.minimum === x.maksimum ? "" : `<div class="meta-kecil">${angkaRp(x.minimum)} sampai ${angkaRp(x.maksimum)}</div>`;
       const arah = x.arah === "naik" ? ' <span class="dsb-ubah naik">naik</span>' : x.arah === "turun" ? ' <span class="dsb-ubah turun">turun</span>' : "";
       const selisih = bd ? `<strong class="${bd.beda_jauh ? "dsb-beda" : ""}">${persen(bd.selisih_persen, 1, true)}</strong>` : '<span class="meta-kecil">tidak dibanding</span>';
-      const utama = bd ? `${angkaRp(bd.harga_utama)}<div class="meta-kecil">${esc(bd.dasar)}${bd.tanggal ? `, ${esc(tgl(bd.tanggal))}` : ""}</div>` : "–";
+      const resmi = bd && bd.minimum !== undefined && bd.minimum !== bd.maksimum ? `${angkaRp(bd.minimum)} sampai ${angkaRp(bd.maksimum)}` : bd ? angkaRp(bd.harga_utama) : "";
+      const utama = bd ? `${resmi}<div class="meta-kecil">${esc(bd.dasar)}${bd.tanggal ? `, ${esc(tgl(bd.tanggal))}` : ""}</div>` : "–";
       const nilai = x.label_putusan ? `<span class="lencana ${KELAS_PUTUSAN[x.putusan] || "polos"}">${esc(x.label_putusan)}</span>
         <div class="meta-kecil">keyakinan ${esc(String(x.keyakinan))} (${esc(x.tingkat)})</div>` : "–";
       return `<tr><td><strong>${esc(x.komoditas)}</strong>${arah}</td><td>${esc(NAMA_PERAN[x.wilayah] || x.wilayah)}${c.pasar ? `<div class="meta-kecil">${esc(c.pasar)}</div>` : ""}</td>
