@@ -179,7 +179,7 @@ async function berandaAnalis(el, meta) {
       ${ind({ i: f1.ikon, warna: f1.status[1] === "baik" ? "hijau" : "oranye", label: f1.nama, nilai: f1.nilai, sub: f1.status[0], warnaNilai: "" })}
       ${ind({ i: rc.ikon, warna: rc.status[1] === "baik" ? "hijau" : "oranye", label: rc.nama, nilai: rc.nilai, sub: rc.status[0] })}
       ${ind({ i: "denyut", warna: mutu[5].status[1] === "baik" ? "hijau" : "oranye", label: mutu[5].nama, nilai: mutu[5].nilai, sub: mutu[5].status[0] })}
-      ${ind({ i: "tren", label: "Prakiraan unggul", nilai: `${model.ringkasan.lolos_smape}/${model.ringkasan.varian_dinilai}`, sub: "lebih tepat dari cara sederhana", meter: model.ringkasan.lolos_smape / model.ringkasan.varian_dinilai * 100, href: "model.html" })}
+      ${ind({ i: mutu[0].ikon, warna: mutu[0].status[1] === "baik" ? "hijau" : "oranye", label: mutu[0].nama, nilai: mutu[0].nilai, sub: `target di bawah ${angka(model.target.smape_median_maks_persen ?? 5)}%`, href: "model.html" })}
     </div>
     <div class="grid tiga-kolom">
       <section class="kartu"><div class="kartu-kepala"><div><h2>Peringatan aktif</h2></div><a class="dash-tautan" href="sinyal.html">Semua</a></div>

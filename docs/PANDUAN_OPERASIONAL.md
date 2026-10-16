@@ -151,9 +151,11 @@ Sistem selalu memakai data asli (`mode_demo: tidak` di `config/pengaturan.json`)
   Setelan ini dipilih dari uji Oktober 2024 sampai Oktober 2025 dan diperiksa pada Oktober 2025 sampai Oktober 2026: cakupan 21 dari 21 varian
   masuk 75 sampai 85% pada kedua tahun (cara lama 14 dari 21). Untuk harga yang jarang berubah, rentang bisa berupa satu angka; situs
   menulisnya "tetap Rp…" karena harga itu paling mungkin tidak berubah.
-- **Target rata-rata meleset 10% lebih kecil.** Untuk harga yang jarang berubah, harga terakhir sudah tebakan terbaik, sehingga sebagian besar
-  varian memakai cara itu dan target ini belum tercapai. Sesuai Tabel 5 rancangan, bila AI tidak lebih tepat sistem kembali ke cara sederhana.
-  Varian yang harganya sama sekali tidak berubah selama masa uji dicatat "tidak dapat dinilai", karena 10% dari nol tidak bisa dihitung.
+- **Target ketepatan prakiraan.** Halaman Akurasi dan Capaian memakai target laporan pengembangan model: rata-rata meleset (nilai tengah
+  sMAPE semua varian) di bawah 5%, dan rentang 80% tepat (75 sampai 85%) di sedikitnya 85% varian. Keduanya bisa diubah di Pengaturan, tab
+  Target dan layanan. Target lama dari rancangan ("10% lebih tepat dari harga terakhir") tetap dihitung sebagai keterangan pembanding di tabel
+  per varian. Untuk harga yang jarang berubah, harga terakhir sudah tebakan terbaik, sehingga sebagian besar varian memakai cara itu; varian
+  yang harganya sama sekali tidak berubah selama masa uji dicatat "tidak dapat dinilai" pada perbandingan itu.
 - **Peringatan dini.** Ambang ditala per kelompok gejolak (rendah, sedang, tinggi) pada 70% masa awal riwayat, dinilai pada 30% masa akhir.
   Dasbor juga menampilkan seberapa dini peringatan muncul (sebelum, pada, atau sesudah hari pertama lonjakan).
 - **Yang perlu dipahami.** Riwayat SP2KP baru sekitar 637 hari pencatatan; syarat status Valid adalah 730, jadi varian Bengkulu Tengah

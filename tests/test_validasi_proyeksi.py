@@ -356,6 +356,14 @@ def test_keluaran_pipeline_memuat_analitik_acara_dan_periodik(tmp_path):
     assert a["wilayah_proyek"]["sasaran"] == "Bengkulu Tengah" and "Kepahiang" in a["wilayah_proyek"]["pembanding"]
     assert a["audit"]["status"] in {"HIJAU", "KUNING", "MERAH"} and len(a["rekomendasi_umum"]) == 3
     assert a["sumber_nama"] and sum(a["model_dipakai"].values()) == 21
+    # target laporan pengembangan model: rata-rata meleset < 5% dan rentang tepat di >= 85% varian
+    rm = json.loads((d / "model.json").read_text(encoding="utf-8"))["ringkasan"]
+    assert rm["porsi_cakupan_persen"] == round(rm["lolos_cakupan"] / rm["varian_dinilai"] * 100, 1)
+    assert rm["target_cakupan_tercapai"] == (rm["porsi_cakupan_persen"] >= 85)
+    assert rm["target_smape_tercapai"] == (rm["smape_median"] < 5)
+    ind = {x["kode"]: x for x in json.loads((d / "kinerja.json").read_text(encoding="utf-8"))["indikator"]}
+    assert ind["A1"]["target"] == 5 and ind["A1"]["nilai"] == rm["smape_median"]
+    assert ind["A1b"]["target"] == 85 and ind["A1b"]["nilai"] == rm["porsi_cakupan_persen"]
     # sumber aktif = sumber otomatis yang mengirim data, sama dengan halaman Sumber Data
     assert 0 < a["kpi"]["sumber_aktif"] <= a["kpi"]["sumber_terdaftar"]
     sm = {x["kode"]: x for x in json.loads((d / "sumber.json").read_text(encoding="utf-8"))["sumber"]}

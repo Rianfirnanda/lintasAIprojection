@@ -17,7 +17,9 @@ Menerapkan arsitektur Champion vs Challenger sesuai pedoman Bab 6 dan Laporan Pe
   baseline dan Ridge; kelas sedang dan tinggi juga menguji Gradient Boosting, Random Forest, dan ensemble.
 
 Syarat Promosi (Gerbang Bab 6):
-  Baseline selain naif hanya menjadi juara bila menang terhadap naif di >= 8 dari 12 origin (>= 67% bila origin lebih sedikit).
+  Baseline selain naif hanya menjadi juara bila menang terhadap naif di >= 8 dari 12 origin (>= 67% bila origin lebih sedikit)
+  dan rata-rata melesetnya secara keseluruhan tidak lebih besar dari naif (Rancangan Tabel 5: tidak memburuk terhadap pembanding).
+  Syarat "tidak lebih buruk secara keseluruhan" juga berlaku untuk ML dan ensemble.
   ML hanya menggantikan baseline jika sMAPE membaik >= 5%, menang di >= 8 dari 12 origin,
   MAE tidak memburuk > 2%, dan bias terkendali (<= 3% kelas rendah, <= 5% lainnya).
   Ensemble hanya aktif jika memperbaiki sMAPE >= 2% dari model tunggal terbaik dan MAE tidak memburuk > 2%.
@@ -1138,7 +1140,9 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
                 lolos_base.append(m)
                 continue
             menang, total = _menang(hasil_bt[m], naif_bt)
-            if total and menang >= math.ceil(total * 2 / 3):
+            # Rancangan (Tabel 5): tidak boleh memburuk terhadap pembanding. Selain menang di 2/3 titik uji, rata-rata
+            # melesetnya secara keseluruhan juga tidak boleh lebih besar dari harga terakhir.
+            if total and menang >= math.ceil(total * 2 / 3) and hasil_bt[m].metrik["smape"] <= naif_bt.metrik["smape"]:
                 lolos_base.append(m)
         if not lolos_base:
             lolos_base = [next(m for m in URUT_BASELINE if m in hasil_bt)] if any(m in hasil_bt for m in URUT_BASELINE) else list(hasil_bt)
@@ -1160,7 +1164,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
             ambang_menang = 8 if total_origin >= 12 else max(1, math.ceil(total_origin * 0.67))
             bias_ml = abs(bt_ml.metrik.get("bias_persen", 0.0))
             batas_bias = 3.0 if kelas == "rendah" else 5.0
-            if perbaikan_smape >= 5.0 and menang_ml >= ambang_menang and degradasi_mae <= 2.0 and bias_ml <= batas_bias:
+            if (perbaikan_smape >= 5.0 and menang_ml >= ambang_menang and degradasi_mae <= 2.0 and bias_ml <= batas_bias
+                    and bt_ml.metrik["smape"] <= bt_base.metrik["smape"]):
                 rekomendasi = ml_terbaik
                 catatan.append(f"Machine learning '{ml_terbaik}' lolos gerbang Bab 6: sMAPE membaik {perbaikan_smape:.1f}% terhadap "
                                f"'{baseline_champion}', menang {menang_ml}/{total_origin} origin, bias {bias_ml:.2f}%.")
@@ -1181,7 +1186,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
                 degradasi_mae_ens = ((bt_ens.metrik["mae"] - bt_kini.metrik["mae"]) / bt_kini.metrik["mae"] * 100) if bt_kini.metrik["mae"] > 0 else 0.0
                 konteks["ensemble"] = {"a": baseline_champion, "b": ml_terbaik, "w": w}
                 hasil_bt["ensemble"] = bt_ens
-                if perbaikan_ens >= 2.0 and degradasi_mae_ens <= 2.0:
+                if perbaikan_ens >= 2.0 and degradasi_mae_ens <= 2.0 and bt_ens.metrik["smape"] <= bt_kini.metrik["smape"]:
                     rekomendasi = "ensemble"
                     catatan.append(f"Dynamic Ensemble aktif: {round(w * 100)}% '{baseline_champion}' + {round((1 - w) * 100)}% "
                                    f"'{ml_terbaik}' memperbaiki sMAPE {perbaikan_ens:.1f}% (target >= 2%).")
