@@ -790,7 +790,7 @@ export async function pasangDasborInternal(wadah, meta) {
   function lencanaTab() {
     const isi = (id, teks, nada = "") => { const el = $(`dsb-b-${id}`); if (el && teks) { el.textContent = teks; el.className = `dsb-tab-lencana ${nada}`; } };
     const f = A.finder || [], fr = A.finder_ringkas || {};
-    if (f.length && fr.aktif !== undefined) isi("finder", `${fr.aktif}/${f.length}`, fr.aktif ? "hijau" : "kuning");
+    if (f.length) { const n = f.filter((x) => x.status !== "menunggu").length; isi("finder", `${n} berjalan`, n ? "hijau" : "kuning"); }
     const t = A.pembersihan || [];
     if (t.length) { const l = t.filter((x) => x.status === "lulus").length; isi("bersih", `${l}/${t.length}`, l === t.length ? "hijau" : "kuning"); }
     if (A.ews?.f1 != null) isi("ews", `F1 ${angka(A.ews.f1 * 100, 0)}%`, A.ews.f1 >= 0.88 ? "hijau" : "kuning");

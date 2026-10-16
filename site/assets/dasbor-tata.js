@@ -76,18 +76,24 @@ export function pasangTab(akar) {
 export function gambarFinder(el, A) {
   const f = A.finder || [];
   if (!f.length) { el.innerHTML = '<p class="meta-kecil">Status pencari data belum tersedia.</p>'; return; }
-  const r = A.finder_ringkas || {};
   const hitung = (st) => f.filter((x) => x.status === st).length;
-  el.innerHTML = `<div class="dsb-ringkas-baris">
-      <span class="dsb-angka-besar">${angka(r.aktif ?? hitung("lulus"))}<small>/${f.length}</small></span><span class="dsb-sub">pencari data sudah mengirim data hari ini</span>
-      <span class="dsb-titik-ket"><i class="baik"></i>${hitung("lulus")} berjalan baik</span><span class="dsb-titik-ket"><i class="sedang"></i>${hitung("perlu_perhatian") + hitung("tinjau")} perlu perhatian</span>
-      <span class="dsb-titik-ket"><i class="polos"></i>${hitung("menunggu")} menunggu</span><span class="dsb-titik-ket"><i class="tinggi"></i>${hitung("gagal")} belum lolos</span></div>
-    <div class="dsb-ubin-finder">${f.map((x) => {
-      const [kelas, teks] = STATUS[x.status] || STATUS.menunggu;
-      return `<details class="dsb-finder ${kelas}"><summary><i class="dsb-titik-status ${kelas}"></i><b>${esc(x.nama)}</b>
+  // Pencari data yang berjalan tampil sebagai ubin. Yang belum tersambung (butuh kunci, data instansi lain, atau isian petugas)
+  // dikumpulkan dalam satu baris yang bisa dibuka, lengkap dengan apa yang dibutuhkan, supaya tidak tampak seperti fitur mati.
+  const jalan = f.filter((x) => x.status !== "menunggu");
+  const belum = f.filter((x) => x.status === "menunggu");
+  const ubin = (x) => {
+    const [kelas, teks] = STATUS[x.status] || STATUS.menunggu;
+    return `<details class="dsb-finder ${kelas}"><summary><i class="dsb-titik-status ${kelas}"></i><b>${esc(x.nama)}</b>
         <span class="meta-kecil">${esc(x.objek)}</span><span class="dsb-finder-kaki"><span class="lencana ${kelas}">${teks}</span><span class="meta-kecil">${x.data_terakhir ? esc(tgl(x.data_terakhir)) : "belum ada data"}</span></span></summary>
         ${x.alasan ? `<p class="meta-kecil">${esc(x.alasan)}</p>` : ""}${daftarGerbang(x.gerbang || [])}<p class="meta-kecil">Bila gagal: ${esc(x.tindakan_gagal || "-")}</p></details>`;
-    }).join("")}</div>`;
+  };
+  el.innerHTML = `<div class="dsb-ringkas-baris">
+      <span class="dsb-angka-besar">${angka(jalan.length)}</span><span class="dsb-sub">pencari data berjalan dan mengirim data</span>
+      <span class="dsb-titik-ket"><i class="baik"></i>${hitung("lulus")} berjalan baik</span><span class="dsb-titik-ket"><i class="sedang"></i>${hitung("perlu_perhatian") + hitung("tinjau")} perlu perhatian</span>
+      ${hitung("gagal") ? `<span class="dsb-titik-ket"><i class="tinggi"></i>${hitung("gagal")} belum lolos</span>` : ""}</div>
+    <div class="dsb-ubin-finder">${jalan.map(ubin).join("")}</div>
+    ${belum.length ? `<details class="dsb-finder-belum"><summary>${belum.length} pencari data dari rancangan belum tersambung karena butuh data atau izin dari luar sistem</summary>
+      <ul>${belum.map((x) => `<li><b>${esc(x.nama)}</b>: ${esc(x.alasan || x.objek)}</li>`).join("")}</ul></details>` : ""}`;
 }
 
 export function gambarPembersihan(el, A) {

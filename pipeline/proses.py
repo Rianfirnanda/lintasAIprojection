@@ -631,12 +631,6 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         seri_pembanding, ringkasan_model, sorted({w for (w, ind, _) in indeks_konteks.data if ind == "harga_pihps"
                                                   and w not in (target, konektor_resmi.WILAYAH_PIHPS)}))
     # Registri model dicatat ke repositori hanya untuk data asli (data contoh bukan jejak audit).
-    # Sumber aktif dihitung sama dengan halaman Sumber Data: sumber otomatis yang benar-benar mengirim data. Saluran isian
-    # petugas (BPS, formulir pasar) baru dihitung setelah ada isinya.
-    otomatis = [s for s in konf.sumber.values()
-                if s.status == "aktif" and not (s.kelompok in ("BPS", "PASAR") and not jumlah_per_sumber.get(s.kode))]
-    hasil_analitik["kpi"]["sumber_aktif"] = sum(1 for s in otomatis if jumlah_per_sumber.get(s.kode))
-    hasil_analitik["kpi"]["sumber_terdaftar"] = len(otomatis)
     registry = analitik.perbarui_registry(konf.akar, hasil_analitik) if not pakai_demo else {"riwayat": [], "terkini": {}}
     hasil_analitik["registry_riwayat"] = registry["riwayat"][-40:]
     # Tata kelola data (laporan: 10 AI Data Finder dan 8 tahap pembersihan), perbandingan antarwilayah, rantai harga, EWS.
@@ -650,8 +644,13 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     hasil_analitik["finder"] = finder
     hasil_analitik["finder_ringkas"] = tata_data.ringkas(finder)
     hasil_analitik["pembersihan"] = pembersihan
-    hasil_analitik["kpi"]["sumber_aktif"] = hasil_analitik["finder_ringkas"]["aktif"]
-    hasil_analitik["kpi"]["sumber_terdaftar"] = len(finder)
+    # Indikator "Sumber data aktif" dihitung sama dengan halaman Sumber Data: sumber otomatis yang benar-benar mengirim data.
+    # Saluran isian petugas (BPS, formulir pasar) baru dihitung setelah ada isinya. Status 10 pencari data (laporan) tetap
+    # tampil terpisah di tab Mutu data.
+    otomatis = [s for s in konf.sumber.values()
+                if s.status == "aktif" and not (s.kelompok in ("BPS", "PASAR") and not jumlah_per_sumber.get(s.kode))]
+    hasil_analitik["kpi"]["sumber_aktif"] = sum(1 for s in otomatis if jumlah_per_sumber.get(s.kode))
+    hasil_analitik["kpi"]["sumber_terdaftar"] = len(otomatis)
     hasil_analitik["kpi"]["tahap_lulus"] = sum(1 for t in pembersihan if t["status"] == "lulus")
     hasil_analitik["kpi"]["tahap_total"] = len(pembersihan)
     hasil_analitik["rantai_harga"] = tata_data.rantai_harga(hasil_masuk.konteks)
