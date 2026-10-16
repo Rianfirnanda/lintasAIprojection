@@ -35,7 +35,7 @@
   "ai": {
     "penyedia": "otomatis",
     "harian_aktif": true,
-    "harian_jumlah": 2,
+    "harian_jumlah": 10,
     "urutan_otomatis": ["gemini", "groq", "cerebras", "openrouter", "mistral"],
     "model_gemini": "gemini-flash-latest",
     "model_groq": "openai/gpt-oss-120b",
@@ -61,7 +61,7 @@
   "notifikasi": {
     "aktif": true,
     "keparahan_minimal": "sedang",
-    "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat"],
+    "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat", "drift"],
     "maks_sinyal_per_pesan": 10,
     "email_ke_pengguna": true,
     "buletin_mingguan": true,
@@ -70,7 +70,7 @@
   "layanan": {"url_pengaduan_eksternal": "", "url_survei_eksternal": ""},
   "tindak_lanjut": {
     "github_issues": true,
-    "keparahan_minimal_issue": "tinggi",
+    "keparahan_minimal_issue": "rendah",
     "maks_issue_baru_per_jalan": 5
   },
   "privasi": {
