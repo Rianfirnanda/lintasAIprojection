@@ -51,6 +51,7 @@
     "simpan_hari": 60,
     "maks_berita": 40,
     "maks_diringkas": 12,
+    "maks_nilai_harga": 60,
     "pakai_ai": true,
     "hormati_robots": true,
     "jeda_detik": 2,

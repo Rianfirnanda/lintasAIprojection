@@ -187,6 +187,9 @@ button.dsb-arah-angka:focus-visible { outline: 2px solid var(--aksen); }
 .dsb .lencana { padding: 2px 8px; font-size: 0.66rem; font-weight: 600; border-radius: 999px; gap: 0; }
 .dsb .lencana::before { display: none; }
 .dsb .lencana.baik { background: var(--dsb-valid-bg); color: var(--dsb-valid-ink); } .dsb .lencana.sedang { background: var(--dsb-eksp-bg); color: var(--dsb-eksp-ink); }
+.dsb .lencana.tinggi { background: color-mix(in srgb, var(--dsb-merah) 15%, transparent); color: var(--dsb-merah); }
+.dsb .lencana.rendah { background: color-mix(in srgb, var(--dsb-oranye) 15%, transparent); color: var(--dsb-oranye); }
+.dsb .lencana.info { background: var(--aksen-lembut); color: var(--aksen); }
 .dsb-legenda-tabel { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 10px 16px 12px; font-size: 0.72rem; color: var(--muted); }
 .dsb-legenda-tabel > span { display: inline-flex; align-items: center; gap: 6px; }
 .dsb-petunjuk { margin-left: auto; }
@@ -352,12 +355,11 @@ button.dsb-arah-angka:focus-visible { outline: 2px solid var(--aksen); }
 .dsb-periodik-isi .skenario { grid-template-columns: 1fr; margin: 0; gap: 8px; }
 .dsb-jejak-isi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
 .dsb-jejak-isi .alur-data { margin: 0; }
-.dsb-tabel-berita { min-width: 760px; }
+.dsb-tabel-berita { min-width: 900px; }
 .dsb-tabel-berita td { vertical-align: top; }
 .dsb-tabel-berita .dsb-bukti { max-width: 360px; white-space: normal; }
 .dsb-tabel-berita .dsb-bukti .meta-kecil { margin-top: 2px; }
 .dsb-beda { color: var(--dsb-oranye); }
-.dsb-beda-label { font-size: 0.66rem; font-weight: 700; color: var(--dsb-oranye); }
 
 /* ---------- kaki */
 .dsb-kaki { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 14px 4px 4px; border-top: 1px solid var(--dsb-garis); color: var(--muted); font-size: 0.78rem; }

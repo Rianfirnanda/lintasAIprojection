@@ -212,8 +212,8 @@ def _berita_harian(akar: Path, paksa: bool = False) -> list[str]:
         _log_ai("berita", "Berita lokal", periode, catatan={"log": hasil["log"], "penyedia": hasil["statistik"]["penyedia_ai"],
                                                           "model": hasil["statistik"]["model_ai"],
                                                           "hasil": {"kandidat": [b for b in hasil["berita"] if b.get("baru")]}})
-        return [f"Berita lokal harian: {baru} berita baru, {hasil['statistik']['kandidat_harga_baru']} kandidat harga "
-                f"({hasil['kesimpulan'][0]['metode']})."]
+        return [f"Berita lokal harian: {baru} berita baru, {hasil['statistik']['kandidat_harga_baru']} harga baru dibaca, "
+                f"{hasil['statistik'].get('harga_dinilai_ai', 0)} harga dinilai AI ({hasil['kesimpulan'][0]['metode']})."]
     except Exception as e:  # noqa: BLE001
         try:
             firestore_sinkron.catat_berita_harian(db, hari.date().isoformat(), 0, "gagal")
@@ -392,7 +392,8 @@ def main(argv: list[str] | None = None) -> int:
         st = hasil["statistik"]
         for baris in hasil["log"]:
             print(f"[{baris['jenis']}] {baris['teks']}")
-        print(f"{st['berita_baru']} berita baru, {st['total_arsip']} di arsip, {st['kandidat_harga_baru']} kandidat harga. Disimpan ke {path}")
+        print(f"{st['berita_baru']} berita baru, {st['total_arsip']} di arsip, {st['kandidat_harga_baru']} harga baru dibaca, "
+              f"{st.get('harga_dinilai_ai', 0)} harga dinilai AI. Disimpan ke {path}")
         print("Kesimpulan:", hasil["kesimpulan"][0]["ringkas"])
         return 0
     if a.perintah == "jalankan":

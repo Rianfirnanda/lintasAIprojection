@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Berita Lokal · Takar Pangan 10•21</title>
-  <meta name="description" content="Berita lokal tentang harga pangan di Bengkulu yang dicari dan dibaca otomatis tiap hari, lengkap dengan kesimpulan harian dan kandidat harga untuk diperiksa analis.">
+  <meta name="description" content="Berita lokal tentang harga pangan di Bengkulu yang dicari dan dibaca otomatis tiap hari, lengkap dengan kesimpulan harian dan penilaian otomatis setiap harga yang disebut di berita.">
   <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
@@ -33,6 +33,24 @@
     .saring .cek { display: flex; align-items: center; gap: 6px; padding-bottom: 8px; color: var(--ink-2); font-size: 0.86rem; }
     .riwayat-k { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
     .riwayat-k li { border-top: 1px solid var(--rule); padding-top: 10px; font-size: 0.9rem; }
+    .nilai-harga { display: grid; gap: 3px; min-width: 170px; }
+    .nilai-harga .meta-kecil { line-height: 1.35; }
+    .yakin { white-space: nowrap; }
+    .yakin b { font-variant-numeric: tabular-nums; }
+    .yakin details summary { cursor: pointer; font-size: 0.78rem; color: var(--muted); }
+    .yakin ul { margin: 4px 0 0; padding-left: 1.1em; font-size: 0.78rem; color: var(--muted); white-space: normal; min-width: 200px; }
+    .alasan-ai { font-size: 0.8rem; color: var(--ink-2); margin-top: 4px; }
+    .ringkas-nilai { margin: 0 0 12px; max-width: 900px; }
+    /* Di layar sempit, tabel harga per berita menjadi kartu bertumpuk supaya tidak perlu digulir ke samping. */
+    @media (max-width: 640px) {
+      .tabel-kartu thead { display: none; }
+      .tabel-kartu, .tabel-kartu tbody, .tabel-kartu tr, .tabel-kartu td { display: block; width: auto; }
+      .tabel-kartu tr { border-top: 1px solid var(--rule); padding: 10px 0; }
+      .tabel-kartu td { border: 0; padding: 3px 0; text-align: left; white-space: normal; }
+      .tabel-kartu td[data-label]::before { content: attr(data-label); display: block; font-size: 0.72rem; color: var(--muted); }
+      .tabel-kartu .nilai-harga { min-width: 0; }
+      .berita-harga blockquote { max-width: none; }
+    }
     .sidik { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; color: var(--muted); word-break: break-all; }
   </style>
 </head>
@@ -41,16 +59,17 @@
   <div class="judul-halaman">
     <div>
       <h1>Berita Lokal</h1>
-      <p>Berita tentang harga pangan di Bengkulu, dicari dan dibaca otomatis tiap hari. Angka harga di sini hanya penunjuk, bukan data resmi.</p>
+      <p>Berita tentang harga pangan di Bengkulu, dicari dan dibaca otomatis tiap hari. Setiap harga yang disebut langsung dinilai terhadap harga resmi.</p>
     </div>
   </div>
 
   <div class="ind-baris" id="kpi"></div>
 
   <div class="penting" role="note">
-    <b>Cara membaca halaman ini.</b> Mesin mencari berita, membaca isinya, lalu menandai kejadian dan harga yang disebut. Ringkasan dan kesimpulan
-    disusun AI gratis atau, bila AI sedang tidak bisa dipakai, disusun otomatis dari kalimat berita. Harga dari berita adalah <b>kandidat</b>:
-    belum diverifikasi, tidak masuk deret harga resmi, dan sering berlaku untuk pasar atau wilayah lain. Selalu buka tautan beritanya sebelum memakai angkanya.
+    <b>Cara membaca halaman ini.</b> Mesin mencari berita, membaca isinya, lalu menandai kejadian dan harga yang disebut. Setiap harga langsung
+    <b>dinilai</b>: AI memeriksa kalimatnya (harga pasar saat itu, harga lama, harga program pemerintah, atau barang lain), lalu mesin
+    membandingkannya dengan harga resmi pada tanggal berita dan memberi skor keyakinan 0 sampai 100. Hasil penilaian adalah penunjuk awal untuk
+    tindak lanjut; angkanya tidak masuk deret harga resmi, yang tetap berasal dari sumber resmi dan petugas lapangan.
   </div>
 
   <section class="kartu" aria-labelledby="j-kes">
@@ -63,6 +82,33 @@
     <div id="kesimpulan"></div>
     <details id="riwayat" style="margin-top:12px" hidden><summary>Kesimpulan hari-hari sebelumnya</summary>
       <ul class="riwayat-k" id="riwayat-isi" style="margin-top:10px"></ul>
+    </details>
+  </section>
+
+  <section class="kartu" aria-labelledby="j-nilai">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-nilai">Penilaian harga dari berita</h2>
+        <p id="ket-nilai"></p>
+      </div>
+    </div>
+    <p class="ringkas-nilai" id="ringkas-nilai"></p>
+    <div id="tabel-nilai"></div>
+    <details style="margin-top:10px"><summary class="meta-kecil">Cara menghitung penilaian dan keyakinan</summary>
+      <div class="prosa" style="margin-top:6px;font-size:0.86rem">
+        <ul>
+          <li><strong>Putusan.</strong> Harga di berita dibandingkan dengan harga resmi pada tanggal berita (paling jauh 7 hari), di wilayah yang sama bila
+            datanya ada (Kota Bengkulu, rata-rata provinsi), kalau tidak dengan harga Bengkulu Tengah. Selisih sampai <span id="ambang-sesuai">5</span>% disebut
+            sesuai, lebih dari <span id="ambang-jauh">15</span>% disebut jauh dan perlu dicek ke lapangan. Bila berita tidak menyebut jenis barangnya, dipakai
+            rentang harga semua jenis barang itu.</li>
+          <li><strong>Tidak dipakai.</strong> Harga lama, angka yang bukan harga barang, harga untuk barang lain, dan angka di luar batas wajar.</li>
+          <li><strong>Keyakinan (0 sampai 100).</strong> Diperiksa AI 30 (belum diperiksa 10), wilayah 30 (Bengkulu Tengah 30, wilayah tetangga 20,
+            provinsi 15, tidak jelas 5, nasional atau luar provinsi 0), kebaruan berita 20, harga jual di pasar 10, dan didukung berita lain dengan harga
+            serupa 10. Tinggi mulai 70, sedang 45 sampai 69. Keyakinan menilai seberapa layak angkanya dipercaya, bukan cocok tidaknya dengan harga resmi.</li>
+          <li><strong>Batas AI.</strong> AI hanya menilai jenis harga, barang, dan wilayah dari kalimat beritanya. AI tidak bisa menulis atau mengubah angka,
+            dan koreksi nama barang hanya diterima bila nama barang itu tertulis di kalimatnya.</li>
+        </ul>
+      </div>
     </details>
   </section>
 
@@ -83,7 +129,7 @@
         <option value="sedang">Sedang ke atas</option>
       </select></label>
       <label class="cek"><input type="checkbox" id="f-target"> Menyebut Bengkulu Tengah</label>
-      <label class="cek"><input type="checkbox" id="f-harga"> Ada kandidat harga</label>
+      <label class="cek"><input type="checkbox" id="f-harga"> Ada harga yang dipakai</label>
     </div>
     <ul class="berita-daftar" id="daftar"></ul>
     <div class="baris-kontrol" style="margin-top:12px"><button class="tombol" type="button" id="lagi" hidden>Tampilkan lebih banyak</button></div>
@@ -103,7 +149,7 @@
           <li><strong>Sumber.</strong> Pencarian berita Tavily, umpan RSS Google Berita untuk beberapa kata kunci pangan Bengkulu, dan umpan RSS portal berita yang diisi admin.</li>
           <li><strong>Sopan terhadap situs.</strong> Mesin memeriksa <code>robots.txt</code> tiap situs dan tidak membaca halaman yang melarang, memberi jeda antar permintaan, dan memakai nama bot yang jelas.</li>
           <li><strong>Yang disimpan.</strong> Tautan, judul, ringkasan, kutipan pendek, kalimat bukti harga, dan sidik SHA-256 isi artikel. Isi lengkap artikel tidak disimpan karena hak ciptanya milik penerbit.</li>
-          <li><strong>Harga dari berita.</strong> Diambil dengan aturan baku dari kalimat yang menyebut komoditas, angka rupiah, dan satuan kg atau liter. Angka di luar batas wajar komoditas ditolak. Hasilnya tetap kandidat sampai analis memeriksanya.</li>
+          <li><strong>Harga dari berita.</strong> Diambil dengan aturan baku dari kalimat yang menyebut komoditas, angka rupiah, dan satuannya. Angka di luar batas wajar komoditas ditolak. Lalu AI menilai kalimatnya dan mesin membandingkannya dengan harga resmi pada tanggal berita.</li>
           <li><strong>Ringkasan AI.</strong> AI hanya boleh memakai fakta dari teks berita. Kalimat yang memuat angka yang tidak ada di berita dibuang otomatis.</li>
           <li><strong>Batas.</strong> Tidak semua berita bisa dibaca isinya (situs berbayar, memakai JavaScript, atau melarang robot). Yang begini hanya tampil dengan judulnya. Berita sering menyebut harga di wilayah lain atau harga rata-rata nasional.</li>
         </ul>
@@ -114,7 +160,7 @@
 
 <script type="module">
 import { ind } from "./assets/peran.js";
-import { pasangKerangka, muatJSON, esc, rp, tgl, tampilkanGalat } from "./assets/app.js";
+import { pasangKerangka, muatJSON, esc, rp, tgl, persen, tampilkanGalat } from "./assets/app.js";
 
 const meta = await pasangKerangka("berita.html");
 let data;
@@ -129,7 +175,8 @@ const LABEL_TAG = data.label_tag || {};
 const KELAS_TAG = { harga_naik: "tinggi", harga_turun: "baik", pasokan: "sedang", cuaca: "rendah", intervensi: "info" };
 const KELAS_REL = { tinggi: "baik", sedang: "info", rendah: "polos" };
 const LABEL_METODE = { ai: "diringkas AI", ekstraktif: "ringkasan otomatis", judul: "hanya judul" };
-const LABEL_WILAYAH = { target: "Bengkulu Tengah", pembanding: "wilayah pembanding", provinsi: "Provinsi Bengkulu", nasional: "nasional", "tidak jelas": "wilayah tidak jelas" };
+const LABEL_WILAYAH = { target: "Bengkulu Tengah", pembanding: "wilayah tetangga", provinsi: "Provinsi Bengkulu", nasional: "nasional", "tidak jelas": "wilayah tidak jelas",
+  "luar daerah": "luar Provinsi Bengkulu" };
 const LABEL_DAMPAK = { naik: "harga naik", turun: "harga turun", stabil: "harga stabil" };
 const amanUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : "#");
 const berita = (data.berita || []).slice();
@@ -142,14 +189,16 @@ const kes = (data.kesimpulan || [])[0];
 const baru = berita.filter((b) => b.baru).length;
 const target = berita.filter((b) => b.wilayah && b.wilayah.target).length;
 const jumlahTag = (k) => berita.filter((b) => (b.tag || []).includes(k)).length;
-const kandidat = berita.flatMap((b) => (b.harga || []).filter((h) => h.status === "kandidat"));
+const pn = data.penilaian || {};
+const dipakai = (h) => h.penilaian && h.penilaian.putusan !== "tidak_dipakai";
 $("kpi").innerHTML = [
   ind({ i: "dokumen", label: "Berita tersimpan", nilai: berita.length, kecil: "berita", sub: baru ? `${baru} baru pada pencarian terakhir` : "belum ada yang baru" }),
   ind({ i: "pin", warna: target ? "oranye" : "biru", label: "Menyebut Bengkulu Tengah", nilai: target, kecil: "berita", sub: "dari semua berita tersimpan" }),
   ind({ i: "peringatan", warna: jumlahTag("harga_naik") + jumlahTag("pasokan") ? "merah" : "hijau", label: "Kejadian terpantau",
     nilai: jumlahTag("harga_naik") + jumlahTag("pasokan") + jumlahTag("cuaca"), kecil: "berita",
     sub: `${jumlahTag("harga_naik")} harga naik · ${jumlahTag("pasokan")} pasokan · ${jumlahTag("cuaca")} cuaca` }),
-  ind({ i: "tren", label: "Kandidat harga", nilai: kandidat.length, kecil: "angka", sub: "belum diverifikasi analis" }),
+  ind({ i: "tren", warna: pn.perlu_dicek ? "oranye" : "hijau", label: "Harga dinilai otomatis", nilai: pn.dipakai ?? 0, kecil: `dari ${pn.jumlah ?? 0}`,
+    sub: `${pn.sesuai ?? 0} sesuai · ${pn.perlu_dicek ?? 0} perlu dicek · ${pn.tidak_dipakai ?? 0} tidak dipakai` }),
 ].join("");
 
 /* ---------- kesimpulan */
@@ -173,6 +222,58 @@ if (kes) {
   $("kesimpulan").innerHTML = '<p class="kosong">Pencarian berita belum pernah berjalan. Pencarian otomatis berjalan sekali sehari mulai pukul 07.00 WIB; admin juga bisa menjalankannya dari halaman Pengaturan (Cari berita lokal sekarang).</p>';
 }
 
+/* ---------- penilaian harga */
+const KELAS_PUTUSAN = { sesuai: "baik", lebih_mahal: "sedang", lebih_murah: "info", jauh_lebih_mahal: "tinggi", jauh_lebih_murah: "rendah",
+  harga_program: "info", lain_wilayah: "polos", tanpa_pembanding: "polos", tidak_dipakai: "polos" };
+const LABEL_PUTUSAN = data.label_putusan || {};
+const KELAS_YAKIN = { tinggi: "baik", sedang: "info", rendah: "polos" };
+const satuanTeks = (s) => (s === "kg" || s === "liter" ? `/${esc(s)}` : ` per ${esc(s)}`);
+$("ambang-sesuai").textContent = data.ambang_sesuai_persen ?? 5;
+$("ambang-jauh").textContent = data.ambang_beda_jauh_persen ?? 15;
+
+function selKeyakinan(p) {
+  if (!p || p.keyakinan === null || p.keyakinan === undefined) return '<span class="meta-kecil">–</span>';
+  const faktor = (p.faktor || []).map((f) => `<li>${esc(f.teks)}: ${f.nilai}</li>`).join("");
+  return `<div class="yakin"><span class="lencana ${KELAS_YAKIN[p.tingkat] || "polos"}"><b>${p.keyakinan}</b>&nbsp;${esc(p.tingkat)}</span>
+    ${faktor ? `<details><summary>rincian</summary><ul>${faktor}</ul></details>` : ""}</div>`;
+}
+
+function selPenilaian(p) {
+  if (!p) return '<span class="lencana polos">lebih dari 14 hari, tidak dinilai</span>';
+  const a = p.acuan;
+  const resmi = a ? `Harga resmi ${a.minimum === a.maksimum ? rp(a.minimum) : `${rp(a.minimum)} sampai ${rp(a.maksimum)}`}, ${esc(a.nama)}, ${esc(tgl(a.tanggal))}` : "";
+  const selisih = p.selisih_persen === null || p.selisih_persen === undefined ? "" : ` · selisih ${persen(p.selisih_persen, 1, true)}`;
+  return `<div class="nilai-harga"><span class="lencana ${KELAS_PUTUSAN[p.putusan] || "polos"}">${esc(p.label || LABEL_PUTUSAN[p.putusan] || p.putusan)}</span>
+    ${resmi ? `<span class="meta-kecil">${resmi}${selisih}</span>` : ""}
+    ${p.putusan === "tidak_dipakai" && p.alasan ? `<span class="meta-kecil">${esc(p.alasan)}</span>` : ""}</div>`;
+}
+
+{
+  const umur = data.umur_hari || 14;
+  const ringkas = data.ringkasan_harga || [];
+  $("ket-nilai").textContent = `Harga yang disebut berita ${umur} hari terakhir, dinilai otomatis setiap kali data diperbarui.`;
+  $("ringkas-nilai").textContent = pn.jumlah
+    ? `${pn.jumlah} harga ditemukan di berita. ${pn.dipakai} dipakai sebagai penunjuk: ${pn.sesuai} sesuai harga resmi, ${pn.lebih_mahal} lebih mahal, `
+      + `${pn.lebih_murah} lebih murah${pn.perlu_dicek ? ` (${pn.perlu_dicek} di antaranya selisihnya jauh dan perlu dicek ke lapangan)` : ""}. `
+      + `${pn.tidak_dipakai} tidak dipakai. AI sudah memeriksa ${pn.dinilai_ai} harga; sisanya dinilai dengan aturan dan akan diperiksa AI pada pencarian berikutnya.`
+    : `Belum ada harga dari berita dalam ${umur} hari terakhir. Pencarian berjalan otomatis setiap hari.`;
+  const amanTautan = (u) => (/^https?:\/\//i.test(u || "") ? u : "");
+  $("tabel-nilai").innerHTML = ringkas.length ? `<div class="gulir-tabel"><table class="tabel-kartu"><thead><tr><th>Komoditas</th><th class="angka">Harga di berita</th><th>Berlaku untuk</th>
+      <th class="angka">Harga resmi</th><th>Penilaian</th><th>Contoh berita</th></tr></thead><tbody>${ringkas.map((x) => {
+      const bd = x.banding, c = x.contoh || {}, link = amanTautan(c.url);
+      const rentang = x.minimum === x.maksimum ? "" : `<div class="meta-kecil">${rp(x.minimum)} sampai ${rp(x.maksimum)}</div>`;
+      return `<tr><td><b>${esc(x.komoditas)}</b><div class="meta-kecil">${x.jumlah_kandidat} harga, ${x.jumlah_berita} berita</div></td>
+        <td class="angka" data-label="Harga di berita (median)"><b>${rp(x.median)}</b>${satuanTeks(x.satuan)}${rentang}</td>
+        <td data-label="Berlaku untuk">${esc(LABEL_WILAYAH[x.wilayah] || x.wilayah)}${c.pasar ? `<div class="meta-kecil">${esc(c.pasar)}</div>` : ""}</td>
+        <td class="angka" data-label="Harga resmi">${bd ? `${rp(bd.harga_utama)}<div class="meta-kecil">${esc(bd.dasar)}<br>${esc(tgl(bd.tanggal))} · selisih <b>${persen(bd.selisih_persen, 1, true)}</b></div>` : "–"}</td>
+        <td data-label="Penilaian"><div class="nilai-harga"><span class="lencana ${KELAS_PUTUSAN[x.putusan] || "polos"}">${esc(x.label_putusan)}</span>
+          <span class="meta-kecil">keyakinan <b>${x.keyakinan}</b> (${esc(x.tingkat)})${x.dinilai_ai ? `, ${x.dinilai_ai} diperiksa AI` : ""}</span></div></td>
+        <td data-label="Contoh berita">${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer">${esc(c.sumber || "berita")}</a>` : esc(c.sumber || "")}
+          <div class="meta-kecil">${esc(tgl(x.tanggal_terbaru))}</div></td></tr>`;
+    }).join("")}</tbody></table></div>`
+    : "";
+}
+
 /* ---------- daftar berita dengan saringan */
 const komoditas = [...new Set(berita.flatMap((b) => b.komoditas || []))].sort();
 $("f-tag").innerHTML = '<option value="">Semua</option>' + Object.entries(LABEL_TAG).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("");
@@ -186,13 +287,20 @@ function lencanaTag(b) {
 function tabelHarga(b) {
   const h = b.harga || [];
   if (!h.length) return "";
-  const baris = h.map((x) => `<tr>
-    <td>${esc(x.komoditas)}${x.kode_varian ? ` <span class="meta-kecil">(${esc(x.kode_varian)})</span>` : ""}</td>
-    <td class="angka"><b>${rp(x.nilai)}</b>/${esc(x.satuan)}</td>
-    <td>${esc(LABEL_WILAYAH[x.peran_wilayah] || x.peran_wilayah)}</td>
-    <td>${x.status === "kandidat" ? '<span class="lencana info">kandidat, belum diverifikasi</span>' : `<span class="lencana polos">${esc(x.status)}</span>`}</td>
-    <td><blockquote>“${esc(x.bukti)}”</blockquote></td></tr>`).join("");
-  return `<div class="berita-harga"><div class="gulir-tabel"><table><thead><tr><th>Komoditas</th><th class="angka">Harga disebut</th><th>Berlaku untuk</th><th>Status</th><th>Kalimat di berita</th></tr></thead><tbody>${baris}</tbody></table></div></div>`;
+  const baris = h.map((x) => {
+    const p = x.penilaian, cek = x.cek_ai;
+    const wilayah = p ? p.wilayah : (LABEL_WILAYAH[x.peran_wilayah] || x.peran_wilayah);
+    const koreksi = x.asal_mesin ? `<div class="meta-kecil">dikoreksi AI, semula ${esc(x.asal_mesin.komoditas)}</div>` : "";
+    const alasan = cek && cek.alasan ? `<div class="alasan-ai">Catatan AI: ${esc(cek.alasan)}</div>` : "";
+    return `<tr>
+    <td><b>${esc(x.komoditas)}</b>${x.kode_varian ? ` <span class="meta-kecil">(${esc(x.kode_varian)})</span>` : ""}${koreksi}</td>
+    <td class="angka" data-label="Harga disebut"><b>${rp(x.nilai)}</b>${satuanTeks(x.satuan)}</td>
+    <td data-label="Berlaku untuk">${esc(wilayah)}</td>
+    <td data-label="Penilaian">${selPenilaian(p)}</td>
+    <td data-label="Keyakinan">${selKeyakinan(p)}</td>
+    <td data-label="Kalimat di berita"><blockquote>“${esc(x.bukti)}”</blockquote>${alasan}</td></tr>`;
+  }).join("");
+  return `<div class="berita-harga"><div class="gulir-tabel"><table class="tabel-kartu"><thead><tr><th>Komoditas</th><th class="angka">Harga disebut</th><th>Berlaku untuk</th><th>Penilaian</th><th>Keyakinan</th><th>Kalimat di berita</th></tr></thead><tbody>${baris}</tbody></table></div></div>`;
 }
 
 function itemBerita(b) {
@@ -225,7 +333,7 @@ function gambar() {
     && (!kom || (b.komoditas || []).includes(kom))
     && (!rel || (rel === "tinggi" ? b.relevansi === "tinggi" : ["tinggi", "sedang"].includes(b.relevansi)))
     && (!$("f-target").checked || (b.wilayah && b.wilayah.target))
-    && (!$("f-harga").checked || (b.harga || []).some((h) => h.status === "kandidat")));
+    && (!$("f-harga").checked || (b.harga || []).some(dipakai)));
   $("ket-daftar").textContent = berita.length
     ? `${hasil.length} dari ${berita.length} berita tersimpan (paling lama ${tgl(tglBerita(berita[berita.length - 1]))}). Urut dari yang terbaru.`
     : "Belum ada berita tersimpan.";
@@ -245,7 +353,8 @@ $("proses").innerHTML = st.hasil_pencarian === undefined ? '<p class="kosong">Be
   <div class="gulir-tabel"><table><tbody>
     <tr><th>Hasil pencarian mentah</th><td class="angka">${ada(st.hasil_pencarian)}</td><th>Setelah duplikat dibuang</th><td class="angka">${ada(st.setelah_duplikat)}</td></tr>
     <tr><th>Berita baru yang relevan</th><td class="angka">${ada(st.berita_baru)}</td><th>Isinya tidak terbaca</th><td class="angka">${ada(st.isi_tidak_terbaca)}</td></tr>
-    <tr><th>Kandidat harga baru</th><td class="angka">${ada(st.kandidat_harga_baru)}</td><th>AI yang dipakai</th><td class="angka">${esc(st.penyedia_ai || "tidak ada (ringkasan otomatis)")}</td></tr>
+    <tr><th>Harga baru dibaca dari berita</th><td class="angka">${ada(st.kandidat_harga_baru)}</td><th>Harga yang dinilai AI</th><td class="angka">${ada(st.harga_dinilai_ai)}</td></tr>
+    <tr><th>AI yang dipakai</th><td class="angka" colspan="3">${esc(st.penyedia_ai || "tidak ada (ringkasan otomatis)")}</td></tr>
   </tbody></table></div>
   ${(data.galat || []).length ? `<details style="margin-top:10px" open><summary><b>${data.galat.length} peringatan</b> dari pencarian terakhir</summary>
     <ul class="meta-kecil" style="margin-top:6px">${data.galat.map((g) => `<li>${esc(g)}</li>`).join("")}</ul></details>` : '<p class="meta-kecil" style="margin-top:8px">Tidak ada peringatan pada pencarian terakhir.</p>'}`;

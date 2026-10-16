@@ -260,7 +260,7 @@ Tabel bisa diurutkan dan diekspor ke CSV, termasuk kolom tanggal pilihan. Angkan
 
 ## 5b. Berita lokal harian
 
-Mesin mencari berita lokal tentang harga pangan, membaca isinya, mengambil harga yang disebut sebagai **kandidat**, lalu
+Mesin mencari berita lokal tentang harga pangan, membaca isinya, mengambil harga yang disebut, **langsung menilai setiap harga**, lalu
 menyusun kesimpulan harian. Hasilnya tampil di halaman **Berita Lokal** (menu Pantau untuk analis, TPID, operator, dan admin).
 
 **Jadwal.** Berjalan sendiri sekali sehari. Penjaga (`antrean.yml`) melihat bahwa jam 07.00 WIB sudah lewat dan berita hari
@@ -285,26 +285,46 @@ Prosesnya tercatat di **Log proses AI** (halaman Sumber Data) dengan keterangan 
    nasional, atau tidak jelas), nama pasar bila disebut (mis. Pasar Taba Penanjung), dan arah perubahan (naik atau turun) bila
    kalimatnya tegas. Selain 21 varian, dibaca juga gas LPG 3 kg (per tabung), susu kental manis (per kaleng), garam (per bungkus),
    dan telur ayam ras per karpet; keempatnya hanya penunjuk dan tidak dibandingkan dengan data utama.
-5. **Menyimpulkan per komoditas.** Kandidat 14 hari terakhir dikelompokkan per komoditas: median, rentang, jumlah berita, wilayah yang
-   paling dekat dengan Bengkulu Tengah, dan selisihnya terhadap harga terakhir di sistem (hanya per kg atau liter). Selisih lebih dari 15%
-   diberi tanda "beda jauh" supaya dicek ke petugas lapangan. Hasilnya tampil di kartu **Harga dari berita dan internet (kandidat)** pada
-   Dashboard Internal (`ringkasan_harga` di `berita.json`).
-6. **Meringkas dan menyimpulkan.** AI gratis (rotasi yang sama dengan AI Data Finder) meringkas berita yang paling relevan dan menyusun
-   kesimpulan harian. AI hanya boleh memakai fakta dari teks berita, dan kalimat yang memuat angka yang tidak ada di berita
-   dibuang otomatis. Bila semua AI sedang tidak bisa dipakai, ringkasan dan kesimpulan disusun otomatis dari kalimat berita
-   dan ditandai "ringkasan otomatis".
+5. **AI menilai setiap harga.** AI gratis (rotasi yang sama dengan AI Data Finder) membaca judul, wilayah, dan kalimat bukti tiap harga,
+   lalu menentukan: harga pasar saat berita ditulis, harga program pemerintah (pasar murah, operasi pasar, SPHP, bazar), harga rata-rata
+   lembaga, harga lama ("dari semula", "sebelumnya"), atau bukan harga barang; apakah angkanya memang untuk barang yang dibaca mesin; dan
+   wilayahnya. AI **tidak bisa menulis atau mengubah angka**. Nama barang hanya dikoreksi bila nama barang yang baru tertulis di kalimat
+   buktinya (mis. "cabai rawit dan cabai setan Rp80.000" yang terbaca mesin sebagai cabai merah). Alasan AI yang memuat angka yang tidak
+   ada di kalimat dibuang. Paling banyak `maks_nilai_harga` harga per hari (bawaan 60, berita terbaru dulu); harga di arsip yang belum
+   sempat dinilai diperiksa pada hari berikutnya. Bila AI tidak tersedia, aturan cadangan tetap mengenali harga lama dari kata
+   "sebelumnya", "semula", atau "pekan lalu" di depan angkanya.
+6. **Membandingkan dengan harga resmi.** Setiap kali situs diterbitkan, tiap harga dibandingkan dengan harga resmi **pada tanggal
+   beritanya** (nilai terakhir paling lama 7 hari sebelumnya, atau paling dekat sesudahnya). Wilayahnya disamakan bila datanya ada:
+   berita Kota Bengkulu dibandingkan dengan deret Kota Bengkulu, berita tingkat provinsi dengan rata-rata provinsi; selain itu dengan
+   harga Bengkulu Tengah. Bila berita tidak menyebut jenis barangnya (mis. "cabai merah" saja), dipakai rentang harga semua jenisnya.
+   Putusannya: **sesuai** (selisih sampai 5%), **sedikit lebih mahal/murah** (5 sampai 15%), **jauh lebih mahal/murah, perlu dicek**
+   (lebih dari 15%), **harga program pemerintah** dan **harga di luar Bengkulu** (tidak dibandingkan), **belum ada harga resmi pembanding**
+   (mis. LPG per tabung, telur per karpet), atau **tidak dipakai** (harga lama, barang lain, bukan harga, di luar batas wajar).
+7. **Skor keyakinan 0 sampai 100.** Diperiksa AI 30 (belum diperiksa 10), wilayah 30 (Bengkulu Tengah 30, wilayah tetangga 20, provinsi 15,
+   tidak jelas 5, nasional atau luar provinsi 0), kebaruan berita 20 (sampai 3 hari 20, sampai 7 hari 14, sampai 14 hari 6), harga jual
+   di pasar 10 (rata-rata atau belum jelas 5), dan didukung berita lain dengan harga serupa (selisih sampai 10%, tautan dan kalimat
+   berbeda) 10. Tinggi mulai 70, sedang 45 sampai 69. Skor ini menilai seberapa layak angkanya dipercaya, bukan cocok tidaknya dengan
+   harga resmi, supaya harga di lapangan yang benar-benar melonjak tetap terlihat.
+8. **Menyimpulkan per komoditas.** Harga yang dipakai dikelompokkan per komoditas: median, rentang, wilayah yang paling dekat dengan
+   Bengkulu Tengah (harga pasar didahulukan dari harga program), median selisih terhadap harga resmi, putusan, dan keyakinan tertinggi.
+   Hasilnya tampil di halaman **Berita Lokal** (bagian *Penilaian harga dari berita*, dengan rincian per harga di bawah tiap berita) dan
+   di tab **Harga dari berita** pada Dashboard Internal (`ringkasan_harga` dan `penilaian` di `berita.json`).
+9. **Meringkas dan menyimpulkan.** AI meringkas berita yang paling relevan dan menyusun kesimpulan harian. AI hanya boleh memakai fakta
+   dari teks berita, dan kalimat yang memuat angka yang tidak ada di berita dibuang otomatis. Bila semua AI sedang tidak bisa dipakai,
+   ringkasan dan kesimpulan disusun otomatis dari kalimat berita dan ditandai "ringkasan otomatis".
 
 **Aturan yang tidak boleh dilanggar:**
 
-- Harga dari berita **tidak pernah** masuk deret harga resmi atau perhitungan prakiraan. Statusnya selalu "kandidat, belum
-  diverifikasi". Analis memeriksa kalimat buktinya dan membuka beritanya; bila layak dipakai, catat sebagai data biasa lewat
-  jalur harga yang sudah ada.
+- Harga dari berita **tidak pernah** masuk deret harga resmi atau perhitungan prakiraan, walaupun penilaiannya "sesuai" dan
+  keyakinannya tinggi. Penilaian otomatis adalah penunjuk awal: harga yang "jauh lebih mahal, perlu dicek" dengan keyakinan tinggi
+  di Bengkulu Tengah adalah alasan untuk menugaskan petugas mengecek pasar, bukan pengganti data resmi. Bila hasil cek lapangan
+  layak dipakai, catat sebagai data biasa lewat jalur harga yang sudah ada.
 - Isi lengkap artikel **tidak disimpan** (hak cipta penerbit). Yang disimpan: tautan, judul, ringkasan, kutipan pendek, kalimat bukti,
   dan sidik SHA-256 isi artikel pada saat dibaca (`data/berita/berita.json`).
 - Berita sering menyebut harga di wilayah lain atau rata-rata nasional. Kolom "Berlaku untuk" di halaman menunjukkan wilayahnya.
 
 **Pengaturan** (Pengaturan → Berita lokal): hidup/mati, jam mulai, umur berita paling lama, jumlah berita yang diringkas AI per hari,
-dan pakai AI atau tidak. Kata kunci pencarian dan umpan RSS tambahan diubah di `config/pengaturan.json` bagian `berita`.
+jumlah harga yang dinilai AI per hari, dan pakai AI atau tidak. Kata kunci pencarian dan umpan RSS tambahan diubah di `config/pengaturan.json` bagian `berita`.
 Pemakaian kuota Tavily: satu pencarian per kata kunci per hari (bawaan 6 kata kunci, sekitar 180 kredit per bulan). Ditambah AI Data
 Finder harian (sekitar 180), totalnya sekitar 360 dari 1.000 kredit gratis per bulan. Tanpa kunci Tavily, pencarian tetap jalan dari Google Berita, tetapi isi artikelnya lebih sering tidak terbaca.
 

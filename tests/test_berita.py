@@ -357,7 +357,9 @@ def test_ringkasan_harga_wilayah_terdekat_median_dan_banding_dengan_data_utama(k
     assert crw["wilayah"] == "target" and crw["median"] == 90000  # hanya rujukan Bengkulu Tengah; angka nasional tidak dicampur
     assert (crw["minimum"], crw["maksimum"], crw["jumlah_kandidat"], crw["jumlah_berita"]) == (40000, 95000, 3, 2)
     assert crw["arah"] == "naik"
-    assert crw["banding"] == {"dasar": "CRW02", "harga_utama": 60000, "selisih_persen": 50.0, "beda_jauh": True}
+    bd = crw["banding"]  # median selisih tiap harga (85.000 dan 95.000) terhadap harga resmi 60.000
+    assert (bd["dasar"], bd["varian"], bd["harga_utama"], bd["selisih_persen"], bd["beda_jauh"]) == ("harga terakhir sistem", "CRW02", 60000, 50.0, True)
+    assert crw["putusan"] == "jauh_lebih_mahal" and crw["label_putusan"].startswith("Jauh lebih mahal")
     assert hasil["BWM"]["banding"] is None  # tanpa harga utama BWM01: tidak membandingkan
     assert hasil["BWM"]["wilayah"] == "nasional"
     # urutan: rujukan wilayah target lebih dulu daripada nasional
@@ -395,6 +397,130 @@ def test_data_untuk_situs_memuat_ringkasan_harga(konf):
                          "berita": [_berita_harga("a", "2026-10-08", [_h("CRW", 85000, "target", "CRW02")])]})
     d = berita.untuk_situs(konf, {"CRW02": 80000}, date(2026, 10, 9))
     assert d["ringkasan_harga"][0]["banding"]["harga_utama"] == 80000
+
+
+# ---------------------------------------------------------------- AI menilai harga dan penilaian otomatis
+
+def _bh(url, tanggal, harga, judul="Harga pangan", wilayah=None):
+    return {"id": url, "url": url, "judul": judul, "sumber": "Portal", "tanggal": tanggal, "tag": [], "harga": harga,
+            "wilayah": wilayah or {"target": False, "pembanding": [], "provinsi": True}}
+
+
+def _hb(kode, nilai, wilayah="tidak jelas", varian=None, bukti=None, pasar=None, satuan="kg", status="kandidat"):
+    return {"komoditas": {"CMR": "Cabai Merah", "CRW": "Cabai Rawit", "BWP": "Bawang Putih", "BRS": "Beras"}.get(kode, kode), "kode_komoditas": kode,
+            "kode_varian": varian, "nilai": nilai, "satuan": satuan, "peran_wilayah": wilayah, "pasar": pasar, "arah": "",
+            "bukti": bukti or f"Harga {kode} Rp{nilai} per kg.", "status": status}
+
+
+def test_ai_menilai_harga_tanpa_bisa_mengubah_angka(konf):
+    b = _bh("https://x.id/1", "2026-10-08", [
+        _hb("CMR", 80000, bukti="Selain cabai merah keriting, cabai rawit dan cabai setan dijual sekitar Rp80.000 per kilogram."),
+        _hb("BWP", 40000, bukti="Bawang putih turun ke Rp30 ribu dari sebelumnya Rp40 ribu per kilogram."),
+        _hb("CMR", 90000, bukti="Khusus cabai setan, harga jualnya berkisar Rp90.000 per kilogram."),
+        _hb("BRS", 13000, bukti="Beras SPHP dijual Rp13.000 per kg di operasi pasar."),
+        _hb("CRW", 85000, bukti="Harga cabai rawit di pasar naik menjadi Rp85.000 per kg."),
+    ])
+    jawab = {"harga": [
+        {"no": 1, "jenis": "pasar", "komoditas_cocok": False, "komoditas": "cabai rawit dan cabai setan", "lingkup": "tidak jelas",
+         "alasan": "Harga ini untuk cabai rawit, bukan cabai merah."},
+        {"no": 2, "jenis": "lama", "komoditas_cocok": True, "komoditas": "bawang putih", "lingkup": "provinsi bengkulu",
+         "alasan": "Ini harga sebelumnya, sekarang 25 ribu."},  # angka 25 tidak ada di kalimat: kalimat alasan dibuang
+        {"no": 3, "jenis": "pasar", "komoditas_cocok": False, "komoditas": "cabai setan", "lingkup": "tidak jelas", "alasan": "Cabai setan."},
+        {"no": 4, "jenis": "program", "komoditas_cocok": True, "komoditas": "beras SPHP", "lingkup": "bengkulu tengah", "alasan": "Operasi pasar."},
+        {"no": 5, "jenis": "harga mahal", "komoditas_cocok": True},  # jenis di luar pilihan: diabaikan, harga tetap belum dinilai
+        {"no": 9, "jenis": "pasar"},  # nomor yang tidak ada
+    ]}
+    klien = {n: _jawab_openai(jawab) for n in ("gemini", "groq", "cerebras", "openrouter", "mistral")}
+    pesan = []
+    klien["groq"] = lambda url, header, isi: (pesan.append(isi["messages"][1]["content"]), _jawab_openai(jawab)(url, header, isi))[1]
+    klien["gemini"] = lambda *a: (_ for _ in ()).throw(pencari_data.PenyediaTidakTersedia("HTTP 429"))
+    log = []
+    n, info = berita.periksa_harga_dengan_ai(konf, [b], klien, lambda t, j="info": log.append(t), date(2026, 10, 9), date(2026, 9, 25), 60)
+    assert n == 4 and info["penyedia"] == "groq"
+    assert "HARGA YANG PERLU DINILAI" in pesan[0] and "Rp80.000 per kg" in pesan[0]
+    h1, h2, h3, h4, h5 = b["harga"]
+    # koreksi barang diterima karena "cabai rawit" tertulis di kalimat bukti; angkanya tetap
+    assert (h1["kode_komoditas"], h1["nilai"], h1["asal_mesin"]["kode_komoditas"], h1["cek_ai"]["dikoreksi"]) == ("CRW", 80000, "CMR", True)
+    assert h2["cek_ai"]["jenis"] == "lama" and h2["cek_ai"]["alasan"] == ""
+    # "cabai setan" tidak dikenal sebagai komoditas lain di kalimat: tidak dikoreksi, ditandai bukan barangnya
+    assert h3["kode_komoditas"] == "CMR" and h3["cek_ai"]["komoditas_cocok"] is False and "dikoreksi" not in h3["cek_ai"]
+    assert h4["cek_ai"]["jenis"] == "program" and h4["cek_ai"]["lingkup"] == "bengkulu tengah"
+    assert "cek_ai" not in h5
+    # jenis lain dari barang yang sama ikut dikoreksi bila namanya tertulis di kalimat
+    b2 = _bh("https://x.id/2", "2026-10-08", [_hb("CMR", 70000, "tidak jelas", "CMR01", bukti="Cabai merah keriting dijual Rp70.000 per kg.")])
+    berita.terapkan_cek_ai(konf, b2, b2["harga"][0], {"jenis": "pasar", "komoditas_cocok": False, "komoditas": "cabai merah keriting"}, {}, date(2026, 10, 9))
+    assert (b2["harga"][0]["kode_varian"], b2["harga"][0]["cek_ai"]["dikoreksi"]) == ("CMR02", True)
+    # jalan berikutnya hanya mengirim harga yang belum dinilai
+    pesan.clear()
+    berita.periksa_harga_dengan_ai(konf, [b], klien, lambda t, j="info": None, date(2026, 10, 9), date(2026, 9, 25), 60)
+    assert pesan and "[1]" in pesan[0] and "[2]" not in pesan[0] and "Rp85.000" in pesan[0]
+
+
+def test_harga_lama_dikenali_aturan_bila_belum_diperiksa_ai(konf):
+    lama = _hb("CMR", 60000, bukti="Cabai setan melompat ke angka Rp75 ribu dari semula Rp60 ribu per kilogram.")
+    baru = _hb("CMR", 75000, bukti="Cabai setan melompat ke angka Rp75 ribu dari semula Rp60 ribu per kilogram.")
+    kisaran = _hb("CMR", 50000, bukti="Harga cabai merah sebelumnya berkisar Rp40.000 hingga Rp50.000 per kilogram.")
+    kini = _hb("CMR", 70000, bukti="Harga sebelumnya tinggi, kini cabai merah Rp70.000 per kilogram.")
+    assert [berita.harga_lama_menurut_kalimat(h) for h in (lama, baru, kisaran, kini)] == [True, False, True, False]
+    p = berita.nilai_harga(konf, [_bh("u", "2026-10-08", [lama, {**kisaran, "cek_ai": {"jenis": "pasar", "lingkup": "tidak jelas"}}])],
+                           berita.deret_acuan({"CMR02": 60000}, None, date(2026, 10, 9)), date(2026, 10, 9))
+    assert p[("u", 0)]["putusan"] == "tidak_dipakai" and "sebelumnya" in p[("u", 0)]["alasan"]
+    assert p[("u", 1)]["putusan"] != "tidak_dipakai"  # bila AI sudah memeriksa, penilaian AI yang dipakai
+
+
+def test_ai_gagal_harga_tetap_dinilai_dengan_aturan(konf):
+    b = _bh("https://x.id/1", "2026-10-08", [_hb("CRW", 85000)])
+    mati = {n: (lambda *a: (_ for _ in ()).throw(pencari_data.PenyediaTidakTersedia("HTTP 429"))) for n in ("gemini", "groq", "cerebras", "openrouter", "mistral")}
+    log = []
+    n, _ = berita.periksa_harga_dengan_ai(konf, [b], mati, lambda t, j="info": log.append((t, j)), date(2026, 10, 9), date(2026, 9, 25), 60)
+    assert n == 0 and "cek_ai" not in b["harga"][0] and any(j == "peringatan" for _, j in log)
+    p = berita.nilai_harga(konf, [b], berita.deret_acuan({"CRW02": 85000}, None, date(2026, 10, 9)), date(2026, 10, 9))[("https://x.id/1", 0)]
+    assert p["dinilai_ai"] is False and p["faktor"][0] == {"teks": "Belum diperiksa AI, hanya aturan", "nilai": 10}
+
+
+def test_penilaian_memakai_harga_resmi_pada_tanggal_berita_dan_wilayah_yang_sama(konf):
+    hari = date(2026, 10, 16)
+    deret = {
+        "target": {"CRW02": {"nama": "Kabupaten Bengkulu Tengah (SP2KP Kemendag)", "nilai": {"2026-10-05": 60000, "2026-10-15": 90000}},
+                   "CMR01": {"nama": "Kabupaten Bengkulu Tengah (SP2KP Kemendag)", "nilai": {"2026-10-14": 50000}},
+                   "CMR02": {"nama": "Kabupaten Bengkulu Tengah (SP2KP Kemendag)", "nilai": {"2026-10-14": 60000}}},
+        "1771": {"CRW02": {"nama": "Kota Bengkulu (PIHPS Bank Indonesia)", "nilai": {"2026-10-14": 100000}}},
+    }
+    cek = lambda jenis="pasar", lingkup="tidak jelas": {"jenis": jenis, "lingkup": lingkup, "komoditas_cocok": True, "alasan": "", "penyedia": "groq"}  # noqa: E731
+    daftar = [
+        _bh("a", "2026-10-07", [{**_hb("CRW", 63000, "target", "CRW02", pasar="Pasar Taba Penanjung"), "cek_ai": cek()}]),
+        _bh("b", "2026-10-15", [{**_hb("CRW", 105000, "pembanding", "CRW02", bukti="Di Kota Bengkulu cabai rawit merah Rp105.000/kg."),
+                                 "cek_ai": cek()}]),
+        _bh("c", "2026-10-15", [{**_hb("CMR", 55000), "cek_ai": cek(lingkup="bengkulu tengah")},
+                                {**_hb("CMR", 40000), "cek_ai": cek("lama")},
+                                {**_hb("BRS", 12000, "target"), "cek_ai": cek("program")},
+                                {**_hb("CRW", 70000, "nasional", "CRW02")},
+                                _hb("CRW", 999, "target", "CRW02", status="ditolak: di luar batas wajar"),
+                                _hb("CRW", 64000, "target", "CRW02", bukti="Cabai rawit merah Rp64.000 per kg.")]),
+        _bh("lama", "2026-09-01", [_hb("CRW", 10000, "target", "CRW02")]),
+    ]
+    p = berita.nilai_harga(konf, daftar, deret, hari, 14)
+    a = p[("a", 0)]
+    # harga resmi pada tanggal berita (5 Okt, dua hari sebelumnya), bukan harga terakhir 90.000
+    assert (a["putusan"], a["selisih_persen"], a["acuan"]["tanggal"], a["acuan"]["sewilayah"]) == ("sesuai", 5.0, "2026-10-05", True)
+    # 30 AI + 30 Bengkulu Tengah + 6 (9 hari lalu) + 10 pasar + 10 didukung berita c (64.000, selisih < 10%) = 86
+    assert (a["keyakinan"], a["tingkat"]) == (86, "tinggi")
+    kota = p[("b", 0)]  # dibandingkan dengan deret Kota Bengkulu, bukan Bengkulu Tengah
+    assert kota["acuan"]["wilayah"] == "1771" and kota["putusan"] == "sesuai" and kota["selisih_persen"] == 5.0
+    cmr = p[("c", 0)]  # tanpa varian: rentang semua varian cabai merah; wilayah dari penilaian AI
+    assert cmr["peran"] == "target" and (cmr["acuan"]["minimum"], cmr["acuan"]["maksimum"]) == (50000, 60000) and cmr["putusan"] == "sesuai"
+    assert p[("c", 1)]["putusan"] == "tidak_dipakai" and "harga lama" in p[("c", 1)]["alasan"]
+    assert p[("c", 2)]["putusan"] == "harga_program" and p[("c", 2)]["acuan"] is None
+    assert p[("c", 3)]["putusan"] == "lain_wilayah"
+    assert p[("c", 4)]["putusan"] == "tidak_dipakai" and "batas wajar" in p[("c", 4)]["alasan"]
+    terakhir = p[("c", 5)]  # 64.000 pada 15 Okt: harga resmi hari itu 90.000
+    assert terakhir["putusan"] == "jauh_lebih_murah" and terakhir["selisih_persen"] == -28.9
+    assert ("lama", 0) not in p
+    rk = berita.ringkas_penilaian(p)
+    assert (rk["jumlah"], rk["tidak_dipakai"], rk["sesuai"], rk["perlu_dicek"], rk["dinilai_ai"]) == (8, 2, 3, 1, 5)
+    # ringkasan per komoditas tidak memakai harga yang tidak dipakai
+    ring = {x["kode_komoditas"]: x for x in berita.ringkasan_harga(konf, daftar, None, hari, 14, deret, p)}
+    assert ring["CRW"]["jumlah_kandidat"] == 4 and ring["CRW"]["minimum"] == 63000 and ring["BRS"]["putusan"] == "harga_program"
 
 
 # ---------------------------------------------------------------- pemeriksaan angka dan ringkasan
@@ -496,7 +622,7 @@ def test_jalankan_tanpa_ai_menghasilkan_arsip_dan_kandidat(konf):
     st = hasil["statistik"]
     assert st["berita_baru"] == 3 and st["kandidat_harga_baru"] >= 3 and st["penyedia_ai"] == ""
     k = hasil["kesimpulan"][0]
-    assert k["metode"] == "ekstraktif" and k["tanggal"] == "2026-10-09" and "kandidat harga" in k["ringkas"]
+    assert k["metode"] == "ekstraktif" and k["tanggal"] == "2026-10-09" and "harga baru dibaca dari berita" in k["ringkas"]
     # robots.txt diperiksa sebelum mengunduh artikel
     assert web.dipanggil.index("https://portal.id/robots.txt") < web.dipanggil.index("https://portal.id/a")
 
@@ -513,9 +639,13 @@ def test_jalankan_dengan_ai_memeriksa_angka_dan_cadangan_penyedia(konf):
     def gemini(url, header, isi):
         raise pencari_data.PenyediaTidakTersedia("HTTP 429 batas pemakaian gratis tercapai")
 
+    nilai_harga = {"harga": [{"no": 1, "jenis": "pasar", "komoditas_cocok": True, "komoditas": "cabai rawit merah", "lingkup": "bengkulu tengah",
+                              "alasan": "Harga jual pedagang di Pasar Karang Nanding saat berita ditulis."}]}
+
     def groq(url, header, isi):
         permintaan.append(isi["messages"][0]["content"][:30])
-        objek = ringkas if "BERITA YANG PERLU DIRINGKAS" in isi["messages"][1]["content"] else kesimpulan
+        teks = isi["messages"][1]["content"]
+        objek = ringkas if "BERITA YANG PERLU DIRINGKAS" in teks else nilai_harga if "HARGA YANG PERLU DINILAI" in teks else kesimpulan
         return _jawab_openai(objek)(url, header, isi)
 
     hasil = berita.jalankan(_konf_uji(konf), klien={"tavily": lambda u, h, i: {"results": []}, "ai": {"gemini": gemini, "groq": groq}},
@@ -524,6 +654,9 @@ def test_jalankan_dengan_ai_memeriksa_angka_dan_cadangan_penyedia(konf):
     assert cabai["metode_ringkas"] == "ai" and cabai["penyedia_ai"] == "groq"
     assert cabai["ringkasan"] == "Harga cabai rawit merah naik menjadi Rp 85.000 per kg di Bengkulu Tengah."  # angka 40 persen dibuang
     assert hasil["statistik"]["penyedia_ai"] == "groq" and hasil["statistik"]["model_ai"] == "groq-palsu"
+    # AI langsung menilai harga yang dibaca mesin dari berita
+    rawit = next(h for h in cabai["harga"] if h["kode_varian"] == "CRW02")
+    assert rawit["cek_ai"]["jenis"] == "pasar" and rawit["cek_ai"]["penyedia"] == "groq" and hasil["statistik"]["harga_dinilai_ai"] >= 1
     k = hasil["kesimpulan"][0]
     assert k["metode"] == "ai" and k["penyedia"] == "groq" and k["poin"] == ["Cabai naik"] and k["perlu_dipantau"] == ["Pasokan cabai"]
     assert all(p.startswith("Anda adalah analis") for p in permintaan)  # pesan sistem berita, bukan pesan AI Data Finder
@@ -603,8 +736,11 @@ def test_simpan_muat_dan_data_untuk_situs(konf):
     path = berita.simpan(konf, hasil)
     tersimpan = json.loads(path.read_text(encoding="utf-8"))
     assert "log" not in tersimpan and len(tersimpan["berita"]) == len(hasil["berita"])
-    situs = berita.untuk_situs(konf)
-    assert situs["statistik"]["berita_baru"] == 3 and situs["label_tag"]["harga_naik"] == "Harga naik" and "belum diverifikasi" in situs["catatan"]
+    situs = berita.untuk_situs(konf, hari=SEKARANG.date())
+    assert situs["statistik"]["berita_baru"] == 3 and situs["label_tag"]["harga_naik"] == "Harga naik" and "tidak masuk deret harga resmi" in situs["catatan"]
+    # setiap harga di arsip langsung membawa penilaiannya
+    harga = [h for b in situs["berita"] for h in b["harga"]]
+    assert harga and all("penilaian" in h for h in harga) and situs["penilaian"]["jumlah"] == len(harga)
     path.write_text("bukan json", encoding="utf-8")
     assert berita.muat(konf) == {"berita": [], "kesimpulan": []}
     assert berita.untuk_situs(konf)["berita"] == []
@@ -659,13 +795,13 @@ def _pasang_firestore(monkeypatch, db):
 def test_berita_harian_tercatat_dan_tidak_diulang(akar_sementara, monkeypatch):
     db = DBTiruan()
     _pasang_firestore(monkeypatch, db)
-    hasil = {"statistik": {"berita_baru": 4, "kandidat_harga_baru": 2, "penyedia_ai": "groq", "model_ai": "g"},
+    hasil = {"statistik": {"berita_baru": 4, "kandidat_harga_baru": 2, "harga_dinilai_ai": 2, "penyedia_ai": "groq", "model_ai": "g"},
              "kesimpulan": [{"metode": "ai", "ringkas": "x"}], "berita": [{"id": "a", "baru": True}, {"id": "b", "baru": False}],
              "log": [{"waktu": "09.00.01", "teks": "Mulai", "jenis": "info"}]}
     panggil = []
     monkeypatch.setattr(berita, "jalankan", lambda konf, **k: panggil.append(1) or hasil)
     pesan = m._berita_harian(akar_sementara)
-    assert pesan == ["Berita lokal harian: 4 berita baru, 2 kandidat harga (ai)."]
+    assert pesan == ["Berita lokal harian: 4 berita baru, 2 harga baru dibaca, 2 harga dinilai AI (ai)."]
     assert db.data["lbp_status"]["berita_harian"]["tanggal"] == "2026-10-09" and db.data["lbp_status"]["berita_harian"]["hasil"] == "berhasil"
     assert (akar_sementara / "data/berita/berita.json").exists()
     (log,) = db.data["lbp_log_ai"].values()
@@ -682,7 +818,7 @@ def test_berita_diminta_dari_panel_jalan_walau_hari_ini_sudah_dicari(akar_sement
     panggil = []
     monkeypatch.setattr(berita, "jalankan", lambda konf, **k: panggil.append(1) or hasil)
     assert m._berita_harian(akar_sementara) == [] and not panggil
-    assert m._berita_harian(akar_sementara, paksa=True) == ["Berita lokal harian: 1 berita baru, 0 kandidat harga (ekstraktif)."]
+    assert m._berita_harian(akar_sementara, paksa=True) == ["Berita lokal harian: 1 berita baru, 0 harga baru dibaca, 0 harga dinilai AI (ekstraktif)."]
     assert len(panggil) == 1
 
 
