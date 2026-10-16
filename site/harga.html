@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Harga Bahan Pokok · Takar Pangan 10•21</title>
   <meta name="description" content="Rincian harga terakhir dan perubahan harga 21 varian pangan di Kabupaten Bengkulu Tengah.">
-  <meta name="theme-color" content="#1f5fae">
+  <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
+  <script src="assets/tema-awal.js"></script>
 </head>
 <body>
 <main class="utama">
@@ -50,7 +51,7 @@
 
 <script type="module">
 import { ind } from "./assets/peran.js";
-import { pasangKerangka, muatJSON, esc, rp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat } from "./assets/app.js";
+import { pasangKerangka, muatJSON, esc, rp, rentangRp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat } from "./assets/app.js";
 import { selisihHarga, htmlSelisih, tglPendek } from "./assets/dashboard.js";
 import { pasangKlikRincian, rincianArahHarga } from "./assets/rincian.js";
 import { peranAktif } from "./assets/akses.js";
@@ -96,7 +97,7 @@ try {
         <td class="angka">${b ? htmlSelisih(b) : "–"}</td>${sel(v.deviasi_persen, v.kelompok)}
         ${sel(p.harian, v.kelompok)}${sel(p.mingguan, v.kelompok)}${sel(p.bulanan, v.kelompok)}
         ${sel(p.triwulanan, v.kelompok)}${sel(p.semesteran, v.kelompok)}${sel(p.tahunan, v.kelompok)}
-        <td class="angka">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rp(h7.bawah)}–${rp(h7.atas)}</span>` : "–"}</td>
+        <td class="angka">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rentangRp(h7.bawah, h7.atas)}</span>` : "–"}</td>
         <td>${lencanaKeparahan(v.sinyal) || '<span class="kosong">–</span>'}</td></tr>`;
     }
   }

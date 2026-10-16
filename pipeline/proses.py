@@ -280,6 +280,42 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     return ringkas
 
 
+def hitung_data_sumber(konf, observasi, konteks, katalog, kandidat) -> tuple[Counter, dict[str, str], dict[str, str]]:
+    """Jumlah data dan tanggal data terakhir tiap sumber. Sumber harga dihitung dari baris harga, sumber pendukung dari
+    catatannya sendiri (cuaca, prakiraan BMKG, tanggal kalender, kandidat AI Data Finder, berita lokal)."""
+    jumlah: Counter = Counter()
+    terakhir: dict[str, date] = {}
+
+    def catat(kode: str, tgl: date | None, n: int = 1) -> None:
+        jumlah[kode] += n
+        if tgl and (kode not in terakhir or tgl > terakhir[kode]):
+            terakhir[kode] = tgl
+
+    for o in observasi:
+        catat(o.kode_sumber, o.tanggal)
+    for k in konteks:
+        catat(k.kode_sumber, k.tanggal)
+    satuan = {"BD-CUACA": "catatan cuaca", "BD-BMKG": "catatan prakiraan", "BD-KALENDER": "tanggal",
+              "AI-FINDER": "kandidat sumber", "BD-BERITA": "berita"}
+    if "BD-KALENDER" in konf.sumber:
+        jumlah["BD-KALENDER"] = len(konf.kalender)
+    if "AI-FINDER" in konf.sumber:
+        jumlah["AI-FINDER"] = len(katalog)
+        waktu = [p.get("waktu") for p in kandidat.get("pencarian", []) if p.get("waktu")]
+        if waktu:
+            terakhir["AI-FINDER"] = date.fromisoformat(max(waktu)[:10])
+    path_berita = konf.akar / "data" / "berita" / "berita.json"
+    if "BD-BERITA" in konf.sumber and path_berita.exists():
+        try:
+            data_berita = json.loads(path_berita.read_text(encoding="utf-8"))
+            jumlah["BD-BERITA"] = len(data_berita.get("berita") or [])
+            if data_berita.get("diperbarui"):
+                terakhir["BD-BERITA"] = date.fromisoformat(str(data_berita["diperbarui"])[:10])
+        except (ValueError, OSError):
+            log.warning("berita.json tidak terbaca untuk hitungan sumber")
+    return jumlah, {k: v.isoformat() for k, v in terakhir.items()}, satuan
+
+
 def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, harian_pasar, hasil_varian,
                  seri_pembanding, daftar_sinyal, evaluasi, tanggal_data, pesan_github, data_kinerja=None) -> dict:
     data_kinerja = data_kinerja or {}
@@ -420,7 +456,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
 
     # ---------- model.json
     per_varian_model = []
-    lolos_smape = lolos_bias = lolos_cakupan = dinilai = 0
+    lolos_smape = lolos_bias = lolos_cakupan = dinilai = smape_tak_dinilai = 0
     for kode, hv in hasil_varian.items():
         m = hv.metrik_model.get(hv.model_terpilih or "", {})
         entri = {
@@ -437,13 +473,16 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         }
         if m:
             dinilai += 1
+            # Bila cara sederhana tidak meleset sama sekali pada masa uji (harga tidak berubah), "10% lebih kecil" tidak
+            # bisa dihitung: varian itu dicatat tidak dapat dinilai, bukan gagal dan bukan lolos.
             entri["lolos"] = {
-                "smape": hv.perbaikan_vs_naif_persen is not None and hv.perbaikan_vs_naif_persen >= tk["perbaikan_smape_persen"],
+                "smape": None if hv.perbaikan_vs_naif_persen is None else hv.perbaikan_vs_naif_persen >= tk["perbaikan_smape_persen"],
                 "bias": abs(m["bias_persen"]) <= tk["bias_absolut_maks_persen"],
                 "cakupan": hv.cakupan_interval_persen is not None
                 and tk["cakupan_interval_min_persen"] <= hv.cakupan_interval_persen <= tk["cakupan_interval_maks_persen"],
             }
-            lolos_smape += entri["lolos"]["smape"]
+            lolos_smape += bool(entri["lolos"]["smape"])
+            smape_tak_dinilai += entri["lolos"]["smape"] is None
             lolos_bias += entri["lolos"]["bias"]
             lolos_cakupan += entri["lolos"]["cakupan"]
         per_varian_model.append(entri)
@@ -451,6 +490,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
                       if hv.model_terpilih in hv.metrik_model]
     ringkasan_model = {
         "varian_dinilai": dinilai, "lolos_smape": lolos_smape, "lolos_bias": lolos_bias, "lolos_cakupan": lolos_cakupan,
+        "smape_tak_dinilai": smape_tak_dinilai,
         "smape_median": round(median(smape_terpilih), 2) if smape_terpilih else None,
         "model_dipakai": Counter(hv.model_terpilih for hv in hasil_varian.values() if hv.model_terpilih),
         "varian_valid": sum(1 for hv in hasil_varian.values() if hv.validasi.get("status") == "valid"),
@@ -523,11 +563,14 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     kandidat_path = konf.akar / "data" / "sumber" / "kandidat_ai.json"
     kandidat = json.loads(kandidat_path.read_text(encoding="utf-8")) if kandidat_path.exists() else {"pencarian": []}
     diterima = terapkan_keputusan_sumber(kandidat, baca_keputusan_sumber(konf.akar))
-    jumlah_per_sumber = Counter(o.kode_sumber for o in hasil_qc.observasi)
     from . import pencari_data
     katalog = pencari_data.katalog_kandidat(kandidat, [s.url for s in konf.sumber.values()])
+    jumlah_per_sumber, terakhir_per_sumber, satuan_jumlah = hitung_data_sumber(konf, hasil_qc.observasi, hasil_masuk.konteks,
+                                                                               katalog, kandidat)
     _tulis_json(keluaran / "sumber.json", {
-        "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0)} for s in konf.sumber.values()] + diterima,
+        "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0),
+                    "satuan_jumlah": satuan_jumlah.get(s.kode, "baris harga"),
+                    "terakhir": terakhir_per_sumber.get(s.kode)} for s in konf.sumber.values()] + diterima,
         "kandidat_ai": kandidat,
         "katalog_ai": katalog, "ringkas_katalog": pencari_data.ringkas_katalog(katalog),
         "ambang_skor": {"layak": pencari_data.AMBANG_LAYAK, "sedang": pencari_data.AMBANG_SEDANG},
@@ -588,6 +631,12 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         seri_pembanding, ringkasan_model, sorted({w for (w, ind, _) in indeks_konteks.data if ind == "harga_pihps"
                                                   and w not in (target, konektor_resmi.WILAYAH_PIHPS)}))
     # Registri model dicatat ke repositori hanya untuk data asli (data contoh bukan jejak audit).
+    # Sumber aktif dihitung sama dengan halaman Sumber Data: sumber otomatis yang benar-benar mengirim data. Saluran isian
+    # petugas (BPS, formulir pasar) baru dihitung setelah ada isinya.
+    otomatis = [s for s in konf.sumber.values()
+                if s.status == "aktif" and not (s.kelompok in ("BPS", "PASAR") and not jumlah_per_sumber.get(s.kode))]
+    hasil_analitik["kpi"]["sumber_aktif"] = sum(1 for s in otomatis if jumlah_per_sumber.get(s.kode))
+    hasil_analitik["kpi"]["sumber_terdaftar"] = len(otomatis)
     registry = analitik.perbarui_registry(konf.akar, hasil_analitik) if not pakai_demo else {"riwayat": [], "terkini": {}}
     hasil_analitik["registry_riwayat"] = registry["riwayat"][-40:]
     # Tata kelola data (laporan: 10 AI Data Finder dan 8 tahap pembersihan), perbandingan antarwilayah, rantai harga, EWS.

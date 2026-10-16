@@ -313,7 +313,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
             "berkas_mentah": [{"berkas": b.berkas, "sha256": b.sha256, "ukuran_byte": b.ukuran_byte, "baris": b.jumlah_baris,
                                "diterima": b.diterima, "ditolak": b.ditolak} for b in harga_batch],
             "tahap": [
-                {"nama": "Sumber", "ringkas": f"{len(harga_batch)} berkas harga, {len(kode_sumber)} sumber aktif"},
+                {"nama": "Sumber", "ringkas": f"{len(harga_batch)} berkas harga, {len(kode_sumber)} sumber harga aktif"},
                 {"nama": "Pemeriksaan kualitas", "ringkas": f"{len(hasil_qc.observasi)} observasi; {status_obs.get('perlu_validasi', 0)} perlu validasi"},
                 {"nama": "Integrasi harian", "ringkas": f"{len(varian)} dari {len(konf.varian_aktif)} varian berdata"},
                 {"nama": "Model Champion vs Challenger", "ringkas": f"{n_valid} Valid, {len(varian) - n_valid} Eksperimen"},

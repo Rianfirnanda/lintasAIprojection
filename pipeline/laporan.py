@@ -190,8 +190,20 @@ def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, m
         ringkasan.append(f"Indeks harga pangan sederhana berada di {_a(indeks, 2)}, artinya harga secara umum {arah} "
                          f"{_a(abs(indeks - 100), 2)}% dibanding {s_label}.")
     if teratas:
-        ringkasan.append(f"Kenaikan terbesar terjadi pada {teratas[0]['nama']} ({_a(teratas[0]['vs_sebelumnya_persen'], 1, True)}%), "
-                         f"penurunan terbesar pada {teratas[-1]['nama']} ({_a(teratas[-1]['vs_sebelumnya_persen'], 1, True)}%).")
+        # Hanya sebut kenaikan dan penurunan yang memang ada (perubahan di bawah 0,05% dianggap tetap).
+        naik, turun = teratas[0], teratas[-1]
+        bagian = []
+        if naik["vs_sebelumnya_persen"] >= 0.05:
+            bagian.append(f"kenaikan terbesar terjadi pada {naik['nama']} ({_a(naik['vs_sebelumnya_persen'], 1, True)}%)")
+        if turun["vs_sebelumnya_persen"] <= -0.05:
+            bagian.append(f"penurunan terbesar pada {turun['nama']} ({_a(turun['vs_sebelumnya_persen'], 1, True)}%)")
+        if bagian:
+            kalimat = ", ".join(bagian)
+            if len(bagian) == 1:
+                kalimat += "; varian lain " + ("tidak turun" if naik["vs_sebelumnya_persen"] >= 0.05 else "tidak naik")
+            ringkasan.append(kalimat[0].upper() + kalimat[1:] + ".")
+        else:
+            ringkasan.append(f"Harga semua varian tidak berubah dibanding {s_label}.")
     status = Counter(s.get("status", "baru") for s in sinyal_periode if s["jenis"] == "anomali_harga")
     n_anomali = sum(status.values())
     if n_anomali:

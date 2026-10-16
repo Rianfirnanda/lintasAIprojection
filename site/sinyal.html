@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Peringatan Harga · Takar Pangan 10•21</title>
   <meta name="description" content="Daftar harga yang perlu dicek: harga janggal, perkiraan naik, risiko hari raya, dan data terlambat, lengkap dengan status penanganannya.">
-  <meta name="theme-color" content="#0e1114">
+  <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
+  <script src="assets/tema-awal.js"></script>
 </head>
 <body>
 <main class="utama">
@@ -93,12 +94,13 @@ try {
   throw e;
 }
 const r = data.ringkasan;
-const pesanGithub = /nonaktif|dilewati/.test(data.pesan_github || "");
+// Peringatan penting yang belum disentuh siapa pun (status masih "baru"): angka ini yang perlu dikerjakan lebih dulu.
+const belumDisentuh = data.sinyal.filter((s) => s.keparahan === "tinggi" && (s.status || "baru") === "baru" && s.aktif !== false).length;
 document.getElementById("kpi").innerHTML = [
   ind({ i: "lonceng", warna: "oranye", label: "Peringatan aktif", nilai: angka(r.aktif), sub: `${r.per_keparahan.tinggi || 0} penting · ${r.per_keparahan.sedang || 0} sedang` }),
   ind({ i: "peringatan", warna: "merah", label: "Harga janggal", nilai: angka(r.per_jenis.anomali_harga || 0), sub: `60 hari · ${r.status_anomali.false_alarm || 0} salah peringatan` }),
   ind({ i: "centang", warna: "hijau", label: "Sudah ditangani", nilai: persen(r.prioritas_ditindaklanjuti_persen, 0), sub: `target ${r.target_tindak_lanjut_persen}%`, meter: r.prioritas_ditindaklanjuti_persen ?? 0, meterWarna: "hijau" }),
-  ind({ i: "sinkron", warna: pesanGithub ? "abu" : "hijau", label: "GitHub", nilai: pesanGithub ? "Mati" : "Aktif", sub: pesanGithub ? "belum tersambung" : "catatan ikut diperbarui" }),
+  ind({ i: "jam", warna: belumDisentuh ? "oranye" : "hijau", label: "Perlu dicek dulu", nilai: angka(belumDisentuh), sub: belumDisentuh ? "peringatan penting belum disentuh" : "semua peringatan penting sudah dicek" }),
 ].join("");
 
 const fJenis = document.getElementById("f-jenis");

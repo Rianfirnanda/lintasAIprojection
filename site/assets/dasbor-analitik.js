@@ -1,7 +1,7 @@
 // Dashboard Internal BPS: indikator, pilihan tanggal perkiraan, tabel 21 varian yang bergulir sendiri, grafik, diagnostik,
 // kinerja model, asal data, rekomendasi, lalu analisis lanjutan dan mutu data dalam tab. Dipakai di dasbor.html dan
 // beranda admin/analis. Semua angka dibaca dari analitik.json, proyeksi_acara.json, proyeksi_periodik.json, dan seri/<varian>.json.
-import { muatJSON, esc, persen, angka, rp, tgl, tampilkanGalat, keCSV, unduhTeks, warna, saatTemaBerubah } from "./app.js";
+import { muatJSON, esc, persen, angka, rp, rentangRp, tgl, tampilkanGalat, keCSV, unduhTeks, warna, saatTemaBerubah } from "./app.js";
 import { ikon } from "./dashboard.js";
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./grafik.js";
 import { KERANGKA_TATA, pasangTab, gambarFinder, gambarPembersihan, gambarEws, gambarBandingWilayah, gambarKonsensus, gambarRantai } from "./dasbor-tata.js";
@@ -196,7 +196,7 @@ export async function pasangDasborInternal(wadah, meta) {
     const chip = (nada, teks) => `<span class="dsb-chip ${nada}">${teks}</span>`;
     const segar = k.hari_tertinggal !== null && k.hari_tertinggal <= 3;
     $("dsb-kpi").innerHTML = [
-      kartu({ ikonNama: "database", nilai: `${k.sumber_aktif}/${k.sumber_terdaftar}`, label: "Sumber data aktif", ket: "Pencari data yang benar-benar mengirim data",
+      kartu({ ikonNama: "database", nilai: `${k.sumber_aktif}/${k.sumber_terdaftar}`, label: "Sumber data aktif", ket: "Sumber otomatis yang benar-benar mengirim data",
         meter: persenAman(k.sumber_aktif, k.sumber_terdaftar), nada: k.sumber_aktif ? "hijau" : "merah", chip: k.sumber_aktif ? chip("hijau", "Aktif") : chip("merah", "Kosong") }),
       k.tahap_total
         ? kartu({ ikonNama: "roda", nilai: `${k.tahap_lulus}/${k.tahap_total}`, label: "Pemeriksaan data", ket: "Tahap pembersihan yang lolos semua syaratnya",
@@ -315,7 +315,7 @@ export async function pasangDasborInternal(wadah, meta) {
         <td class="dsb-nama" title="${esc(v.nama)} · cara perkiraan: ${esc(v.nama_model)}${v.sumber?.pengganti ? ` · ${esc(v.sumber.catatan || "")}` : ""}">${esc(singkat(v.nama))}${v.sumber?.pengganti ? '<sup class="dsb-prov">prov</sup>' : ""}</td>
         <td class="angka">${angkaRp(v.harga_aktual)}</td>
         ${kolomH.map((h) => { const q = proy(v, h); return `<td class="angka${h === S.h ? " dipilih" : ""}">${q ? angkaRp(q.prediksi) : "–"}</td>`; }).join("")}
-        <td class="angka dsb-rentang">${p ? `${angkaRp(p.bawah)}<span>–</span>${angkaRp(p.atas)}` : "–"}</td>
+        <td class="angka dsb-rentang">${!p ? "–" : Math.round(p.bawah) === Math.round(p.atas) ? `<span>tetap</span> ${angkaRp(p.bawah)}` : `${angkaRp(p.bawah)}<span>–</span>${angkaRp(p.atas)}`}</td>
         <td class="angka"><span class="dsb-ubah-sel"><span class="dsb-ubah-batang ${kelasUbah(x)}" style="--lebar:${lebar.toFixed(1)}%"></span><b class="dsb-ubah ${kelasUbah(x)}">${persen(x, 1, true)}</b></span></td>
         <td class="dsb-model k-cara" title="${esc(v.nama_model)}">${esc(NAMA_PENDEK[v.model] || v.nama_model)}</td>
         <td class="tengah">${lencanaStatus(v.status)}</td>
@@ -393,7 +393,8 @@ export async function pasangDasborInternal(wadah, meta) {
     return `<div class="dsb-rentang-vis" role="img" aria-label="Rentang wajar ${rp(p.bawah)} sampai ${rp(p.atas)}, perkiraan ${rp(p.prediksi)}, harga sekarang ${rp(sekarang)}">
       <span class="pita" style="left:${pos(p.bawah)}%;width:${(pos(p.atas) - pos(p.bawah)).toFixed(1)}%"></span>
       <span class="kini" style="left:${pos(sekarang)}%" title="Sekarang ${rp(sekarang)}"></span><span class="titik" style="left:${pos(p.prediksi)}%" title="Perkiraan ${rp(p.prediksi)}"></span></div>
-      <div class="dsb-rentang-label"><span>${rp(p.bawah)}</span><span>${rp(p.atas)}</span></div>`;
+      <div class="dsb-rentang-label">${Math.round(p.bawah) === Math.round(p.atas)
+        ? `<span>Kemungkinan besar tetap ${rp(p.bawah)}</span>` : `<span>${rp(p.bawah)}</span><span>${rp(p.atas)}</span>`}</div>`;
   }
 
   function ringkasVarian(v) {
@@ -403,7 +404,7 @@ export async function pasangDasborInternal(wadah, meta) {
     const baris = daftarH.map((h) => {
       const q = proy(v, h);
       return q ? `<tr class="${h === S.h ? "terpilih" : ""}"><td>${labelH(h)}<br><span class="meta-kecil">${esc(tgl(q.tanggal))}</span></td><td class="angka"><strong>${rp(q.prediksi)}</strong></td>
-        <td class="angka">${rp(q.bawah)} – ${rp(q.atas)}</td><td class="angka dsb-ubah ${kelasUbah(q.perubahan_persen)}">${persen(q.perubahan_persen, 1, true)}</td></tr>` : "";
+        <td class="angka">${rentangRp(q.bawah, q.atas, " – ")}</td><td class="angka dsb-ubah ${kelasUbah(q.perubahan_persen)}">${persen(q.perubahan_persen, 1, true)}</td></tr>` : "";
     }).join("");
     $("dsb-ringkas").innerHTML = `
       <div class="dsb-harga-dua">
@@ -636,7 +637,7 @@ export async function pasangDasborInternal(wadah, meta) {
       isi += garisWaktu(a, ent);
       isi += `<h3 class="sub-judul">${esc(a.nama)} · ${esc(tgl(a.tanggal))}</h3><div class="gulir-tabel"><table class="tabel-kecil"><thead><tr><th>Titik</th><th class="angka">Harga asal</th><th class="angka">Prediksi</th><th class="angka">Interval ${persenTingkat}%</th><th class="angka">Selisih</th><th class="angka">Kenyataan</th><th>Status</th></tr></thead><tbody>${ent.baris.map((b) => b.prediksi === null
         ? `<tr><td>${esc(b.kode)}</td><td class="angka">${rp(b.asal)}</td><td colspan="5" class="meta-kecil">${esc(b.alasan)}</td></tr>`
-        : `<tr><td>${esc(b.kode)}<br><span class="meta-kecil">${esc(tgl(b.sasaran_tanggal))}</span></td><td class="angka">${rp(b.asal)}</td><td class="angka"><strong>${rp(b.prediksi)}</strong></td><td class="angka">${rp(b.bawah)} sampai ${rp(b.atas)}</td><td class="angka dsb-ubah ${kelasUbah(b.delta_persen)}">${rp(b.delta_rp)} (${persen(b.delta_persen, 1, true)})</td><td class="angka">${b.aktual ? rp(b.aktual) : "–"}</td><td>${lencanaStatus(b.status)}</td></tr>`).join("")}</tbody></table></div>`;
+        : `<tr><td>${esc(b.kode)}<br><span class="meta-kecil">${esc(tgl(b.sasaran_tanggal))}</span></td><td class="angka">${rp(b.asal)}</td><td class="angka"><strong>${rp(b.prediksi)}</strong></td><td class="angka">${rentangRp(b.bawah, b.atas, " sampai ")}</td><td class="angka dsb-ubah ${kelasUbah(b.delta_persen)}">${rp(b.delta_rp)} (${persen(b.delta_persen, 1, true)})</td><td class="angka">${b.aktual ? rp(b.aktual) : "–"}</td><td>${lencanaStatus(b.status)}</td></tr>`).join("")}</tbody></table></div>`;
     }
     const ev = ACARA.evaluasi.filter((e) => e.kode === v.kode);
     const urutOffset = [...(ACARA.aturan.offset_pra || []), ...(ACARA.aturan.offset_pasca || [])];

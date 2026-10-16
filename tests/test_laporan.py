@@ -52,4 +52,7 @@ def test_bentuk_semua(konf):
     assert any("Cabai Rawit Merah naik 20,0%" in r and "Kepahiang" in r for r in m["rekomendasi"])
     assert any("belum diverifikasi" in r for r in m["rekomendasi"])
     assert "," in m["ringkasan"][0]  # format angka Indonesia
+    # Hanya CRW02 yang naik dan tidak ada yang turun: ringkasan tidak boleh menyebut "penurunan terbesar" dengan angka 0%.
+    assert any(r.startswith("Kenaikan terbesar terjadi pada Cabai Rawit Merah") and "varian lain tidak turun" in r for r in m["ringkasan"])
+    assert not any("penurunan terbesar" in r for r in m["ringkasan"])
     assert laporan.bentuk_semua(konf, {}, {}, [], [], None) == {j: [] for j in ("mingguan", "bulanan", "triwulanan", "semesteran", "tahunan")}

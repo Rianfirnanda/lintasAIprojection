@@ -99,6 +99,41 @@ def holdout_baik(**ubah):
     return h
 
 
+# ---------------------------------------------------------------- rentang adaptif
+
+def test_kuantil_berbobot_mengikuti_bobot_dan_koreksi_konformal():
+    res = np.linspace(-0.1, 0.1, 201)
+    hz = np.full(201, 7)
+    lo, hi = analisis.kuantil_berbobot(res, hz, np.ones(201), 7, 0.2)
+    assert lo == pytest.approx(-0.08, abs=0.002) and hi == pytest.approx(0.08, abs=0.002)
+    # residu baru (bobot besar) hanya di sisi positif: rentang ikut bergeser ke atas
+    w = np.where(res > 0, 1.0, 0.1)
+    lo2, hi2 = analisis.kuantil_berbobot(res, hz, w, 7, 0.2)
+    assert lo2 > lo and hi2 > hi
+    assert analisis.kuantil_berbobot(res[:5], hz[:5], np.ones(5), 7, 0.2) is None
+
+
+def test_kalibrasi_adaptif_melebar_saat_gejolak_naik_dan_mendekati_sasaran():
+    # Seri yang gejolaknya tiba-tiba naik tiga kali lipat: kalibrasi tetap kebobolan, kalibrasi adaptif menyesuaikan diri.
+    rng = np.random.default_rng(7)
+    langkah = np.concatenate([rng.normal(0, 0.004, 900), rng.normal(0, 0.012, 500)])
+    s = seri_hari_kerja(lambda i: 20000 * math.exp(langkah[: i + 1].sum()), 1400)
+    terisi = analisis.isi_celah(s.nilai, 3)
+    bt = analisis.backtest_kalibrasi(s, terisi, "naif", {}, 30, 60)
+    hasil = analisis.kalibrasi_adaptif(bt, 0.8)
+    assert hasil["minggu"] == 52 and 0.01 <= hasil["alfa_akhir"] <= 0.6
+    assert 72 <= hasil["persen"] <= 88
+    iv = analisis.interval_adaptif(bt, 30, hasil["alfa_akhir"], 0.01)
+    assert len(iv) == 30 and all(lo <= hi for lo, hi in iv) and iv[29][1] - iv[29][0] > iv[0][1] - iv[0][0]
+
+
+def test_cakupan_pit_berbobot_membagi_rata_nilai_kembar():
+    # Semua residu kalibrasi nol dan residu uji nol: peluang masuk rentang 80% adalah 80/((n+1)/(n+1)) dibagi rata.
+    res = np.zeros(99)
+    c = analisis.cakupan_pit_berbobot(res, np.full(99, 7), np.ones(99), 0.0, 7, 0.2)
+    assert c == pytest.approx(0.8)
+
+
 def test_status_valid_bila_semua_syarat_lolos():
     v = analisis.pengaturan_validasi({})
     hasil = analisis.nilai_validasi("pokok", v, 900, 98.0, holdout_baik())
@@ -321,6 +356,11 @@ def test_keluaran_pipeline_memuat_analitik_acara_dan_periodik(tmp_path):
     assert a["wilayah_proyek"]["sasaran"] == "Bengkulu Tengah" and "Kepahiang" in a["wilayah_proyek"]["pembanding"]
     assert a["audit"]["status"] in {"HIJAU", "KUNING", "MERAH"} and len(a["rekomendasi_umum"]) == 3
     assert a["sumber_nama"] and sum(a["model_dipakai"].values()) == 21
+    # sumber aktif = sumber otomatis yang mengirim data, sama dengan halaman Sumber Data
+    assert 0 < a["kpi"]["sumber_aktif"] <= a["kpi"]["sumber_terdaftar"]
+    sm = {x["kode"]: x for x in json.loads((d / "sumber.json").read_text(encoding="utf-8"))["sumber"]}
+    assert sm["BD-KALENDER"]["jumlah_observasi"] > 0 and sm["BD-KALENDER"]["satuan_jumlah"] == "tanggal"
+    assert sm["BD-PIHPS"]["jumlah_observasi"] >= 2 and sm["BD-PIHPS"]["terakhir"] >= "2026-09-29"
     assert all(0 <= x["syarat_lolos"] <= x["syarat_total"] for x in a["varian"])
     ac = json.loads((d / "proyeksi_acara.json").read_text(encoding="utf-8"))
     assert ac["tanggal_data"] and ac["evaluasi"] and "metode" in ac["aturan"]
