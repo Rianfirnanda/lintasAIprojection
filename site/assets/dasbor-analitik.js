@@ -1,12 +1,11 @@
-// Dashboard Internal BPS: tata letak padat (indikator, tabel 21 varian, grafik, diagnostik, kinerja model, lineage, rekomendasi),
-// diikuti analisis lanjutan (hari raya, periodik, kartu model, jejak versi). Dipakai di dasbor.html dan beranda admin/analis.
-// Semua angka dibaca dari analitik.json, proyeksi_acara.json, proyeksi_periodik.json, model.json, dan seri/<varian>.json.
+// Dashboard Internal BPS: indikator, pilihan tanggal perkiraan, tabel 21 varian yang bergulir sendiri, grafik, diagnostik,
+// kinerja model, asal data, rekomendasi, lalu analisis lanjutan dan mutu data dalam tab. Dipakai di dasbor.html dan
+// beranda admin/analis. Semua angka dibaca dari analitik.json, proyeksi_acara.json, proyeksi_periodik.json, dan seri/<varian>.json.
 import { muatJSON, esc, persen, angka, rp, tgl, tampilkanGalat, keCSV, unduhTeks, warna, saatTemaBerubah } from "./app.js";
 import { ikon } from "./dashboard.js";
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./grafik.js";
-import { KERANGKA_TATA, gambarFinder, gambarPembersihan, gambarEws, gambarBandingWilayah, gambarKonsensus, gambarRantai } from "./dasbor-tata.js";
+import { KERANGKA_TATA, pasangTab, gambarFinder, gambarPembersihan, gambarEws, gambarBandingWilayah, gambarKonsensus, gambarRantai } from "./dasbor-tata.js";
 
-const NAMA_KELOMPOK = { pokok: "Pokok", protein: "Protein", volatil: "Volatil", pabrikan: "Pabrikan" };
 const NAMA_PERCAYA = { tinggi: "Tinggi", sedang: "Sedang", rendah: "Rendah" };
 const URUT_PERCAYA = { tinggi: 3, sedang: 2, rendah: 1 };
 const NAMA_PENDEK = { naif: "Harga terakhir", naif_musiman7: "Hari yang sama minggu lalu", rata7: "Rata-rata 7 hari",
@@ -14,48 +13,43 @@ const NAMA_PENDEK = { naif: "Harga terakhir", naif_musiman7: "Hari yang sama min
   ml_hgb: "Mesin belajar Boosting", ml_rf: "Mesin belajar Random Forest", ensemble: "Gabungan (ensemble)" };
 const KOMODITAS_BANDING = ["BRS03", "CMR01", "DAY01", "TLR01"];
 const NAMA_BANDING = { BRS03: "Beras Medium", CMR01: "Cabai Merah", DAY01: "Daging Ayam Ras", TLR01: "Telur Ayam Ras" };
+const HORIZON_CEPAT = [7, 14, 30];
+const AMBANG_STABIL = 1;  // perubahan kurang dari 1% dianggap stabil
+const KECEPATAN_GULIR = 16;  // piksel per detik: pelan supaya tetap terbaca
+
+const tab = (id, label, aktif = false) => `<button type="button" role="tab" id="dsb-t-${id}" aria-controls="dsb-p-${id}" aria-selected="${aktif}" tabindex="${aktif ? 0 : -1}">${label}<span class="dsb-tab-lencana" id="dsb-b-${id}"></span></button>`;
 
 const KERANGKA = `
-<header class="dsb-kepala">
-  <img class="dsb-logo" src="assets/logo-bps.png" alt="Badan Pusat Statistik">
-  <div class="dsb-judul">
-    <h1>HASIL AKHIR · DASHBOARD INTERNAL BPS</h1>
-    <p class="dsb-kuning">PROYEKSI HARGA PANGAN</p>
-    <p id="dsb-wilayah" class="dsb-wilayah"></p>
-  </div>
-  <div class="dsb-semboyan"><span>DATA UNTUK PENGAMBILAN KEPUTUSAN<br>YANG LEBIH BAIK</span><span class="dsb-sekat"></span><em>Statistik Berkualitas<br>untuk Indonesia Maju</em></div>
-</header>
+<section class="dsb-atas">
+  <div class="dsb-atas-teks"><h1>Proyeksi Harga Pangan</h1><p id="dsb-wilayah"></p></div>
+  <div class="dsb-atas-status" id="dsb-cap"></div>
+</section>
 <div class="dsb-kpi" id="dsb-kpi"></div>
 <section class="dsb-kontrol" aria-label="Pilihan tampilan">
-  <label class="dsb-pilih"><span class="dsb-label">Data sampai tanggal</span><select id="dsb-origin" aria-label="Data sampai tanggal"></select></label>
-  <label class="dsb-pilih dsb-pilih-varian"><span class="dsb-label">Pilih komoditas</span><select id="dsb-varian" aria-label="Pilih komoditas"></select></label>
+  <label class="dsb-pilih dsb-pilih-varian"><span class="dsb-label">Komoditas</span><select id="dsb-varian" aria-label="Pilih komoditas"></select></label>
   <div class="dsb-pilih"><span class="dsb-label">Perkiraan untuk</span>
-    <div class="dsb-tombol-h" id="dsb-horizon" role="group" aria-label="Perkiraan untuk berapa hari ke depan">
-      <button type="button" data-h="7" aria-pressed="false">7 Hari</button><button type="button" data-h="14" aria-pressed="false">14 Hari</button><button type="button" data-h="30" aria-pressed="true">30 Hari</button>
+    <div class="dsb-segmen" id="dsb-horizon" role="group" aria-label="Perkiraan untuk berapa hari ke depan">
+      ${HORIZON_CEPAT.map((h) => `<button type="button" data-h="${h}" aria-pressed="${h === 30}">${h} hari</button>`).join("")}
     </div></div>
-  <div class="dsb-status" id="dsb-cap"></div>
+  <label class="dsb-pilih dsb-pilih-tanggal"><span class="dsb-label">Atau pilih tanggal</span>
+    <span class="dsb-tanggal">${ikon("kalender", 16)}<input type="date" id="dsb-tanggal" aria-label="Tanggal perkiraan"></span></label>
+  <div class="dsb-pilih dsb-pilih-hr"><span class="dsb-label" id="dsb-hr-label">Menjelang hari raya</span>
+    <div class="dsb-segmen" id="dsb-hr" role="group" aria-labelledby="dsb-hr-label"></div><span class="dsb-hr-ket" id="dsb-hr-ket"></span></div>
 </section>
+<section class="dsb-arah" id="dsb-arah" aria-label="Ringkasan perkiraan semua komoditas"></section>
 <div class="dsb-grid">
   <section class="dsb-kartu dsb-tabel">
-    <div class="dsb-kartu-kepala gelap"><h2 id="dsb-judul-tabel">Tabel Proyeksi Harga Pangan</h2>
+    <div class="dsb-kartu-kepala"><h2 id="dsb-judul-tabel">Tabel Proyeksi Harga Pangan</h2>
       <div class="dsb-alat">
+        <button type="button" class="dsb-alat-tombol" id="dsb-putar" aria-pressed="true" title="Tabel bergulir pelan dengan sendirinya. Berhenti saat kursor di atas tabel."></button>
         <select id="dsb-kelompok" aria-label="Kelompok komoditas"><option value="">Semua kelompok</option><option value="pokok">Pokok</option><option value="protein">Protein</option><option value="volatil">Volatil</option><option value="pabrikan">Pabrikan</option></select>
-        <select id="dsb-status-filter" aria-label="Status validasi"><option value="">Semua status</option><option value="valid">Valid</option><option value="eksperimen">Eksperimen</option></select>
-        <button class="dsb-ekspor" type="button" id="dsb-ekspor">Ekspor CSV</button>
+        <select id="dsb-status-filter" aria-label="Status uji"><option value="">Semua status</option><option value="valid">Valid</option><option value="eksperimen">Eksperimen</option></select>
+        <button class="dsb-alat-tombol" type="button" id="dsb-ekspor">${ikon("dokumen", 14)}CSV</button>
       </div></div>
-    <div class="dsb-gulir">
-      <table id="dsb-tabel" class="dsb-tabel-isi">
-        <colgroup><col class="k-no"><col class="k-nama"><col class="k-rp"><col class="k-rp"><col class="k-rp"><col class="k-rp"><col class="k-rp"><col class="k-rp"><col class="k-ubah"><col class="k-model"><col class="k-status"><col class="k-yakin"></colgroup>
-        <thead>
-          <tr><th rowspan="2" class="angka" data-urut="no">No</th><th rowspan="2" data-urut="nama">Komoditas</th><th rowspan="2" class="angka" data-urut="harga">Harga Sekarang (Rp)</th>
-            <th colspan="3" class="tengah">Perkiraan Harga (Rp)</th><th colspan="2" class="tengah" id="dsb-th-interval">Rentang Wajar 80%</th>
-            <th rowspan="2" class="angka" data-urut="ubah" id="dsb-th-ubah">Perubahan 30 Hari (%)</th><th rowspan="2" data-urut="model">Cara Perkiraan Terbaik</th>
-            <th rowspan="2" class="tengah" data-urut="status">Status Uji</th><th rowspan="2" class="angka" data-urut="percaya" title="Persen syarat uji yang lolos">Keyakinan (%)</th></tr>
-          <tr><th class="angka" data-urut="h7">7 Hari</th><th class="angka" data-urut="h14">14 Hari</th><th class="angka" data-urut="h30">30 Hari</th><th class="angka">Bawah</th><th class="angka">Atas</th></tr>
-        </thead><tbody></tbody>
-      </table>
+    <div class="dsb-gulir" id="dsb-gulir" tabindex="0" aria-label="Tabel proyeksi, bisa digulir">
+      <table id="dsb-tabel" class="dsb-tabel-isi"><thead></thead><tbody></tbody></table>
     </div>
-    <p class="dsb-catatan" id="dsb-catatan-status"></p>
+    <div class="dsb-legenda-tabel" id="dsb-catatan-status"></div>
   </section>
   <section class="dsb-kartu dsb-tren">
     <div class="dsb-kartu-kepala"><h2 id="dsb-judul-tren">Tren Harga</h2>
@@ -63,34 +57,78 @@ const KERANGKA = `
     <div class="dsb-kanvas"><canvas id="dsb-grafik-tren" role="img" aria-label="Grafik harga aktual dan proyeksi"></canvas></div>
     <div class="dsb-kaki-kartu"><div class="legenda" id="dsb-legenda"></div></div>
   </section>
-  <section class="dsb-kartu dsb-banding"><div class="dsb-kartu-kepala"><h2>Perbandingan Harga Terkini (Rp)</h2></div>
+  <section class="dsb-kartu dsb-banding"><div class="dsb-kartu-kepala"><h2>Harga Terkini antar Wilayah</h2></div>
     <div class="dsb-kanvas"><canvas id="dsb-grafik-banding" role="img" aria-label="Perbandingan harga terkini antar wilayah"></canvas></div>
     <div class="dsb-kaki-kartu"><div class="legenda" id="dsb-legenda-banding"></div></div></section>
-  <section class="dsb-kartu dsb-dispar"><div class="dsb-kartu-kepala"><h2>Selisih Harga antar Wilayah (Rp)</h2></div>
+  <section class="dsb-kartu dsb-dispar"><div class="dsb-kartu-kepala"><h2>Selisih Harga antar Wilayah</h2></div>
     <div class="dsb-isi-penuh" id="dsb-dispar"></div></section>
   <section class="dsb-kartu dsb-diag"><div class="dsb-kartu-kepala"><h2 id="dsb-judul-diag">Ciri Pergerakan Harga</h2></div><div class="dsb-isi-penuh" id="dsb-diag"></div></section>
   <section class="dsb-kartu dsb-metrik"><div class="dsb-kartu-kepala"><h2 id="dsb-judul-metrik">Ketepatan Perkiraan</h2></div><div class="dsb-isi-penuh" id="dsb-metrik"></div></section>
   <section class="dsb-kartu dsb-faktor"><div class="dsb-kartu-kepala"><h2>Faktor Pendorong Harga</h2></div><div class="dsb-isi-penuh" id="dsb-faktor"></div></section>
 </div>
 <div class="dsb-bawah">
-  <section class="dsb-kartu dsb-lineage"><div class="dsb-kartu-kepala"><h2>Asal Data sampai Perkiraan (Data Lineage)</h2></div><div class="dsb-isi-penuh" id="dsb-lineage"></div></section>
-  <section class="dsb-kartu dsb-rekom"><div class="dsb-kartu-kepala"><h2>Rekomendasi (Netral)</h2></div><div class="dsb-isi-penuh" id="dsb-rekom"></div></section>
+  <section class="dsb-kartu dsb-lineage"><div class="dsb-kartu-kepala"><h2>Asal Data sampai Perkiraan</h2></div><div class="dsb-isi-penuh" id="dsb-lineage"></div></section>
+  <section class="dsb-kartu dsb-rekom"><div class="dsb-kartu-kepala"><h2>Rekomendasi</h2></div><div class="dsb-isi-penuh" id="dsb-rekom"></div></section>
 </div>
-<h2 class="dsb-bagian">Analisis lanjutan</h2>
-<div class="dsb-lanjut">
-  <section class="dsb-kartu dsb-l-ringkas"><div class="dsb-kartu-kepala gelap"><h2 id="dsb-judul-ringkas">Ringkasan varian terpilih</h2></div><div class="dsb-isi" id="dsb-ringkas"></div></section>
-  <section class="dsb-kartu dsb-l-kinerja"><div class="dsb-kartu-kepala gelap"><h2>Ketepatan pada 90 hari terakhir (uji akhir)</h2></div><div class="dsb-isi"><p class="dsb-sub" id="dsb-sub-kinerja"></p><div id="dsb-kinerja"></div></div></section>
-  <section class="dsb-kartu dsb-l-uji"><div class="dsb-kartu-kepala gelap"><h2>Prakiraan 7 hari lawan kenyataan</h2></div><p class="dsb-sub">Masa uji akhir: garis putus adalah prakiraan 7 hari sebelumnya, garis utuh adalah harga yang terjadi.</p><div class="dsb-kanvas" id="dsb-uji-wadah"><canvas id="dsb-grafik-uji" role="img" aria-label="Prakiraan lawan kenyataan pada masa uji"></canvas></div></section>
-  <section class="dsb-kartu dsb-l-acara"><div class="dsb-kartu-kepala gelap"><h2>Proyeksi hari raya</h2></div><div class="dsb-isi"><p class="dsb-sub" id="dsb-sub-acara"></p><div id="dsb-acara"></div></div></section>
-  <section class="dsb-kartu dsb-l-periodik"><div class="dsb-kartu-kepala gelap"><h2>Proyeksi triwulanan, semesteran, dan tahunan</h2>
-    <div class="dsb-tombol-h kecil terang" id="dsb-periode" role="group" aria-label="Jenis periode"><button type="button" data-p="triwulanan" aria-pressed="true">Triwulanan</button><button type="button" data-p="semesteran" aria-pressed="false">Semesteran</button><button type="button" data-p="tahunan" aria-pressed="false">Tahunan</button></div></div>
-    <div class="dsb-isi" id="dsb-periodik"></div></section>
-  <section class="dsb-kartu dsb-l-berita"><div class="dsb-kartu-kepala gelap"><h2>Harga dari berita dan internet (kandidat)</h2></div><div class="dsb-isi"><p class="dsb-sub" id="dsb-sub-berita"></p><div id="dsb-berita"></div></div></section>
-  <section class="dsb-kartu dsb-l-rekom"><div class="dsb-kartu-kepala gelap"><h2>Rekomendasi varian terpilih</h2></div><div class="dsb-isi" id="dsb-rekom-varian"></div></section>
-  <section class="dsb-kartu dsb-l-jejak"><div class="dsb-kartu-kepala gelap"><h2>Jejak data dan versi</h2></div><div class="dsb-isi" id="dsb-jejak"></div></section>
-</div>
+<section class="dsb-kartu dsb-tab" data-tab>
+  <div class="dsb-tab-kepala"><h2>Analisis lanjutan <span class="dsb-tab-sub" id="dsb-judul-ringkas"></span></h2>
+    <div class="dsb-tab-daftar" role="tablist" aria-label="Analisis lanjutan">
+      ${tab("ringkas", "Ringkasan", true)}${tab("uji", "Uji ketepatan")}${tab("acara", "Hari raya")}${tab("periodik", "Triwulan dan tahunan")}${tab("berita", "Harga dari berita")}${tab("jejak", "Jejak data")}
+    </div></div>
+  <div class="dsb-panel dua" role="tabpanel" id="dsb-p-ringkas" aria-labelledby="dsb-t-ringkas"><div id="dsb-ringkas"></div><div id="dsb-rekom-varian"></div></div>
+  <div class="dsb-panel dua" role="tabpanel" id="dsb-p-uji" aria-labelledby="dsb-t-uji" hidden>
+    <div><p class="dsb-sub" id="dsb-sub-kinerja"></p><div id="dsb-kinerja"></div></div>
+    <div><h3 class="sub-judul">Perkiraan 7 hari lawan kenyataan</h3><div class="dsb-kanvas dsb-kanvas-uji" id="dsb-uji-wadah"><canvas id="dsb-grafik-uji" role="img" aria-label="Prakiraan lawan kenyataan pada masa uji"></canvas></div></div></div>
+  <div class="dsb-panel" role="tabpanel" id="dsb-p-acara" aria-labelledby="dsb-t-acara" hidden><p class="dsb-sub" id="dsb-sub-acara"></p><div id="dsb-acara"></div></div>
+  <div class="dsb-panel" role="tabpanel" id="dsb-p-periodik" aria-labelledby="dsb-t-periodik" hidden>
+    <div class="dsb-segmen kecil" id="dsb-periode" role="group" aria-label="Jenis periode"><button type="button" data-p="triwulanan" aria-pressed="true">Triwulanan</button><button type="button" data-p="semesteran" aria-pressed="false">Semesteran</button><button type="button" data-p="tahunan" aria-pressed="false">Tahunan</button></div>
+    <div id="dsb-periodik"></div></div>
+  <div class="dsb-panel" role="tabpanel" id="dsb-p-berita" aria-labelledby="dsb-t-berita" hidden><p class="dsb-sub" id="dsb-sub-berita"></p><div id="dsb-berita"></div></div>
+  <div class="dsb-panel" role="tabpanel" id="dsb-p-jejak" aria-labelledby="dsb-t-jejak" hidden><div id="dsb-jejak"></div></div>
+</section>
 ${KERANGKA_TATA}
-<footer class="dsb-kaki"><span>Badan Pusat Statistik &nbsp;|&nbsp; Bengkulu Tengah</span><span>Statistik Berkualitas untuk Indonesia Maju</span></footer>`;
+<footer class="dsb-kaki"><span>Badan Pusat Statistik Kabupaten Bengkulu Tengah</span><span>Statistik Berkualitas untuk Indonesia Maju</span></footer>`;
+
+/** Tabel bergulir pelan ke bawah dengan sendirinya, berhenti sebentar di ujung lalu kembali ke atas. Berhenti saat kursor,
+ * sentuhan, atau fokus papan ketik ada di tabel, saat tabel tidak terlihat, dan bila pengguna memilih gerak dikurangi. */
+function pasangGulirOtomatis(el, tombol) {
+  const kurangiGerak = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let hidup = !kurangiGerak, ditahan = false, terlihat = true, tungguSampai = 0, posisi = 0, terakhir = null;
+  const tulisTombol = () => {
+    tombol.setAttribute("aria-pressed", String(hidup));
+    tombol.innerHTML = hidup ? `<span class="dsb-ikon-jeda" aria-hidden="true"></span>Jeda` : `<span class="dsb-ikon-putar" aria-hidden="true"></span>Gulir otomatis`;
+  };
+  tulisTombol();
+  tombol.addEventListener("click", () => { hidup = !hidup; posisi = el.scrollTop; tulisTombol(); });
+  const tahan = () => { ditahan = true; };
+  const lepas = () => { ditahan = false; posisi = el.scrollTop; tungguSampai = performance.now() + 1500; };
+  el.addEventListener("pointerenter", tahan);
+  el.addEventListener("pointerleave", lepas);
+  el.addEventListener("focusin", tahan);
+  el.addEventListener("focusout", lepas);
+  el.addEventListener("touchstart", tahan, { passive: true });
+  el.addEventListener("touchend", () => setTimeout(lepas, 2500), { passive: true });
+  el.addEventListener("wheel", () => { posisi = el.scrollTop; }, { passive: true });
+  if ("IntersectionObserver" in window) new IntersectionObserver(([e]) => { terlihat = e.isIntersecting; }).observe(el);
+  function langkah(t) {
+    const dt = terakhir === null ? 0 : Math.min((t - terakhir) / 1000, 0.1);
+    terakhir = t;
+    const sisa = el.scrollHeight - el.clientHeight;
+    if (hidup && !ditahan && terlihat && !document.hidden && sisa > 4 && t >= tungguSampai) {
+      if (el.scrollTop >= sisa - 1) {
+        // di ujung bawah: berhenti sebentar, lalu kembali ke atas dan berhenti lagi sebelum turun
+        tungguSampai = t + 2500;
+        setTimeout(() => { el.scrollTo({ top: 0, behavior: kurangiGerak ? "auto" : "smooth" }); posisi = 0; tungguSampai = performance.now() + 2500; }, 2400);
+      } else {
+        posisi = Math.min(sisa, Math.max(posisi, el.scrollTop - 1) + KECEPATAN_GULIR * dt);
+        el.scrollTop = posisi;
+      }
+    }
+    requestAnimationFrame(langkah);
+  }
+  requestAnimationFrame(langkah);
+  return { kembaliKeAtas: () => { el.scrollTop = 0; posisi = 0; tungguSampai = performance.now() + 2000; } };
+}
 
 /** Memasang dashboard ke dalam `wadah`. `meta` dipakai untuk nama wilayah dan keterangan lain bila perlu. */
 export async function pasangDasborInternal(wadah, meta) {
@@ -107,10 +145,11 @@ export async function pasangDasborInternal(wadah, meta) {
   }
   void meta;
 
-  const S = { kode: null, h: 30, hari: 180, urut: { kunci: "no", arah: 1 }, periode: "triwulanan", grafik: null, grafikBanding: null, grafikDispar: null,
-    grafikUji: null, grafikPeriodik: null, seri: {} };
+  const S = { kode: null, h: 30, tanggal: null, hari: 180, urut: { kunci: "no", arah: 1 }, arah: "", periode: "triwulanan", grafik: null,
+    grafikBanding: null, grafikDispar: null, grafikUji: null, grafikPeriodik: null, seri: {} };
   const tingkat = A.tingkat_interval ?? 0.8;
   const persenTingkat = Math.round(tingkat * 100);
+  const horizonMaks = A.horizon_maks ?? 30;
 
   const lencanaStatus = (s) => s === "valid" ? '<span class="lencana baik">Valid</span>' : '<span class="lencana sedang">Eksperimen</span>';
   const tanda = (ok) => ok === null || ok === undefined ? '<span class="tanda tunggu" title="Belum bisa dinilai">–</span>'
@@ -119,90 +158,193 @@ export async function pasangDasborInternal(wadah, meta) {
   const pendek = (h) => (h ? String(h).slice(0, 8) : "–");
   const kelasUbah = (x) => (x === null || x === undefined ? "" : x > 0.05 ? "naik" : x < -0.05 ? "turun" : "");
   const angkaRp = (x) => (x === null || x === undefined ? "–" : Math.round(x).toLocaleString("id-ID"));
-  const proy = (v, h) => v.proyeksi?.[String(h)] || null;
   const skor = (v) => (v.syarat_total ? Math.round(v.syarat_lolos / v.syarat_total * 100) : null);
   const varianTerpilih = () => A.varian.find((x) => x.kode === S.kode);
   // Nama varian dipendekkan untuk judul dan tabel (nama lengkap tetap di keterangan saat kursor diarahkan).
   const singkat = (n) => String(n).replace(/ Kualitas/g, "").replace(/ Ukuran Sedang(\/Bonggol)?/, "").replace(" Kemasan Bermerek", " Kemasan").replace(/ Segar$/, "");
   const judul = (id, teks) => { const el = $(id); el.textContent = teks; el.title = teks; };
 
+  /* ---------- tanggal perkiraan: h hari sesudah data terakhir */
+  const asal = new Date(`${A.dibuat_untuk}T00:00:00Z`);
+  const isoTambah = (hari) => new Date(asal.getTime() + hari * 86400000).toISOString().slice(0, 10);
+  const selisihHari = (iso) => Math.round((new Date(`${iso}T00:00:00Z`) - asal) / 86400000);
+  const tglPendek = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("id-ID", { day: "numeric", month: "short", timeZone: "UTC" });
+  /** Perkiraan varian `v` untuk `h` hari ke depan dari jalur harian (cadangan: ringkasan 7/14/30 hari). */
+  function proy(v, h) {
+    const j = v.jalur?.[h - 1];
+    const p = j ? { tanggal: j[0], prediksi: j[1], bawah: j[2], atas: j[3] } : v.proyeksi?.[String(h)];
+    if (!p) return null;
+    return { ...p, perubahan_persen: p.perubahan_persen ?? (v.harga_aktual ? Math.round((p.prediksi / v.harga_aktual - 1) * 10000) / 100 : null) };
+  }
+  const labelH = (h) => (HORIZON_CEPAT.includes(h) ? `${h} hari` : tglPendek(isoTambah(h)));
+
   /* ---------- kepala, indikator, kontrol */
   function kepala() {
     const wp = A.wilayah_proyek || { sasaran: "Bengkulu Tengah", pembanding: ["Kepahiang", "Kota Bengkulu"] };
-    $("dsb-wilayah").textContent = `${wp.sasaran} | Pembanding: ${wp.pembanding.join(" dan ")}`;
-    judul("dsb-judul-tabel", `Proyeksi Harga Pangan · ${A.wilayah.nama}`);
+    $("dsb-wilayah").textContent = `${wp.sasaran} · pembanding ${wp.pembanding.join(" dan ")}`;
+    judul("dsb-judul-tabel", "Proyeksi harga semua komoditas");
     $("dsb-cap").innerHTML = A.mode_demo
-      ? '<span class="dsb-cap demo">DATA CONTOH · ANGKA ILUSTRATIF</span>'
-      : `<span class="dsb-cap asli">DATA ASLI · per ${esc(tgl(A.dibuat_untuk))}</span>`;
+      ? '<span class="dsb-cap demo"><i></i>Data contoh, angka ilustratif</span>'
+      : `<span class="dsb-cap asli"><i></i>Data asli · per ${esc(tgl(A.dibuat_untuk))}</span>`;
     const k = A.kpi, au = A.audit || { status: "KUNING", alasan: "" };
-    const tahap = (A.garis_data?.tahap || []).length;
-    const kartu = (ikonNama, nilai, label, sub, chip = "") => `<div class="dsb-k">
-      <span class="dsb-k-ikon">${ikon(ikonNama, 24)}</span>
-      <div class="dsb-k-isi"><div class="dsb-k-atas"><strong>${nilai}</strong>${chip}</div><div class="dsb-k-label">${label}</div><div class="dsb-k-sub" title="${esc(sub)}">${esc(sub)}</div></div></div>`;
-    const chip = (warnaChip, teks) => `<span class="dsb-chip ${warnaChip}">${teks}</span>`;
+    const nValid = A.varian.filter((v) => v.status === "valid").length;
+    const persenAman = (a, b) => (b ? Math.max(0, Math.min(100, a / b * 100)) : 0);
+    const kartu = ({ ikonNama, nilai, label, ket, meter = null, target = null, nada = "biru", chip = "" }) => `<div class="dsb-k nada-${nada}" title="${esc(ket)}">
+      <span class="dsb-k-ikon">${ikon(ikonNama, 20)}</span>
+      <div class="dsb-k-isi"><div class="dsb-k-label">${label}</div><div class="dsb-k-atas"><strong>${nilai}</strong>${chip}</div>
+      ${meter === null ? `<div class="dsb-k-sub">${esc(ket)}</div>` : `<div class="dsb-meter" role="presentation"><span style="width:${meter.toFixed(1)}%"></span>${target === null ? "" : `<i style="left:${target}%"></i>`}</div>`}</div></div>`;
+    const chip = (nada, teks) => `<span class="dsb-chip ${nada}">${teks}</span>`;
+    const segar = k.hari_tertinggal !== null && k.hari_tertinggal <= 3;
     $("dsb-kpi").innerHTML = [
-      kartu("database", `${k.sumber_aktif}/${k.sumber_terdaftar}`, "Sumber Data Aktif", "Pencari data yang mengirim data", k.sumber_aktif ? chip("hijau", "AKTIF") : chip("merah", "KOSONG")),
+      kartu({ ikonNama: "database", nilai: `${k.sumber_aktif}/${k.sumber_terdaftar}`, label: "Sumber data aktif", ket: "Pencari data yang benar-benar mengirim data",
+        meter: persenAman(k.sumber_aktif, k.sumber_terdaftar), nada: k.sumber_aktif ? "hijau" : "merah", chip: k.sumber_aktif ? chip("hijau", "Aktif") : chip("merah", "Kosong") }),
       k.tahap_total
-        ? kartu("roda", `${k.tahap_lulus}/${k.tahap_total}`, "Pemeriksaan Data", "Tahap pembersihan yang lolos", k.tahap_lulus === k.tahap_total ? chip("hijau", "LULUS") : chip("kuning", "CEK"))
-        : kartu("roda", `${tahap}/${tahap}`, "Pemrosesan Data", "Tahapan pengolahan selesai", chip("hijau", "SELESAI")),
-      kartu("centang", k.skor_konsensus === null ? "–" : angka(k.skor_konsensus, 2), "Kecocokan Sumber",
-        k.skor_konsensus === null ? (k.keterangan_konsensus ? "Butuh dua sumber untuk tanggal yang sama" : "Belum dihitung") : "Kesepakatan harga dua sumber (target ≥ 0,80)",
-        k.skor_konsensus === null ? chip("abu", "MENUNGGU") : k.skor_konsensus >= 0.8 ? chip("hijau", "SEPAKAT") : chip("kuning", "TINJAU")),
-      kartu("kalender", k.hari_tertinggal === null ? "–" : `${k.hari_tertinggal} hari`, "Kesegaran Data", `Per ${tgl(A.dibuat_untuk)}`),
-      kartu("database", `${angka(k.kelengkapan_persen, 0)}%`, "Kelengkapan Data", `${k.varian_berdata}/${k.varian_aktif} varian`),
-      kartu("dokumen", `<span class="dsb-audit ${au.status.toLowerCase()}">${esc(au.status)}</span>`, "Status Audit", au.alasan || "Tidak ada isu"),
+        ? kartu({ ikonNama: "roda", nilai: `${k.tahap_lulus}/${k.tahap_total}`, label: "Pemeriksaan data", ket: "Tahap pembersihan yang lolos semua syaratnya",
+          meter: persenAman(k.tahap_lulus, k.tahap_total), nada: k.tahap_lulus === k.tahap_total ? "hijau" : "kuning", chip: k.tahap_lulus === k.tahap_total ? chip("hijau", "Lulus") : chip("kuning", "Cek") })
+        : kartu({ ikonNama: "roda", nilai: "–", label: "Pemeriksaan data", ket: "Belum dinilai" }),
+      kartu({ ikonNama: "centang", nilai: k.skor_konsensus === null ? "–" : angka(k.skor_konsensus, 2), label: "Kecocokan sumber",
+        ket: k.skor_konsensus === null ? (k.keterangan_konsensus || "Belum dihitung") : "Kesepakatan harga dua sumber pada tanggal yang sama. Garis tegak: target 0,80",
+        meter: k.skor_konsensus === null ? 0 : k.skor_konsensus * 100, target: 80, nada: k.skor_konsensus === null ? "abu" : k.skor_konsensus >= 0.8 ? "hijau" : "kuning",
+        chip: k.skor_konsensus === null ? chip("abu", "Menunggu") : k.skor_konsensus >= 0.8 ? chip("hijau", "Sepakat") : chip("kuning", "Tinjau") }),
+      kartu({ ikonNama: "jam", nilai: k.hari_tertinggal === null ? "–" : `${k.hari_tertinggal} hari`, label: "Umur data", ket: `Jarak data terakhir ke hari ini. Data per ${tgl(A.dibuat_untuk)}`,
+        nada: segar ? "hijau" : "kuning", chip: k.hari_tertinggal === null ? "" : segar ? chip("hijau", "Segar") : chip("kuning", "Terlambat") }),
+      kartu({ ikonNama: "batang", nilai: `${angka(k.kelengkapan_persen, 0)}%`, label: "Kelengkapan data", ket: `${k.varian_berdata} dari ${k.varian_aktif} varian berdata`,
+        meter: k.kelengkapan_persen ?? 0, nada: (k.kelengkapan_persen ?? 0) >= 90 ? "hijau" : "kuning" }),
+      kartu({ ikonNama: "target", nilai: `${nValid}/${A.varian.length}`, label: "Lolos uji (Valid)", ket: "Varian yang lolos semua uji ketepatan perkiraan",
+        meter: persenAman(nValid, A.varian.length), nada: "biru" }),
+      kartu({ ikonNama: "lonceng", nilai: angka(A.sinyal_aktif ?? 0), label: "Sinyal aktif", ket: "Peringatan harga yang belum selesai ditindaklanjuti",
+        nada: (A.sinyal_aktif ?? 0) > 0 ? "merah" : "hijau", chip: (A.sinyal_aktif ?? 0) > 0 ? chip("merah", "Cek") : chip("hijau", "Aman") }),
+      kartu({ ikonNama: "perisai", nilai: `<span class="dsb-audit ${au.status.toLowerCase()}">${esc(au.status.charAt(0) + au.status.slice(1).toLowerCase())}</span>`, label: "Status audit",
+        ket: au.alasan || "Tidak ada isu", nada: au.status === "HIJAU" ? "hijau" : au.status === "MERAH" ? "merah" : "kuning" }),
     ].join("");
-    $("dsb-origin").innerHTML = `<option>${esc(tgl(A.dibuat_untuk, true))} (data terakhir)</option>`;
     $("dsb-varian").innerHTML = A.varian.map((v) => `<option value="${esc(v.kode)}">${esc(v.nama)}</option>`).join("");
+    const inp = $("dsb-tanggal");
+    inp.min = isoTambah(1);
+    inp.max = isoTambah(horizonMaks);
+    inp.title = `Perkiraan harian tersedia ${tglPendek(inp.min)} sampai ${tglPendek(inp.max)}`;
+    tombolHariRaya();
+  }
+
+  /** Tombol H-30, H-14, H-7, H-3, dan Hari H untuk hari raya terdekat. Tanggal di luar jangkauan perkiraan harian tidak bisa
+   * dipilih; keterangannya menyebut mulai kapan tanggal itu bisa dipilih. */
+  function tombolHariRaya() {
+    const hr = (A.hari_raya_mendatang || [])[0];
+    const wadahHr = $("dsb-hr");
+    if (!hr) { wadahHr.closest(".dsb-pilih").hidden = true; return; }
+    $("dsb-hr-label").textContent = `Menjelang ${hr.nama.replace(/^Hari Raya /, "")} · ${tglPendek(hr.tanggal)}`;
+    wadahHr.innerHTML = hr.titik.filter((t) => !t.lewat).map((t) => {
+      const bisa = t.dalam_jangkauan;
+      const ket = bisa ? `${t.kode}: ${tgl(t.tanggal, true)}` : `${t.kode} jatuh pada ${tgl(t.tanggal, true)}. Bisa dipilih mulai ${tgl(t.bisa_dipilih_mulai, true)}, saat tanggal itu sudah masuk jangkauan perkiraan ${horizonMaks} hari.`;
+      return `<button type="button" data-tanggal="${esc(t.tanggal)}" aria-pressed="false" ${bisa ? "" : "disabled"} title="${esc(ket)}">${esc(t.kode)}</button>`;
+    }).join("");
+    const pertama = hr.titik.find((t) => !t.lewat && !t.dalam_jangkauan && t.bisa_dipilih_mulai > A.dibuat_untuk);
+    const adaYangBisa = hr.titik.some((t) => t.dalam_jangkauan);
+    $("dsb-hr-ket").textContent = !adaYangBisa && pertama ? `${pertama.kode} bisa dipilih mulai ${tglPendek(pertama.bisa_dipilih_mulai)}` : "";
+  }
+
+  /** Pilih tanggal perkiraan (h hari sesudah data terakhir) dan perbarui tabel, ringkasan, dan grafik. */
+  function aturTanggal(h) {
+    S.h = Math.max(1, Math.min(horizonMaks, h));
+    S.tanggal = isoTambah(S.h);
+    $("dsb-tanggal").value = S.tanggal;
+    $("dsb-horizon").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.h) === S.h)));
+    $("dsb-hr").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tanggal === S.tanggal)));
+    ringkasArah();
+    gambarTabel();
+    const v = varianTerpilih();
+    if (v) { gambarTren(v); ringkasVarian(v); }
+  }
+
+  /* ---------- ringkasan arah perkiraan semua komoditas untuk tanggal terpilih */
+  function golongan(x) { return x === null || x === undefined ? null : x >= AMBANG_STABIL ? "naik" : x <= -AMBANG_STABIL ? "turun" : "stabil"; }
+  function ringkasArah() {
+    const ada = A.varian.map((v) => ({ v, x: proy(v, S.h)?.perubahan_persen })).filter((d) => d.x !== null && d.x !== undefined);
+    const n = { naik: 0, turun: 0, stabil: 0 };
+    ada.forEach((d) => { n[golongan(d.x)] += 1; });
+    const rata = ada.length ? ada.reduce((a, d) => a + d.x, 0) / ada.length : null;
+    const urut = [...ada].sort((a, b) => b.x - a.x);
+    const naikMaks = urut[0], turunMaks = urut.at(-1);
+    const total = ada.length || 1;
+    const pil = (kunci, simbol, label) => `<button type="button" class="dsb-arah-pil ${kunci}" data-arah="${kunci}" aria-pressed="${S.arah === kunci}"
+      title="Tampilkan hanya komoditas yang ${label.toLowerCase()}"><span class="dsb-arah-simbol">${simbol}</span><strong>${n[kunci]}</strong><span>${label}</span></button>`;
+    $("dsb-arah").innerHTML = `
+      <div class="dsb-arah-judul"><span class="dsb-label">Perkiraan ${esc(tgl(S.tanggal, true))}</span><b>${S.h} hari lagi</b></div>
+      <div class="dsb-arah-pilihan">${pil("naik", "▲", "Naik")}${pil("stabil", "▬", "Stabil")}${pil("turun", "▼", "Turun")}</div>
+      <div class="dsb-arah-batang" role="img" aria-label="${n.naik} naik, ${n.stabil} stabil, ${n.turun} turun">
+        <span class="naik" style="flex:${n.naik / total}"></span><span class="stabil" style="flex:${n.stabil / total}"></span><span class="turun" style="flex:${n.turun / total}"></span></div>
+      <div class="dsb-arah-angka"><span class="dsb-label">Rata-rata</span><strong class="dsb-ubah ${kelasUbah(rata)}">${persen(rata, 1, true)}</strong></div>
+      ${naikMaks && naikMaks.x > 0 ? `<button type="button" class="dsb-arah-angka tombol-varian" data-kode="${esc(naikMaks.v.kode)}"><span class="dsb-label">Naik terbesar</span><strong><span class="dsb-ubah naik">${persen(naikMaks.x, 1, true)}</span> ${esc(singkat(naikMaks.v.nama))}</strong></button>` : ""}
+      ${turunMaks && turunMaks.x < 0 ? `<button type="button" class="dsb-arah-angka tombol-varian" data-kode="${esc(turunMaks.v.kode)}"><span class="dsb-label">Turun terbesar</span><strong><span class="dsb-ubah turun">${persen(turunMaks.x, 1, true)}</span> ${esc(singkat(turunMaks.v.nama))}</strong></button>` : ""}`;
   }
 
   /* ---------- tabel */
   const nilaiUrut = {
     no: (v) => A.varian.indexOf(v), nama: (v) => v.nama, harga: (v) => v.harga_aktual ?? -1, h7: (v) => proy(v, 7)?.prediksi ?? -1,
-    h14: (v) => proy(v, 14)?.prediksi ?? -1, h30: (v) => proy(v, 30)?.prediksi ?? -1, ubah: (v) => proy(v, S.h)?.perubahan_persen ?? -999,
-    model: (v) => v.nama_model, status: (v) => v.status, percaya: (v) => skor(v) ?? -1 + URUT_PERCAYA[v.kepercayaan] / 10,
+    h14: (v) => proy(v, 14)?.prediksi ?? -1, h30: (v) => proy(v, 30)?.prediksi ?? -1, hx: (v) => proy(v, S.h)?.prediksi ?? -1,
+    ubah: (v) => proy(v, S.h)?.perubahan_persen ?? -999, model: (v) => v.nama_model, status: (v) => v.status,
+    percaya: (v) => (skor(v) ?? -1) + URUT_PERCAYA[v.kepercayaan] / 10,
   };
 
   function daftarTampil() {
     const kel = $("dsb-kelompok").value, st = $("dsb-status-filter").value;
     const u = nilaiUrut[S.urut.kunci] || nilaiUrut.no;
-    return A.varian.filter((v) => (!kel || v.kelompok === kel) && (!st || v.status === st))
+    return A.varian.filter((v) => (!kel || v.kelompok === kel) && (!st || v.status === st) && (!S.arah || golongan(proy(v, S.h)?.perubahan_persen) === S.arah))
       .sort((a, b) => { const x = u(a), y = u(b); return (x < y ? -1 : x > y ? 1 : 0) * S.urut.arah; });
   }
 
   function gambarTabel() {
+    const tambahan = !HORIZON_CEPAT.includes(S.h);
+    const kolomH = [...HORIZON_CEPAT, ...(tambahan ? [S.h] : [])];
+    const kunciH = (h) => (tambahan && h === S.h ? "hx" : `h${h}`);
+    $("dsb-tabel").querySelector("thead").innerHTML = `
+      <tr><th rowspan="2" class="angka k-no" data-urut="no">No</th><th rowspan="2" class="k-nama" data-urut="nama">Komoditas</th><th rowspan="2" class="angka" data-urut="harga">Sekarang</th>
+        <th colspan="${kolomH.length}" class="tengah">Perkiraan harga (Rp)</th>
+        <th rowspan="2" class="angka" title="Harga kemungkinan besar (${persenTingkat}%) berada di rentang ini">Rentang wajar ${labelH(S.h)}</th>
+        <th rowspan="2" class="angka k-ubah" data-urut="ubah">Perubahan ${labelH(S.h)}</th><th rowspan="2" class="k-cara" data-urut="model">Cara perkiraan</th>
+        <th rowspan="2" class="tengah" data-urut="status">Status uji</th><th rowspan="2" class="k-yakin" data-urut="percaya" title="Persen syarat uji yang lolos">Keyakinan</th></tr>
+      <tr>${kolomH.map((h) => `<th class="angka${h === S.h ? " dipilih" : ""}" data-urut="${kunciH(h)}">${labelH(h)}</th>`).join("")}</tr>`;
     const baris = daftarTampil();
-    const sel = (v, h) => { const p = proy(v, h); return `<td class="angka">${p ? angkaRp(p.prediksi) : "–"}</td>`; };
+    const ubahMaks = Math.max(5, ...A.varian.map((v) => Math.abs(proy(v, S.h)?.perubahan_persen ?? 0)));
     $("dsb-tabel").querySelector("tbody").innerHTML = baris.map((v) => {
       const p = proy(v, S.h);
       const s = skor(v);
+      const x = p?.perubahan_persen;
+      const lebar = x === null || x === undefined ? 0 : Math.min(50, Math.abs(x) / ubahMaks * 50);
       return `<tr data-kode="${esc(v.kode)}" class="${v.kode === S.kode ? "terpilih" : ""}" tabindex="0">
-        <td class="angka">${A.varian.indexOf(v) + 1}</td><td class="dsb-nama" title="${esc(v.nama)}${v.sumber?.pengganti ? ` · ${esc(v.sumber.catatan || "")}` : ""}">${esc(singkat(v.nama))}${v.sumber?.pengganti ? '<sup class="dsb-prov">prov</sup>' : ""}</td><td class="angka">${angkaRp(v.harga_aktual)}</td>${sel(v, 7)}${sel(v, 14)}${sel(v, 30)}
-        <td class="angka">${p ? angkaRp(p.bawah) : "–"}</td><td class="angka">${p ? angkaRp(p.atas) : "–"}</td>
-        <td class="angka dsb-ubah ${kelasUbah(p?.perubahan_persen)}">${persen(p?.perubahan_persen, 1, true)}</td>
-        <td class="dsb-model" title="${esc(v.nama_model)}">${esc(NAMA_PENDEK[v.model] || v.nama_model)}</td>
-        <td class="tengah">${lencanaStatus(v.status)}</td><td class="angka" title="${v.syarat_lolos} dari ${v.syarat_total} syarat uji lolos (${esc(NAMA_PERCAYA[v.kepercayaan] || "")})">${s === null ? "–" : s}</td></tr>`;
-    }).join("") || `<tr><td colspan="12" class="kosong">Tidak ada varian yang cocok dengan pilihan.</td></tr>`;
-    $("dsb-th-interval").textContent = `Rentang Wajar ${persenTingkat}% (${S.h} Hari)`;
-    $("dsb-th-ubah").textContent = `Perubahan ${S.h} Hari (%)`;
+        <td class="angka k-no">${A.varian.indexOf(v) + 1}</td>
+        <td class="dsb-nama" title="${esc(v.nama)} · cara perkiraan: ${esc(v.nama_model)}${v.sumber?.pengganti ? ` · ${esc(v.sumber.catatan || "")}` : ""}">${esc(singkat(v.nama))}${v.sumber?.pengganti ? '<sup class="dsb-prov">prov</sup>' : ""}</td>
+        <td class="angka">${angkaRp(v.harga_aktual)}</td>
+        ${kolomH.map((h) => { const q = proy(v, h); return `<td class="angka${h === S.h ? " dipilih" : ""}">${q ? angkaRp(q.prediksi) : "–"}</td>`; }).join("")}
+        <td class="angka dsb-rentang">${p ? `${angkaRp(p.bawah)}<span>–</span>${angkaRp(p.atas)}` : "–"}</td>
+        <td class="angka"><span class="dsb-ubah-sel"><span class="dsb-ubah-batang ${kelasUbah(x)}" style="--lebar:${lebar.toFixed(1)}%"></span><b class="dsb-ubah ${kelasUbah(x)}">${persen(x, 1, true)}</b></span></td>
+        <td class="dsb-model k-cara" title="${esc(v.nama_model)}">${esc(NAMA_PENDEK[v.model] || v.nama_model)}</td>
+        <td class="tengah">${lencanaStatus(v.status)}</td>
+        <td title="${v.syarat_lolos} dari ${v.syarat_total} syarat uji lolos (${esc(NAMA_PERCAYA[v.kepercayaan] || "")})">${s === null ? "–" : `<span class="dsb-yakin"><span class="dsb-meter kecil ${s >= 80 ? "hijau" : s >= 50 ? "kuning" : "merah"}"><span style="width:${s}%"></span></span><b>${s}</b></span>`}</td></tr>`;
+    }).join("") || `<tr><td colspan="${9 + kolomH.length}" class="kosong">Tidak ada komoditas yang cocok dengan pilihan.</td></tr>`;
     $("dsb-tabel").querySelectorAll("th[data-urut]").forEach((th) => {
       th.setAttribute("aria-sort", th.dataset.urut === S.urut.kunci ? (S.urut.arah > 0 ? "ascending" : "descending") : "none");
     });
     const valid = A.varian.filter((v) => v.status === "valid").length;
-    $("dsb-catatan-status").innerHTML = `<b>${valid}</b> dari ${A.varian.length} komoditas berstatus Valid (lolos semua uji ketepatan). Eksperimen: ada uji yang belum lolos, jadi angkanya dipakai sebagai bahan pertimbangan saja. Keyakinan: persen uji yang lolos. Rentang wajar: harga kemungkinan besar (80%) berada di antara batas bawah dan atas.${A.varian.some((v) => v.sumber?.pengganti) ? ' Tanda <sup class="dsb-prov">prov</sup>: pasar Bengkulu Tengah belum mencatat varian ini, jadi dipakai rata-rata Provinsi Bengkulu (PIHPS).' : ""} Klik baris untuk melihat rinciannya.`;
+    $("dsb-catatan-status").innerHTML = `<span><span class="lencana baik">Valid</span> ${valid} lolos semua uji</span>
+      <span><span class="lencana sedang">Eksperimen</span> ${A.varian.length - valid} bahan pertimbangan</span>
+      ${A.varian.some((v) => v.sumber?.pengganti) ? '<span title="Pasar Bengkulu Tengah belum mencatat varian ini, jadi dipakai rata-rata Provinsi Bengkulu (PIHPS)."><sup class="dsb-prov">prov</sup> pakai rata-rata provinsi</span>' : ""}
+      ${S.arah ? `<button type="button" class="dsb-hapus-saring" data-arah="">Tampilkan semua (${baris.length} dari ${A.varian.length})</button>` : '<span class="dsb-petunjuk">Klik baris untuk rinciannya</span>'}`;
   }
 
   function ekspor() {
     const kolom = ["kode", "varian", "kelompok", "satuan", "tanggal_harga", "harga_aktual", "prediksi_7", "bawah_7", "atas_7", "prediksi_14", "bawah_14", "atas_14",
-      "prediksi_30", "bawah_30", "atas_30", "perubahan_30_persen", "cara_prakiraan", "status_validasi", "keyakinan_persen", "smape_uji_akhir", "cakupan_uji_akhir"];
+      "prediksi_30", "bawah_30", "atas_30", "tanggal_pilihan", "prediksi_pilihan", "bawah_pilihan", "atas_pilihan", "perubahan_pilihan_persen",
+      "cara_prakiraan", "status_validasi", "keyakinan_persen", "smape_uji_akhir", "cakupan_uji_akhir"];
     const baris = daftarTampil().map((v) => {
+      const pp = proy(v, S.h);
       const o = { kode: v.kode, varian: v.nama, kelompok: v.kelompok, satuan: v.satuan, tanggal_harga: v.tanggal_aktual, harga_aktual: v.harga_aktual,
-        perubahan_30_persen: proy(v, 30)?.perubahan_persen, cara_prakiraan: v.nama_model, status_validasi: v.status, keyakinan_persen: skor(v),
+        tanggal_pilihan: S.tanggal, prediksi_pilihan: pp?.prediksi, bawah_pilihan: pp?.bawah, atas_pilihan: pp?.atas, perubahan_pilihan_persen: pp?.perubahan_persen,
+        cara_prakiraan: v.nama_model, status_validasi: v.status, keyakinan_persen: skor(v),
         smape_uji_akhir: v.holdout?.smape, cakupan_uji_akhir: v.holdout?.cakupan_persen };
-      for (const h of [7, 14, 30]) { const p = proy(v, h); o[`prediksi_${h}`] = p?.prediksi; o[`bawah_${h}`] = p?.bawah; o[`atas_${h}`] = p?.atas; }
+      for (const h of HORIZON_CEPAT) { const p = proy(v, h); o[`prediksi_${h}`] = p?.prediksi; o[`bawah_${h}`] = p?.bawah; o[`atas_${h}`] = p?.atas; }
       return o;
     });
-    unduhTeks(`proyeksi_harga_${A.dibuat_untuk}.csv`, keCSV(kolom, baris));
+    unduhTeks(`proyeksi_harga_${A.dibuat_untuk}_untuk_${S.tanggal}.csv`, keCSV(kolom, baris));
   }
 
   /* ---------- varian terpilih */
@@ -242,18 +384,36 @@ export async function pasangDasborInternal(wadah, meta) {
     S.grafik = gambarGrafikHarga($("dsb-grafik-tren"), potongSeri(seri, S.hari), { gaya: "dashboard", horizon: S.h, tingkat, dariNol: false });
   }
 
+  /** Batang rentang: wilayah arsir = rentang wajar, titik = perkiraan, garis tegak = harga sekarang. */
+  function batangRentang(p, sekarang) {
+    if (!p || !sekarang) return "";
+    const lo = Math.min(p.bawah, sekarang), hi = Math.max(p.atas, sekarang);
+    const lebar = hi - lo || 1;
+    const pos = (x) => ((x - lo) / lebar * 100).toFixed(1);
+    return `<div class="dsb-rentang-vis" role="img" aria-label="Rentang wajar ${rp(p.bawah)} sampai ${rp(p.atas)}, perkiraan ${rp(p.prediksi)}, harga sekarang ${rp(sekarang)}">
+      <span class="pita" style="left:${pos(p.bawah)}%;width:${(pos(p.atas) - pos(p.bawah)).toFixed(1)}%"></span>
+      <span class="kini" style="left:${pos(sekarang)}%" title="Sekarang ${rp(sekarang)}"></span><span class="titik" style="left:${pos(p.prediksi)}%" title="Perkiraan ${rp(p.prediksi)}"></span></div>
+      <div class="dsb-rentang-label"><span>${rp(p.bawah)}</span><span>${rp(p.atas)}</span></div>`;
+  }
+
   function ringkasVarian(v) {
-    judul("dsb-judul-ringkas", `Ringkasan · ${singkat(v.nama)}`);
-    const baris = [7, 14, 30].map((h) => {
-      const p = proy(v, h);
-      return p ? `<tr class="${h === S.h ? "terpilih" : ""}"><td>${h} hari<br><span class="meta-kecil">${esc(tgl(p.tanggal))}</span></td><td class="angka"><strong>${rp(p.prediksi)}</strong></td>
-        <td class="angka">${rp(p.bawah)} sampai ${rp(p.atas)}</td><td class="angka dsb-ubah ${kelasUbah(p.perubahan_persen)}">${persen(p.perubahan_persen, 1, true)}</td></tr>` : "";
+    $("dsb-judul-ringkas").textContent = `· ${singkat(v.nama)}`;
+    const p = proy(v, S.h);
+    const daftarH = [...new Set([...HORIZON_CEPAT, S.h])].sort((a, b) => a - b);
+    const baris = daftarH.map((h) => {
+      const q = proy(v, h);
+      return q ? `<tr class="${h === S.h ? "terpilih" : ""}"><td>${labelH(h)}<br><span class="meta-kecil">${esc(tgl(q.tanggal))}</span></td><td class="angka"><strong>${rp(q.prediksi)}</strong></td>
+        <td class="angka">${rp(q.bawah)} – ${rp(q.atas)}</td><td class="angka dsb-ubah ${kelasUbah(q.perubahan_persen)}">${persen(q.perubahan_persen, 1, true)}</td></tr>` : "";
     }).join("");
     $("dsb-ringkas").innerHTML = `
-      <dl class="dl"><dt>Harga aktual</dt><dd><strong>${rp(v.harga_aktual)}</strong> <span class="meta-kecil">${esc(tgl(v.tanggal_aktual))}</span></dd>
-      <dt>Cara prakiraan</dt><dd>${esc(v.nama_model)}</dd><dt>Status</dt><dd>${lencanaStatus(v.status)}</dd>
-      <dt>Riwayat</dt><dd>${angka(v.jumlah_obs)} hari harga sejak ${esc(tgl(v.tanggal_awal))}</dd></dl>
-      <div class="gulir-tabel"><table class="tabel-kecil"><thead><tr><th>Horizon</th><th class="angka">Prediksi</th><th class="angka">Interval ${persenTingkat}%</th><th class="angka">Perubahan</th></tr></thead><tbody>${baris}</tbody></table></div>
+      <div class="dsb-harga-dua">
+        <div><span class="dsb-label">Sekarang</span><strong>${rp(v.harga_aktual)}</strong><span class="meta-kecil">${esc(tgl(v.tanggal_aktual))} · per ${esc(v.satuan)}</span></div>
+        <div><span class="dsb-label">Perkiraan ${esc(tgl(S.tanggal))}</span><strong>${p ? rp(p.prediksi) : "–"}</strong>
+          <span class="dsb-ubah ${kelasUbah(p?.perubahan_persen)}">${persen(p?.perubahan_persen, 1, true)}</span></div>
+      </div>
+      ${batangRentang(p, v.harga_aktual)}
+      <div class="dsb-chip-baris">${lencanaStatus(v.status)}<span class="dsb-chip-polos">${esc(NAMA_PENDEK[v.model] || v.nama_model)}</span><span class="dsb-chip-polos">${angka(v.jumlah_obs)} hari data</span></div>
+      <div class="gulir-tabel"><table class="tabel-kecil"><thead><tr><th>Untuk</th><th class="angka">Perkiraan</th><th class="angka">Rentang ${persenTingkat}%</th><th class="angka">Ubah</th></tr></thead><tbody>${baris}</tbody></table></div>
       ${v.catatan?.length ? `<details><summary class="meta-kecil">Catatan mesin (${v.catatan.length})</summary><ul class="meta-kecil">${v.catatan.map((c) => `<li>${esc(c)}</li>`).join("")}</ul></details>` : ""}
       ${kartuModel(v)}`;
   }
@@ -432,25 +592,56 @@ export async function pasangDasborInternal(wadah, meta) {
   }
 
   /* ---------- hari raya */
+  /** Garis waktu menuju Hari H: H-30, H-14, H-7, H-3, dan Hari H berjarak rata supaya mudah dibaca; penanda "Hari ini"
+   * diletakkan sebanding di antara dua titik yang mengapitnya. Titik yang sudah tiba menampilkan perkiraan harga Hari H. */
+  function garisWaktu(a, ent) {
+    const kode = [...(ACARA.aturan.offset_pra || []), "H"];
+    const hariKe = (k) => Number(k.replace("H", "")) || 0;
+    const hari = kode.map(hariKe);
+    const pos = kode.map((_, i) => 14 + i * (86 / (kode.length - 1)));
+    const kini = -(a.hari_menuju ?? 0);
+    let posKini;
+    if (kini <= hari[0]) posKini = Math.max(0, 14 - Math.min(14, (hari[0] - kini) / 30 * 14));
+    else if (kini >= 0) posKini = 100;
+    else {
+      const i = hari.findIndex((d, j) => kini >= d && kini <= hari[j + 1]);
+      posKini = pos[i] + (kini - hari[i]) / (hari[i + 1] - hari[i]) * (pos[i + 1] - pos[i]);
+    }
+    const hH = new Date(`${a.tanggal}T00:00:00Z`);
+    const tanggalTitik = (d) => new Date(hH.getTime() + d * 86400000).toISOString().slice(0, 10);
+    const sudah = new Map((ent?.baris || []).map((x) => [x.kode, x]));
+    const titik = kode.map((k, i) => {
+      const t = tanggalTitik(hari[i]), b = sudah.get(k);
+      const kelas = k === "H" ? "hari-h" : (b || hari[i] <= kini) ? "tiba" : "nanti";
+      const isi = k === "H" ? `<b>Hari H</b><span>${esc(tglPendek(t))}</span>`
+        : `<b>${esc(k)}</b><span>${esc(tglPendek(t))}</span>${b?.prediksi ? `<em title="Perkiraan harga Hari H dari titik ini">${rp(b.prediksi)}</em>` : `<em class="redup">${hari[i] <= kini ? "menunggu data" : "belum tiba"}</em>`}`;
+      return `<li class="${kelas}" style="--pos:${pos[i].toFixed(1)}%">${isi}</li>`;
+    }).join("");
+    return `<div class="dsb-gw-bungkus"><div class="dsb-gw-kepala"><strong>${esc(a.nama)}</strong><span>${esc(tgl(a.tanggal, true))}</span>
+        ${a.hari_menuju > 0 ? `<span class="dsb-chip-polos">${a.hari_menuju} hari lagi</span>` : ""}</div>
+      <div class="dsb-gw"><span class="dsb-gw-jalur"></span><span class="dsb-gw-isi" style="width:${posKini.toFixed(1)}%"></span>
+        <span class="dsb-gw-kini" style="--pos:${posKini.toFixed(1)}%"><b>Hari ini</b></span><ol>${titik}</ol></div></div>`;
+  }
+
   function acaraVarian(v) {
     const aktif = ACARA.acara.filter((a) => a.fase !== "belum_dimulai" && a.fase !== "selesai");
     const berikut = ACARA.acara.find((a) => a.fase === "belum_dimulai");
-    $("dsb-sub-acara").textContent = `Menuju Hari H dari H-7 dan H-3; sesudahnya H+3, H+7, H+14. Diuji dengan menyisihkan satu hari raya bergiliran (minimal ${ACARA.aturan.minimal_acara} hari raya sejenis).`;
+    const pra = (ACARA.aturan.offset_pra || []).join(", "), pasca = (ACARA.aturan.offset_pasca || []).join(", ");
+    $("dsb-sub-acara").textContent = `Perkiraan harga Hari H dibuat dari ${pra}; sesudah hari raya dari Hari H ke ${pasca}. Tiap titik muncul sendiri begitu tanggalnya tiba.`;
     let isi = "";
-    if (berikut) {
-      isi += `<div class="pesan" style="margin-bottom:12px"><b>${esc(berikut.nama)}</b>, ${esc(tgl(berikut.tanggal, true))} (${berikut.hari_menuju} hari lagi). Proyeksi menuju Hari H muncul otomatis mulai ${esc(tgl(berikut.proyeksi_mulai, true))} (H-7), dihitung dari harga pada saat itu.</div>`;
-    }
+    if (berikut) isi += garisWaktu(berikut, null);
     for (const a of aktif) {
       const ent = a.varian.find((x) => x.kode === v.kode);
       if (!ent) continue;
+      isi += garisWaktu(a, ent);
       isi += `<h3 class="sub-judul">${esc(a.nama)} · ${esc(tgl(a.tanggal))}</h3><div class="gulir-tabel"><table class="tabel-kecil"><thead><tr><th>Titik</th><th class="angka">Harga asal</th><th class="angka">Prediksi</th><th class="angka">Interval ${persenTingkat}%</th><th class="angka">Selisih</th><th class="angka">Kenyataan</th><th>Status</th></tr></thead><tbody>${ent.baris.map((b) => b.prediksi === null
         ? `<tr><td>${esc(b.kode)}</td><td class="angka">${rp(b.asal)}</td><td colspan="5" class="meta-kecil">${esc(b.alasan)}</td></tr>`
         : `<tr><td>${esc(b.kode)}<br><span class="meta-kecil">${esc(tgl(b.sasaran_tanggal))}</span></td><td class="angka">${rp(b.asal)}</td><td class="angka"><strong>${rp(b.prediksi)}</strong></td><td class="angka">${rp(b.bawah)} sampai ${rp(b.atas)}</td><td class="angka dsb-ubah ${kelasUbah(b.delta_persen)}">${rp(b.delta_rp)} (${persen(b.delta_persen, 1, true)})</td><td class="angka">${b.aktual ? rp(b.aktual) : "–"}</td><td>${lencanaStatus(b.status)}</td></tr>`).join("")}</tbody></table></div>`;
     }
     const ev = ACARA.evaluasi.filter((e) => e.kode === v.kode);
-    const urutOffset = ["H-7", "H-3", "H+3", "H+7", "H+14"];
+    const urutOffset = [...(ACARA.aturan.offset_pra || []), ...(ACARA.aturan.offset_pasca || [])];
     if (ev.length) {
-      // Satu baris per jenis hari raya, satu kolom per titik (H-7 sampai H+14): ringkas dan mudah dibandingkan.
+      // Satu baris per jenis hari raya, satu kolom per titik (H-30 sampai H+14): ringkas dan mudah dibandingkan.
       const sel = (x) => {
         if (!x) return '<td class="tengah meta-kecil">–</td>';
         if (x.smape === undefined) return `<td class="tengah" title="${esc((x.gagal || []).join(", "))}"><span class="meta-kecil">belum cukup</span><span class="dsb-sel-n">n ${x.n_acara}</span></td>`;
@@ -546,11 +737,10 @@ export async function pasangDasborInternal(wadah, meta) {
     const au = A.audit || {};
     $("dsb-rekom").innerHTML = `<div class="dsb-rekom-isi">
       <ol class="dsb-rekom-daftar">${r.map((x, i) => `<li><span class="dsb-no ${esc(x.warna)}">${i + 1}</span><div><strong class="${esc(x.warna)}">${esc(x.judul)}</strong><p>${esc(x.isi)}</p></div></li>`).join("")}</ol>
-      <aside class="dsb-catatan-kotak"><b>Catatan:</b><ul>
-        <li>Angka berasal dari ${A.mode_demo ? "data contoh (ilustratif)" : "data asli"} sampai ${esc(tgl(A.dibuat_untuk, true))}.</li>
-        <li>Status Eksperimen berarti belum lolos protokol validasi; gunakan sebagai bahan pertimbangan.</li>
-        <li>Dashboard ini mendukung analisis internal BPS dan dapat dipakai bersama pemangku kepentingan terkait.</li>
-        ${au.status && au.status !== "HIJAU" ? `<li>Status audit ${esc(au.status)}: ${esc(au.alasan)}.</li>` : ""}
+      <aside class="dsb-catatan-kotak"><b>Catatan</b><ul>
+        <li>${A.mode_demo ? "Data contoh (ilustratif)" : "Data asli"} sampai ${esc(tgl(A.dibuat_untuk, true))}.</li>
+        <li>Eksperimen: belum lolos semua uji, jadi bahan pertimbangan.</li>
+        ${au.status && au.status !== "HIJAU" ? `<li>Audit ${esc(au.status.toLowerCase())}: ${esc(au.alasan)}.</li>` : ""}
       </ul></aside></div>`;
   }
 
@@ -595,6 +785,19 @@ export async function pasangDasborInternal(wadah, meta) {
       <details><summary class="meta-kecil">Berkas sumber dan sidik jari SHA-256 (${g.berkas_mentah.length})</summary><div class="gulir-tabel"><table class="tabel-kecil"><thead><tr><th>Berkas</th><th class="angka">Diterima</th><th class="angka">Ditolak</th><th>SHA-256</th></tr></thead><tbody>${g.berkas_mentah.map((b) => `<tr><td class="meta-kecil">${esc(b.berkas)}</td><td class="angka">${angka(b.diterima)}</td><td class="angka">${angka(b.ditolak)}</td><td><code title="${esc(b.sha256)}">${esc(b.sha256.slice(0, 12))}</code></td></tr>`).join("")}</tbody></table></div></details></div></div>`;
   }
 
+  /** Angka kecil di tab supaya keadaan tiap bagian terlihat tanpa membukanya. */
+  function lencanaTab() {
+    const isi = (id, teks, nada = "") => { const el = $(`dsb-b-${id}`); if (el && teks) { el.textContent = teks; el.className = `dsb-tab-lencana ${nada}`; } };
+    const f = A.finder || [], fr = A.finder_ringkas || {};
+    if (f.length && fr.aktif !== undefined) isi("finder", `${fr.aktif}/${f.length}`, fr.aktif ? "hijau" : "kuning");
+    const t = A.pembersihan || [];
+    if (t.length) { const l = t.filter((x) => x.status === "lulus").length; isi("bersih", `${l}/${t.length}`, l === t.length ? "hijau" : "kuning"); }
+    if (A.ews?.f1 != null) isi("ews", `F1 ${angka(A.ews.f1 * 100, 0)}%`, A.ews.f1 >= 0.88 ? "hijau" : "kuning");
+    if (A.kpi.skor_konsensus != null) isi("konsensus", angka(A.kpi.skor_konsensus, 2), A.kpi.skor_konsensus >= 0.8 ? "hijau" : "kuning");
+    const nAcara = (ACARA.acara || []).find((a) => a.fase !== "selesai");
+    if (nAcara) isi("acara", nAcara.hari_menuju > 0 ? `${nAcara.hari_menuju} hari` : "berjalan", nAcara.fase === "pra" || nAcara.fase === "pasca" ? "kuning" : "");
+  }
+
   /* ---------- peristiwa */
   const atur = (grup, atribut, fn) => {
     $(grup).addEventListener("click", (e) => {
@@ -615,11 +818,31 @@ export async function pasangDasborInternal(wadah, meta) {
   gambarEws($("dsb-ews"), A);
   gambarKonsensus($("dsb-konsensus"), A);
   gambarRantai($("dsb-rantai"), A);
-  atur("dsb-horizon", "data-h", (h) => { S.h = Number(h); gambarTabel(); const v = varianTerpilih(); gambarTren(v); ringkasVarian(v); });
+  pasangTab(wadah);
+  lencanaTab();
+  const gulir = pasangGulirOtomatis($("dsb-gulir"), $("dsb-putar"));
+  aturTanggal(30);
+  $("dsb-horizon").addEventListener("click", (e) => { const b = e.target.closest("button[data-h]"); if (b) aturTanggal(Number(b.dataset.h)); });
+  $("dsb-hr").addEventListener("click", (e) => { const b = e.target.closest("button[data-tanggal]:not([disabled])"); if (b) aturTanggal(selisihHari(b.dataset.tanggal)); });
+  $("dsb-tanggal").addEventListener("change", (e) => {
+    if (!e.target.value) return;
+    const h = selisihHari(e.target.value);
+    if (h < 1 || h > horizonMaks) { e.target.setCustomValidity(`Pilih tanggal ${tglPendek(isoTambah(1))} sampai ${tglPendek(isoTambah(horizonMaks))}`); e.target.reportValidity(); return; }
+    e.target.setCustomValidity("");
+    aturTanggal(h);
+  });
+  const saringArah = (e) => {
+    const b = e.target.closest("[data-arah]");
+    if (b) { S.arah = S.arah === b.dataset.arah ? "" : b.dataset.arah; ringkasArah(); gambarTabel(); gulir.kembaliKeAtas(); return; }
+    const t = e.target.closest(".tombol-varian[data-kode]");
+    if (t) pilih(t.dataset.kode, true);
+  };
+  $("dsb-arah").addEventListener("click", saringArah);
+  $("dsb-catatan-status").addEventListener("click", saringArah);
   $("dsb-rentang").addEventListener("change", (e) => { S.hari = Number(e.target.value); gambarTren(varianTerpilih()); });
   atur("dsb-periode", "data-p", (p) => { S.periode = p; periodik(varianTerpilih()); });
   $("dsb-varian").addEventListener("change", (e) => pilih(e.target.value));
-  for (const id of ["dsb-kelompok", "dsb-status-filter"]) $(id).addEventListener("change", gambarTabel);
+  for (const id of ["dsb-kelompok", "dsb-status-filter"]) $(id).addEventListener("change", () => { gambarTabel(); gulir.kembaliKeAtas(); });
   $("dsb-ekspor").addEventListener("click", ekspor);
   $("dsb-tabel").querySelector("thead").addEventListener("click", (e) => {
     const th = e.target.closest("th[data-urut]");

@@ -149,13 +149,22 @@ Sistem selalu memakai data asli (`mode_demo: tidak` di `config/pengaturan.json`)
 
 ## 4d. Proyeksi, status Valid/Eksperimen, dan Dasbor Analitik
 
-**Dashboard Internal BPS** adalah beranda Administrator dan Analis (juga halaman `dasbor.html` di menu Analis, TPID, dan Admin). Tata letaknya mengikuti gambar
-atasan: kepala biru, enam indikator, tabel 21 varian di kiri, grafik dan diagnostik di tengah dan kanan, lalu Data Lineage dan Rekomendasi Netral; di bawahnya
-"Analisis lanjutan" dan "Mutu data, peringatan dini, dan perbandingan wilayah" (10 pencari data, 8 tahap pembersihan, peringatan dini lonjakan harga,
-perbandingan Bengkulu Tengah dengan Kepahiang dan Kota Bengkulu, kecocokan antar-sumber, rantai harga). Indikator yang belum bisa dihitung tetap jujur:
-keyakinan berupa persen syarat uji yang lolos (bukan angka karangan), dan faktor pendorong bukan SHAP. Isinya memuat semua yang diminta rancangan: indikator di atas, pilihan varian dan
-horizon 7/14/30 hari, tabel 21 varian (bisa diurutkan dan diekspor ke CSV), grafik tren dan proyeksi, diagnostik deret waktu, kinerja
-model, proyeksi hari raya, proyeksi triwulanan/semesteran/tahunan, rekomendasi netral, dan jejak data. Angkanya dibaca dari
+**Dashboard Internal BPS** adalah beranda Administrator dan Analis (juga halaman `dasbor.html` di menu Analis, TPID, dan Admin). Tampilannya
+ringan tanpa pita biru, memakai satu jenis huruf (Plus Jakarta Sans, disimpan di `site/vendor/font`): judul singkat, delapan indikator bergaris
+ukur (sumber aktif, pemeriksaan, kecocokan sumber, umur data, kelengkapan, lolos uji, sinyal aktif, status audit), lalu baris pilihan:
+
+- **Perkiraan untuk** 7, 14, atau 30 hari, **atau pilih tanggal** mana pun sampai 30 hari sesudah data terakhir. Angkanya diambil dari
+  perkiraan harian (`jalur` per varian di `analitik.json`), bukan dihitung ulang di browser.
+- **Menjelang hari raya**: tombol H-30, H-14, H-7, H-3, dan Hari H untuk hari raya terdekat (`hari_raya_mendatang`). Tanggal yang masih di
+  luar jangkauan 30 hari tidak bisa ditekan, dan keterangannya menyebut mulai kapan bisa dipilih (mis. H-30 Natal 2026 mulai 26 Oktober).
+
+Di bawahnya ada ringkasan arah perkiraan untuk tanggal terpilih (berapa komoditas naik, stabil, turun; klik untuk menyaring tabel), tabel
+proyeksi 21 varian yang **dipendekkan dan bergulir pelan ke bawah dengan sendirinya** (berhenti saat kursor, sentuhan, atau fokus papan
+ketik ada di tabel; tombol Jeda untuk mematikan; tidak bergerak bila perangkat diatur untuk mengurangi gerak), grafik tren, perbandingan dan
+selisih antarwilayah, ciri pergerakan harga, ketepatan perkiraan, faktor pendorong, asal data, dan rekomendasi. "Analisis lanjutan" dan
+"Mutu data dan peringatan dini" berupa tab supaya halaman tidak terlalu panjang; tab menampilkan angka ringkas (mis. 5/10 pencari data,
+F1 89%). Indikator yang belum bisa dihitung tetap jujur: keyakinan berupa persen syarat uji yang lolos, dan faktor pendorong bukan SHAP.
+Tabel bisa diurutkan dan diekspor ke CSV, termasuk kolom tanggal pilihan. Angkanya dibaca dari
 `analitik.json`, `proyeksi_acara.json`, dan `proyeksi_periodik.json` yang dibuat tiap pipeline jalan.
 
 - **Proyeksi harian.** 7, 14, dan 30 hari ke depan dengan rentang 80%. Rentang dibentuk dari selisih prakiraan dan kenyataan pada uji data
@@ -169,9 +178,10 @@ model, proyeksi hari raya, proyeksi triwulanan/semesteran/tahunan, rekomendasi n
 - **Tingkat keyakinan.** Tinggi bila semua syarat lolos, Sedang bila hanya satu syarat gagal, Rendah bila lebih. Ini aturan, bukan angka karangan.
 - **Uji Diebold-Mariano.** Mesin belajar atau gabungan yang terbukti lebih buruk dari cara naif pada masa uji akhir dikembalikan ke juara
   cara sederhana.
-- **Hari raya.** Menuju Hari H dari H-7 dan H-3, sesudahnya H+3, H+7, H+14, untuk Idul Fitri, Idul Adha, dan Natal. Cara: harga titik asal
-  dikalikan median perubahan pada hari raya sejenis sebelumnya, diuji dengan menyisihkan satu hari raya bergiliran (butuh minimal 3).
-  Proyeksi aktif baru muncul setelah titik asalnya tiba (mis. Natal mulai 18 Desember), dihitung dari harga pada hari itu. Selama hari raya
+- **Hari raya.** Menuju Hari H dari H-30, H-14, H-7, dan H-3, sesudahnya H+3, H+7, H+14, untuk Idul Fitri, Idul Adha, dan Natal. Cara:
+  harga titik asal dikalikan median perubahan pada hari raya sejenis sebelumnya, diuji dengan menyisihkan satu hari raya bergiliran (butuh
+  minimal 3). Proyeksi aktif baru muncul setelah titik asalnya tiba (mis. Natal 2026 mulai 25 November dari H-30), dihitung dari harga pada
+  hari itu. Tab "Hari raya" menampilkan garis waktu titik-titik ini. Selama hari raya
   sejenis kurang dari 8, cakupan rentang belum bisa dinilai, jadi statusnya Eksperimen. Kalender `config/kalender.csv` kini memuat 2022
   sampai 2027; tanggal 2022 sampai 2026 sesuai keputusan sidang isbat dan SKB pemerintah.
 - **Triwulanan, semesteran, tahunan.** Rata-rata harga bulanan dengan skenario rendah, dasar, tinggi (kuantil 10%, 50%, 90% galat uji
@@ -216,10 +226,18 @@ model, proyeksi hari raya, proyeksi triwulanan/semesteran/tahunan, rekomendasi n
    komoditas, periode, jenis data, wilayah, dan penyedia. `otomatis` mencoba AI sesuai *Urutan kalau memilih Otomatis*,
    lalu AI gratis lain yang belum disebut. AI yang kuncinya belum diisi, kena batas pemakaian, atau jawabannya rusak
    dilewati, dan alasannya dicatat di hasil ("dilewati: ...").
-5. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data**:
-   - *URL di hasil pencarian?* "tidak" = URL tidak muncul di hasil pencarian Google, jadi periksa dengan saksama.
-   - *URL dapat dibuka?* "tidak" = alamat tidak bisa dibuka (kemungkinan dikarang/berubah).
+5. Hasil tersimpan di `data/sumber/kandidat_ai.json` dan tampil di halaman **Sumber Data** sebagai kartu:
+   - Kandidat yang sama dari banyak pencarian (alamat sama, tanpa `www` dan garis miring akhir) **digabung** menjadi satu kartu, lengkap
+     dengan berapa kali muncul, untuk komoditas apa, dan kapan terakhir ditemukan.
+   - **Skor kelayakan 0 sampai 100** dihitung dari hal yang bisa dicek, bukan pendapat AI: situs resmi (25), alamat muncul di hasil
+     pencarian web (15), alamat bisa dibuka (15; setengah bila situs menolak robot), wilayah Bengkulu Tengah (20; pembanding/provinsi 12,
+     nasional 6), diperbarui harian (15; mingguan 8, bulanan 4), dan bisa diambil otomatis (10; berkas 7, halaman web 4). Skor 70 ke atas
+     berarti layak dicek, 45 sampai 69 sedang.
+   - Kartu bisa disaring (belum dinilai, layak dicek, diterima, ditolak, sudah dipakai), dicari, dan diurutkan. Rincian per pencarian ada di
+     *Riwayat pencarian*.
    - Hasil tanpa Tavily (dan selain Claude) ditandai **tanpa pencarian web**: semua URL wajib dicek manual.
+   - Setiap pencarian memberi AI daftar sumber yang sudah tercatat (paling banyak 40 alamat) supaya yang dicari sumber baru. Kandidat yang
+     alamatnya sudah tercatat ditandai `sudah_dikenal`, dan log mencatat berapa kandidat yang benar-benar baru.
 6. Verifikasi kandidat (izin, lisensi, cakupan, keandalan). Bila layak, tambahkan ke `config/sumber.csv`.
    Kandidat tidak pernah otomatis menjadi sumber data.
 

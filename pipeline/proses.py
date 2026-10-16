@@ -524,9 +524,13 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     kandidat = json.loads(kandidat_path.read_text(encoding="utf-8")) if kandidat_path.exists() else {"pencarian": []}
     diterima = terapkan_keputusan_sumber(kandidat, baca_keputusan_sumber(konf.akar))
     jumlah_per_sumber = Counter(o.kode_sumber for o in hasil_qc.observasi)
+    from . import pencari_data
+    katalog = pencari_data.katalog_kandidat(kandidat, [s.url for s in konf.sumber.values()])
     _tulis_json(keluaran / "sumber.json", {
         "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0)} for s in konf.sumber.values()] + diterima,
         "kandidat_ai": kandidat,
+        "katalog_ai": katalog, "ringkas_katalog": pencari_data.ringkas_katalog(katalog),
+        "ambang_skor": {"layak": pencari_data.AMBANG_LAYAK, "sedang": pencari_data.AMBANG_SEDANG},
     })
 
     # ---------- berita.json (halaman Berita Lokal; hasil pencarian harian di data/berita/berita.json)
@@ -571,7 +575,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     }
     _tulis_json(keluaran / "ringkasan.json", ringkasan)
 
-    # ---------- proyeksi_acara.json (H-7/H-3 menuju Hari H, dan H+3/H+7/H+14 sesudahnya)
+    # ---------- proyeksi_acara.json (H-30/H-14/H-7/H-3 menuju Hari H, dan H+3/H+7/H+14 sesudahnya)
     _tulis_json(keluaran / "proyeksi_acara.json", proyeksi_acara.bentuk(konf, hasil_varian, tanggal_data))
 
     # ---------- proyeksi_periodik.json (triwulanan, semesteran, tahunan; skenario rendah/dasar/tinggi)
@@ -689,7 +693,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         _tulis_json(keluaran / "pengaturan.json", konf.pengaturan)
     # Prompt AI Data Finder untuk browser admin (tidak rahasia; kunci tidak ikut).
     from . import pencari_data
-    _tulis_json(keluaran / "ai_prompt.json", pencari_data.bahan_situs())
+    _tulis_json(keluaran / "ai_prompt.json", pencari_data.bahan_situs(pencari_data.sumber_dikenal(konf)))
     # Login per peran: Firebase (akun Google) bila konfigurasinya terisi lewat Secret FIREBASE_WEB_CONFIG atau
     # config/firebase.json; jika tidak, akun contoh dari config/pengguna.json. Berkas cara masuk yang tidak dipakai
     # dihapus supaya akun contoh tidak tetap terbuka saat Firebase sudah aktif.

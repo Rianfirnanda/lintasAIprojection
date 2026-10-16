@@ -165,6 +165,8 @@ export async function cariDiBrowser(masukan, catat = () => {}) {
   if (hasilWeb.length) {
     teks += "\n\nHASIL PENCARIAN WEB (diambil hari ini):\n" + hasilWeb.map((h, i) => `[${i + 1}] ${h.judul}\nURL: ${h.url}\nCuplikan: ${h.isi}`).join("\n\n");
   }
+  // Sumber yang sudah tercatat diberikan ke AI supaya yang dicari sumber baru.
+  if (b.sumber_dikenal_teks) teks += b.sumber_dikenal_teks;
   const sistem = b.sistem + (hasilWeb.length ? b.tambahan_hasil_web : b.tambahan_tanpa_pencarian);
 
   // 2. AI, bergantian
