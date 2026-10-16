@@ -7,9 +7,14 @@ Alur satu kali jalan (otomatis sekali sehari, lihat firestore_sinkron.berita_jat
   3. Baca isi halaman yang belum punya isi. Setiap halaman dicek robots.txt dulu, diberi jeda, dan dibatasi ukurannya.
   4. Nilai relevansi, tandai kejadian (harga naik, pasokan terganggu, cuaca ekstrem, intervensi), dan ambil harga dari
      kalimat berita dengan aturan biasa. Angka harga selalu disertai kalimat bukti dan dicek terhadap batas wajar
-     tiap varian. Hasilnya KANDIDAT yang wajib diverifikasi analis, tidak pernah masuk deret harga resmi.
+     tiap varian.
   5. Ringkas dengan AI gratis (rotasi penyedia yang sama dengan AI Data Finder). Angka di ringkasan dicek terhadap isi
-     berita, dan bila AI tidak tersedia dipakai ringkasan ekstraktif. Terakhir disusun kesimpulan harian.
+     berita, dan bila AI tidak tersedia dipakai ringkasan ekstraktif.
+  6. AI langsung menilai setiap harga yang dibaca mesin: harga pasar saat itu, harga lama, harga program pemerintah, atau
+     barang lain, dan di wilayah mana. AI tidak bisa menulis atau mengubah angka. Terakhir disusun kesimpulan harian.
+  7. Saat situs diterbitkan (untuk_situs), setiap harga dibandingkan dengan harga resmi pada tanggal beritanya (wilayah yang
+     sama bila deretnya ada) dan diberi putusan serta skor keyakinan 0-100. Harga dari berita tetap penunjuk dan tidak
+     pernah masuk deret harga resmi; deret resmi hanya dari sumber resmi dan petugas.
 
 Yang disimpan hanya tautan, judul, ringkasan, kutipan pendek, kalimat bukti harga, dan sidik SHA-256 isi artikel.
 Isi lengkap artikel tidak disimpan karena hak ciptanya milik penerbit. Hasil ada di data/berita/berita.json.
@@ -67,6 +72,7 @@ BAWAAN = {
     "hormati_robots": True,
     "jeda_detik": 2.0,
     "maks_menit": 8,  # batas waktu mengunduh halaman supaya pembaruan harian tidak tertahan
+    "maks_nilai_harga": 60,  # harga dari berita yang dinilai AI per jalan (berita terbaru dulu); sisanya dinilai pada jalan berikutnya
     "kueri": [
         "harga pangan Bengkulu Tengah",
         "harga cabai bawang Bengkulu",
@@ -793,6 +799,120 @@ def ringkas_dengan_ai(konf: Konfigurasi, daftar: list[dict], klien: dict | None,
     return hasil, info
 
 
+# ---------------------------------------------------------------- AI menilai harga yang dibaca mesin
+
+SISTEM_HARGA = """Anda adalah analis harga untuk BPS Kabupaten Bengkulu Tengah (Provinsi Bengkulu, Indonesia). Mesin sudah membaca \
+angka harga dari kalimat berita. Tugas Anda menilai setiap angka itu hanya dari judul, wilayah, dan kalimat beritanya.
+
+Untuk setiap nomor, isi:
+- jenis: "pasar" bila angka itu harga jual barang di pasar atau pedagang pada saat berita ditulis; "program" bila harga di pasar \
+murah, operasi pasar, bazar, SPHP, atau program pemerintah lain; "rata_rata" bila harga rata-rata dari lembaga (BPS, Bapanas, \
+panel harga, dinas); "lama" bila harga sebelumnya atau pada waktu lalu (misalnya "dari semula", "sebelumnya", "pekan lalu"); \
+"bukan_harga" bila angka itu besar kenaikan, ongkos, nilai bantuan, harga eceran tertinggi, atau bukan harga barang.
+- komoditas_cocok: true bila angka itu memang harga barang yang disebut mesin, false bila harga barang lain.
+- komoditas: nama barang yang harganya disebut, persis seperti tertulis di kalimat.
+- lingkup: "bengkulu tengah", "wilayah lain di provinsi bengkulu", "provinsi bengkulu", "luar provinsi bengkulu", "nasional", \
+atau "tidak jelas".
+- alasan: paling banyak 15 kata, bahasa Indonesia sederhana.
+
+Aturan wajib: jangan menulis angka apa pun di alasan dan jangan menebak. Bila ragu, pilih "tidak jelas" untuk lingkup."""
+
+FORMAT_HARGA = """
+
+Balas HANYA dengan satu objek JSON (tanpa teks lain) berbentuk:
+{"harga": [{"no": 1, "jenis": "pasar|program|rata_rata|lama|bukan_harga", "komoditas_cocok": true, "komoditas": "", \
+"lingkup": "", "alasan": ""}]}"""
+
+JENIS_HARGA = {"pasar": "harga pasar", "program": "harga program pemerintah", "rata_rata": "harga rata-rata lembaga",
+               "lama": "harga lama", "bukan_harga": "bukan harga barang"}
+LINGKUP_PERAN = {"bengkulu tengah": "target", "wilayah lain di provinsi bengkulu": "pembanding", "provinsi bengkulu": "provinsi",
+                 "luar provinsi bengkulu": "luar daerah", "nasional": "nasional", "tidak jelas": "tidak jelas"}
+UKURAN_GELOMBANG_HARGA = 15
+
+
+def _wilayah_berita(b: dict) -> str:
+    w = b.get("wilayah") or {}
+    nama = (["Bengkulu Tengah"] if w.get("target") else []) + [x.title() for x in w.get("pembanding") or []]
+    return ", ".join(nama) or ("Provinsi Bengkulu" if w.get("provinsi") else "tidak disebut")
+
+
+def _pesan_harga(daftar: list[tuple[dict, dict]]) -> str:
+    bagian = []
+    for no, (b, h) in enumerate(daftar, 1):
+        rupiah = f"{int(h['nilai']):,}".replace(",", ".")
+        bagian.append(f"[{no}] Judul: {b.get('judul', '')}\nSumber: {b.get('sumber') or '-'}, tanggal {b.get('tanggal') or '-'}\n"
+                      f"Wilayah yang disebut di berita: {_wilayah_berita(b)}\nKalimat: \"{h['bukti']}\"\n"
+                      f"Dibaca mesin: {h['komoditas']} Rp{rupiah} per {h['satuan']}")
+    return "HARGA YANG PERLU DINILAI:\n\n" + "\n\n".join(bagian)
+
+
+def _nama_komoditas(konf: Konfigurasi, kode_k: str) -> str:
+    return next((v.komoditas for v in konf.varian.values() if v.kode_komoditas == kode_k), kode_k)
+
+
+def terapkan_cek_ai(konf: Konfigurasi, b: dict, h: dict, r: dict, info: dict, hari: date, alias=None) -> bool:
+    """Pasang hasil penilaian AI pada satu harga. Jawaban yang tidak sesuai format diabaikan. AI tidak bisa mengubah angka:
+    ia hanya boleh menilai jenis, wilayah, dan barangnya. Koreksi barang hanya diterima bila nama barang baru ada di kalimat bukti."""
+    jenis = str(r.get("jenis") or "").strip().lower().replace(" ", "_").replace("-", "_")
+    if jenis not in JENIS_HARGA:
+        return False
+    lingkup = str(r.get("lingkup") or "").strip().lower()
+    cocok = r.get("komoditas_cocok") if isinstance(r.get("komoditas_cocok"), bool) else None
+    alasan = bersihkan_angka(str(r.get("alasan") or ""), f"{h['bukti']} {b.get('judul', '')}")[0][:200]
+    cek = {"jenis": jenis, "lingkup": lingkup if lingkup in LINGKUP_PERAN else "tidak jelas", "komoditas_cocok": cocok,
+           "alasan": alasan, "penyedia": info.get("penyedia", ""), "tanggal": hari.isoformat()}
+    nama = _norm(str(r.get("komoditas") or ""))
+    bukti = _norm(h["bukti"])
+    if cocok is False and nama and h["satuan"] in ("kg", "liter") and h["kode_komoditas"] not in KOMODITAS_TAMBAHAN:
+        baru = next(((a, v, k) for a, v, k in (alias or _alias_harga(konf)) if k not in KOMODITAS_TAMBAHAN
+                     and _punya(a, nama) and _punya(a, bukti)), None)
+        # Barang lain (mis. cabai rawit, bukan cabai merah), atau jenis lain dari barang yang sama (mis. cabai merah keriting).
+        if baru and (baru[2] != h["kode_komoditas"] or (baru[1] and baru[1] != h.get("kode_varian"))):
+            batas = _batas(konf, baru[1], baru[2])
+            h["asal_mesin"] = {k: h[k] for k in ("komoditas", "kode_komoditas", "kode_varian")}
+            h.update(komoditas=_nama_komoditas(konf, baru[2]), kode_komoditas=baru[2], kode_varian=baru[1])
+            if batas is None or not batas[0] <= h["nilai"] <= batas[1]:
+                h["status"] = "ditolak: di luar batas wajar"
+            cek["dikoreksi"] = True
+    h["cek_ai"] = cek
+    return True
+
+
+def periksa_harga_dengan_ai(konf: Konfigurasi, daftar_berita: list[dict], klien: dict | None, tulis, hari: date, sejak: date,
+                            maks: int) -> tuple[int, dict]:
+    """AI menilai harga yang belum pernah dinilai (berita terbaru dulu, paling banyak `maks` per jalan). Mengembalikan
+    (jumlah harga yang dinilai, info penyedia)."""
+    antre = [(b, h) for b in daftar_berita if (b.get("tanggal") or (b.get("diakses") or "")[:10]) >= sejak.isoformat()
+             for h in b.get("harga", []) if h.get("status") == "kandidat" and "cek_ai" not in h]
+    antre.sort(key=lambda x: x[0].get("tanggal") or (x[0].get("diakses") or "")[:10], reverse=True)
+    antre = antre[:max(0, maks)]
+    alias = _alias_harga(konf)
+    dinilai, info = 0, {}
+    for i in range(0, len(antre), UKURAN_GELOMBANG_HARGA):
+        gelombang = antre[i:i + UKURAN_GELOMBANG_HARGA]
+        try:
+            jawab, info = tanya_ai(konf, SISTEM_HARGA, _pesan_harga(gelombang), FORMAT_HARGA, klien)
+        except Exception as e:  # noqa: BLE001
+            tulis(f"Penilaian AI untuk {len(gelombang)} harga gagal, harga itu dinilai dengan aturan saja: {e}", "peringatan")
+            break
+        n = 0
+        daftar_jawab = jawab.get("harga") if isinstance(jawab, dict) else None
+        for r in daftar_jawab if isinstance(daftar_jawab, list) else []:
+            if not isinstance(r, dict):
+                continue
+            try:
+                no = int(r.get("no"))
+            except (TypeError, ValueError):
+                continue
+            if 1 <= no <= len(gelombang):
+                b, h = gelombang[no - 1]
+                if "cek_ai" not in h and terapkan_cek_ai(konf, b, h, r, info, hari, alias):
+                    n += 1
+        dinilai += n
+        tulis(f"{info['penyedia']} ({info['model']}) menilai {n} dari {len(gelombang)} harga yang dibaca dari berita.")
+    return dinilai, info
+
+
 def dampak_dari_tag(tag: list[str]) -> str:
     naik, turun = "harga_naik" in tag, "harga_turun" in tag
     return "naik" if naik and not turun else "turun" if turun and not naik else "tidak jelas"
@@ -811,9 +931,16 @@ def kesimpulan_ekstraktif(baru: list[dict], arsip: list[dict], umur: int, tangga
             kom = Counter(k for b in baru if kode in b["tag"] for k in b["komoditas"]).most_common(2)
             tambah = f" ({', '.join(k for k, _ in kom)})" if kom else ""
             baris.append(f"{hitung[kode]} berita menyebut {tag_label[kode]}{tambah}.")
-    kandidat = sum(1 for b in baru for h in b["harga"] if h["status"] == "kandidat")
+    kandidat = [h for b in baru for h in b["harga"] if h["status"] == "kandidat"]
     if kandidat:
-        baris.append(f"{kandidat} kandidat harga dari berita menunggu verifikasi analis.")
+        dicek = [h for h in kandidat if h.get("cek_ai")]
+        dibuang = sum(1 for h in dicek if h["cek_ai"]["jenis"] in ("lama", "bukan_harga") or
+                      (h["cek_ai"].get("komoditas_cocok") is False and not h["cek_ai"].get("dikoreksi")))
+        if dicek:
+            baris.append(f"{len(kandidat)} harga baru dibaca dari berita. AI sudah menilai {len(dicek)} di antaranya: "
+                         f"{len(dicek) - dibuang} bisa dipakai sebagai penunjuk dan {dibuang} tidak dipakai.")
+        else:
+            baris.append(f"{len(kandidat)} harga baru dibaca dari berita dan dinilai dengan aturan otomatis.")
     if not baru:
         baris = ["Tidak ada berita baru yang relevan hari ini."]
     poin = [f"{b['judul']} ({b['sumber'] or 'sumber tidak diketahui'})" for b in sorted(baru, key=lambda x: -x["skor"])[:3]]
@@ -981,6 +1108,13 @@ def jalankan(konf: Konfigurasi, *, klien: dict | None = None, tanpa_ai: bool = F
     semua = sorted(baru + lama, key=lambda b: (b["tanggal"] or b["diakses"][:10], b["skor"]), reverse=True)[:MAKS_ARSIP]
     relevan_umur = [b for b in semua if (b["tanggal"] or b["diakses"][:10]) >= batas_tgl.isoformat()]
 
+    # AI menilai tiap harga yang dibaca mesin (termasuk harga di arsip yang belum sempat dinilai)
+    harga_dinilai = 0
+    if pakai_ai:
+        harga_dinilai, info_harga = periksa_harga_dengan_ai(konf, relevan_umur, klien.get("ai"), tulis, hari, batas_tgl,
+                                                            int(cfg.get("maks_nilai_harga", 60)))
+        info_ai = info_ai or info_harga
+
     kesimpulan = kesimpulan_dengan_ai(konf, baru, relevan_umur, umur, hari, klien.get("ai"), tulis) if pakai_ai else kesimpulan_ekstraktif(baru, relevan_umur, umur, hari)
     riwayat = [k for k in arsip_lama.get("kesimpulan", []) if k.get("tanggal") != hari.isoformat()]
     kesimpulan_semua = ([kesimpulan] + riwayat)[:MAKS_KESIMPULAN]
@@ -992,7 +1126,7 @@ def jalankan(konf: Konfigurasi, *, klien: dict | None = None, tanpa_ai: bool = F
         "kesimpulan": kesimpulan_semua,
         "berita": semua,
         "statistik": {"hasil_pencarian": len(mentah), "setelah_duplikat": len(unik), "berita_baru": len(baru), "total_arsip": len(semua),
-                      "kandidat_harga_baru": harga_kandidat, "isi_tidak_terbaca": tak_terbaca,
+                      "kandidat_harga_baru": harga_kandidat, "harga_dinilai_ai": harga_dinilai, "isi_tidak_terbaca": tak_terbaca,
                       "penyedia_ai": info_ai.get("penyedia", ""), "model_ai": info_ai.get("model", "")},
         "galat": galat[:20],
         "log": langkah,
@@ -1022,63 +1156,309 @@ def simpan(konf: Konfigurasi, hasil: dict) -> Path:
     return p
 
 
-URUT_PERAN = ["target", "pembanding", "provinsi", "nasional", "tidak jelas"]
+URUT_PERAN = ["target", "pembanding", "provinsi", "tidak jelas", "nasional", "luar daerah"]
 AMBANG_BEDA_JAUH_PERSEN = 15.0
+AMBANG_SESUAI_PERSEN = 5.0
+JENDELA_ACUAN_HARI = 7
+SKOR_WILAYAH = {"target": 30, "pembanding": 20, "provinsi": 15, "tidak jelas": 5, "nasional": 0, "luar daerah": 0}
+LABEL_PERAN = {"target": "Bengkulu Tengah", "pembanding": "wilayah tetangga", "provinsi": "Provinsi Bengkulu", "tidak jelas": "wilayah tidak jelas",
+               "nasional": "nasional", "luar daerah": "luar Provinsi Bengkulu"}
+LABEL_PUTUSAN = {
+    "sesuai": "Sesuai harga resmi",
+    "lebih_mahal": "Sedikit lebih mahal dari harga resmi",
+    "lebih_murah": "Sedikit lebih murah dari harga resmi",
+    "jauh_lebih_mahal": "Jauh lebih mahal dari harga resmi, perlu dicek",
+    "jauh_lebih_murah": "Jauh lebih murah dari harga resmi, perlu dicek",
+    "harga_program": "Harga program pemerintah, bukan harga pasar",
+    "lain_wilayah": "Harga di luar Bengkulu, hanya gambaran",
+    "tanpa_pembanding": "Belum ada harga resmi pembanding",
+    "tidak_dipakai": "Tidak dipakai",
+}
 
 
-def ringkasan_harga(konf: Konfigurasi, berita: list[dict], harga_utama: dict[str, float] | None, hari: date, umur: int = 14) -> list[dict]:
-    """Harga kandidat dari berita, dikelompokkan per komoditas: rentang, wilayah paling relevan, arah, alasan di berita, dan (bila ada)
-    selisih terhadap harga utama sistem. Hanya penunjuk; tidak pernah masuk deret harga resmi."""
+def _tanggal_berita(b: dict) -> str:
+    return b.get("tanggal") or (b.get("diakses") or "")[:10]
+
+
+def _median(nilai: list[float]) -> float:
+    x = sorted(nilai)
+    return x[len(x) // 2] if len(x) % 2 else (x[len(x) // 2 - 1] + x[len(x) // 2]) / 2
+
+
+def _peran_akhir(h: dict) -> str:
+    """Wilayah tempat harga berlaku. Wilayah yang disebut langsung di kalimat bukti dipegang; bila kalimatnya tidak menyebut
+    wilayah, dipakai penilaian AI (yang juga membaca judul berita)."""
+    peran = h.get("peran_wilayah") or "tidak jelas"
+    cek = h.get("cek_ai") or {}
+    if peran == "tidak jelas" and cek.get("lingkup") in LINGKUP_PERAN:
+        return LINGKUP_PERAN[cek["lingkup"]]
+    return peran
+
+
+def _kode_wilayah_pembanding(konf: Konfigurasi, teks: str) -> str | None:
+    t = _norm(teks)
+    for kode, w in konf.wilayah.items():
+        if w.peran.startswith("pembanding") and w.peran != "pembanding_provinsi":
+            inti = re.sub(r"^(kabupaten|provinsi)\s+", "", w.nama.strip(), flags=re.I).lower()
+            if _punya(inti, t):
+                return kode
+    return None
+
+
+def _nilai_pada(deret: dict[str, float], tgl: str) -> tuple[str, float] | None:
+    """Harga resmi pada tanggal berita: yang terakhir pada atau sebelum tanggal itu (paling lama 7 hari sebelumnya), kalau
+    tidak ada, yang paling dekat sesudahnya (paling lama 7 hari)."""
+    try:
+        t = date.fromisoformat(tgl)
+    except ValueError:
+        return None
+    for selisih in [-d for d in range(JENDELA_ACUAN_HARI + 1)] + list(range(1, JENDELA_ACUAN_HARI + 1)):
+        k = (t + timedelta(days=selisih)).isoformat()
+        if deret.get(k) is not None:
+            return k, float(deret[k])
+    return None
+
+
+def deret_acuan(harga_utama: dict[str, float] | None, deret_resmi: dict | None, hari: date) -> dict:
+    """Deret harga resmi untuk penilaian: {kunci wilayah: {varian: {"nama", "nilai": {tanggal: harga}}}}. Tanpa deret lengkap,
+    harga terakhir sistem dipakai sebagai harga Bengkulu Tengah pada hari ini."""
+    if deret_resmi:
+        return deret_resmi
+    return {"target": {k: {"nama": "harga terakhir sistem", "nilai": {hari.isoformat(): v}} for k, v in (harga_utama or {}).items() if v}}
+
+
+def _acuan_harga(konf: Konfigurasi, acuan: dict, h: dict, peran: str, tgl: str, teks_wilayah: str) -> dict | None:
+    """Harga resmi pembanding yang paling sepadan: wilayah yang sama bila deretnya ada (Kota Bengkulu, provinsi), kalau tidak
+    harga Bengkulu Tengah. Untuk harga per komoditas (tanpa varian) dipakai rentang semua varian komoditas itu."""
+    if h["satuan"] not in ("kg", "liter") or h["kode_komoditas"] in KOMODITAS_TAMBAHAN:
+        return None
+    varian = [h["kode_varian"]] if h.get("kode_varian") else [v.kode for v in konf.varian.values() if v.kode_komoditas == h["kode_komoditas"]]
+    kunci = ["target"]
+    if peran == "pembanding":
+        kode_w = _kode_wilayah_pembanding(konf, teks_wilayah)
+        kunci = ([kode_w] if kode_w else []) + kunci
+    elif peran == "provinsi":
+        kunci = [k for k, w in konf.wilayah.items() if w.peran == "pembanding_provinsi"] + kunci
+    for k in kunci:
+        nilai, nama, tgl_acuan, pengganti = [], [], [], False
+        for v in varian:
+            d = (acuan.get(k) or {}).get(v)
+            ada = _nilai_pada(d["nilai"], tgl) if d else None
+            if ada:
+                nilai.append(ada[1])
+                tgl_acuan.append(ada[0])
+                nama.append(d["nama"])
+                pengganti = pengganti or bool(d.get("pengganti"))
+        if nilai:
+            return {"wilayah": k, "nama": Counter(nama).most_common(1)[0][0], "varian": varian[0] if len(varian) == 1 else None,
+                    "jumlah_varian": len(nilai), "minimum": round(min(nilai)), "maksimum": round(max(nilai)), "tanggal": max(tgl_acuan),
+                    "sewilayah": k != "target" or (peran == "target" and not pengganti)}
+    return None
+
+
+def _selisih_rentang(nilai: float, bawah: float, atas: float) -> float:
+    """Selisih persen terhadap rentang harga resmi: 0 bila di dalam rentang, kalau tidak terhadap batas terdekat."""
+    if nilai > atas:
+        return round((nilai / atas - 1) * 100, 1)
+    if nilai < bawah:
+        return round((nilai / bawah - 1) * 100, 1)
+    return 0.0
+
+
+def _putusan_selisih(selisih: float) -> str:
+    if abs(selisih) <= AMBANG_SESUAI_PERSEN:
+        return "sesuai"
+    arah = "lebih_mahal" if selisih > 0 else "lebih_murah"
+    return f"jauh_{arah}" if abs(selisih) > AMBANG_BEDA_JAUH_PERSEN else arah
+
+
+RE_KATA_LAMA = re.compile(r"\b(sebelumnya|semula|patokan lama|harga lama|pekan lalu|minggu lalu|bulan lalu)\b(?P<sisa>(?:[^.;]|\.(?=\d))*)$", re.I)
+RE_KATA_KINI = re.compile(r"\b(menjadi|kini|sekarang|saat ini)\b", re.I)
+
+
+def harga_lama_menurut_kalimat(h: dict) -> bool:
+    """Cadangan tanpa AI: angka didahului kata seperti "sebelumnya" atau "dari semula" (dalam 45 karakter, tanpa "menjadi" atau
+    "kini" di antaranya) adalah harga lama, misalnya "naik ke Rp75 ribu dari semula Rp60 ribu per kilogram"."""
+    bukti = h.get("bukti") or ""
+    for m in RE_HARGA.finditer(bukti):
+        if round(_nilai_rupiah(m)) != round(h["nilai"]):
+            continue
+        lama = RE_KATA_LAMA.search(bukti[max(0, m.start() - 45):m.start()])
+        if lama and not RE_KATA_KINI.search(lama.group("sisa")):
+            return True
+    return False
+
+
+def _alasan_tidak_dipakai(h: dict) -> str | None:
+    if h.get("status") != "kandidat":
+        return "Angkanya di luar batas wajar harga komoditas ini."
+    cek = h.get("cek_ai") or {}
+    if not cek and harga_lama_menurut_kalimat(h):
+        return "Kalimatnya menyebut ini harga sebelumnya, bukan harga saat berita ditulis."
+    if cek.get("jenis") == "lama":
+        return cek.get("alasan") or "Menurut AI, ini harga lama, bukan harga saat berita ditulis."
+    if cek.get("jenis") == "bukan_harga":
+        return cek.get("alasan") or "Menurut AI, angka ini bukan harga barang."
+    if cek.get("komoditas_cocok") is False and not cek.get("dikoreksi"):
+        return cek.get("alasan") or f"Menurut AI, angka ini bukan harga {h['komoditas'].lower()}."
+    return None
+
+
+def nilai_harga(konf: Konfigurasi, daftar_berita: list[dict], acuan: dict, hari: date, umur: int = 14) -> dict[tuple[str, int], dict]:
+    """Penilaian otomatis setiap harga dari berita dalam `umur` hari terakhir: putusan terhadap harga resmi pada tanggal berita
+    dan skor keyakinan 0-100. Kunci hasil (id atau url berita, urutan harga)."""
     batas = (hari - timedelta(days=umur)).isoformat()
-    kelompok: dict[tuple[str, str], list[dict]] = {}
-    for b in berita:
-        tgl = b.get("tanggal") or (b.get("diakses") or "")[:10]
+    hasil: dict[tuple[str, int], dict] = {}
+    pakai: list[tuple[tuple[str, int], dict, str]] = []
+    for b in daftar_berita:
+        tgl = _tanggal_berita(b)
         if tgl < batas:
             continue
-        for h in b.get("harga", []):
-            if h.get("status") == "kandidat":
-                kelompok.setdefault((h["kode_komoditas"], h["satuan"]), []).append(
-                    {**h, "tanggal": tgl, "judul": b.get("judul", ""), "url": b.get("url", ""), "sumber": b.get("sumber", ""), "tag": b.get("tag", [])})
-    hasil = []
-    for (kode_k, satuan), daftar in kelompok.items():
-        nilai = sorted(x["nilai"] for x in daftar)
-        peran = lambda x: URUT_PERAN.index(x["peran_wilayah"]) if x.get("peran_wilayah") in URUT_PERAN else len(URUT_PERAN)  # noqa: E731
-        terbaik = sorted(daftar, key=lambda x: (peran(x), [-ord(c) for c in x["tanggal"]]))[0]
-        sebanding = [x for x in daftar if peran(x) == peran(terbaik)]
-        nilai_w = sorted(x["nilai"] for x in sebanding)
-        median = nilai_w[len(nilai_w) // 2] if len(nilai_w) % 2 else (nilai_w[len(nilai_w) // 2 - 1] + nilai_w[len(nilai_w) // 2]) / 2
-        naik, turun = sum(1 for x in daftar if x.get("arah") == "naik"), sum(1 for x in daftar if x.get("arah") == "turun")
-        alasan = [TAG[t][0] for t in dict.fromkeys(t for x in daftar for t in x["tag"]) if t in TAG and t not in ("harga_naik", "harga_turun")]
-        banding = None
-        if harga_utama and satuan in ("kg", "liter"):
-            varian = sorted({x["kode_varian"] for x in daftar if x.get("kode_varian")})
-            acuan = [harga_utama[v] for v in varian if v in harga_utama] or \
-                    [harga_utama[v.kode] for v in konf.varian.values() if v.kode_komoditas == kode_k and v.kode in harga_utama]
-            if acuan:
-                acuan.sort()
-                utama = acuan[len(acuan) // 2] if len(acuan) % 2 else (acuan[len(acuan) // 2 - 1] + acuan[len(acuan) // 2]) / 2
-                selisih = round((median / utama - 1) * 100, 1)
-                banding = {"dasar": varian[0] if len(varian) == 1 else "median varian komoditas", "harga_utama": round(utama), "selisih_persen": selisih,
-                           "beda_jauh": abs(selisih) > AMBANG_BEDA_JAUH_PERSEN}
-        hasil.append({
-            "kode_komoditas": kode_k, "komoditas": terbaik["komoditas"], "satuan": satuan, "jumlah_kandidat": len(daftar),
-            "jumlah_berita": len({x["url"] for x in daftar}), "wilayah": terbaik.get("peran_wilayah", "tidak jelas"),
-            "median": round(median), "minimum": nilai[0], "maksimum": nilai[-1], "tanggal_terbaru": max(x["tanggal"] for x in daftar),
-            "arah": "naik" if naik > turun else "turun" if turun > naik else "belum jelas", "alasan": alasan[:3], "banding": banding,
-            "contoh": {k: terbaik.get(k) for k in ("nilai", "bukti", "url", "judul", "sumber", "pasar", "tanggal")},
-        })
-    hasil.sort(key=lambda x: (URUT_PERAN.index(x["wilayah"]) if x["wilayah"] in URUT_PERAN else 9, -x["jumlah_berita"], x["komoditas"]))
+        kunci_b = b.get("id") or b.get("url", "")
+        for i, h in enumerate(b.get("harga", [])):
+            peran = _peran_akhir(h)
+            cek = h.get("cek_ai") or {}
+            p = {"peran": peran, "wilayah": LABEL_PERAN.get(peran, peran), "dinilai_ai": bool(cek), "acuan": None, "selisih_persen": None}
+            tolak = _alasan_tidak_dipakai(h)
+            if tolak:
+                hasil[(kunci_b, i)] = {**p, "putusan": "tidak_dipakai", "label": LABEL_PUTUSAN["tidak_dipakai"], "alasan": tolak,
+                                       "keyakinan": None, "tingkat": None, "faktor": []}
+                continue
+            acuan_h = None
+            if peran in ("nasional", "luar daerah"):
+                putusan = "lain_wilayah"
+            elif cek.get("jenis") == "program":
+                putusan = "harga_program"
+            else:
+                acuan_h = _acuan_harga(konf, acuan, h, peran, tgl, f"{h.get('bukti', '')} {b.get('judul', '')}")
+                if acuan_h:
+                    p["selisih_persen"] = _selisih_rentang(h["nilai"], acuan_h["minimum"], acuan_h["maksimum"])
+                    putusan = _putusan_selisih(p["selisih_persen"])
+                else:
+                    putusan = "tanpa_pembanding"
+            p.update(putusan=putusan, label=LABEL_PUTUSAN[putusan], acuan=acuan_h, alasan=cek.get("alasan", ""))
+            # keyakinan: seberapa layak angka ini dipercaya sebagai penunjuk, terlepas dari cocok tidaknya dengan harga resmi
+            faktor = []
+            if cek:
+                faktor.append(("Diperiksa AI" + (" (barangnya dikoreksi)" if cek.get("dikoreksi") else ""), 30))
+            else:
+                faktor.append(("Belum diperiksa AI, hanya aturan", 10))
+            faktor.append((f"Wilayah: {LABEL_PERAN.get(peran, peran)}", SKOR_WILAYAH.get(peran, 0)))
+            umur_hari = max(0, (hari - date.fromisoformat(tgl)).days) if re.match(r"\d{4}-\d{2}-\d{2}$", tgl) else umur
+            faktor.append((f"Berita {umur_hari} hari lalu" if umur_hari else "Berita hari ini",
+                           20 if umur_hari <= 3 else 14 if umur_hari <= 7 else 6 if umur_hari <= 14 else 0))
+            jenis = cek.get("jenis")
+            if jenis == "pasar" or (not cek and h.get("pasar")):
+                faktor.append(("Harga jual di pasar" + (f" ({h['pasar']})" if h.get("pasar") else ""), 10))
+            elif jenis == "rata_rata" or not cek:
+                faktor.append(("Harga rata-rata atau jenis harga belum jelas", 5))
+            else:
+                faktor.append(("Harga program, bukan harga pasar", 0))
+            p["faktor"] = faktor
+            hasil[(kunci_b, i)] = p
+            pakai.append(((kunci_b, i), h, b.get("url", "")))
+    # dukungan: berita lain (tautan dan kalimat berbeda) menyebut harga komoditas yang sama dengan selisih paling banyak 10%
+    for kunci, h, url in pakai:
+        p = hasil[kunci]
+        dukung = {u for k2, h2, u in pakai if u != url and h2["bukti"] != h["bukti"] and h2["kode_komoditas"] == h["kode_komoditas"]
+                  and h2["satuan"] == h["satuan"] and hasil[k2]["putusan"] not in ("lain_wilayah", "harga_program")
+                  and abs(h["nilai"] / h2["nilai"] - 1) <= 0.10}
+        p["faktor"].append((f"Didukung {len(dukung)} berita lain" if dukung else "Belum ada berita lain yang menyebut harga serupa",
+                            10 if dukung else 0))
+        p["keyakinan"] = sum(n for _, n in p["faktor"])
+        p["tingkat"] = "tinggi" if p["keyakinan"] >= 70 else "sedang" if p["keyakinan"] >= 45 else "rendah"
+        p["faktor"] = [{"teks": t, "nilai": n} for t, n in p["faktor"]]
     return hasil
 
 
-def untuk_situs(konf: Konfigurasi, harga_utama: dict[str, float] | None = None, hari: date | None = None) -> dict:
-    """Data untuk halaman Berita Lokal (site/data/berita.json): arsip, kesimpulan, statistik, dan penjelasan batasnya."""
+def ringkasan_harga(konf: Konfigurasi, berita: list[dict], harga_utama: dict[str, float] | None, hari: date, umur: int = 14,
+                    deret_resmi: dict | None = None, penilaian: dict | None = None) -> list[dict]:
+    """Harga dari berita yang layak dipakai, dikelompokkan per komoditas: rentang, wilayah paling relevan, arah, alasan di berita,
+    putusan terhadap harga resmi, dan keyakinan. Harga yang tidak dipakai (harga lama, barang lain, di luar batas wajar) tidak
+    ikut dihitung. Hanya penunjuk; tidak pernah masuk deret harga resmi."""
+    acuan = deret_acuan(harga_utama, deret_resmi, hari)
+    penilaian = penilaian if penilaian is not None else nilai_harga(konf, berita, acuan, hari, umur)
+    kelompok: dict[tuple[str, str], list[dict]] = {}
+    for b in berita:
+        kunci_b = b.get("id") or b.get("url", "")
+        for i, h in enumerate(b.get("harga", [])):
+            p = penilaian.get((kunci_b, i))
+            if not p or p["putusan"] == "tidak_dipakai":
+                continue
+            kelompok.setdefault((h["kode_komoditas"], h["satuan"]), []).append(
+                {**h, "p": p, "tanggal": _tanggal_berita(b), "judul": b.get("judul", ""), "url": b.get("url", ""), "sumber": b.get("sumber", ""),
+                 "tag": b.get("tag", [])})
+    hasil = []
+    for (kode_k, satuan), daftar in kelompok.items():
+        nilai = sorted(x["nilai"] for x in daftar)
+
+        def golongan(x):  # wilayah paling relevan dulu; harga pasar didahulukan dari harga program pemerintah
+            return (URUT_PERAN.index(x["p"]["peran"]) if x["p"]["peran"] in URUT_PERAN else len(URUT_PERAN), x["p"]["putusan"] == "harga_program")
+        terbaik = sorted(daftar, key=lambda x: (golongan(x), -(x["p"]["keyakinan"] or 0), [-ord(c) for c in x["tanggal"]]))[0]
+        sebanding = [x for x in daftar if golongan(x) == golongan(terbaik)]
+        median = _median([x["nilai"] for x in sebanding])
+        naik, turun = sum(1 for x in daftar if x.get("arah") == "naik"), sum(1 for x in daftar if x.get("arah") == "turun")
+        alasan = [TAG[t][0] for t in dict.fromkeys(t for x in daftar for t in x["tag"]) if t in TAG and t not in ("harga_naik", "harga_turun")]
+        banding = None
+        dibanding = [x for x in sebanding if x["p"].get("acuan")]
+        if dibanding:
+            # selisih kelompok = median selisih tiap harga terhadap harga resmi pada tanggal beritanya masing-masing
+            selisih = round(_median([x["p"]["selisih_persen"] for x in dibanding]), 1)
+            a0 = max(dibanding, key=lambda x: x["p"]["acuan"]["tanggal"])["p"]["acuan"]
+            banding = {"dasar": a0["nama"], "varian": a0["varian"],
+                       "harga_utama": round(_median([(x["p"]["acuan"]["minimum"] + x["p"]["acuan"]["maksimum"]) / 2 for x in dibanding])),
+                       "minimum": min(x["p"]["acuan"]["minimum"] for x in dibanding), "maksimum": max(x["p"]["acuan"]["maksimum"] for x in dibanding),
+                       "tanggal": a0["tanggal"], "selisih_persen": selisih, "beda_jauh": abs(selisih) > AMBANG_BEDA_JAUH_PERSEN,
+                       "sewilayah": a0["sewilayah"]}
+        putusan = _putusan_selisih(banding["selisih_persen"]) if banding else terbaik["p"]["putusan"]
+        keyakinan = max(x["p"]["keyakinan"] or 0 for x in sebanding)
+        hasil.append({
+            "kode_komoditas": kode_k, "komoditas": terbaik["komoditas"], "satuan": satuan, "jumlah_kandidat": len(daftar),
+            "jumlah_berita": len({x["url"] for x in daftar}), "wilayah": terbaik["p"]["peran"],
+            "median": round(median), "minimum": nilai[0], "maksimum": nilai[-1], "tanggal_terbaru": max(x["tanggal"] for x in daftar),
+            "arah": "naik" if naik > turun else "turun" if turun > naik else "belum jelas", "alasan": alasan[:3], "banding": banding,
+            "putusan": putusan, "label_putusan": LABEL_PUTUSAN[putusan], "keyakinan": keyakinan,
+            "tingkat": "tinggi" if keyakinan >= 70 else "sedang" if keyakinan >= 45 else "rendah",
+            "dinilai_ai": sum(1 for x in daftar if x["p"]["dinilai_ai"]),
+            "contoh": {k: terbaik.get(k) for k in ("nilai", "bukti", "url", "judul", "sumber", "pasar", "tanggal")},
+        })
+    hasil.sort(key=lambda x: (URUT_PERAN.index(x["wilayah"]) if x["wilayah"] in URUT_PERAN else 9, -x["keyakinan"], -x["jumlah_berita"], x["komoditas"]))
+    return hasil
+
+
+def ringkas_penilaian(penilaian: dict) -> dict:
+    """Hitungan putusan untuk kotak ringkasan di halaman Berita Lokal."""
+    hitung = Counter(p["putusan"] for p in penilaian.values())
+    dipakai = [p for p in penilaian.values() if p["putusan"] != "tidak_dipakai"]
+    return {"jumlah": len(penilaian), "dinilai_ai": sum(1 for p in penilaian.values() if p["dinilai_ai"]),
+            "dipakai": len(dipakai), "tidak_dipakai": hitung.get("tidak_dipakai", 0),
+            "sesuai": hitung.get("sesuai", 0), "lebih_mahal": hitung.get("lebih_mahal", 0) + hitung.get("jauh_lebih_mahal", 0),
+            "lebih_murah": hitung.get("lebih_murah", 0) + hitung.get("jauh_lebih_murah", 0),
+            "perlu_dicek": hitung.get("jauh_lebih_mahal", 0) + hitung.get("jauh_lebih_murah", 0),
+            "keyakinan_tinggi": sum(1 for p in dipakai if p.get("tingkat") == "tinggi"), "per_putusan": dict(hitung)}
+
+
+def untuk_situs(konf: Konfigurasi, harga_utama: dict[str, float] | None = None, hari: date | None = None,
+                deret_resmi: dict | None = None) -> dict:
+    """Data untuk halaman Berita Lokal (site/data/berita.json): arsip dengan penilaian tiap harga, kesimpulan, statistik, dan
+    penjelasan batasnya."""
     d = muat(konf)
     hari = hari or datetime.now(WIB).date()
     umur = int(pengaturan_berita(konf)["umur_maks_hari"])
-    return {"diperbarui": d.get("diperbarui"), "kesimpulan": d.get("kesimpulan", []), "berita": d.get("berita", []),
+    daftar = d.get("berita", [])
+    acuan = deret_acuan(harga_utama, deret_resmi, hari)
+    penilaian = nilai_harga(konf, daftar, acuan, hari, umur)
+    berita_situs = []
+    for b in daftar:
+        kunci_b = b.get("id") or b.get("url", "")
+        harga = [{**h, "penilaian": penilaian[(kunci_b, i)]} if (kunci_b, i) in penilaian else h for i, h in enumerate(b.get("harga", []))]
+        berita_situs.append({**b, "harga": harga})
+    return {"diperbarui": d.get("diperbarui"), "kesimpulan": d.get("kesimpulan", []), "berita": berita_situs,
             "statistik": d.get("statistik", {}), "galat": d.get("galat", []),
-            "ringkasan_harga": ringkasan_harga(konf, d.get("berita", []), harga_utama, hari, umur),
-            "ambang_beda_jauh_persen": AMBANG_BEDA_JAUH_PERSEN,
-            "label_tag": {k: v[0] for k, v in TAG.items()},
-            "catatan": "Harga di berita hanyalah penunjuk. Angkanya belum diverifikasi dan tidak masuk deret harga resmi."}
+            "ringkasan_harga": ringkasan_harga(konf, daftar, harga_utama, hari, umur, deret_resmi, penilaian),
+            "penilaian": ringkas_penilaian(penilaian), "umur_hari": umur,
+            "ambang_beda_jauh_persen": AMBANG_BEDA_JAUH_PERSEN, "ambang_sesuai_persen": AMBANG_SESUAI_PERSEN,
+            "label_tag": {k: v[0] for k, v in TAG.items()}, "label_putusan": LABEL_PUTUSAN,
+            "catatan": ("Setiap harga dari berita langsung dinilai: AI memeriksa kalimatnya (harga pasar, harga lama, harga program, "
+                        "atau barang lain), lalu mesin membandingkannya dengan harga resmi pada tanggal berita. Hasilnya penunjuk awal "
+                        "dan tidak masuk deret harga resmi.")}

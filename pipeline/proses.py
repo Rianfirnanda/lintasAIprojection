@@ -7,6 +7,7 @@ import json
 import logging
 import math
 import os
+import re
 import shutil
 import tempfile
 from collections import Counter, defaultdict
@@ -355,9 +356,31 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         if o.tanggal >= batas:
             hitung_sumber[(o.kode_wilayah, o.kode_varian)][o.kode_sumber] += 1
     sumber_pembanding = {k: c.most_common(1)[0][0] for k, c in hitung_sumber.items()}
+    # Harga resmi 75 hari terakhir per wilayah dan varian, untuk menilai harga yang disebut di berita pada tanggal beritanya.
+    batas_berita = (tanggal_data or konf.hari_ini) - timedelta(days=75)
+    deret_resmi: dict[str, dict] = defaultdict(dict)
+
+    def _nama_pendek(nama: str) -> str:
+        return re.sub(r"^Kabupaten\s+", "", nama)
+
+    def _ke_deret(tanggal_nilai) -> dict[str, int]:
+        return {t.isoformat(): round(float(x)) for t, x in tanggal_nilai if t >= batas_berita and x is not None and not np.isnan(x)}
+
     for kode, hv in hasil_varian.items():
         v = konf.varian[kode]
         seri = hv.seri
+        ss = hv.sumber_seri or {}
+        deret_resmi["target"][kode] = {"nama": f"{_nama_pendek(ss.get('wilayah', konf.wilayah[target].nama))} ({ss.get('sumber', '-')})",
+                                       "pengganti": bool(ss.get("pengganti")), "nilai": _ke_deret(zip(seri.tanggal, seri.nilai))}
+        for w, sp in seri_pembanding.get(kode, {}).items():
+            if w != target:
+                ks = sumber_pembanding.get((w, kode))
+                deret_resmi[w][kode] = {"nama": f"{_nama_pendek(konf.wilayah[w].nama)} ({LABEL_SUMBER.get(ks, ks) or '-'})",
+                                        "nilai": _ke_deret(zip(sp.tanggal, sp.nilai))}
+        for w in konf.wilayah:
+            pk = indeks_konteks.data.get((w, "harga_pihps", kode), {})
+            if w != target and pk and not deret_resmi[w].get(kode, {}).get("nilai"):
+                deret_resmi[w][kode] = {"nama": f"{_nama_pendek(konf.wilayah[w].nama)} (PIHPS Bank Indonesia)", "nilai": _ke_deret(pk.items())}
         i0 = max(0, seri.indeks(batas)) if seri.tanggal[0] < batas else 0
         tanggal = seri.tanggal[i0:]
         pembanding = {}
@@ -584,7 +607,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
 
     # ---------- berita.json (halaman Berita Lokal; hasil pencarian harian di data/berita/berita.json)
     _tulis_json(keluaran / "berita.json", berita.untuk_situs(
-        konf, {x["kode"]: x["harga_terakhir"] for x in ringkasan_varian if x.get("harga_terakhir")}, tanggal_data or konf.hari_ini))
+        konf, {x["kode"]: x["harga_terakhir"] for x in ringkasan_varian if x.get("harga_terakhir")}, tanggal_data or konf.hari_ini,
+        dict(deret_resmi)))
 
     # ---------- ringkasan.json (dashboard utama)
     jhr = konf.pengaturan["jendela_hari_raya"]

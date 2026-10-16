@@ -1,6 +1,6 @@
 name: Berita lokal
 
-# Mencari berita lokal tentang harga pangan, membaca isinya, mengambil harga sebagai KANDIDAT, lalu menyimpulkannya.
+# Mencari berita lokal tentang harga pangan, membaca isinya, mengambil harga yang disebut, menilainya dengan AI, lalu menyimpulkannya.
 # Biasanya tidak perlu dijalankan sendiri: penjaga (antrean.yml) memicu pembaruan harian yang sudah memuat langkah ini.
 # Alur kerja ini untuk menjalankan sekarang juga (misalnya setelah mengubah kueri atau mengisi kunci baru).
 # Kunci AI dan Tavily sama dengan AI Data Finder; yang diisi lewat situs (Firestore) menggantikan GitHub Secret yang sama.

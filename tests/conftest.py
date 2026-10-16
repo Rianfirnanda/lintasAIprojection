@@ -22,6 +22,10 @@ def salin_config(tujuan: Path) -> None:
     # supaya cepat (hasil pemilihan model tetap diuji dengan aturan yang sama).
     d["analisis"]["model_pohon"] = False
     d["mode_demo"] = "otomatis"  # uji alur lengkap tanpa berkas harga memakai data contoh
+    # Pengaturan yang bisa diubah admin dari situs dipatok ke nilai uji, supaya uji tidak ikut berubah saat admin mengubahnya.
+    d["ai"]["harian_jumlah"] = 2
+    d["notifikasi"].update({"keparahan_minimal": "sedang", "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat"]})
+    d["tindak_lanjut"]["keparahan_minimal_issue"] = "tinggi"
     p.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
 
 

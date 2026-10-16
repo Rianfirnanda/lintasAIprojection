@@ -703,13 +703,17 @@ export async function pasangDasborInternal(wadah, meta) {
     });
   }
 
-  /* ---------- harga dari berita (kandidat, tidak masuk model) */
-  const NAMA_PERAN = { target: "Bengkulu Tengah", pembanding: "Wilayah pembanding", provinsi: "Provinsi Bengkulu", nasional: "Nasional", "tidak jelas": "Wilayah tidak jelas" };
+  /* ---------- harga dari berita (dinilai otomatis, tidak masuk model) */
+  const NAMA_PERAN = { target: "Bengkulu Tengah", pembanding: "Wilayah tetangga", provinsi: "Provinsi Bengkulu", nasional: "Nasional", "tidak jelas": "Wilayah tidak jelas",
+    "luar daerah": "Luar Provinsi Bengkulu" };
+  const KELAS_PUTUSAN = { sesuai: "baik", lebih_mahal: "sedang", lebih_murah: "info", jauh_lebih_mahal: "tinggi", jauh_lebih_murah: "rendah", harga_program: "info" };
   async function hargaBerita() {
     let B = null;
     try { B = await muatJSON("berita.json"); } catch { B = null; }
     const daftar = B?.ringkasan_harga || [];
-    $("dsb-sub-berita").textContent = "Harga yang disebut di berita 14 hari terakhir, dibaca otomatis tiap hari. Angkanya belum diverifikasi dan tidak masuk ke deret harga maupun model prakiraan; fungsinya hanya sebagai petunjuk awal.";
+    const pn = B?.penilaian;
+    $("dsb-sub-berita").textContent = `Harga yang disebut di berita ${B?.umur_hari ?? 14} hari terakhir, dibaca dan dinilai otomatis tiap hari: AI memeriksa kalimatnya, lalu mesin membandingkannya dengan harga resmi pada tanggal berita.`
+      + (pn && pn.jumlah ? ` ${pn.dipakai} dari ${pn.jumlah} harga dipakai, ${pn.tidak_dipakai} tidak dipakai (harga lama, barang lain, atau di luar batas wajar).` : "");
     if (!daftar.length) {
       $("dsb-berita").innerHTML = `<p class="dsb-tunggu">${B ? "Belum ada harga yang dapat dibaca dari berita pada periode ini." : "Data berita belum tersedia."} Pencarian berjalan otomatis setiap hari.</p>`;
       return;
@@ -721,15 +725,17 @@ export async function pasangDasborInternal(wadah, meta) {
       const satuan = x.satuan === "kg" || x.satuan === "liter" ? `/${x.satuan}` : ` per ${esc(x.satuan)}`;
       const rentang = x.minimum === x.maksimum ? "" : `<div class="meta-kecil">${angkaRp(x.minimum)} sampai ${angkaRp(x.maksimum)}</div>`;
       const arah = x.arah === "naik" ? ' <span class="dsb-ubah naik">naik</span>' : x.arah === "turun" ? ' <span class="dsb-ubah turun">turun</span>' : "";
-      const selisih = bd ? `<strong class="${bd.beda_jauh ? "dsb-beda" : ""}">${persen(bd.selisih_persen, 1, true)}</strong>${bd.beda_jauh ? '<div class="dsb-beda-label">beda jauh</div>' : ""}` : '<span class="meta-kecil">tidak dibanding</span>';
-      const utama = bd ? `${angkaRp(bd.harga_utama)}<div class="meta-kecil">${esc(bd.dasar)}</div>` : "–";
+      const selisih = bd ? `<strong class="${bd.beda_jauh ? "dsb-beda" : ""}">${persen(bd.selisih_persen, 1, true)}</strong>` : '<span class="meta-kecil">tidak dibanding</span>';
+      const utama = bd ? `${angkaRp(bd.harga_utama)}<div class="meta-kecil">${esc(bd.dasar)}${bd.tanggal ? `, ${esc(tgl(bd.tanggal))}` : ""}</div>` : "–";
+      const nilai = x.label_putusan ? `<span class="lencana ${KELAS_PUTUSAN[x.putusan] || "polos"}">${esc(x.label_putusan)}</span>
+        <div class="meta-kecil">keyakinan ${esc(String(x.keyakinan))} (${esc(x.tingkat)})</div>` : "–";
       return `<tr><td><strong>${esc(x.komoditas)}</strong>${arah}</td><td>${esc(NAMA_PERAN[x.wilayah] || x.wilayah)}${c.pasar ? `<div class="meta-kecil">${esc(c.pasar)}</div>` : ""}</td>
-        <td class="angka"><strong>${angkaRp(x.median)}</strong>${satuan}${rentang}</td><td class="angka">${utama}</td><td class="angka">${selisih}</td>
+        <td class="angka"><strong>${angkaRp(x.median)}</strong>${satuan}${rentang}</td><td class="angka">${utama}</td><td class="angka">${selisih}</td><td>${nilai}</td>
         <td class="angka">${angka(x.jumlah_berita)} berita<div class="meta-kecil">terbaru ${esc(tgl(x.tanggal_terbaru))}</div></td>
         <td class="dsb-bukti">${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer">${esc(c.sumber || "sumber")}</a>` : esc(c.sumber || "")}<div class="meta-kecil">${esc(c.bukti || "")}</div></td></tr>`;
     }).join("");
-    $("dsb-berita").innerHTML = `<div class="gulir-tabel"><table class="tabel-kecil dsb-tabel-berita"><thead><tr><th>Komoditas</th><th>Rujukan wilayah</th><th class="angka">Harga di berita (median, Rp)</th><th class="angka">Data utama sistem (Rp)</th><th class="angka">Selisih</th><th class="angka">Sumber</th><th>Kalimat bukti</th></tr></thead><tbody>${baris}</tbody></table></div>
-      <p class="dsb-catatan">${B?.diperbarui ? `Diperbarui ${esc(tgl(String(B.diperbarui).slice(0, 10)))}. ` : ""}Selisih dihitung dari median harga di berita terhadap harga terakhir sistem, hanya untuk harga per kg atau liter. Tanda "beda jauh" berarti selisihnya lebih dari ${B?.ambang_beda_jauh_persen ?? 15}%, jadi perlu dicek ke petugas lapangan sebelum dipercaya.</p>`;
+    $("dsb-berita").innerHTML = `<div class="gulir-tabel"><table class="tabel-kecil dsb-tabel-berita"><thead><tr><th>Komoditas</th><th>Rujukan wilayah</th><th class="angka">Harga di berita (median, Rp)</th><th class="angka">Harga resmi (Rp)</th><th class="angka">Selisih</th><th>Penilaian</th><th class="angka">Sumber</th><th>Kalimat bukti</th></tr></thead><tbody>${baris}</tbody></table></div>
+      <p class="dsb-catatan">${B?.diperbarui ? `Diperbarui ${esc(tgl(String(B.diperbarui).slice(0, 10)))}. ` : ""}Selisih adalah median selisih tiap harga di berita terhadap harga resmi pada tanggal beritanya (wilayah yang sama bila datanya ada), hanya untuk harga per kg atau liter. Selisih sampai ${B?.ambang_sesuai_persen ?? 5}% disebut sesuai; lebih dari ${B?.ambang_beda_jauh_persen ?? 15}% perlu dicek ke petugas lapangan. Rincian tiap harga ada di halaman Berita Lokal.</p>`;
   }
 
   /* ---------- rekomendasi, lineage, jejak */
