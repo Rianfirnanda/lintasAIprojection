@@ -1,5 +1,5 @@
-// Panel mutu data dan peringatan dini di Dashboard Internal: 10 pencari data (AI Data Finder), 8 tahap pembersihan,
-// kecocokan antar-sumber, peringatan dini lonjakan harga (EWS), perbandingan antarwilayah, dan rantai harga.
+// Panel mutu data dan peringatan dini di Dashboard Internal (dalam tab): 10 pencari data (AI Data Finder), 8 tahap
+// pembersihan, peringatan dini lonjakan harga (EWS), perbandingan antarwilayah, kecocokan antar-sumber, dan rantai harga.
 // Semua angka dibaca dari analitik.json; bila data belum ada, panel menulis alasannya, bukan angka karangan.
 import { esc, angka, tgl } from "./app.js";
 
@@ -21,38 +21,82 @@ const daftarGerbang = (g) => g.length
   ? `<ul class="dsb-gerbang">${g.map((x) => `<li>${tanda(x.lolos)} ${esc(x.gerbang)}: <b>${esc(String(x.nilai ?? "–"))}</b> <span class="meta-kecil">(target ${esc(x.target)})</span></li>`).join("")}</ul>`
   : "";
 
+const tab = (id, label, aktif = false) => `<button type="button" role="tab" id="dsb-t-${id}" aria-controls="dsb-p-${id}" aria-selected="${aktif}" tabindex="${aktif ? 0 : -1}">${label}<span class="dsb-tab-lencana" id="dsb-b-${id}"></span></button>`;
+const panel = (id, isi, aktif = false) => `<div class="dsb-panel" role="tabpanel" id="dsb-p-${id}" aria-labelledby="dsb-t-${id}"${aktif ? "" : " hidden"}>${isi}</div>`;
+
 export const KERANGKA_TATA = `
-<h2 class="dsb-bagian">Mutu data, peringatan dini, dan perbandingan wilayah</h2>
-<div class="dsb-tata">
-  <section class="dsb-kartu"><div class="dsb-kartu-kepala gelap"><h2>Pencari data otomatis (10 AI Data Finder)</h2></div><div class="dsb-isi" id="dsb-finder"></div></section>
-  <section class="dsb-kartu"><div class="dsb-kartu-kepala gelap"><h2>Pemeriksaan dan pembersihan data (8 tahap)</h2></div><div class="dsb-isi" id="dsb-bersih"></div></section>
-  <section class="dsb-kartu"><div class="dsb-kartu-kepala gelap"><h2>Peringatan dini lonjakan harga (EWS)</h2></div><div class="dsb-isi" id="dsb-ews"></div></section>
-  <section class="dsb-kartu"><div class="dsb-kartu-kepala gelap"><h2 id="dsb-judul-wil">Perbandingan dengan wilayah lain</h2></div><div class="dsb-isi" id="dsb-wil"></div></section>
-  <section class="dsb-kartu"><div class="dsb-kartu-kepala gelap"><h2>Kecocokan antar-sumber</h2></div><div class="dsb-isi" id="dsb-konsensus"></div></section>
-  <section class="dsb-kartu"><div class="dsb-kartu-kepala gelap"><h2>Rantai harga Kota Bengkulu</h2></div><div class="dsb-isi" id="dsb-rantai"></div></section>
-</div>`;
+<section class="dsb-kartu dsb-tab" data-tab>
+  <div class="dsb-tab-kepala"><h2>Mutu data dan peringatan dini</h2>
+    <div class="dsb-tab-daftar" role="tablist" aria-label="Mutu data dan peringatan dini">
+      ${tab("finder", "Pencari data", true)}${tab("bersih", "Pembersihan")}${tab("ews", "Peringatan dini")}${tab("wil", "Antarwilayah")}${tab("konsensus", "Kecocokan sumber")}${tab("rantai", "Rantai harga")}
+    </div></div>
+  ${panel("finder", '<div id="dsb-finder"></div>', true)}
+  ${panel("bersih", '<div id="dsb-bersih"></div>')}
+  ${panel("ews", '<div id="dsb-ews"></div>')}
+  ${panel("wil", '<h3 class="sub-judul" id="dsb-judul-wil">Perbandingan dengan wilayah lain</h3><div id="dsb-wil"></div>')}
+  ${panel("konsensus", '<div id="dsb-konsensus"></div>')}
+  ${panel("rantai", '<div id="dsb-rantai"></div>')}
+</section>`;
+
+/** Tab yang bisa dipakai dengan tetikus dan papan ketik (panah kiri/kanan, Home, End). Grafik di panel yang baru tampil
+ * diukur ulang supaya ukurannya pas. Tab terakhir yang dibuka diingat di peramban ini saja. */
+export function pasangTab(akar) {
+  akar.querySelectorAll("[data-tab]").forEach((bagian, i) => {
+    const tombol = [...bagian.querySelectorAll('[role="tab"]')];
+    const kunci = `lintas-tab-${i}`;
+    const buka = (t, fokus = false) => {
+      tombol.forEach((x) => {
+        const aktif = x === t;
+        x.setAttribute("aria-selected", String(aktif));
+        x.tabIndex = aktif ? 0 : -1;
+        const p = bagian.querySelector(`#${x.getAttribute("aria-controls")}`);
+        if (p) p.hidden = !aktif;
+      });
+      if (fokus) t.focus();
+      const p = bagian.querySelector(`#${t.getAttribute("aria-controls")}`);
+      p?.querySelectorAll("canvas").forEach((c) => window.Chart?.getChart(c)?.resize());
+      try { localStorage.setItem(kunci, t.id); } catch { /* penyimpanan peramban tidak tersedia */ }
+    };
+    bagian.addEventListener("click", (e) => { const t = e.target.closest('[role="tab"]'); if (t && tombol.includes(t)) buka(t); });
+    bagian.querySelector('[role="tablist"]').addEventListener("keydown", (e) => {
+      const i0 = tombol.indexOf(document.activeElement);
+      if (i0 < 0) return;
+      const ke = { ArrowRight: i0 + 1, ArrowLeft: i0 - 1, Home: 0, End: tombol.length - 1 }[e.key];
+      if (ke === undefined) return;
+      e.preventDefault();
+      buka(tombol[(ke + tombol.length) % tombol.length], true);
+    });
+    let simpan = null;
+    try { simpan = localStorage.getItem(kunci); } catch { simpan = null; }
+    const awal = tombol.find((t) => t.id === simpan);
+    if (awal) buka(awal);
+  });
+}
 
 export function gambarFinder(el, A) {
   const f = A.finder || [];
   if (!f.length) { el.innerHTML = '<p class="meta-kecil">Status pencari data belum tersedia.</p>'; return; }
   const r = A.finder_ringkas || {};
-  el.innerHTML = `<p class="dsb-sub">Sepuluh pencari data mengumpulkan bahan dari sumber yang berbeda. Statusnya dihitung dari data yang benar-benar masuk hari ini.
-    ${r.aktif !== undefined ? `<b>${angka(r.aktif)}</b> dari ${f.length} sudah mengirim data.` : ""}</p>
-    <div class="gulir-tabel"><table class="tabel-kecil dsb-tabel-tata"><thead><tr><th>Pencari data</th><th>Status</th><th>Data terakhir</th></tr></thead><tbody>
-    ${f.map((x) => `<tr><td><details><summary><b>${esc(x.nama)}</b><span class="meta-kecil"> · ${esc(x.objek)}</span></summary>
-      ${x.alasan ? `<p class="meta-kecil">${esc(x.alasan)}</p>` : ""}${daftarGerbang(x.gerbang || [])}
-      <p class="meta-kecil">Bila gagal: ${esc(x.tindakan_gagal || "-")}</p></details></td>
-      <td>${lencana(x.status)}</td><td class="meta-kecil">${x.data_terakhir ? esc(tgl(x.data_terakhir)) : "–"}</td></tr>`).join("")}
-    </tbody></table></div>`;
+  const hitung = (st) => f.filter((x) => x.status === st).length;
+  el.innerHTML = `<div class="dsb-ringkas-baris">
+      <span class="dsb-angka-besar">${angka(r.aktif ?? hitung("lulus"))}<small>/${f.length}</small></span><span class="dsb-sub">pencari data sudah mengirim data hari ini</span>
+      <span class="dsb-titik-ket"><i class="baik"></i>${hitung("lulus")} berjalan baik</span><span class="dsb-titik-ket"><i class="sedang"></i>${hitung("perlu_perhatian") + hitung("tinjau")} perlu perhatian</span>
+      <span class="dsb-titik-ket"><i class="polos"></i>${hitung("menunggu")} menunggu</span><span class="dsb-titik-ket"><i class="tinggi"></i>${hitung("gagal")} belum lolos</span></div>
+    <div class="dsb-ubin-finder">${f.map((x) => {
+      const [kelas, teks] = STATUS[x.status] || STATUS.menunggu;
+      return `<details class="dsb-finder ${kelas}"><summary><i class="dsb-titik-status ${kelas}"></i><b>${esc(x.nama)}</b>
+        <span class="meta-kecil">${esc(x.objek)}</span><span class="dsb-finder-kaki"><span class="lencana ${kelas}">${teks}</span><span class="meta-kecil">${x.data_terakhir ? esc(tgl(x.data_terakhir)) : "belum ada data"}</span></span></summary>
+        ${x.alasan ? `<p class="meta-kecil">${esc(x.alasan)}</p>` : ""}${daftarGerbang(x.gerbang || [])}<p class="meta-kecil">Bila gagal: ${esc(x.tindakan_gagal || "-")}</p></details>`;
+    }).join("")}</div>`;
 }
 
 export function gambarPembersihan(el, A) {
   const t = A.pembersihan || [];
   if (!t.length) { el.innerHTML = '<p class="meta-kecil">Hasil pembersihan belum tersedia.</p>'; return; }
   const lulus = t.filter((x) => x.status === "lulus").length;
-  el.innerHTML = `<p class="dsb-sub">Setiap data melewati delapan pemeriksaan sebelum dipakai. <b>${lulus}</b> dari ${t.length} tahap lolos semua syaratnya.</p>
-    <ol class="dsb-tahap">${t.map((x) => `<li><details><summary><b>${esc(x.nama)}</b> ${lencana(x.status)}</summary>
-      <p class="meta-kecil">${esc(x.proses)}</p>${daftarGerbang(x.gerbang || [])}${x.catatan ? `<p class="meta-kecil">${esc(x.catatan)}</p>` : ""}</details></li>`).join("")}</ol>`;
+  el.innerHTML = `<div class="dsb-ringkas-baris"><span class="dsb-angka-besar">${lulus}<small>/${t.length}</small></span><span class="dsb-sub">tahap pemeriksaan lolos semua syaratnya. Klik tahap untuk melihat syaratnya.</span></div>
+    <ol class="dsb-tahap">${t.map((x, i) => { const [kelas] = STATUS[x.status] || STATUS.menunggu; return `<li class="${kelas}"><details><summary><span class="dsb-tahap-no">${i + 1}</span><b>${esc(x.nama)}</b> ${lencana(x.status)}</summary>
+      <p class="meta-kecil">${esc(x.proses)}</p>${daftarGerbang(x.gerbang || [])}${x.catatan ? `<p class="meta-kecil">${esc(x.catatan)}</p>` : ""}</details></li>`; }).join("")}</ol>`;
 }
 
 export function gambarEws(el, A) {
@@ -62,26 +106,26 @@ export function gambarEws(el, A) {
     return;
   }
   const p = e.parameter || {};
-  const baris = [
-    ["Lonjakan yang tertangkap", "recall", persen0(e.recall), `${angka(e.episode_tertangkap)} dari ${angka(e.episode_uji)} lonjakan`, e.recall >= TARGET_EWS.recall, "≥ 88%"],
-    ["Peringatan yang tepat", "precision", persen0(e.precision), `dari ${angka(e.alarm_uji)} peringatan`, null, "-"],
-    ["Nilai gabungan", "F1", persen0(e.f1), "keseimbangan dua angka di atas", e.f1 >= TARGET_EWS.f1, "≥ 88%"],
-    ["Peringatan keliru di hari biasa", "false positive rate", persen0(e.false_positive_rate, 1), "makin kecil makin baik", e.false_positive_rate <= TARGET_EWS.fpr, "≤ 10%"],
+  const ubin = [
+    ["Lonjakan tertangkap", e.recall, `${angka(e.episode_tertangkap)} dari ${angka(e.episode_uji)}`, e.recall >= TARGET_EWS.recall, "target ≥ 88%", TARGET_EWS.recall],
+    ["Peringatan tepat", e.precision, `dari ${angka(e.alarm_uji)} peringatan`, null, "", null],
+    ["Nilai gabungan (F1)", e.f1, "keseimbangan keduanya", e.f1 >= TARGET_EWS.f1, "target ≥ 88%", TARGET_EWS.f1],
+    ["Keliru di hari biasa", e.false_positive_rate, "makin kecil makin baik", e.false_positive_rate <= TARGET_EWS.fpr, "target ≤ 10%", TARGET_EWS.fpr],
   ];
-  el.innerHTML = `<p class="dsb-sub">Sistem memberi peringatan bila kenaikan harian tidak biasa. Cara ini diuji pada riwayat harga
-    ${e.periode_uji ? `${esc(tgl(e.periode_uji[0]))} sampai ${esc(tgl(e.periode_uji[1]))}` : ""}, masa yang tidak dipakai untuk menyetel ambangnya.</p>
-    <table class="tabel-kecil"><thead><tr><th>Ukuran</th><th class="angka">Hasil</th><th>Target</th><th></th></tr></thead><tbody>
-    ${baris.map(([n, istilah, nilai, sub, ok, tgt]) => `<tr><td>${esc(n)} <span class="meta-kecil">(${esc(istilah)})</span><div class="meta-kecil">${esc(sub)}</div></td>
-      <td class="angka"><b>${nilai}</b></td><td class="meta-kecil">${esc(tgt)}</td><td>${tanda(ok)}</td></tr>`).join("")}</tbody></table>
-    <p class="meta-kecil">Lonjakan dihitung bila harga naik melewati batas kelompoknya (5%, 10%, atau 15% di atas harga normal 28 hari).
-    ${p.per_kelas ? "" : `Pengaturan terpilih: ambang z ${esc(String(p.z_ambang ?? "-"))}, toleransi ${esc(String(p.toleransi_hari ?? "-"))} hari kerja.`}
-    ${e.f1 !== null && e.f1 < TARGET_EWS.f1 ? "Peringatan masih cukup sering muncul tanpa lonjakan sungguhan, jadi setiap peringatan perlu dicek ke pasar sebelum ditindaklanjuti." : ""}</p>
+  el.innerHTML = `<p class="dsb-sub">Diuji pada ${e.periode_uji ? `${esc(tgl(e.periode_uji[0]))} sampai ${esc(tgl(e.periode_uji[1]))}` : "masa uji"}, masa yang tidak dipakai untuk menyetel ambang.</p>
+    <div class="dsb-ubin-ews">${ubin.map(([n, x, sub, ok, tgt, garis]) => `<div class="dsb-ews ${ok === false ? "kuning" : ok ? "hijau" : ""}">
+      <span class="dsb-label">${esc(n)}</span><strong>${persen0(x, x !== null && x < 0.1 ? 1 : 0)}</strong>
+      <div class="dsb-meter ${ok === false ? "kuning" : ok ? "hijau" : "biru"}"><span style="width:${Math.min(100, (x ?? 0) * 100).toFixed(1)}%"></span>${garis === null ? "" : `<i style="left:${garis * 100}%"></i>`}</div>
+      <span class="meta-kecil">${esc(sub)}${tgt ? ` · ${esc(tgt)}` : ""}</span>${ok === null ? "" : tanda(ok)}</div>`).join("")}</div>
     ${waktuPeringatan(e.waktu_peringatan)}
-    ${p.per_kelas ? `<details><summary class="meta-kecil">Pengaturan per kelompok gejolak (dipilih dari masa latih)</summary><div class="gulir-tabel"><table class="tabel-kecil">
+    <details><summary class="meta-kecil">Cara kerja dan pengaturan per kelompok gejolak</summary>
+    <p class="meta-kecil">Lonjakan dihitung bila harga naik melewati batas kelompoknya (5%, 10%, atau 15% di atas harga normal 28 hari).
+    ${p.per_kelas ? "" : `Pengaturan terpilih: ambang z ${esc(String(p.z_ambang ?? "-"))}, toleransi ${esc(String(p.toleransi_hari ?? "-"))} hari kerja.`}</p>
+    ${p.per_kelas ? `<div class="gulir-tabel"><table class="tabel-kecil">
       <thead><tr><th>Kelompok</th><th class="angka">Ambang z</th><th class="angka">Sudah naik</th><th class="angka">Toleransi</th><th class="angka">Nilai gabungan uji</th></tr></thead><tbody>
       ${Object.entries(p.per_kelas).map(([k, x]) => `<tr><td>${esc(NAMA_KELAS[k] || k)}</td><td class="angka">${angka(x.z_ambang, 1)}</td>
         <td class="angka">${angka(x.porsi_level * 100, 0)}% dari batas</td><td class="angka">${angka(x.toleransi_hari)} hari</td>
-        <td class="angka">${e.per_kelas?.[k]?.f1 == null ? "–" : persen0(e.per_kelas[k].f1)}</td></tr>`).join("")}</tbody></table></div></details>` : ""}`;
+        <td class="angka">${e.per_kelas?.[k]?.f1 == null ? "–" : persen0(e.per_kelas[k].f1)}</td></tr>`).join("")}</tbody></table></div>` : ""}</details>`;
 }
 
 const NAMA_KELAS = { rendah: "Gejolak rendah (beras, gula, minyak)", sedang: "Gejolak sedang (daging, telur, bawang putih)", tinggi: "Gejolak tinggi (cabai, bawang merah)" };
@@ -90,9 +134,10 @@ function waktuPeringatan(w) {
   if (!w) return "";
   const total = (w.sebelum || 0) + (w.tepat || 0) + (w.sesudah || 0);
   if (!total) return "";
-  return `<p class="meta-kecil"><b>Seberapa dini?</b> Dari ${angka(total)} lonjakan yang tertangkap, peringatan muncul ${angka(w.sebelum)} kali sebelum harga melonjak,
-    ${angka(w.tepat)} kali pada hari pertama lonjakan, dan ${angka(w.sesudah)} kali sesudahnya. Harga pasar biasanya naik sekaligus dalam satu hari,
-    jadi peringatan paling cepat datang pada hari harga mulai naik, sebelum lonjakan terbukti berlanjut.</p>`;
+  const bag = (x) => (x / total * 100).toFixed(1);
+  return `<div class="dsb-waktu-peringatan"><span class="dsb-label">Kapan peringatan muncul (${angka(total)} lonjakan tertangkap)</span>
+    <div class="dsb-arah-batang"><span class="turun" style="flex:${bag(w.sebelum || 0)}" title="Sebelum harga melonjak"></span><span class="tepat" style="flex:${bag(w.tepat || 0)}" title="Hari pertama lonjakan"></span><span class="naik" style="flex:${bag(w.sesudah || 0)}" title="Sesudahnya"></span></div>
+    <div class="dsb-legenda-mini"><span><i class="turun"></i>Sebelum: ${angka(w.sebelum)}</span><span><i class="tepat"></i>Hari pertama: ${angka(w.tepat)}</span><span><i class="naik"></i>Sesudahnya: ${angka(w.sesudah)}</span></div></div>`;
 }
 
 const SATU = (nama) => String(nama || "").replace("Kabupaten ", "").replace("Provinsi ", "");

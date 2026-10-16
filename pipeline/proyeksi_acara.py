@@ -1,13 +1,13 @@
 """Proyeksi menjelang dan sesudah hari raya (Idul Fitri, Idul Adha, Natal).
 
 Dua kelompok keluaran:
-- Pra-hari raya: dari titik asal H-7 dan H-3, sasaran harga pada Hari H.
+- Pra-hari raya: dari titik asal H-30 (sebulan), H-14 (dua minggu), H-7 (seminggu), dan H-3, sasaran harga pada Hari H.
 - Pasca-hari raya: dari Hari H, sasaran harga pada H+3, H+7, dan H+14.
 
 Metode: rasio historis. Untuk tiap hari raya yang sudah lewat dihitung log-rasio harga sasaran terhadap harga titik asal.
 Proyeksi = harga titik asal x median rasio dari hari raya lain sejenis; interval 80% dari sebaran selisih rasio terhadap median.
 Evaluasi leave-one-event-out (satu hari raya disisihkan bergiliran) melawan cara naif (harga tidak berubah).
-Proyeksi baru dibuat bila titik asalnya sudah tiba (data harga sudah sampai H-7), tidak pernah dari data masa depan.
+Proyeksi baru dibuat bila titik asalnya sudah tiba (data harga sudah sampai H-30, H-14, dan seterusnya), tidak pernah dari data masa depan.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import numpy as np
 
 from . import analisis
 
-OFFSET_PRA = (-7, -3)
+OFFSET_PRA = (-30, -14, -7, -3)
 OFFSET_PASCA = (3, 7, 14)
 MIN_ACARA = 3  # minimal hari raya sejenis berdata (Protokol Validasi)
 MIN_ACARA_CAKUPAN = 8  # di bawah ini cakupan interval tidak bermakna untuk dinilai

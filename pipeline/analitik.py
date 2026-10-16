@@ -10,7 +10,7 @@ import hashlib
 import json
 import os
 from collections import Counter
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +18,8 @@ import numpy as np
 from . import analisis
 
 HORIZON_TAMPIL = (7, 14, 30)
+# Titik menjelang hari raya yang bisa dipilih di dashboard: sebulan, dua minggu, seminggu, dan tiga hari sebelum Hari H.
+TITIK_HARI_RAYA = (-30, -14, -7, -3, 0)
 SEED = None  # semua model deterministik (tanpa komponen acak); dicatat di jejak versi
 
 
@@ -46,6 +48,34 @@ def proyeksi_horizon(hv: analisis.HasilVarian, harga_aktual: float | None) -> di
         hasil[str(h)] = None if p is None else {
             "tanggal": p["tanggal"], "prediksi": p["prediksi"], "bawah": p["bawah"], "atas": p["atas"],
             "perubahan_persen": _ubah(p["prediksi"], harga_aktual)}
+    return hasil
+
+
+def jalur_harian(hv: analisis.HasilVarian) -> list[list]:
+    """Perkiraan setiap hari sampai horizon terjauh: [tanggal, prediksi, bawah, atas]. Dipakai pemilih tanggal di dashboard."""
+    return [[p["tanggal"], p["prediksi"], p["bawah"], p["atas"]] for p in hv.proyeksi]
+
+
+def hari_raya_mendatang(konf, tanggal_data: date | None, horizon: int, jumlah: int = 3) -> list[dict]:
+    """Hari raya terdekat beserta tanggal H-30, H-14, H-7, H-3, dan Hari H. `dalam_jangkauan` menandai tanggal yang sudah
+    tercakup perkiraan harian (paling jauh `horizon` hari sesudah data terakhir)."""
+    if not tanggal_data:
+        return []
+    batas = tanggal_data + timedelta(days=horizon)
+    hasil = []
+    for a in sorted(konf.hari_raya(), key=lambda x: x.tanggal):
+        if a.tanggal <= tanggal_data:
+            continue
+        titik = []
+        for k in TITIK_HARI_RAYA:
+            t = a.tanggal + timedelta(days=k)
+            titik.append({"kode": "H" if k == 0 else f"H{k}", "tanggal": t.isoformat(), "lewat": t <= tanggal_data,
+                          "dalam_jangkauan": tanggal_data < t <= batas,
+                          "bisa_dipilih_mulai": (t - timedelta(days=horizon)).isoformat()})
+        hasil.append({"nama": a.nama, "tanggal": a.tanggal.isoformat(), "status": a.status,
+                      "hari_menuju": (a.tanggal - tanggal_data).days, "titik": titik})
+        if len(hasil) >= jumlah:
+            break
     return hasil
 
 
@@ -217,7 +247,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
         m = hv.metrik_model.get(hv.model_terpilih or "", {})
         varian.append({
             "kode": kode, "nama": v.nama, "komoditas": v.komoditas, "kelompok": v.kelompok, "satuan": v.satuan,
-            "harga_aktual": round(harga) if harga else None, "tanggal_aktual": tgl, "proyeksi": pr,
+            "harga_aktual": round(harga) if harga else None, "tanggal_aktual": tgl, "proyeksi": pr, "jalur": jalur_harian(hv),
             "perubahan_30h_persen": (pr.get("30") or {}).get("perubahan_persen"),
             "model": hv.model_terpilih, "nama_model": analisis.NAMA_MODEL.get(hv.model_terpilih or "", "-"),
             "jenis_model": "challenger" if hv.model_terpilih in analisis.MODEL_CHALLENGER else "baseline" if hv.model_terpilih else None,
@@ -265,6 +295,8 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
         "dibuat_untuk": tanggal_data.isoformat() if tanggal_data else None,
         "wilayah": {"kode": konf.wilayah_target, "nama": konf.wilayah[konf.wilayah_target].nama, "peran": konf.wilayah[konf.wilayah_target].peran},
         "mode_demo": pakai_demo, "horizon": list(HORIZON_TAMPIL), "tingkat_interval": konf.pengaturan["analisis"]["tingkat_interval"],
+        "horizon_maks": konf.pengaturan["analisis"]["horizon_hari"],
+        "hari_raya_mendatang": hari_raya_mendatang(konf, tanggal_data, konf.pengaturan["analisis"]["horizon_hari"]),
         "kpi": kpi, "varian": varian, "wilayah_proyek": wilayah_proyek(konf), "audit": status_audit(kpi),
         "sumber_nama": sumber_nama, "model_dipakai": ringkasan_model.get("model_dipakai", {}),
         "rekomendasi_umum": rekomendasi_umum(varian, kpi, keterangan_pembanding(konf, pembanding_tersedia)),

@@ -1,10 +1,11 @@
 // Service worker: formulir input tetap berfungsi tanpa sinyal (wilayah blank spot).
-const CACHE = "lintas-benteng-v24";
+const CACHE = "lintas-benteng-v25";
 const ASET = [
   "input.html", "masuk.html", "assets/app.css", "assets/app.js", "assets/status-layanan.js", "assets/akses.js", "assets/peran.js", "assets/dashboard.js", "assets/gambar-komoditas.js", "assets/selisih.js", "assets/rincian.js", "assets/kiriman.js", "assets/firebase-klien.js", "vendor/firebase/firebase.js", "assets/logo-bps.png", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
   "data/master.json", "data/meta.json",
-  ...["ibm-plex-sans-latin-400-normal", "ibm-plex-sans-latin-400-italic", "ibm-plex-sans-latin-500-normal",
-      "ibm-plex-sans-latin-600-normal", "ibm-plex-mono-latin-400-normal", "ibm-plex-mono-latin-500-normal"].map((f) => `vendor/font/${f}.woff2`),
+  ...["plus-jakarta-sans-latin-400-normal", "plus-jakarta-sans-latin-500-normal", "plus-jakarta-sans-latin-600-normal",
+      "plus-jakarta-sans-latin-700-normal", "plus-jakarta-sans-latin-800-normal", "ibm-plex-mono-latin-400-normal",
+      "ibm-plex-mono-latin-500-normal"].map((f) => `vendor/font/${f}.woff2`),
 ];
 
 self.addEventListener("install", (e) => {

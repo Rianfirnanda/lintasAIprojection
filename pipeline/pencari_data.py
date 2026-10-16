@@ -367,6 +367,141 @@ def beri_id(data: dict) -> dict:
     return data
 
 
+# ---------------------------------------------------------------- penilaian dan katalog kandidat
+
+AMBANG_LAYAK = 70
+AMBANG_SEDANG = 45
+
+
+def _resmi(url: str) -> bool:
+    host = _host(url) if url else ""
+    return bool(host) and (host.endswith(".go.id") or any(host == d or host.endswith("." + d) for d in DOMAIN_RESMI))
+
+
+def nilai_kandidat(k: dict) -> dict:
+    """Skor kelayakan 0-100 dari ciri yang bisa dicek, bukan dari pendapat AI:
+    sumber resmi (25), alamat muncul di hasil pencarian (15), alamat bisa dibuka (15), wilayah (20),
+    seberapa sering diperbarui (15), dan kemudahan diambil otomatis (10)."""
+    url = k.get("url") or ""
+    frek = str(k.get("frekuensi_pembaruan") or "").lower()
+    metode = str(k.get("metode_akses") or "").lower()
+    peran = str(k.get("peran_wilayah") or "").lower()
+    di_cari, dibuka = k.get("url_ada_di_hasil_pencarian"), k.get("url_dapat_diakses")
+    butir = [
+        ("resmi", "Situs resmi", 25, 25 if _resmi(url) else 0, _resmi(url)),
+        ("dicari", "Muncul di pencarian web", 15, 15 if di_cari is True else 0, di_cari),
+        ("dibuka", "Alamat bisa dibuka", 15, 15 if dibuka is True else 7 if dibuka is None and url else 0,
+         dibuka if url else False),
+        ("wilayah", "Bengkulu Tengah", 20, {"target": 20, "pembanding": 12, "provinsi": 12, "nasional": 6}.get(peran, 0),
+         True if peran == "target" else None if peran in ("pembanding", "provinsi", "nasional") else False),
+        ("harian", "Harian", 15, 15 if ("harian" in frek or "daily" in frek) else 8 if ("minggu" in frek or "weekly" in frek)
+         else 4 if ("bulan" in frek or "monthly" in frek) else 0,
+         True if ("harian" in frek or "daily" in frek) else None if any(x in frek for x in ("minggu", "weekly", "bulan", "monthly")) else False),
+        ("otomatis", "Bisa diambil otomatis", 10, {"api": 10, "file": 7, "web": 4}.get(metode, 0),
+         True if metode in ("api", "file") else None if metode == "web" else False),
+    ]
+    skor = sum(b[3] for b in butir)
+    tingkat = "layak" if skor >= AMBANG_LAYAK else "sedang" if skor >= AMBANG_SEDANG else "lemah"
+    return {"skor": skor, "tingkat": tingkat,
+            "butir": [{"kode": a, "nama": n, "bobot": w, "nilai": v, "lolos": ok} for a, n, w, v, ok in butir]}
+
+
+def _kunci_katalog(k: dict) -> str:
+    """Kandidat dianggap sama bila alamatnya sama (tanpa www, garis miring akhir, dan parameter), atau namanya sama bila tanpa alamat."""
+    url = (k.get("url") or "").strip()
+    if url:
+        u = urlparse(url if "://" in url else f"https://{url}")
+        return f"{u.netloc.lower().removeprefix('www.')}{u.path.rstrip('/').lower()}"
+    return "nama:" + re.sub(r"\s+", " ", str(k.get("nama_sumber") or "").strip().lower())
+
+
+def katalog_kandidat(data: dict, url_terdaftar: list[str] | None = None) -> list[dict]:
+    """Gabungkan kandidat yang sama dari banyak pencarian menjadi satu entri: berapa kali muncul, untuk komoditas apa,
+    kapan pertama dan terakhir ditemukan, skor terbaik, keputusan analis terakhir, dan apakah alamatnya sudah terdaftar
+    sebagai sumber. Diurutkan dari skor tertinggi."""
+    host_terdaftar = {_host(u) for u in (url_terdaftar or []) if u}
+    grup: dict[str, dict] = {}
+    for p in data.get("pencarian", []):
+        waktu = str(p.get("waktu") or "")
+        komoditas = str((p.get("permintaan") or {}).get("komoditas") or "")
+        for k in (p.get("hasil") or {}).get("kandidat") or []:
+            nilai = nilai_kandidat(k)
+            kunci = _kunci_katalog(k)
+            g = grup.get(kunci)
+            if g is None:
+                g = grup[kunci] = {"kunci": kunci, "kandidat": k, "nilai": nilai, "pencarian": waktu, "jumlah_muncul": 0,
+                                   "komoditas": [], "pertama": waktu, "terakhir": waktu, "id": [], "keputusan": None,
+                                   "_waktu_keputusan": ""}
+            g["jumlah_muncul"] += 1
+            if komoditas and komoditas.lower() not in (x.lower() for x in g["komoditas"]):
+                g["komoditas"].append(komoditas)
+            g["pertama"], g["terakhir"] = min(g["pertama"], waktu), max(g["terakhir"], waktu)
+            if k.get("id"):
+                g["id"].append(k["id"])
+            # entri yang ditampilkan: skor tertinggi, lalu yang paling baru
+            if (nilai["skor"], waktu) > (g["nilai"]["skor"], g["pencarian"]):
+                g.update(kandidat=k, nilai=nilai, pencarian=waktu)
+            kp = k.get("keputusan")
+            if kp and str(kp.get("tanggal") or "") >= g["_waktu_keputusan"]:
+                g["keputusan"], g["_waktu_keputusan"] = kp, str(kp.get("tanggal") or "")
+    hasil = []
+    for g in grup.values():
+        g.pop("_waktu_keputusan")
+        url = g["kandidat"].get("url") or ""
+        g["resmi"] = _resmi(url)
+        g["sudah_terdaftar"] = bool(url) and _host(url) in host_terdaftar
+        hasil.append(g)
+    hasil.sort(key=lambda g: (-g["nilai"]["skor"], -g["jumlah_muncul"], g["kunci"]))
+    return hasil
+
+
+MAKS_DIKENAL = 40
+
+
+def sumber_dikenal(konf: Konfigurasi) -> list[str]:
+    """Alamat sumber yang sudah tercatat (daftar sumber dan hasil pencarian sebelumnya), dalam bentuk host/jalur pendek.
+    Diberikan ke AI supaya pencarian harian mencari sumber baru, bukan mengulang yang sama."""
+    kunci = {_kunci_katalog({"url": s.url}) for s in konf.sumber.values() if getattr(s, "url", "")}
+    path = konf.akar / "data" / "sumber" / "kandidat_ai.json"
+    if path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            data = {}
+        for p in data.get("pencarian", []):
+            for k in (p.get("hasil") or {}).get("kandidat") or []:
+                if k.get("url"):
+                    kunci.add(_kunci_katalog(k))
+    return sorted(kunci)[:MAKS_DIKENAL]
+
+
+def teks_dikenal(dikenal: list[str]) -> str:
+    if not dikenal:
+        return ""
+    return ("\n\nSUMBER YANG SUDAH TERCATAT (jangan diulang, kecuali Anda menemukan halaman data yang lebih spesifik di "
+            "situs yang sama): " + "; ".join(dikenal))
+
+
+def _dikenal(k: dict, dikenal: set[str]) -> bool:
+    kunci = _kunci_katalog(k)
+    return kunci in dikenal or any(kunci.split("/")[0] == d.split("/")[0] and kunci.startswith(d) for d in dikenal)
+
+
+def ringkas_katalog(katalog: list[dict]) -> dict:
+    """Angka ringkas untuk indikator halaman Sumber Data."""
+    def status(g: dict) -> str:
+        return (g["keputusan"] or {}).get("keputusan") or "belum"
+    return {
+        "unik": len(katalog), "layak": sum(1 for g in katalog if g["nilai"]["tingkat"] == "layak"),
+        "belum_dinilai": sum(1 for g in katalog if status(g) == "belum" and not g["sudah_terdaftar"]),
+        "diterima": sum(1 for g in katalog if status(g) == "terima"),
+        "ditolak": sum(1 for g in katalog if status(g) == "tolak"),
+        "sudah_terdaftar": sum(1 for g in katalog if g["sudah_terdaftar"]),
+        "resmi": sum(1 for g in katalog if g["resmi"]),
+        "kandidat_total": sum(g["jumlah_muncul"] for g in katalog),
+    }
+
+
 # ---------------------------------------------------------------- penyedia
 
 def _cari_gemini(teks: str, cfg: dict, klien=None) -> dict:
@@ -563,6 +698,10 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
     if hasil_web:
         cfg["_hasil_web"] = hasil_web
         teks += teks_hasil_web(hasil_web)
+    dikenal = sumber_dikenal(konf)
+    teks += teks_dikenal(dikenal)
+    if dikenal:
+        tulis(f"{len(dikenal)} sumber yang sudah tercatat diberikan ke AI supaya tidak diulang.")
     jawab = dipakai = None
     for nama in urutan_penyedia(konf, penyedia):
         try:
@@ -586,6 +725,9 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
         k["url_ada_di_hasil_pencarian"] = _cocok(k["url"], jawab["url_pencarian"]) if jawab["punya_pencarian"] else None
         terapkan_periksa(k, pemeriksa_url(k["url"]) if pemeriksa_url else (None, "tidak dicek"))
         k["status_verifikasi"] = "kandidat"
+        k["sudah_dikenal"] = bool(k["url"]) and _dikenal(k, set(dikenal))
+    baru = sum(1 for k in hasil["kandidat"] if not k["sudah_dikenal"])
+    tulis(f"{baru} kandidat baru, {len(hasil['kandidat']) - baru} sudah pernah tercatat.")
 
     zona = ZoneInfo(konf.pengaturan.get("zona_waktu", "Asia/Jakarta"))
     return {
@@ -603,10 +745,10 @@ def cari(konf: Konfigurasi, komoditas: str, periode: str, kebutuhan: str = "harg
     }
 
 
-def bahan_situs() -> dict:
+def bahan_situs(dikenal: list[str] | None = None) -> dict:
     """Prompt dan pengaturan yang dipakai AI Data Finder di browser admin (site/data/ai_prompt.json), supaya
     browser dan mesin selalu memakai aturan yang sama."""
-    return {"sistem": SISTEM, "tambahan_hasil_web": TAMBAHAN_HASIL_WEB, "tambahan_tanpa_pencarian": TAMBAHAN_TANPA_PENCARIAN,
+    return {"sistem": SISTEM, "sumber_dikenal_teks": teks_dikenal(dikenal or []), "tambahan_hasil_web": TAMBAHAN_HASIL_WEB, "tambahan_tanpa_pencarian": TAMBAHAN_TANPA_PENCARIAN,
             "format_json": FORMAT_JSON, "kolom_kandidat": KOLOM_KANDIDAT, "domain_resmi": DOMAIN_RESMI,
             "maks_hasil_web": MAKS_HASIL_WEB, "url_gemini": URL_GEMINI, "model_gemini_cadangan": MODEL_GEMINI_CADANGAN,
             "url_tavily": URL_TAVILY, "gratis": GRATIS,

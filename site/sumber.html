@@ -40,21 +40,35 @@
     <div class="kartu-kepala">
       <div><h2>Daftar sumber</h2><p>Kalau dua sumber beda angka, yang nomor prioritasnya lebih kecil dipakai.</p></div>
     </div>
-    <div class="gulir-tabel"><table id="tabel-sumber"><thead><tr>
-      <th>Kode</th><th>Nama</th><th>Kelompok</th><th>Metode akses</th><th>Frekuensi</th><th>Status</th>
-      <th class="angka">Prioritas</th><th class="angka">Jumlah data</th><th>Izin pemakaian</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
+    <div class="gulir-tabel"><table id="tabel-sumber" class="tabel-sumber"><thead><tr>
+      <th>Sumber</th><th>Kelompok</th><th>Cara ambil</th><th>Status</th>
+      <th class="angka">Prioritas</th><th class="angka">Jumlah data</th></tr></thead><tbody></tbody></table></div>
   </section>
 
-  <section class="kartu">
+  <section class="kartu" aria-labelledby="j-ai">
     <div class="kartu-kepala">
       <div>
-        <h2>Kandidat sumber dari AI</h2>
-        <p>AI mencarikan sumber data baru (AI Data Finder). Analis memeriksa tiap kandidat lalu menerima atau menolaknya.
-          Yang diterima masuk Daftar sumber. Keputusan, penilai, dan alasannya tercatat.</p>
+        <h2 id="j-ai">Kandidat sumber dari AI Data Finder</h2>
+        <p>Kandidat yang sama dari banyak pencarian digabung jadi satu. Skor dihitung dari hal yang bisa dicek, bukan dari pendapat AI.</p>
       </div>
       <a class="tombol" id="tautan-finder" href="#">Cari sumber baru</a>
     </div>
-    <div id="kandidat"></div>
+    <div class="ind-baris" id="kpi-ai"></div>
+    <div class="ai-alat">
+      <div class="ai-saring" role="group" aria-label="Saring kandidat" id="ai-saring">
+        <button type="button" data-saring="" aria-pressed="true">Semua</button>
+        <button type="button" data-saring="belum" aria-pressed="false">Belum dinilai</button>
+        <button type="button" data-saring="layak" aria-pressed="false">Layak dicek</button>
+        <button type="button" data-saring="terima" aria-pressed="false">Diterima</button>
+        <button type="button" data-saring="tolak" aria-pressed="false">Ditolak</button>
+        <button type="button" data-saring="terdaftar" aria-pressed="false">Sudah dipakai</button>
+      </div>
+      <label class="ai-cari"><span class="sr-only">Cari kandidat</span><input type="search" id="ai-cari" placeholder="Cari nama, alamat, atau komoditas"></label>
+      <label class="ai-urut"><span class="sr-only">Urutkan</span><select id="ai-urut">
+        <option value="skor">Skor tertinggi</option><option value="muncul">Paling sering muncul</option><option value="baru">Paling baru</option></select></label>
+    </div>
+    <div id="katalog" class="ai-katalog"></div>
+    <details class="ai-riwayat"><summary id="ai-riwayat-judul">Riwayat pencarian</summary><div id="kandidat"></div></details>
   </section>
 
   <section class="kartu" id="kartu-log" hidden aria-labelledby="j-log">
@@ -86,11 +100,11 @@ document.getElementById("kpi").innerHTML = [
 ].join("");
 const KELAS_STATUS = { aktif: "baik", kandidat: "info", diterima: "info", menunggu_konfirmasi: "rendah", ditolak: "polos" };
 document.querySelector("#tabel-sumber tbody").innerHTML = data.sumber.map((s) => `<tr>
-  <td><code>${esc(s.kode)}</code></td><td>${s.url ? `<a href="${esc(s.url)}" rel="noopener">${esc(s.nama)}</a>` : esc(s.nama)}</td>
-  <td>${esc(s.kelompok)}</td><td>${esc(s.metode_akses.replace(/_/g, " "))}</td><td>${esc(s.frekuensi.replace(/_/g, " "))}</td>
+  <td class="sumber-nama">${s.url ? `<a href="${esc(s.url)}" rel="noopener">${esc(s.nama)}</a>` : esc(s.nama)}<code>${esc(s.kode)}</code>
+    ${s.lisensi || s.catatan ? `<details><summary>Ketentuan dan catatan</summary>${s.lisensi ? `<p><b>Izin:</b> ${esc(s.lisensi)}</p>` : ""}${s.catatan ? `<p>${esc(s.catatan)}</p>` : ""}</details>` : ""}</td>
+  <td>${esc(s.kelompok)}</td><td>${esc(s.metode_akses.replace(/_/g, " "))}<br><span class="meta-kecil">${esc(s.frekuensi.replace(/_/g, " "))}</span></td>
   <td><span class="lencana ${KELAS_STATUS[s.status] || "polos"}">${esc(s.status.replace(/_/g, " "))}</span></td>
-  <td class="angka">${s.prioritas}</td><td class="angka">${angka(s.jumlah_observasi)}</td>
-  <td class="meta-kecil">${esc(s.lisensi)}</td><td class="meta-kecil">${esc(s.catatan)}</td></tr>`).join("");
+  <td class="angka">${s.prioritas}</td><td class="angka">${angka(s.jumlah_observasi)}</td></tr>`).join("");
 
 // Log proses AI (langsung dari Firestore) untuk akun yang boleh melihatnya.
 if (meta?.login === "firebase") {
@@ -114,10 +128,12 @@ else if (meta?.url_repo) finder.href = `${meta.url_repo}/actions/workflows/ai-da
 else finder.href = "tentang.html#ai-data-finder";
 
 const pencarian = data.kandidat_ai?.pencarian || [];
+const katalog = data.katalog_ai || [];
 const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
 const KANDIDAT = new Map(); // id kandidat -> { k, pencarian }
 let keputusanLangsung = new Map(); // keputusan di Firestore yang mungkin belum diolah mesin
 const sedangIsi = new Set();
+const S = { saring: "", cari: "", urut: "skor" };
 
 const sidik = (k) => `${k.url_diakses ? `<br><span class="meta-kecil">dicek ${esc(waktu(k.url_diakses))}</span>` : ""}${k.url_sha256
   ? `<br><span class="meta-kecil" title="SHA-256 isi halaman saat dicek: ${esc(k.url_sha256)}">sidik SHA-256 <code>${esc(k.url_sha256.slice(0, 12))}…</code>${
@@ -131,12 +147,21 @@ function teksKeputusan(kp, menunggu) {
     ${menunggu ? '<br><span class="meta-kecil">Tersimpan. Daftar sumber ikut berubah setelah pembaruan berikutnya.</span>' : ""}`;
 }
 
+/** Keputusan terbaru untuk satu kelompok: keputusan langsung di Firestore untuk id mana pun di kelompok, lalu keputusan
+ * yang sudah diolah mesin. */
+function keputusanKelompok(id) {
+  const g = katalog.find((x) => x.kandidat.id === id);
+  const ids = g ? g.id : [id];
+  const langsung = ids.map((x) => keputusanLangsung.get(x)).filter(Boolean).sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)))[0];
+  return { langsung, olahan: g?.keputusan || KANDIDAT.get(id)?.k.keputusan };
+}
+
 function isiSel(td, { pilih = false } = {}) {
   const x = KANDIDAT.get(td.dataset.id);
   if (!x) return;
-  const langsung = keputusanLangsung.get(td.dataset.id);
-  const kp = langsung || x.k.keputusan;
-  const menunggu = !!langsung && (langsung.keputusan !== x.k.keputusan?.keputusan || (langsung.alasan || "") !== (x.k.keputusan?.alasan || ""));
+  const { langsung, olahan } = keputusanKelompok(td.dataset.id);
+  const kp = langsung || olahan;
+  const menunggu = !!langsung && (langsung.keputusan !== olahan?.keputusan || (langsung.alasan || "") !== (olahan?.alasan || ""));
   const tombol = !kiriman ? "" : kp && !pilih ? '<button class="tombol kecil" type="button" data-ubah>Ubah</button>'
     : '<button class="tombol utama-aksi kecil" type="button" data-putus="terima">Terima</button><button class="tombol kecil" type="button" data-putus="tolak">Tolak</button>';
   td.innerHTML = (kp ? teksKeputusan(kp, menunggu) : '<span class="lencana info">belum dinilai</span>')
@@ -155,7 +180,87 @@ function bukaForm(td, pilihan) {
     <p class="meta-kecil pesan-putus" role="status"></p></form>`;
   td.querySelector("textarea").focus();
 }
+
+// Semua kandidat dari setiap pencarian (untuk keputusan dan riwayat).
+for (const p of pencarian) for (const k of (p.hasil?.kandidat || [])) if (k.id) KANDIDAT.set(k.id, { k, pencarian: p.waktu });
+
+/* ---------- indikator AI */
+const rk = data.ringkas_katalog || {};
+const ambang = data.ambang_skor || { layak: 70, sedang: 45 };
+document.getElementById("kpi-ai").innerHTML = katalog.length ? [
+  ind({ i: "cari", label: "Kandidat unik", nilai: angka(rk.unik), sub: `dari ${angka(rk.kandidat_total)} temuan, ${angka(pencarian.length)} pencarian` }),
+  ind({ i: "centang", warna: "hijau", label: "Layak dicek", nilai: angka(rk.layak), sub: `skor ${ambang.layak} ke atas`, warnaNilai: "hijau", meter: rk.unik ? rk.layak / rk.unik * 100 : 0, meterWarna: "hijau" }),
+  ind({ i: "lampu", warna: "oranye", label: "Belum dinilai", nilai: angka(rk.belum_dinilai), sub: "menunggu keputusan analis" }),
+  ind({ i: "dokumenCentang", label: "Diterima", nilai: angka(rk.diterima), sub: `${angka(rk.ditolak)} ditolak` }),
+  ind({ i: "gedung", label: "Situs resmi", nilai: angka(rk.resmi), sub: `${angka(rk.sudah_terdaftar)} sudah dipakai` }),
+].join("") : "";
+
+/* ---------- kartu kandidat */
+const CEK = { true: ["ok", "✓"], false: ["tidak", "✕"], null: ["ragu", "~"] };
+const host = (u) => { try { return new URL(u).host.replace(/^www\./, ""); } catch { return u || ""; } };
+const statusKelompok = (g) => {
+  const { langsung, olahan } = keputusanKelompok(g.kandidat.id);
+  return (langsung || olahan)?.keputusan || "belum";
+};
+function cocok(g) {
+  const st = statusKelompok(g);
+  if (S.saring === "belum" && (st !== "belum" || g.sudah_terdaftar)) return false;
+  if (S.saring === "layak" && g.nilai.tingkat !== "layak") return false;
+  if (S.saring === "terima" && st !== "terima") return false;
+  if (S.saring === "tolak" && st !== "tolak") return false;
+  if (S.saring === "terdaftar" && !g.sudah_terdaftar) return false;
+  if (S.cari) {
+    const k = g.kandidat;
+    const teks = `${k.nama_sumber} ${k.penyedia} ${k.url} ${g.komoditas.join(" ")} ${k.wilayah}`.toLowerCase();
+    if (!teks.includes(S.cari)) return false;
+  }
+  return true;
+}
+function kartuKandidat(g) {
+  const k = g.kandidat, n = g.nilai;
+  const cek = n.butir.map((b) => { const [kelas, simbol] = CEK[String(b.lolos)] || CEK.null;
+    return `<li class="${kelas}" title="${esc(b.nama)}: ${b.nilai} dari ${b.bobot} poin"><span aria-hidden="true">${simbol}</span>${esc(b.nama)}</li>`; }).join("");
+  return `<article class="ai-kartu ${esc(n.tingkat)}">
+    <div class="ai-skor" style="--skor:${n.skor}" role="img" aria-label="Skor ${n.skor} dari 100"><b>${n.skor}</b><small>${n.tingkat === "layak" ? "layak" : n.tingkat === "sedang" ? "sedang" : "lemah"}</small></div>
+    <div class="ai-isi">
+      <h3>${k.url ? `<a href="${esc(k.url)}" rel="noopener nofollow" target="_blank">${esc(k.nama_sumber)}</a>` : esc(k.nama_sumber)}
+        ${g.sudah_terdaftar ? '<span class="lencana baik">sudah dipakai</span>' : ""}${g.resmi ? '<span class="lencana info">resmi</span>' : ""}</h3>
+      <p class="meta-kecil ai-host">${esc(host(k.url) || "tanpa alamat")} · ${esc(k.penyedia)} · ${esc(k.wilayah)}</p>
+      <ul class="ai-cek">${cek}</ul>
+      <p class="meta-kecil">Muncul ${angka(g.jumlah_muncul)}× · ${g.komoditas.map(esc).join(", ")} · terakhir ${esc(waktu(g.terakhir))}</p>
+      <details><summary class="meta-kecil">Rincian</summary>
+        <dl class="dl ai-dl"><dt>Periode data</dt><dd>${esc(k.periode_data)}</dd><dt>Komoditas</dt><dd>${esc(k.komoditas_varian)} (${esc(k.satuan)})</dd>
+          <dt>Diperbarui</dt><dd>${esc(k.frekuensi_pembaruan)}</dd><dt>Cara akses</dt><dd>${esc(k.metode_akses)}${k.perlu_izin ? " · perlu izin" : ""}</dd>
+          <dt>Ketentuan</dt><dd>${esc(k.lisensi_atau_ketentuan)}</dd><dt>Relevansi</dt><dd>${esc(k.relevansi)}</dd><dt>Keandalan</dt><dd>${esc(k.catatan_keandalan)}</dd>
+          <dt>Bukti akses</dt><dd>${esc(k.keterangan_url || "-")}${sidik(k)}</dd></dl></details>
+    </div>
+    <div class="ai-aksi sel-putus" ${k.id ? `data-id="${esc(k.id)}"` : ""}></div>
+  </article>`;
+}
+const wadahKatalog = document.getElementById("katalog");
+function gambarKatalog() {
+  const urut = { skor: (a, b) => b.nilai.skor - a.nilai.skor || b.jumlah_muncul - a.jumlah_muncul,
+    muncul: (a, b) => b.jumlah_muncul - a.jumlah_muncul || b.nilai.skor - a.nilai.skor,
+    baru: (a, b) => String(b.terakhir).localeCompare(String(a.terakhir)) }[S.urut];
+  const daftar = katalog.filter(cocok).sort(urut);
+  wadahKatalog.innerHTML = daftar.length ? daftar.map(kartuKandidat).join("")
+    : `<p class="kosong">${katalog.length ? "Tidak ada kandidat yang cocok dengan saringan." : "Belum ada kandidat. Pencarian otomatis berjalan setiap hari."}</p>`;
+  wadahKatalog.querySelectorAll(".sel-putus[data-id]").forEach((td) => { if (!sedangIsi.has(td.dataset.id)) isiSel(td); });
+}
+document.getElementById("ai-saring").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-saring]");
+  if (!b) return;
+  S.saring = b.dataset.saring;
+  document.querySelectorAll("#ai-saring button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  gambarKatalog();
+});
+document.getElementById("ai-cari").addEventListener("input", (e) => { S.cari = e.target.value.trim().toLowerCase(); gambarKatalog(); });
+document.getElementById("ai-urut").addEventListener("change", (e) => { S.urut = e.target.value; gambarKatalog(); });
+gambarKatalog();
+
+/* ---------- riwayat pencarian (rincian per pencarian, seperti sebelumnya) */
 const wadah = document.getElementById("kandidat");
+document.getElementById("ai-riwayat-judul").textContent = `Riwayat pencarian (${pencarian.length})`;
 if (!pencarian.length) {
   wadah.innerHTML = `<div class="pesan">Belum ada pencarian. Jalankan <strong>AI Data Finder</strong> dari menu Pengaturan, tab Jalankan, lalu isi komoditas dan periode. Pencarian otomatis juga berjalan setiap hari.
     <details style="margin-top:8px"><summary>Detail penyedia AI</summary>Gratis lewat Gemini, Groq, Cerebras, OpenRouter, dan Mistral
@@ -165,68 +270,51 @@ if (!pencarian.length) {
   wadah.innerHTML = pencarian.slice(0, 10).map((p) => {
     const h = p.hasil || {};
     const kandidat = h.kandidat || [];
-    return `<details ${p === pencarian[0] ? "open" : ""} style="margin-bottom:12px">
+    return `<details style="margin-bottom:12px">
       <summary><strong>${esc(p.permintaan.komoditas)}</strong> · ${esc(p.permintaan.periode)} · ${esc(waktu(p.waktu))} · ${kandidat.length} kandidat · ${esc(p.penyedia || "anthropic")}</summary>
       <p class="meta-kecil" style="margin:6px 0;overflow-wrap:anywhere">Model: ${esc(p.model)}${p.pencarian_web ? ` · dari pencarian web (${esc(p.pencarian_web)})` : ""}${p.punya_pencarian_web === false ? " · <strong>tanpa pencarian web, jadi semua URL perlu dicek manual</strong>" : ""}${(p.penyedia_dilewati || []).length ? " · dilewati: " + p.penyedia_dilewati.map(esc).join("; ") : ""}</p>
-      <p class="meta-kecil" style="margin:6px 0;overflow-wrap:anywhere">Prompt: ${esc(p.permintaan.prompt)}</p>
-      <div class="gulir-tabel"><table><thead><tr><th>Sumber</th><th>Keputusan analis</th><th>Wilayah</th><th>Periode</th><th>Komoditas/satuan</th><th>Frekuensi</th>
-        <th>Akses</th><th>URL di hasil pencarian?</th><th>URL dapat dibuka? (bukti akses)</th><th>Perlu izin?</th><th>Catatan</th></tr></thead><tbody>
-      ${kandidat.map((k) => {
-        if (k.id) KANDIDAT.set(k.id, { k, pencarian: p.waktu });
-        return `<tr>
-        <td>${k.url ? `<a href="${esc(k.url)}" rel="noopener nofollow">${esc(k.nama_sumber)}</a>` : esc(k.nama_sumber)}<br><span class="meta-kecil">${esc(k.penyedia)}</span></td>
-        <td class="sel-putus" ${k.id ? `data-id="${esc(k.id)}"` : ""}></td>
-        <td>${esc(k.wilayah)}<br><span class="meta-kecil">${esc(k.peran_wilayah)}</span></td><td>${esc(k.periode_data)}</td>
-        <td>${esc(k.komoditas_varian)}<br><span class="meta-kecil">${esc(k.satuan)}</span></td><td>${esc(k.frekuensi_pembaruan)}</td>
-        <td>${esc(k.metode_akses)}</td>
-        <td>${k.url_ada_di_hasil_pencarian === null || k.url_ada_di_hasil_pencarian === undefined ? '<span class="lencana polos">tidak ada pencarian</span>' : k.url_ada_di_hasil_pencarian ? '<span class="lencana baik">ya</span>' : '<span class="lencana tinggi">tidak, periksa</span>'}</td>
-        <td>${k.url_dapat_diakses === true ? '<span class="lencana baik">ya</span>' : k.url_dapat_diakses === false ? '<span class="lencana tinggi">tidak</span>' : '<span class="lencana polos">belum pasti</span>'}<br><span class="meta-kecil">${esc(k.keterangan_url || "")}</span>${sidik(k)}</td>
-        <td>${k.perlu_izin ? '<span class="lencana rendah">ya</span>' : "tidak"}</td>
-        <td class="meta-kecil">${esc(k.relevansi)} ${esc(k.catatan_keandalan)} ${esc(k.lisensi_atau_ketentuan)}</td></tr>`;
-      }).join("")
-        || `<tr><td colspan="11" class="kosong">Tidak ada kandidat.</td></tr>`}
-      </tbody></table></div>
+      <ul class="ai-riwayat-daftar">${kandidat.map((k) => `<li>${k.url ? `<a href="${esc(k.url)}" rel="noopener nofollow" target="_blank">${esc(k.nama_sumber)}</a>` : esc(k.nama_sumber)}
+        <span class="meta-kecil">${esc(k.wilayah)} · ${esc(k.frekuensi_pembaruan)} · ${k.url_dapat_diakses === true ? "bisa dibuka" : k.url_dapat_diakses === false ? "tidak bisa dibuka" : "belum pasti bisa dibuka"}</span></li>`).join("") || '<li class="kosong">Tidak ada kandidat.</li>'}</ul>
       ${(h.tidak_ditemukan || []).length ? `<p class="meta-kecil">Tidak ditemukan: ${h.tidak_ditemukan.map(esc).join("; ")}</p>` : ""}
       ${h.catatan ? `<p class="meta-kecil">Catatan AI: ${esc(h.catatan)}</p>` : ""}
     </details>`;
   }).join("");
-  wadah.querySelectorAll(".sel-putus[data-id]").forEach((td) => isiSel(td));
+}
 
-  if (kiriman) {
-    wadah.addEventListener("click", (e) => {
-      const td = e.target.closest(".sel-putus[data-id]");
-      if (!td) return;
-      if (e.target.closest("[data-ubah]")) isiSel(td, { pilih: true });
-      else if (e.target.closest("[data-putus]")) bukaForm(td, e.target.closest("[data-putus]").dataset.putus);
-      else if (e.target.closest("[data-batal]")) { sedangIsi.delete(td.dataset.id); isiSel(td); }
-    });
-    wadah.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const td = form.closest(".sel-putus");
-      const x = KANDIDAT.get(td.dataset.id);
-      const pilihan = form.dataset.pilihan;
-      const alasan = form.querySelector("textarea").value.trim();
-      const pesan = form.querySelector(".pesan-putus");
-      if (pilihan === "tolak" && alasan.length < 3) { pesan.textContent = "Tulis alasan penolakan dulu."; return; }
-      form.querySelectorAll("button").forEach((b) => { b.disabled = true; });
-      pesan.textContent = "Menyimpan…";
-      try {
-        const penilai = sesi()?.nama || "";
-        await kiriman.putuskanSumber(x.k, x.pencarian, pilihan, { alasan, penilai });
-        keputusanLangsung.set(td.dataset.id, { keputusan: pilihan, alasan, penilai, tanggal: new Date().toISOString().slice(0, 10) });
-        sedangIsi.delete(td.dataset.id);
-        isiSel(td);
-      } catch (galat) {
-        pesan.textContent = kiriman.pesanKiriman(galat);
-        form.querySelectorAll("button").forEach((b) => { b.disabled = false; });
-      }
-    });
-    kiriman.pantauKeputusanSumber((peta) => {
-      keputusanLangsung = peta;
-      wadah.querySelectorAll(".sel-putus[data-id]").forEach((td) => { if (!sedangIsi.has(td.dataset.id)) isiSel(td); });
-    }).catch(() => {});
-  }
+if (kiriman) {
+  wadahKatalog.addEventListener("click", (e) => {
+    const td = e.target.closest(".sel-putus[data-id]");
+    if (!td) return;
+    if (e.target.closest("[data-ubah]")) isiSel(td, { pilih: true });
+    else if (e.target.closest("[data-putus]")) bukaForm(td, e.target.closest("[data-putus]").dataset.putus);
+    else if (e.target.closest("[data-batal]")) { sedangIsi.delete(td.dataset.id); isiSel(td); }
+  });
+  wadahKatalog.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const td = form.closest(".sel-putus");
+    const x = KANDIDAT.get(td.dataset.id);
+    const pilihan = form.dataset.pilihan;
+    const alasan = form.querySelector("textarea").value.trim();
+    const pesan = form.querySelector(".pesan-putus");
+    if (pilihan === "tolak" && alasan.length < 3) { pesan.textContent = "Tulis alasan penolakan dulu."; return; }
+    form.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+    pesan.textContent = "Menyimpan…";
+    try {
+      const penilai = sesi()?.nama || "";
+      await kiriman.putuskanSumber(x.k, x.pencarian, pilihan, { alasan, penilai });
+      keputusanLangsung.set(td.dataset.id, { keputusan: pilihan, alasan, penilai, tanggal: new Date().toISOString().slice(0, 10) });
+      sedangIsi.delete(td.dataset.id);
+      isiSel(td);
+    } catch (galat) {
+      pesan.textContent = kiriman.pesanKiriman(galat);
+      form.querySelectorAll("button").forEach((b) => { b.disabled = false; });
+    }
+  });
+  kiriman.pantauKeputusanSumber((peta) => {
+    keputusanLangsung = peta;
+    wadahKatalog.querySelectorAll(".sel-putus[data-id]").forEach((td) => { if (!sedangIsi.has(td.dataset.id)) isiSel(td); });
+  }).catch(() => {});
 }
 </script>
 </body>

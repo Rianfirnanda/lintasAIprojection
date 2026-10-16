@@ -422,3 +422,74 @@ def test_gemini_tanpa_tavily_pencarian_google_ditolak_dicoba_tanpa_pencarian(kon
     assert len(isi_gemini) == 2 and "tools" not in isi_gemini[1]
     assert "TIDAK memiliki akses internet" in isi_gemini[1]["system_instruction"]["parts"][0]["text"]
     assert catatan["penyedia"] == "gemini" and catatan["punya_pencarian_web"] is False
+
+
+def _kand(url, peran="target", frek="harian", metode="api", di_cari=True, dibuka=True, **lain):
+    return {"nama_sumber": lain.pop("nama", url or "tanpa alamat"), "url": url, "peran_wilayah": peran, "frekuensi_pembaruan": frek,
+            "metode_akses": metode, "url_ada_di_hasil_pencarian": di_cari, "url_dapat_diakses": dibuka, **lain}
+
+
+def test_skor_kandidat_dari_ciri_yang_bisa_dicek():
+    terbaik = pencari_data.nilai_kandidat(_kand("https://satudata.bengkulutengahkab.go.id/harga"))
+    assert terbaik["skor"] == 100 and terbaik["tingkat"] == "layak"
+    assert {b["kode"] for b in terbaik["butir"]} == {"resmi", "dicari", "dibuka", "wilayah", "harian", "otomatis"}
+    assert sum(b["bobot"] for b in terbaik["butir"]) == 100
+    # situs swasta, nasional, bulanan, hanya halaman web, dan alamat tidak bisa dibuka: skor rendah
+    lemah = pencari_data.nilai_kandidat(_kand("https://contoh-blog.com/harga", peran="nasional", frek="bulanan", metode="web",
+                                              di_cari=False, dibuka=False))
+    assert lemah["skor"] == 6 + 4 + 4 and lemah["tingkat"] == "lemah"
+    # situs menolak robot (belum pasti bisa dibuka): setengah nilai
+    ragu = pencari_data.nilai_kandidat(_kand("https://bi.go.id/hargapangan", peran="provinsi", dibuka=None))
+    assert next(b for b in ragu["butir"] if b["kode"] == "dibuka")["nilai"] == 7
+    assert next(b for b in ragu["butir"] if b["kode"] == "resmi")["lolos"] is True
+
+
+def test_katalog_menggabungkan_kandidat_yang_sama_dari_banyak_pencarian():
+    data = {"pencarian": [
+        {"waktu": "2026-10-14T08:00:00+07:00", "permintaan": {"komoditas": "Cabai rawit"}, "hasil": {"kandidat": [
+            _kand("https://www.sigahada.bengkulukota.go.id/", peran="pembanding", id="a1", dibuka=None),
+            _kand("https://bi.go.id/hargapangan", peran="provinsi", id="a2")]}},
+        {"waktu": "2026-10-15T08:00:00+07:00", "permintaan": {"komoditas": "Cabai Rawit"}, "hasil": {"kandidat": [
+            _kand("https://sigahada.bengkulukota.go.id", peran="pembanding", id="b1",
+                  keputusan={"keputusan": "terima", "tanggal": "2026-10-15", "penilai": "Analis", "alasan": ""}),
+            _kand("", nama="Sumber tanpa alamat", peran="tidak diketahui", metode="lainnya", frek="?", di_cari=None, dibuka=None, id="b2")]}},
+        {"waktu": "2026-10-16T08:00:00+07:00", "permintaan": {"komoditas": "Gula Pasir"}, "hasil": {"kandidat": [
+            _kand("https://sigahada.bengkulukota.go.id/", peran="pembanding", id="c1")]}},
+    ]}
+    kat = pencari_data.katalog_kandidat(data, ["https://www.bi.go.id/hargapangan/"])
+    assert len(kat) == 3
+    sig = next(g for g in kat if g["kunci"] == "sigahada.bengkulukota.go.id")
+    assert sig["jumlah_muncul"] == 3 and sig["id"] == ["a1", "b1", "c1"]
+    assert sig["komoditas"] == ["Cabai rawit", "Gula Pasir"]  # beda huruf besar kecil dianggap sama
+    assert sig["pertama"].startswith("2026-10-14") and sig["terakhir"].startswith("2026-10-16")
+    assert sig["keputusan"]["keputusan"] == "terima" and sig["resmi"] and not sig["sudah_terdaftar"]
+    assert sig["kandidat"]["id"] == "c1"  # entri dengan skor tertinggi (alamat terbukti bisa dibuka), lalu yang terbaru
+    bi = next(g for g in kat if g["kunci"] == "bi.go.id/hargapangan")
+    assert bi["sudah_terdaftar"]
+    assert [g["nilai"]["skor"] for g in kat] == sorted((g["nilai"]["skor"] for g in kat), reverse=True)
+    r = pencari_data.ringkas_katalog(kat)
+    assert r == {"unik": 3, "layak": 2, "belum_dinilai": 1, "diterima": 1, "ditolak": 0, "sudah_terdaftar": 1, "resmi": 2,
+                 "kandidat_total": 5}
+
+
+def test_sumber_dikenal_diberikan_ke_ai_dan_kandidat_lama_ditandai(konf):
+    (konf.akar / "data" / "sumber").mkdir(parents=True, exist_ok=True)
+    (konf.akar / "data" / "sumber" / "kandidat_ai.json").write_text(json.dumps({"pencarian": [
+        {"waktu": "2026-10-01T08:00:00+07:00", "permintaan": {"komoditas": "Beras"},
+         "hasil": {"kandidat": [{"nama_sumber": "Panel Harga", "url": "https://panelharga.badanpangan.go.id/"}]}}]}), encoding="utf-8")
+    dikenal = pencari_data.sumber_dikenal(konf)
+    assert "panelharga.badanpangan.go.id" in dikenal and len(dikenal) <= pencari_data.MAKS_DIKENAL
+    assert "SUDAH TERCATAT" in pencari_data.teks_dikenal(dikenal) and pencari_data.teks_dikenal([]) == ""
+    assert pencari_data._dikenal({"url": "https://panelharga.badanpangan.go.id/harga/beras"}, set(dikenal))
+    assert not pencari_data._dikenal({"url": "https://contoh-baru.go.id/harga"}, set(dikenal))
+    assert pencari_data.bahan_situs(dikenal)["sumber_dikenal_teks"].startswith("\n\nSUMBER YANG SUDAH TERCATAT")
+    # pencarian baru: prompt memuat daftar sumber lama dan kandidat lama ditandai
+    hasil_cari = blok("web_search_tool_result", content=[SimpleNamespace(url="https://panelharga.badanpangan.go.id/")])
+    r = SimpleNamespace(stop_reason="end_turn", content=[hasil_cari, blok("text", text=json.dumps(HASIL_JSON))], model="claude-opus-5-5",
+                        _request_id="req_2")
+    klien = KlienPalsu([r])
+    catatan = pencari_data.cari(konf, "cabai rawit merah", "Oktober 2026", penyedia="anthropic", klien={"anthropic": klien}, pemeriksa_url=cek_palsu)
+    assert "panelharga.badanpangan.go.id" in klien.panggilan[0]["messages"][0]["content"]
+    k = catatan["hasil"]["kandidat"]
+    assert k[0]["sudah_dikenal"] is True and k[1]["sudah_dikenal"] is False
+    assert any("kandidat baru" in x["teks"] for x in catatan["log"])

@@ -205,18 +205,25 @@ def test_proyeksi_acara_baru_dibuat_setelah_titik_asal_tiba():
     acara = [Acara(n, "Hari Raya Natal", "hari_raya", "pasti") for n in natal + [date(2026, 12, 25)]]
     hv = {"V1": SimpleNamespace(seri=s0)}
     konf = konf_palsu(acara)
-    # data baru sampai Oktober 2026: Natal 2026 belum dimulai (titik asal H-7 = 18 Des)
+    # data baru sampai Oktober 2026: Natal 2026 belum dimulai (titik asal pertama H-30 = 25 Nov)
     out = proyeksi_acara.bentuk(konf, hv, date(2026, 10, 9))
     natal26 = next(a for a in out["acara"] if a["tanggal"] == "2026-12-25")
-    assert natal26["fase"] == "belum_dimulai" and natal26["varian"] == [] and natal26["proyeksi_mulai"] == "2026-12-18"
+    assert natal26["fase"] == "belum_dimulai" and natal26["varian"] == [] and natal26["proyeksi_mulai"] == "2026-11-25"
     assert len(out["evaluasi"]) == 1  # satu varian x satu jenis hari raya (Natal)
-    # data sudah sampai 20 Des 2026: titik asal H-7 tiba, H-3 belum
+    assert set(out["evaluasi"][0]["offset"]) == {"H-30", "H-14", "H-7", "H-3", "H+3", "H+7", "H+14"}
+    assert out["aturan"]["offset_pra"] == ["H-30", "H-14", "H-7", "H-3"]
+    # data sudah sampai 20 Des 2026: titik asal H-30, H-14, dan H-7 tiba, H-3 belum
     s1 = seri_hari_kerja(lambda i: 10000, 1530)
     out2 = proyeksi_acara.bentuk(konf, {"V1": SimpleNamespace(seri=s1)}, date(2026, 12, 20))
     natal26 = next(a for a in out2["acara"] if a["tanggal"] == "2026-12-25")
     assert natal26["fase"] == "pra"
     baris = natal26["varian"][0]["baris"]
-    assert [b["kode"] for b in baris] == ["H-7"] and baris[0]["prediksi"] == 10000 and baris[0]["bawah"] <= 10000 <= baris[0]["atas"]
+    assert [b["kode"] for b in baris] == ["H-30", "H-14", "H-7"]
+    assert all(b["prediksi"] == 10000 and b["bawah"] <= 10000 <= b["atas"] for b in baris)
+    # data sampai 20 Nov 2026: belum ada titik asal yang tiba
+    s2 = seri_hari_kerja(lambda i: 10000, 1500)
+    out3 = proyeksi_acara.bentuk(konf, {"V1": SimpleNamespace(seri=s2)}, date(2026, 11, 20))
+    assert next(a for a in out3["acara"] if a["tanggal"] == "2026-12-25")["fase"] == "belum_dimulai"
 
 
 # ---------------------------------------------------------------- proyeksi periodik
