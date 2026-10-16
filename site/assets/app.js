@@ -202,9 +202,13 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
 });
 
 // ---------- kerangka halaman
-export const NAMA_SISTEM = "Lintas Benteng Projection";
-// Logo resmi BPS (diambil dari dokumen BPS Kabupaten Bengkulu Tengah).
-const LOGO = `<img class="merek-ikon" src="assets/logo-bps.png" alt="" width="38" height="30">`;
+export const NAMA_SISTEM = "Takar Pangan 10•21";
+// Untuk tampilan: titik di antara 10 dan 21 dikecilkan supaya mirip titik pada logo.
+const NAMA_TAMPIL = 'Takar Pangan 10<span class="titik-merek">•</span>21';
+// Logo Takar Pangan 10•21 dan logo mini Lintas Benteng (dokumen Branding Takar Pangan). Latar kotak-kotak pada gambar
+// aslinya sudah dibersihkan menjadi transparan.
+const LOGO = `<img class="merek-ikon" src="assets/logo-takar-pangan.webp" alt="" width="44" height="42">`;
+const LOGO_MINI = `<img class="logo-mini" src="assets/logo-lintas-benteng.webp" alt="" width="9" height="13">`;
 const tundaSelamanya = () => new Promise(() => {});
 
 // Layar pembuka (lihat app.css): tampil sekali per sesi browser. Pada halaman berikutnya langsung dilewati.
@@ -260,7 +264,7 @@ export async function pasangKerangka(aktif) {
     <div class="kepala-dalam">
       <a class="merek" href="index.html" aria-label="${NAMA_SISTEM}, beranda">
         ${LOGO}
-        <span class="merek-teks"><span class="merek-nama">${NAMA_SISTEM}</span><span class="merek-sub">BPS Kabupaten Bengkulu Tengah</span></span>
+        <span class="merek-teks"><span class="merek-nama">${NAMA_TAMPIL}</span><span class="merek-sub">powered by ${LOGO_MINI} Lintas Benteng</span></span>
       </a>
       <nav class="navigasi" aria-label="Menu utama">
         ${menuUtama.map(tautan).join("")}
@@ -360,7 +364,7 @@ export async function pasangKerangka(aktif) {
   const layanan = tautanLayanan(meta.layanan);
   kaki.innerHTML = `
     <div class="kaki-baris">
-      <div class="kaki-logo">${LOGO}<div><strong>${NAMA_SISTEM}</strong><span>BPS Kab. Bengkulu Tengah · bukan angka resmi BPS</span></div></div>
+      <div class="kaki-logo">${LOGO}<div><strong>${NAMA_TAMPIL}</strong><span>powered by ${LOGO_MINI} Lintas Benteng · BPS Kab. Bengkulu Tengah · bukan angka resmi BPS</span></div></div>
       <section class="kaki-status" aria-label="Status jaringan dan layanan"></section>
       <div class="kaki-kanan">
         ${layanan ? `<nav class="kaki-tautan" aria-label="Layanan pengguna">${layanan}</nav>` : ""}
