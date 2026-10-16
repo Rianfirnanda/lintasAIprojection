@@ -1,4 +1,4 @@
-/* Lintas Benteng Projection · Pemantauan Harga Pangan BPS Kabupaten Bengkulu Tengah
+/* Takar Pangan 10•21 (powered by Lintas Benteng) · Pemantauan Harga Pangan BPS Kabupaten Bengkulu Tengah
    Tampilan kaca (glassmorphism): permukaan tembus pandang dengan blur di atas latar yang diambil dari warna logo BPS
    (biru, jingga, hijau). Teks selalu memakai warna tegas agar terbaca di mode terang maupun gelap. */
 
@@ -193,7 +193,10 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .kepala-dalam { display: flex; align-items: center; gap: 14px; padding: 8px 12px 8px 16px; }
 .merek { display: flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; flex: none; }
 .merek:hover { color: var(--ink); }
-.merek-ikon { width: 38px; height: auto; flex: none; display: block; }
+.merek-ikon { width: 44px; height: auto; flex: none; display: block; filter: drop-shadow(0 2px 4px rgba(9, 18, 33, 0.18)); }
+.titik-merek { font-size: 0.62em; vertical-align: 0.2em; margin: 0 0.08em; }
+/* logo mini Lintas Benteng di samping tulisan "powered by" */
+.logo-mini { display: inline-block; width: auto; height: 1.15em; vertical-align: -0.22em; margin: 0 1px; }
 .merek-teks { display: flex; flex-direction: column; line-height: 1.15; }
 .merek-nama { font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; }
 .merek-sub { font-size: 0.72rem; color: var(--muted); }
@@ -268,7 +271,7 @@ code { font-family: var(--mono); font-size: 0.84em; background: var(--surface-3)
 .kaki-merek { display: grid; gap: 10px; align-content: start; }
 .kaki-merek p { line-height: 1.55; color: var(--ink-2); max-width: 46ch; }
 .kaki-logo { display: flex; align-items: center; gap: 10px; }
-.kaki-logo img { width: 38px; height: auto; flex: none; }
+.kaki-logo > img { width: 38px; height: auto; flex: none; }
 .kaki-logo strong { display: block; color: var(--ink); font-size: 0.98rem; font-weight: 600; }
 .kaki-logo span { font-size: 0.78rem; color: var(--muted); }
 .kaki-tautan { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -917,7 +920,7 @@ button.ind:hover .kpi-buka { opacity: 1; color: var(--aksen); transform: transla
   box-shadow: 0 24px 60px rgba(10, 34, 70, 0.16), inset 0 1px 0 var(--kaca-kilau);
 }
 .masuk-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
-.masuk-logo img { width: 46px; height: auto; }
+.masuk-logo > img { width: 64px; height: auto; flex: none; }
 .masuk-logo b { display: block; font-size: 1.02rem; }
 .masuk-logo span { font-size: 0.78rem; color: var(--muted); }
 .masuk-kartu h1 { font-size: 1.6rem; }
@@ -1223,7 +1226,7 @@ body.tanpa-kepala .masuk-wadah { min-height: calc(100vh - 220px); }
 .masuk-sambut::after { content: ""; position: absolute; right: -60px; bottom: -60px; width: 220px; height: 220px; border-radius: 50%;
   border: 28px solid rgba(255, 255, 255, 0.07); pointer-events: none; }
 .masuk-sambut .masuk-logo { margin: 0; }
-.masuk-sambut .masuk-logo img { background: #ffffff; border-radius: 12px; padding: 6px; width: 52px; }
+.masuk-sambut .masuk-logo > img { width: 76px; filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35)); }
 .masuk-sambut .masuk-logo b { color: #ffffff; }
 .masuk-sambut .masuk-logo span { color: rgba(255, 255, 255, 0.78); }
 .masuk-slogan { margin: 6px 0 0; font-size: 1.45rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; max-width: 18ch; }
@@ -1294,7 +1297,7 @@ body:has(.masuk-latar) { overflow-x: clip; }
 .kaki::before { border-radius: 18px 18px 0 0; height: 2px; }
 .kaki-baris { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
 .kaki-baris .kaki-logo { flex: 1 1 220px; min-width: 0; }
-.kaki-baris .kaki-logo img { width: 30px; }
+.kaki-baris .kaki-logo > img { width: 34px; }
 .kaki-baris .kaki-logo strong { font-size: 0.86rem; }
 .kaki-baris .kaki-logo span { font-size: 0.72rem; }
 .kaki-kanan { display: flex; align-items: center; gap: 8px; }
@@ -1325,40 +1328,38 @@ body:has(.masuk-latar) { overflow-x: clip; }
 .kaki::before { content: none; }
 
 /* ============================================================
-   Layar pembuka: logo BPS dengan cincin tiga warna BPS yang berputar, tampil saat situs pertama kali dibuka dalam
-   satu sesi, lalu memudar begitu halaman siap. Murni CSS (html::before dan html::after) supaya muncul sebelum
-   JavaScript termuat. Saat pindah halaman di dalam situs, app.js menambahkan html.lewati-pembuka sehingga layar ini
-   tidak tampil lagi. Pengaman: bila halaman tidak pernah siap (mis. gagal memuat), layar hilang sendiri setelah 10 detik.
+   Layar pembuka: logo lengkap Takar Pangan 10•21 (powered by Lintas Benteng) di atas latar gelap, sesuai dokumen
+   branding yang merancang logo untuk latar gelap, dengan garis muat tiga warna pita logo (biru, jingga, hijau).
+   Tampil saat situs pertama kali dibuka dalam satu sesi, lalu memudar begitu halaman siap. Murni CSS (html::before dan
+   html::after) supaya muncul sebelum JavaScript termuat. Saat pindah halaman di dalam situs, app.js menambahkan
+   html.lewati-pembuka sehingga layar ini tidak tampil lagi. Pengaman: bila halaman tidak pernah siap (mis. gagal
+   memuat), layar hilang sendiri setelah 10 detik.
    ============================================================ */
 html:not(.lewati-pembuka)::before {
-  content: "Lintas Benteng Projection\A BPS Kabupaten Bengkulu Tengah"; white-space: pre; text-align: center;
-  position: fixed; inset: 0; z-index: 9998; pointer-events: none; box-sizing: border-box;
-  display: grid; place-items: center; padding-top: 220px;
-  color: #ffffff; font: 600 1.05rem/1.6 "Jakarta Sans", system-ui, sans-serif; letter-spacing: 0.01em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  content: ""; position: fixed; inset: 0; z-index: 9998; pointer-events: none;
   background-image:
-    url("logo-bps.png"),
-    radial-gradient(circle at 50% calc(50% - 22px), #ffffff 0 50px, rgba(255, 255, 255, 0.18) 51px 53px, transparent 54px),
-    radial-gradient(120% 80% at 15% 10%, rgba(29, 127, 214, 0.55), transparent 60%),
-    radial-gradient(90% 70% at 90% 95%, rgba(14, 138, 98, 0.45), transparent 60%),
-    linear-gradient(160deg, #0a4f91, #052a52);
-  background-repeat: no-repeat; background-size: 62px auto, auto, auto, auto, auto;
-  background-position: 50% calc(50% - 22px), 0 0, 0 0, 0 0, 0 0;
+    url("logo-takar-pangan-lengkap.webp"),
+    radial-gradient(60% 45% at 18% 8%, rgba(0, 128, 255, 0.24), transparent 70%),
+    radial-gradient(55% 40% at 88% 92%, rgba(0, 200, 83, 0.16), transparent 70%),
+    radial-gradient(40% 30% at 92% 12%, rgba(255, 109, 0, 0.12), transparent 70%),
+    linear-gradient(165deg, #0c1628 0%, #060b14 100%);
+  background-repeat: no-repeat;
+  background-size: min(300px, 72vw) auto, auto, auto, auto, auto;
+  background-position: 50% calc(50% - 26px), 0 0, 0 0, 0 0, 0 0;
   animation: pembuka-hilang 0.5s ease 10s forwards;
 }
-/* cincin tiga warna di sekeliling logo */
+/* garis muat di bawah logo, warna pita logo bergeser pelan */
 html:not(.lewati-pembuka)::after {
-  content: ""; position: fixed; z-index: 9999; pointer-events: none; left: 50%; top: calc(50% - 22px);
-  width: 128px; height: 128px; margin: -64px 0 0 -64px; border-radius: 50%;
-  background: conic-gradient(from 0deg, #2a9df4 0 30%, transparent 30% 36%, #3fbf6f 36% 64%, transparent 64% 70%, #f59a23 70% 96%, transparent 96%);
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
-  animation: pembuka-putar 1.1s linear infinite, pembuka-hilang 0.5s ease 10s forwards;
+  content: ""; position: fixed; z-index: 9999; pointer-events: none; left: 50%; top: calc(50% + min(150px, 36vw));
+  width: 168px; height: 4px; margin-left: -84px; border-radius: 4px;
+  background: linear-gradient(90deg, #0080ff, #00e5ff, #ffab00, #ff6d00, #00c853, #0080ff);
+  background-size: 300% 100%;
+  animation: pembuka-muat 1.6s linear infinite, pembuka-hilang 0.5s ease 10s forwards;
 }
 /* halaman siap: layar pembuka memudar */
 html:not(.lewati-pembuka):has(body.siap)::before,
 html:not(.lewati-pembuka):has(body.siap)::after { animation: pembuka-hilang 0.55s ease forwards; }
-@keyframes pembuka-putar { to { transform: rotate(360deg); } }
+@keyframes pembuka-muat { to { background-position: -300% 0; } }
 @keyframes pembuka-hilang { to { opacity: 0; visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) {
   html:not(.lewati-pembuka)::after { animation: pembuka-hilang 0.5s ease 10s forwards; }
@@ -1410,3 +1411,10 @@ html:not(.lewati-pembuka):has(body.siap)::after { animation: pembuka-hilang 0.55
 .tabel-sumber .sumber-nama code { font-size: 0.68rem; margin-left: 6px; white-space: nowrap; }
 .tabel-sumber details { margin-top: 3px; } .tabel-sumber details summary { cursor: pointer; font-size: 0.74rem; color: var(--muted); }
 .tabel-sumber details p { margin: 4px 0 0; font-size: 0.76rem; color: var(--ink-2); }
+
+/* Tentang: identitas visual. Logo dirancang untuk latar gelap, jadi diletakkan di panel gelap. */
+.identitas { display: grid; grid-template-columns: minmax(180px, 280px) minmax(0, 1fr); gap: 22px; align-items: center; }
+.identitas-logo { display: grid; place-items: center; padding: 18px; border-radius: 14px;
+  background: radial-gradient(70% 60% at 20% 10%, rgba(0, 128, 255, 0.22), transparent 70%), linear-gradient(165deg, #0c1628, #060b14); }
+.identitas-logo img { width: 100%; max-width: 240px; height: auto; }
+@media (max-width: 720px) { .identitas { grid-template-columns: minmax(0, 1fr); } }
