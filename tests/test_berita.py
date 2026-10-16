@@ -355,7 +355,8 @@ def test_ringkasan_harga_wilayah_terdekat_median_dan_banding_dengan_data_utama(k
     hasil = {x["kode_komoditas"]: x for x in berita.ringkasan_harga(konf, daftar, {"CRW02": 60000}, hari, 14)}
     crw = hasil["CRW"]
     assert crw["wilayah"] == "target" and crw["median"] == 90000  # hanya rujukan Bengkulu Tengah; angka nasional tidak dicampur
-    assert (crw["minimum"], crw["maksimum"], crw["jumlah_kandidat"], crw["jumlah_berita"]) == (40000, 95000, 3, 2)
+    # rentang dari kelompok Bengkulu Tengah saja; jumlah tetap menghitung semua harga yang dipakai (termasuk nasional)
+    assert (crw["minimum"], crw["maksimum"], crw["jumlah_kandidat"], crw["jumlah_berita"]) == (85000, 95000, 3, 2)
     assert crw["arah"] == "naik"
     bd = crw["banding"]  # median selisih tiap harga (85.000 dan 95.000) terhadap harga resmi 60.000
     assert (bd["dasar"], bd["varian"], bd["harga_utama"], bd["selisih_persen"], bd["beda_jauh"]) == ("harga terakhir sistem", "CRW02", 60000, 50.0, True)
@@ -520,7 +521,8 @@ def test_penilaian_memakai_harga_resmi_pada_tanggal_berita_dan_wilayah_yang_sama
     assert (rk["jumlah"], rk["tidak_dipakai"], rk["sesuai"], rk["perlu_dicek"], rk["dinilai_ai"]) == (8, 2, 3, 1, 5)
     # ringkasan per komoditas tidak memakai harga yang tidak dipakai
     ring = {x["kode_komoditas"]: x for x in berita.ringkasan_harga(konf, daftar, None, hari, 14, deret, p)}
-    assert ring["CRW"]["jumlah_kandidat"] == 4 and ring["CRW"]["minimum"] == 63000 and ring["BRS"]["putusan"] == "harga_program"
+    assert ring["CRW"]["jumlah_kandidat"] == 4 and (ring["CRW"]["minimum"], ring["CRW"]["maksimum"]) == (63000, 64000)
+    assert ring["BRS"]["putusan"] == "harga_program"
 
 
 # ---------------------------------------------------------------- pemeriksaan angka dan ringkasan

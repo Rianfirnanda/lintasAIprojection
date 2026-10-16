@@ -1390,13 +1390,12 @@ def ringkasan_harga(konf: Konfigurasi, berita: list[dict], harga_utama: dict[str
                  "tag": b.get("tag", [])})
     hasil = []
     for (kode_k, satuan), daftar in kelompok.items():
-        nilai = sorted(x["nilai"] for x in daftar)
-
         def golongan(x):  # wilayah paling relevan dulu; harga pasar didahulukan dari harga program pemerintah
             return (URUT_PERAN.index(x["p"]["peran"]) if x["p"]["peran"] in URUT_PERAN else len(URUT_PERAN), x["p"]["putusan"] == "harga_program")
         terbaik = sorted(daftar, key=lambda x: (golongan(x), -(x["p"]["keyakinan"] or 0), [-ord(c) for c in x["tanggal"]]))[0]
         sebanding = [x for x in daftar if golongan(x) == golongan(terbaik)]
         median = _median([x["nilai"] for x in sebanding])
+        nilai = sorted(x["nilai"] for x in sebanding)  # rentang dari kelompok yang sama dengan median, bukan dari wilayah lain
         naik, turun = sum(1 for x in daftar if x.get("arah") == "naik"), sum(1 for x in daftar if x.get("arah") == "turun")
         alasan = [TAG[t][0] for t in dict.fromkeys(t for x in daftar for t in x["tag"]) if t in TAG and t not in ("harga_naik", "harga_turun")]
         banding = None

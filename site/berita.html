@@ -265,7 +265,7 @@ function selPenilaian(p) {
       return `<tr><td><b>${esc(x.komoditas)}</b><div class="meta-kecil">${x.jumlah_kandidat} harga, ${x.jumlah_berita} berita</div></td>
         <td class="angka" data-label="Harga di berita (median)"><b>${rp(x.median)}</b>${satuanTeks(x.satuan)}${rentang}</td>
         <td data-label="Berlaku untuk">${esc(LABEL_WILAYAH[x.wilayah] || x.wilayah)}${c.pasar ? `<div class="meta-kecil">${esc(c.pasar)}</div>` : ""}</td>
-        <td class="angka" data-label="Harga resmi">${bd ? `${rp(bd.harga_utama)}<div class="meta-kecil">${esc(bd.dasar)}<br>${esc(tgl(bd.tanggal))} · selisih <b>${persen(bd.selisih_persen, 1, true)}</b></div>` : "–"}</td>
+        <td class="angka" data-label="Harga resmi">${bd ? `${bd.minimum !== undefined && bd.minimum !== bd.maksimum ? `${rp(bd.minimum)} sampai ${rp(bd.maksimum)}` : rp(bd.harga_utama)}<div class="meta-kecil">${esc(bd.dasar)}<br>${esc(tgl(bd.tanggal))} · selisih <b>${persen(bd.selisih_persen, 1, true)}</b></div>` : "–"}</td>
         <td data-label="Penilaian"><div class="nilai-harga"><span class="lencana ${KELAS_PUTUSAN[x.putusan] || "polos"}">${esc(x.label_putusan)}</span>
           <span class="meta-kecil">keyakinan <b>${x.keyakinan}</b> (${esc(x.tingkat)})${x.dinilai_ai ? `, ${x.dinilai_ai} diperiksa AI` : ""}</span></div></td>
         <td data-label="Contoh berita">${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer">${esc(c.sumber || "berita")}</a>` : esc(c.sumber || "")}
@@ -291,7 +291,8 @@ function tabelHarga(b) {
     const p = x.penilaian, cek = x.cek_ai;
     const wilayah = p ? p.wilayah : (LABEL_WILAYAH[x.peran_wilayah] || x.peran_wilayah);
     const koreksi = x.asal_mesin ? `<div class="meta-kecil">dikoreksi AI, semula ${esc(x.asal_mesin.komoditas)}</div>` : "";
-    const alasan = cek && cek.alasan ? `<div class="alasan-ai">Catatan AI: ${esc(cek.alasan)}</div>` : "";
+    // alasan harga yang tidak dipakai sudah tampil di kolom Penilaian
+    const alasan = cek && cek.alasan && !(p && p.putusan === "tidak_dipakai") ? `<div class="alasan-ai">Catatan AI: ${esc(cek.alasan)}</div>` : "";
     return `<tr>
     <td><b>${esc(x.komoditas)}</b>${x.kode_varian ? ` <span class="meta-kecil">(${esc(x.kode_varian)})</span>` : ""}${koreksi}</td>
     <td class="angka" data-label="Harga disebut"><b>${rp(x.nilai)}</b>${satuanTeks(x.satuan)}</td>
