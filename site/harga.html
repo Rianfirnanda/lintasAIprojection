@@ -262,6 +262,10 @@ try {
 
   gambarChip();
   gambarIsi();
+  // "harga.html#barang=KODE" (dari pencarian cepat atau Tanya Takar) langsung membuka grafik barang itu.
+  const barangDariHash = () => decodeURIComponent((location.hash.match(/barang=([^&]+)/) || [])[1] || "");
+  if (barangDariHash()) bukaGrafik(barangDariHash());
+  window.addEventListener("hashchange", () => { if (barangDariHash()) bukaGrafik(barangDariHash()); });
 
   /* ---------- bandingkan harga */
   let pilihBanding = varian.filter((v) => v.sinyal).slice(0, 2).map((v) => v.kode);
