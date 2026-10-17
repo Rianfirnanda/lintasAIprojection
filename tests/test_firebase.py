@@ -75,6 +75,12 @@ def test_kolom_asing_dibuang_dan_mode_emulator(tmp_path):
     assert "rahasia" not in hasil and hasil["emulator"]["auth"].startswith("http://127.0.0.1")
 
 
+def test_kunci_recaptcha_app_check_ikut_bila_diisi(tmp_path):
+    hasil = firebase.konfigurasi_web(tmp_path, {"FIREBASE_WEB_CONFIG": json.dumps({**KONF, "recaptchaSiteKey": "6Lc-situs"})})
+    assert hasil["recaptchaSiteKey"] == "6Lc-situs"
+    assert "recaptchaSiteKey" not in firebase.konfigurasi_web(tmp_path, {"FIREBASE_WEB_CONFIG": json.dumps(KONF)})
+
+
 def test_daftar_admin_awal():
     assert firebase.daftar_admin_awal(" A@Contoh.go.id, b@contoh.go.id\nA@contoh.go.id ") == ["a@contoh.go.id", "b@contoh.go.id"]
     assert firebase.daftar_admin_awal("") == []

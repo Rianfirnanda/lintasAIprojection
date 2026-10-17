@@ -36,7 +36,9 @@ def konfigurasi_web(akar: Path, env: dict | None = None) -> dict | None:
     if kurang:
         raise ValueError(f"Konfigurasi Firebase belum lengkap, kurang: {', '.join(kurang)}")
     hasil = {k: str(v) for k, v in konf.items() if isinstance(v, (str, int)) and k in (
-        "apiKey", "authDomain", "projectId", "appId", "storageBucket", "messagingSenderId", "measurementId")}
+        "apiKey", "authDomain", "projectId", "appId", "storageBucket", "messagingSenderId", "measurementId",
+        # Kunci situs reCAPTCHA v3 untuk App Check (opsional). Kunci situs memang publik; kunci rahasianya di Firebase.
+        "recaptchaSiteKey")}
     if env.get("FIREBASE_EMULATOR") == "1":
         # Hanya untuk uji di komputer sendiri; situs mengabaikan ini bila tidak dibuka dari localhost.
         hasil["emulator"] = {"auth": "http://127.0.0.1:9099", "firestore": ["127.0.0.1", 8080]}

@@ -286,7 +286,7 @@ export async function jawabBebas(sistem, pertanyaan) {
         const model = cfg.model_gemini || "gemini-flash-latest";
         const data = await kirim(b.url_gemini.replace("{model}", model), { "x-goog-api-key": kunci.GEMINI_API_KEY }, {
           system_instruction: { parts: [{ text: sistem }] }, contents: [{ role: "user", parts: [{ text: pertanyaan }] }],
-          generationConfig: { temperature: 0.2, maxOutputTokens: 600 },
+          generationConfig: { temperature: 0.2, maxOutputTokens: 1500 },
         });
         const teks = (data.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
         if (!teks) throw new Lewati("jawaban kosong");
