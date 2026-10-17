@@ -152,6 +152,46 @@ service cloud.firestore {
         && teksPendek(request.resource.data.aksi, 40);
     }
 
+    // Kehadiran: satu dokumen per akun aktif (halaman yang sedang dibuka, aktif atau diam, kapan terakhir aktif, dan lokasi
+    // hanya bila pemiliknya memilih membagikan). Ditulis pemiliknya sendiri; dibaca pemiliknya dan pengelola akun.
+    function lokasiSah(l) {
+      return l == null || (l is map && l.keys().hasOnly(['lat', 'lon', 'akurasi', 'perkiraan'])
+        && l.lat is number && l.lat >= -90 && l.lat <= 90 && l.lon is number && l.lon >= -180 && l.lon <= 180
+        && l.akurasi is number && l.akurasi >= 0 && l.perkiraan is bool);
+    }
+    match /lbp_kehadiran/{uid} {
+      allow read: if (masuk() && request.auth.uid == uid) || kelolaPengguna();
+      allow create, update: if aktif() && request.auth.uid == uid
+        && baru().keys().hasOnly(['status', 'halaman', 'judul', 'perangkat', 'terakhir_aktif', 'izin_lokasi', 'lokasi', 'lokasi_waktu'])
+        && baru().status in ['aktif', 'diam', 'keluar']
+        && teksPendek(baru().halaman, 60) && teksPendek(baru().judul, 120)
+        && baru().perangkat in ['ponsel', 'komputer']
+        && baru().terakhir_aktif == request.time
+        && baru().izin_lokasi in ['belum', 'ya', 'tidak', 'ditolak']
+        && lokasiSah(baru().get('lokasi', null))
+        && (baru().izin_lokasi == 'ya' || baru().get('lokasi', null) == null)
+        && (baru().get('lokasi_waktu', null) == null || baru().lokasi_waktu is timestamp);
+      allow delete: if kelolaPengguna();
+    }
+
+    // Log aktivitas: masuk, membuka halaman, keluar, dan perubahan izin lokasi. Hanya bisa ditambah oleh pemiliknya
+    // (peran harus sama dengan akunnya), tidak bisa diubah atau dihapus siapa pun dari situs. Kolom hapus_pada dipakai kebijakan TTL
+    // Firestore untuk menghapus catatan lama otomatis (paling lama setahun).
+    match /lbp_aktivitas/{id} {
+      allow read: if kelolaPengguna();
+      allow create: if aktif()
+        && baru().keys().hasOnly(['uid', 'nama', 'peran', 'aksi', 'halaman', 'rincian', 'lokasi', 'waktu', 'hapus_pada'])
+        && baru().uid == request.auth.uid
+        && baru().peran == get(akun(request.auth.uid)).data.peran
+        && teksPendek(baru().nama, 120)
+        && baru().aksi in ['masuk', 'buka', 'keluar', 'lokasi_dibagikan', 'lokasi_dihentikan']
+        && teksPendek(baru().halaman, 60) && teksPendek(baru().rincian, 200)
+        && lokasiSah(baru().get('lokasi', null))
+        && baru().waktu == request.time
+        && baru().hapus_pada is timestamp && baru().hapus_pada > request.time
+        && baru().hapus_pada < request.time + duration.value(366, 'd');
+    }
+
     // Tabel hak akses per peran (halaman Pengguna). Semua akun aktif membacanya untuk menyusun menu; hanya peran
     // Administrator yang mengubahnya. Peran Administrator sendiri selalu membuka semua halaman, jadi tidak ada di sini.
     match /lbp_akses/{id} {
