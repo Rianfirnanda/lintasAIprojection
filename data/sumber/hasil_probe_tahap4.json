@@ -1,0 +1,109 @@
+{
+ "waktu": "2026-10-17T01:45:19+00:00",
+ "situs": [
+  {
+   "nama": "sigahada",
+   "halaman": {
+    "url": "https://sigahada.bengkulukota.go.id",
+    "status": 403,
+    "jenis": "text/html; charset=UTF-8",
+    "byte": 4914,
+    "detik": 0.2,
+    "wilayah_disebut": [],
+    "cuplikan": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 8]> <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]--> <!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!--<![endif]--> <head> <title>Attention Required! | Cloudflare</title> <meta charset=\"UTF-8\" /> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\" /> <meta name=\"robots\" content=\"noindex, nofollow\" /> <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" /> <link rel=\"stylesheet\" id=\"cf_styles-css\" href=\"/cdn-cgi/styles/cf.errors.css\" /> <!--[if lt IE 9]><link rel=\"stylesheet\" id='cf_styles-ie-css' href=\"/cdn-cgi/styles/cf.errors.ie.css\" /><![endif]--> <style>body{margin:0;padding:0}</style> <!--[if gte IE 10]><!--> <script> if (!navigator.cookieEnabled) { window.addEventListener('DOMContentLoaded', function () { var cookieEl = document.getElementById('cookie-alert'); cookieEl.style.display = 'block'; }) } </script> <!--<![endif]--> </head> <body> <div id=\"cf-wrapper\"> <div class=\"cf-alert cf-alert-error cf-cookie-error\" id=\"cookie-alert\" data-translate=\"enable_cookies\">Please enable cookies.</div> <div id=\"cf-error-details\" class=\"cf-error-details-wrapper\"> <div class=\"cf-wrapper cf-header cf-error-overview\"> <h1 data-translate=\"block_headline\">Sorry, you have been blocked</h1> <h2 class=\"cf-subheadline\"",
+    "galat": "HTTP 403",
+    "catatan": "tahap 4",
+    "json": false
+   }
+  },
+  {
+   "nama": "ben_connect",
+   "halaman": {
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+    "status": 200,
+    "jenis": "text/html; charset=UTF-8",
+    "byte": 503499,
+    "detik": 3.1,
+    "wilayah_disebut": [
+     "bengkulu tengah",
+     "kepahiang",
+     "kota bengkulu"
+    ],
+    "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\"> <title>Data Komoditas | BEN CONNECT PROVINSI BENGKULU </title> <link rel=\"shortcut icon\" href=\"https://ben-connect.bengkuluprov.go.id/assets/BackOffice/img/favicon.png\" type=\"image/x-icon\"> <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"> <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin> <link href=\"https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap\" rel=\"stylesheet\"> <link rel=\"stylesheet\" href=\"https://ben-connect.bengkuluprov.go.id/build/assets/app-BOOc36j7.css\"> <style> [x-cloak] { display: none !important; } </style> <script type=\"text/javascript\" class=\"flasher-js\">(function() { var rootScript = 'https://cdn.jsdelivr.net/npm/@flasher/flasher@1.3.2/dist/flasher.min.js'; var FLASHER_FLASH_BAG_PLACE_HOLDER = {}; var options = mergeOptions([], FLASHER_FLASH_BAG_PLACE_HOLDER); function mergeOptions(first, second) { return { context: merge(first.context || {}, second.context || {}), envelopes: merge(first.envelopes || [], second.envelopes || []), options: merge(first.options || {}, second.options || {}), scripts: merge(first.scripts || [], second.scripts || []), styles: merge(first.styles || [], second.styles || []), }; } function merge(first, second) { if (Array.isArray(first) && Array.isArray(second)) { return first.concat(second).filte",
+    "catatan": "tahap 4",
+    "json": false
+   },
+   "skrip": [
+    "https://ben-connect.bengkuluprov.go.id/build/assets/app-q2CGfi1L.js"
+   ],
+   "tabel": [
+    " | | | | | Kabupaten Kota | | | | | | | Nama Varian | | | | | | | 20/01/2025 | | | | | | | 21/01/2025 | | | | | | | 22/01/2025 | | | | | | | 23/01/2025 | | | | | | | | | | Kabupaten Bengkulu Selatan | | Bawang Bombai | | Rp.38,000 | | Rp.38,000 | | Rp.38,000 | | Rp.38,000 | | | | Kabupaten Bengkulu Selatan | | Bawang Merah | | Rp.40,000 | | Rp.35,000 | | Rp.35,000 | | Rp.35,000 | | | | Kabupaten Bengkulu Selatan | | Bawang Putih Honan | | Rp.42,000 | | Rp.40,000 | | Rp.40,000 | | Rp.40,000 | | | | Kabupaten Bengkulu Selatan | | Beras Medium | | Rp.13,125 | | Rp.13,125 | | Rp.13,125 | | Rp.13,125 | | | | Kabupaten Bengkulu Selatan | | Beras SPHP Bulog | | Rp.11,000 | | Rp.11,000 | | Rp.11,000 | | Rp.11,000 | | | | Kabupaten Bengkulu Selatan | | Cabai Merah Besar | | Rp.45,000 | | Rp.55,000 | | Rp.55,000 | | Rp.55,000 | | | | Kabupaten Bengkulu Selatan | | Cabai Merah Keriting | | Rp.50,000 | | Rp.60,000 | | Rp.60,000 | | Rp.60,000 | | | | Kabupaten Bengkulu Selatan | | Cabai Rawit Hijau | | Rp.60,000 | | Rp.80,000 | | Rp.80,000 | | Rp.80,000 | | | | Kabupaten Bengkulu Selatan | | Cabai Rawit Merah | | Rp.60,000 | | Rp.80,000 | | Rp.80,000 | | Rp.80,000 | | | | Kabupaten Bengkulu Selatan | | Daging Ayam Kampung | | Rp.80,000 | | Rp.80,000 | | Rp.80,000 | | Rp.80,000 | | | | Kabupaten Bengkulu Selatan | | Daging Ayam Ras | | Rp.40,000 | | Rp.40,000 | | Rp.40,000 | | Rp.40,000 | | | | Kabupaten Bengkulu Selatan | | Daging Sapi Paha Belakang | | Rp.120,000 | | Rp.120,000 | | Rp.120,000 | | Rp.120,000 | | | | Kabupaten Bengkulu Selatan | | Daging Sapi Paha Depan | | Rp.130,000 | | Rp.130,000 | | Rp.130,000 | | Rp.130,000 | | | | Kabupaten Bengkulu Selatan | | Daging Sapi Sandung Lamur | | Rp.100,000 | | Rp.100,000 | | Rp.100,000 | | Rp.100,000 | | | | Kabupaten Bengkulu Selatan | | Daging Sapi Tetelan | | Rp.50,000 | | Rp.50,000 | | Rp.50,000 | | Rp.50,000 | | | | Kabupaten Bengkulu Selatan | | Garam Halus | | Rp.16,000 | | Rp.16,000 | | Rp.16,000 | | Rp.16,000 | | | | Ka"
+   ],
+   "alamat_disebut": [
+    "https://ben-connect.bengkuluprov.go.id/dashboard/kebencanaan/data-cuaca",
+    "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag",
+    "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas/import",
+    "https://fonts.googleapis.com",
+    "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+   ],
+   "dicoba": [
+    {
+     "url": "https://ben-connect.bengkuluprov.go.id/dashboard/kebencanaan/data-cuaca",
+     "status": 200,
+     "jenis": "text/html; charset=UTF-8",
+     "byte": 149040,
+     "detik": 1.6,
+     "wilayah_disebut": [
+      "bengkulu tengah",
+      "kepahiang",
+      "kota bengkulu"
+     ],
+     "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\"> <title>Data Prakiraan Cuaca Provinsi Bengkulu | BEN CONNECT PROVINSI BENGKULU </title> <link rel=\"shortcut icon\" href=\"https://ben-connect.bengkuluprov.go.id/assets/BackOffice/img/favicon.png\" type=\"image/x-icon\"> <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"> <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin> <link href=\"https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap\" rel=\"stylesheet\"> <link rel=\"stylesheet\" href=\"https://ben-connect.bengkuluprov.go.id/build/assets/app-BOOc36j7.css\"> <style> [x-cloak] { display: none !important; } </style> </head",
+     "catatan": "alamat dari halaman",
+     "json": false
+    },
+    {
+     "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag",
+     "status": 200,
+     "jenis": "text/html; charset=UTF-8",
+     "byte": 81486,
+     "detik": 1.2,
+     "wilayah_disebut": [],
+     "cuplikan": "<!DOCTYPE html> <html lang=\"id\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\"> <title>Data Komoditas | BEN CONNECT PROVINSI BENGKULU </title> <link rel=\"shortcut icon\" href=\"https://ben-connect.bengkuluprov.go.id/assets/BackOffice/img/favicon.png\" type=\"image/x-icon\"> <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"> <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin> <link href=\"https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap\" rel=\"stylesheet\"> <link rel=\"stylesheet\" href=\"https://ben-connect.bengkuluprov.go.id/build/assets/app-BOOc36j7.css\"> <style> [x-cloak] { display: none !important; } </style> </head> <body class=\"bg-[#f9fa",
+     "catatan": "alamat dari halaman",
+     "json": false
+    },
+    {
+     "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas/import",
+     "status": 405,
+     "jenis": "application/json",
+     "byte": 129,
+     "detik": 0.8,
+     "wilayah_disebut": [],
+     "cuplikan": "{ \"message\": \"The GET method is not supported for route dashboard/perindustrian/komoditas/import. Supported methods: POST.\" }",
+     "galat": "HTTP 405",
+     "catatan": "alamat dari halaman",
+     "json": true,
+     "kunci": [
+      "message"
+     ]
+    }
+   ]
+  },
+  {
+   "nama": "simponi_ternak",
+   "halaman": {
+    "url": "https://simponiternak.pertanian.go.id",
+    "status": 403,
+    "jenis": "text/html; charset=UTF-8",
+    "byte": 5849,
+    "detik": 0.2,
+    "wilayah_disebut": [],
+    "cuplikan": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 8]> <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]--> <!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!--<![endif]--> <head> <title>Attention Required! | Cloudflare</title> <meta charset=\"UTF-8\" /> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" /> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\" /> <meta name=\"robots\" content=\"noindex, nofollow\" /> <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" /> <link rel=\"stylesheet\" id=\"cf_styles-css\" href=\"/cdn-cgi/styles/cf.errors.css\" /> <!--[if lt IE 9]><link rel=\"stylesheet\" id='cf_styles-ie-css' href=\"/cdn-cgi/styles/cf.errors.ie.css\" /><![endif]--> <style>body{margin:0;padding:0}</style> <!--[if gte IE 10]><!--> <script> if (!navigator.cookieEnabled) { window.addEventListener('DOMContentLoaded', function () { var cookieEl = document.getElementById('cookie-alert'); cookieEl.style.display = 'block'; }) } </script> <!--<![endif]--> </head> <body> <div id=\"cf-wrapper\"> <div class=\"cf-alert cf-alert-error cf-cookie-error\" id=\"cookie-alert\" data-translate=\"enable_cookies\">Please enable cookies.</div> <div id=\"cf-error-details\" class=\"cf-error-details-wrapper\"> <div class=\"cf-wrapper cf-header cf-error-overview\"> <h1 data-translate=\"block_headline\">Sorry, you have been blocked</h1> <h2 class=\"cf-subheadline\"",
+    "galat": "HTTP 403",
+    "catatan": "tahap 4",
+    "json": false
+   }
+  }
+ ]
+}

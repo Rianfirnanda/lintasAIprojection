@@ -167,3 +167,20 @@ def test_alur_kerja_tidak_mengirim_mode_demo_kosong():
 
     baris = [b for b in (AKAR / ".github/workflows/pipeline.yml").read_text(encoding="utf-8").splitlines() if "pipeline jalankan" in b]
     assert baris and all('${MODE_DEMO:+--demo "$MODE_DEMO"}' in b for b in baris)
+
+
+def test_status_sambungan_sumber_yang_diterima(akar_sementara):
+    from pipeline import proses
+    from .conftest import AKAR
+
+    aturan = proses.baca_sambungan(AKAR)
+    aktif = {"BD-SP2KP": "https://sp2kp.kemendag.go.id/", "BD-PIHPS": "https://www.bi.go.id/hargapangan"}
+    s = lambda url: proses.status_sambungan(url, aturan, aktif)  # noqa: E731
+    assert s("https://sisp.kemendag.go.id")["sumber_terkait"] == "BD-SP2KP"
+    assert s("https://www.bi.go.id/hargapangan/TabelHarga/PasarTradisionalDaerah")["status"] == "tersambung_lewat"
+    assert s("https://sigahada.bengkulukota.go.id")["status"] == "diblokir"
+    assert s("https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas")["status"] == "galat_sumber"
+    assert s("https://contoh-baru.go.id/harga")["status"] == "belum"
+    # tanpa aturan khusus: situs yang sama dengan sumber aktif dianggap sudah tersambung
+    assert proses.status_sambungan("https://www.bi.go.id/lain", [], aktif)["sumber_terkait"] == "BD-PIHPS"
+    assert proses.baca_sambungan(akar_sementara) == aturan  # salinan config uji memuat berkas yang sama

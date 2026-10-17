@@ -10,6 +10,7 @@ import os
 import re
 import shutil
 import tempfile
+import urllib.parse
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -112,6 +113,36 @@ def baca_keputusan_sumber(akar: Path) -> dict[str, dict]:
     return hasil
 
 
+LABEL_SAMBUNGAN = {"tersambung_lewat": "sudah tersambung", "diblokir": "situs menolak akses mesin", "tidak_bisa": "tidak bisa diambil otomatis",
+                   "galat_sumber": "situs sumbernya galat", "tersambung": "tersambung", "belum": "belum tersambung"}
+
+
+def baca_sambungan(akar: Path) -> list[dict]:
+    """config/sambungan_sumber.csv: status sambungan sumber yang diterima analis (berdasarkan hasil penjajakan)."""
+    p = akar / "config" / "sambungan_sumber.csv"
+    if not p.exists():
+        return []
+    with p.open(newline="", encoding="utf-8") as f:
+        return [b for b in csv.DictReader(f) if (b.get("pola_url") or "").strip()]
+
+
+def status_sambungan(url: str, aturan: list[dict], sumber_aktif: dict[str, str]) -> dict:
+    """Apakah data sumber yang diterima analis sudah masuk, dan kalau belum, kenapa. `sumber_aktif`: kode -> url sumber aktif."""
+    u = (url or "").lower()
+    for a in aturan:
+        if a["pola_url"].strip().lower() in u:
+            status = a.get("status") or "belum"
+            return {"status": status, "label": LABEL_SAMBUNGAN.get(status, status), "sumber_terkait": a.get("sumber_terkait") or "",
+                    "keterangan": a.get("keterangan") or ""}
+    host = urllib.parse.urlparse(u).netloc.removeprefix("www.")
+    for kode, url_aktif in sumber_aktif.items():
+        if host and host == urllib.parse.urlparse((url_aktif or "").lower()).netloc.removeprefix("www."):
+            return {"status": "tersambung_lewat", "label": LABEL_SAMBUNGAN["tersambung_lewat"], "sumber_terkait": kode,
+                    "keterangan": f"Situsnya sama dengan sumber {kode} yang sudah tersambung."}
+    return {"status": "belum", "label": LABEL_SAMBUNGAN["belum"], "sumber_terkait": "",
+            "keterangan": "Belum ada konektor otomatis untuk situs ini, jadi datanya belum masuk."}
+
+
 def terapkan_keputusan_sumber(kandidat: dict, keputusan: dict[str, dict]) -> list[dict]:
     """Tandai kandidat yang sudah diputuskan analis, lalu kembalikan kandidat yang diterima sebagai baris daftar sumber
     (status "diterima": sudah dinilai layak, tetapi datanya belum diambil)."""
@@ -199,7 +230,8 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
 
     # Sinyal + tindak lanjut
     indeks = modul_sinyal.IndeksKonteks(hasil_masuk.konteks)
-    daftar_sinyal = modul_sinyal.bentuk_sinyal(konf, hasil_varian, seri_pembanding, indeks, hasil_qc.ketepatan, tanggal_data)
+    daftar_sinyal = modul_sinyal.bentuk_sinyal(konf, hasil_varian, seri_pembanding, indeks, hasil_qc.ketepatan, tanggal_data,
+                                               beku=hasil_qc.beku)
     buku, terlewat = ({}, []) if pakai_demo else tindak_lanjut.baca_buku(akar / "data" / "tindak_lanjut")
     repo = os.environ.get("GITHUB_REPOSITORY")
     url_dashboard = os.environ.get("URL_DASHBOARD") or (
@@ -461,7 +493,9 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "berkas": len(hasil_masuk.batch), "baris_ditolak_skema": len(hasil_masuk.penolakan),
             "duplikat_dibuang": hasil_qc.jumlah_duplikat, "per_status": status_obs,
             "rekonsiliasi_melebihi_batas": sum(1 for r in hasil_qc.rekonsiliasi if r["melebihi_batas"]),
+            "deret_beku": sum(1 for b in hasil_qc.beku if b["masih_beku"]), "observasi_beku": status_obs.get("beku", 0),
         },
+        "beku": hasil_qc.beku[:200],
         "keterangan_tanda": kualitas.KETERANGAN_TANDA,
         "pengaturan": {"jam_batas_tepat_waktu": konf.pengaturan["jam_batas_tepat_waktu"], **konf.pengaturan["kualitas"]},
         "ketepatan": hasil_qc.ketepatan,
@@ -596,6 +630,14 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     katalog = pencari_data.katalog_kandidat(kandidat, [s.url for s in konf.sumber.values()])
     jumlah_per_sumber, terakhir_per_sumber, satuan_jumlah = hitung_data_sumber(konf, hasil_qc.observasi, hasil_masuk.konteks,
                                                                                katalog, kandidat)
+    aturan_sambungan = baca_sambungan(konf.akar)
+    sumber_aktif = {s.kode: s.url for s in konf.sumber.values() if s.status == "aktif" and s.url}
+    for d in diterima:
+        d["sambungan"] = status_sambungan(d.get("url", ""), aturan_sambungan, sumber_aktif)
+        terkait = d["sambungan"]["sumber_terkait"]
+        if d["sambungan"]["status"] == "tersambung_lewat" and terkait:
+            d["jumlah_observasi_terkait"] = jumlah_per_sumber.get(terkait, 0)
+        d["catatan"] = d["catatan"].replace(" Datanya belum diambil.", "") + " " + d["sambungan"]["keterangan"]
     _tulis_json(keluaran / "sumber.json", {
         "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0),
                     "satuan_jumlah": satuan_jumlah.get(s.kode, "baris harga"),

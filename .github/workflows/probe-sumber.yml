@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       jenis:
-        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2/lanjut3 = tahap 2/3; sp2kp = riwayat harga harian SP2KP 5 tahun"
+        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2/lanjut3 = tahap 2/3; lanjut4 = sumber yang diterima analis (SIGAHADA, BEN CONNECT, Simponi Ternak); sp2kp = riwayat harga harian SP2KP 5 tahun"
         default: "lanjut"
 
 permissions:
@@ -36,6 +36,9 @@ jobs:
             dasar) python -m pipeline probe-sumber ;;
             lanjut2) python -m pipeline probe-lanjut --tahap 2 ;;
             lanjut3) python -m pipeline probe-lanjut --tahap 3 ;;
+            lanjut4) python -m pipeline probe-lanjut --tahap 4 ;;
+            lanjut5) python -m pipeline probe-lanjut --tahap 5 ;;
+            lanjut6) python -m pipeline probe-lanjut --tahap 6 ;;
             sp2kp) python -m pipeline ambil-sp2kp --riwayat-hari 1830 && python -m pipeline sp2kp-ke-harga ;;
             *) python -m pipeline probe-lanjut ;;
           esac

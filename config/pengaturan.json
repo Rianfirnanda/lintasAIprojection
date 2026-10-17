@@ -21,7 +21,12 @@
     "z_pencilan": 5,
     "toleransi_konfirmasi_persen": 10,
     "selisih_rekonsiliasi_persen": 15,
-    "jendela_evaluasi_ketepatan_hari": 30
+    "jendela_evaluasi_ketepatan_hari": 30,
+    "beku": {
+      "aktif": true,
+      "min_hari": {"volatil": 14, "protein": 30, "pokok": 30, "pabrikan": 30},
+      "geser_persen": {"volatil": 20, "protein": 12, "pokok": 10, "pabrikan": 10}
+    }
   },
   "sinyal": {
     "z_ambang": 3.5,
@@ -62,7 +67,7 @@
   "notifikasi": {
     "aktif": true,
     "keparahan_minimal": "sedang",
-    "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat", "drift"],
+    "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat", "data_beku", "drift"],
     "maks_sinyal_per_pesan": 10,
     "email_ke_pengguna": true,
     "buletin_mingguan": true,

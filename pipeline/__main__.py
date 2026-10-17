@@ -25,7 +25,7 @@ import logging
 import sys
 from pathlib import Path
 
-from . import berita, konfigurasi, kualitas, masukan, pencari_data, pengaturan, pengguna
+from . import berita, konfigurasi, kualitas, kuota_tavily, masukan, pencari_data, pengaturan, pengguna
 
 
 def _periksa(konf) -> int:
@@ -110,6 +110,8 @@ def _firestore(a) -> int:
     pesan_berita = _berita_harian(akar, paksa=diminta_berita)
     for pesan in pesan_berita:
         print(pesan)
+    if any(x["jenis"] == "uji_notifikasi" for x in ringkas["perintah"]):
+        _uji_notifikasi_dari_situs(akar, a.url)
     if diminta_berita:
         gagal = not pesan_berita or pesan_berita[0].startswith("::warning::")
         try:
@@ -128,6 +130,31 @@ def _firestore(a) -> int:
         keluaran["demo"] = demo
     _keluaran_github(**keluaran)
     return 0
+
+
+def _uji_notifikasi_dari_situs(akar: Path, url: str) -> None:
+    """Tombol "Kirim pesan uji" di panel Pengaturan. Hasil lengkap (termasuk ID obrolan yang pernah menghubungi bot) hanya
+    disimpan di Firestore, yang bisa dibaca admin; catatan proses publik hanya berisi ringkasan tanpa ID."""
+    import os
+    from datetime import datetime
+
+    from . import firestore_sinkron, notifikasi
+
+    try:
+        konf = konfigurasi.muat(akar)
+        firestore_sinkron.pasang_rahasia_dari_firestore(akar)
+        h = notifikasi.uji_kanal(dict(os.environ), datetime.now(berita.WIB).strftime("%d-%m-%Y %H.%M WIB"),
+                                 ke_pengguna=bool({**notifikasi.BAWAAN, **konf.pengaturan.get("notifikasi", {})}["email_ke_pengguna"]))
+    except Exception as e:  # noqa: BLE001
+        h = {"ok": False, "ringkas": f"Uji notifikasi gagal dijalankan: {e}"[:400], "obrolan": []}
+    print(h["ringkas"] if h["ok"] else f"::warning::{h['ringkas']}")
+    kolom = {"pesan": h["ringkas"][:500], "obrolan": h.get("obrolan", [])}
+    if not h["ok"]:
+        kolom.update(status="gagal", hasil="failure")
+    try:
+        firestore_sinkron.catat_perintah("uji_notifikasi", url, **kolom)
+    except Exception as e:  # noqa: BLE001
+        print(f"::warning::Hasil uji notifikasi tidak tercatat di situs: {e}")
 
 
 def _log_ai(sumber: str, komoditas: str, periode: str, catatan: dict | None = None, galat: Exception | None = None,
@@ -201,6 +228,7 @@ def _berita_harian(akar: Path, paksa: bool = False) -> list[str]:
         # Catat dulu supaya penjaga tidak memicu ulang walaupun pencarian gagal; hasilnya ada di log.
         firestore_sinkron.catat_berita_harian(db, hari.date().isoformat())
         firestore_sinkron.pasang_rahasia_dari_firestore(akar)
+        kuota_tavily.siapkan(akar, db=db)
     except Exception as e:  # noqa: BLE001
         return [f"::warning::Berita lokal harian tidak bisa dimulai: {e}"]
     periode = f"{BULAN_ID[hari.month - 1]} {hari.year}"
@@ -247,9 +275,15 @@ def _ai_harian(akar: Path) -> list[str]:
         # Catat dulu supaya penjaga tidak memicu ulang walaupun pencarian gagal; hasilnya ada di log.
         firestore_sinkron.catat_ai_harian(db, hari.date().isoformat(), (mulai + len(pilih)) % len(daftar), pilih)
         firestore_sinkron.pasang_rahasia_dari_firestore(akar)
+        # Jatah kuota Tavily hari ini; sisakan untuk berita lokal bila hari ini belum dicari.
+        sisihkan = len(berita.pengaturan_berita(konf)["kueri"]) if firestore_sinkron.berita_jatuh_tempo(akar, db, sekarang) else 0
+        jatah = kuota_tavily.siapkan(akar, sisihkan=sisihkan, db=db)
     except Exception as e:  # noqa: BLE001
         return [f"::warning::AI Data Finder harian tidak bisa dimulai: {e}"]
     pesan = []
+    if jatah is not None and jatah["boleh_dipakai"] < len(pilih) * kuota_tavily.KREDIT_PER_PERMINTAAN_AI:
+        pesan.append(f"Kuota Tavily dijaga: sisa {jatah['sisa_bulan']} dari {jatah['batas']} kredit bulan ini, jatah hari ini "
+                     f"{jatah['jatah_harian']}. Sebagian komoditas dicari AI tanpa pencarian web.")
     for komoditas in pilih:
         try:
             catatan = pencari_data.cari(konf, komoditas, periode)
@@ -275,6 +309,7 @@ def _cari_dari_situs(akar: Path, masukan: dict) -> tuple[bool, str]:
     try:
         konf = konfigurasi.muat(akar)
         firestore_sinkron.pasang_rahasia_dari_firestore(akar)
+        kuota_tavily.siapkan(akar, manual=True)
         catatan = pencari_data.cari(konf, teks("komoditas"), teks("periode"), teks("kebutuhan", "harga eceran harian"),
                                     teks("wilayah", "Kabupaten Bengkulu Tengah, Provinsi Bengkulu"), penyedia=penyedia)
         pencari_data.simpan(konf, catatan)
@@ -329,6 +364,8 @@ def main(argv: list[str] | None = None) -> int:
     b = sub.add_parser("berita", help="berita lokal: cari, baca, ambil harga dari isinya, ringkas (hasil di data/berita/berita.json)")
     b.add_argument("--tanpa-ai", action="store_true", help="jangan pakai AI; ringkasan dan kesimpulan disusun otomatis")
 
+    sub.add_parser("uji-notifikasi", help="kirim pesan uji ke Telegram dan email, lalu jelaskan bila gagal")
+
     w = sub.add_parser("sandi", help="buat entri akun (sandi berhash) untuk config/pengguna.json")
     w.add_argument("id")
     w.add_argument("sandi")
@@ -382,10 +419,22 @@ def main(argv: list[str] | None = None) -> int:
         print(f"GAGAL: {e}", file=sys.stderr)
         return 2
 
-    if a.perintah in ("jalankan", "cari-sumber", "berita"):
+    if a.perintah in ("jalankan", "cari-sumber", "berita", "uji-notifikasi"):
         from . import firestore_sinkron
 
         firestore_sinkron.pasang_rahasia_dari_firestore(konf.akar)
+    if a.perintah in ("cari-sumber", "berita"):
+        kuota_tavily.siapkan(konf.akar, manual=a.perintah == "cari-sumber")
+    if a.perintah == "uji-notifikasi":
+        import os
+        from datetime import datetime
+
+        from . import notifikasi
+
+        h = notifikasi.uji_kanal(dict(os.environ), datetime.now(berita.WIB).strftime("%d-%m-%Y %H.%M WIB"),
+                                 ke_pengguna=bool({**notifikasi.BAWAAN, **konf.pengaturan.get("notifikasi", {})}["email_ke_pengguna"]))
+        print(h["ringkas"])  # tanpa ID atau nama obrolan: catatan proses repositori publik bisa dibaca siapa saja
+        return 0 if h["ok"] else 1
     if a.perintah == "berita":
         hasil = berita.jalankan(konf, tanpa_ai=a.tanpa_ai)
         path = berita.simpan(konf, hasil)
@@ -433,6 +482,27 @@ def main(argv: list[str] | None = None) -> int:
     if a.perintah == "probe-lanjut":
         from . import probe_lanjut
 
+        if a.tahap == 6:
+            hasil = probe_lanjut.jalankan_tahap6(konf.akar)["disperindag"]
+            print(f"[tahap6] halaman {hasil.get('halaman')} api={hasil.get('api_base')} parameter={hasil.get('parameter')}")
+            for r in hasil.get("coba", []):
+                print(f"   {r['status']} {r['byte']}B json={r['json']} jumlah={r.get('jumlah')} tanggal={r.get('tanggal')} {r['url'][:160]}")
+            return 0
+        if a.tahap == 5:
+            hasil = probe_lanjut.jalankan_tahap5(konf.akar)
+            for r in hasil["ben_connect"]:
+                print(f"[tahap5] {r['status']} {r['byte']}B bengkulu_tengah={r.get('bengkulu_tengah')} {r['url']}")
+                for c in r.get("coba_tanggal", []):
+                    print(f"   {c['status']} {c['kueri']} kepala={c['kepala'][:6]} bengkulu_tengah={c['bengkulu_tengah']}")
+            return 0
+        if a.tahap == 4:
+            hasil = probe_lanjut.jalankan_tahap4(konf.akar)
+            for x in hasil["situs"]:
+                hl = x["halaman"]
+                print(f"[tahap4] {x['nama']}: {hl['status']} {hl['byte']}B {hl.get('galat', '')} alamat={len(x.get('alamat_disebut', []))}")
+                for r in x.get("dicoba", []):
+                    print(f"   {r['status']} {r['byte']}B json={r['json']} {r['url'][:140]}")
+            return 0
         if a.tahap == 3:
             hasil = probe_lanjut.jalankan_tahap3(konf.akar)
             for r in hasil["sp2kp"]["coba"] + hasil["lain"]:

@@ -18,6 +18,7 @@ import logging
 import os
 import smtplib
 import ssl
+import urllib.error
 import urllib.request
 from datetime import date, timedelta
 from email.message import EmailMessage
@@ -29,7 +30,7 @@ TINGKAT = {"rendah": 0, "sedang": 1, "tinggi": 2}
 BAWAAN = {
     "aktif": True,
     "keparahan_minimal": "sedang",
-    "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat"],
+    "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat", "data_beku"],
     "maks_sinyal_per_pesan": 10,
     "email_ke_pengguna": True,
     "buletin_mingguan": True,
@@ -37,7 +38,7 @@ BAWAAN = {
 }
 BATAS_TELEGRAM = 4000
 LABEL_JENIS = {"anomali_harga": "Anomali harga", "proyeksi_naik": "Proyeksi naik", "risiko_hari_raya": "Risiko hari raya",
-               "data_terlambat": "Data terlambat", "drift": "Drift"}
+               "data_terlambat": "Data terlambat", "data_beku": "Data tidak diperbarui", "drift": "Drift"}
 
 
 def baca_status(path: Path) -> dict:
@@ -89,18 +90,118 @@ def susun_pesan_buletin(periode: dict, url: str) -> str:
     return "\n".join(baris)
 
 
+# Penjelasan galat Telegram dalam bahasa sederhana (dicocokkan dengan teks "description" dari Telegram).
+SARAN_TELEGRAM = [
+    ("chat not found", "ID obrolan tidak dikenal bot. Buka bot di Telegram lalu tekan Start (untuk pesan pribadi), atau masukkan "
+                       "bot ke grup lalu kirim satu pesan di grup itu. Setelah itu isi ID obrolan yang benar (lihat daftar di bawah)."),
+    ("bot was blocked", "Bot diblokir oleh penerima. Buka bot di Telegram, buka blokirnya, lalu tekan Start lagi."),
+    ("bot was kicked", "Bot sudah dikeluarkan dari grup. Masukkan lagi bot ke grup tujuan."),
+    ("bot is not a member", "Bot belum dimasukkan ke grup atau kanal tujuan."),
+    ("not enough rights", "Bot belum boleh mengirim pesan di grup atau kanal ini. Jadikan bot admin atau beri izin mengirim pesan."),
+    ("can't initiate conversation", "Penerima belum pernah membuka bot. Buka bot di Telegram lalu tekan Start."),
+    ("chat_id is empty", "ID obrolan masih kosong."),
+    ("unauthorized", "Token bot ditolak Telegram. Salin ulang token dari @BotFather."),
+    ("not found", "Token bot tidak dikenal Telegram. Salin ulang token dari @BotFather."),
+]
+
+
+class GalatTelegram(RuntimeError):
+    def __init__(self, deskripsi: str, kode: int | None = None):
+        self.deskripsi, self.kode = deskripsi, kode
+        cocok = next((saran for kunci, saran in SARAN_TELEGRAM if kunci in deskripsi.lower()), "")
+        self.saran = cocok
+        super().__init__(f"Telegram menolak: {deskripsi}." + (f" {cocok}" if cocok else ""))
+
+
+def panggil_telegram(token: str, metode: str, data: dict | None = None, batas_waktu: int = 30) -> dict:
+    """Panggil Bot API Telegram. Galat dari Telegram dilempar sebagai GalatTelegram berisi alasan aslinya (mis.
+    "Bad Request: chat not found"), bukan hanya "HTTP Error 400"."""
+    req = urllib.request.Request(f"https://api.telegram.org/bot{token}/{metode}", method="POST" if data is not None else "GET",
+                                 data=json.dumps(data).encode() if data is not None else None,
+                                 headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=batas_waktu) as r:
+            hasil = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        try:
+            isi = json.loads(e.read().decode("utf-8", "replace"))
+            raise GalatTelegram(str(isi.get("description") or e), e.code) from None
+        except (ValueError, AttributeError):
+            raise GalatTelegram(f"HTTP {e.code}", e.code) from None
+    if not hasil.get("ok"):
+        raise GalatTelegram(str(hasil.get("description") or hasil))
+    return hasil.get("result")
+
+
 def kirim_telegram(token: str, chat_id: str, teks: str) -> None:
     for i in range(0, len(teks), BATAS_TELEGRAM):
-        req = urllib.request.Request(
-            f"https://api.telegram.org/bot{token}/sendMessage", method="POST",
-            data=json.dumps({"chat_id": chat_id, "text": teks[i:i + BATAS_TELEGRAM],
-                             "disable_web_page_preview": True}).encode(),
-            headers={"Content-Type": "application/json"},
-        )
-        with urllib.request.urlopen(req, timeout=30) as r:
-            hasil = json.loads(r.read())
-            if not hasil.get("ok"):
-                raise RuntimeError(f"Telegram menolak pesan: {hasil}")
+        panggil_telegram(token, "sendMessage", {"chat_id": chat_id, "text": teks[i:i + BATAS_TELEGRAM],
+                                                 "disable_web_page_preview": True})
+
+
+def obrolan_bot(token: str, panggil=panggil_telegram) -> list[dict]:
+    """Obrolan yang baru-baru ini mengirim pesan ke bot (dari getUpdates): untuk menemukan ID obrolan yang benar."""
+    try:
+        pembaruan = panggil(token, "getUpdates", {"limit": 100, "allowed_updates": ["message", "my_chat_member", "channel_post"]})
+    except GalatTelegram:
+        return []
+    hasil: dict[str, dict] = {}
+    for u in pembaruan or []:
+        for kunci in ("message", "channel_post", "my_chat_member", "edited_message"):
+            chat = (u.get(kunci) or {}).get("chat")
+            if not chat or "id" not in chat:
+                continue
+            nama = chat.get("title") or " ".join(x for x in (chat.get("first_name"), chat.get("last_name")) if x) or chat.get("username") or ""
+            hasil[str(chat["id"])] = {"id": str(chat["id"]), "jenis": {"private": "pribadi", "group": "grup", "supergroup": "grup",
+                                                                        "channel": "kanal"}.get(chat.get("type"), chat.get("type", "")),
+                                      "nama": nama[:80]}
+    return list(hasil.values())[:10]
+
+
+def uji_kanal(env: dict, sekarang: str = "", panggil=panggil_telegram, kirim_surel=None, ke_pengguna: bool = True) -> dict:
+    """Kirim pesan uji ke tiap kanal yang kuncinya terisi. Mengembalikan hasil per kanal dengan alasan bila gagal dan,
+    untuk Telegram, daftar obrolan yang pernah menghubungi bot (supaya ID obrolan yang benar mudah dipilih).
+    Ringkasan (`ringkas`) tidak memuat ID atau nama obrolan, jadi aman ditulis di catatan proses publik."""
+    hasil: dict = {"telegram": None, "email": None, "obrolan": [], "bot": ""}
+    teks = ("Uji notifikasi Takar Pangan 10\u202221 berhasil. Peringatan harga pangan penting untuk Kabupaten Bengkulu Tengah "
+            "akan dikirim ke obrolan ini." + (f" ({sekarang})" if sekarang else ""))
+    token, chat = (env.get("TELEGRAM_BOT_TOKEN") or "").strip(), (env.get("TELEGRAM_CHAT_ID") or "").strip()
+    if token:
+        try:
+            bot = panggil(token, "getMe") or {}
+            hasil["bot"] = bot.get("username", "")
+            if not chat:
+                hasil["telegram"] = {"ok": False, "pesan": "Token bot benar, tetapi ID obrolan belum diisi."}
+            else:
+                panggil(token, "sendMessage", {"chat_id": chat, "text": teks, "disable_web_page_preview": True})
+                hasil["telegram"] = {"ok": True, "pesan": f"Pesan uji terkirim lewat bot @{hasil['bot']}." if hasil["bot"] else "Pesan uji terkirim."}
+        except GalatTelegram as e:
+            hasil["telegram"] = {"ok": False, "pesan": str(e)}
+        if hasil["telegram"] and not hasil["telegram"]["ok"]:
+            hasil["obrolan"] = obrolan_bot(token, panggil)
+    if all(env.get(k) for k in ("SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD")):
+        penerima = penerima_email(env, ke_pengguna)
+        if not penerima:
+            hasil["email"] = {"ok": False, "pesan": "Akun email pengirim sudah diisi, tetapi belum ada alamat penerima."}
+        else:
+            try:
+                n = (kirim_surel or kirim_email)(env, "[Uji] Notifikasi Takar Pangan 10\u202221", teks, penerima)
+                hasil["email"] = {"ok": True, "pesan": f"Email uji terkirim ke {n} alamat."}
+            except Exception as e:  # noqa: BLE001
+                hasil["email"] = {"ok": False, "pesan": f"Email uji gagal: {e}"[:300]}
+    bagian = []
+    for nama, label in (("telegram", "Telegram"), ("email", "Email")):
+        h = hasil[nama]
+        if h:
+            bagian.append(f"{label}: {'berhasil' if h['ok'] else 'gagal'}. {h['pesan']}")
+    if hasil["obrolan"]:
+        bagian.append(f"Ada {len(hasil['obrolan'])} obrolan yang pernah menghubungi bot; pilih ID yang benar di halaman Pengaturan.")
+    elif hasil["telegram"] and not hasil["telegram"]["ok"] and token:
+        bagian.append("Belum ada obrolan yang menghubungi bot. Buka bot di Telegram dan tekan Start, atau kirim pesan di grup yang "
+                      "sudah berisi bot, lalu jalankan uji lagi.")
+    hasil["ok"] = any(h and h["ok"] for h in (hasil["telegram"], hasil["email"]))
+    hasil["ringkas"] = " ".join(bagian) or "Belum ada kanal notifikasi: isi token bot dan ID obrolan Telegram, atau akun email, di Pengaturan."
+    return hasil
 
 
 def _daftar(teks: str | None) -> list[str]:

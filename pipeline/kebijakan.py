@@ -116,6 +116,9 @@ def _langkah(s: dict) -> tuple[list[str], str]:
         return ([f"Pantau harga {kom} setiap hari sejak H-14.",
                  "Koordinasikan stok dan distribusi menjelang hari raya.",
                  f"Siapkan pasar murah {kom} bila harga mulai naik."], "operasi_pasar")
+    if jenis == "data_beku":
+        return (["Minta petugas mencatat harga langsung di pasar ini.",
+                 "Laporkan ke pengelola sumber data bahwa angkanya tidak berubah lama."], "lainnya")
     if jenis == "data_terlambat":
         return (["Hubungi petugas pencatat di pasar terkait.",
                  "Untuk pasar di wilayah sulit sinyal, pakai pengiriman luring lalu kirim saat ada sinyal."], "lainnya")

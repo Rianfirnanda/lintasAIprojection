@@ -94,3 +94,6 @@
 }
 .bantuan .tautan-bahaya { font-size: 0.78rem; padding: 0; }
 
+.pilih-obrolan { margin-top: 8px; }
+.pilih-obrolan ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
+.pilih-obrolan li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }

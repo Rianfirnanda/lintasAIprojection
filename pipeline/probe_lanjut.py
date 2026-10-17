@@ -505,3 +505,236 @@ def jalankan_tahap3(akar: Path, ambil_fn=ambil) -> dict:
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_tahap3.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
     return hasil
+
+
+# ---------------------------------------------------------------- tahap 4: sumber yang diterima analis dari AI Data Finder
+
+TAHAP4_SITUS = {
+    "sigahada": "https://sigahada.bengkulukota.go.id",
+    "ben_connect": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+    "simponi_ternak": "https://simponiternak.pertanian.go.id",
+}
+POLA_SKRIP = re.compile(r"""<script[^>]+src=["']([^"']+\.js[^"']*)["']""", re.I)
+POLA_ALAMAT_DATA = re.compile(r"""["'`]((?:https?:)?//[^"'`\s<>]*(?:api|json|harga|komoditas|data)[^"'`\s<>]*|/(?:api|harga|komoditas|data|ajax|get)[\w\-/.?=&{}$]*)["'`]""", re.I)
+
+
+def tahap4_situs(nama: str, url: str, ambil_fn=ambil, maks_skrip: int = 8) -> dict:
+    """Halaman utama, alamat data yang disebut di HTML dan skripnya, lalu mencoba alamat yang tampak berisi JSON harga."""
+    h = ambil_fn(url, 40, 3_000_000)
+    hasil = {"nama": nama, "halaman": ringkas(h, "tahap 4", 1500)}
+    if h["status"] != 200:
+        return hasil
+    t = teks(h)
+    asal = "/".join(url.split("/")[:3])
+    skrip = [urllib.parse.urljoin(url, s) for s in POLA_SKRIP.findall(t)]
+    hasil["skrip"] = skrip[:20]
+    alamat = set(POLA_ALAMAT_DATA.findall(t))
+    hasil["tabel"] = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", x))[:2000] for x in re.findall(r"<table.*?</table>", t, re.S | re.I)[:2]]
+    for s in [x for x in skrip if x.startswith(asal)][:maks_skrip]:
+        hs = ambil_fn(s, 40, 4_000_000)
+        if hs["status"] == 200:
+            alamat |= set(POLA_ALAMAT_DATA.findall(teks(hs)))
+        time.sleep(JEDA)
+    alamat = sorted(a for a in alamat if not a.endswith((".js", ".css", ".png", ".jpg", ".svg", ".woff2", ".ico")))[:80]
+    hasil["alamat_disebut"] = alamat
+    dicoba = []
+    for a in alamat:
+        if "{" in a or "$" in a or len(dicoba) >= 15:
+            continue
+        u = urllib.parse.urljoin(url, a if not a.startswith("//") else "https:" + a)
+        if not u.startswith(asal):
+            continue
+        hj = ambil_fn(u, 40, 2_000_000, {"X-Requested-With": "XMLHttpRequest", "Referer": url})
+        dicoba.append(ringkas(hj, "alamat dari halaman", 800))
+        time.sleep(JEDA)
+    hasil["dicoba"] = dicoba
+    return hasil
+
+
+def jalankan_tahap4(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+             "situs": [tahap4_situs(n, u, ambil_fn) for n, u in TAHAP4_SITUS.items()]}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap4.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
+    return hasil
+
+
+# ---------------------------------------------------------------- tahap 5: BEN CONNECT (tabel harga per kabupaten/kota)
+
+BEN_CONNECT = ["https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+               "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag"]
+
+
+def _sel(baris_html: str) -> list[str]:
+    return [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", c)).strip() for c in re.findall(r"<t[hd][^>]*>(.*?)</t[hd]>", baris_html, re.S | re.I)]
+
+
+def bedah_tabel(t: str) -> list[dict]:
+    """Ringkas semua tabel: kepala, jumlah baris, nilai unik kolom pertama dan kedua, dan contoh baris."""
+    hasil = []
+    for tabel in re.findall(r"<table.*?</table>", t, re.S | re.I)[:4]:
+        baris = [_sel(b) for b in re.findall(r"<tr.*?</tr>", tabel, re.S | re.I)]
+        baris = [b for b in baris if any(b)]
+        if not baris:
+            continue
+        isi = baris[1:]
+        hasil.append({"kepala": baris[0][:40], "jumlah_baris": len(isi),
+                      "kolom1": sorted({b[0] for b in isi if b})[:60], "kolom2": sorted({b[1] for b in isi if len(b) > 1})[:80],
+                      "contoh": isi[:6]})
+    return hasil
+
+
+def bedah_formulir(t: str) -> list[dict]:
+    hasil = []
+    for f in re.findall(r"<form.*?</form>", t, re.S | re.I)[:6]:
+        kepala = re.search(r"<form([^>]*)>", f, re.I).group(1)
+        isian = [re.sub(r"\s+", " ", x)[:250] for x in re.findall(r"<input[^>]*>", f, re.I)]
+        pilihan = []
+        for nama, isi in re.findall(r"""<select[^>]*name=["']([^"']+)["'][^>]*>(.*?)</select>""", f, re.S | re.I):
+            pilihan.append({"nama": nama, "opsi": [(v, re.sub(r"\s+", " ", x).strip()) for v, x in
+                                                   re.findall(r"""<option[^>]*value=["']([^"']*)["'][^>]*>(.*?)</option>""", isi, re.S | re.I)][:60]})
+        hasil.append({"atribut": re.sub(r"\s+", " ", kepala)[:300], "isian": isian[:30], "pilihan": pilihan})
+    return hasil
+
+
+def tahap5_ben_connect(ambil_fn=ambil, hari: date | None = None) -> list[dict]:
+    hari = hari or date.today()
+    hasil = []
+    for url in BEN_CONNECT:
+        h = ambil_fn(url, 60, 6_000_000)
+        r = {"url": url, "status": h["status"], "byte": h["byte"], "galat": h.get("galat", "")}
+        if h["status"] == 200:
+            t = teks(h)
+            r["formulir"] = bedah_formulir(t)
+            r["tabel"] = bedah_tabel(t)
+            r["tautan_kueri"] = sorted(set(re.findall(r"""href=["']([^"']*\?[^"']*)["']""", t)))[:40]
+            r["wire_livewire"] = konteks(t, re.compile(r"wire:model|wire:click|livewire|x-data|fetch\(|axios", re.I), 200, 12)
+            r["bengkulu_tengah"] = "bengkulu tengah" in t.lower()
+            # Coba isi saringan tanggal (nama isian yang umum) dengan 10 hari terakhir lewat GET.
+            percobaan = []
+            for awal, akhir in (("start_date", "end_date"), ("tanggal_awal", "tanggal_akhir"), ("tgl_awal", "tgl_akhir"),
+                                ("from", "to"), ("date_from", "date_to")):
+                q = urllib.parse.urlencode({awal: (hari - timedelta(days=10)).isoformat(), akhir: hari.isoformat()})
+                hq = ambil_fn(f"{url}?{q}", 60, 6_000_000)
+                tq = teks(hq) if hq["status"] == 200 else ""
+                kepala = (bedah_tabel(tq) or [{}])[0].get("kepala", [])
+                percobaan.append({"kueri": q, "status": hq["status"], "kepala": kepala[:12],
+                                  "bengkulu_tengah": "bengkulu tengah" in tq.lower()})
+                time.sleep(JEDA)
+            r["coba_tanggal"] = percobaan
+        hasil.append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
+def jalankan_tahap5(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "ben_connect": tahap5_ben_connect(ambil_fn)}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap5.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
+    return hasil
+
+
+# ---------------------------------------------------------------- tahap 6: API harga Disperindag di BEN CONNECT
+
+def tahap6_api_disperindag(ambil_fn=ambil, hari: date | None = None) -> dict:
+    """Cari alamat API_BASE dan nama parameter di halaman komoditas-disperindag, lalu panggil API-nya untuk Bengkulu Tengah."""
+    hari = hari or date.today()
+    url = BEN_CONNECT[1]
+    h = ambil_fn(url, 60, 6_000_000)
+    hasil = {"halaman": h["status"]}
+    if h["status"] != 200:
+        return hasil
+    t = teks(h)
+    m = re.search(r"""API_BASE\s*=\s*[`"']([^`"']+)[`"']""", t)
+    hasil["api_base"] = m.group(1) if m else None
+    hasil["parameter"] = sorted(set(re.findall(r"""params\.(?:append|set)\(\s*['"]([\w\-]+)['"]""", t)))
+    hasil["skrip_api"] = konteks(t, re.compile(r"API_BASE|params\.(?:append|set)|URLSearchParams", re.I), 300, 12)
+    if not hasil["api_base"]:
+        return hasil
+    base = urllib.parse.urljoin(url, hasil["api_base"])
+    coba = []
+    # Halaman memanggil API dengan last_days (wajib) dan kabupaten_kota (pilihan).
+    for q in ({"last_days": 7}, {"last_days": 30, "kabupaten_kota": "Kabupaten Bengkulu Tengah"},
+              {"last_days": 30, "kabupaten_kota": "Kota Bengkulu"}, {"last_days": 365, "kabupaten_kota": "Kabupaten Bengkulu Tengah"},
+              {"last_days": 1825, "kabupaten_kota": "Kabupaten Bengkulu Tengah"}):
+        u = f"{base}?{urllib.parse.urlencode(q)}" if q else base
+        hj = ambil_fn(u, 60, 8_000_000, {"Accept": "application/json", "X-Requested-With": "XMLHttpRequest", "Referer": url})
+        r = ringkas(hj, "API Disperindag", 3000)
+        try:
+            d = json.loads(teks(hj))
+            data = d.get("data") if isinstance(d, dict) else d
+            if isinstance(data, dict):
+                r["kunci_data"] = list(data)[:20]
+                data = next((v for v in data.values() if isinstance(v, list)), data)
+            if isinstance(data, list):
+                r["jumlah"] = len(data)
+                r["contoh"] = data[:5]
+                tgl = sorted({str(x.get(k)) for x in data if isinstance(x, dict) for k in x if "tanggal" in k.lower() or "date" in k.lower()})
+                r["tanggal"] = [tgl[0], tgl[-1]] if tgl else []
+                r["kabupaten"] = sorted({str(x.get("kabupaten_kota")) for x in data if isinstance(x, dict) and x.get("kabupaten_kota")})[:15]
+        except (ValueError, AttributeError):
+            pass
+        coba.append(r)
+        time.sleep(JEDA)
+    hasil["coba"] = coba
+    return hasil
+
+
+def tahap6_dengan_sesi(hari: date | None = None) -> list[dict]:
+    """Ulangi panggilan API dengan cookie sesi dan token XSRF dari halamannya (aplikasi Laravel biasanya memintanya)."""
+    import http.cookiejar
+
+    jar = http.cookiejar.CookieJar()
+    buka = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    url = BEN_CONNECT[1]
+    hasil = []
+    try:
+        with buka.open(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=60) as r:
+            halaman = r.read(6_000_000).decode("utf-8", "replace")
+    except Exception as e:  # noqa: BLE001
+        return [{"galat": f"{e.__class__.__name__}: {e}"[:200]}]
+    xsrf = next((urllib.parse.unquote(c.value) for c in jar if c.name == "XSRF-TOKEN"), "")
+    csrf = (re.search(r"""name=["']csrf-token["']\s+content=["']([^"']+)""", halaman) or re.search(r"""name=["']_token["'][^>]*value=["']([^"']+)""", halaman))
+    m = re.search(r"lastDays\s*:\s*(\d+)", halaman)
+    bawaan = int(m.group(1)) if m else 30
+    for q in ({"last_days": bawaan}, {"last_days": bawaan, "kabupaten_kota": "Kabupaten Bengkulu Tengah"}, {"last_days": 365, "kabupaten_kota": "Kabupaten Bengkulu Tengah"}):
+        tajuk = {"User-Agent": UA, "Accept": "application/json", "X-Requested-With": "XMLHttpRequest", "Referer": url}
+        if xsrf:
+            tajuk["X-XSRF-TOKEN"] = xsrf
+        if csrf:
+            tajuk["X-CSRF-TOKEN"] = csrf.group(1)
+        u = f"{url}/filter-by-date?{urllib.parse.urlencode(q)}"
+        r0 = {"url": u, "cookie": sorted(c.name for c in jar), "last_days_bawaan": bawaan}
+        try:
+            with buka.open(urllib.request.Request(u, headers=tajuk), timeout=60) as r:
+                isi = r.read(8_000_000).decode("utf-8", "replace")
+                r0["status"] = r.status
+        except urllib.error.HTTPError as e:
+            isi = e.read(20_000).decode("utf-8", "replace")
+            r0["status"] = e.code
+        except Exception as e:  # noqa: BLE001
+            isi, r0["status"] = "", 0
+            r0["galat"] = f"{e.__class__.__name__}: {e}"[:200]
+        r0["cuplikan"] = re.sub(r"\s+", " ", isi)[:3000]
+        try:
+            d = json.loads(isi)
+            data = d.get("data") if isinstance(d, dict) else d
+            r0["kunci"] = list(d)[:20] if isinstance(d, dict) else None
+            if isinstance(data, list):
+                r0["jumlah"], r0["contoh"] = len(data), data[:5]
+        except ValueError:
+            pass
+        hasil.append(r0)
+        time.sleep(JEDA)
+    return hasil
+
+
+def jalankan_tahap6(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "disperindag": tahap6_api_disperindag(ambil_fn),
+             "dengan_sesi": tahap6_dengan_sesi()}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap6.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    return hasil

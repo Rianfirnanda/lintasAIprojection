@@ -78,6 +78,27 @@ di bawah hanya untuk situs tanpa login Google.
 Catatan: lonjakan yang dikonfirmasi oleh pasar/responden lain pada hari yang sama, atau bertahan pada observasi
 berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidasi manual.
 
+**Harga yang tidak diperbarui sumbernya (data beku).** Sumber resmi kadang terus melaporkan angka yang sama persis,
+misalnya cabai merah besar di Pasar Panorama tercatat Rp35.000 setiap hari sejak September 2025, padahal harga cabai di
+pasar dan sumber lain sudah bergeser lebih dari 70%. Mesin menandai angka seperti ini sebagai `data_beku` bila:
+- angkanya sama persis selama sedikitnya 14 hari (cabai dan bawang) atau 30 hari (lainnya), dan
+- median harga barang yang sama di pasar dan sumber lain (jendela 7 hari) sudah bergeser sedikitnya 20% (cabai dan bawang),
+  12% (protein), atau 10% (beras, gula, minyak, dan barang pabrikan) dari awal masa itu.
+
+Hanya angka sesudah pergeseran melewati ambang yang tidak dipakai; awal masa itu tetap dipakai karena saat itu harganya
+masih sejalan. Angka beku tidak dipakai di perhitungan, peringatan, prakiraan, maupun pembanding harga berita, dan tidak
+masuk antrean keputusan (jumlahnya bisa ratusan). Daftarnya ada di halaman **Cek Data**, bagian *Harga yang tidak
+diperbarui sumbernya*. Deret yang masih beku sampai data terakhir memunculkan peringatan **Data tidak diperbarui**
+(keparahan sedang untuk pasar Bengkulu Tengah, rendah untuk pasar pembanding). Tindak lanjutnya: minta petugas mencatat
+harga langsung di pasar itu, atau laporkan ke pengelola sumber. Bila validator sudah mengecek ke pasar dan harganya memang
+tetap, keputusan **Terima** pada angka itu dihormati. Pemeriksaan ini bisa dimatikan di Pengaturan → Data
+(*Abaikan harga yang tidak diperbarui sumbernya*).
+
+Dampaknya pada ketepatan prakiraan jujur dicatat: setelah angka beku dikeluarkan (17 Oktober 2026), kesalahan prakiraan
+cabai naik (cabai rawit merah dari 10,7% menjadi 16,6%, cabai merah keriting dari 8,1% menjadi 11,3%), karena angka beku
+sebelumnya membuat cabai tampak lebih mudah ditebak daripada kenyataannya. Bila angka beku berada di ujung data, deretnya
+terputus dan evaluasi model untuk varian itu menunggu 14 hari data bersambung (keterangannya muncul di halaman Model).
+
 ## 4. Analis & TPID (tindak lanjut sinyal)
 
 1. Dashboard → **Komoditas prioritas** dan halaman **Peringatan**. Klik kotak **Sinyal prioritas** di bagian atas
@@ -239,6 +260,17 @@ Tabel bisa diurutkan dan diekspor ke CSV, termasuk kolom tanggal pilihan. Angkan
       **Researcher (Free)**.
    3. Tempel di **Pengaturan → AI → Pencarian web → Kunci Tavily**, lalu **Simpan kunci yang diisi**.
    Bila kuota habis atau Tavily gangguan, AI tetap bekerja tanpa pencarian dan alasannya dicatat ("dilewati: tavily").
+
+   **Jatah kuota Tavily otomatis.** Sebelum mencari, mesin membaca sisa kredit bulan ini langsung dari Tavily
+   (`https://api.tavily.com/usage`), jadi pemakaian dari mana pun ikut terhitung (AI harian, berita lokal, tombol di
+   Pengaturan, dan AI yang berjalan di browser admin). 10% kuota disisihkan sebagai cadangan; sisanya dibagi rata ke hari
+   yang tersisa dalam bulan itu menjadi jatah harian, yang dipakai bersama semua proses hari itu (angka awal hari disimpan
+   di Firestore `lbp_status/kuota_tavily`). AI harian menyisakan jatah untuk berita lokal bila berita hari itu belum
+   dicari. Permintaan yang ditekan admin boleh melewati jatah harian, tetapi tidak menyentuh cadangan. Bila jatah habis,
+   pencarian dilewati dengan alasan yang jelas, AI tetap menjawab tanpa pencarian web, dan berita lokal tetap dicari lewat
+   Google Berita. Sisa kuota dan jatah hari ini tampil di Pengaturan → AI (*Pencarian web (Tavily)*). Contoh: dengan AI
+   harian 10 komoditas (30 kredit) dan berita (6 kredit), kebutuhan sekitar 1.080 kredit per bulan melebihi 1.000, jadi
+   menjelang akhir bulan sebagian komoditas dicari tanpa pencarian web, alih-alih semua pencarian berhenti total.
 4. **Actions → AI Data Finder → Run workflow** (atau Pengaturan → Jalankan → *Cari sumber data dengan AI*), isi
    komoditas, periode, jenis data, wilayah, dan penyedia. `otomatis` mencoba AI sesuai *Urutan kalau memilih Otomatis*,
    lalu AI gratis lain yang belum disebut. AI yang kuncinya belum diisi, kena batas pemakaian, atau jawabannya rusak
@@ -335,9 +367,13 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
 
 - Halaman **Laporan**: buletin mingguan, analisis bulanan, bahan rapat TPID triwulanan, evaluasi semesteran, dan laporan tahunan. Pilih periode lalu
   **Cetak / Simpan PDF**. Rekomendasi di dalamnya disusun otomatis dan wajib ditelaah analis.
-- **Notifikasi Telegram** (gratis): buat bot lewat @BotFather → salin token → tambahkan bot ke grup TPID →
-  dapatkan `chat_id` grup (mis. kirim pesan di grup lalu buka `https://api.telegram.org/bot<TOKEN>/getUpdates`).
-  Simpan sebagai secret `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID`.
+- **Notifikasi Telegram** (gratis): buat bot lewat @BotFather → salin token → buka bot di Telegram dan tekan **Start**
+  (untuk pesan pribadi), atau tambahkan bot ke grup TPID lalu kirim satu pesan di grup itu. Isi token di Pengaturan →
+  Notifikasi, lalu buka Pengaturan → Jalankan → **Kirim pesan uji Telegram dan email**. Bila ID obrolan belum diisi atau
+  salah, hasil uji menampilkan alasan dari Telegram (mis. "chat not found") dan daftar obrolan yang pernah menghubungi
+  bot; tekan **Pakai ID ini dan kirim uji lagi** pada obrolan yang benar. ID pribadi berupa angka; ID grup berawalan
+  minus. Nama `@pengguna` orang tidak bisa dipakai sebagai tujuan (hanya kanal publik yang boleh memakai `@nama`).
+  Tanpa situs berlogin, isi secret `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID` lalu jalankan **Actions → Uji notifikasi**.
 - **Notifikasi email** (gratis, mis. Gmail): aktifkan verifikasi 2 langkah → buat *App Password* → secret
   `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=465`, `SMTP_USER`, `SMTP_PASSWORD` (App Password), `EMAIL_KE`.
 - Yang dikirim: sinyal aktif keparahan ≥ sedang yang belum pernah dikirim, dan buletin mingguan setelah minggu
@@ -414,7 +450,9 @@ Di repositori publik, panel hanya bisa mengubah sesuatu bila token valid, jadi j
 | Dashboard masih "DATA DEMO" | Belum ada CSV/Excel di `data/masuk/harga/` | Unggah berkas harga pertama |
 | Berkas "GAGAL" di Quality Gate | Kolom wajib hilang / kolom data pribadi | Perbaiki header sesuai templat |
 | Banyak baris ditolak | Kode pasar/varian salah, tanggal masa depan, satuan tak dikenal | Lihat alasan per baris di Quality Gate |
-| Notifikasi tidak terkirim | Secret belum diatur, mode demo, atau kanal menolak | Lihat `pesan_notifikasi` di `site/data/meta.json` / log Actions |
+| Notifikasi tidak terkirim | Kunci belum diisi, mode demo, atau Telegram menolak (mis. "chat not found": bot belum di-Start atau ID obrolan salah) | Pengaturan → Jalankan → **Kirim pesan uji Telegram dan email**; alasan dan daftar obrolan yang benar tampil di sana |
+| Peringatan "Data tidak diperbarui" | Sumber resmi melaporkan angka yang sama terus padahal harga di tempat lain bergeser | Minta petugas mencatat langsung di pasar itu; lihat Cek Data → *Harga yang tidak diperbarui sumbernya* |
+| AI mencari "tanpa pencarian web" | Jatah kuota Tavily hari ini habis (kuota bulanan dijaga) | Lihat sisa kuota di Pengaturan → AI; kurangi *AI harian* atau tunggu hari berikutnya |
 | Issue tidak dibuat | Mode demo, keparahan < tinggi, atau `github_issues=false` | Periksa `pengaturan.json` dan pesan sinkronisasi di halaman Sinyal |
 | Workflow deploy gagal "Pages not enabled" | Pages belum diaktifkan | Settings → Pages → Source: GitHub Actions |
 | Cuaca tidak bertambah | API Open-Meteo tidak terjangkau | Langkah konektor bersifat `continue-on-error`; cek log Actions |

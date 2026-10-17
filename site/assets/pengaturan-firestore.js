@@ -7,7 +7,8 @@
 import { firebaseSiap, penggunaKini } from "./firebase-klien.js";
 import { GalatGitHub } from "./github.js";
 
-export const JENIS_PERINTAH = { "pipeline.yml": "perbarui", "ai-data-finder.yml": "cari_sumber", "berita.yml": "berita" };
+export const JENIS_PERINTAH = { "pipeline.yml": "perbarui", "ai-data-finder.yml": "cari_sumber", "berita.yml": "berita",
+  "uji-notifikasi.yml": "uji_notifikasi" };
 const NAMA_RAHASIA = /^[A-Z][A-Z0-9_]{1,79}$/;
 const iso = (t) => (t?.toDate ? t.toDate().toISOString() : t || null);
 const objek = (x) => x && typeof x === "object" && !Array.isArray(x);
@@ -89,6 +90,14 @@ export class KlienFirestore {
     });
   }
 
+  /** Sisa kuota Tavily menurut proses terakhir (ditulis mesin di lbp_status/kuota_tavily), atau null. */
+  async statusKuotaTavily() {
+    try {
+      const d = await this.fb.getDoc(this.fb.doc(this.db, "lbp_status", "kuota_tavily"));
+      return d.exists() ? d.data() : null;
+    } catch { return null; }
+  }
+
   daftarRahasia() {
     return this._coba(async () => {
       const snap = await this.fb.getDocs(this.fb.collection(this.db, "lbp_rahasia_status"));
@@ -131,7 +140,8 @@ export class KlienFirestore {
     if (!data) return null;
     const status = data.status === "menunggu" ? "queued" : data.status === "berjalan" ? "in_progress" : "completed";
     return { status, hasil: data.hasil || (data.status === "gagal" ? "failure" : data.status === "selesai" ? "success" : null),
-      url: data.url || "", dibuat: iso(data.diminta_pada) || new Date().toISOString(), pesan: data.pesan || "", oleh: data.diminta_oleh || "" };
+      url: data.url || "", dibuat: iso(data.diminta_pada) || new Date().toISOString(), pesan: data.pesan || "", oleh: data.diminta_oleh || "",
+      obrolan: Array.isArray(data.obrolan) ? data.obrolan : [] };
   }
 
   prosesTerakhir(berkas) {

@@ -119,6 +119,7 @@ export const LANGKAH_SINYAL = {
   proyeksi_naik: "Pantau harga 7 hari ke depan",
   risiko_hari_raya: "Siapkan pemantauan intensif",
   data_terlambat: "Hubungi petugas pencatat",
+  data_beku: "Minta petugas mencatat langsung",
   drift: "Cek ulang cara prakiraan",
 };
 

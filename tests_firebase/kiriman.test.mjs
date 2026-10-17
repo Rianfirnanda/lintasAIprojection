@@ -176,6 +176,8 @@ test("permintaan jalankan hanya dari admin, selalu berstatus menunggu, dan statu
     diminta_oleh: "adm@contoh.go.id", diminta_pada: serverTimestamp(), ...tambahan });
   await assertSucceeds(setDoc(doc(db("adm"), "lbp_perintah", "perbarui"), p()));
   await assertSucceeds(setDoc(doc(db("adm"), "lbp_perintah", "berita"), p({ jenis: "berita" })));
+  await assertSucceeds(setDoc(doc(db("adm"), "lbp_perintah", "uji_notifikasi"), p({ jenis: "uji_notifikasi", masukan: {} })));
+  await assertFails(setDoc(doc(db("adm"), "lbp_perintah", "uji_notifikasi"), p({ jenis: "berita" })));
   await assertFails(setDoc(doc(db("adm"), "lbp_perintah", "perbarui"), p({ status: "selesai" })));
   await assertFails(setDoc(doc(db("adm"), "lbp_perintah", "hapus_semua"), p({ jenis: "hapus_semua" })));
   await assertFails(setDoc(doc(db("an"), "lbp_perintah", "perbarui"), p({ diminta_oleh: "an@contoh.go.id" })));

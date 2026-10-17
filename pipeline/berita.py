@@ -304,9 +304,14 @@ def cari_tavily(kueri: list[str], umur: int, kirim=None) -> tuple[list[dict], li
     kunci = os.environ.get("TAVILY_API_KEY")
     if not kunci and kirim is None:
         return [], ["Tavily dilewati: kunci belum diisi."]
+    from .kuota_tavily import ANGGARAN
+
     kirim = kirim or pencari_data._post_json
     hasil, galat = [], []
     for q in kueri:
+        if not ANGGARAN.pakai(1):
+            galat.append(f"Tavily dilewati untuk {len(kueri) - kueri.index(q)} kueri: {ANGGARAN.pesan_habis()}. Pencarian tetap jalan lewat Google Berita.")
+            break
         isi = {"query": q, "topic": "news", "days": max(1, umur), "search_depth": "basic", "max_results": 6,
                "include_answer": False, "include_raw_content": True}
         try:
