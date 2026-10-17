@@ -1,6 +1,6 @@
 // Beranda khusus tiap peran. Dashboard TPID (Gambar 12) tetap berada di index.html.
 import { muatJSON, esc, rp, persen, angka, tgl, waktu } from "./app.js";
-import { ikon, hitungMutu, ringkasSinyalPrioritas, nilaiUptime, bulanTahun, gambarKomoditas, selisihHarga, teksSelisih } from "./dashboard.js";
+import { ikon, hitungMutu, ringkasSinyalPrioritas, nilaiUptime, bulanTahun, gambarKomoditas, selisihHarga, teksSelisih, ringkasHariIni } from "./dashboard.js";
 import { PERAN, sesi, bolehAkses } from "./akses.js";
 import { pasangKlikRincian, rincianArahHarga } from "./rincian.js";
 
@@ -23,7 +23,7 @@ function sparkline(nilai, arah = "") {
   const min = Math.min(...v), maks = Math.max(...v), r = maks - min || 1;
   const titik = v.map((x, k) => `${(k / (v.length - 1) * 100).toFixed(1)},${(28 - ((x - min) / r) * 24).toFixed(1)}`);
   return `<svg class="spark ${arah}" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
-    <polygon class="isi" points="0,30 ${titik.join(" ")} 100,30"/><polyline points="${titik.join(" ")}"/></svg>`;
+    <polygon class="isi" points="0,30 ${titik.join(" ")} 100,30"/><polyline pathLength="100" points="${titik.join(" ")}"/></svg>`;
 }
 
 function salam(peran, judul, sub, aksi = "") {
@@ -63,7 +63,8 @@ async function berandaMasyarakat(el, meta) {
   const aksi = tombol("harga.html", "Semua harga", true) + tombol("laporan.html", "Buletin mingguan") +
     (lay.url_pengaduan_eksternal || lay.url_pengaduan ? tombol(lay.url_pengaduan_eksternal || lay.url_pengaduan, "Lapor data") : "");
   kosongkan(el, `${salam("masyarakat", PERAN.masyarakat.judulBeranda, `Data ${tgl(meta.tanggal_data_terakhir, true)}`, aksi)}
-    <p class="petunjuk-klik">Klik kotak di bawah untuk melihat barang apa saja yang naik, turun, stabil, atau perlu diwaspadai.</p>
+    <p class="hari-ini">${ikon("lampu", 20)}<span>${esc(ringkasHariIni(v, "mingguan").kalimat)}</span></p>
+    <p class="petunjuk-klik">Ketuk kotak di bawah untuk melihat barang apa saja yang naik, turun, stabil, atau perlu diwaspadai.</p>
     <div class="ind-baris" id="kotak-arah">
       ${ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: naik.length, kecil: "varian", sub: "dibanding minggu lalu", meter: naik.length / v.length * 100, meterWarna: "merah", warnaNilai: "merah", rincian: "naik" })}
       ${ind({ i: "trenTurun", warna: "hijau", label: "Harga turun", nilai: turun.length, kecil: "varian", sub: "dibanding minggu lalu", meter: turun.length / v.length * 100, meterWarna: "hijau", warnaNilai: "hijau", rincian: "turun" })}

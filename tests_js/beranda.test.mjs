@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { KODE_GAMBAR, gambarKomoditas } from "../site/assets/gambar-komoditas.js";
-import { arahSelisih, htmlSelisih, selisihHarga, teksSelisih, tglPendek } from "../site/assets/selisih.js";
+import { arahSelisih, htmlSelisih, ringkasHariIni, selisihHarga, teksSelisih, tglPendek } from "../site/assets/selisih.js";
 
 const varianCsv = readFileSync(new URL("../config/komoditas.csv", import.meta.url), "utf-8")
   .trim().split("\n").slice(1).map((baris) => baris.split(",")[2]);
@@ -69,4 +69,16 @@ test("teks selisih mudah dibaca", () => {
   assert.match(htmlSelisih({ selisih: -500, persen: -1.23 }), /Turun Rp500 <small>\(-1,2%\)<\/small>/);
   assert.match(htmlSelisih({ selisih: 0, persen: 0 }), /Tetap<\/span>$/);
   assert.match(htmlSelisih(null), /Belum ada pembanding/);
+});
+
+test("ringkasan hari ini memakai rupiah, ambang 0,5%, dan kalimat biasa", () => {
+  const v = (nama, kini, lalu, satuan = "kg") => ({ nama, satuan, harga_terakhir: kini,
+    harga_acuan: { mingguan: { harga: lalu, tanggal: "2026-10-09" } }, perubahan: { mingguan: ((kini - lalu) / lalu) * 100 } });
+  const r = ringkasHariIni([v("Cabai Rawit Hijau", 80000, 70000), v("Beras Medium", 14400, 14375), v("Daging Ayam", 35000, 40000)]);
+  assert.equal(r.naik, 1);
+  assert.equal(r.turun, 1);
+  assert.equal(r.kalimat, "Dibanding minggu lalu, 1 harga naik dan 1 harga turun. Naik paling banyak: Cabai Rawit Hijau, Rp10.000 per kg (+14,3%).");
+  assert.match(ringkasHariIni([v("Beras", 14375, 14375)]).kalimat, /stabil/);
+  assert.match(ringkasHariIni([]).kalimat, /Belum ada harga minggu lalu/);
+  assert.match(ringkasHariIni([v("Gula", 18000, 20000)]).kalimat, /tidak ada harga yang naik dan 1 harga turun\.$/);
 });

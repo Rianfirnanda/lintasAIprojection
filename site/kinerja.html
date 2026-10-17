@@ -58,6 +58,7 @@
 
 <script type="module">
 import { ind } from "./assets/peran.js";
+import { animasiGrafik } from "./assets/grafik.js";
 import { pasangKerangka, muatJSON, esc, persen, angka, tgl, waktu, warna, saatTemaBerubah, tampilkanGalat } from "./assets/app.js";
 
 const meta = await pasangKerangka("kinerja.html");
@@ -109,7 +110,7 @@ function gambarKoreksi() {
     type: "line",
     data: { labels: seri.map((s) => s.bulan), datasets: [{ label: "Koreksi supervisor (%)", data: seri.map((s) => s.persen),
       borderColor: warna("series-1"), backgroundColor: warna("series-1"), borderWidth: 2, pointRadius: 3, tension: 0 }] },
-    options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+    options: { responsive: true, maintainAspectRatio: false, animation: animasiGrafik(seri.length), interaction: { mode: "index", intersect: false },
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${angka(c.raw, 2)}% dari ${angka(seri[c.dataIndex].observasi)} data` } } },
       scales: { x: { grid: { display: false }, ticks: { color: warna("muted"), maxRotation: 0, autoSkipPadding: 16 } },
                 y: { grid: { color: warna("grid") }, border: { display: false }, beginAtZero: true, ticks: { color: warna("muted"), callback: (v) => v + "%" } } } },

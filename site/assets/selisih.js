@@ -36,3 +36,26 @@ export function htmlSelisih(s, { kelas = "" } = {}) {
   return `<span class="selisih ${a} ${kelas}"><span class="segitiga" aria-hidden="true">${TANDA_ARAH[a]}</span>${teksSelisih(s.selisih)}` +
     `${s.persen !== null && s.persen !== undefined && s.selisih ? ` <small>(${persen(s.persen)})</small>` : ""}</span>`;
 }
+
+const NAMA_PERIODE = { harian: "kemarin", mingguan: "minggu lalu", bulanan: "sebulan lalu" };
+
+/** Ringkasan satu-dua kalimat untuk semua kalangan: berapa harga naik dan turun dibanding periode lalu, dan kenaikan
+ *  terbesar dalam rupiah. Naik/turun memakai ambang yang sama dengan kotak di beranda (lebih dari 0,5%).
+ *  Mengembalikan { naik, turun, kalimat } dengan kalimat berupa teks biasa (tanpa HTML). */
+export function ringkasHariIni(varian, periode = "mingguan") {
+  const ubah = (v) => v.perubahan?.[periode];
+  const ada = varian.filter((v) => ubah(v) !== null && ubah(v) !== undefined);
+  const naik = ada.filter((v) => ubah(v) > 0.5), turun = ada.filter((v) => ubah(v) < -0.5);
+  const lalu = NAMA_PERIODE[periode] || "periode lalu";
+  if (!ada.length) return { naik: 0, turun: 0, kalimat: `Belum ada harga ${lalu} untuk dibandingkan.` };
+  const jumlah = (n, kata) => (n ? `${n} harga ${kata}` : `tidak ada harga yang ${kata}`);
+  let kalimat = `Dibanding ${lalu}, ${jumlah(naik.length, "naik")} dan ${jumlah(turun.length, "turun")}.`;
+  if (!naik.length && !turun.length) kalimat = `Dibanding ${lalu}, harga bahan pokok stabil: tidak ada yang naik atau turun lebih dari 0,5%.`;
+  const terbesar = naik.map((v) => ({ v, s: selisihHarga(v, periode) })).filter((x) => x.s && x.s.selisih > 0)
+    .sort((a, b) => b.s.selisih - a.s.selisih)[0];
+  if (terbesar) {
+    kalimat += ` Naik paling banyak: ${terbesar.v.nama}, ${rp(terbesar.s.selisih)} per ${terbesar.v.satuan || "kg"}` +
+      `${terbesar.s.persen !== null && terbesar.s.persen !== undefined ? ` (${persen(terbesar.s.persen)})` : ""}.`;
+  }
+  return { naik: naik.length, turun: turun.length, kalimat };
+}
