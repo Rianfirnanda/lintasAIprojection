@@ -682,8 +682,58 @@ def tahap6_api_disperindag(ambil_fn=ambil, hari: date | None = None) -> dict:
     return hasil
 
 
+def tahap6_dengan_sesi(hari: date | None = None) -> list[dict]:
+    """Ulangi panggilan API dengan cookie sesi dan token XSRF dari halamannya (aplikasi Laravel biasanya memintanya)."""
+    import http.cookiejar
+
+    jar = http.cookiejar.CookieJar()
+    buka = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    url = BEN_CONNECT[1]
+    hasil = []
+    try:
+        with buka.open(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=60) as r:
+            halaman = r.read(6_000_000).decode("utf-8", "replace")
+    except Exception as e:  # noqa: BLE001
+        return [{"galat": f"{e.__class__.__name__}: {e}"[:200]}]
+    xsrf = next((urllib.parse.unquote(c.value) for c in jar if c.name == "XSRF-TOKEN"), "")
+    csrf = (re.search(r"""name=["']csrf-token["']\s+content=["']([^"']+)""", halaman) or re.search(r"""name=["']_token["'][^>]*value=["']([^"']+)""", halaman))
+    m = re.search(r"lastDays\s*:\s*(\d+)", halaman)
+    bawaan = int(m.group(1)) if m else 30
+    for q in ({"last_days": bawaan}, {"last_days": bawaan, "kabupaten_kota": "Kabupaten Bengkulu Tengah"}, {"last_days": 365, "kabupaten_kota": "Kabupaten Bengkulu Tengah"}):
+        tajuk = {"User-Agent": UA, "Accept": "application/json", "X-Requested-With": "XMLHttpRequest", "Referer": url}
+        if xsrf:
+            tajuk["X-XSRF-TOKEN"] = xsrf
+        if csrf:
+            tajuk["X-CSRF-TOKEN"] = csrf.group(1)
+        u = f"{url}/filter-by-date?{urllib.parse.urlencode(q)}"
+        r0 = {"url": u, "cookie": sorted(c.name for c in jar), "last_days_bawaan": bawaan}
+        try:
+            with buka.open(urllib.request.Request(u, headers=tajuk), timeout=60) as r:
+                isi = r.read(8_000_000).decode("utf-8", "replace")
+                r0["status"] = r.status
+        except urllib.error.HTTPError as e:
+            isi = e.read(20_000).decode("utf-8", "replace")
+            r0["status"] = e.code
+        except Exception as e:  # noqa: BLE001
+            isi, r0["status"] = "", 0
+            r0["galat"] = f"{e.__class__.__name__}: {e}"[:200]
+        r0["cuplikan"] = re.sub(r"\s+", " ", isi)[:3000]
+        try:
+            d = json.loads(isi)
+            data = d.get("data") if isinstance(d, dict) else d
+            r0["kunci"] = list(d)[:20] if isinstance(d, dict) else None
+            if isinstance(data, list):
+                r0["jumlah"], r0["contoh"] = len(data), data[:5]
+        except ValueError:
+            pass
+        hasil.append(r0)
+        time.sleep(JEDA)
+    return hasil
+
+
 def jalankan_tahap6(akar: Path, ambil_fn=ambil) -> dict:
-    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "disperindag": tahap6_api_disperindag(ambil_fn)}
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "disperindag": tahap6_api_disperindag(ambil_fn),
+             "dengan_sesi": tahap6_dengan_sesi()}
     folder = akar / "data" / "sumber"
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_tahap6.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
