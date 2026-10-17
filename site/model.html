@@ -106,6 +106,8 @@ document.getElementById("kpi").innerHTML = [
 const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum bisa dinilai</span>'
   : ok ? '<span class="lencana baik">tercapai</span>' : '<span class="lencana sedang">belum tercapai</span>';
 const ada = (x) => x !== null && x !== undefined;
+// Catatan dari mesin memakai titik desimal (mis. "6.9%"); di situs ditulis cara Indonesia ("6,9%").
+const desimalKoma = (s) => String(s).replace(/(\d)\.(\d)/g, "$1,$2");
 const pct = (x, d = 0) => (ada(x) ? `${angka(x * 100, d)}%` : "–");
 const n = r.varian_dinilai || 0;
 // Target mengikuti laporan pengembangan model: rata-rata meleset di bawah 5% dan rentang tepat di sedikitnya 85% varian.
@@ -179,13 +181,13 @@ document.querySelector("#tabel-model tbody").innerHTML = m.per_varian.map((v) =>
     <td class="angka">${persen(mp.bias_persen, 2, true)}${tanda(ok.bias)}</td>
     <td class="angka">${persen(v.cakupan_interval_persen)}${tanda(ok.cakupan)}</td>
     <td class="angka">${rp(mp.mae)}</td>
-    <td class="angka">${d.rasio_volatilitas ?? "–"}</td>
-    <td class="angka">${d.penurunan_periode_sebelumnya_persen ?? "–"}% → ${d.penurunan_periode_terakhir_persen ?? "–"}%</td>
+    <td class="angka">${d.rasio_volatilitas == null ? "–" : angka(d.rasio_volatilitas, 2)}</td>
+    <td class="angka">${d.penurunan_periode_sebelumnya_persen == null ? "–" : `${angka(d.penurunan_periode_sebelumnya_persen, 1)}%`} → ${d.penurunan_periode_terakhir_persen == null ? "–" : `${angka(d.penurunan_periode_terakhir_persen, 1)}%`}</td>
     <td>${v.validasi?.status === "valid" ? '<span class="lencana baik">Valid</span>' : `<span class="lencana sedang" title="${esc((v.validasi?.gagal || []).join(", "))}">Eksperimen</span>`}</td>
     <td>${v.status_persetujuan === "disetujui" ? `<span class="lencana baik">disetujui</span>${v.persetujuan?.penyetuju ? `<br><span class="meta-kecil">${esc(v.persetujuan.penyetuju)} ${esc(v.persetujuan.tanggal || "")}</span>` : ""}`
       : v.status_persetujuan === "menunggu_persetujuan" ? `<label class="cek"><input type="checkbox" data-setuju="${esc(v.kode)}" data-model="${esc(v.model_rekomendasi)}"> setujui ${esc(NAMA_CARA[v.model_rekomendasi] || v.model_rekomendasi)}</label>`
       : '<span class="lencana polos">–</span>'}</td>
-    <td class="meta-kecil">${esc((v.catatan || []).join(" "))}</td></tr>`;
+    <td class="meta-kecil">${esc(desimalKoma((v.catatan || []).join(" ")))}</td></tr>`;
 }).join("") || `<tr><td colspan="20" class="kosong">Belum ada varian dengan riwayat cukup.</td></tr>`;
 
 const menunggu = m.per_varian.filter((v) => v.status_persetujuan === "menunggu_persetujuan").length;

@@ -11,9 +11,30 @@
   <link rel="stylesheet" href="assets/app.css">
   <script src="assets/tema-awal.js"></script>
   <style>
-    .berita-daftar { list-style: none; margin: 0; padding: 0; }
-    .berita-daftar > li { border-top: 1px solid var(--rule); padding: 16px 0; }
-    .berita-daftar > li:first-child { border-top: 0; padding-top: 4px; }
+    /* Tiap berita berupa kartu; berita yang menyebut Bengkulu Tengah diberi garis biru di kiri. */
+    .berita-daftar { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+    .berita-daftar > li { position: relative; overflow: hidden; border: 1px solid var(--rule); border-radius: 16px; padding: 16px 18px 14px 22px;
+      background: var(--surface-2); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+    .berita-daftar > li::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--rule-2); }
+    .berita-daftar > li.target::before { background: var(--aksen); }
+    .berita-daftar > li:hover { border-color: var(--sorot-garis); box-shadow: 0 14px 34px -18px var(--sorot-garis); }
+    .berita-daftar > li.kosong { padding: 18px; text-align: center; }
+    .berita-daftar > li.kosong::before { display: none; }
+    .berita-sumber { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); }
+    .berita-sumber i { width: 24px; height: 24px; border-radius: 8px; display: inline-grid; place-items: center; font-style: normal; font-weight: 700;
+      font-size: 0.72rem; color: var(--on-accent); background: linear-gradient(135deg, var(--aksen), var(--series-3)); flex: none; }
+    @media (prefers-reduced-motion: no-preference) {
+      .berita-daftar > li { animation: muncul 0.4s var(--lentur) backwards; }
+      .berita-daftar > li:nth-child(2) { animation-delay: 0.04s; } .berita-daftar > li:nth-child(3) { animation-delay: 0.08s; }
+      .berita-daftar > li:nth-child(n+4) { animation-delay: 0.12s; }
+    }
+    /* kesimpulan AI: kartu yang paling menonjol di halaman ini */
+    .kartu.kartu-ai.kartu-ai { border: 1px solid transparent; background:
+      radial-gradient(520px circle at var(--mx, -999px) var(--my, -999px), var(--sorot), transparent 45%) padding-box,
+      linear-gradient(var(--kaca-atas), var(--kaca-atas)) padding-box,
+      linear-gradient(120deg, color-mix(in srgb, var(--aksen) 70%, transparent), color-mix(in srgb, var(--series-3) 60%, transparent), color-mix(in srgb, var(--series-4) 55%, transparent)) border-box; }
+    .lencana-ai { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      color: var(--on-accent); background: linear-gradient(120deg, var(--aksen), var(--series-3)); vertical-align: 2px; margin-left: 6px; }
     .berita-judul { font-weight: 600; font-size: 1rem; line-height: 1.4; color: var(--ink); text-decoration: none; }
     .berita-judul:hover { text-decoration: underline; color: var(--aksen); }
     .berita-atas { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin: 4px 0 8px; }
@@ -59,23 +80,21 @@
   <div class="judul-halaman">
     <div>
       <h1>Berita Lokal</h1>
-      <p>Berita tentang harga pangan di Bengkulu, dicari dan dibaca otomatis tiap hari. Setiap harga yang disebut langsung dinilai terhadap harga resmi.</p>
+      <div class="teks-tanya">Berita harga pangan di Bengkulu, dicari dan dibaca otomatis tiap hari. Setiap harga yang disebut langsung dinilai terhadap harga resmi.
+        <details class="tanya"><summary aria-label="Cara membaca halaman ini">?</summary><div class="tanya-isi">
+          Mesin mencari berita, membaca isinya, lalu menandai kejadian dan harga yang disebut. Setiap harga langsung <b>dinilai</b>: AI memeriksa
+          kalimatnya (harga pasar saat itu, harga lama, harga program pemerintah, atau barang lain), lalu mesin membandingkannya dengan harga resmi
+          pada tanggal berita dan memberi skor keyakinan 0 sampai 100. Hasil penilaian adalah penunjuk awal untuk tindak lanjut; angkanya tidak masuk
+          deret harga resmi, yang tetap berasal dari sumber resmi dan petugas lapangan.</div></details></div>
     </div>
   </div>
 
   <div class="ind-baris" id="kpi"></div>
 
-  <div class="penting" role="note">
-    <b>Cara membaca halaman ini.</b> Mesin mencari berita, membaca isinya, lalu menandai kejadian dan harga yang disebut. Setiap harga langsung
-    <b>dinilai</b>: AI memeriksa kalimatnya (harga pasar saat itu, harga lama, harga program pemerintah, atau barang lain), lalu mesin
-    membandingkannya dengan harga resmi pada tanggal berita dan memberi skor keyakinan 0 sampai 100. Hasil penilaian adalah penunjuk awal untuk
-    tindak lanjut; angkanya tidak masuk deret harga resmi, yang tetap berasal dari sumber resmi dan petugas lapangan.
-  </div>
-
-  <section class="kartu" aria-labelledby="j-kes">
+  <section class="kartu kartu-ai" aria-labelledby="j-kes">
     <div class="kartu-kepala">
       <div>
-        <h2 id="j-kes">Kesimpulan hari ini</h2>
+        <h2 id="j-kes">Kesimpulan hari ini <span class="lencana-ai">AI</span></h2>
         <p id="ket-kes"></p>
       </div>
     </div>
@@ -211,7 +230,7 @@ if (kes) {
       ${kes.poin && kes.poin.length ? `<div><h3>Berita yang paling relevan</h3>${daftar(kes.poin)}</div>` : ""}
       ${kes.perlu_dipantau && kes.perlu_dipantau.length ? `<div><h3>Perlu dipantau</h3>${daftar(kes.perlu_dipantau)}</div>` : ""}
     </div>
-    <p class="meta-kecil">Pembaruan terakhir ${data.diperbarui ? esc(data.diperbarui.slice(0, 16).replace("T", " ")) + " WIB" : "–"}. Kesimpulan memuat angka hanya bila angka itu ada di beritanya.</p>`;
+    <p class="meta-kecil">Pembaruan terakhir ${data.diperbarui ? esc(tgl(data.diperbarui.slice(0, 10), true)) + ", pukul " + esc(data.diperbarui.slice(11, 16).replace(":", ".")) + " WIB" : "–"}. Kesimpulan memuat angka hanya bila angka itu ada di beritanya.</p>`;
   const lama = (data.kesimpulan || []).slice(1, 8);
   if (lama.length) {
     $("riwayat").hidden = false;
@@ -280,6 +299,9 @@ $("f-tag").innerHTML = '<option value="">Semua</option>' + Object.entries(LABEL_
 $("f-kom").innerHTML = '<option value="">Semua</option>' + komoditas.map((k) => `<option value="${esc(k)}">${esc(k)}</option>`).join("");
 let tampil = 20;
 
+// Ringkasan berita kadang membawa sisa tautan markdown dari halaman sumber, mis. "[judul](/2026-09-04/...)": tampilkan teksnya saja.
+const tanpaMarkdown = (s) => String(s || "").replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/\s{2,}/g, " ").trim();
+
 function lencanaTag(b) {
   return (b.tag || []).map((t) => `<span class="lencana ${KELAS_TAG[t] || "polos"}">${esc(LABEL_TAG[t] || t)}</span>`).join(" ");
 }
@@ -299,7 +321,7 @@ function tabelHarga(b) {
     <td data-label="Berlaku untuk">${esc(wilayah)}</td>
     <td data-label="Penilaian">${selPenilaian(p)}</td>
     <td data-label="Keyakinan">${selKeyakinan(p)}</td>
-    <td data-label="Kalimat di berita"><blockquote>“${esc(x.bukti)}”</blockquote>${alasan}</td></tr>`;
+    <td data-label="Kalimat di berita"><blockquote>“${esc(tanpaMarkdown(x.bukti).replace(/^[*•-]\s+/, ""))}”</blockquote>${alasan}</td></tr>`;
   }).join("");
   return `<div class="berita-harga"><div class="gulir-tabel"><table class="tabel-kartu"><thead><tr><th>Komoditas</th><th class="angka">Harga disebut</th><th>Berlaku untuk</th><th>Penilaian</th><th>Keyakinan</th><th>Kalimat di berita</th></tr></thead><tbody>${baris}</tbody></table></div></div>`;
 }
@@ -308,16 +330,17 @@ function itemBerita(b) {
   const w = b.wilayah || {};
   const wil = w.target ? "Bengkulu Tengah" : (w.pembanding || []).length ? (w.pembanding || []).map((x) => x.replace(/\b\w/g, (c) => c.toUpperCase())).join(", ") : w.provinsi ? "Bengkulu" : "";
   const catatan = !b.isi_terbaca && b.catatan_baca ? `<p class="berita-catatan">Alasan isinya tidak terbaca: ${esc(b.catatan_baca)}.</p>` : "";
-  return `<li>
-    <a class="berita-judul" href="${esc(amanUrl(b.url))}" target="_blank" rel="noopener noreferrer">${esc(b.judul)}</a>
+  const sumber = b.sumber || "sumber tidak diketahui";
+  return `<li${w.target ? ' class="target"' : ""}>
+    <span class="berita-sumber"><i aria-hidden="true">${esc(sumber.replace(/^www\./, "").charAt(0).toUpperCase())}</i>${esc(sumber)} · ${b.tanggal ? esc(tgl(b.tanggal)) : "tanggal tidak diketahui"}</span>
+    <div style="margin-top:6px"><a class="berita-judul" href="${esc(amanUrl(b.url))}" target="_blank" rel="noopener noreferrer">${esc(b.judul)}</a></div>
     <div class="berita-atas">
-      <span class="meta-kecil">${esc(b.sumber || "sumber tidak diketahui")} · ${b.tanggal ? esc(tgl(b.tanggal)) : "tanggal tidak diketahui"}</span>
       ${b.baru ? '<span class="lencana baik">baru</span>' : ""}
       <span class="lencana ${KELAS_REL[b.relevansi] || "polos"}">kecocokan ${esc(b.relevansi)}</span>
       ${wil ? `<span class="lencana polos">${esc(wil)}</span>` : ""}
       ${lencanaTag(b)}
     </div>
-    <p class="berita-ringkas">${esc(b.ringkasan)}</p>
+    <p class="berita-ringkas">${esc(tanpaMarkdown(b.ringkasan))}</p>
     <div class="meta-kecil">${esc(LABEL_METODE[b.metode_ringkas] || "")}${LABEL_DAMPAK[b.dampak_harga] ? ` · menurut berita: ${LABEL_DAMPAK[b.dampak_harga]}` : ""}${b.tindak_lanjut ? " · perlu tindak lanjut" : ""}${(b.komoditas || []).length ? ` · ${esc(b.komoditas.join(", "))}` : ""}</div>
     ${catatan}
     ${tabelHarga(b)}

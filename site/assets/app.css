@@ -1762,3 +1762,22 @@ a.komo:hover { transform: translateY(-3px); border-color: var(--sorot-garis); }
 .th-bawah { display: flex; justify-content: space-between; gap: 10px; font-size: 0.82rem; color: var(--muted); }
 .th-bawah b { color: var(--ink); font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: no-preference) { .th-batang span { transform-origin: left center; animation: isi-batang 1s var(--lentur) 0.2s backwards; } }
+
+/* lampu status: titik berpendar hijau, kuning, atau merah dengan kata di sampingnya */
+.lampu { display: inline-flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.lampu::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--baseline); flex: none; }
+.lampu.hijau::before { background: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 22%, transparent), 0 0 10px color-mix(in srgb, var(--good) 60%, transparent); }
+.lampu.kuning::before { background: var(--warning); box-shadow: 0 0 0 3px color-mix(in srgb, var(--warning) 22%, transparent); }
+.lampu.merah::before { background: var(--critical); box-shadow: 0 0 0 3px color-mix(in srgb, var(--critical) 22%, transparent); }
+.lampu.merah { color: var(--d-merah-teks); }
+
+/* Pengaturan: di layar lebar, kelompok pengaturan menjadi menu samping */
+@media (min-width: 1100px) {
+  #kartu-pengaturan { display: grid; grid-template-columns: 230px minmax(0, 1fr); column-gap: 26px; align-items: start; }
+  #kartu-pengaturan > .kartu-kepala, #kartu-pengaturan > .bilah-simpan { grid-column: 1 / -1; }
+  #kartu-pengaturan > .tab-pengaturan {
+    position: sticky; top: 96px; display: flex; flex-direction: column; flex-wrap: nowrap; gap: 2px; padding: 6px; border-radius: 14px;
+  }
+  #kartu-pengaturan > .tab-pengaturan button { text-align: left; padding: 9px 12px; border-radius: 10px; }
+  #kartu-pengaturan > #panel-isi { min-width: 0; }
+}

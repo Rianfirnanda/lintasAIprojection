@@ -115,11 +115,15 @@ def rekomendasi_netral(nama: str, harga_aktual: float | None, hv: analisis.Hasil
         awal = ""
     if arah is None:
         return awal + "Perubahan 30 hari belum dapat dihitung."
+    # Angka ditulis cara Indonesia: koma untuk desimal, titik untuk ribuan.
+    pct = lambda x: f"{x:+.1f}".replace(".", ",") if x else "0,0"  # noqa: E731
+    rp = lambda x: f"Rp{x:,.0f}".replace(",", ".")  # noqa: E731
     if abs(arah) < 1:
-        return awal + f"Harga diperkirakan relatif stabil dalam 30 hari ({arah:+.1f}%). Cukup dipantau rutin."
+        return awal + f"Harga diperkirakan relatif stabil dalam 30 hari ({pct(arah)}%). Cukup dipantau rutin."
     kata = "naik" if arah > 0 else "turun"
     tindak = "perlu dipantau lebih sering dan dicek ke pasar" if arah > 0 else "perlu dicek apakah penurunan wajar (pasokan/musim)"
-    return awal + f"Harga diperkirakan {kata} {abs(arah):.1f}% dalam 30 hari (rentang 80%: Rp{p30['bawah']:,} sampai Rp{p30['atas']:,}); {tindak}.".replace(",", ".")
+    return awal + (f"Harga diperkirakan {kata} {pct(abs(arah)).lstrip('+')}% dalam 30 hari (rentang 80%: {rp(p30['bawah'])} sampai "
+                   f"{rp(p30['atas'])}); {tindak}.")
 
 
 def kartu_model(konf, v, hv: analisis.HasilVarian, harga: float | None) -> dict:

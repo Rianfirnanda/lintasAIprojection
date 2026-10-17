@@ -110,11 +110,15 @@ document.getElementById("kpi").innerHTML = [
   ind({ i: "jam", warna: "hijau", label: "Data terbaru", nilai: terbaru ? tgl(terbaru) : "–", sub: "tanggal data paling baru" }),
   ind({ i: "lampu", label: "Kandidat AI Data Finder", nilai: angka((data.katalog_ai || []).length), sub: "calon sumber baru" }),
 ].join("");
+// Kode kelompok dan cara akses ditulis dengan kata sehari-hari; kodenya tetap ada di tooltip.
+const NAMA_KELOMPOK = { BIGDATA: "Big Data resmi", AI_FINDER: "Temuan AI", BPS: "BPS", PASAR: "Petugas pasar", PEMDA: "Pemerintah daerah" };
+const NAMA_AKSES = { api: "otomatis (API)", file: "berkas", offline_ke_online: "isian petugas", web: "halaman web" };
+const kataKelompok = (k) => `<span title="${esc(k)}">${esc(NAMA_KELOMPOK[k] || k)}</span>`;
 document.querySelector("#tabel-sumber tbody").innerHTML = mengalir.map((s) => `<tr>
   <td class="sumber-nama">${s.url ? `<a href="${esc(s.url)}" rel="noopener">${esc(s.nama)}</a>` : esc(s.nama)}<code>${esc(s.kode)}</code>
     ${s.lisensi || s.catatan ? `<details><summary>Ketentuan dan catatan</summary>${s.lisensi ? `<p><b>Izin:</b> ${esc(s.lisensi)}</p>` : ""}${s.catatan ? `<p>${esc(s.catatan)}</p>` : ""}</details>` : ""}</td>
-  <td>${esc(s.kelompok)}</td><td>${esc(s.metode_akses.replace(/_/g, " "))}<br><span class="meta-kecil">${esc(s.frekuensi.replace(/_/g, " "))}</span></td>
-  <td>${s.jumlah_observasi ? '<span class="lencana baik">aktif</span>' : '<span class="lencana tinggi" title="Sumber otomatis ini belum mengirim data. Periksa log proses.">belum ada data</span>'}</td>
+  <td>${kataKelompok(s.kelompok)}</td><td>${esc(NAMA_AKSES[s.metode_akses] || s.metode_akses.replace(/_/g, " "))}<br><span class="meta-kecil">${esc(s.frekuensi.replace(/_/g, " "))}</span></td>
+  <td>${s.jumlah_observasi ? '<span class="lampu hijau">aktif</span>' : '<span class="lampu merah" title="Sumber otomatis ini belum mengirim data. Periksa log proses.">belum ada data</span>'}</td>
   <td class="angka">${s.prioritas}</td><td class="angka">${angka(s.jumlah_observasi)}<br><span class="meta-kecil">${esc(s.satuan_jumlah || "baris")}</span></td>
   <td class="angka">${!s.terakhir ? "–" : s.terakhir > hariIni ? `${esc(tgl(s.terakhir))}<br><span class="meta-kecil">prakiraan sampai</span>` : esc(tgl(s.terakhir))}</td></tr>`).join("");
 if (saluran.length) {
@@ -173,7 +177,7 @@ function teksKeputusan(kp, menunggu, url = "") {
   const sb = terima ? SAMBUNGAN.get(url) : null;
   return `<span class="lencana ${terima ? "baik" : "polos"}">${terima ? "diterima" : "ditolak"}</span>
     ${sb ? `<span class="lencana ${KELAS_SAMBUNGAN[sb.status] || "polos"}" title="${esc(sb.keterangan)}">${esc(sb.label)}</span><br><span class="meta-kecil">${esc(sb.keterangan)}</span>` : ""}
-    <br><span class="meta-kecil">${esc(kp.penilai || "-")} · ${esc(kp.tanggal || "")}</span>
+    <br><span class="meta-kecil">${esc(kp.penilai || "-")} · ${kp.tanggal ? esc(tgl(String(kp.tanggal).slice(0, 10))) : ""}</span>
     ${kp.alasan ? `<br><span class="meta-kecil">“${esc(kp.alasan)}”</span>` : ""}
     ${menunggu ? '<br><span class="meta-kecil">Tersimpan. Daftar sumber ikut berubah setelah pembaruan berikutnya.</span>' : ""}`;
 }
