@@ -1,0 +1,92 @@
+{
+ "waktu": "2026-10-17T01:54:01+00:00",
+ "disperindag": {
+  "halaman": 200,
+  "api_base": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date",
+  "parameter": [
+   "kabupaten_kota"
+  ],
+  "skrip_api": [
+   " Impor </button> </form> </div> </div> </div> </div> </div> </main> <script src=\"https://ben-connect.bengkuluprov.go.id/build/assets/app-q2CGfi1L.js\"></script> <script> const API_BASE = 'https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date'; const COLORS = [ '#1a56db','#059669','#d97706','#7c3aed','#db2777', '#0891b2','#65a30d','#ea580c','#9333ea','#0284c7', '#16a34a','#ca8a04','#c026d3','#e11d48','#2563eb', '#10b98",
+   "); } // ══════════════════════════════════════════════════════════ // CHART FETCH & RENDER // ══════════════════════════════════════════════════════════ async function fetchChart() { document.getElementById('chartLoadingSpinner').classList.remove('hidden'); try { const params = new URLSearchParams({ last_days: chartState.lastDays }); if (chartState.kabupaten) params.append('kabupaten_kota', chartState.kabupaten); // Tidak filter nama_variant di API — ambil semua, filter di FE // supaya ganti variant tidak perlu fetch ulang const res = await fetch(`${API_BASE",
+   "NDER // ══════════════════════════════════════════════════════════ async function fetchChart() { document.getElementById('chartLoadingSpinner').classList.remove('hidden'); try { const params = new URLSearchParams({ last_days: chartState.lastDays }); if (chartState.kabupaten) params.append('kabupaten_kota', chartState.kabupaten); // Tidak filter nama_variant di API — ambil semua, filter di FE // supaya ganti variant tidak perlu fetch ulang const res = await fetch(`${API_BASE}?${params}`); const json = await res.json(); if (json.status_code !"
+  ],
+  "coba": [
+   {
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date",
+    "status": 500,
+    "jenis": "application/json",
+    "byte": 33,
+    "detik": 11.1,
+    "wilayah_disebut": [],
+    "cuplikan": "{ \"message\": \"Server Error\" }",
+    "galat": "HTTP 500",
+    "catatan": "API Disperindag",
+    "json": true,
+    "kunci": [
+     "message"
+    ]
+   },
+   {
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kabupaten+Bengkulu+Tengah",
+    "status": 500,
+    "jenis": "application/json",
+    "byte": 33,
+    "detik": 4.0,
+    "wilayah_disebut": [],
+    "cuplikan": "{ \"message\": \"Server Error\" }",
+    "galat": "HTTP 500",
+    "catatan": "API Disperindag",
+    "json": true,
+    "kunci": [
+     "message"
+    ]
+   },
+   {
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kabupaten+Bengkulu+Tengah&start_date=2026-09-17&end_date=2026-10-17",
+    "status": 500,
+    "jenis": "application/json",
+    "byte": 33,
+    "detik": 2.3,
+    "wilayah_disebut": [],
+    "cuplikan": "{ \"message\": \"Server Error\" }",
+    "galat": "HTTP 500",
+    "catatan": "API Disperindag",
+    "json": true,
+    "kunci": [
+     "message"
+    ]
+   },
+   {
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kabupaten+Bengkulu+Tengah&tanggal_awal=2026-09-17&tanggal_akhir=2026-10-17",
+    "status": 500,
+    "jenis": "application/json",
+    "byte": 33,
+    "detik": 2.3,
+    "wilayah_disebut": [],
+    "cuplikan": "{ \"message\": \"Server Error\" }",
+    "galat": "HTTP 500",
+    "catatan": "API Disperindag",
+    "json": true,
+    "kunci": [
+     "message"
+    ]
+   },
+   {
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kota+Bengkulu",
+    "status": 500,
+    "jenis": "application/json",
+    "byte": 33,
+    "detik": 2.3,
+    "wilayah_disebut": [],
+    "cuplikan": "{ \"message\": \"Server Error\" }",
+    "galat": "HTTP 500",
+    "catatan": "API Disperindag",
+    "json": true,
+    "kunci": [
+     "message"
+    ]
+   }
+  ]
+ }
+}
