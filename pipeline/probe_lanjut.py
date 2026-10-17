@@ -655,14 +655,13 @@ def tahap6_api_disperindag(ambil_fn=ambil, hari: date | None = None) -> dict:
         return hasil
     base = urllib.parse.urljoin(url, hasil["api_base"])
     coba = []
-    for q in ({}, {"kabupaten_kota": "Kabupaten Bengkulu Tengah"},
-              {"kabupaten_kota": "Kabupaten Bengkulu Tengah", "start_date": (hari - timedelta(days=30)).isoformat(), "end_date": hari.isoformat()},
-              {"kabupaten_kota": "Kabupaten Bengkulu Tengah", "tanggal_awal": (hari - timedelta(days=30)).isoformat(),
-               "tanggal_akhir": hari.isoformat()},
-              {"kabupaten_kota": "Kota Bengkulu"}):
+    # Halaman memanggil API dengan last_days (wajib) dan kabupaten_kota (pilihan).
+    for q in ({"last_days": 7}, {"last_days": 30, "kabupaten_kota": "Kabupaten Bengkulu Tengah"},
+              {"last_days": 30, "kabupaten_kota": "Kota Bengkulu"}, {"last_days": 365, "kabupaten_kota": "Kabupaten Bengkulu Tengah"},
+              {"last_days": 1825, "kabupaten_kota": "Kabupaten Bengkulu Tengah"}):
         u = f"{base}?{urllib.parse.urlencode(q)}" if q else base
         hj = ambil_fn(u, 60, 8_000_000, {"Accept": "application/json", "X-Requested-With": "XMLHttpRequest", "Referer": url})
-        r = ringkas(hj, "API Disperindag", 1500)
+        r = ringkas(hj, "API Disperindag", 3000)
         try:
             d = json.loads(teks(hj))
             data = d.get("data") if isinstance(d, dict) else d
