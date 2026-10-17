@@ -91,6 +91,7 @@ async function lanjutkanAkun(fk, user) {
   if (akun.status === "aktif" && PERAN[akun.peran]) {
     const s = await fk.sesiAkun(akun);
     simpanSesiFirebase(s);
+    await import("./assets/kehadiran.js").then((m) => m.catatMasukKeluar("masuk", s)).catch(() => {});
     location.href = tujuan(s.peran, s.halaman);
     return;
   }
@@ -115,6 +116,7 @@ function tampilkanStatusAkun(fk, akun) {
       if (a && a.status === "aktif" && PERAN[a.peran]) {
         const s = await fk.sesiAkun(a);
         simpanSesiFirebase(s);
+        await import("./assets/kehadiran.js").then((m) => m.catatMasukKeluar("masuk", s)).catch(() => {});
         location.href = tujuan(s.peran, s.halaman);
       } else if (a && a.status !== "menunggu") tampilkanStatusAkun(fk, a);
     });
@@ -135,7 +137,7 @@ async function tampilkanGoogle() {
       <li><span>2</span><div><b>Tunggu persetujuan admin</b><small>Admin memberi peran sesuai tugas Anda.</small></div></li>
       <li><span>3</span><div><b>Mulai gunakan</b><small>Menu yang tampil menyesuaikan peran Anda.</small></div></li>
     </ol>
-    <p class="masuk-catatan">${ikon("gembokPerisai", 16)}<span>Kami hanya menyimpan nama, email, dan foto profil Google Anda, untuk persetujuan akun.</span></p>`;
+    <p class="masuk-catatan">${ikon("gembokPerisai", 16)}<span>Kami menyimpan nama, email, dan foto profil Google Anda untuk persetujuan akun, serta catatan kapan Anda masuk dan halaman yang dibuka. Lokasi hanya dikirim bila Anda memilih membagikannya.</span></p>`;
   const tombol = document.getElementById("btn-google");
   const galat = document.getElementById("galat");
   let fk;

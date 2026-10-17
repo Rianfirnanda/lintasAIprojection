@@ -527,6 +527,8 @@ async function segarkanSesiFirebase(lama) {
     catatPemakaian(fk, user.uid);
     const baru = await fk.sesiAkun(akun);
     const beda = baru.peran !== lama.peran || JSON.stringify(baru.halaman) !== JSON.stringify(lama.halaman ?? null) || baru.nama !== lama.nama;
+    // Kehadiran dan log aktivitas (dilihat Administrator di beranda); lokasi hanya bila pengguna memilih membagikan.
+    if (!beda) import("./kehadiran.js").then((m) => m.pasangKehadiran(baru)).catch(() => {});
     if (beda) {
       simpanSesiFirebase(baru);
       location.reload();

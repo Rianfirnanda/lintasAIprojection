@@ -203,6 +203,8 @@ export async function ubahAkun(sasaran, perubahan, aksi, rincian = "") {
 export async function hapusAkun(sasaran) {
   const { fb, db } = await firebaseSiap();
   await fb.deleteDoc(fb.doc(db, KOLEKSI_PENGGUNA, sasaran.uid));
+  // Kehadiran (termasuk lokasi terakhir) ikut dihapus; log aktivitas tetap sampai terhapus otomatis.
+  await fb.deleteDoc(fb.doc(db, "lbp_kehadiran", sasaran.uid)).catch(() => {});
   await catatJejak("hapus", sasaran, "");
 }
 

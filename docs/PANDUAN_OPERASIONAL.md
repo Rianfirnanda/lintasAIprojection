@@ -453,6 +453,36 @@ di sana Tanya Takar memakai kunci AI situs milik Administrator.
    diaktifkan lagi atau dihapus.
 5. Semua tindakan tercatat di **Jejak tindakan admin**. Admin tidak bisa mencabut hak adminnya sendiri.
 
+### Pengguna aktif, lokasi, dan log aktivitas (bila memakai Firebase)
+
+Di Beranda Administrator, tab **Ringkasan Administrator**, ada panel **Pengguna aktif dan lokasi** yang diperbarui langsung:
+
+- **Angka ringkas**: berapa orang aktif sekarang (dipakai dalam 10 menit terakhir), diam (aplikasi terbuka tetapi tidak
+  dipakai, sampai 30 menit), tidak aktif (keluar atau lama tidak membuka), dan berapa yang membagikan lokasi.
+- **Peta**: titik tiap orang yang membagikan lokasi. Hijau berdenyut = aktif, oranye = diam, abu = tidak aktif (lokasi
+  terakhir). Huruf di titik adalah huruf awal peran. Ketuk titik untuk nama, halaman yang sedang dibuka, dan waktu lokasi.
+- **Daftar**: nama, peran, status, halaman yang sedang dibuka, lokasi, jenis perangkat, dan kapan terakhir aktif.
+  Ketuk koordinat untuk melompat ke titiknya di peta.
+- **Log aktivitas**: siapa masuk, membuka halaman apa, keluar, dan mulai atau berhenti berbagi lokasi, beserta waktu dan
+  lokasinya. Bisa disaring per peran dan diunduh sebagai CSV.
+
+**Lokasi selalu atas izin pengguna.** Saat pertama memakai aplikasi, setiap pengguna ditanya "Bagikan lokasi Anda dengan
+Administrator?" dan bisa menjawab *Jangan*. Pilihan bisa diubah kapan saja lewat menu akun (pojok kanan atas). Browser
+juga meminta izin sendiri. Lokasi **petugas lapangan** dikirim tepat (untuk memantau kunjungan pasar); lokasi **peran lain**
+dibulatkan sekitar 1 km supaya rumah orang tidak bisa ditunjuk. Lokasi hanya diambil saat aplikasi sedang dibuka, paling
+sering tiap 10 menit, bukan terus-menerus di latar belakang. Ini sejalan dengan UU Pelindungan Data Pribadi (UU 27/2022):
+ada persetujuan, tujuan jelas, dan data tidak disimpan selamanya.
+
+Yang bisa melihat panel ini hanya pengelola akun (peran Administrator, atau orang yang diberi halaman Pengguna). Catatan
+tidak bisa diubah atau dihapus dari situs. Menghapus akun di halaman Pengguna ikut menghapus lokasi terakhirnya.
+
+**Hapus otomatis catatan lama (sekali saja, disarankan):** setiap catatan log membawa tanggal hapus 90 hari ke depan.
+Supaya benar-benar terhapus, buka Firebase Console → **Firestore Database** → **TTL** (Time-to-live) → **Create policy**,
+isi *Collection group* `lbp_aktivitas` dan *Timestamp field* `hapus_pada`, lalu simpan. Fitur ini gratis.
+
+Bila aturan Firestore digabung sendiri (`FIREBASE_TERBITKAN_ATURAN` = `tidak`), salin juga blok
+`match /lbp_kehadiran/...`, `match /lbp_aktivitas/...`, dan fungsi `lokasiSah` dari `firestore.rules`.
+
 ### Panel Pengaturan (AI, kunci, dan fungsi)
 
 Menu **Pengaturan** mengumpulkan semua yang perlu diatur. Langkahnya:

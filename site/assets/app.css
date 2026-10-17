@@ -1952,3 +1952,38 @@ body.tanya-terbuka .tanya-fab { opacity: 0; pointer-events: none; }
   .tanya-panel { inset: 8px; width: auto; height: auto; bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 60; }
 }
 @media print { .tanya-fab, .tanya-panel { display: none !important; } }
+
+/* ---------- pengguna aktif dan lokasi (Ringkasan Administrator) */
+.panel-kehadiran .hadir-saring { margin: 4px 0 14px; }
+.panel-kehadiran .chip-saring small { opacity: 0.7; margin-left: 4px; }
+.hadir-peta { height: 420px; border-radius: 14px; overflow: hidden; position: relative; border: 1px solid var(--border); }
+.hadir-peta[data-kosong]:not([data-kosong=""])::after {
+  content: attr(data-kosong); position: absolute; inset: auto 12px 12px auto; z-index: 500; padding: 8px 12px; border-radius: 10px;
+  background: var(--menu-latar); color: var(--muted); font-size: 13px; box-shadow: var(--kaca-bayang);
+}
+.titik-hadir-bungkus { background: none; border: 0; }
+.titik-hadir {
+  display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35); background: #6f7c8f; color: #fff; font: 700 12px/1 inherit;
+}
+.titik-hadir.hijau { background: #1e9e5a; } .titik-hadir.oranye { background: #f08a24; }
+.lingkar-hadir { stroke: #6f7c8f; fill: #6f7c8f; } .lingkar-hadir.hijau { stroke: #1e9e5a; fill: #1e9e5a; } .lingkar-hadir.oranye { stroke: #f08a24; fill: #f08a24; }
+@media (prefers-reduced-motion: no-preference) {
+  .titik-hadir.hijau { animation: denyut-hadir 2.4s ease-out infinite; }
+  @keyframes denyut-hadir { 0% { box-shadow: 0 0 0 0 rgba(30, 158, 90, 0.55); } 80%, 100% { box-shadow: 0 0 0 12px rgba(30, 158, 90, 0); } }
+}
+.popup-hadir { font-size: 12.5px; line-height: 1.5; } .popup-hadir strong { font-size: 14px; }
+.popup-hadir .hijau { color: var(--d-hijau-teks); font-weight: 600; } .popup-hadir .oranye { color: var(--d-oranye-teks); font-weight: 600; }
+.hadir-log-kepala { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+.tautan-tombol { background: none; border: 0; padding: 0; color: var(--aksen); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.tawar-lokasi {
+  position: fixed; left: 16px; bottom: 16px; z-index: 900; max-width: 380px; padding: 14px 16px; border-radius: 16px;
+  background: var(--menu-latar); box-shadow: var(--kaca-bayang), 0 12px 40px rgba(0, 0, 0, 0.25); border: 1px solid var(--border); font-size: 13.5px;
+}
+.tawar-lokasi p { margin: 0 0 10px; line-height: 1.5; } .tawar-lokasi b { display: block; margin-bottom: 4px; font-size: 14.5px; }
+.tawar-lokasi-aksi { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 760px) {
+  .hadir-peta { height: 340px; }
+  .tawar-lokasi { left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); max-width: none; }
+}
+@media print { .tawar-lokasi { display: none; } }

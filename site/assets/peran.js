@@ -241,6 +241,7 @@ async function berandaAdmin(el, meta) {
       ${ind({ i: "jam", warna: "hijau", label: "Dashboard bisa dibuka", nilai: uptime === null ? "–" : persen(uptime, 1), sub: uptime === null ? "belum ada log" : "target 99,5%", meter: uptime === null ? null : uptime, meterWarna: "hijau", href: "kinerja.html" })}
       ${ind({ i: "database", label: "Berkas masuk", nilai: angka(meta.jumlah.berkas), sub: `${angka(meta.jumlah.observasi_dipakai)} data dipakai` })}
     </div>
+    <section class="kartu panel-kehadiran" id="panel-kehadiran" aria-label="Pengguna aktif dan lokasi"></section>
     <section class="kartu" id="panel-data"></section>
     <div class="grid dua-kolom">
       <section class="kartu"><div class="kartu-kepala"><div><h2>Pemeriksaan sistem</h2></div></div>
@@ -257,6 +258,8 @@ async function berandaAdmin(el, meta) {
       </section>
     </div>`);
   pasangPanelData(el.querySelector("#panel-data"), { ubinStatis, ubinDinamis, master, sumber, ringkasan, sinyal, kualitas });
+  import("./panel-kehadiran.js").then((m) => m.pasangPanelKehadiran(el.querySelector("#panel-kehadiran"), meta))
+    .catch((e) => { el.querySelector("#panel-kehadiran").innerHTML = `<p class="kosong">Panel pengguna aktif belum bisa dimuat: ${esc(e.message || e)}</p>`; });
   if (meta.login === "firebase") pengingatPersetujuan(el);
 }
 
