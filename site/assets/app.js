@@ -501,6 +501,8 @@ export async function pasangKerangka(aktif) {
   pasangPembaruan(meta);
   pasangHitungNaik();
   pasangGerak();
+  // Tombol "Tanya" (chatbot Tanya Takar) di pojok kanan bawah semua halaman.
+  if (!wajibMasuk) import("./tanya.js").then((m) => m.pasangTombolTanya(meta)).catch(() => {});
   if (pengguna?.sumber === "firebase") segarkanSesiFirebase(pengguna);
   return izin === "tolak" ? tundaSelamanya() : meta;
 }

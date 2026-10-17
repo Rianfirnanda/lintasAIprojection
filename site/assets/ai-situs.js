@@ -267,3 +267,44 @@ export async function pantauLog(saatBerubah, saatGagal = () => {}, batas = 30) {
   const q = fb.query(fb.collection(db, "lbp_log_ai"), fb.orderBy("diperbarui", "desc"), fb.limit(batas));
   return fb.onSnapshot(q, (snap) => saatBerubah(snap.docs.map((d) => ({ id: d.id, ...d.data(), diperbarui: d.data().diperbarui?.toDate?.() || null }))), saatGagal);
 }
+
+/**
+ * Jawaban teks bebas untuk Tanya Takar (bukan JSON). Memakai urutan AI dan kunci yang sama dengan AI Data Finder, jadi
+ * hanya jalan di browser peran Administrator (aturan Firestore). Mengembalikan { teks, penyedia, model }.
+ */
+export async function jawabBebas(sistem, pertanyaan) {
+  const [b, cfg] = await Promise.all([muatJSON("ai_prompt.json"), muatJSON("pengaturan.json").then((p) => p.ai || {})]);
+  const { fb, db } = await firebaseSiap();
+  const kunci = await bacaKunci(fb, db);
+  const dikenal = ["gemini", ...Object.keys(b.sejenis_openai)];
+  const urutan = [...new Set([...(cfg.urutan_otomatis || []).filter((x) => dikenal.includes(x)), ...b.gratis])];
+  const dilewati = [];
+  for (const nama of urutan) {
+    try {
+      if (nama === "gemini") {
+        if (!kunci.GEMINI_API_KEY) throw new Lewati("kunci belum diisi");
+        const model = cfg.model_gemini || "gemini-flash-latest";
+        const data = await kirim(b.url_gemini.replace("{model}", model), { "x-goog-api-key": kunci.GEMINI_API_KEY }, {
+          system_instruction: { parts: [{ text: sistem }] }, contents: [{ role: "user", parts: [{ text: pertanyaan }] }],
+          generationConfig: { temperature: 0.2, maxOutputTokens: 600 },
+        });
+        const teks = (data.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
+        if (!teks) throw new Lewati("jawaban kosong");
+        return { teks, penyedia: "gemini", model: data.modelVersion || model };
+      }
+      const p = b.sejenis_openai[nama];
+      if (!kunci[p.kunci]) throw new Lewati("kunci belum diisi");
+      const data = await kirim(p.url, { Authorization: `Bearer ${kunci[p.kunci]}` }, {
+        model: cfg[p.model], temperature: 0.2, max_tokens: 600,
+        messages: [{ role: "system", content: sistem }, { role: "user", content: pertanyaan }],
+      });
+      const isiPesan = data.choices?.[0]?.message?.content;
+      const teks = (Array.isArray(isiPesan) ? isiPesan.map((x) => x?.text || "").join("") : String(isiPesan || "")).trim();
+      if (!teks) throw new Lewati("jawaban kosong");
+      return { teks, penyedia: nama, model: data.model || cfg[p.model] };
+    } catch (e) {
+      dilewati.push(`${nama}: ${e.message || e}`);
+    }
+  }
+  throw new Error(`Tidak ada AI yang bisa dipakai saat ini (${dilewati.join("; ").slice(0, 300)}).`);
+}

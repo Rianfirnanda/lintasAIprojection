@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { ringkasHariIni } from "../site/assets/selisih.js";
 
-export const ISTILAH_TEKNIS = /\b(s?MAPE|F1(-score)?|recall|precision|quality gate|ensemble|z-?score|baseline|drift|conformal|Ridge|Holt|SES|false alarm|uptime)\b/i;
+import { ISTILAH_TEKNIS } from "./istilah-daftar.mjs";
 
 /** Teks yang terlihat dari markup HTML statis: tanpa <script>, <style>, komentar, isi <details>, dan atribut. */
 function teksTerlihat(html) {
