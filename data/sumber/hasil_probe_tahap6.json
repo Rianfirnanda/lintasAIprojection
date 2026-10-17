@@ -1,5 +1,5 @@
 {
- "waktu": "2026-10-17T01:54:01+00:00",
+ "waktu": "2026-10-17T01:55:36+00:00",
  "disperindag": {
   "halaman": 200,
   "api_base": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date",
@@ -13,11 +13,11 @@
   ],
   "coba": [
    {
-    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date",
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?last_days=7",
     "status": 500,
     "jenis": "application/json",
     "byte": 33,
-    "detik": 11.1,
+    "detik": 3.9,
     "wilayah_disebut": [],
     "cuplikan": "{ \"message\": \"Server Error\" }",
     "galat": "HTTP 500",
@@ -28,22 +28,7 @@
     ]
    },
    {
-    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kabupaten+Bengkulu+Tengah",
-    "status": 500,
-    "jenis": "application/json",
-    "byte": 33,
-    "detik": 4.0,
-    "wilayah_disebut": [],
-    "cuplikan": "{ \"message\": \"Server Error\" }",
-    "galat": "HTTP 500",
-    "catatan": "API Disperindag",
-    "json": true,
-    "kunci": [
-     "message"
-    ]
-   },
-   {
-    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kabupaten+Bengkulu+Tengah&start_date=2026-09-17&end_date=2026-10-17",
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?last_days=30&kabupaten_kota=Kabupaten+Bengkulu+Tengah",
     "status": 500,
     "jenis": "application/json",
     "byte": 33,
@@ -58,7 +43,7 @@
     ]
    },
    {
-    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kabupaten+Bengkulu+Tengah&tanggal_awal=2026-09-17&tanggal_akhir=2026-10-17",
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?last_days=30&kabupaten_kota=Kota+Bengkulu",
     "status": 500,
     "jenis": "application/json",
     "byte": 33,
@@ -73,7 +58,22 @@
     ]
    },
    {
-    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?kabupaten_kota=Kota+Bengkulu",
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?last_days=365&kabupaten_kota=Kabupaten+Bengkulu+Tengah",
+    "status": 500,
+    "jenis": "application/json",
+    "byte": 33,
+    "detik": 2.3,
+    "wilayah_disebut": [],
+    "cuplikan": "{ \"message\": \"Server Error\" }",
+    "galat": "HTTP 500",
+    "catatan": "API Disperindag",
+    "json": true,
+    "kunci": [
+     "message"
+    ]
+   },
+   {
+    "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag/filter-by-date?last_days=1825&kabupaten_kota=Kabupaten+Bengkulu+Tengah",
     "status": 500,
     "jenis": "application/json",
     "byte": 33,
