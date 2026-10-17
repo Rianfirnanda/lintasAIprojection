@@ -589,8 +589,7 @@ def bedah_formulir(t: str) -> list[dict]:
     hasil = []
     for f in re.findall(r"<form.*?</form>", t, re.S | re.I)[:6]:
         kepala = re.search(r"<form([^>]*)>", f, re.I).group(1)
-        isian = [{"nama": n, "jenis": j, "nilai": v} for n, j, v in
-                 re.findall(r"""<input[^>]*?name=["']([^"']+)["'][^>]*?(?:type=["']([^"']+)["'])?[^>]*?(?:value=["']([^"']*)["'])?""", f, re.I)]
+        isian = [re.sub(r"\s+", " ", x)[:250] for x in re.findall(r"<input[^>]*>", f, re.I)]
         pilihan = []
         for nama, isi in re.findall(r"""<select[^>]*name=["']([^"']+)["'][^>]*>(.*?)</select>""", f, re.S | re.I):
             pilihan.append({"nama": nama, "opsi": [(v, re.sub(r"\s+", " ", x).strip()) for v, x in
