@@ -164,9 +164,15 @@ const sidik = (k) => `${k.url_diakses ? `<br><span class="meta-kecil">dicek ${es
   ? `<br><span class="meta-kecil" title="SHA-256 isi halaman saat dicek: ${esc(k.url_sha256)}">sidik SHA-256 <code>${esc(k.url_sha256.slice(0, 12))}…</code>${
     k.url_ukuran_byte != null ? ` · ${angka(Math.max(1, Math.round(k.url_ukuran_byte / 1024)))} KB${k.url_sidik_terpotong ? " pertama" : ""}` : ""}</span>` : ""}`;
 
-function teksKeputusan(kp, menunggu) {
+// Status sambungan sumber yang diterima: datanya sudah masuk lewat konektor lain, situsnya menolak mesin, atau belum ada konektor.
+const SAMBUNGAN = new Map(data.sumber.filter((x) => x.kelompok === "AI_FINDER" && x.sambungan).map((x) => [x.url, x.sambungan]));
+const KELAS_SAMBUNGAN = { tersambung_lewat: "baik", tersambung: "baik", diblokir: "sedang", tidak_bisa: "polos", belum: "info" };
+
+function teksKeputusan(kp, menunggu, url = "") {
   const terima = kp.keputusan === "terima";
+  const sb = terima ? SAMBUNGAN.get(url) : null;
   return `<span class="lencana ${terima ? "baik" : "polos"}">${terima ? "diterima" : "ditolak"}</span>
+    ${sb ? `<span class="lencana ${KELAS_SAMBUNGAN[sb.status] || "polos"}" title="${esc(sb.keterangan)}">${esc(sb.label)}</span><br><span class="meta-kecil">${esc(sb.keterangan)}</span>` : ""}
     <br><span class="meta-kecil">${esc(kp.penilai || "-")} · ${esc(kp.tanggal || "")}</span>
     ${kp.alasan ? `<br><span class="meta-kecil">“${esc(kp.alasan)}”</span>` : ""}
     ${menunggu ? '<br><span class="meta-kecil">Tersimpan. Daftar sumber ikut berubah setelah pembaruan berikutnya.</span>' : ""}`;
@@ -189,7 +195,7 @@ function isiSel(td, { pilih = false } = {}) {
   const menunggu = !!langsung && (langsung.keputusan !== olahan?.keputusan || (langsung.alasan || "") !== (olahan?.alasan || ""));
   const tombol = !kiriman ? "" : kp && !pilih ? '<button class="tombol kecil" type="button" data-ubah>Ubah</button>'
     : '<button class="tombol utama-aksi kecil" type="button" data-putus="terima">Terima</button><button class="tombol kecil" type="button" data-putus="tolak">Tolak</button>';
-  td.innerHTML = (kp ? teksKeputusan(kp, menunggu) : '<span class="lencana info">belum dinilai</span>')
+  td.innerHTML = (kp ? teksKeputusan(kp, menunggu, x.k.url || "") : '<span class="lencana info">belum dinilai</span>')
     + (tombol ? `<div class="aksi-putus">${tombol}</div>` : "");
 }
 

@@ -10,6 +10,7 @@ import os
 import re
 import shutil
 import tempfile
+import urllib.parse
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -110,6 +111,36 @@ def baca_keputusan_sumber(akar: Path) -> dict[str, dict]:
                 if b.get("id_kandidat") and b.get("keputusan") in ("terima", "tolak"):
                     hasil[b["id_kandidat"]] = {k: (b.get(k) or "").strip() for k in ("keputusan", "alasan", "penilai", "tanggal")}
     return hasil
+
+
+LABEL_SAMBUNGAN = {"tersambung_lewat": "sudah tersambung", "diblokir": "situs menolak akses mesin", "tidak_bisa": "tidak bisa diambil otomatis",
+                   "tersambung": "tersambung", "belum": "belum tersambung"}
+
+
+def baca_sambungan(akar: Path) -> list[dict]:
+    """config/sambungan_sumber.csv: status sambungan sumber yang diterima analis (berdasarkan hasil penjajakan)."""
+    p = akar / "config" / "sambungan_sumber.csv"
+    if not p.exists():
+        return []
+    with p.open(newline="", encoding="utf-8") as f:
+        return [b for b in csv.DictReader(f) if (b.get("pola_url") or "").strip()]
+
+
+def status_sambungan(url: str, aturan: list[dict], sumber_aktif: dict[str, str]) -> dict:
+    """Apakah data sumber yang diterima analis sudah masuk, dan kalau belum, kenapa. `sumber_aktif`: kode -> url sumber aktif."""
+    u = (url or "").lower()
+    for a in aturan:
+        if a["pola_url"].strip().lower() in u:
+            status = a.get("status") or "belum"
+            return {"status": status, "label": LABEL_SAMBUNGAN.get(status, status), "sumber_terkait": a.get("sumber_terkait") or "",
+                    "keterangan": a.get("keterangan") or ""}
+    host = urllib.parse.urlparse(u).netloc.removeprefix("www.")
+    for kode, url_aktif in sumber_aktif.items():
+        if host and host == urllib.parse.urlparse((url_aktif or "").lower()).netloc.removeprefix("www."):
+            return {"status": "tersambung_lewat", "label": LABEL_SAMBUNGAN["tersambung_lewat"], "sumber_terkait": kode,
+                    "keterangan": f"Situsnya sama dengan sumber {kode} yang sudah tersambung."}
+    return {"status": "belum", "label": LABEL_SAMBUNGAN["belum"], "sumber_terkait": "",
+            "keterangan": "Belum ada konektor otomatis untuk situs ini, jadi datanya belum masuk."}
 
 
 def terapkan_keputusan_sumber(kandidat: dict, keputusan: dict[str, dict]) -> list[dict]:
@@ -599,6 +630,14 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     katalog = pencari_data.katalog_kandidat(kandidat, [s.url for s in konf.sumber.values()])
     jumlah_per_sumber, terakhir_per_sumber, satuan_jumlah = hitung_data_sumber(konf, hasil_qc.observasi, hasil_masuk.konteks,
                                                                                katalog, kandidat)
+    aturan_sambungan = baca_sambungan(konf.akar)
+    sumber_aktif = {s.kode: s.url for s in konf.sumber.values() if s.status == "aktif" and s.url}
+    for d in diterima:
+        d["sambungan"] = status_sambungan(d.get("url", ""), aturan_sambungan, sumber_aktif)
+        terkait = d["sambungan"]["sumber_terkait"]
+        if d["sambungan"]["status"] == "tersambung_lewat" and terkait:
+            d["jumlah_observasi_terkait"] = jumlah_per_sumber.get(terkait, 0)
+        d["catatan"] = d["catatan"].replace(" Datanya belum diambil.", "") + " " + d["sambungan"]["keterangan"]
     _tulis_json(keluaran / "sumber.json", {
         "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0),
                     "satuan_jumlah": satuan_jumlah.get(s.kode, "baris harga"),
