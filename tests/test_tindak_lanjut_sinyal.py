@@ -106,3 +106,19 @@ def test_sinyal_data_terlambat(konf):
     daftar = sinyal.bentuk_sinyal(konf, {}, {}, sinyal.IndeksKonteks([]), ketepatan, date(2026, 9, 28))
     assert [s["kode_pasar"] for s in daftar] == ["PSR02"]
     assert daftar[0]["jenis"] == "data_terlambat" and "blank spot" in daftar[0]["narasi"]
+
+
+def test_sinyal_data_beku_hanya_untuk_deret_yang_masih_beku(konf):
+    def b(pasar, wilayah, masih=True):
+        return {"kode_pasar": pasar, "pasar": f"Pasar {pasar}", "kode_wilayah": wilayah, "kode_varian": "CMR01", "varian": "Cabai Merah Besar",
+                "kode_sumber": "BD-SP2KP", "harga": 35000.0, "sejak": "2025-09-03", "beku_sejak": "2025-09-17", "sampai": "2026-09-28",
+                "hari": 390, "observasi_beku": 166, "geser_pembanding_persen": 74.7, "masih_beku": masih}
+    daftar = sinyal.bentuk_sinyal(konf, {}, {}, sinyal.IndeksKonteks([]), {}, date(2026, 9, 28),
+                                  beku=[b("PSR01", konf.wilayah_target), b("PSR92", "1771"), b("PSR91", "1708", masih=False)])
+    beku = {s["kode_pasar"]: s for s in daftar if s["jenis"] == "data_beku"}
+    assert set(beku) == {"PSR01", "PSR92"}  # yang sudah diperbarui sumbernya tidak lagi diperingatkan
+    assert beku["PSR01"]["keparahan"] == "sedang" and beku["PSR92"]["keparahan"] == "rendah"
+    s = beku["PSR01"]
+    assert s["nilai_aktual"] == 35000.0 and s["deviasi_persen"] == 74.7 and "tidak diperbarui sejak 2025-09-03" in s["judul"]
+    assert "+75%" in s["narasi"] and "tidak dipakai" in s["narasi"]
+    assert len({x["id"] for x in daftar}) == len(daftar)

@@ -558,3 +558,80 @@ def jalankan_tahap4(akar: Path, ambil_fn=ambil) -> dict:
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_tahap4.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
     return hasil
+
+
+# ---------------------------------------------------------------- tahap 5: BEN CONNECT (tabel harga per kabupaten/kota)
+
+BEN_CONNECT = ["https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+               "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag"]
+
+
+def _sel(baris_html: str) -> list[str]:
+    return [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", c)).strip() for c in re.findall(r"<t[hd][^>]*>(.*?)</t[hd]>", baris_html, re.S | re.I)]
+
+
+def bedah_tabel(t: str) -> list[dict]:
+    """Ringkas semua tabel: kepala, jumlah baris, nilai unik kolom pertama dan kedua, dan contoh baris."""
+    hasil = []
+    for tabel in re.findall(r"<table.*?</table>", t, re.S | re.I)[:4]:
+        baris = [_sel(b) for b in re.findall(r"<tr.*?</tr>", tabel, re.S | re.I)]
+        baris = [b for b in baris if any(b)]
+        if not baris:
+            continue
+        isi = baris[1:]
+        hasil.append({"kepala": baris[0][:40], "jumlah_baris": len(isi),
+                      "kolom1": sorted({b[0] for b in isi if b})[:60], "kolom2": sorted({b[1] for b in isi if len(b) > 1})[:80],
+                      "contoh": isi[:6]})
+    return hasil
+
+
+def bedah_formulir(t: str) -> list[dict]:
+    hasil = []
+    for f in re.findall(r"<form.*?</form>", t, re.S | re.I)[:6]:
+        kepala = re.search(r"<form([^>]*)>", f, re.I).group(1)
+        isian = [{"nama": n, "jenis": j, "nilai": v} for n, j, v in
+                 re.findall(r"""<input[^>]*?name=["']([^"']+)["'][^>]*?(?:type=["']([^"']+)["'])?[^>]*?(?:value=["']([^"']*)["'])?""", f, re.I)]
+        pilihan = []
+        for nama, isi in re.findall(r"""<select[^>]*name=["']([^"']+)["'][^>]*>(.*?)</select>""", f, re.S | re.I):
+            pilihan.append({"nama": nama, "opsi": [(v, re.sub(r"\s+", " ", x).strip()) for v, x in
+                                                   re.findall(r"""<option[^>]*value=["']([^"']*)["'][^>]*>(.*?)</option>""", isi, re.S | re.I)][:60]})
+        hasil.append({"atribut": re.sub(r"\s+", " ", kepala)[:300], "isian": isian[:30], "pilihan": pilihan})
+    return hasil
+
+
+def tahap5_ben_connect(ambil_fn=ambil, hari: date | None = None) -> list[dict]:
+    hari = hari or date.today()
+    hasil = []
+    for url in BEN_CONNECT:
+        h = ambil_fn(url, 60, 6_000_000)
+        r = {"url": url, "status": h["status"], "byte": h["byte"], "galat": h.get("galat", "")}
+        if h["status"] == 200:
+            t = teks(h)
+            r["formulir"] = bedah_formulir(t)
+            r["tabel"] = bedah_tabel(t)
+            r["tautan_kueri"] = sorted(set(re.findall(r"""href=["']([^"']*\?[^"']*)["']""", t)))[:40]
+            r["wire_livewire"] = konteks(t, re.compile(r"wire:model|wire:click|livewire|x-data|fetch\(|axios", re.I), 200, 12)
+            r["bengkulu_tengah"] = "bengkulu tengah" in t.lower()
+            # Coba isi saringan tanggal (nama isian yang umum) dengan 10 hari terakhir lewat GET.
+            percobaan = []
+            for awal, akhir in (("start_date", "end_date"), ("tanggal_awal", "tanggal_akhir"), ("tgl_awal", "tgl_akhir"),
+                                ("from", "to"), ("date_from", "date_to")):
+                q = urllib.parse.urlencode({awal: (hari - timedelta(days=10)).isoformat(), akhir: hari.isoformat()})
+                hq = ambil_fn(f"{url}?{q}", 60, 6_000_000)
+                tq = teks(hq) if hq["status"] == 200 else ""
+                kepala = (bedah_tabel(tq) or [{}])[0].get("kepala", [])
+                percobaan.append({"kueri": q, "status": hq["status"], "kepala": kepala[:12],
+                                  "bengkulu_tengah": "bengkulu tengah" in tq.lower()})
+                time.sleep(JEDA)
+            r["coba_tanggal"] = percobaan
+        hasil.append(r)
+        time.sleep(JEDA)
+    return hasil
+
+
+def jalankan_tahap5(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "ben_connect": tahap5_ben_connect(ambil_fn)}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap5.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
+    return hasil

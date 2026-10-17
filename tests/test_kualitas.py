@@ -133,3 +133,58 @@ def test_libur_pencatatan_terdeteksi_dari_data():
             data.append(obs(t, 40000, pasar=p, sumber="BD-SP2KP"))
     data.append(obs(hari[2], 41000, pasar="PSR02", sumber="PSR-ENUM"))  # sumber satu pasar tidak menentukan libur
     assert kualitas.libur_pencatatan(data) == {hari[2]}
+
+
+# ---------------------------------------------------------------- data beku
+
+def _naik(mulai: date, hari: int, awal: float, akhir: float, pasar_list=("PSR01", "PSR02", "PSR91"), varian="CMR01"):
+    """Harga pasar pembanding yang naik pelan dari `awal` ke `akhir` (tanpa lonjakan harian)."""
+    hasil = []
+    for i in range(hari + 1):
+        for p in pasar_list:
+            hasil.append(obs(mulai + timedelta(days=i), round(awal + (akhir - awal) * i / hari), pasar=p, varian=varian, sumber="BD-SP2KP"))
+    return hasil
+
+
+def test_harga_beku_ditandai_hanya_setelah_pembanding_bergeser_jauh(konf):
+    d0 = date(2026, 8, 1)
+    beku = [obs(d0 + timedelta(days=i), 35000, pasar="PSR92", varian="CMR01", sumber="BD-SP2KP") for i in range(41)]
+    hasil = kualitas.jalankan(beku + _naik(d0, 40, 35000, 70000), konf, {})
+    status = {o.tanggal: o.status for o in hasil.observasi if o.kode_pasar == "PSR92"}
+    # 14 hari pertama tetap dipakai (belum cukup lama); sesudahnya ditandai beku begitu pembanding bergeser >= 20%
+    assert all(status[d0 + timedelta(days=i)] == "lolos" for i in range(14))
+    assert status[d0 + timedelta(days=40)] == "beku" and "data_beku" in next(o.tanda for o in hasil.observasi if o.kode_pasar == "PSR92" and o.tanggal == d0 + timedelta(days=40))
+    assert all(o.status == "lolos" for o in hasil.observasi if o.kode_pasar != "PSR92")  # pembanding yang bergerak tidak tersentuh
+    (b,) = hasil.beku
+    assert (b["kode_pasar"], b["kode_varian"], b["harga"], b["sejak"], b["masih_beku"]) == ("PSR92", "CMR01", 35000, "2026-08-01", True)
+    assert b["geser_pembanding_persen"] >= 20 and b["observasi_beku"] == sum(1 for s in status.values() if s == "beku")
+    assert all(o.status != "beku" for o in hasil.dipakai())
+
+
+def test_harga_tetap_yang_wajar_tidak_dianggap_beku(konf):
+    d0 = date(2026, 6, 1)
+    # gula: 60 hari tetap, pembanding hanya bergeser 4% (di bawah ambang 10% untuk kelompok pokok)
+    tetap = [obs(d0 + timedelta(days=i), 18000, pasar="PSR92", varian="GLP01", sumber="BD-SP2KP") for i in range(61)]
+    hasil = kualitas.jalankan(tetap + _naik(d0, 60, 18000, 18720, varian="GLP01"), konf, {})
+    assert hasil.beku == [] and all(o.status == "lolos" for o in hasil.observasi)
+    # cabai beku tetapi sumbernya sudah memperbarui harga: masa beku tercatat, tetapi tidak "masih beku"
+    d1 = date(2026, 8, 1)
+    seri = [obs(d1 + timedelta(days=i), 35000, pasar="PSR92", varian="CMR01", sumber="BD-SP2KP") for i in range(31)]
+    seri += [obs(d1 + timedelta(days=i), 60000 + i, pasar="PSR92", varian="CMR01", sumber="BD-SP2KP") for i in range(31, 36)]
+    hasil = kualitas.jalankan(seri + _naik(d1, 35, 35000, 62000), konf, {})
+    assert len(hasil.beku) == 1 and hasil.beku[0]["masih_beku"] is False
+
+
+def test_harga_beku_menghormati_validator_dan_bisa_dimatikan(konf):
+    d0 = date(2026, 8, 1)
+    beku = [obs(d0 + timedelta(days=i), 35000, pasar="PSR92", varian="CMR01", sumber="BD-SP2KP") for i in range(41)]
+    data = beku + _naik(d0, 40, 35000, 70000)
+    terakhir = beku[-1]
+    kep = {terakhir.id: kualitas.Keputusan("terima", "dicek ke pasar, memang tetap", "VAL", "2026-09-11")}
+    hasil = kualitas.jalankan(data, konf, kep)
+    assert next(o.status for o in hasil.observasi if o.id == terakhir.id) == "lolos"
+    konf.pengaturan["kualitas"]["beku"] = {"aktif": False}
+    for o in data:
+        o.status, o.tanda = "", []
+    hasil = kualitas.jalankan(data, konf, {})
+    assert hasil.beku == [] and not any(o.status == "beku" for o in hasil.observasi)

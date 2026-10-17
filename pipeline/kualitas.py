@@ -270,7 +270,8 @@ def tandai_beku(dipakai: list[Observasi], konf: Konfigurasi, keputusan: dict[str
                     "sejak": awal.tanggal.isoformat(), "beku_sejak": kena[0].tanggal.isoformat(),
                     "sampai": daftar[j].tanggal.isoformat(), "hari": (daftar[j].tanggal - awal.tanggal).days,
                     "observasi_beku": len(kena), "geser_pembanding_persen": round(geser_akhir, 1),
-                    "masih_beku": akhir is not None and (akhir - daftar[j].tanggal).days <= 3,
+                    # masih beku: masa ini adalah catatan terakhir deretnya dan belum lama (belum ada angka baru sesudahnya)
+                    "masih_beku": j == len(daftar) - 1 and akhir is not None and (akhir - daftar[j].tanggal).days <= 3,
                 })
             i = j + 1
     hasil.sort(key=lambda x: x["sampai"], reverse=True)

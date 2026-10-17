@@ -1118,6 +1118,11 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
                           jarak_sel, a["minimal_hari_riwayat"], ambang_gejolak, geser)
             if bt:
                 hasil_bt[nama] = bt
+    elif jumlah_obs >= a["minimal_hari_riwayat"]:
+        catatan.append(
+            f"Data terbaru terputus: baru {len(y_akhir)} hari berturut-turut sejak celah terakhir (dibutuhkan 14). "
+            "Sementara proyeksi memakai harga terakhir tanpa evaluasi backtest; penilaian kembali setelah datanya bersambung."
+        )
     else:
         catatan.append(
             f"Riwayat baru {jumlah_obs} hari observasi (minimal {a['minimal_hari_riwayat']}); "

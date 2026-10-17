@@ -482,6 +482,13 @@ def main(argv: list[str] | None = None) -> int:
     if a.perintah == "probe-lanjut":
         from . import probe_lanjut
 
+        if a.tahap == 5:
+            hasil = probe_lanjut.jalankan_tahap5(konf.akar)
+            for r in hasil["ben_connect"]:
+                print(f"[tahap5] {r['status']} {r['byte']}B bengkulu_tengah={r.get('bengkulu_tengah')} {r['url']}")
+                for c in r.get("coba_tanggal", []):
+                    print(f"   {c['status']} {c['kueri']} kepala={c['kepala'][:6]} bengkulu_tengah={c['bengkulu_tengah']}")
+            return 0
         if a.tahap == 4:
             hasil = probe_lanjut.jalankan_tahap4(konf.akar)
             for x in hasil["situs"]:
