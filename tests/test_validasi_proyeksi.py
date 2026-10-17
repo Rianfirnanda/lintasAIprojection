@@ -305,7 +305,8 @@ def test_kepercayaan_dan_rekomendasi_netral():
     assert analitik.kepercayaan({}) == "rendah"
     pr = {"30": {"perubahan_persen": 6.0, "bawah": 10000, "atas": 12000}}
     teks = analitik.rekomendasi_netral("Cabai", 11000, SimpleNamespace(), pr, "eksperimen")
-    assert "Eksperimen" in teks and "naik 6.0%" in teks
+    # angka ditulis cara Indonesia: koma desimal, titik ribuan
+    assert "Eksperimen" in teks and "naik 6,0%" in teks and "Rp10.000 sampai Rp12.000" in teks
     assert "stabil" in analitik.rekomendasi_netral("Beras", 15000, SimpleNamespace(), {"30": {"perubahan_persen": 0.2, "bawah": 1, "atas": 2}}, "valid")
     assert "belum dapat disusun" in analitik.rekomendasi_netral("X", None, SimpleNamespace(), {}, "valid")
 

@@ -26,7 +26,10 @@
       <h1>Pemantauan Harga Pangan TPID</h1>
       <p class="dash-wilayah">Kabupaten Bengkulu Tengah · data untuk pengendalian inflasi daerah</p>
     </div>
-    <div class="dash-periode" id="dash-ikon-kalender"><div><small>Periode data</small><strong id="periode">memuat…</strong></div></div>
+    <div class="baris-kontrol">
+      <button type="button" class="tombol tombol-rapat" id="tombol-rapat" title="Layar penuh untuk proyektor atau TV, berganti otomatis">Mode Rapat</button>
+      <div class="dash-periode" id="dash-ikon-kalender"><div><small>Periode data</small><strong id="periode">memuat…</strong></div></div>
+    </div>
   </header>
   <p class="hari-ini" id="hari-ini-tpid" hidden></p>
 
@@ -184,6 +187,9 @@ function pasangTabBeranda(peran) {
   document.fonts?.ready.then(geser);
 }
 document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
+const tombolRapat = document.getElementById("tombol-rapat");
+tombolRapat.insertAdjacentHTML("afterbegin", ikon("layar", 18));
+tombolRapat.addEventListener("click", () => import("./assets/rapat.js").then((m) => m.bukaModeRapat()));
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 20));
 // Harga yang baru dikirim petugas langsung tampil (real-time), sebelum selesai diolah.
 if (meta?.login === "firebase") import("./assets/harga-masuk.js").then((m) => m.pasangHargaMasuk(meta, utama)).catch(() => {});
@@ -335,7 +341,7 @@ function renderKaki(m) {
 }
 
 /* ---------- peta */
-function renderPeta(daftar, master) {
+function renderPeta(daftar, master, daftarSinyal = []) {
   const namaVarian = Object.fromEntries(master.varian.map((v) => [v.kode, v.nama]));
   const ada = daftar.filter((p) => p.lat !== null && p.lon !== null);
   const legenda = document.getElementById("peta-legenda");
@@ -343,15 +349,29 @@ function renderPeta(daftar, master) {
     document.getElementById("peta").innerHTML = `<div class="pesan">Koordinat pasar belum diisi di config/pasar.csv.</div>`;
     return;
   }
-  const HIJAU = "#1e9e5a", ORANYE = "#f08a24", ABU = "#6f7c8f";
+  const HIJAU = "#1e9e5a", ORANYE = "#f08a24", ABU = "#6f7c8f", MERAH = "#e5484d";
+  // Warna titik mengikuti kondisi pasar: ada peringatan aktif (merah, berdenyut), data terlambat lebih dari 3 hari (jingga),
+  // atau normal (hijau untuk pasar target, abu-abu untuk pembanding).
+  const sinyalPasar = (kode) => daftarSinyal.filter((s) => s.aktif && s.kode_pasar === kode);
+  const acuan = Date.parse(meta.tanggal_data_terakhir);
+  const terlambat = (p) => {
+    const akhir = (p.terkini || []).map((x) => x.tanggal).sort().pop();
+    return !akhir || (acuan - Date.parse(akhir)) / 864e5 > 3;
+  };
+  const kondisi = (p) => sinyalPasar(p.kode).length ? ["merah", MERAH, "ada peringatan aktif"]
+    : terlambat(p) ? ["oranye", ORANYE, "data terlambat"] : p.peran === "target" ? ["hijau", HIJAU, "normal"] : ["abu", ABU, "pembanding, normal"];
   const peta = L.map("peta", { scrollWheelZoom: false, attributionControl: true });
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© kontributor OpenStreetMap" }).addTo(peta);
   L.control.scale({ metric: true, imperial: false, position: "bottomright" }).addTo(peta);
   const batas = [];
   for (const p of ada) {
     const target = p.peran === "target";
-    const warna = p.blank_spot ? ORANYE : target ? HIJAU : ABU;
-    const m = L.circleMarker([p.lat, p.lon], { radius: target ? 8 : 6, color: "#ffffff", weight: 2, fillColor: warna, fillOpacity: 0.95 }).addTo(peta);
+    const [kelas, , teksKondisi] = kondisi(p);
+    const ukuran = target ? 18 : 13;
+    const m = L.marker([p.lat, p.lon], {
+      icon: L.divIcon({ className: "titik-pasar-bungkus", html: `<span class="titik-pasar ${kelas}${target ? " target" : ""}"></span>`, iconSize: [ukuran, ukuran] }),
+      title: `${p.nama}: ${teksKondisi}`, keyboard: true,
+    }).addTo(peta);
     const isi = document.createElement("div");
     const judul = document.createElement("strong");
     judul.textContent = p.nama;
@@ -359,9 +379,16 @@ function renderPeta(daftar, master) {
     const sub = document.createElement("div");
     sub.style.fontSize = "12px";
     const kt = p.ketepatan;
-    sub.textContent = `${p.wilayah} · ${target ? "pasar target" : "pembanding"}${p.blank_spot ? " · blank spot" : ""}` +
+    sub.textContent = `${p.wilayah} · ${target ? "pasar target" : "pembanding"}${p.blank_spot ? " · sulit sinyal" : ""} · ${teksKondisi}` +
       (kt ? ` · kelengkapan 30 hari ${kt.kelengkapan_persen ?? "–"}%` : "");
     isi.append(sub);
+    sinyalPasar(p.kode).slice(0, 3).forEach((s) => {
+      const a = document.createElement("a");
+      a.href = `sinyal.html#${encodeURIComponent(s.id)}`;
+      a.textContent = `⚠ ${s.judul}`;
+      a.style.cssText = "display:block;margin-top:4px;font-size:12px";
+      isi.append(a);
+    });
     const ul = document.createElement("ul");
     ul.style.cssText = "margin:6px 0 0;padding-left:16px;font-size:12px";
     p.terkini.slice(0, 6).forEach((t) => {
@@ -374,8 +401,9 @@ function renderPeta(daftar, master) {
     batas.push([p.lat, p.lon]);
   }
   peta.fitBounds(batas, { padding: [34, 34], maxZoom: 12 });
-  const butir = [[HIJAU, "Pasar (aktif)"]];
-  if (ada.some((p) => p.blank_spot)) butir.push([ORANYE, "Blank spot"]);
+  const butir = [[HIJAU, "Normal"]];
+  if (ada.some((p) => kondisi(p)[0] === "merah")) butir.push([MERAH, "Ada peringatan aktif"]);
+  if (ada.some((p) => kondisi(p)[0] === "oranye")) butir.push([ORANYE, "Data terlambat"]);
   if (ada.some((p) => p.peran !== "target")) butir.push([ABU, "Pasar pembanding"]);
   legenda.innerHTML = `<strong>Keterangan</strong>` + butir.map(([w, t]) => `<div><i style="background:${w}"></i>${t}</div>`).join("");
   setTimeout(() => peta.invalidateSize(), 200);
@@ -479,7 +507,7 @@ if (tampilanTpid) try {
   renderHariRaya(ringkasan.hari_raya);
   renderTindakLanjut(sinyal.sinyal, pasar.pasar);
   renderKaki(meta);
-  renderPeta(pasar.pasar, master);
+  renderPeta(pasar.pasar, master, sinyal.sinyal);
   siapkanGrafik(ringkasan.varian, master, model);
 } catch (e) {
   console.error(e);

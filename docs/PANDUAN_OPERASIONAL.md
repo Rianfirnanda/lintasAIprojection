@@ -379,6 +379,25 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
 - Yang dikirim: sinyal aktif keparahan ≥ sedang yang belum pernah dikirim, dan buletin mingguan setelah minggu
   berakhir. Catatan kiriman di `data/notifikasi/terkirim.json`. Mode demo tidak mengirim notifikasi.
 
+## 6b. Fitur bantu untuk semua pengguna
+
+- **Tanya Takar** (tombol "Tanya" di pojok kanan bawah). Menjawab pertanyaan dengan kalimat biasa dari data situs:
+  harga barang, barang yang naik atau turun paling banyak, perkiraan 7, 14, atau 30 hari, peringatan aktif, hari raya
+  berikutnya, dan kapan data diperbarui. Jawaban ini tidak memakai AI dan tidak memakai kunci, jadi bisa dipakai semua peran.
+  Pertanyaan bebas yang tidak ada di data (mis. "kenapa harga naik?") diteruskan ke AI **hanya untuk peran Administrator**,
+  karena kunci AI hanya boleh dibaca peran itu. AI hanya diberi data situs sebagai bahan jawaban dan dibatasi 30 pertanyaan
+  per hari per perangkat supaya kuota gratis tidak habis. Bila AI ingin dibuka untuk peran lain, kunci AI harus bisa dibaca
+  peran itu (berarti kuncinya bisa disalin oleh pengguna peran itu), jadi putuskan dulu bersama pengelola sistem.
+- **Pencarian cepat** (tombol Cari di bilah atas, atau tekan Ctrl+K atau /). Ketik nama barang, peringatan, atau halaman;
+  barang langsung membuka grafiknya di halaman Harga.
+- **Mode Rapat TPID** (tombol "Mode Rapat" di Dasbor TPID, atau lewat pencarian cepat). Layar penuh untuk proyektor atau TV;
+  lima tampilan berganti tiap 12 detik. Panah kiri/kanan untuk pindah, P untuk jeda, Esc untuk keluar.
+- **Grafik**: tombol + dan − di pojok grafik untuk memperbesar, lalu seret ke kiri atau kanan; ketuk dua kali untuk kembali
+  ke semua tanggal. Halaman Harga punya grafik **Bandingkan harga** untuk sampai 4 barang sekaligus.
+- **Pasang aplikasi**: bila peramban mengizinkan, tombol "Pasang aplikasi" muncul di kaki halaman supaya situs bisa dibuka
+  dari layar utama ponsel seperti aplikasi.
+- Animasi otomatis mati bila pengaturan perangkat meminta gerak dikurangi.
+
 ## 7. Indikator kinerja, persetujuan model, dan layanan publik
 
 - Halaman **Kinerja** menampilkan capaian indikator SMART Rancangan (ketepatan waktu, koreksi supervisor, model,

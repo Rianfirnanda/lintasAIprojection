@@ -241,6 +241,16 @@ const LOGO = `<img class="merek-ikon" src="assets/logo-takar-pangan.webp" alt=""
 const LOGO_MINI = `<img class="logo-mini" src="assets/logo-lintas-benteng.webp" alt="" width="9" height="13">`;
 const tundaSelamanya = () => new Promise(() => {});
 
+// Pasang di ponsel seperti aplikasi: peramban yang mendukung memberi tahu lewat "beforeinstallprompt". Ajakannya disimpan
+// lalu tombol "Pasang aplikasi" ditampilkan di kaki halaman.
+let ajakanPasang = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  ajakanPasang = e;
+  document.dispatchEvent(new Event("lbp-bisa-dipasang"));
+});
+window.addEventListener("appinstalled", () => { ajakanPasang = null; document.querySelector("[data-pasang]")?.remove(); });
+
 // Layar pembuka (lihat app.css): tampil sekali per sesi browser. Pada halaman berikutnya langsung dilewati.
 const KUNCI_PEMBUKA = "lbp-pembuka-tampil";
 const pembukaSudah = (() => { try { return sessionStorage.getItem(KUNCI_PEMBUKA) === "1"; } catch { return false; } })();
@@ -314,6 +324,8 @@ export async function pasangKerangka(aktif) {
       </nav>
       <div class="kepala-kanan">
         <span class="status-mini" id="status-mini" hidden><i></i><span></span></span>
+        ${wajibMasuk ? "" : `<button class="tombol-cari" type="button" aria-label="Cari (Ctrl+K)" title="Cari barang, peringatan, atau halaman (Ctrl+K)">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg><span>Cari</span><kbd>Ctrl K</kbd></button>`}
         <button class="menu-ponsel" type="button" aria-expanded="false" aria-controls="navigasi"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14"/></svg><span>Menu</span></button>
         ${pengguna ? `<div class="akun"><button class="akun-tombol" type="button" aria-expanded="false" aria-haspopup="true" title="${esc(pengguna.nama)} · ${esc(PERAN[peran].nama)}">
             <span class="avatar" data-huruf="${esc((pengguna.nama || "?").trim().charAt(0).toUpperCase())}">${pengguna.foto
@@ -362,6 +374,18 @@ export async function pasangKerangka(aktif) {
     kepala.classList.remove("nav-buka");
     document.querySelector(".nav-bawah [data-buka-menu]")?.setAttribute("aria-expanded", "false");
   };
+  // Pencarian cepat: tombol di bilah atas, Ctrl+K (⌘K), atau "/" saat tidak sedang mengetik.
+  const daftarHalaman = [...menuUtama, ...lainnya].map((m) => ({ href: m.href, label: m.label, ket: KET_MENU[m.href] || "" }));
+  const bukaCari = () => import("./cari-cepat.js").then((m) => m.bukaCariCepat(daftarHalaman));
+  kepala.querySelector(".tombol-cari")?.addEventListener("click", bukaCari);
+  document.addEventListener("keydown", (e) => {
+    const mengetik = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable;
+    if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") || (e.key === "/" && !mengetik)) {
+      if (wajibMasuk) return;
+      e.preventDefault();
+      bukaCari();
+    }
+  });
   if (!wajibMasuk) {
     const { ikon } = await import("./dashboard.js");
     const cepat = [["index.html", "rumah", "Beranda"], ...MENU_CEPAT.filter(([h]) => boleh.has(h)).slice(0, 3)];
@@ -444,6 +468,24 @@ export async function pasangKerangka(aktif) {
     </div>
     <p class="kaki-catatan">Sumber: BPS, SP2KP Kemendag, PIHPS Bank Indonesia, BMKG, Pemda, Open-Meteo (CC BY 4.0), peta © OpenStreetMap · © ${new Date().getFullYear()}${meta.versi ? ` · v${esc(meta.versi)}` : ""}</p>`;
   pasangStatus(kaki, meta);
+  const tampilPasang = () => {
+    if (!ajakanPasang || kaki.querySelector("[data-pasang]")) return;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "tombol kecil utama-aksi";
+    b.dataset.pasang = "";
+    b.textContent = "Pasang aplikasi";
+    b.title = "Pasang Takar Pangan di layar utama ponsel atau komputer";
+    b.addEventListener("click", async () => {
+      ajakanPasang?.prompt();
+      const pilih = await ajakanPasang?.userChoice.catch(() => null);
+      if (pilih?.outcome === "accepted") b.remove();
+      ajakanPasang = null;
+    });
+    kaki.querySelector(".kaki-kanan")?.prepend(b);
+  };
+  tampilPasang();
+  document.addEventListener("lbp-bisa-dipasang", tampilPasang);
   kaki.querySelector("[data-tema-ganti]").addEventListener("click", () => {
     // Matikan animasi warna sesaat supaya semua bagian berganti serentak, tanpa kedip.
     const akar = document.documentElement;
@@ -459,6 +501,8 @@ export async function pasangKerangka(aktif) {
   pasangPembaruan(meta);
   pasangHitungNaik();
   pasangGerak();
+  // Tombol "Tanya" (chatbot Tanya Takar) di pojok kanan bawah semua halaman.
+  if (!wajibMasuk) import("./tanya.js").then((m) => m.pasangTombolTanya(meta)).catch(() => {});
   if (pengguna?.sumber === "firebase") segarkanSesiFirebase(pengguna);
   return izin === "tolak" ? tundaSelamanya() : meta;
 }

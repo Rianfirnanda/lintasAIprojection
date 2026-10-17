@@ -119,6 +119,6 @@ def test_sinyal_data_beku_hanya_untuk_deret_yang_masih_beku(konf):
     assert set(beku) == {"PSR01", "PSR92"}  # yang sudah diperbarui sumbernya tidak lagi diperingatkan
     assert beku["PSR01"]["keparahan"] == "sedang" and beku["PSR92"]["keparahan"] == "rendah"
     s = beku["PSR01"]
-    assert s["nilai_aktual"] == 35000.0 and s["deviasi_persen"] == 74.7 and "tidak diperbarui sejak 2025-09-03" in s["judul"]
+    assert s["nilai_aktual"] == 35000.0 and s["deviasi_persen"] == 74.7 and "tidak diperbarui sejak 3 Sep 2025" in s["judul"]
     assert "+75%" in s["narasi"] and "tidak dipakai" in s["narasi"]
     assert len({x["id"] for x in daftar}) == len(daftar)

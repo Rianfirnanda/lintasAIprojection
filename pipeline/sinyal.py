@@ -32,6 +32,15 @@ def _rp(x: float) -> str:
     return f"Rp{x:,.0f}".replace(",", ".")
 
 
+BULAN_SINGKAT = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
+
+
+def _tgl(iso: str) -> str:
+    """Tanggal untuk teks peringatan, mis. "3 Sep 2025" (sama dengan tampilan situs)."""
+    d = date.fromisoformat(str(iso)[:10])
+    return f"{d.day} {BULAN_SINGKAT[d.month - 1]} {d.year}"
+
+
 class IndeksKonteks:
     """Akses cepat ke data konteks (cuaca, stok, dll) per wilayah/indikator/tanggal."""
 
@@ -286,13 +295,13 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
             "id": id_sinyal("data_beku", b["kode_pasar"], b["kode_varian"], b["kode_sumber"], b["sejak"]),
             "jenis": "data_beku", "kode_varian": b["kode_varian"], "varian": b["varian"],
             "komoditas": konf.varian[b["kode_varian"]].komoditas, "kode_wilayah": b["kode_wilayah"], "kode_pasar": b["kode_pasar"],
-            "judul": f"Harga {b['varian']} di {b['pasar']} tidak diperbarui sejak {b['sejak']}",
+            "judul": f"Harga {b['varian']} di {b['pasar']} tidak diperbarui sejak {_tgl(b['sejak'])}",
             "tanggal_mulai": b["beku_sejak"], "tanggal_terakhir": b["sampai"],
             "keparahan": "sedang" if di_target else "rendah", "arah": None, "aktif": True,
             "nilai_aktual": b["harga"], "baseline": None, "deviasi_persen": b["geser_pembanding_persen"],
             "konteks": {"kode_sumber": b["kode_sumber"], "hari": b["hari"], "observasi_beku": b["observasi_beku"]},
             "narasi": (f"Angkanya tetap {_rp(b['harga'])} selama {b['hari']} hari, padahal harga barang yang sama di pasar dan "
-                       f"sumber lain bergeser {b['geser_pembanding_persen']:+.0f}%. Angka sejak {b['beku_sejak']} tidak dipakai "
+                       f"sumber lain bergeser {b['geser_pembanding_persen']:+.0f}%. Angka sejak {_tgl(b['beku_sejak'])} tidak dipakai "
                        "dalam perhitungan sampai sumbernya memperbarui harga. Minta petugas mencatat harga langsung di pasar ini."),
         })
 
