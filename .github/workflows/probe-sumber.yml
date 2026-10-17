@@ -38,6 +38,7 @@ jobs:
             lanjut3) python -m pipeline probe-lanjut --tahap 3 ;;
             lanjut4) python -m pipeline probe-lanjut --tahap 4 ;;
             lanjut5) python -m pipeline probe-lanjut --tahap 5 ;;
+            lanjut6) python -m pipeline probe-lanjut --tahap 6 ;;
             sp2kp) python -m pipeline ambil-sp2kp --riwayat-hari 1830 && python -m pipeline sp2kp-ke-harga ;;
             *) python -m pipeline probe-lanjut ;;
           esac

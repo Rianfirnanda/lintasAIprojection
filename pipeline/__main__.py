@@ -482,6 +482,12 @@ def main(argv: list[str] | None = None) -> int:
     if a.perintah == "probe-lanjut":
         from . import probe_lanjut
 
+        if a.tahap == 6:
+            hasil = probe_lanjut.jalankan_tahap6(konf.akar)["disperindag"]
+            print(f"[tahap6] halaman {hasil.get('halaman')} api={hasil.get('api_base')} parameter={hasil.get('parameter')}")
+            for r in hasil.get("coba", []):
+                print(f"   {r['status']} {r['byte']}B json={r['json']} jumlah={r.get('jumlah')} tanggal={r.get('tanggal')} {r['url'][:160]}")
+            return 0
         if a.tahap == 5:
             hasil = probe_lanjut.jalankan_tahap5(konf.akar)
             for r in hasil["ben_connect"]:

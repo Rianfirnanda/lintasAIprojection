@@ -634,3 +634,58 @@ def jalankan_tahap5(akar: Path, ambil_fn=ambil) -> dict:
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_tahap5.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
     return hasil
+
+
+# ---------------------------------------------------------------- tahap 6: API harga Disperindag di BEN CONNECT
+
+def tahap6_api_disperindag(ambil_fn=ambil, hari: date | None = None) -> dict:
+    """Cari alamat API_BASE dan nama parameter di halaman komoditas-disperindag, lalu panggil API-nya untuk Bengkulu Tengah."""
+    hari = hari or date.today()
+    url = BEN_CONNECT[1]
+    h = ambil_fn(url, 60, 6_000_000)
+    hasil = {"halaman": h["status"]}
+    if h["status"] != 200:
+        return hasil
+    t = teks(h)
+    m = re.search(r"""API_BASE\s*=\s*[`"']([^`"']+)[`"']""", t)
+    hasil["api_base"] = m.group(1) if m else None
+    hasil["parameter"] = sorted(set(re.findall(r"""params\.(?:append|set)\(\s*['"]([\w\-]+)['"]""", t)))
+    hasil["skrip_api"] = konteks(t, re.compile(r"API_BASE|params\.(?:append|set)|URLSearchParams", re.I), 300, 12)
+    if not hasil["api_base"]:
+        return hasil
+    base = urllib.parse.urljoin(url, hasil["api_base"])
+    coba = []
+    for q in ({}, {"kabupaten_kota": "Kabupaten Bengkulu Tengah"},
+              {"kabupaten_kota": "Kabupaten Bengkulu Tengah", "start_date": (hari - timedelta(days=30)).isoformat(), "end_date": hari.isoformat()},
+              {"kabupaten_kota": "Kabupaten Bengkulu Tengah", "tanggal_awal": (hari - timedelta(days=30)).isoformat(),
+               "tanggal_akhir": hari.isoformat()},
+              {"kabupaten_kota": "Kota Bengkulu"}):
+        u = f"{base}?{urllib.parse.urlencode(q)}" if q else base
+        hj = ambil_fn(u, 60, 8_000_000, {"Accept": "application/json", "X-Requested-With": "XMLHttpRequest", "Referer": url})
+        r = ringkas(hj, "API Disperindag", 1500)
+        try:
+            d = json.loads(teks(hj))
+            data = d.get("data") if isinstance(d, dict) else d
+            if isinstance(data, dict):
+                r["kunci_data"] = list(data)[:20]
+                data = next((v for v in data.values() if isinstance(v, list)), data)
+            if isinstance(data, list):
+                r["jumlah"] = len(data)
+                r["contoh"] = data[:5]
+                tgl = sorted({str(x.get(k)) for x in data if isinstance(x, dict) for k in x if "tanggal" in k.lower() or "date" in k.lower()})
+                r["tanggal"] = [tgl[0], tgl[-1]] if tgl else []
+                r["kabupaten"] = sorted({str(x.get("kabupaten_kota")) for x in data if isinstance(x, dict) and x.get("kabupaten_kota")})[:15]
+        except (ValueError, AttributeError):
+            pass
+        coba.append(r)
+        time.sleep(JEDA)
+    hasil["coba"] = coba
+    return hasil
+
+
+def jalankan_tahap6(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"), "disperindag": tahap6_api_disperindag(ambil_fn)}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap6.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    return hasil
