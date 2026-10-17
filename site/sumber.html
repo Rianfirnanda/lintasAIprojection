@@ -166,7 +166,7 @@ const sidik = (k) => `${k.url_diakses ? `<br><span class="meta-kecil">dicek ${es
 
 // Status sambungan sumber yang diterima: datanya sudah masuk lewat konektor lain, situsnya menolak mesin, atau belum ada konektor.
 const SAMBUNGAN = new Map(data.sumber.filter((x) => x.kelompok === "AI_FINDER" && x.sambungan).map((x) => [x.url, x.sambungan]));
-const KELAS_SAMBUNGAN = { tersambung_lewat: "baik", tersambung: "baik", diblokir: "sedang", tidak_bisa: "polos", belum: "info" };
+const KELAS_SAMBUNGAN = { tersambung_lewat: "baik", tersambung: "baik", diblokir: "sedang", galat_sumber: "sedang", tidak_bisa: "polos", belum: "info" };
 
 function teksKeputusan(kp, menunggu, url = "") {
   const terima = kp.keputusan === "terima";

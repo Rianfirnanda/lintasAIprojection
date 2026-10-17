@@ -114,7 +114,7 @@ def baca_keputusan_sumber(akar: Path) -> dict[str, dict]:
 
 
 LABEL_SAMBUNGAN = {"tersambung_lewat": "sudah tersambung", "diblokir": "situs menolak akses mesin", "tidak_bisa": "tidak bisa diambil otomatis",
-                   "tersambung": "tersambung", "belum": "belum tersambung"}
+                   "galat_sumber": "situs sumbernya galat", "tersambung": "tersambung", "belum": "belum tersambung"}
 
 
 def baca_sambungan(akar: Path) -> list[dict]:

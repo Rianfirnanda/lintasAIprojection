@@ -5,3 +5,4 @@ bi.go.id/hargapangan,tersambung_lewat,BD-PIHPS,Datanya sudah masuk lewat konekto
 sigahada.bengkulukota.go.id,diblokir,,"Situs ini menolak akses mesin otomatis (perlindungan Cloudflare, hasil penjajakan 17 Oktober 2026). Perlu izin akses atau kiriman berkas data dari Dinas Perdagangan Kota Bengkulu."
 simponiternak.pertanian.go.id,diblokir,,"Situs ini menolak akses mesin otomatis (perlindungan Cloudflare, hasil penjajakan 17 Oktober 2026). Perlu izin akses dari Kementerian Pertanian."
 databoks.katadata.co.id,tidak_bisa,,"Halaman grafik di portal berita, bukan berkas data mentah. Angkanya mengutip lembaga lain, jadi tidak diambil otomatis."
+ben-connect.bengkuluprov.go.id,galat_sumber,,"Dicek 17 Oktober 2026: tabel di halaman ini hanya berisi data unggahan 20 sampai 23 Januari 2025, dan API harga Disperindag-nya menjawab ""Server Error"" (dengan maupun tanpa sesi). Belum bisa disambungkan; perlu konfirmasi ke Disperindag Provinsi Bengkulu."
