@@ -1,0 +1,534 @@
+{
+ "waktu": "2026-10-17T01:52:18+00:00",
+ "ben_connect": [
+  {
+   "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+   "status": 200,
+   "byte": 503499,
+   "galat": "",
+   "formulir": [
+    {
+     "atribut": " method=\"GET\" action=\"\"",
+     "isian": [],
+     "pilihan": [
+      {
+       "nama": "region",
+       "opsi": [
+        [
+         "",
+         "Semua Kabupaten/Kota Kantor"
+        ],
+        [
+         "Kota Bengkulu",
+         "Kota Bengkulu"
+        ],
+        [
+         "Kabupaten Bengkulu Selatan",
+         "Kabupaten Bengkulu Selatan"
+        ],
+        [
+         "Kabupaten Bengkulu Tengah",
+         "Kabupaten Bengkulu Tengah"
+        ],
+        [
+         "Kabupaten Bengkulu Utara",
+         "Kabupaten Bengkulu Utara"
+        ],
+        [
+         "Kabupaten Kaur",
+         "Kabupaten Kaur"
+        ],
+        [
+         "Kabupaten Kepahiang",
+         "Kabupaten Kepahiang"
+        ],
+        [
+         "Kabupaten Lebong",
+         "Kabupaten Lebong"
+        ],
+        [
+         "Kabupaten Muko-muko",
+         "Kabupaten Muko-muko"
+        ],
+        [
+         "Kabupaten Rejang Lebong",
+         "Kabupaten Rejang Lebong"
+        ],
+        [
+         "Kabupaten Seluma",
+         "Kabupaten Seluma"
+        ]
+       ]
+      },
+      {
+       "nama": "variant",
+       "opsi": [
+        [
+         "",
+         "Semua Komoditas"
+        ],
+        [
+         "Bawang Bombai",
+         "Bawang Bombai"
+        ],
+        [
+         "Bawang Merah",
+         "Bawang Merah"
+        ],
+        [
+         "Bawang Putih Honan",
+         "Bawang Putih Honan"
+        ],
+        [
+         "Beras Medium",
+         "Beras Medium"
+        ],
+        [
+         "Beras Premium",
+         "Beras Premium"
+        ],
+        [
+         "Beras SPHP Bulog",
+         "Beras SPHP Bulog"
+        ],
+        [
+         "Cabai Merah Besar",
+         "Cabai Merah Besar"
+        ],
+        [
+         "Cabai Merah Keriting",
+         "Cabai Merah Keriting"
+        ],
+        [
+         "Cabai Rawit Hijau",
+         "Cabai Rawit Hijau"
+        ],
+        [
+         "Cabai Rawit Merah",
+         "Cabai Rawit Merah"
+        ],
+        [
+         "Daging Ayam Kampung",
+         "Daging Ayam Kampung"
+        ],
+        [
+         "Daging Ayam Ras",
+         "Daging Ayam Ras"
+        ],
+        [
+         "Daging Sapi Paha Belakang",
+         "Daging Sapi Paha Belakang"
+        ],
+        [
+         "Daging Sapi Paha Depan",
+         "Daging Sapi Paha Depan"
+        ],
+        [
+         "Daging Sapi Sandung Lamur",
+         "Daging Sapi Sandung Lamur"
+        ],
+        [
+         "Daging Sapi Tetelan",
+         "Daging Sapi Tetelan"
+        ],
+        [
+         "Garam Halus",
+         "Garam Halus"
+        ],
+        [
+         "Gula Pasir Curah",
+         "Gula Pasir Curah"
+        ],
+        [
+         "Gula Pasir Kemasan",
+         "Gula Pasir Kemasan"
+        ],
+        [
+         "Ikan Teri",
+         "Ikan Teri"
+        ],
+        [
+         "Ikan Tongkol",
+         "Ikan Tongkol"
+        ],
+        [
+         "Jeruk Lokal",
+         "Jeruk Lokal"
+        ],
+        [
+         "Kacang Hijau",
+         "Kacang Hijau"
+        ],
+        [
+         "Kacang Panjang",
+         "Kacang Panjang"
+        ],
+        [
+         "Kacang Tanah",
+         "Kacang Tanah"
+        ],
+        [
+         "Kangkung",
+         "Kangkung"
+        ],
+        [
+         "Kedelai Impor",
+         "Kedelai Impor"
+        ],
+        [
+         "Kentang Sedang",
+         "Kentang Sedang"
+        ],
+        [
+         "Ketela Pohon",
+         "Ketela Pohon"
+        ],
+        [
+         "Ketimun Sedang",
+         "Ketimun Sedang"
+        ],
+        [
+         "Mie Instan",
+         "Mie Instan"
+        ],
+        [
+         "Minyak Goreng Curah",
+         "Minyak Goreng Curah"
+        ],
+        [
+         "Minyak Goreng Kemasan",
+         "Minyak Goreng Kemasan"
+        ],
+        [
+         "Minyakita",
+         "Minyakita"
+        ],
+        [
+         "Pisang Lokal",
+         "Pisang Lokal"
+        ],
+        [
+         "Sawi Hijau",
+         "Sawi Hijau"
+        ],
+        [
+         "Susu Bubuk",
+         "Susu Bubuk"
+        ],
+        [
+         "Susu Bubuk Balita",
+         "Susu Bubuk Balita"
+        ],
+        [
+         "Susu Kental Manis",
+         "Susu Kental Manis"
+        ],
+        [
+         "Tahu Putih",
+         "Tahu Putih"
+        ],
+        [
+         "Telur Ayam Kampung",
+         "Telur Ayam Kampung"
+        ],
+        [
+         "Telur Ayam Ras",
+         "Telur Ayam Ras"
+        ],
+        [
+         "Tempe Bungkus",
+         "Tempe Bungkus"
+        ],
+        [
+         "Tepung Terigu",
+         "Tepung Terigu"
+        ],
+        [
+         "Tomat",
+         "Tomat"
+        ],
+        [
+         "Udang Basah",
+         "Udang Basah"
+        ],
+        [
+         "Kedelai Lokal",
+         "Kedelai Lokal"
+        ],
+        [
+         "Beras Khusus",
+         "Beras Khusus"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "atribut": " class=\"p-4 md:p-5\" method=\"POST\" action=\"https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas/import\" enctype=\"multipart/form-data\"",
+     "isian": [
+      "<input type=\"hidden\" name=\"_token\" value=\"8DJvSnzUDPXmduQ8g5sFQmyrOhdDlJE3HgPDOJon\" autocomplete=\"off\">",
+      "<input name=\"file\" id=\"file\" class=\"block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400\" aria-describedby"
+     ],
+     "pilihan": []
+    }
+   ],
+   "tabel": [
+    {
+     "kepala": [
+      "Kabupaten Kota",
+      "Nama Varian",
+      "20/01/2025",
+      "21/01/2025",
+      "22/01/2025",
+      "23/01/2025"
+     ],
+     "jumlah_baris": 384,
+     "kolom1": [
+      "Kabupaten Bengkulu Selatan",
+      "Kabupaten Bengkulu Tengah",
+      "Kabupaten Bengkulu Utara",
+      "Kabupaten Kaur",
+      "Kabupaten Kepahiang",
+      "Kabupaten Lebong",
+      "Kabupaten Rejang Lebong",
+      "Kabupaten Seluma",
+      "Kota Bengkulu"
+     ],
+     "kolom2": [
+      "Bawang Bombai",
+      "Bawang Merah",
+      "Bawang Putih Honan",
+      "Beras Khusus",
+      "Beras Medium",
+      "Beras Premium",
+      "Beras SPHP Bulog",
+      "Cabai Merah Besar",
+      "Cabai Merah Keriting",
+      "Cabai Rawit Hijau",
+      "Cabai Rawit Merah",
+      "Daging Ayam Kampung",
+      "Daging Ayam Ras",
+      "Daging Sapi Paha Belakang",
+      "Daging Sapi Paha Depan",
+      "Daging Sapi Sandung Lamur",
+      "Daging Sapi Tetelan",
+      "Garam Halus",
+      "Gula Pasir Curah",
+      "Gula Pasir Kemasan",
+      "Ikan Teri",
+      "Ikan Tongkol",
+      "Jeruk Lokal",
+      "Kacang Hijau",
+      "Kacang Panjang",
+      "Kacang Tanah",
+      "Kangkung",
+      "Kedelai Impor",
+      "Kedelai Lokal",
+      "Kentang Sedang",
+      "Ketela Pohon",
+      "Ketimun Sedang",
+      "Mie Instan",
+      "Minyak Goreng Curah",
+      "Minyak Goreng Kemasan",
+      "Minyakita",
+      "Pisang Lokal",
+      "Sawi Hijau",
+      "Susu Bubuk",
+      "Susu Bubuk Balita",
+      "Susu Kental Manis",
+      "Tahu Putih",
+      "Telur Ayam Kampung",
+      "Telur Ayam Ras",
+      "Tempe Bungkus",
+      "Tepung Terigu",
+      "Tomat",
+      "Udang Basah"
+     ],
+     "contoh": [
+      [
+       "Kabupaten Bengkulu Selatan",
+       "Bawang Bombai",
+       "Rp.38,000",
+       "Rp.38,000",
+       "Rp.38,000",
+       "Rp.38,000"
+      ],
+      [
+       "Kabupaten Bengkulu Selatan",
+       "Bawang Merah",
+       "Rp.40,000",
+       "Rp.35,000",
+       "Rp.35,000",
+       "Rp.35,000"
+      ],
+      [
+       "Kabupaten Bengkulu Selatan",
+       "Bawang Putih Honan",
+       "Rp.42,000",
+       "Rp.40,000",
+       "Rp.40,000",
+       "Rp.40,000"
+      ],
+      [
+       "Kabupaten Bengkulu Selatan",
+       "Beras Medium",
+       "Rp.13,125",
+       "Rp.13,125",
+       "Rp.13,125",
+       "Rp.13,125"
+      ],
+      [
+       "Kabupaten Bengkulu Selatan",
+       "Beras SPHP Bulog",
+       "Rp.11,000",
+       "Rp.11,000",
+       "Rp.11,000",
+       "Rp.11,000"
+      ],
+      [
+       "Kabupaten Bengkulu Selatan",
+       "Cabai Merah Besar",
+       "Rp.45,000",
+       "Rp.55,000",
+       "Rp.55,000",
+       "Rp.55,000"
+      ]
+     ]
+    }
+   ],
+   "tautan_kueri": [
+    "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+   ],
+   "wire_livewire": [
+    "ent.querySelectorAll('script.flasher-js').length) { document.addEventListener('flasher:render', function (event) { render(event.detail); }); document.addEventListener('livewire:navigating', function () { var elements = document.querySelectorAll('.fl-no-cache'); for (var i = 0; i < elements.length; i++) { elements[i].remove(); }}); } if (window.hasOwnPr",
+    "oad = function () { render(options); }; document.head.appendChild(tag); }})();</script> </head> <body class=\"bg-[#f9fafb] dark:bg-gray-900\"> <!-- Sidebar --> <nav x-data=\"darkMode\" class=\"fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700\"> <div class=\"px-3 py-3 lg:px-5 lg:pl-3\"> <div class=\"flex items-cent"
+   ],
+   "bengkulu_tengah": true,
+   "coba_tanggal": [
+    {
+     "kueri": "start_date=2026-10-07&end_date=2026-10-17",
+     "status": 200,
+     "kepala": [
+      "Kabupaten Kota",
+      "Nama Varian",
+      "20/01/2025",
+      "21/01/2025",
+      "22/01/2025",
+      "23/01/2025"
+     ],
+     "bengkulu_tengah": true
+    },
+    {
+     "kueri": "tanggal_awal=2026-10-07&tanggal_akhir=2026-10-17",
+     "status": 200,
+     "kepala": [
+      "Kabupaten Kota",
+      "Nama Varian",
+      "20/01/2025",
+      "21/01/2025",
+      "22/01/2025",
+      "23/01/2025"
+     ],
+     "bengkulu_tengah": true
+    },
+    {
+     "kueri": "tgl_awal=2026-10-07&tgl_akhir=2026-10-17",
+     "status": 200,
+     "kepala": [
+      "Kabupaten Kota",
+      "Nama Varian",
+      "20/01/2025",
+      "21/01/2025",
+      "22/01/2025",
+      "23/01/2025"
+     ],
+     "bengkulu_tengah": true
+    },
+    {
+     "kueri": "from=2026-10-07&to=2026-10-17",
+     "status": 200,
+     "kepala": [
+      "Kabupaten Kota",
+      "Nama Varian",
+      "20/01/2025",
+      "21/01/2025",
+      "22/01/2025",
+      "23/01/2025"
+     ],
+     "bengkulu_tengah": true
+    },
+    {
+     "kueri": "date_from=2026-10-07&date_to=2026-10-17",
+     "status": 200,
+     "kepala": [
+      "Kabupaten Kota",
+      "Nama Varian",
+      "20/01/2025",
+      "21/01/2025",
+      "22/01/2025",
+      "23/01/2025"
+     ],
+     "bengkulu_tengah": true
+    }
+   ]
+  },
+  {
+   "url": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas-disperindag",
+   "status": 200,
+   "byte": 83845,
+   "galat": "",
+   "formulir": [
+    {
+     "atribut": " class=\"p-4 md:p-5\" method=\"POST\" action=\"https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas/import\" enctype=\"multipart/form-data\"",
+     "isian": [
+      "<input type=\"hidden\" name=\"_token\" value=\"NvXQpvZmWdOnuxPGXhWbp09DzWPSEkrGnNQW756z\" autocomplete=\"off\">",
+      "<input name=\"file\" id=\"file\" type=\"file\" class=\"block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600\">"
+     ],
+     "pilihan": []
+    }
+   ],
+   "tabel": [],
+   "tautan_kueri": [
+    "https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+   ],
+   "wire_livewire": [
+    "ent.querySelectorAll('script.flasher-js').length) { document.addEventListener('flasher:render', function (event) { render(event.detail); }); document.addEventListener('livewire:navigating', function () { var elements = document.querySelectorAll('.fl-no-cache'); for (var i = 0; i < elements.length; i++) { elements[i].remove(); }}); } if (window.hasOwnPr",
+    "oad = function () { render(options); }; document.head.appendChild(tag); }})();</script> </head> <body class=\"bg-[#f9fafb] dark:bg-gray-900\"> <!-- Sidebar --> <nav x-data=\"darkMode\" class=\"fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700\"> <div class=\"px-3 py-3 lg:px-5 lg:pl-3\"> <div class=\"flex items-cent",
+    "nd('kabupaten_kota', chartState.kabupaten); // Tidak filter nama_variant di API — ambil semua, filter di FE // supaya ganti variant tidak perlu fetch ulang const res = await fetch(`${API_BASE}?${params}`); const json = await res.json(); if (json.status_code !== 200) throw new Error(json.message); // Simpan semua data chartState.allRawData = cha"
+   ],
+   "bengkulu_tengah": false,
+   "coba_tanggal": [
+    {
+     "kueri": "start_date=2026-10-07&end_date=2026-10-17",
+     "status": 200,
+     "kepala": [],
+     "bengkulu_tengah": false
+    },
+    {
+     "kueri": "tanggal_awal=2026-10-07&tanggal_akhir=2026-10-17",
+     "status": 200,
+     "kepala": [],
+     "bengkulu_tengah": false
+    },
+    {
+     "kueri": "tgl_awal=2026-10-07&tgl_akhir=2026-10-17",
+     "status": 200,
+     "kepala": [],
+     "bengkulu_tengah": false
+    },
+    {
+     "kueri": "from=2026-10-07&to=2026-10-17",
+     "status": 200,
+     "kepala": [],
+     "bengkulu_tengah": false
+    },
+    {
+     "kueri": "date_from=2026-10-07&date_to=2026-10-17",
+     "status": 200,
+     "kepala": [],
+     "bengkulu_tengah": false
+    }
+   ]
+  }
+ ]
+}
