@@ -1,7 +1,11 @@
 // Tanya Takar: jendela tanya-jawab di setiap halaman (tombol "Tanya" di pojok kanan bawah).
 // Pertanyaan dijawab dulu oleh mesin jawab (tanya-mesin.js) dari data situs, cepat dan tanpa kunci. Bila pertanyaannya
-// bebas dan tidak ada di data, AI dipakai hanya bila peran ini boleh membaca kunci AI (Administrator), dengan batas
-// pemakaian harian supaya kuota gratis tidak habis. AI hanya diberi data situs sebagai bahan jawaban.
+// bebas dan tidak ada di data, AI dipakai untuk semua pengguna yang sudah masuk:
+//   1. AI Logic Firebase (Gemini). Kuncinya disimpan Firebase, tidak pernah dikirim ke browser. Perlu dinyalakan sekali
+//      di Firebase Console (lihat PANDUAN_OPERASIONAL.md bagian 6b).
+//   2. Bila itu belum dinyalakan atau gagal, Administrator memakai kunci AI situs (ai-situs.js); peran lain tetap dijawab
+//      dari data saja.
+// Ada batas pemakaian harian supaya kuota gratis tidak habis. AI hanya diberi data situs sebagai bahan jawaban.
 import { muatJSON, muatMeta, esc } from "./app.js";
 import { ikon } from "./dashboard.js";
 import { peranAktif, bolehAkses } from "./akses.js";
@@ -9,6 +13,7 @@ import { jawab, konteksAi, SISTEM_AI } from "./tanya-mesin.js";
 
 const KUNCI_RIWAYAT = "lbp-tanya-riwayat";
 const KUNCI_KUOTA = "lbp-tanya-ai";
+const KUNCI_AI_MATI = "lbp-tanya-ai-firebase-mati";
 const BATAS_AI_HARIAN = 30;
 const SARAN_AWAL = ["Harga cabai hari ini", "Apa yang naik paling tinggi?", "Perkiraan harga beras minggu depan", "Ada peringatan apa?", "Kapan hari raya berikutnya?"];
 
@@ -19,7 +24,55 @@ const baca = (k, awal) => { try { return JSON.parse(sessionStorage.getItem(k)) ?
 const simpan = (k, v) => { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch { /* abaikan */ } };
 
 function bolehAi() {
-  return peranAktif() === "admin" && meta?.login === "firebase";
+  return meta?.login === "firebase" && Boolean(peranAktif());
+}
+const adminKunci = () => peranAktif() === "admin";
+// Halaman dengan aturan keamanan ketat (Pengaturan) tidak mengizinkan sambungan ke AI Logic dan reCAPTCHA.
+const bolehAiFirebase = () => !baca(KUNCI_AI_MATI, false) && !document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+
+/** Jawaban dari AI Logic Firebase. Model dicoba berurutan; berhenti di galat yang tidak akan hilang dengan ganti model. */
+async function tanyaAiFirebase(teks) {
+  const [{ fb, ai }, cfg] = await Promise.all([
+    import("./firebase-klien.js").then((m) => m.aiFirebase()),
+    muatJSON("pengaturan.json").then((p) => p.ai || {}).catch(() => ({})),
+  ]);
+  let galat;
+  for (const model of [...new Set([cfg.model_gemini || "gemini-flash-latest", "gemini-flash-lite-latest"])]) {
+    try {
+      const m = fb.getGenerativeModel(ai, { model, systemInstruction: SISTEM_AI, generationConfig: { temperature: 0.2, maxOutputTokens: 1500 } });
+      const hasil = await m.generateContent(teks);
+      const jawaban = hasil.response.text().trim();
+      if (!jawaban) throw new Error("jawaban kosong");
+      return { teks: jawaban, model };
+    } catch (e) {
+      galat = e;
+      const status = e?.customErrorData?.status;
+      if (e?.code === "api-not-enabled" || [400, 401, 403].includes(status)) throw e;
+    }
+  }
+  throw galat;
+}
+
+/** AI Logic dulu; bila belum siap, Administrator memakai kunci AI situs. Mengembalikan { teks, model } atau melempar galat. */
+async function tanyaAi(teks) {
+  let galatFirebase = null;
+  if (bolehAiFirebase()) {
+    try { return await tanyaAiFirebase(teks); } catch (e) {
+      galatFirebase = e;
+      // AI Logic belum dinyalakan atau App Check menolak: jangan dicoba lagi sampai tab ini ditutup.
+      if (e?.code === "api-not-enabled" || [401, 403].includes(e?.customErrorData?.status)) simpan(KUNCI_AI_MATI, true);
+    }
+  }
+  if (adminKunci()) {
+    const { jawabBebas } = await import("./ai-situs.js");
+    try { return await jawabBebas(SISTEM_AI, teks); } catch (e) {
+      throw new Error(galatFirebase?.code === "api-not-enabled"
+        ? `${e.message} Supaya semua pengguna bisa memakai AI, nyalakan AI Logic di Firebase Console (Panduan bagian 6b).` : e.message);
+    }
+  }
+  const g = new Error(galatFirebase?.code === "api-not-enabled" ? "belum dinyalakan" : "sedang tidak tersedia");
+  g.firebase = galatFirebase;
+  throw g;
 }
 function sisaKuotaAi() {
   const hariIni = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" });
@@ -113,13 +166,15 @@ async function kirim(pertanyaan) {
     if (r.perluAi) {
       if (bolehAi() && sisaKuotaAi().pakai < BATAS_AI_HARIAN) {
         try {
-          const { jawabBebas } = await import("./ai-situs.js");
-          const a = await jawabBebas(SISTEM_AI, `DATA:\n${konteksAi(d)}\n\nPERTANYAAN: ${pertanyaan}`);
+          const a = await tanyaAi(`DATA:\n${konteksAi(d)}\n\nPERTANYAAN: ${pertanyaan}`);
           catatPakaiAi();
           balasan = { dari: "takar", ai: true, model: a.model, baris: a.teks.split(/\n+/).map((x) => x.replace(/^[*#\s]+/, "").replace(/\*\*/g, "")).filter(Boolean),
             tautan: r.tautan, saran: r.saran };
         } catch (e) {
-          balasan.baris = [...r.baris, `AI belum bisa menjawab: ${e.message || e}`];
+          balasan.baris = [...r.baris, adminKunci() ? `AI belum bisa menjawab: ${e.message || e}`
+            : "Pertanyaan bebas seperti ini dijawab oleh AI, tetapi AI-nya " + (e.message === "belum dinyalakan"
+              ? "belum dinyalakan oleh Administrator." : "sedang tidak bisa dihubungi. Coba lagi nanti.") +
+              " Pertanyaan tentang harga, perkiraan, dan peringatan tetap bisa dijawab."];
         }
       } else if (bolehAi()) {
         balasan.baris = [...r.baris, `Batas ${BATAS_AI_HARIAN} pertanyaan AI hari ini sudah tercapai, supaya kuota gratis tidak habis. Pertanyaan tentang harga tetap bisa dijawab.`];

@@ -10,6 +10,8 @@ export const DOK_AKSES = ["lbp_akses", "peran"];
 
 let siap = null;
 let modeEmulator = false;
+let kunciAppCheck = "";
+let ai = null;
 
 /** { fb, app, auth, db } setelah SDK dan konfigurasi termuat. Dipanggil berkali-kali aman. */
 export function firebaseSiap() {
@@ -18,7 +20,8 @@ export function firebaseSiap() {
     if (!r.ok) throw new Error("Konfigurasi Firebase belum tersedia.");
     const { konfigurasi } = await r.json();
     const fb = await import("../vendor/firebase/firebase.js");
-    const { emulator, ...konf } = konfigurasi;
+    const { emulator, recaptchaSiteKey, ...konf } = konfigurasi;
+    kunciAppCheck = recaptchaSiteKey || "";
     const app = fb.getApps()[0] || fb.initializeApp(konf);
     const auth = fb.getAuth(app);
     const db = fb.getFirestore(app);
@@ -32,6 +35,23 @@ export function firebaseSiap() {
   })();
   siap.catch(() => { siap = null; });
   return siap;
+}
+
+/** Layanan AI Logic Firebase (Gemini). Kunci Gemini disimpan Firebase, bukan di browser; yang boleh memanggil hanya situs ini.
+ *  Bila kunci reCAPTCHA diisi, App Check dinyalakan dulu supaya skrip di luar situs ditolak Firebase. */
+export async function aiFirebase() {
+  ai ||= (async () => {
+    const { fb, app } = await firebaseSiap();
+    const lokal = ["localhost", "127.0.0.1"].includes(location.hostname);
+    if (kunciAppCheck && !lokal) {
+      try {
+        fb.initializeAppCheck(app, { provider: new fb.ReCaptchaV3Provider(kunciAppCheck), isTokenAutoRefreshEnabled: true });
+      } catch { /* sudah dinyalakan sebelumnya */ }
+    }
+    return { fb, ai: fb.getAI(app, { backend: new fb.GoogleAIBackend() }) };
+  })();
+  ai.catch(() => { ai = null; });
+  return ai;
 }
 
 /** Pengguna Firebase yang sedang masuk (menunggu Firebase selesai memulihkan login), atau null. */

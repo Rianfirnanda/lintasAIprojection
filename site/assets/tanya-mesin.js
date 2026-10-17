@@ -19,6 +19,16 @@ const KATA_UMUM = new Set(("harga berapa apakah apa yang di ke dari dan atau unt
   "info informasi tentang soal mengenai jika kalau bisa tahu ingin mau saya kami kita paling tertinggi terendah terbesar banyak sedikit " +
   "7 14 30 hari2 seminggu sebulan dua tiga ada adakah").split(" "));
 
+// Tanda bahwa pertanyaan memang soal harga. Tanpa tanda ini dan dengan banyak kata lain (mis. "cara menyimpan cabai
+// supaya awet"), pertanyaan menyebut barang tetapi bukan soal harga, jadi tidak dijawab dengan daftar harga.
+const TANDA_HARGA = /(harga|berapa|naik|turun|mahal|murah|rp|rupiah|sekarang|hari ini|kemarin|minggu|bulan|stabil|berubah|kg|liter)/;
+
+/** Kata di pertanyaan yang bukan kata umum dan bukan bagian nama barang yang dikenali. */
+function kataLain(teks, barang) {
+  const nama = new Set(barang.flatMap((v) => normal(`${v.nama} ${v.komoditas || ""}`).split(" ")));
+  return teks.split(" ").filter((k) => k.length > 1 && !KATA_UMUM.has(k) && !nama.has(k) && ![...nama].some((n) => k.length >= 4 && n.startsWith(k)));
+}
+
 /** Barang yang disebut di pertanyaan: daftar varian dengan skor tertinggi (bisa lebih dari satu, mis. "cabai"). */
 export function kenaliBarang(pertanyaan, varian) {
   const kata = normal(pertanyaan).split(" ").filter((k) => k.length > 1 && !KATA_UMUM.has(k));
@@ -120,7 +130,7 @@ export async function jawab(pertanyaan, data, muatSeri = null) {
   }
 
   // perkiraan
-  if (/(perkiraan|prakiraan|prediksi|ramalan|minggu depan|bulan depan|besok|ke depan|akan|nanti)/.test(teks)) {
+  if (/\b(perkiraan|prakiraan|prediksi|ramalan|minggu depan|bulan depan|besok|ke depan|akan|nanti)\b/.test(teks)) {
     if (!barang.length) return hasil("perkiraan", ["Barang apa yang ingin diperkirakan harganya? Misalnya: \"perkiraan harga cabai rawit minggu depan\"."], [],
       ["Perkiraan harga beras minggu depan", "Perkiraan harga cabai merah 30 hari"]);
     const hari = horizonDari(teks);
@@ -151,10 +161,22 @@ export async function jawab(pertanyaan, data, muatSeri = null) {
     return { ...hasil("kenapa", baris, [tautanBarang(x), { href: "berita.html", label: "Berita lokal" }]), perluAi: true };
   }
 
+  // menyebut barang tetapi bukan soal harga (mis. cara menyimpan, resep, cara menanam)
+  if (barang.length && !TANDA_HARGA.test(teks) && kataLain(teks, barang).length >= 2) {
+    const x = barang[0];
+    const lain = new Set(kataLain(teks, barang));
+    const disebut = barang.length === 1 ? x.nama : teks.split(" ").filter((k) => k.length > 1 && !KATA_UMUM.has(k) && !lain.has(k)).join(" ");
+    return { niat: "lain", baris: ["Data situs ini hanya berisi harga, jadi pertanyaan itu belum bisa saya jawab dari data. " +
+      (barang.length === 1 ? `Yang tersedia: harga ${x.nama} sekarang ${rp(x.harga_terakhir)} per ${x.satuan}.` : `Yang tersedia: harga ${barang.length} jenis ${disebut}.`)],
+      tautan: barang.length === 1 ? [tautanBarang(x)] : [{ href: "harga.html", label: "Semua harga" }],
+      saran: [`Harga ${disebut} hari ini`, `Perkiraan harga ${x.nama} minggu depan`], perluAi: true };
+  }
+
   // harga barang (bawaan bila barang disebut)
   if (barang.length) {
     if (barang.length > 3) {
-      const disebut = teks.split(" ").filter((k) => k.length > 1 && !KATA_UMUM.has(k)).join(" ") || "barang";
+      const lain = new Set(kataLain(teks, barang));
+      const disebut = teks.split(" ").filter((k) => k.length > 1 && !KATA_UMUM.has(k) && !lain.has(k)).join(" ") || "barang";
       return hasil("harga", [`Ada ${barang.length} jenis ${disebut}:`,
         ...barang.map((x) => `• ${x.nama}: ${rp(x.harga_terakhir)}/${x.satuan}${ada(x.perubahan?.mingguan) ? ` (${persen(x.perubahan.mingguan)} seminggu)` : ""}`)],
       [{ href: "harga.html", label: "Semua harga" }], [`Perkiraan harga ${barang[0].nama} minggu depan`]);

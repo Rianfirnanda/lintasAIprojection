@@ -74,6 +74,21 @@ test("pertanyaan penyebab jujur dan boleh diteruskan ke AI; pertanyaan asing tid
   assert.doesNotMatch(teks(asing), /\d/);
 });
 
+test("menyebut barang tetapi bukan soal harga: tidak dijawab dengan daftar harga", async () => {
+  const r = await jawab("Bagaimana cara menyimpan cabai supaya awet?", DATA);
+  assert.equal(r.niat, "lain");
+  assert.equal(r.perluAi, true);
+  assert.match(teks(r), /hanya berisi harga/);
+  assert.doesNotMatch(teks(r), /jenis cara/);
+  assert.match(teks(r), /harga 4 jenis cabai\.$/);
+  assert.match(teks(await jawab("resep masakan pakai beras medium yang enak", DATA)), /harga Beras Kualitas Medium I sekarang Rp14\.375 per kg/);
+  // kata tambahan yang tidak dikenal tidak ikut jadi nama kelompok barang
+  assert.equal((await jawab("harga cabai panorama", DATA)).baris[0], "Ada 4 jenis cabai:");
+  assert.equal((await jawab("cabai rawit hijau", DATA)).niat, "harga");
+  assert.equal((await jawab("harga makanan cabai rawit hijau", DATA)).niat, "harga"); // "makanan" bukan "akan"
+  assert.equal((await jawab("cabai rawit hijau di pasar panorama", DATA)).niat, "harga");
+});
+
 test("jawaban tanpa istilah teknis; konteks AI ringkas dan berisi angka situs", async () => {
   for (const q of ["harga cabai", "apa yang naik paling tinggi", "perkiraan harga beras medium minggu depan", "ada peringatan apa", "halo"]) {
     assert.doesNotMatch(teks(await jawab(q, DATA)), ISTILAH_TEKNIS, q);

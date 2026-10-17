@@ -384,10 +384,11 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
 - **Tanya Takar** (tombol "Tanya" di pojok kanan bawah). Menjawab pertanyaan dengan kalimat biasa dari data situs:
   harga barang, barang yang naik atau turun paling banyak, perkiraan 7, 14, atau 30 hari, peringatan aktif, hari raya
   berikutnya, dan kapan data diperbarui. Jawaban ini tidak memakai AI dan tidak memakai kunci, jadi bisa dipakai semua peran.
-  Pertanyaan bebas yang tidak ada di data (mis. "kenapa harga naik?") diteruskan ke AI **hanya untuk peran Administrator**,
-  karena kunci AI hanya boleh dibaca peran itu. AI hanya diberi data situs sebagai bahan jawaban dan dibatasi 30 pertanyaan
-  per hari per perangkat supaya kuota gratis tidak habis. Bila AI ingin dibuka untuk peran lain, kunci AI harus bisa dibaca
-  peran itu (berarti kuncinya bisa disalin oleh pengguna peran itu), jadi putuskan dulu bersama pengelola sistem.
+  Pertanyaan bebas yang tidak ada di data (mis. "kenapa harga naik?") diteruskan ke AI untuk **semua pengguna yang sudah
+  masuk**, lewat fitur AI bawaan Firebase (AI Logic). Kunci Gemini-nya disimpan Firebase dan tidak pernah dikirim ke
+  browser, jadi tidak ada kunci yang bisa disalin pengguna. AI hanya diberi data situs sebagai bahan jawaban dan dibatasi
+  30 pertanyaan per hari per perangkat. Selama AI Logic belum dinyalakan, AI tetap jalan untuk Administrator memakai kunci
+  AI situs, dan peran lain dijawab dari data saja.
 - **Pencarian cepat** (tombol Cari di bilah atas, atau tekan Ctrl+K atau /). Ketik nama barang, peringatan, atau halaman;
   barang langsung membuka grafiknya di halaman Harga.
 - **Mode Rapat TPID** (tombol "Mode Rapat" di Dasbor TPID, atau lewat pencarian cepat). Layar penuh untuk proyektor atau TV;
@@ -397,6 +398,34 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
 - **Pasang aplikasi**: bila peramban mengizinkan, tombol "Pasang aplikasi" muncul di kaki halaman supaya situs bisa dibuka
   dari layar utama ponsel seperti aplikasi.
 - Animasi otomatis mati bila pengaturan perangkat meminta gerak dikurangi.
+
+### Menyalakan AI untuk semua pengguna (sekali saja)
+
+1. Buka [Firebase Console](https://console.firebase.google.com) → pilih proyek situs ini → menu **AI Logic** (alamat
+   langsungnya `console.firebase.google.com/project/ID-PROYEK/genai`) → **Get started**.
+2. Pilih **Gemini Developer API**. Paket gratis (Spark) cukup; Firebase membuat kunci Gemini sendiri dan menyimpannya di
+   server. Jangan menempelkan kunci Gemini situs ke mana pun di langkah ini.
+3. Tunggu beberapa menit, lalu coba Tanya Takar dengan pertanyaan bebas memakai akun yang bukan Administrator. Jawaban AI
+   ditandai "Jawaban AI dari data situs".
+
+**Pengaman yang disarankan: App Check.** Konfigurasi web Firebase memang terbuka untuk umum, jadi tanpa App Check orang
+lain bisa memakai jatah AI proyek dari skrip mereka sendiri. Dengan App Check, Firebase hanya melayani permintaan dari situs
+ini. Bila proyek masih paket gratis (Spark), pemakaian liar paling buruk menghabiskan kuota gratis sehingga AI berhenti
+sampai kuota pulih. Bila proyek sudah paket berbayar (Blaze), pemakaian liar bisa menimbulkan tagihan, jadi App Check wajib
+dipasang:
+
+1. Buat kunci **reCAPTCHA v3** di [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin): tipe reCAPTCHA v3,
+   domain diisi alamat situs (mis. `lintas-benteng-proyeksi.web.app`). Simpan **kunci situs** dan **kunci rahasia**.
+2. Firebase Console → **App Check** → tab **Apps** → aplikasi web situs → **reCAPTCHA** → tempel **kunci rahasia** → Simpan.
+3. Buka **Pengaturan** di situs → tab **Firebase** → isian Konfigurasi web Firebase (`FIREBASE_WEB_CONFIG`). Tambahkan baris
+   `recaptchaSiteKey: "kunci-situs-dari-langkah-1"` di dalam `firebaseConfig`, lalu simpan. Kunci situs memang boleh
+   terlihat publik. Tunggu situs terbit ulang.
+4. Setelah beberapa jam, buka App Check → tab **APIs** → **Firebase AI Logic**. Bila hampir semua permintaan sudah
+   "Verified", tekan **Enforce**. Sejak itu permintaan AI dari luar situs ditolak.
+
+Batas pemakaian per pengguna juga bisa diatur di Firebase Console → AI Logic → **Settings** (permintaan per menit per
+pengguna). Di halaman Pengaturan situs, AI Logic sengaja tidak dipakai karena aturan keamanan halaman itu lebih ketat;
+di sana Tanya Takar memakai kunci AI situs milik Administrator.
 
 ## 7. Indikator kinerja, persetujuan model, dan layanan publik
 
