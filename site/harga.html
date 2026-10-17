@@ -10,103 +10,293 @@
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
   <link rel="stylesheet" href="assets/app.css">
   <script src="assets/tema-awal.js"></script>
+  <script src="vendor/chart.umd.js"></script>
 </head>
 <body>
 <main class="utama">
   <div class="judul-halaman">
     <div>
       <h1>Harga Bahan Pokok</h1>
-      <p>Perubahan harga dari hari ke tahun. Ketuk baris untuk melihat grafiknya.</p>
+      <p>Harga terakhir tiap barang dan perubahannya. Ketuk barang untuk melihat grafiknya.</p>
     </div>
-    <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh CSV</a>
+    <div class="baris-kontrol">
+      <div class="segmen" role="group" aria-label="Tampilan" id="pilih-tampilan">
+        <button type="button" data-tampil="kartu" aria-pressed="true">Kartu</button>
+        <button type="button" data-tampil="tabel" aria-pressed="false">Tabel</button>
+      </div>
+      <a class="tombol" href="data/unduh/harga_harian.csv" download>Unduh CSV</a>
+    </div>
   </div>
 
   <div class="ind-baris" id="kpi"></div>
 
   <section class="kartu" aria-labelledby="judul-tabel">
     <div class="kartu-kepala">
-      <div><h2 id="judul-tabel">Semua varian</h2></div>
-      <div class="legenda" style="margin:0">
+      <div><h2 id="judul-tabel">Semua barang</h2><p id="sub-tabel">Perubahan dibanding sebulan lalu</p></div>
+      <div class="baris-kontrol">
+        <label class="sr-only" for="f-cari">Cari barang</label>
+        <input type="search" id="f-cari" placeholder="Cari barang, mis. cabai">
+        <details class="pilih-kolom" id="pilih-kolom" hidden><summary class="tombol">Pilih kolom</summary><div class="menu-kolom" id="menu-kolom"></div></details>
+      </div>
+    </div>
+    <div class="chip-baris" id="f-kelompok" role="group" aria-label="Jenis barang"></div>
+    <div id="tampil-kartu" class="tampil-kartu"></div>
+    <div id="tampil-tabel" hidden>
+      <div class="legenda" style="margin:0 0 10px">
         <span><span class="kunci-pita" style="background:var(--up-wash-strong)"></span>Naik tajam</span>
         <span><span class="kunci-pita" style="background:var(--up-wash)"></span>Naik</span>
         <span><span class="kunci-pita" style="background:var(--down-wash)"></span>Turun</span>
       </div>
+      <div class="gulir-tabel tabel-menempel">
+        <table id="tabel-perubahan">
+          <thead>
+            <tr>
+              <th>Barang</th><th class="angka">Harga terakhir</th><th class="angka" data-kolom="lalu">Sebulan lalu</th><th class="angka" data-kolom="selisih">Selisih sebulan</th>
+              <th class="angka" data-kolom="normal">Dibanding harga normal</th>
+              <th class="angka" data-kolom="harian">Harian</th><th class="angka" data-kolom="mingguan">Mingguan</th><th class="angka" data-kolom="bulanan">Bulanan</th>
+              <th class="angka" data-kolom="triwulanan">Triwulanan</th><th class="angka" data-kolom="semesteran">Semesteran</th><th class="angka" data-kolom="tahunan">Tahunan</th>
+              <th class="angka" data-kolom="perkiraan">Perkiraan 7 hari lagi</th><th data-kolom="peringatan">Peringatan</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
-    <div class="gulir-tabel">
-      <table id="tabel-perubahan">
-        <thead>
-          <tr>
-            <th>Varian</th><th class="angka">Harga terakhir</th><th class="angka">Sebulan lalu</th><th class="angka">Selisih sebulan</th>
-            <th class="angka">Dibanding harga normal</th>
-            <th class="angka">Harian</th><th class="angka">Mingguan</th><th class="angka">Bulanan</th>
-            <th class="angka">Triwulanan</th><th class="angka">Semesteran</th><th class="angka">Tahunan</th>
-            <th class="angka">Perkiraan 7 hari lagi</th><th>Peringatan</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+  </section>
+
+  <section class="kartu" aria-labelledby="judul-banding">
+    <div class="kartu-kepala">
+      <div><h2 id="judul-banding">Bandingkan harga</h2><p>Pilih sampai 4 barang. Garisnya menunjukkan naik atau turunnya harga (dalam persen) sejak tanggal awal, jadi barang murah dan mahal bisa dibandingkan.</p></div>
+      <div class="segmen" role="group" aria-label="Rentang waktu" id="banding-rentang">
+        <button type="button" data-hari="30" aria-pressed="false">30 hari</button>
+        <button type="button" data-hari="90" aria-pressed="true">90 hari</button>
+        <button type="button" data-hari="365" aria-pressed="false">1 tahun</button>
+      </div>
     </div>
+    <div class="chip-baris chip-bungkus" id="banding-pilih" role="group" aria-label="Barang yang dibandingkan"></div>
+    <div class="wadah-grafik"><canvas id="grafik-banding" role="img" aria-label="Grafik perbandingan perubahan harga"></canvas></div>
   </section>
 </main>
 
 <script type="module">
 import { ind } from "./assets/peran.js";
-import { pasangKerangka, muatJSON, esc, rp, rentangRp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat } from "./assets/app.js";
-import { selisihHarga, htmlSelisih, tglPendek } from "./assets/dashboard.js";
-import { pasangKlikRincian, rincianArahHarga } from "./assets/rincian.js";
+import { pasangKerangka, muatJSON, esc, rp, rentangRp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat, saatTemaBerubah } from "./assets/app.js";
+import { selisihHarga, htmlSelisih, tglPendek, gambarKomoditas } from "./assets/dashboard.js";
+import { pasangKlikRincian, rincianArahHarga, bukaRincian } from "./assets/rincian.js";
+import { gambarGrafikHarga, legendaHarga, gambarBanding } from "./assets/grafik.js";
 import { peranAktif } from "./assets/akses.js";
 
 const AMBANG = { volatil: 15, protein: 10, pokok: 5, pabrikan: 5 };
 await pasangKerangka("harga.html");
 const utama = document.querySelector("main");
+const simpan = (k, v) => { try { localStorage.setItem(k, v); } catch { /* abaikan */ } };
+const ambil = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
 
-function sel(x, kelompok) {
-  return `<td class="angka ${kelasPerubahan(x, AMBANG[kelompok])}">${persen(x, 1, true)}</td>`;
+function sel(x, kelompok, kolom) {
+  return `<td class="angka ${kelasPerubahan(x, AMBANG[kelompok])}" data-kolom="${kolom}">${persen(x, 1, true)}</td>`;
+}
+function sparkline(nilai, arah) {
+  const v = nilai.filter((x) => x !== null && x !== undefined);
+  if (v.length < 2) return "";
+  const min = Math.min(...v), maks = Math.max(...v), r = maks - min || 1;
+  const titik = v.map((x, k) => `${(k / (v.length - 1) * 100).toFixed(1)},${(28 - ((x - min) / r) * 24).toFixed(1)}`).join(" ");
+  return `<svg class="spark ${arah}" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><polygon class="isi" points="0,30 ${titik} 100,30"/><polyline pathLength="100" points="${titik}"/></svg>`;
 }
 
 try {
   const [ringkasan, master] = await Promise.all([muatJSON("ringkasan.json"), muatJSON("master.json")]);
   const varian = ringkasan.varian;
+  const perKode = Object.fromEntries(varian.map((v) => [v.kode, v]));
   const arah = (v) => { const b = v.perubahan?.bulanan; return b === null || b === undefined ? "datar" : b > 0.5 ? "naik" : b < -0.5 ? "turun" : "datar"; };
   const nNaik = varian.filter((v) => arah(v) === "naik").length, nTurun = varian.filter((v) => arah(v) === "turun").length;
   const total = varian.length || 1;
   document.getElementById("kpi").innerHTML = [
-    ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: nNaik, kecil: "varian", sub: "dibanding sebulan lalu", meter: nNaik / total * 100, meterWarna: "merah", warnaNilai: "merah", rincian: "naik" }),
-    ind({ i: "trenTurun", warna: "hijau", label: "Harga turun", nilai: nTurun, kecil: "varian", sub: "dibanding sebulan lalu", meter: nTurun / total * 100, meterWarna: "hijau", warnaNilai: "hijau", rincian: "turun" }),
-    ind({ i: "kubus", label: "Harga stabil", nilai: varian.length - nNaik - nTurun, kecil: "varian", sub: "naik atau turun sedikit sekali", meter: (varian.length - nNaik - nTurun) / total * 100, rincian: "stabil" }),
-    ind({ i: "peringatan", warna: "oranye", label: "Perlu diwaspadai", nilai: varian.filter((v) => v.sinyal).length, kecil: "varian", sub: "harga jauh dari biasanya", rincian: "waspada" }),
+    ind({ i: "tren", warna: "merah", label: "Harga naik", nilai: nNaik, kecil: "barang", sub: "dibanding sebulan lalu", meter: nNaik / total * 100, meterWarna: "merah", warnaNilai: "merah", rincian: "naik" }),
+    ind({ i: "trenTurun", warna: "hijau", label: "Harga turun", nilai: nTurun, kecil: "barang", sub: "dibanding sebulan lalu", meter: nTurun / total * 100, meterWarna: "hijau", warnaNilai: "hijau", rincian: "turun" }),
+    ind({ i: "kubus", label: "Harga stabil", nilai: varian.length - nNaik - nTurun, kecil: "barang", sub: "naik atau turun sedikit sekali", meter: (varian.length - nNaik - nTurun) / total * 100, rincian: "stabil" }),
+    ind({ i: "peringatan", warna: "oranye", label: "Perlu diwaspadai", nilai: varian.filter((v) => v.sinyal).length, kecil: "barang", sub: "harga jauh dari biasanya", rincian: "waspada" }),
   ].join("");
   pasangKlikRincian(document.getElementById("kpi"), rincianArahHarga({ varian, periode: "bulanan", arah, peran: peranAktif() }));
-  const tbody = document.querySelector("#tabel-perubahan tbody");
-  let html = "";
-  for (const k of master.komoditas) {
-    html += `<tr class="grup"><td colspan="13">${esc(k.nama)}</td></tr>`;
-    for (const kode of k.varian) {
-      const v = varian.find((x) => x.kode === kode);
-      if (!v) {
-        html += `<tr><td>${esc(master.varian.find((x) => x.kode === kode)?.nama || kode)}</td><td colspan="12" class="kosong">belum ada data</td></tr>`;
-        continue;
-      }
-      const p = v.perubahan || {};
-      const h7 = v.proyeksi_h7;
-      const b = selisihHarga(v);
-      html += `<tr class="bisa-klik" data-kode="${esc(v.kode)}" tabindex="0">
-        <td>${esc(v.nama)} <span class="meta-kecil">/${esc(v.satuan)}</span></td>
-        <td class="angka">${rp(v.harga_terakhir)}</td>
-        <td class="angka">${b ? `${rp(b.lalu)}<br><span class="meta-kecil">${esc(tglPendek(b.tanggal))}</span>` : "–"}</td>
-        <td class="angka">${b ? htmlSelisih(b) : "–"}</td>${sel(v.deviasi_persen, v.kelompok)}
-        ${sel(p.harian, v.kelompok)}${sel(p.mingguan, v.kelompok)}${sel(p.bulanan, v.kelompok)}
-        ${sel(p.triwulanan, v.kelompok)}${sel(p.semesteran, v.kelompok)}${sel(p.tahunan, v.kelompok)}
-        <td class="angka">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rentangRp(h7.bawah, h7.atas)}</span>` : "–"}</td>
-        <td>${lencanaKeparahan(v.sinyal) || '<span class="kosong">–</span>'}</td></tr>`;
-    }
+
+  // Deret harian tiap barang dimuat sekali dan dipakai untuk garis kecil, jendela grafik, dan perbandingan.
+  const seri = {};
+  const muatSeri = (kode) => (seri[kode] ||= muatJSON(`seri/${kode}.json`).catch(() => null));
+
+  /* ---------- saringan: jenis barang (chip) dan kata cari */
+  let kelompok = "", tampilan = ambil("lbp-harga-tampilan") === "tabel" ? "tabel" : "kartu";
+  const cocok = (v) => {
+    const cari = document.getElementById("f-cari").value.trim().toLowerCase();
+    return (!kelompok || v.kode_komoditas === kelompok) && (!cari || `${v.nama} ${v.komoditas}`.toLowerCase().includes(cari));
+  };
+  const chipKelompok = document.getElementById("f-kelompok");
+  function gambarChip() {
+    chipKelompok.innerHTML = [["", "Semua"], ...master.komoditas.map((k) => [k.kode, k.nama])]
+      .map(([k, nama]) => `<button type="button" class="chip-saring" data-kelompok="${esc(k)}" aria-pressed="${kelompok === k}">${esc(nama)}</button>`).join("");
   }
-  tbody.innerHTML = html;
-  const buka = (tr) => { location.href = `index.html#varian=${encodeURIComponent(tr.dataset.kode)}`; };
-  tbody.querySelectorAll("tr.bisa-klik").forEach((tr) => {
-    tr.addEventListener("click", () => buka(tr));
-    tr.addEventListener("keydown", (e) => { if (e.key === "Enter") buka(tr); });
+  chipKelompok.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-kelompok]");
+    if (!b) return;
+    kelompok = b.dataset.kelompok;
+    gambarChip();
+    gambarIsi();
   });
+  document.getElementById("f-cari").addEventListener("input", gambarIsi);
+
+  /* ---------- tampilan kartu */
+  function kartuHarga(v) {
+    const b = selisihHarga(v);
+    const h7 = v.proyeksi_h7;
+    return `<button type="button" class="kartu-harga" data-kode="${esc(v.kode)}" aria-haspopup="dialog">
+      <span class="kh-atas">${gambarKomoditas(v.kode)}<span class="kh-nama">${esc(v.nama)}${v.sinyal ? `<span class="kh-waspada" title="Harga jauh dari biasanya">Waspada</span>` : ""}</span></span>
+      <span class="kh-harga">${rp(v.harga_terakhir)}<small>/${esc(v.satuan)}</small></span>
+      ${b ? htmlSelisih(b, { kelas: "kh-ubah" }) : '<span class="selisih datar kh-ubah">Belum ada pembanding</span>'}
+      <span class="kh-spark" data-spark="${esc(v.kode)}"></span>
+      <span class="kh-bawah"><span>${b ? `Sebulan lalu ${rp(b.lalu)}` : "&nbsp;"}</span>${h7 ? `<span>7 hari lagi sekitar ${rp(h7.prediksi)}</span>` : ""}</span>
+    </button>`;
+  }
+  function gambarKartu() {
+    const wadah = document.getElementById("tampil-kartu");
+    const isi = master.komoditas.flatMap((k) => k.varian.map((kode) => perKode[kode])).filter((v) => v && cocok(v));
+    wadah.innerHTML = isi.length ? `<div class="grid-harga">${isi.map(kartuHarga).join("")}</div>`
+      : `<p class="kosong">Tidak ada barang yang cocok dengan pencarian Anda.</p>`;
+    wadah.querySelectorAll("[data-spark]").forEach(async (el) => {
+      const s = await muatSeri(el.dataset.spark);
+      if (s) el.innerHTML = sparkline(s.aktual.slice(-30), arah(perKode[el.dataset.spark]));
+    });
+  }
+
+  /* ---------- tampilan tabel (kolom bisa dipilih, nama barang menempel saat digeser) */
+  const KOLOM = [["lalu", "Sebulan lalu"], ["selisih", "Selisih sebulan"], ["normal", "Dibanding harga normal"], ["harian", "Harian"],
+    ["mingguan", "Mingguan"], ["bulanan", "Bulanan"], ["triwulanan", "Triwulanan"], ["semesteran", "Semesteran"], ["tahunan", "Tahunan"],
+    ["perkiraan", "Perkiraan 7 hari lagi"], ["peringatan", "Peringatan"]];
+  let sembunyi = new Set((ambil("lbp-harga-kolom-sembunyi") || "").split(",").filter(Boolean));
+  const menuKolom = document.getElementById("menu-kolom");
+  menuKolom.innerHTML = KOLOM.map(([k, nama]) => `<label class="cek"><input type="checkbox" value="${k}"${sembunyi.has(k) ? "" : " checked"}> ${nama}</label>`).join("");
+  menuKolom.addEventListener("change", (e) => {
+    if (e.target.checked) sembunyi.delete(e.target.value); else sembunyi.add(e.target.value);
+    simpan("lbp-harga-kolom-sembunyi", [...sembunyi].join(","));
+    terapKolom();
+  });
+  function terapKolom() {
+    document.querySelectorAll("#tabel-perubahan [data-kolom]").forEach((el) => { el.hidden = sembunyi.has(el.dataset.kolom); });
+    document.querySelectorAll("#tabel-perubahan tr.grup td").forEach((td) => { td.colSpan = 13 - sembunyi.size; });
+  }
+  function gambarTabel() {
+    const tbody = document.querySelector("#tabel-perubahan tbody");
+    let html = "";
+    for (const k of master.komoditas) {
+      const isi = k.varian.filter((kode) => !perKode[kode] || cocok(perKode[kode]));
+      if (!isi.length) continue;
+      html += `<tr class="grup"><td colspan="13">${esc(k.nama)}</td></tr>`;
+      for (const kode of isi) {
+        const v = perKode[kode];
+        if (!v) {
+          html += `<tr><th scope="row">${esc(master.varian.find((x) => x.kode === kode)?.nama || kode)}</th><td colspan="12" class="kosong">belum ada data</td></tr>`;
+          continue;
+        }
+        const p = v.perubahan || {};
+        const h7 = v.proyeksi_h7;
+        const b = selisihHarga(v);
+        html += `<tr class="bisa-klik" data-kode="${esc(v.kode)}" tabindex="0">
+          <th scope="row">${esc(v.nama)} <span class="meta-kecil">/${esc(v.satuan)}</span></th>
+          <td class="angka">${rp(v.harga_terakhir)}</td>
+          <td class="angka" data-kolom="lalu">${b ? `${rp(b.lalu)}<br><span class="meta-kecil">${esc(tglPendek(b.tanggal))}</span>` : "–"}</td>
+          <td class="angka" data-kolom="selisih">${b ? htmlSelisih(b) : "–"}</td>${sel(v.deviasi_persen, v.kelompok, "normal")}
+          ${sel(p.harian, v.kelompok, "harian")}${sel(p.mingguan, v.kelompok, "mingguan")}${sel(p.bulanan, v.kelompok, "bulanan")}
+          ${sel(p.triwulanan, v.kelompok, "triwulanan")}${sel(p.semesteran, v.kelompok, "semesteran")}${sel(p.tahunan, v.kelompok, "tahunan")}
+          <td class="angka" data-kolom="perkiraan">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rentangRp(h7.bawah, h7.atas)}</span>` : "–"}</td>
+          <td data-kolom="peringatan">${lencanaKeparahan(v.sinyal) || '<span class="kosong">–</span>'}</td></tr>`;
+      }
+    }
+    tbody.innerHTML = html || `<tr><td colspan="13" class="kosong">Tidak ada barang yang cocok dengan pencarian Anda.</td></tr>`;
+    terapKolom();
+  }
+
+  function gambarIsi() {
+    document.getElementById("tampil-kartu").hidden = tampilan !== "kartu";
+    document.getElementById("tampil-tabel").hidden = tampilan !== "tabel";
+    document.getElementById("pilih-kolom").hidden = tampilan !== "tabel";
+    document.querySelectorAll("#pilih-tampilan button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tampil === tampilan)));
+    if (tampilan === "kartu") gambarKartu(); else gambarTabel();
+  }
+  document.getElementById("pilih-tampilan").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tampil]");
+    if (!b || b.dataset.tampil === tampilan) return;
+    tampilan = b.dataset.tampil;
+    simpan("lbp-harga-tampilan", tampilan);
+    gambarIsi();
+  });
+
+  /* ---------- jendela grafik satu barang (kartu atau baris tabel diketuk) */
+  let grafikJendela = null;
+  async function bukaGrafik(kode) {
+    const v = perKode[kode];
+    if (!v) return;
+    const b = selisihHarga(v), h7 = v.proyeksi_h7;
+    await bukaRincian({
+      judul: v.nama, sub: `Harga ${v.tanggal_terakhir ? `per ${tglPendek(v.tanggal_terakhir)}` : "terakhir"} · per ${v.satuan}`, ikonNama: "tren",
+      isi: `<div class="ks-angka">
+          <div class="ks-angka-isi"><small>Harga sekarang</small><b>${rp(v.harga_terakhir)}</b></div>
+          ${b ? `<div class="ks-angka-isi ${b.selisih > 0 ? "naik" : b.selisih < 0 ? "turun" : ""}"><small>Dibanding sebulan lalu</small><b>${htmlSelisih(b)}</b></div>` : ""}
+          ${h7 ? `<div class="ks-angka-isi"><small>Perkiraan 7 hari lagi</small><b>${rp(h7.prediksi)}</b></div>` : ""}
+        </div>
+        <div class="wadah-grafik kecil"><canvas id="grafik-jendela" role="img" aria-label="Grafik harga ${esc(v.nama)}"></canvas></div>
+        <div class="legenda" id="legenda-jendela"></div>
+        <p class="meta-kecil">Tekan + untuk memperbesar, lalu seret grafik ke kiri atau kanan. Ketuk dua kali untuk melihat semua tanggal.</p>`,
+    });
+    const kanvas = document.getElementById("grafik-jendela");
+    const s = await muatSeri(kode);
+    if (!kanvas || !s) return;
+    grafikJendela?.destroy();
+    grafikJendela = gambarGrafikHarga(kanvas, s, { horizon: 30 });
+    document.getElementById("legenda-jendela").innerHTML = legendaHarga(s);
+  }
+  utama.addEventListener("click", (e) => {
+    const el = e.target.closest(".kartu-harga, tr.bisa-klik");
+    if (el) bukaGrafik(el.dataset.kode);
+  });
+  utama.addEventListener("keydown", (e) => {
+    const tr = e.target.closest("tr.bisa-klik");
+    if (tr && e.key === "Enter") bukaGrafik(tr.dataset.kode);
+  });
+
+  gambarChip();
+  gambarIsi();
+
+  /* ---------- bandingkan harga */
+  let pilihBanding = varian.filter((v) => v.sinyal).slice(0, 2).map((v) => v.kode);
+  if (pilihBanding.length < 2) pilihBanding = varian.slice(0, 2).map((v) => v.kode);
+  let hariBanding = 90, grafikBanding = null;
+  const chipBanding = document.getElementById("banding-pilih");
+  function gambarChipBanding() {
+    chipBanding.innerHTML = varian.map((v) => {
+      const i = pilihBanding.indexOf(v.kode);
+      return `<button type="button" class="chip-saring${i >= 0 ? ` warna-${i + 1}` : ""}" data-banding="${esc(v.kode)}" aria-pressed="${i >= 0}"${i < 0 && pilihBanding.length >= 4 ? " disabled" : ""}>${esc(v.nama)}</button>`;
+    }).join("");
+  }
+  async function gambarGrafikBanding() {
+    const daftar = (await Promise.all(pilihBanding.map(muatSeri))).filter(Boolean);
+    grafikBanding?.destroy();
+    grafikBanding = daftar.length ? gambarBanding(document.getElementById("grafik-banding"), daftar, hariBanding) : null;
+  }
+  chipBanding.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-banding]");
+    if (!b) return;
+    const k = b.dataset.banding;
+    pilihBanding = pilihBanding.includes(k) ? pilihBanding.filter((x) => x !== k) : [...pilihBanding, k].slice(0, 4);
+    gambarChipBanding();
+    gambarGrafikBanding();
+  });
+  document.getElementById("banding-rentang").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-hari]");
+    if (!b) return;
+    hariBanding = Number(b.dataset.hari);
+    document.querySelectorAll("#banding-rentang button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    gambarGrafikBanding();
+  });
+  saatTemaBerubah(gambarGrafikBanding);
+  gambarChipBanding();
+  gambarGrafikBanding();
 } catch (e) {
   console.error(e);
   tampilkanGalat(utama, e);

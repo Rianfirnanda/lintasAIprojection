@@ -16,11 +16,21 @@
   <div class="judul-halaman">
     <div>
       <h1>Cek Data</h1>
-      <p>Data diperiksa dulu sebelum dipakai (Quality Gate). Yang mencurigakan ditahan sampai ada keputusan.</p>
+      <div class="teks-tanya">Data diperiksa dulu sebelum dipakai. Yang mencurigakan ditahan sampai ada keputusan.
+        <details class="tanya"><summary aria-label="Penjelasan pemeriksaan data">?</summary><div class="tanya-isi">
+          Setiap baris harga melewati beberapa pemeriksaan (dalam istilah teknis disebut <i>quality gate</i>): bentuk isian benar,
+          tidak ganda, harga masuk akal dibanding hari-hari sebelumnya dan pasar lain, dan sumbernya tetap memperbarui harga.
+          Baris yang lolos langsung dipakai. Baris yang mencurigakan ditahan sampai pemeriksa memutuskan diterima atau ditolak.</div></details></div>
     </div>
   </div>
 
   <div class="ind-baris" id="kpi"></div>
+
+  <section class="kartu" aria-labelledby="j-alur-baris">
+    <div class="kartu-kepala"><div><h2 id="j-alur-baris">Ke mana setiap baris data</h2><p id="sub-alur-baris"></p></div></div>
+    <div class="batang-tumpuk" id="batang-baris" role="img"></div>
+    <ul class="legenda-tumpuk" id="legenda-baris"></ul>
+  </section>
 
   <section class="kartu">
     <div class="kartu-kepala">
@@ -36,8 +46,10 @@
     <div class="kartu-kepala">
       <div>
         <h2 id="j-beku">Harga yang tidak diperbarui sumbernya</h2>
-        <p>Angka yang sama persis terus dilaporkan sebuah pasar, padahal harga barang yang sama di pasar dan sumber lain sudah bergeser jauh.
-          Angka sesudah pergeseran itu tidak dipakai dalam perhitungan, peringatan, maupun prakiraan, sampai sumbernya memperbarui harga.</p>
+        <div class="teks-tanya">Angka yang sama terus dilaporkan, padahal harga di tempat lain sudah bergeser.
+          <details class="tanya"><summary aria-label="Penjelasan harga yang tidak diperbarui">?</summary><div class="tanya-isi">
+            Angka yang sama persis terus dilaporkan sebuah pasar, padahal harga barang yang sama di pasar dan sumber lain sudah bergeser jauh.
+            Angka sesudah pergeseran itu tidak dipakai dalam perhitungan, peringatan, maupun prakiraan, sampai sumbernya memperbarui harga.</div></details></div>
       </div>
     </div>
     <p class="meta-kecil" id="ket-beku"></p>
@@ -119,15 +131,26 @@ const r = q.ringkasan;
 const ps = r.per_status || {};
 const lolosN = (ps.lolos || 0) + (ps.divalidasi || 0);
 document.getElementById("kpi").innerHTML = [
-  ind({ i: "dokumen", label: "Berkas diperiksa", nilai: angka(r.berkas), sub: "harga dan data pendukung" }),
   ind({ i: "centang", warna: "hijau", label: "Baris lolos", nilai: angka(lolosN), sub: `${angka(ps.divalidasi || 0)} lewat pemeriksaan manusia`, warnaNilai: "hijau" }),
   ind({ i: "peringatan", warna: "merah", label: "Menunggu keputusan", nilai: angka(q.jumlah_perlu_validasi), sub: "menunggu pemeriksa", warnaNilai: q.jumlah_perlu_validasi ? "merah" : "" }),
-  ind({ i: "kurang", warna: "oranye", label: "Baris ditolak", nilai: angka(r.baris_ditolak_skema), sub: `${angka(ps.ditolak_validator || 0)} ditolak pemeriksa`, warnaNilai: r.baris_ditolak_skema ? "oranye" : "" }),
-  ind({ i: "database", label: "Data ganda dibuang", nilai: angka(r.duplikat_dibuang), sub: "salinan atau kiriman ulang" }),
-  ind({ i: "tukar", label: "Beda antar sumber", nilai: angka(r.rekonsiliasi_melebihi_batas), sub: "selisihnya terlalu besar" }),
   ind({ i: "jam", warna: r.deret_beku ? "oranye" : "hijau", label: "Harga tidak diperbarui", nilai: angka(r.deret_beku || 0), kecil: "deret",
     sub: `${angka(r.observasi_beku || 0)} angka tidak dipakai`, warnaNilai: r.deret_beku ? "oranye" : "" }),
+  ind({ i: "tukar", label: "Beda antar sumber", nilai: angka(r.rekonsiliasi_melebihi_batas), sub: "selisihnya terlalu besar" }),
 ].join("");
+
+// Satu batang bertumpuk: berapa bagian baris yang dipakai, ditahan, ditolak, ganda, atau tidak diperbarui sumbernya.
+const bagianBaris = [
+  ["lolos", "Dipakai", lolosN, "hijau"], ["tahan", "Menunggu keputusan", q.jumlah_perlu_validasi || 0, "merah"],
+  ["beku", "Tidak diperbarui sumbernya", ps.beku ?? r.observasi_beku ?? 0, "oranye"],
+  ["tolak", "Ditolak", (r.baris_ditolak_skema || 0) + (ps.ditolak_validator || 0), "abu"], ["ganda", "Ganda, dibuang", r.duplikat_dibuang || 0, "biru"],
+];
+const totalBaris = bagianBaris.reduce((a, [, , n]) => a + n, 0) || 1;
+document.getElementById("sub-alur-baris").textContent = `${angka(totalBaris)} baris dari ${angka(r.berkas)} berkas harga dan data pendukung`;
+document.getElementById("batang-baris").setAttribute("aria-label", bagianBaris.map(([, nama, n]) => `${nama} ${angka(n)}`).join(", "));
+document.getElementById("batang-baris").innerHTML = bagianBaris.filter(([, , n]) => n > 0)
+  .map(([k, nama, n, w]) => `<span class="${w}" style="--lebar:${(n / totalBaris) * 100}%" title="${esc(nama)}: ${angka(n)} baris"></span>`).join("");
+document.getElementById("legenda-baris").innerHTML = bagianBaris.map(([, nama, n, w]) =>
+  `<li><i class="${w}"></i><span>${esc(nama)}</span><b>${angka(n)}</b><small>${persen((n / totalBaris) * 100, n && n / totalBaris < 0.01 ? 2 : 1)}</small></li>`).join("");
 
 const beku = q.beku || [];
 const masihBeku = beku.filter((b) => b.masih_beku);

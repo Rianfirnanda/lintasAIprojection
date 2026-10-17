@@ -16,7 +16,11 @@
   <div class="judul-halaman">
     <div>
       <h1>Akurasi Prakiraan</h1>
-      <p>Seberapa tepat prakiraan harga saat diuji dengan data lama (Mutu Model). Kalau tidak lebih baik dari cara sederhana, cara sederhana yang dipakai.</p>
+      <div class="teks-tanya">Seberapa tepat prakiraan harga saat diuji dengan data lama. Kalau tidak lebih baik dari cara sederhana, cara sederhana yang dipakai.
+        <details class="tanya"><summary aria-label="Cara menguji prakiraan">?</summary><div class="tanya-isi">
+          Prakiraan diuji dengan cara "pura-pura belum tahu": sistem menebak harga hari-hari yang sudah lewat, lalu tebakannya
+          dibandingkan dengan harga sebenarnya. Dalam istilah teknis ini disebut uji mutu model (sMAPE, cakupan rentang, dan sejenisnya).
+          Cara yang tidak lebih tepat daripada sekadar memakai harga terakhir tidak dipakai.</div></details></div>
     </div>
   </div>
 
@@ -24,8 +28,8 @@
 
   <div class="grid dua-sama">
     <section class="kartu">
-      <div class="kartu-kepala"><div><h2>Sudah sesuai target?</h2><p>Target mengikuti laporan pengembangan model.</p></div></div>
-      <div class="gulir-tabel"><table id="tabel-target"><thead><tr><th>Yang dinilai</th><th>Target</th><th>Hasil</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      <div class="kartu-kepala"><div><h2>Sudah sesuai target?</h2><p>Garis tegak adalah target dari laporan pengembangan model.</p></div></div>
+      <ul class="target-hasil" id="target-hasil"></ul>
       <p class="meta-kecil" id="ket-target" style="margin-top:10px" hidden></p>
     </section>
     <section class="kartu">
@@ -73,7 +77,7 @@
 
 <script type="module">
 import { ind } from "./assets/peran.js";
-import { pasangKerangka, muatJSON, esc, persen, angka, rp, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
+import { pasangKerangka, muatJSON, esc, persen, angka, rp, tgl, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
 import { sesi } from "./assets/akses.js";
 
 const meta = await pasangKerangka("model.html");
@@ -101,21 +105,33 @@ document.getElementById("kpi").innerHTML = [
 
 const status = (ok) => ok === null || ok === undefined ? '<span class="lencana polos">belum bisa dinilai</span>'
   : ok ? '<span class="lencana baik">tercapai</span>' : '<span class="lencana sedang">belum tercapai</span>';
+const ada = (x) => x !== null && x !== undefined;
+const pct = (x, d = 0) => (ada(x) ? `${angka(x * 100, d)}%` : "–");
 const n = r.varian_dinilai || 0;
 // Target mengikuti laporan pengembangan model: rata-rata meleset di bawah 5% dan rentang tepat di sedikitnya 85% varian.
 const smapeMaks = t.smape_median_maks_persen ?? 5, porsiMin = t.porsi_varian_cakupan_min_persen ?? 85;
-const baris = [
-  ["Rata-rata meleset", `di bawah ${angka(smapeMaks)}%`, r.smape_median === null ? "–" : `${angka(r.smape_median, 2)}%`,
-    r.smape_median === null ? null : r.smape_median < smapeMaks],
-  ["Condong terlalu tinggi atau rendah", `paling banyak ${t.bias_absolut_maks_persen}%`, `${r.lolos_bias}/${n} varian`, n ? r.lolos_bias === n : null],
-  ["Harga sebenarnya masuk rentang prakiraan", `${t.cakupan_interval_min_persen} sampai ${t.cakupan_interval_maks_persen}% di minimal ${porsiMin}% varian`,
-    `${r.lolos_cakupan}/${n} varian (${angka(n ? r.lolos_cakupan / n * 100 : 0)}%)`, n ? r.lolos_cakupan / n * 100 >= porsiMin : null],
-  ["Nilai gabungan peringatan (F1)", `minimal ${t.f1_min}`, ev.f1 ?? "–", ev.f1 === undefined || ev.f1 === null ? null : ev.f1 >= t.f1_min],
-  ["Lonjakan yang tertangkap (recall)", `minimal ${t.recall_min}`, ev.recall ?? "–", ev.recall === undefined || ev.recall === null ? null : ev.recall >= t.recall_min],
-  ["Peringatan yang salah (false alarm)", `paling banyak ${t.fpr_maks}`, ev.false_positive_rate ?? "–", ev.false_positive_rate === undefined || ev.false_positive_rate === null ? null : ev.false_positive_rate <= t.fpr_maks],
+// Tiap target digambar sebagai batang: isi = hasil, garis tegak = target. "rendah" berarti makin kecil makin baik.
+const targetHasil = [
+  { nama: "Rata-rata meleset", istilah: "sMAPE median", hasil: r.smape_median, target: smapeMaks, rendah: true, skala: Math.max(smapeMaks * 2, (r.smape_median ?? 0) * 1.2),
+    teks: ada(r.smape_median) ? `${angka(r.smape_median, 2)}%` : "–", teksTarget: `di bawah ${angka(smapeMaks)}%` },
+  { nama: "Barang yang tidak condong terlalu tinggi atau rendah", istilah: `bias, paling banyak ${t.bias_absolut_maks_persen}%`, hasil: n ? r.lolos_bias / n * 100 : null, target: 100, skala: 100,
+    teks: `${r.lolos_bias} dari ${n} barang`, teksTarget: "semua barang" },
+  { nama: "Harga sebenarnya masuk rentang prakiraan", istilah: `cakupan interval ${t.cakupan_interval_min_persen} sampai ${t.cakupan_interval_maks_persen}%`, hasil: n ? r.lolos_cakupan / n * 100 : null, target: porsiMin, skala: 100,
+    teks: `${r.lolos_cakupan} dari ${n} barang`, teksTarget: `minimal ${angka(porsiMin)}% barang` },
+  { nama: "Ketepatan peringatan", istilah: "F1", hasil: ada(ev.f1) ? ev.f1 * 100 : null, target: t.f1_min * 100, skala: 100, teks: pct(ev.f1), teksTarget: `minimal ${pct(t.f1_min)}` },
+  { nama: "Lonjakan harga yang tertangkap", istilah: "recall", hasil: ada(ev.recall) ? ev.recall * 100 : null, target: t.recall_min * 100, skala: 100, teks: pct(ev.recall), teksTarget: `minimal ${pct(t.recall_min)}` },
+  { nama: "Peringatan keliru di hari biasa", istilah: "false alarm rate", hasil: ada(ev.false_positive_rate) ? ev.false_positive_rate * 100 : null, target: t.fpr_maks * 100, rendah: true, samaBoleh: true,
+    skala: Math.max(t.fpr_maks * 200, (ev.false_positive_rate ?? 0) * 120), teks: pct(ev.false_positive_rate, 2), teksTarget: `paling banyak ${pct(t.fpr_maks)}` },
 ];
-document.querySelector("#tabel-target tbody").innerHTML = baris.map(([a, b, c, ok]) =>
-  `<tr><td>${a}</td><td>${esc(b)}</td><td>${esc(c)}</td><td>${status(ok)}</td></tr>`).join("");
+const posisi = (x, skala) => Math.max(0, Math.min(100, (x / (skala || 1)) * 100));
+document.getElementById("target-hasil").innerHTML = targetHasil.map((b) => {
+  const ok = ada(b.hasil) ? (b.rendah ? (b.samaBoleh ? b.hasil <= b.target : b.hasil < b.target) : b.hasil >= b.target) : null;
+  return `<li title="Istilah teknis: ${esc(b.istilah)}">
+    <div class="th-atas"><span class="th-nama">${esc(b.nama)}</span>${status(ok)}</div>
+    <div class="th-batang ${ok === null ? "" : ok ? "baik" : "kurang"}" role="img" aria-label="${esc(b.nama)}: ${esc(b.teks)}, target ${esc(b.teksTarget)}">
+      <span style="--lebar:${ada(b.hasil) ? posisi(b.hasil, b.skala) : 0}%"></span><i style="left:${posisi(b.target, b.skala)}%"></i></div>
+    <div class="th-bawah"><b>${esc(b.teks)}</b><span>target ${esc(b.teksTarget)}</span></div></li>`;
+}).join("");
 // Keterangan pembanding: berapa varian yang memakai harga terakhir dan mengapa (bukan syarat target).
 const pakaiNaif = m.per_varian.filter((v) => v.model_terpilih === "naif").length;
 const jarang = m.per_varian.filter((v) => (v.holdout?.porsi_harga_tetap_persen ?? 0) >= 50).length;
@@ -127,23 +143,23 @@ ket.textContent = `Pembanding: ${r.lolos_smape} varian lebih tepat minimal ${t.p
 document.getElementById("evaluasi").innerHTML = ev.episode_uji !== undefined ? `
   <dl class="dl">
     <dt>Acuan penilaian</dt><dd>${esc(ev.sumber_label || "-")}</dd>
-    <dt>Masa uji</dt><dd>${ev.periode_uji ? `${esc(ev.periode_uji[0])} sampai ${esc(ev.periode_uji[1])}` : "–"}</dd>
+    <dt>Masa uji</dt><dd>${ev.periode_uji ? `${esc(tgl(ev.periode_uji[0]))} sampai ${esc(tgl(ev.periode_uji[1]))}` : "–"}</dd>
     <dt>Lonjakan harga pada masa uji</dt><dd>${angka(ev.episode_uji)} lonjakan, ${angka(ev.episode_tertangkap)} tertangkap</dd>
     <dt>Peringatan yang muncul</dt><dd>${angka(ev.alarm_uji)} peringatan: ${angka(ev.tp)} tepat, ${angka(ev.fp)} keliru</dd>
-    <dt>Peringatan yang tepat (precision)</dt><dd>${ev.precision ?? "–"}</dd>
-    <dt>Lonjakan yang tertangkap (recall)</dt><dd>${ev.recall ?? "–"}</dd>
-    <dt>Nilai gabungan (F1)</dt><dd>${ev.f1 ?? "–"}</dd>
-    <dt>Peringatan keliru di hari biasa</dt><dd>${ev.false_positive_rate ?? "–"}</dd>
+    <dt title="precision">Peringatan yang tepat</dt><dd>${pct(ev.precision)}</dd>
+    <dt title="recall">Lonjakan yang tertangkap</dt><dd>${pct(ev.recall)}</dd>
+    <dt title="F1">Nilai gabungan</dt><dd>${pct(ev.f1)}</dd>
+    <dt title="false alarm rate">Peringatan keliru di hari biasa</dt><dd>${pct(ev.false_positive_rate, 2)}</dd>
   </dl>
-  <p class="meta-kecil" style="margin-top:10px">${esc(ev.metode || "")}. Setelah analis menandai peringatan (terverifikasi atau keliru), penilaian juga memakai tanda itu.</p>` : `
+  <details class="ks-rincian"><summary>Cara menilai (istilah teknis)</summary><p class="meta-kecil" style="margin-top:6px">${esc(ev.metode || "")}. Setelah analis menandai peringatan (terverifikasi atau keliru), penilaian juga memakai tanda itu.</p></details>` : `
   <dl class="dl">
     <dt>Acuan penilaian</dt><dd>${esc(ev.sumber_label)}</dd>
     <dt>Lonjakan yang ditemukan</dt><dd>${angka(ev.sinyal_total)}${ev.kebenaran_total !== undefined ? ` dari ${angka(ev.kebenaran_total)} lonjakan sebenarnya` : ""}</dd>
     <dt>Benar / salah / terlewat</dt><dd>${angka(ev.tp)} / ${angka(ev.fp)} / ${angka(ev.fn)}</dd>
-    <dt>Peringatan yang benar</dt><dd>${ev.precision ?? "–"}</dd>
-    <dt>Lonjakan yang tertangkap</dt><dd>${ev.recall ?? "–"}</dd>
-    <dt>Nilai gabungan</dt><dd>${ev.f1 ?? "–"}</dd>
-    <dt>Peringatan yang salah</dt><dd>${ev.false_positive_rate ?? "–"}</dd>
+    <dt>Peringatan yang benar</dt><dd>${pct(ev.precision)}</dd>
+    <dt>Lonjakan yang tertangkap</dt><dd>${pct(ev.recall)}</dd>
+    <dt>Nilai gabungan</dt><dd>${pct(ev.f1)}</dd>
+    <dt>Peringatan yang salah</dt><dd>${pct(ev.false_positive_rate, 2)}</dd>
     <dt>Hari yang diperiksa</dt><dd>${angka(ev.titik_dievaluasi)} (varian × hari)</dd>
   </dl>
   ${ev.catatan ? `<p class="pesan" style="margin-top:10px">${esc(ev.catatan)}</p>` : ""}`;
