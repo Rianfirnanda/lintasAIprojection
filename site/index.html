@@ -16,6 +16,7 @@
   <script src="vendor/leaflet/leaflet.js"></script>
 </head>
 <body class="halaman-dash">
+<div class="utama tab-beranda-bungkus" id="tab-beranda" hidden></div>
 <main class="utama dsb" id="beranda-internal" hidden></main>
 <main class="utama" id="beranda-peran" hidden></main>
 <main class="utama dash" id="beranda-tpid" hidden>
@@ -27,6 +28,7 @@
     </div>
     <div class="dash-periode" id="dash-ikon-kalender"><div><small>Periode data</small><strong id="periode">memuat…</strong></div></div>
   </header>
+  <p class="hari-ini" id="hari-ini-tpid" hidden></p>
 
   <section class="dash-kpi" id="kpi" aria-label="Indikator utama"></section>
 
@@ -109,14 +111,14 @@
 <script type="module">
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./assets/grafik.js";
-import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime, selisihHarga, htmlSelisih, tglPendek, LANGKAH_SINYAL } from "./assets/dashboard.js";
+import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime, selisihHarga, htmlSelisih, tglPendek, LANGKAH_SINYAL, ringkasHariIni } from "./assets/dashboard.js";
 import { bukaRincian, isiSinyal, isiKomoditas, isiBlankSpot, isiKetepatan, isiUptime } from "./assets/rincian.js";
-import { peranAktif } from "./assets/akses.js";
+import { peranAktif, PERAN } from "./assets/akses.js";
 import { renderBerandaPeran } from "./assets/peran.js";
 
 const meta = await pasangKerangka("index.html");
 // Dashboard TPID (Gambar 12) tampil langsung di halaman ini untuk TPID, analis, dan administrator.
-// Analis dan administrator melihat ringkasan peran masing-masing di atasnya.
+// Analis dan administrator punya tiga tampilan (Dasbor Internal, ringkasan peran, Dasbor TPID) dalam tab, tidak ditumpuk.
 const peran = peranAktif();
 const tampilanTpid = ["tpid", "admin", "analis"].includes(peran);
 const tampilanPeran = peran !== "tpid";
@@ -131,6 +133,56 @@ if (["admin", "analis"].includes(peran)) {
   import("./assets/dasbor-analitik.js").then((m) => m.pasangDasborInternal(wadahInternal, meta)).catch((e) => { console.error(e); tampilkanGalat(wadahInternal, e); });
 }
 if (!tampilanTpid) document.body.classList.remove("halaman-dash");
+if (["admin", "analis"].includes(peran)) pasangTabBeranda(peran);
+
+/* ---------- tab beranda admin dan analis: satu tampilan sekaligus, pilihan terakhir diingat */
+function pasangTabBeranda(peran) {
+  const TAB = [["internal", "beranda-internal", "Dasbor Internal", "batang"], ["peran", "beranda-peran", `Ringkasan ${PERAN[peran].nama}`, "papan"],
+    ["tpid", "beranda-tpid", "Dasbor TPID", "pemda"]];
+  const bungkus = document.getElementById("tab-beranda");
+  bungkus.hidden = false;
+  bungkus.innerHTML = `<div class="tab-beranda" role="tablist" aria-label="Tampilan beranda">${TAB.map(([k, id, nama, i]) =>
+    `<button type="button" role="tab" id="tab-${k}" aria-controls="${id}" data-tab="${k}">${ikon(i, 18)}<span>${esc(nama)}</span></button>`).join("")}
+    <span class="tab-penanda" aria-hidden="true"></span></div>`;
+  const daftar = bungkus.querySelector(".tab-beranda"), penanda = bungkus.querySelector(".tab-penanda");
+  const geser = () => {
+    const b = daftar.querySelector('[aria-selected="true"]');
+    if (b) Object.assign(penanda.style, { left: `${b.offsetLeft}px`, width: `${b.offsetWidth}px` });
+  };
+  const pilih = (k, simpan = true) => {
+    if (!TAB.some(([kk]) => kk === k)) k = "internal";
+    for (const [kk, id] of TAB) {
+      const main = document.getElementById(id), aktif = kk === k, tombol = daftar.querySelector(`[data-tab="${kk}"]`);
+      main.hidden = !aktif;
+      main.setAttribute("role", "tabpanel");
+      main.setAttribute("aria-labelledby", `tab-${kk}`);
+      tombol.setAttribute("aria-selected", String(aktif));
+      tombol.tabIndex = aktif ? 0 : -1;
+      if (aktif && simpan) { main.classList.remove("tab-masuk"); void main.offsetWidth; main.classList.add("tab-masuk"); }
+    }
+    geser();
+    if (simpan) try { localStorage.setItem("lbp-tab-beranda", k); } catch { /* abaikan */ }
+    // peta dan grafik di tab yang baru tampil menyesuaikan ukurannya
+    window.dispatchEvent(new Event("resize"));
+  };
+  daftar.addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) pilih(b.dataset.tab); });
+  daftar.addEventListener("keydown", (e) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+    const tombol = [...daftar.querySelectorAll("[data-tab]")], i = tombol.indexOf(document.activeElement);
+    const j = e.key === "Home" ? 0 : e.key === "End" ? tombol.length - 1 : (i + (e.key === "ArrowRight" ? 1 : -1) + tombol.length) % tombol.length;
+    e.preventDefault();
+    tombol[j].focus();
+    pilih(tombol[j].dataset.tab);
+  });
+  window.addEventListener("resize", geser);
+  // tautan "#varian=..." (kartu prioritas) dan "#tab=tpid" membuka tab yang sesuai
+  const dariHash = () => (/varian=/.test(location.hash) ? "tpid" : (/tab=(\w+)/.exec(location.hash) || [])[1]);
+  window.addEventListener("hashchange", () => { const k = dariHash(); if (k) pilih(k); });
+  let awal = dariHash();
+  try { awal ||= localStorage.getItem("lbp-tab-beranda"); } catch { /* abaikan */ }
+  pilih(awal || "internal", false);
+  document.fonts?.ready.then(geser);
+}
 document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.dataset.ikon, 20); });
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 20));
 // Harga yang baru dikirim petugas langsung tampil (real-time), sebelum selesai diolah.
@@ -151,10 +203,10 @@ function renderKPI(k, daftarPasar, kinerja) {
   document.getElementById("kpi").innerHTML = [
     kartuKpi("komoditas", "keranjang", "biru", angka(k.jumlah_komoditas), "Komoditas", "dipantau"),
     kartuKpi("varian", "kubus", "biru", angka(k.jumlah_varian), "Varian", "(jenis/ukuran)"),
-    kartuKpi("blankspot", "pin", "oranye", angka(blankSpot), "Wilayah", blankSpot < 8 ? "<i>blank spot</i> (target 8)" : "<i>blank spot</i>"),
+    kartuKpi("blankspot", "pin", "oranye", angka(blankSpot), "Wilayah", blankSpot < 8 ? "sulit sinyal (target 8)" : "sulit sinyal"),
     kartuKpi("ketepatan", "jam", "biru", k.ketepatan_persen === null ? "–" : persen(k.ketepatan_persen, 0), "Ketepatan waktu", "pelaporan"),
     kartuKpi("sinyal", "peringatan", "merah", angka(k.sinyal_tinggi), "Sinyal", "prioritas", k.sinyal_tinggi > 0),
-    kartuKpi("uptime", "roda", "hijau", adaUptime ? persen(uptime, 1) : "–", "Uptime", adaUptime ? "sistem" : "belum ada log"),
+    kartuKpi("uptime", "roda", "hijau", adaUptime ? persen(uptime, 1) : "–", "Situs aktif", adaUptime ? "waktu situs bisa dibuka" : "belum ada catatan"),
   ].join("");
 }
 
@@ -166,13 +218,13 @@ function pasangRincianKPI(data) {
       isi: isiKomoditas({ ringkasan, master }) }),
     varian: () => ({ judul: `${angka(k.jumlah_varian)} varian dipantau`, sub: "Varian adalah jenis atau ukuran dari satu komoditas", ikonNama: "kubus",
       isi: isiKomoditas({ ringkasan, master }) }),
-    blankspot: () => ({ judul: "Wilayah blank spot", sub: "Wilayah sulit sinyal yang dipantau khusus", ikonNama: "pin", warna: "oranye",
+    blankspot: () => ({ judul: "Wilayah sulit sinyal (blank spot)", sub: "Wilayah sulit sinyal yang dipantau khusus", ikonNama: "pin", warna: "oranye",
       isi: isiBlankSpot({ pasar: pasar.pasar, peran }) }),
     ketepatan: () => ({ judul: "Ketepatan waktu pelaporan", sub: "Seberapa tepat waktu harga dikirim dari pasar", ikonNama: "jam",
       isi: () => isiKetepatan({ kpi: k, pasar: pasar.pasar, peran }) }),
     sinyal: () => ({ judul: `${angka(k.sinyal_tinggi)} sinyal prioritas`, sub: "Peringatan yang perlu segera dicek", ikonNama: "peringatan", warna: "merah",
       isi: isiSinyal({ sinyal: sinyal.sinyal, ringkasan, pasar: pasar.pasar, peran }) }),
-    uptime: () => ({ judul: "Uptime sistem", sub: "Seberapa sering dashboard bisa dibuka", ikonNama: "roda", warna: "hijau",
+    uptime: () => ({ judul: "Situs aktif (uptime)", sub: "Seberapa sering dashboard bisa dibuka", ikonNama: "roda", warna: "hijau",
       isi: isiUptime({ kinerja, peran }) }),
   };
   document.getElementById("kpi").addEventListener("click", (e) => {
@@ -210,8 +262,8 @@ function renderPrioritas(varian) {
 /* ---------- mutu model */
 function renderMutu(m, daftarSinyal) {
   document.getElementById("mutu").innerHTML = hitungMutu(m, daftarSinyal).map((u) => `
-    <div class="ubin" title="${esc(u.catatan)}"><span class="ubin-ikon">${ikon(u.ikon, 24)}</span>
-      <div class="ubin-nama">${u.nama}</div><div class="ubin-kecil">${u.arti}</div><div class="ubin-nilai">${u.nilai}</div><span class="pil ${u.status[1]}">${u.status[0]}</span></div>`).join("");
+    <div class="ubin" title="${esc(u.catatan)} (istilah teknis: ${esc(u.arti)})"><span class="ubin-ikon">${ikon(u.ikon, 24)}</span>
+      <div class="ubin-nama">${u.nama}</div><div class="ubin-nilai">${u.nilai}</div><span class="pil ${u.status[1]}">${u.status[0]}</span></div>`).join("");
 }
 
 /* ---------- perbandingan perubahan harga (rata-rata per komoditas) */
@@ -416,6 +468,9 @@ if (tampilanTpid) try {
     muatJSON("kinerja.json").catch(() => null),
   ]);
   document.getElementById("periode").textContent = bulanTahun(meta.tanggal_data_terakhir);
+  const hariIni = document.getElementById("hari-ini-tpid");
+  hariIni.innerHTML = `${ikon("lampu", 20)}<span>${esc(ringkasHariIni(ringkasan.varian, "bulanan").kalimat)}</span>`;
+  hariIni.hidden = false;
   renderKPI(ringkasan.kpi, pasar.pasar, kinerja);
   pasangRincianKPI({ ringkasan, sinyal, pasar, master, kinerja });
   renderPrioritas(ringkasan.varian, master);

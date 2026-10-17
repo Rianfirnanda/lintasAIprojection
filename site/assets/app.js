@@ -1,5 +1,6 @@
 // Utilitas bersama dashboard (ES module, tanpa build step).
 import { PERAN, menuPeran, peranAktif, sesi, periksaAkses, keluar, izinAktif, simpanSesiFirebase } from "./akses.js";
+import { pasangGerak } from "./gerak.js";
 
 const BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 const BULAN_PANJANG = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -217,6 +218,12 @@ const GRUP_MENU = [
   { label: "Kelola", isi: ["pengaturan.html", "pengguna.html"] },
   { label: "Info", isi: ["alur.html", "tentang.html"] },
 ];
+// Ponsel: menu cepat di bawah layar. Beranda, lalu paling banyak tiga halaman pertama dari daftar ini yang boleh dibuka
+// peran, ditambah tombol Menu untuk semua halaman lain.
+const MENU_CEPAT = [
+  ["input.html", "catat", "Catat"], ["harga.html", "keranjang", "Harga"], ["sinyal.html", "lonceng", "Peringatan"],
+  ["dasbor.html", "batang", "Dasbor"], ["laporan.html", "dokumen", "Laporan"], ["kamus.html", "dokumen", "Kamus"],
+];
 const KET_MENU = {
   "dasbor.html": "Ringkasan untuk rapat", "harga.html": "Harga tiap komoditas", "sinyal.html": "Harga yang perlu diwaspadai",
   "berita.html": "Kabar harga dari media lokal", "input.html": "Isi harga dari pasar", "kualitas.html": "Periksa data sebelum dipakai",
@@ -353,7 +360,24 @@ export async function pasangKerangka(aktif) {
     kepala.querySelectorAll(".menu-jatuh").forEach((m) => { m.hidden = true; });
     kepala.querySelectorAll("[aria-expanded]").forEach((b) => b.setAttribute("aria-expanded", "false"));
     kepala.classList.remove("nav-buka");
+    document.querySelector(".nav-bawah [data-buka-menu]")?.setAttribute("aria-expanded", "false");
   };
+  if (!wajibMasuk) {
+    const { ikon } = await import("./dashboard.js");
+    const cepat = [["index.html", "rumah", "Beranda"], ...MENU_CEPAT.filter(([h]) => boleh.has(h)).slice(0, 3)];
+    const bawah = document.createElement("nav");
+    bawah.className = "nav-bawah";
+    bawah.setAttribute("aria-label", "Menu cepat");
+    bawah.innerHTML = cepat.map(([h, i, t]) => `<a href="${h}"${h === aktif ? ' aria-current="page"' : ""}>${ikon(i, 22)}<span>${t}</span></a>`).join("") +
+      `<button type="button" data-buka-menu aria-controls="navigasi" aria-expanded="false">${ikon("menu", 22)}<span>Menu</span></button>`;
+    document.body.append(bawah);
+    document.body.classList.add("ada-nav-bawah");
+    bawah.querySelector("[data-buka-menu]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      tombolPonsel.click();
+      e.currentTarget.setAttribute("aria-expanded", String(kepala.classList.contains("nav-buka")));
+    });
+  }
   document.addEventListener("click", tutupSemua);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") tutupSemua(); });
   // Keluar lewat halaman Masuk (yang membersihkan sesi lalu kembali ke beranda), supaya halaman dengan CSP ketat tidak perlu memuat pustaka pihak lain.
@@ -434,6 +458,7 @@ export async function pasangKerangka(aktif) {
   tandaiSiap();
   pasangPembaruan(meta);
   pasangHitungNaik();
+  pasangGerak();
   if (pengguna?.sumber === "firebase") segarkanSesiFirebase(pengguna);
   return izin === "tolak" ? tundaSelamanya() : meta;
 }
@@ -508,7 +533,7 @@ function hitungNaik(el) {
 function pasangHitungNaik() {
   if (!window.matchMedia || matchMedia("(prefers-reduced-motion: reduce)").matches || !("MutationObserver" in window)) return;
   const sudah = new WeakSet();
-  const pindai = (akar) => akar.querySelectorAll?.(".kpi-angka, .ind-nilai").forEach((el) => {
+  const pindai = (akar) => akar.querySelectorAll?.(".kpi-angka, .ind-nilai, .dsb-k-atas strong, .kpi .nilai, .ringkas-angka").forEach((el) => {
     if (sudah.has(el)) return;
     sudah.add(el);
     hitungNaik(el);

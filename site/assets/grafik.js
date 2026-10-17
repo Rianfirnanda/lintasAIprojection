@@ -20,6 +20,28 @@ const garisPenunjuk = {
   },
 };
 
+/** Animasi grafik saat dibuat: garis tergambar dari kiri ke kanan (jumlah = banyak titik), batang tumbuh dari bawah.
+ *  Mati (false) bila perangkat meminta gerak dikurangi. Saat disorot atau diubah ukurannya grafik tidak diulang. */
+export function animasiGrafik(jumlah = 0, jenis = "garis", lama = 900) {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return false;
+  if (jenis === "batang" || !jumlah) return { duration: 700, easing: "easeOutQuart" };
+  const jeda = lama / Math.max(1, jumlah);
+  const yAwal = (ctx) => {
+    const sebelum = ctx.index > 0 ? ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1] : null;
+    const y = sebelum?.getProps(["y"], true).y;
+    return Number.isFinite(y) ? y : ctx.chart.chartArea?.bottom ?? 0;
+  };
+  const tunda = (kunci) => (ctx) => {
+    if (ctx.type !== "data" || ctx[kunci]) return 0;
+    ctx[kunci] = true;
+    return ctx.index * jeda;
+  };
+  return {
+    x: { type: "number", easing: "linear", duration: jeda, from: NaN, delay: tunda("xMulai") },
+    y: { type: "number", easing: "linear", duration: jeda, from: yAwal, delay: tunda("yMulai") },
+  };
+}
+
 // Nama garis harga utama: Bengkulu Tengah, atau wilayah cadangan bila pasar Bengkulu Tengah belum mencatat varian ini.
 export function namaAktual(seri) {
   const s = seri.sumber_seri;
@@ -81,7 +103,7 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
   const datasets = [
     garis("Batas bawah rentang", bawah, "transparent", { borderWidth: 0, pointHoverRadius: 0, _interval: true }),
     garis(`Rentang perkiraan ${tingkat}%`, atas, "transparent", {
-      borderWidth: 0, pointHoverRadius: 0, fill: "-1", backgroundColor: dash ? "rgba(128,138,152,0.24)" : c.s2 + "22", _interval: true,
+      borderWidth: 0, pointHoverRadius: 0, fill: "-1", backgroundColor: c.s2 + (dash ? "2e" : "22"), _interval: true,
     }),
     dash
       ? garis("Harga normal (nilai tengah 28 hari)", [...seri.baseline, ...kosong(tanggalProyeksi.length)], c.s1, { borderWidth: 1.6, borderDash: [5, 4] })
@@ -121,7 +143,8 @@ export function gambarGrafikHarga(canvas, seri, opsi = {}) {
     type: "line",
     data: { labels: label, datasets },
     options: {
-      responsive: true, maintainAspectRatio: false, animation: false, normalized: true,
+      responsive: true, maintainAspectRatio: false, normalized: true,
+      animation: animasiGrafik(tipe === "batang" ? 0 : label.length, tipe === "batang" ? "batang" : "garis"),
       interaction: { mode: "index", intersect: false },
       plugins: {
         legend: { display: false },
@@ -178,7 +201,7 @@ export function legendaDashboard() {
     ['<span class="kunci-garis" style="border-color:var(--series-1)"></span>', "Harga tercatat"],
     ['<span class="kunci-garis putus" style="border-color:var(--series-1)"></span>', "Harga normal"],
     ['<span class="kunci-garis putus" style="border-color:var(--series-2)"></span>', "Perkiraan"],
-    ['<span class="kunci-pita" style="background:rgba(128,138,152,0.32)"></span>', "Rentang perkiraan"],
+    ['<span class="kunci-pita" style="background:color-mix(in srgb, var(--series-2) 22%, transparent)"></span>', "Rentang perkiraan"],
     ['<span class="kunci-titik" style="background:var(--critical)"></span>', "Harga janggal"],
   ].map(([k, t]) => `<span>${k}${t}</span>`).join("");
 }

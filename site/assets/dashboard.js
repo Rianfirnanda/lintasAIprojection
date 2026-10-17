@@ -49,6 +49,9 @@ const GARIS = {
   gunung: '<path d="M2 20l6-9 4 5 3-4 7 8H2z"/>',
   silang: '<path d="M6 6l12 12M18 6L6 18"/>',
   kanan: '<path d="M9.5 6l6 6-6 6"/>',
+  rumah: '<path d="M3.5 11L12 4l8.5 7"/><path d="M6 9.5V20h12V9.5M10 20v-5.5h4V20"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  catat: '<path d="M5 20h4l10-10-4-4L5 16v4z"/><path d="M13.5 7.5l3 3"/>',
 };
 
 export function ikon(nama, ukuran = 20) {
@@ -90,10 +93,10 @@ export function hitungMutu(m, daftarSinyal) {
       catatan: `Rata-rata meleset prakiraan. Target di bawah ${angka(t.smape_median_maks_persen ?? 5)}% (laporan pengembangan model)` },
     { ikon: "timbangan", nama: "Condong tinggi/rendah", arti: "bias", nilai: ada(bias) ? `${angka(bias, 1)}%` : "–", status: n ? ok(r.lolos_bias === n) : kosong,
       catatan: `Condong terlalu tinggi atau rendah. Target paling besar ${t.bias_absolut_maks_persen}%` },
-    { ikon: "simpul", nama: "Ketepatan peringatan", arti: "F1-score", nilai: ada(e?.f1) ? angka(e.f1, 2) : "–", status: ada(e?.f1) ? ok(e.f1 >= t.f1_min) : kosong,
-      catatan: `Nilai gabungan ketepatan peringatan. Target minimal ${angka(t.f1_min, 2)}${e?.sumber_label ? ` (${e.sumber_label})` : ""}` },
-    { ikon: "batang", nama: "Lonjakan tertangkap", arti: "recall", nilai: ada(e?.recall) ? angka(e.recall, 2) : "–", status: ada(e?.recall) ? ok(e.recall >= t.recall_min) : kosong,
-      catatan: `Lonjakan harga yang berhasil tertangkap. Target minimal ${angka(t.recall_min, 2)}` },
+    { ikon: "simpul", nama: "Ketepatan peringatan", arti: "F1-score", nilai: ada(e?.f1) ? `${angka(e.f1 * 100, 0)}%` : "–", status: ada(e?.f1) ? ok(e.f1 >= t.f1_min) : kosong,
+      catatan: `Nilai gabungan ketepatan peringatan. Target minimal ${angka(t.f1_min * 100, 0)}%${e?.sumber_label ? ` (${e.sumber_label})` : ""}` },
+    { ikon: "batang", nama: "Lonjakan tertangkap", arti: "recall", nilai: ada(e?.recall) ? `${angka(e.recall * 100, 0)}%` : "–", status: ada(e?.recall) ? ok(e.recall >= t.recall_min) : kosong,
+      catatan: `Lonjakan harga yang berhasil tertangkap. Target minimal ${angka(t.recall_min * 100, 0)}%` },
     { ikon: "lonceng", nama: "Peringatan keliru", arti: "false alarm", nilai: ada(e?.false_positive_rate) ? `${angka(e.false_positive_rate * 100, 1)}%` : "–",
       status: ada(e?.false_positive_rate) ? ok(e.false_positive_rate <= t.fpr_maks, "Terkendali") : kosong, catatan: `Peringatan yang ternyata salah. Target paling besar ${t.fpr_maks * 100}%` },
     { ikon: "denyut", nama: "Pola harga berubah", arti: "drift", nilai: drift ? `${drift} varian` : "Normal", status: drift ? ["Waspada", "perhatian"] : ["Stabil", "baik"],
@@ -124,4 +127,4 @@ export const LANGKAH_SINYAL = {
 };
 
 /* ---------- selisih harga dalam rupiah (logika murni ada di selisih.js supaya bisa diuji di Node) */
-export { tglPendek, selisihHarga, teksSelisih, arahSelisih, TANDA_ARAH, htmlSelisih } from "./selisih.js";
+export { tglPendek, selisihHarga, teksSelisih, arahSelisih, TANDA_ARAH, htmlSelisih, ringkasHariIni } from "./selisih.js";

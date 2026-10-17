@@ -3,7 +3,7 @@
 // beranda admin/analis. Semua angka dibaca dari analitik.json, proyeksi_acara.json, proyeksi_periodik.json, dan seri/<varian>.json.
 import { muatJSON, esc, persen, angka, rp, rentangRp, tgl, tampilkanGalat, keCSV, unduhTeks, warna, saatTemaBerubah } from "./app.js";
 import { ikon } from "./dashboard.js";
-import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./grafik.js";
+import { gambarGrafikHarga, legendaDashboard, potongSeri, animasiGrafik } from "./grafik.js";
 import { KERANGKA_TATA, pasangTab, gambarFinder, gambarPembersihan, gambarEws, gambarBandingWilayah, gambarKonsensus, gambarRantai } from "./dasbor-tata.js";
 
 const NAMA_PERCAYA = { tinggi: "Tinggi", sedang: "Sedang", rendah: "Rendah" };
@@ -468,7 +468,7 @@ export async function pasangDasborInternal(wadah, meta) {
     S.grafikBanding = new window.Chart($("dsb-grafik-banding"), {
       type: "bar",
       data: { labels: kodeAda.map((k) => NAMA_BANDING[k].split(" ").length > 2 ? [NAMA_BANDING[k].split(" ").slice(0, 2).join(" "), NAMA_BANDING[k].split(" ").slice(2).join(" ")] : NAMA_BANDING[k].split(" ")), datasets: set },
-      options: { responsive: true, maintainAspectRatio: false, animation: false,
+      options: { responsive: true, maintainAspectRatio: false, animation: animasiGrafik(0, "batang"),
         plugins: { legend: { display: false }, tooltip: { callbacks: { title: (i) => [].concat(i[0].label).join(" "), label: (i) => `${i.dataset.label}: ${rp(i.raw)}` } } },
         scales: { x: { grid: { display: false }, ticks: { color: c.muted, maxRotation: 0, autoSkip: false, font: { size: 10 } } }, y: { grid: { color: c.grid }, border: { display: false }, beginAtZero: true,
           ticks: { color: c.muted, callback: (val) => new Intl.NumberFormat("id-ID").format(val) } } } },
@@ -496,7 +496,7 @@ export async function pasangDasborInternal(wadah, meta) {
       type: "line",
       data: { labels: seri.tanggal.slice(mulai), datasets: lain.map((p, i) => ({ label: `${namaUtama()} dikurangi ${p.nama}`, borderColor: c.w[i % 3], borderWidth: 1.6, pointRadius: 0, spanGaps: true,
         data: seri.aktual.slice(mulai).map((a, j) => (a != null && p.nilai[mulai + j] != null ? a - p.nilai[mulai + j] : null)) })) },
-      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+      options: { responsive: true, maintainAspectRatio: false, animation: animasiGrafik(seri.tanggal.length - mulai), interaction: { mode: "index", intersect: false },
         plugins: { legend: { display: true, labels: { boxWidth: 10, color: c.m } }, tooltip: { callbacks: { title: (i) => tgl(i[0].label), label: (i) => `${rp(i.raw)}  ${i.dataset.label}` } } },
         scales: { x: { grid: { display: false }, ticks: { color: c.m, maxRotation: 0, autoSkipPadding: 28, callback(val) { return tgl(this.getLabelForValue(val)); } } },
           y: { grid: { color: c.g }, border: { display: false }, ticks: { color: c.m } } } },
@@ -585,7 +585,7 @@ export async function pasangDasborInternal(wadah, meta) {
         { label: "Kenyataan", data: t.map((x) => x.aktual), borderColor: c.a, backgroundColor: c.a, borderWidth: 2, pointRadius: 0, tension: 0 },
         { label: "Prakiraan 7 hari", data: t.map((x) => x.prediksi), borderColor: c.p, backgroundColor: c.p, borderWidth: 2, borderDash: [5, 4], pointRadius: 0, tension: 0 },
       ] },
-      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+      options: { responsive: true, maintainAspectRatio: false, animation: animasiGrafik(t.length), interaction: { mode: "index", intersect: false },
         plugins: { legend: { display: true, labels: { boxWidth: 12, color: c.muted } }, tooltip: { callbacks: { title: (i) => tgl(i[0].label), label: (i) => `${rp(i.raw)}  ${i.dataset.label}` } } },
         scales: { x: { grid: { display: false }, ticks: { color: c.muted, maxRotation: 0, autoSkipPadding: 24, callback(val) { return tgl(this.getLabelForValue(val)); } } },
           y: { grid: { color: c.grid }, border: { display: false }, ticks: { color: c.muted, callback: (val) => new Intl.NumberFormat("id-ID").format(val) } } } },
@@ -696,7 +696,7 @@ export async function pasangDasborInternal(wadah, meta) {
         { label: "Dasar", data: sambung(p.dasar).slice(0, label.length), borderColor: c.p, backgroundColor: c.p, borderDash: [6, 4], borderWidth: 2, pointRadius: 2, tension: 0 },
         { label: "Rendah", data: sambung(p.rendah).slice(0, label.length), borderColor: c.s3, borderDash: [4, 3], borderWidth: 1.5, pointRadius: 0, tension: 0 },
       ] },
-      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+      options: { responsive: true, maintainAspectRatio: false, animation: animasiGrafik(label.length), interaction: { mode: "index", intersect: false },
         plugins: { legend: { display: true, labels: { boxWidth: 12, color: c.muted } }, tooltip: { callbacks: { label: (i) => (i.raw === null ? "" : `${rp(i.raw)}  ${i.dataset.label}`) } } },
         scales: { x: { grid: { display: false }, ticks: { color: c.muted, maxRotation: 0, autoSkipPadding: 18 } },
           y: { grid: { color: c.grid }, border: { display: false }, ticks: { color: c.muted, callback: (val) => new Intl.NumberFormat("id-ID").format(val) } } } },
