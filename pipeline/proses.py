@@ -199,7 +199,8 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
 
     # Sinyal + tindak lanjut
     indeks = modul_sinyal.IndeksKonteks(hasil_masuk.konteks)
-    daftar_sinyal = modul_sinyal.bentuk_sinyal(konf, hasil_varian, seri_pembanding, indeks, hasil_qc.ketepatan, tanggal_data)
+    daftar_sinyal = modul_sinyal.bentuk_sinyal(konf, hasil_varian, seri_pembanding, indeks, hasil_qc.ketepatan, tanggal_data,
+                                               beku=hasil_qc.beku)
     buku, terlewat = ({}, []) if pakai_demo else tindak_lanjut.baca_buku(akar / "data" / "tindak_lanjut")
     repo = os.environ.get("GITHUB_REPOSITORY")
     url_dashboard = os.environ.get("URL_DASHBOARD") or (
@@ -461,7 +462,9 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "berkas": len(hasil_masuk.batch), "baris_ditolak_skema": len(hasil_masuk.penolakan),
             "duplikat_dibuang": hasil_qc.jumlah_duplikat, "per_status": status_obs,
             "rekonsiliasi_melebihi_batas": sum(1 for r in hasil_qc.rekonsiliasi if r["melebihi_batas"]),
+            "deret_beku": sum(1 for b in hasil_qc.beku if b["masih_beku"]), "observasi_beku": status_obs.get("beku", 0),
         },
+        "beku": hasil_qc.beku[:200],
         "keterangan_tanda": kualitas.KETERANGAN_TANDA,
         "pengaturan": {"jam_batas_tepat_waktu": konf.pengaturan["jam_batas_tepat_waktu"], **konf.pengaturan["kualitas"]},
         "ketepatan": hasil_qc.ketepatan,

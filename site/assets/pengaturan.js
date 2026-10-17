@@ -200,6 +200,7 @@ function putuskan() {
 /* ------------------------------------------------------------------ kunci rahasia */
 async function muatRahasia() {
   try { S.rahasia = await S.klien.daftarRahasia(); S.rahasiaGalat = ""; } catch (e) { S.rahasia = null; S.rahasiaGalat = galatTeks(e); }
+  S.kuotaTavily = S.klien?.statusKuotaTavily ? await S.klien.statusKuotaTavily() : null;
 }
 
 function tglSingkat(iso) { return iso ? waktu(iso).split(" ").slice(0, 3).join(" ") : ""; }
@@ -425,7 +426,30 @@ function htmlProses(p) {
     : p.status === "completed" ? (NAMA_HASIL[p.hasil] || p.hasil || "selesai") : (NAMA_STATUS[p.status] || p.status);
   const warna = p.status !== "completed" ? "info" : p.hasil === "success" ? "baik" : "tinggi";
   const tautan = p.url ? ` · <a href="${esc(urlAman(p.url))}" rel="noopener" target="_blank">${FS ? "rincian proses" : "lihat di GitHub"}</a>` : "";
-  return `<span class="lencana ${warna}">${esc(teks)}</span> ${esc(waktu(p.dibuat))}${p.oleh ? ` oleh ${esc(p.oleh)}` : ""}${tautan}${p.pesan ? `<br><span class="meta-kecil">${esc(p.pesan)}</span>` : ""}`;
+  return `<span class="lencana ${warna}">${esc(teks)}</span> ${esc(waktu(p.dibuat))}${p.oleh ? ` oleh ${esc(p.oleh)}` : ""}${tautan}${p.pesan ? `<br><span class="meta-kecil">${esc(p.pesan)}</span>` : ""}${htmlObrolan(p.obrolan)}`;
+}
+
+/** Hasil "Kirim pesan uji": obrolan yang pernah menghubungi bot, supaya ID obrolan yang benar tinggal dipilih. */
+function htmlObrolan(daftar) {
+  if (!Array.isArray(daftar) || !daftar.length) return "";
+  return `<div class="pilih-obrolan"><span class="meta-kecil">Obrolan yang pernah menghubungi bot. Pilih yang menjadi tujuan peringatan:</span>
+    <ul>${daftar.map((o) => `<li><b>${esc(o.nama || "(tanpa nama)")}</b> <span class="meta-kecil">${esc(o.jenis || "")} · ID ${esc(o.id)}</span>
+      <button type="button" class="tombol kecil" data-pakai-obrolan="${esc(o.id)}">Pakai ID ini dan kirim uji lagi</button></li>`).join("")}</ul></div>`;
+}
+
+async function pakaiObrolan(id, wadah) {
+  const pesan = wadah.querySelector(".pesan-bagian");
+  if (!/^-?\d{3,20}$/.test(id)) return tampilPesan(pesan, "galat", "ID obrolan tidak sah.");
+  wadah.querySelectorAll("[data-pakai-obrolan]").forEach((b) => { b.disabled = true; });
+  try {
+    await S.klien.simpanRahasia("TELEGRAM_CHAT_ID", id);
+    await S.klien.jalankanAlur("uji-notifikasi.yml", S.cabang, {});
+    await muatRahasia();
+    tampilPesan(pesan, "sukses", "ID obrolan tersimpan dan pesan uji diminta lagi. Hasilnya muncul di sebelah tombol dalam beberapa menit.");
+  } catch (e) {
+    tampilPesan(pesan, "galat", esc(galatTeks(e)));
+    wadah.querySelectorAll("[data-pakai-obrolan]").forEach((b) => { b.disabled = false; });
+  }
 }
 
 async function muatProses(berkas) {
@@ -540,6 +564,12 @@ function urutBagian(kode) {
 const KUNCI_AI = [["Gemini", "GEMINI_API_KEY"], ["Groq", "GROQ_API_KEY"], ["Cerebras", "CEREBRAS_API_KEY"],
   ["OpenRouter", "OPENROUTER_API_KEY"], ["Mistral", "MISTRAL_API_KEY"]];
 
+function teksKuota(k) {
+  if (!k || !(k.batas > 0)) return "aktif";
+  const f = (n) => Number(n).toLocaleString("id-ID");
+  return `aktif, sisa ${f(k.sisa_bulan)} dari ${f(k.batas)} kredit bulan ini (jatah ${f(k.jatah_harian)} per hari)`;
+}
+
 function htmlKesiapanAi() {
   const ada = (n) => S.rahasia?.has(n);
   const status = (nama, siap, ket) => `<span class="lencana ${siap ? "baik" : "polos"}">${nama}: ${ket}</span>`;
@@ -548,7 +578,7 @@ function htmlKesiapanAi() {
   return `<div class="kesiapan-ai">
     ${KUNCI_AI.map(([nama, k]) => status(nama, ada(k), tahu ? (ada(k) ? "kunci sudah diisi" : "kunci belum diisi") : "belum dicek")).join("\n    ")}
     ${status("Claude", ada("ANTHROPIC_API_KEY"), tahu ? (ada("ANTHROPIC_API_KEY") ? "kunci sudah diisi" : "tidak dipakai") : "belum dicek")}
-    ${status("Pencarian web (Tavily)", ada("TAVILY_API_KEY"), tahu ? (ada("TAVILY_API_KEY") ? "aktif" : "kunci belum diisi") : "belum dicek")}</div>
+    ${status("Pencarian web (Tavily)", ada("TAVILY_API_KEY"), tahu ? (ada("TAVILY_API_KEY") ? teksKuota(S.kuotaTavily) : "kunci belum diisi") : "belum dicek")}</div>
     <p class="ringkas-tab">Pada mode Otomatis, kalau satu AI kena batas pemakaian gratis, sistem pindah ke AI berikutnya. Makin banyak kunci gratis yang diisi, makin kecil kemungkinan gagal${tahu ? ` (sekarang ${nSiap} AI gratis siap)` : ""}. Dengan kunci Tavily, sistem lebih dulu mencari di web, lalu AI menyusun kandidat dari hasil pencarian itu, jadi alamat webnya nyata. Untuk mencoba, buka tab <a href="#" data-ke-tab="jalankan">Jalankan</a> lalu pilih "Cari sumber data dengan AI".</p>`;
 }
 
@@ -631,6 +661,8 @@ isi.addEventListener("click", (e) => {
   if (hapus) return hapusKunci(hapus.dataset.hapus, hapus.closest(".bagian-pengaturan"));
   const jalan = e.target.closest("[data-jalankan]");
   if (jalan) return jalankan(jalan.closest(".kartu-alur"));
+  const obrolan = e.target.closest("[data-pakai-obrolan]");
+  if (obrolan) return pakaiObrolan(obrolan.dataset.pakaiObrolan, obrolan.closest(".kartu-alur"));
 });
 window.addEventListener("beforeunload", (e) => { if (adaPerubahan()) { e.preventDefault(); e.returnValue = ""; } });
 

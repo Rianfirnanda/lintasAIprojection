@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cek Data · Takar Pangan 10•21</title>
-  <meta name="description" content="Pemeriksaan kualitas data harga: deduplikasi, data hilang, pencilan, rekonsiliasi, validasi manusia, dan ketepatan waktu.">
+  <meta name="description" content="Pemeriksaan kualitas data harga: deduplikasi, data hilang, pencilan, harga yang tidak diperbarui, rekonsiliasi, validasi manusia, dan ketepatan waktu.">
   <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
@@ -30,6 +30,19 @@
       <th>Pasar</th><th class="angka">Seharusnya masuk</th><th class="angka">Sudah masuk</th><th class="angka">Kelengkapan</th>
       <th class="angka">Tepat waktu*</th><th>Data terakhir</th><th>Catatan</th></tr></thead><tbody></tbody></table></div>
     <p class="meta-kecil" style="margin-top:6px">*Dihitung dari data yang punya catatan waktu pengisian (otomatis ada kalau memakai halaman Catat Harga). Dianggap tepat waktu kalau masuk sebelum pukul <span id="jam-batas"></span> WIB di hari pencatatan.</p>
+  </section>
+
+  <section class="kartu" aria-labelledby="j-beku">
+    <div class="kartu-kepala">
+      <div>
+        <h2 id="j-beku">Harga yang tidak diperbarui sumbernya</h2>
+        <p>Angka yang sama persis terus dilaporkan sebuah pasar, padahal harga barang yang sama di pasar dan sumber lain sudah bergeser jauh.
+          Angka sesudah pergeseran itu tidak dipakai dalam perhitungan, peringatan, maupun prakiraan, sampai sumbernya memperbarui harga.</p>
+      </div>
+    </div>
+    <p class="meta-kecil" id="ket-beku"></p>
+    <div class="gulir-tabel" style="max-height:420px"><table id="tabel-beku"><thead><tr><th>Pasar</th><th>Varian</th><th>Sumber</th>
+      <th class="angka">Angka yang dilaporkan</th><th>Tidak berubah</th><th class="angka">Harga di tempat lain bergeser</th><th>Tidak dipakai sejak</th><th>Status</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section class="kartu">
@@ -112,7 +125,21 @@ document.getElementById("kpi").innerHTML = [
   ind({ i: "kurang", warna: "oranye", label: "Baris ditolak", nilai: angka(r.baris_ditolak_skema), sub: `${angka(ps.ditolak_validator || 0)} ditolak pemeriksa`, warnaNilai: r.baris_ditolak_skema ? "oranye" : "" }),
   ind({ i: "database", label: "Data ganda dibuang", nilai: angka(r.duplikat_dibuang), sub: "salinan atau kiriman ulang" }),
   ind({ i: "tukar", label: "Beda antar sumber", nilai: angka(r.rekonsiliasi_melebihi_batas), sub: "selisihnya terlalu besar" }),
+  ind({ i: "jam", warna: r.deret_beku ? "oranye" : "hijau", label: "Harga tidak diperbarui", nilai: angka(r.deret_beku || 0), kecil: "deret",
+    sub: `${angka(r.observasi_beku || 0)} angka tidak dipakai`, warnaNilai: r.deret_beku ? "oranye" : "" }),
 ].join("");
+
+const beku = q.beku || [];
+const masihBeku = beku.filter((b) => b.masih_beku);
+document.getElementById("ket-beku").textContent = beku.length
+  ? `${masihBeku.length} deret masih tidak diperbarui sampai data terakhir; ${beku.length - masihBeku.length} masa lain sudah berlalu (sumbernya kemudian memperbarui harga). Total ${angka(r.observasi_beku || 0)} angka tidak dipakai.`
+  : "Tidak ada harga yang terlihat tidak diperbarui.";
+document.querySelector("#tabel-beku tbody").innerHTML = beku.map((b) => `<tr>
+  <td>${esc(b.pasar)}</td><td>${esc(b.varian)}</td><td class="meta-kecil">${esc(b.kode_sumber)}</td>
+  <td class="angka">${rp(b.harga)}</td><td>${esc(tgl(b.sejak))} sampai ${esc(tgl(b.sampai))}<div class="meta-kecil">${angka(b.hari)} hari</div></td>
+  <td class="angka">${persen(b.geser_pembanding_persen, 0, true)}</td><td>${esc(tgl(b.beku_sejak))}<div class="meta-kecil">${angka(b.observasi_beku)} angka</div></td>
+  <td>${b.masih_beku ? '<span class="lencana sedang">masih belum diperbarui</span>' : '<span class="lencana polos">sudah diperbarui</span>'}</td></tr>`).join("")
+  || `<tr><td colspan="8" class="kosong">Tidak ada.</td></tr>`;
 
 const kt = q.ketepatan || {};
 document.getElementById("periode-ketepatan").textContent = kt.periode
@@ -125,7 +152,7 @@ document.querySelector("#tabel-ketepatan tbody").innerHTML = (kt.per_pasar || []
   <td>${esc(tgl(p.tanggal_terakhir))}</td><td>${p.blank_spot ? '<span class="lencana rendah">blank spot</span>' : ""}</td></tr>`).join("")
   || `<tr><td colspan="7" class="kosong">Belum ada pasar target.</td></tr>`;
 
-const TANDA = { duplikat_konflik: "harga ganda beda", di_luar_batas_wajar: "di luar batas wajar", perubahan_ekstrem: "berubah terlalu jauh", pencilan_statistik: "jauh dari kebiasaan" };
+const TANDA = { data_beku: "tidak diperbarui", duplikat_konflik: "harga ganda beda", di_luar_batas_wajar: "di luar batas wajar", perubahan_ekstrem: "berubah terlalu jauh", pencilan_statistik: "jauh dari kebiasaan" };
 const tbodyV = document.querySelector("#tabel-validasi tbody");
 tbodyV.innerHTML = q.perlu_validasi.map((o) => `<tr data-id="${esc(o.id)}">
   <td>${esc(tgl(o.tanggal))}</td><td>${esc(namaPasar[o.kode_pasar] || o.kode_pasar)}</td><td>${esc(namaVarian[o.kode_varian] || o.kode_varian)}</td>

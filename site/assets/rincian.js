@@ -94,9 +94,12 @@ function angkaSinyal(s, satuan) {
   } else if (s.jenis === "data_terlambat") {
     const t = s.konteks?.tanggal_data_terakhir;
     r.push(baris("Data terakhir masuk", t ? esc(tglPendek(t)) : "belum pernah"));
+  } else if (s.jenis === "data_beku") {
+    r.push(baris("Angka yang terus dilaporkan", `${rp(s.nilai_aktual)}${satuan}`),
+      baris("Harga di tempat lain bergeser", persen(s.deviasi_persen, 0, true)));
   } else if (kini) r.push(kini);
   const lama = lamaHari(s.tanggal_mulai, s.tanggal_terakhir);
-  r.push(baris(s.jenis === "data_terlambat" ? "Belum masuk sejak" : "Mulai terlihat", `${esc(tglPendek(s.tanggal_mulai))}${lama ? `, sudah ${lama}` : ""}`));
+  r.push(baris(s.jenis === "data_terlambat" ? "Belum masuk sejak" : s.jenis === "data_beku" ? "Tidak dipakai sejak" : "Mulai terlihat", `${esc(tglPendek(s.tanggal_mulai))}${lama ? `, sudah ${lama}` : ""}`));
   return `<dl class="rs-angka">${r.join("")}</dl>`;
 }
 

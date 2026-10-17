@@ -191,7 +191,7 @@ async function berandaAnalis(el, meta) {
           <div class="sub">${tgl(o.tanggal)} · ${esc(o.kode_pasar)}</div></div><div class="kanan"><b>${rp(o.harga)}</b></div></div>`).join("") || '<p class="kosong">Antrean kosong.</p>'}
       </section>
       <section class="kartu"><div class="kartu-kepala"><div><h2>Jenis peringatan</h2></div></div>
-        ${jenis.map(([n, jml]) => `<div class="baris-info"><div class="nama" style="font-weight:500;min-width:110px">${esc(({ anomali_harga: "Harga janggal", proyeksi_naik: "Diperkirakan naik", risiko_hari_raya: "Hari raya", data_terlambat: "Data terlambat", drift: "Pola berubah" })[n] || n)}</div>
+        ${jenis.map(([n, jml]) => `<div class="baris-info"><div class="nama" style="font-weight:500;min-width:110px">${esc(({ anomali_harga: "Harga janggal", proyeksi_naik: "Diperkirakan naik", risiko_hari_raya: "Hari raya", data_terlambat: "Data terlambat", data_beku: "Data tidak diperbarui", drift: "Pola berubah" })[n] || n)}</div>
           <div class="batang-mini"><span style="width:${jml / maksJenis * 100}%"></span></div><div class="kanan"><b>${jml}</b></div></div>`).join("")}
       </section>
     </div>`);

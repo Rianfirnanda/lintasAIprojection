@@ -118,6 +118,22 @@ async function bacaKunci(fb, db) {
  * Jalankan pencarian di browser. `catat(teks, jenis)` dipanggil di setiap langkah (untuk log langsung di layar).
  * Mengembalikan { ok, langkah, catatan?, alasan?, pindahKeMesin }.
  */
+/** Sisa kredit Tavily bulan ini. Bila tidak bisa dibaca, pencarian tetap jalan seperti biasa. */
+export async function kuotaTavily(kunci, ambil = fetch) {
+  try {
+    const r = await ambil("https://api.tavily.com/usage", { headers: { Authorization: `Bearer ${kunci}` } });
+    if (!r.ok) return null;
+    const d = await r.json();
+    const a = d.account || {}, k = d.key || {};
+    const batas = Number(a.plan_limit || k.limit), pakai = Number(a.plan_usage ?? k.usage);
+    if (!(batas > 0) || !Number.isFinite(pakai)) return null;
+    const sisa = Math.max(0, batas - pakai);
+    return { sisa, batas, cukup: sisa - 3 >= batas * 0.1 };
+  } catch {
+    return null;
+  }
+}
+
 export async function cariDiBrowser(masukan, catat = () => {}) {
   const langkah = [];
   const tulis = (teks, jenis = "info") => {
@@ -140,9 +156,13 @@ export async function cariDiBrowser(masukan, catat = () => {}) {
     return { ok: false, langkah, alasan: e.message || String(e), pindahKeMesin: true };
   }
 
-  // 1. Pencarian web
+  // 1. Pencarian web (kuota bulanan Tavily dijaga: cadangan 10% tidak dipakai, sama seperti di mesin pengolah)
   const web = new Map();
-  if (kunci.TAVILY_API_KEY) {
+  const kuota = kunci.TAVILY_API_KEY ? await kuotaTavily(kunci.TAVILY_API_KEY) : null;
+  if (kuota && !kuota.cukup) {
+    tulis(`Pencarian web dilewati: kuota Tavily bulan ini tinggal ${kuota.sisa} dari ${kuota.batas} kredit (cadangan). AI menjawab tanpa pencarian web.`, "peringatan");
+  }
+  if (kunci.TAVILY_API_KEY && (!kuota || kuota.cukup)) {
     for (const [q, domain] of b.templat_kueri_web) {
       try {
         const data = await kirim(b.url_tavily, { Authorization: `Bearer ${kunci.TAVILY_API_KEY}` },

@@ -505,3 +505,56 @@ def jalankan_tahap3(akar: Path, ambil_fn=ambil) -> dict:
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "hasil_probe_tahap3.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
     return hasil
+
+
+# ---------------------------------------------------------------- tahap 4: sumber yang diterima analis dari AI Data Finder
+
+TAHAP4_SITUS = {
+    "sigahada": "https://sigahada.bengkulukota.go.id",
+    "ben_connect": "https://ben-connect.bengkuluprov.go.id/dashboard/perindustrian/komoditas",
+    "simponi_ternak": "https://simponiternak.pertanian.go.id",
+}
+POLA_SKRIP = re.compile(r"""<script[^>]+src=["']([^"']+\.js[^"']*)["']""", re.I)
+POLA_ALAMAT_DATA = re.compile(r"""["'`]((?:https?:)?//[^"'`\s<>]*(?:api|json|harga|komoditas|data)[^"'`\s<>]*|/(?:api|harga|komoditas|data|ajax|get)[\w\-/.?=&{}$]*)["'`]""", re.I)
+
+
+def tahap4_situs(nama: str, url: str, ambil_fn=ambil, maks_skrip: int = 8) -> dict:
+    """Halaman utama, alamat data yang disebut di HTML dan skripnya, lalu mencoba alamat yang tampak berisi JSON harga."""
+    h = ambil_fn(url, 40, 3_000_000)
+    hasil = {"nama": nama, "halaman": ringkas(h, "tahap 4", 1500)}
+    if h["status"] != 200:
+        return hasil
+    t = teks(h)
+    asal = "/".join(url.split("/")[:3])
+    skrip = [urllib.parse.urljoin(url, s) for s in POLA_SKRIP.findall(t)]
+    hasil["skrip"] = skrip[:20]
+    alamat = set(POLA_ALAMAT_DATA.findall(t))
+    hasil["tabel"] = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", x))[:2000] for x in re.findall(r"<table.*?</table>", t, re.S | re.I)[:2]]
+    for s in [x for x in skrip if x.startswith(asal)][:maks_skrip]:
+        hs = ambil_fn(s, 40, 4_000_000)
+        if hs["status"] == 200:
+            alamat |= set(POLA_ALAMAT_DATA.findall(teks(hs)))
+        time.sleep(JEDA)
+    alamat = sorted(a for a in alamat if not a.endswith((".js", ".css", ".png", ".jpg", ".svg", ".woff2", ".ico")))[:80]
+    hasil["alamat_disebut"] = alamat
+    dicoba = []
+    for a in alamat:
+        if "{" in a or "$" in a or len(dicoba) >= 15:
+            continue
+        u = urllib.parse.urljoin(url, a if not a.startswith("//") else "https:" + a)
+        if not u.startswith(asal):
+            continue
+        hj = ambil_fn(u, 40, 2_000_000, {"X-Requested-With": "XMLHttpRequest", "Referer": url})
+        dicoba.append(ringkas(hj, "alamat dari halaman", 800))
+        time.sleep(JEDA)
+    hasil["dicoba"] = dicoba
+    return hasil
+
+
+def jalankan_tahap4(akar: Path, ambil_fn=ambil) -> dict:
+    hasil = {"waktu": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+             "situs": [tahap4_situs(n, u, ambil_fn) for n, u in TAHAP4_SITUS.items()]}
+    folder = akar / "data" / "sumber"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "hasil_probe_tahap4.json").write_text(json.dumps(hasil, ensure_ascii=False, indent=1), encoding="utf-8")
+    return hasil

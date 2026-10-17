@@ -162,7 +162,7 @@ def konteks_sinyal(konf: Konfigurasi, tgl: date, kode_varian: str, nilai: float 
 
 
 def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pembanding: dict[str, dict[str, SeriHarian]],
-                  indeks: IndeksKonteks, ketepatan: dict, tanggal_data: date | None) -> list[dict]:
+                  indeks: IndeksKonteks, ketepatan: dict, tanggal_data: date | None, beku: list[dict] | None = None) -> list[dict]:
     s_cfg = konf.pengaturan["sinyal"]
     jhr = konf.pengaturan["jendela_hari_raya"]
     wil = konf.wilayah_target
@@ -276,6 +276,25 @@ def bentuk_sinyal(konf: Konfigurasi, hasil: dict[str, HasilVarian], seri_pemband
                 "narasi": ("Pasar ini termasuk blank spot. Petugas bisa memakai formulir luring lalu mengirim data saat dapat sinyal."
                            if p["blank_spot"] else "Coba hubungi petugas pencatat, kemungkinan datanya belum terkirim."),
             })
+
+    # 6. Data beku: sumber terus melaporkan angka yang sama padahal harga di tempat lain sudah bergeser jauh.
+    for b in beku or []:
+        if not b.get("masih_beku"):
+            continue
+        di_target = b["kode_wilayah"] == wil
+        sinyal.append({
+            "id": id_sinyal("data_beku", b["kode_pasar"], b["kode_varian"], b["kode_sumber"], b["sejak"]),
+            "jenis": "data_beku", "kode_varian": b["kode_varian"], "varian": b["varian"],
+            "komoditas": konf.varian[b["kode_varian"]].komoditas, "kode_wilayah": b["kode_wilayah"], "kode_pasar": b["kode_pasar"],
+            "judul": f"Harga {b['varian']} di {b['pasar']} tidak diperbarui sejak {b['sejak']}",
+            "tanggal_mulai": b["beku_sejak"], "tanggal_terakhir": b["sampai"],
+            "keparahan": "sedang" if di_target else "rendah", "arah": None, "aktif": True,
+            "nilai_aktual": b["harga"], "baseline": None, "deviasi_persen": b["geser_pembanding_persen"],
+            "konteks": {"kode_sumber": b["kode_sumber"], "hari": b["hari"], "observasi_beku": b["observasi_beku"]},
+            "narasi": (f"Angkanya tetap {_rp(b['harga'])} selama {b['hari']} hari, padahal harga barang yang sama di pasar dan "
+                       f"sumber lain bergeser {b['geser_pembanding_persen']:+.0f}%. Angka sejak {b['beku_sejak']} tidak dipakai "
+                       "dalam perhitungan sampai sumbernya memperbarui harga. Minta petugas mencatat harga langsung di pasar ini."),
+        })
 
     sinyal.sort(key=lambda s: s["tanggal_terakhir"], reverse=True)
     sinyal.sort(key=lambda s: (not s["aktif"], -TINGKAT[s["keparahan"]]))

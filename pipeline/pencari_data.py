@@ -234,7 +234,12 @@ def cari_web(kueri: list[tuple[str, list[str] | None]], klien=None) -> tuple[lis
     kirim = klien or _post_json
     hasil: dict[str, dict] = {}
     galat: list[str] = []
+    from .kuota_tavily import ANGGARAN
+
     for q, domain in kueri:
+        if not ANGGARAN.pakai(1):
+            galat.append(f"tavily dilewati: {ANGGARAN.pesan_habis()}")
+            break
         isi = {"query": q, "search_depth": "basic", "max_results": 6, "include_answer": False}
         if domain:
             isi["include_domains"] = domain

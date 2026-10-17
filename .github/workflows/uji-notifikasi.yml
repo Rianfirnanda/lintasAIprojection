@@ -1,0 +1,49 @@
+name: Uji notifikasi
+
+# Mengirim satu pesan uji ke Telegram dan/atau email yang kuncinya sudah diisi (GitHub Secrets atau situs), lalu menulis
+# alasannya bila gagal. Catatan proses ini publik, jadi yang ditulis hanya ringkasan tanpa ID atau nama obrolan.
+# Di situs dengan login Google, tombol "Kirim pesan uji" di Pengaturan memakai antrean yang sama dengan pembaruan harian
+# dan menampilkan daftar obrolan yang pernah menghubungi bot.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  uji:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+
+      - name: Sambungkan ke Firestore (kunci dari situs)
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then echo "Firebase belum diatur, hanya GitHub Secrets yang dipakai."; exit 0; fi
+          pip install -q -r requirements-firebase.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-layanan.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/akun-layanan.json" >> "$GITHUB_ENV"
+
+      - name: Kirim pesan uji
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_KE: ${{ secrets.EMAIL_KE }}
+          EMAIL_DARI: ${{ secrets.EMAIL_DARI }}
+        run: python -m pipeline uji-notifikasi
+
+      - name: Hapus kredensial
+        if: always()
+        run: rm -f "$RUNNER_TEMP/akun-layanan.json"

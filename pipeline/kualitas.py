@@ -6,6 +6,8 @@ Status observasi setelah quality gate:
   perlu_validasi   -> ditandai; menunggu keputusan validator (TIDAK dipakai analisis)
   ditolak_validator-> ditolak validator (tidak dipakai)
   duplikat         -> salinan identik, dibuang
+  beku             -> harga tidak berubah sekian lama padahal harga pembanding sudah bergeser jauh: sumbernya tidak
+                      memperbarui angka. Tidak dipakai analisis dan tidak masuk antrean Cek Data (lihat tandai_beku).
 """
 
 from __future__ import annotations
@@ -28,7 +30,12 @@ KETERANGAN_TANDA = {
     "di_luar_batas_wajar": "Harganya di luar batas wajar untuk varian ini (config/komoditas.csv)",
     "perubahan_ekstrem": "Harganya berubah terlalu jauh dari catatan sebelumnya di pasar yang sama",
     "pencilan_statistik": "Harganya jauh berbeda dari kebiasaan 28 hari terakhir di wilayah ini",
+    "data_beku": "Harganya tidak berubah lama padahal harga pasar lain untuk barang yang sama sudah bergeser jauh",
 }
+# Data beku: berapa hari harga boleh sama persis, dan seberapa jauh harga pembanding (median pasar dan sumber lain untuk
+# varian yang sama) boleh bergeser dari awal masa itu, sebelum angkanya dianggap tidak diperbarui. Per kelompok komoditas.
+BEKU_BAWAAN = {"aktif": True, "min_hari": {"volatil": 14, "protein": 30, "pokok": 30, "pabrikan": 30},
+               "geser_persen": {"volatil": 20, "protein": 12, "pokok": 10, "pabrikan": 10}}
 
 
 @dataclass
@@ -44,6 +51,7 @@ class HasilKualitas:
     observasi: list[Observasi]
     jumlah_duplikat: int = 0
     rekonsiliasi: list[dict] = field(default_factory=list)
+    beku: list[dict] = field(default_factory=list)  # ringkasan tiap masa harga beku (lihat tandai_beku)
     ketepatan: dict = field(default_factory=dict)
     libur: set = field(default_factory=set)  # hari kerja tanpa pencatatan di semua pasar satu sumber (libur nasional, cuti bersama)
 
@@ -194,9 +202,79 @@ def jalankan(observasi: list[Observasi], konf: Konfigurasi, keputusan: dict[str,
                 tertunda[(o.kode_pasar, o.kode_varian, o.responden)] = o
 
     hasil = HasilKualitas(observasi=unik, jumlah_duplikat=duplikat)
+    hasil.beku = tandai_beku(hasil.dipakai(), konf, keputusan)
     hasil.rekonsiliasi = rekonsiliasi(hasil.dipakai(), konf)
     hasil.libur = libur_pencatatan(unik)
     hasil.ketepatan = ketepatan_waktu(unik, konf, hasil.libur)
+    return hasil
+
+
+def tandai_beku(dipakai: list[Observasi], konf: Konfigurasi, keputusan: dict[str, Keputusan] | None = None) -> list[dict]:
+    """Tandai harga yang "beku": angka yang sama persis terus dilaporkan satu pasar dan sumber, padahal median harga
+    varian yang sama di pasar dan sumber lain (jendela 7 hari) sudah bergeser jauh dari awal masa itu. Hanya observasi
+    sesudah pergeseran melewati ambang yang ditandai (status "beku"); awal masa tetap dipakai karena saat itu harganya
+    masih sejalan. Keputusan "terima" dari validator tetap dihormati. Mengembalikan ringkasan tiap masa beku."""
+    cfg = {**BEKU_BAWAAN, **(konf.pengaturan.get("kualitas", {}).get("beku") or {})}
+    if not cfg.get("aktif", True):
+        return []
+    keputusan = keputusan or {}
+    min_hari = {**BEKU_BAWAAN["min_hari"], **(cfg.get("min_hari") or {})}
+    geser_maks = {**BEKU_BAWAAN["geser_persen"], **(cfg.get("geser_persen") or {})}
+    seri: dict[tuple, list[Observasi]] = defaultdict(list)
+    for o in dipakai:
+        seri[(o.kode_pasar, o.kode_varian, o.kode_sumber, o.responden)].append(o)
+    per_varian: dict[str, dict[date, list[tuple[tuple, float]]]] = defaultdict(lambda: defaultdict(list))
+    for k, daftar in seri.items():
+        for o in daftar:
+            per_varian[k[1]][o.tanggal].append((k, o.harga))
+    akhir = max((o.tanggal for o in dipakai), default=None)
+
+    def pembanding(k: tuple, t: date) -> float | None:
+        nilai = [h for d in range(-3, 4) for kk, h in per_varian[k[1]].get(t + timedelta(days=d), []) if kk != k]
+        return median(nilai) if len(nilai) >= 3 else None
+
+    hasil = []
+    for k, daftar in seri.items():
+        daftar.sort(key=lambda o: o.tanggal)
+        v = konf.varian.get(k[1])
+        if v is None:
+            continue
+        hari_min, ambang = min_hari.get(v.kelompok, 30), geser_maks.get(v.kelompok, 10)
+        i = 0
+        while i < len(daftar):
+            j = i
+            while j + 1 < len(daftar) and daftar[j + 1].harga == daftar[i].harga:
+                j += 1
+            awal = daftar[i]
+            r0 = pembanding(k, awal.tanggal) if (daftar[j].tanggal - awal.tanggal).days >= hari_min else None
+            kena, geser_akhir = [], 0.0
+            if r0:
+                for o in daftar[i:j + 1]:
+                    if (o.tanggal - awal.tanggal).days < hari_min:
+                        continue
+                    r = pembanding(k, o.tanggal)
+                    if r is None:
+                        continue
+                    geser = (r / r0 - 1) * 100
+                    if abs(geser) >= ambang and not (o.id in keputusan and keputusan[o.id].keputusan == "terima"):
+                        kena.append(o)
+                        geser_akhir = geser
+            for o in kena:
+                o.status = "beku"
+                o.tanda.append("data_beku")
+            if kena:
+                pasar = konf.pasar.get(k[0])
+                hasil.append({
+                    "kode_pasar": k[0], "pasar": pasar.nama if pasar else k[0], "kode_wilayah": awal.kode_wilayah,
+                    "kode_varian": k[1], "varian": v.nama, "kode_sumber": k[2], "harga": awal.harga,
+                    "sejak": awal.tanggal.isoformat(), "beku_sejak": kena[0].tanggal.isoformat(),
+                    "sampai": daftar[j].tanggal.isoformat(), "hari": (daftar[j].tanggal - awal.tanggal).days,
+                    "observasi_beku": len(kena), "geser_pembanding_persen": round(geser_akhir, 1),
+                    "masih_beku": akhir is not None and (akhir - daftar[j].tanggal).days <= 3,
+                })
+            i = j + 1
+    hasil.sort(key=lambda x: x["sampai"], reverse=True)
+    hasil.sort(key=lambda x: not x["masih_beku"])  # yang masih beku sampai data terakhir di atas
     return hasil
 
 

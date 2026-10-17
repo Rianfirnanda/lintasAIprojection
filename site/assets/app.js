@@ -10,6 +10,7 @@ export const JENIS_SINYAL = {
   proyeksi_naik: "Diperkirakan naik",
   risiko_hari_raya: "Risiko hari raya",
   data_terlambat: "Data terlambat",
+  data_beku: "Data tidak diperbarui",
   drift: "Pola berubah",
 };
 
