@@ -1,19 +1,19 @@
 {
- "diperbarui": "2026-10-17T03:42:34+07:00",
+ "diperbarui": "2026-10-17T07:11:49+07:00",
  "kesimpulan": [
   {
    "tanggal": "2026-10-17",
    "metode": "ai",
    "penyedia": "gemini",
-   "ringkas": "Seluruh pantauan berita saat ini berasal dari wilayah Kota Bengkulu dan tidak ada berita yang menyebutkan Kabupaten Bengkulu Tengah secara langsung. Di Kota Bengkulu, pasokan telur dan ayam potong dilaporkan lancar dengan harga yang relatif stabil, sedangkan harga beras mengalami kenaikan akibat dampak musim kemarau. Pemerintah Kota Bengkulu berupaya menekan inflasi dengan menggelar kegiatan bazar pangan murah untuk komoditas pokok. Perkembangan harga beras dan pasokan pangan antarwilayah perlu dipantau agar dampaknya tidak merambat ke Bengkulu Tengah.",
+   "ringkas": "Informasi harga dan pasokan khusus untuk wilayah Kabupaten Bengkulu Tengah tidak ditemukan pada laporan berita hari ini. Secara nasional, seluruh harga pangan dilaporkan mengalami kenaikan dengan lonjakan tertinggi terjadi pada komoditas cabai. Sementara itu, kegiatan pasar murah dilaporkan berlangsung di Tenayan Raya, Riau, guna menjaga keterjangkauan harga bagi masyarakat. Oleh karena itu, TPID perlu memantau potensi dampak dari kenaikan harga pangan nasional tersebut terhadap pasar di Bengkulu Tengah.",
    "poin": [
-    "Pasokan ayam potong dan telur di Pasar Minggu Kota Bengkulu dilaporkan lancar dan harganya relatif stabil.",
-    "Pemerintah Kota Bengkulu menggelar bazar pangan murah untuk menekan inflasi dan menyediakan bahan pokok terjangkau.",
-    "Tidak terdapat laporan harga maupun pasokan pangan yang spesifik menyebutkan Kabupaten Bengkulu Tengah."
+    "Tidak ada laporan berita mengenai kondisi harga dan pasokan pangan yang secara spesifik menyebut Kabupaten Bengkulu Tengah.",
+    "Berita nasional melaporkan bahwa seluruh harga pangan naik, dengan cabai mengalami kenaikan paling tinggi.",
+    "Pemerintah daerah di wilayah lain, yakni Tenayan Raya (Riau), menggelar pasar murah untuk menjaga keterjangkauan harga pangan."
    ],
    "perlu_dipantau": [
-    "Perkembangan harga beras akibat pengaruh musim kemarau.",
-    "Potensi rembetan kenaikan harga bahan pangan dari Kota Bengkulu ke pasar di Bengkulu Tengah."
+    "Dampak kenaikan harga pangan nasional terhadap harga komoditas di Bengkulu Tengah, khususnya cabai.",
+    "Ketersediaan pasokan pangan lokal mengingat minimnya informasi langsung dari wilayah Bengkulu Tengah."
    ],
    "kalimat_dibuang": 0
   },
@@ -134,6 +134,292 @@
  ],
  "berita": [
   {
+   "id": "fc4a299620cc",
+   "url": "https://www.pedomanbengkulu.com/2026/10/seluruh-harga-pangan-hari-ini-naik.html",
+   "judul": "Seluruh Harga Pangan Hari Ini Naik, Cabai Paling Panas - Pedoman Bengkulu",
+   "sumber": "pedomanbengkulu.com",
+   "tanggal": "2026-10-16",
+   "diakses": "2026-10-17T07:11:49+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 8,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Minyak Goreng",
+    "Gula Pasir"
+   ],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9466,
+   "sidik_sha256": "0c5fbaf1226d9ef260d6c3cb4865afbbc9e5bdafac0031cc32dd975969865330",
+   "kutipan": "Harga daging yam ras segar naik 8,59% atau Rp3.550 menjadi Rp44.900/kg. Daging sapi kualitas 1 juga naik 8,35% atau Rp12.750 menjadi Rp165.400/kg, serta daging sapi kualitas 2 naik 0,97% atau Rp1.400 menjadi Rp145.400/kg",
+   "ringkasan": "Berita nasional mengabarkan bahwa seluruh harga pangan dilaporkan naik, dengan cabai mengalami kenaikan yang paling tinggi.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR01",
+     "nilai": 83350,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Berdasarkan data per pukul 9.15 WIB, harga cabai merah besar naik 17,48% atau Rp12.400 menjadi Rp83.350/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 145950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Harga cabai merah keriting naik 73,13% atau Rp61.600 menjadi Rp145.950/kg, sekaligus menjadi kenaikan persentase dan nominal tertinggi.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW01",
+     "nilai": 86650,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Kemudian, harga cabai rawit hijau naik 12,75% atau Rp9.800 menjadi Rp86.650/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 130400,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Begitu juga harga cabai rawit merah yang naik 26,05% atau Rp26.900 menjadi Rp130.400/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": "BWM01",
+     "nilai": 45850,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Harga bawang merah ukuran sedang juga naik 23,75% atau Rp8.800 menjadi Rp45.850/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 41900,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Bawang putih ukuran sedang pun melonjak 7,99% atau Rp3.100 menjadi Rp41.900/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS01",
+     "nilai": 17650,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Beras kualitas bawah I atau SPHP tercatat naik 18,46% atau Rp2.750 menjadi Rp17.650/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS02",
+     "nilai": 17250,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Beras kualitas bawah II juga naik 16,95% atau Rp2.500 menjadi Rp17.250/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS03",
+     "nilai": 18550,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Harga beras kualitas medium I naik 11,41% atau Rp1.900 menjadi Rp18.550/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS04",
+     "nilai": 18200,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Begitu juga beras kualitas medium II yang naik 10,98% atau Rp1.800 menjadi Rp18.200/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS05",
+     "nilai": 19500,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Harga beras kualitas super I atau setara dengan premiun pun mengalami kenaikan 8,64% atau Rp1.550 menjadi Rp19.500/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS06",
+     "nilai": 19250,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Beras kualitas super II juga naik 10,63% atau Rp1.850 menjadi Rp19.250/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata dari panel pangan namun wilayah tidak disebutkan dengan jelas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "545210d7b2f7",
    "url": "https://bengkulu.antaranews.com/berita/482401/pasokan-lancar-harga-ayam-dan-telur-di-pasar-kota-bengkulu-relatif-stabil",
    "judul": "Pasokan lancar, harga ayam dan telur di Pasar Kota Bengkulu relatif stabil - ANTARA News Bengkulu",
@@ -235,7 +521,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -409,6 +695,116 @@
    "penyedia_ai": "gemini"
   },
   {
+   "id": "d21114599366",
+   "url": "https://www.isbcenter.com/plt-gubernur-riau-tinjau-pasar-murah-di-tenayan-raya-pastikan-harga-pangan-tetap-terjangkau",
+   "judul": "Plt Gubernur Riau Tinjau Pasar Murah di Tenayan Raya, Pastikan Harga Pangan Tetap Terjangkau - ISBCenter.com",
+   "sumber": "isbcenter.com",
+   "tanggal": "2026-10-15",
+   "diakses": "2026-10-17T07:11:49+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Garam",
+    "Garam Beryodium"
+   ],
+   "tag": [
+    "harga_turun",
+    "pasokan",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 12826,
+   "sidik_sha256": "d96677ba341852d6af2b55b07da29609ec6a858577d81424ff5c2c3c853a2417",
+   "kutipan": "Konten Spesial Kapolda Bengkulu Pimpin Langsung Gerebek Dugaan Sarang Narkoba di Kampung Jeruk Rejang Lebong Sentimen MSCI dan Inflasi AS Tekan Rupiah, Dibuka Melemah ke Rp18.021 per Dolar Lantik Anggota BPD Lubuk Resam,",
+   "ringkasan": "Plt Gubernur Riau meninjau kegiatan pasar murah di Tenayan Raya untuk memastikan harga pangan tetap terjangkau oleh masyarakat.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": null,
+     "nilai": 18000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Di antaranya beras SPHP Rp60 ribu per 5 kilogram, beras Anak Daro dan beras Sokan Rp169.000 per 10 kg dan Rp84.500 per 5 kg, gula pasir Rp18.000 per kg, minyak goreng MinyaKita Rp15.500 per bungkus, garam Krista Rp2 ribu per 200 gram, garam Nusantara Rp2 ribu per 250 gram, telur Rp48 ribu per papan,",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga gula pasir pada kegiatan pasar murah di Tenayan Raya Riau.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 65000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Di antaranya beras SPHP Rp60 ribu per 5 kilogram, beras Anak Daro dan beras Sokan Rp169.000 per 10 kg dan Rp84.500 per 5 kg, gula pasir Rp18.000 per kg, minyak goreng MinyaKita Rp15.500 per bungkus, garam Krista Rp2 ribu per 200 gram, garam Nusantara Rp2 ribu per 250 gram, telur Rp48 ribu per papan,",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Komoditas dan harga tersebut tidak tercantum dalam kalimat berita yang diberikan.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 30000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Di antaranya beras SPHP Rp60 ribu per 5 kilogram, beras Anak Daro dan beras Sokan Rp169.000 per 10 kg dan Rp84.500 per 5 kg, gula pasir Rp18.000 per kg, minyak goreng MinyaKita Rp15.500 per bungkus, garam Krista Rp2 ribu per 200 gram, garam Nusantara Rp2 ribu per 250 gram, telur Rp48 ribu per papan,",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Komoditas dan harga tersebut tidak tercantum dalam kalimat berita yang diberikan.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-17"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "946436ad93c7",
    "url": "https://bengkulu.antaranews.com/amp/berita/482285/pedagang-sebut-kemarau-diduga-pengaruhi-kenaikan-harga-beras-di-bengkulu",
    "judul": "Pedagang sebut kemarau diduga pengaruhi kenaikan harga beras di Bengkulu",
@@ -446,7 +842,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -482,7 +878,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "d6071fa1ab17",
@@ -529,7 +925,7 @@
    "dampak_harga": "turun",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -576,7 +972,7 @@
    "dampak_harga": "turun",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -1897,15 +2293,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 163,
-  "setelah_duplikat": 136,
-  "berita_baru": 5,
-  "total_arsip": 25,
-  "kandidat_harga_baru": 3,
-  "harga_dinilai_ai": 37,
-  "isi_tidak_terbaca": 1,
-  "penyedia_ai": "openrouter",
-  "model_ai": "poolside/laguna-s-2.1:free"
+  "hasil_pencarian": 162,
+  "setelah_duplikat": 137,
+  "berita_baru": 2,
+  "total_arsip": 27,
+  "kandidat_harga_baru": 15,
+  "harga_dinilai_ai": 15,
+  "isi_tidak_terbaca": 0,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
