@@ -1,6 +1,20 @@
 {
- "diperbarui": "2026-10-17T07:11:49+07:00",
+ "diperbarui": "2026-10-18T07:08:49+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-18",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Sementara itu, informasi kenaikan harga cabai di Pasar Panorama Kota Bengkulu dan kenaikan harga beras akibat kemarau terjadi di luar wilayah Kabupaten Bengkulu Tengah. TPID perlu memantau perkembangan harga ayam potong secara langsung di pasaran wilayah Bengkulu Tengah.",
+   "poin": [
+    "Kenaikan harga cabai terjadi di Pasar Panorama, Kota Bengkulu.",
+    "Kenaikan harga beras akibat kemarau dilaporkan terjadi di wilayah lain di Bengkulu."
+   ],
+   "perlu_dipantau": [
+    "Pergerakan harga ayam potong di pasar-pasar dalam wilayah Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 1
+  },
   {
    "tanggal": "2026-10-17",
    "metode": "ai",
@@ -133,6 +147,225 @@
   }
  ],
  "berita": [
+  {
+   "id": "6bf247a9e51e",
+   "url": "https://bengkulu.antaranews.com/berita/480129/tips-belanja-cabai-tetap-hemat-saat-harga-mengalami-kenaikan",
+   "judul": "Tips belanja cabai tetap hemat saat harga mengalami kenaikan - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-17",
+   "diakses": "2026-10-18T07:08:49+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 9,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Beras",
+    "Daging Ayam",
+    "Cabai Rawit"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "cuaca"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 11350,
+   "sidik_sha256": "176457c7dd036a7906a9e2359ca2e970e0d5dd4e15e38dacb159b31e440b1db8",
+   "kutipan": "Belum lagi soal permintaan, saat hari besar nasional, atau hari besar keagamaan nasional (HBKN), masyarakat akan lebih tinggi mengonsumsi komoditas satu ini. Tingginya permintaan ini pula juga dapat memicu peningkatan ha",
+   "ringkasan": "Berita membahas mengenai tips belanja cabai agar tetap hemat saat harganya mengalami kenaikan di Pasar Panorama, Kota Bengkulu, yang dipengaruhi oleh kondisi musim, cuaca, dan pasokan.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": null,
+     "nilai": 60000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": "Pasar Panorama",
+     "arah": "",
+     "bukti": "Di Pasar Panorama, harga cabai rawit kini mencapai Rp60.000 per kilogram, dari sebelumnya sekitar Rp45.000-Rp50.000 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual cabai rawit di pasar.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-18"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": null,
+     "nilai": 45000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": "Pasar Panorama",
+     "arah": "",
+     "bukti": "Di Pasar Panorama, harga cabai rawit kini mencapai Rp60.000 per kilogram, dari sebelumnya sekitar Rp45.000-Rp50.000 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Merupakan harga cabai rawit waktu lalu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-18"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": null,
+     "nilai": 50000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": "Pasar Panorama",
+     "arah": "",
+     "bukti": "Di Pasar Panorama, harga cabai rawit kini mencapai Rp60.000 per kilogram, dari sebelumnya sekitar Rp45.000-Rp50.000 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Merupakan harga cabai rawit waktu lalu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-18"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR01",
+     "nilai": 50000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Cabai merah besar berada pada kisaran Rp50.000-Rp60.000 per kilogram dari sebelumnya Rp40.000, sedangkan cabai setan mencapai Rp80.000-Rp85.000 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual cabai merah besar di pasar.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-18"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR01",
+     "nilai": 60000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Cabai merah besar berada pada kisaran Rp50.000-Rp60.000 per kilogram dari sebelumnya Rp40.000, sedangkan cabai setan mencapai Rp80.000-Rp85.000 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual cabai merah besar di pasar.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-18"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 80000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Cabai merah besar berada pada kisaran Rp50.000-Rp60.000 per kilogram dari sebelumnya Rp40.000, sedangkan cabai setan mencapai Rp80.000-Rp85.000 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Komoditas pada mesin salah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-18"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 85000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Cabai merah besar berada pada kisaran Rp50.000-Rp60.000 per kilogram dari sebelumnya Rp40.000, sedangkan cabai setan mencapai Rp80.000-Rp85.000 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Komoditas pada mesin salah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-18"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "ab9669504e8d",
+   "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPTC1ENzE4dUF3OElyaE1BM244Wlc5dnFieGE4aExuRlBYRWFiUWpyLVpHWmlIM0FONkJGS3NleDdsM3JiV3dGV01WMTBWM2cxYW1BZTM3cDMtaS1mYUJGZVlqUWR4RUg2SGU1RG5TMjVUS09hY3N0RExsQWE5djIxbVRoVEE0eV9DREpKOU8teEQ1Ti1CWEZEX05FTU94NjlsN2RWUkVWMHU1QVVXRGZRMWdFUQ?oc=5",
+   "judul": "Harga Ayam Potong di Bengkulu tengah Naik Jadi Rp45 Ribu per Kilogram",
+   "sumber": "RRI.co.id",
+   "tanggal": "2026-10-17",
+   "diakses": "2026-10-18T07:08:49+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Daging Ayam"
+   ],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "fc4a299620cc",
    "url": "https://www.pedomanbengkulu.com/2026/10/seluruh-harga-pangan-hari-ini-naik.html",
@@ -416,7 +649,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -801,7 +1034,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -1173,6 +1406,42 @@
    "tindak_lanjut": false,
    "harga": [],
    "baru": false
+  },
+  {
+   "id": "7d5542f46255",
+   "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQazAxTjVFLVlpcDVuLU5nMWRiTEdxS2hhVHpZa0w4ODhEeUhlQXhBSExLZHkxbVRmdG4xM3NtdGVhUlVjdTVUdlFJZDBSYVpWUHh5MjVESlBBY2NFYXN0Q1RCNjlCLWtiTFJob2VqSWJDdjNub0JNVGlOVm9odEZWOVctOGcyVWRNVUtQY05mU2hOYTBUSWQtZ0xJSWxnaDRPQUFDMVBpWjlpQmF1TDZEd0stcEdDTXZ4NEHSAb8BQVVfeXFMUHNkYkc5eFZ6Zl9PZDF3UFpGZ0pFb0NkdnpOdlIwNXlsWDloTHhPTUsxY0xUSjAwX0hjVlJLTnprRy1qOUZuUmd1eEVVY3U2blkwQ2NMUDhsQVozMW8tRUg2bUFKdHpudFZEVGhPc1RMenhRaFZaNXA5aVNGRnZXYzVnLUR5SHRGSGt5UndvdTdjSlk4MUxXMmJjV2dyTzEtamNGMWxTVXZPcS1ZUTJGaVB0MnFOSTdpRG95Sm9TV1k?oc=5",
+   "judul": "Pedagang sebut kemarau diduga pengaruhi kenaikan harga beras di Bengkulu",
+   "sumber": "ANTARA News",
+   "tanggal": "2026-10-14",
+   "diakses": "2026-10-18T07:08:49+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "harga_naik",
+    "cuaca"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
   },
   {
    "id": "3482d435ca0e",
@@ -2293,15 +2562,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 162,
-  "setelah_duplikat": 137,
-  "berita_baru": 2,
-  "total_arsip": 27,
-  "kandidat_harga_baru": 15,
-  "harga_dinilai_ai": 15,
-  "isi_tidak_terbaca": 0,
+  "hasil_pencarian": 153,
+  "setelah_duplikat": 128,
+  "berita_baru": 3,
+  "total_arsip": 30,
+  "kandidat_harga_baru": 7,
+  "harga_dinilai_ai": 7,
+  "isi_tidak_terbaca": 2,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "model_ai": "gemini-3.5-flash-lite"
  },
  "galat": []
 }
