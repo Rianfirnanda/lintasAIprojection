@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-10-18T07:08:49+07:00",
+ "diperbarui": "2026-10-19T07:07:02+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-19",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-10-18",
    "metode": "ai",
@@ -328,7 +336,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -364,7 +372,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "fc4a299620cc",
@@ -1441,7 +1449,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "3482d435ca0e",
@@ -2562,15 +2570,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 153,
-  "setelah_duplikat": 128,
-  "berita_baru": 3,
+  "hasil_pencarian": 176,
+  "setelah_duplikat": 153,
+  "berita_baru": 0,
   "total_arsip": 30,
-  "kandidat_harga_baru": 7,
-  "harga_dinilai_ai": 7,
-  "isi_tidak_terbaca": 2,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.5-flash-lite"
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
+  "isi_tidak_terbaca": 0,
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
