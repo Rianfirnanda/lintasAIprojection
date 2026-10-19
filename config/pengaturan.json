@@ -66,14 +66,17 @@
   },
   "notifikasi": {
     "aktif": true,
-    "keparahan_minimal": "sedang",
+    "keparahan_minimal": "rendah",
     "jenis": ["anomali_harga", "proyeksi_naik", "risiko_hari_raya", "data_terlambat", "data_beku", "drift"],
     "maks_sinyal_per_pesan": 10,
     "email_ke_pengguna": true,
     "buletin_mingguan": true,
     "kirim_saat_demo": false
   },
-  "layanan": {"url_pengaduan_eksternal": "", "url_survei_eksternal": ""},
+  "layanan": {
+    "url_pengaduan_eksternal": "https://test.com",
+    "url_survei_eksternal": "https://test.com"
+  },
   "tindak_lanjut": {
     "github_issues": true,
     "keparahan_minimal_issue": "rendah",
