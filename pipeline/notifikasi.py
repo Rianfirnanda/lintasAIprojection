@@ -20,7 +20,7 @@ import smtplib
 import ssl
 import urllib.error
 import urllib.request
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from email.message import EmailMessage
 from pathlib import Path
 
@@ -35,22 +35,30 @@ BAWAAN = {
     "email_ke_pengguna": True,
     "buletin_mingguan": True,
     "kirim_saat_demo": False,
+    "ringkasan_harian": True,
+    "jam_ringkasan": "07.30, 15.45",
 }
+WIB = timezone(timedelta(hours=7))
+# Ringkasan harian hanya dikirim bila jamnya belum lewat lebih dari ini (pesan "pagi" tidak dikirim siang hari).
+BATAS_TELAT_RINGKASAN = timedelta(hours=3)
 BATAS_TELEGRAM = 4000
 LABEL_JENIS = {"anomali_harga": "Anomali harga", "proyeksi_naik": "Proyeksi naik", "risiko_hari_raya": "Risiko hari raya",
                "data_terlambat": "Data terlambat", "data_beku": "Data tidak diperbarui", "drift": "Drift"}
 
 
 def baca_status(path: Path) -> dict:
-    if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
-    return {"sinyal": {}, "buletin": []}
+    status = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    status.setdefault("sinyal", {})
+    status.setdefault("buletin", [])
+    status.setdefault("harian", [])
+    return status
 
 
 def simpan_status(path: Path, status: dict, hari_ini: date, simpan_hari: int = 180) -> None:
     batas = (hari_ini - timedelta(days=simpan_hari)).isoformat()
     status["sinyal"] = {k: v for k, v in status["sinyal"].items() if v >= batas}
     status["buletin"] = status["buletin"][-30:]
+    status["harian"] = status.get("harian", [])[-60:]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(status, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
 
@@ -150,6 +158,95 @@ def susun_pesan_buletin(periode: dict, url: str) -> str:
         baris += [f"{i}. {_esc(r)}" for i, r in enumerate(periode["rekomendasi"][:5], 1)]
     if url:
         baris += ["", f'\U0001F449 <a href="{url}laporan.html">Baca buletin lengkap</a> (bisa dicetak atau disimpan PDF)']
+    return "\n".join(baris)
+
+
+def _waktu_hari(jam: int) -> str:
+    return "pagi" if jam < 11 else "siang" if jam < 15 else "sore" if jam < 18 else "malam"
+
+
+def ringkasan_jatuh_tempo(cfg: dict, terkirim: list[str], sekarang: datetime) -> tuple[str, str] | None:
+    """(kunci, waktu) ringkasan harian yang jamnya sudah lewat hari ini dan belum dikirim, mis. ("2026-10-21 pagi", "pagi")."""
+    from .firestore_sinkron import jam_periksa  # noqa: PLC0415 - pengurai jam yang sama dengan penjaga antrean
+    w = sekarang.astimezone(WIB)
+    lewat = [w.replace(hour=j, minute=m, second=0, microsecond=0) for j, m in jam_periksa(cfg.get("jam_ringkasan"))]
+    lewat = [t for t in lewat if t <= w and w - t <= BATAS_TELAT_RINGKASAN]
+    if not lewat:
+        return None
+    waktu = _waktu_hari(lewat[-1].hour)
+    kunci = f"{w.date().isoformat()} {waktu}"
+    return None if kunci in terkirim else (kunci, waktu)
+
+
+def _tgl_panjang(iso: str | None) -> str:
+    if not iso:
+        return ""
+    d = date.fromisoformat(str(iso)[:10])
+    return f"{d.day} {BULAN[d.month - 1]} {d.year}"
+
+
+def susun_pesan_harian(ringkasan: dict, sinyal: list[dict], url: str, waktu: str, hari_ini: date | None = None) -> str:
+    """Ringkasan harga rutin (pagi/sore): gambaran umum, naik dan turun terbanyak seminggu, yang perlu diwaspadai,
+    dan perkiraan 7 hari. Bahasa sehari-hari, angka rupiah."""
+    varian = [v for v in ringkasan.get("varian", []) if v.get("harga_terakhir")]
+    ikon = {"pagi": "\u2600\uFE0F", "siang": "\U0001F31E", "sore": "\U0001F307", "malam": "\U0001F319"}.get(waktu, "\U0001F4CA")
+    tanggal_data = max((v.get("tanggal_terakhir") or "" for v in varian), default="")
+    baris = [f"<b>{ikon} Ringkasan Harga Pangan {waktu.capitalize()} Ini</b>",
+             f"Kabupaten Bengkulu Tengah{' · ' + _tanggal(hari_ini) if hari_ini else ''}"]
+    if tanggal_data:
+        baris.append(f"<i>Harga terakhir per {_tgl_panjang(tanggal_data)}</i>")
+    if not varian:
+        return "\n".join(baris + ["", "Data harga belum tersedia."])
+
+    def ubah(v):
+        return (v.get("perubahan") or {}).get("mingguan")
+
+    def selisih(v):
+        lalu = ((v.get("harga_acuan") or {}).get("mingguan") or {}).get("harga")
+        return v["harga_terakhir"] - lalu if lalu else None
+
+    def baris_harga(v):
+        per = f"/{v.get('satuan') or 'kg'}"
+        s, u = selisih(v), ubah(v)
+        arah = "naik" if (u or 0) > 0 else "turun"
+        detail = f" ({arah} {_rp(abs(s))}" + (f", {u:+.1f}%".replace(".", ",") if u is not None else "") + ")" if s else ""
+        return f"{_esc(v['nama'])} <b>{_rp(v['harga_terakhir'])}{per}</b>{detail}"
+
+    naik = sorted([v for v in varian if (ubah(v) or 0) > 0.5], key=lambda v: -ubah(v))
+    turun = sorted([v for v in varian if (ubah(v) or 0) < -0.5], key=ubah)
+    stabil = len(varian) - len(naik) - len(turun)
+    baris += ["", f"Dibanding minggu lalu: <b>{len(naik)} naik</b>, <b>{len(turun)} turun</b>, {stabil} stabil "
+                  f"dari {len(varian)} barang yang dipantau."]
+    if naik:
+        baris += ["", "<b>\U0001F4C8 Naik paling banyak</b>"] + [f"{i}. {baris_harga(v)}" for i, v in enumerate(naik[:3], 1)]
+    if turun:
+        baris += ["", "<b>\U0001F4C9 Turun paling banyak</b>"] + [f"{i}. {baris_harga(v)}" for i, v in enumerate(turun[:3], 1)]
+    if not naik and not turun:
+        baris += ["", "Semua harga bahan pokok stabil, tidak ada yang naik atau turun lebih dari 0,5%."]
+
+    penting = [s for s in sinyal if s.get("aktif") and s["jenis"] not in JENIS_DATA and s["keparahan"] in ("tinggi", "sedang")]
+    penting.sort(key=lambda s: -TINGKAT[s["keparahan"]])
+    if penting:
+        baris += ["", f"<b>\u26A0\uFE0F Perlu diwaspadai ({len(penting)})</b>"] + [f"\u2022 {_esc(s['judul'])}" for s in penting[:3]]
+        if len(penting) > 3:
+            baris.append(f"\u2022 … dan {len(penting) - 3} lainnya")
+    else:
+        baris += ["", "\u2705 Tidak ada harga yang bergerak jauh dari kebiasaan."]
+
+    kira = []
+    for v in varian:
+        h7 = (v.get("proyeksi_h7") or {}).get("prediksi")
+        if h7 and abs(h7 - v["harga_terakhir"]) / v["harga_terakhir"] >= 0.02:
+            kira.append((abs(h7 - v["harga_terakhir"]) / v["harga_terakhir"], v, h7))
+    if kira:
+        baris += ["", "<b>\U0001F52E Perkiraan 7 hari ke depan</b>"]
+        for _, v, h7 in sorted(kira, key=lambda x: -x[0])[:3]:
+            beda = h7 - v["harga_terakhir"]
+            baris.append(f"\u2022 {_esc(v['nama'])}: sekitar {_rp(h7)}/{v.get('satuan') or 'kg'} "
+                         f"({'naik' if beda > 0 else 'turun'} {_rp(abs(beda))})")
+        baris.append("<i>Perkiraan bukan angka resmi.</i>")
+    if url:
+        baris += ["", f'\U0001F449 <a href="{url}harga.html">Lihat semua harga</a>']
     return "\n".join(baris)
 
 
@@ -363,7 +460,8 @@ def _kirim(kanal: list[str], env: dict, subjek: str, html: str, pengirim: dict |
 
 
 def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboard: str, demo: bool,
-             env: dict | None = None, pengirim: dict | None = None) -> str:
+             env: dict | None = None, pengirim: dict | None = None, ringkasan: dict | None = None,
+             sekarang: datetime | None = None) -> str:
     """Kirim notifikasi yang belum pernah terkirim. Kembalikan pesan status untuk dicatat di meta.json."""
     cfg = {**BAWAAN, **konf.pengaturan.get("notifikasi", {})}
     env = env if env is not None else dict(os.environ)
@@ -409,6 +507,18 @@ def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboa
             status["buletin"].append(p["label"])
             berubah = True
             catatan.append(f"buletin {p['label']} dikirim lewat {', '.join(ok)}")
+
+    # Ringkasan harga rutin pagi dan sore (setiap hari) ke Telegram.
+    if ringkasan is not None and cfg["ringkasan_harian"] and "telegram" in kanal:
+        jatuh = ringkasan_jatuh_tempo(cfg, status["harian"], sekarang or datetime.now(WIB))
+        if jatuh:
+            kunci, waktu = jatuh
+            teks = susun_pesan_harian(ringkasan, sinyal, url_dashboard, waktu, konf.hari_ini)
+            ok = _kirim(["telegram"], env, f"Ringkasan harga {waktu} ini", teks, pengirim, ke_pengguna)
+            if ok:
+                status["harian"].append(kunci)
+                berubah = True
+                catatan.append(f"ringkasan {waktu} dikirim lewat telegram")
 
     if berubah:
         simpan_status(path, status, konf.hari_ini)

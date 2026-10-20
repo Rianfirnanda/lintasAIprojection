@@ -384,6 +384,13 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
   Rp12.650/kg". Catatan kelengkapan data (pasar belum mengirim, angka tidak diperbarui) ada di bagian sendiri di bawah.
   Pesan yang hanya berisi catatan data dikirim tanpa bunyi supaya grup tidak terganggu. Tautan di pesan mengarah ke
   situs utama (Firebase Hosting).
+- **Ringkasan harga rutin pagi dan sore** (Telegram, setiap hari termasuk Sabtu dan Minggu): berisi gambaran harga hari
+  itu (berapa yang naik, turun, dan stabil), tiga barang yang naik dan turun paling banyak dalam seminggu dengan angka
+  rupiahnya, harga yang perlu diwaspadai, dan perkiraan 7 hari bila ada yang diperkirakan berubah. Jamnya diatur di
+  Pengaturan → Notifikasi → **Jam ringkasan harian** (bawaan 07.30 dan 15.45 WIB; pesan tiba sekitar 10 menit
+  kemudian) dan bisa dimatikan dengan saklar **Kirim ringkasan harga rutin pagi dan sore**. Tiap jam hanya dikirim sekali
+  per hari; bila prosesnya terlambat lebih dari 3 jam, ringkasan jam itu dilewati supaya tidak ada "ringkasan pagi" yang
+  datang siang hari. Ringkasan ini hanya ke Telegram, tidak ke email.
 - **Kapan dikirim (lebih cepat)**: jadwal bawaan GitHub sering terlambat sampai berjam-jam, jadi pemeriksaan rutin kini
   dijalankan oleh penjaga antrean yang selalu menyala, tepat pada jam di Pengaturan → Notifikasi → **Jam pemeriksaan
   rutin** (bawaan 07.30, 11.45, 15.45 WIB pada hari pencatatan). Harga yang dikirim petugas dari situs tetap diproses saat

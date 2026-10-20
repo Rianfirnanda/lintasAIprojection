@@ -391,5 +391,14 @@ def test_pemeriksaan_rutin_tepat_waktu_tanpa_menunggu_jadwal_github(akar):
     db.data["lbp_status"]["pipeline"] = {"status": "selesai", "mulai": selasa(11, 51), "selesai": selasa(12, 0)}
     assert fs.perlu_jalan(akar, db, selasa(12, 30)) == (False, "tidak ada yang baru")  # sudah jalan setelah 11.45
     assert fs.perlu_jalan(akar, db, selasa(15, 46)) == (True, "pemeriksaan rutin pukul 15.45")
-    minggu = datetime(2026, 10, 25, 12, 0, tzinfo=fs.WIB)  # bukan hari pencatatan
-    assert fs.jadwal_jatuh_tempo(akar, {}, minggu) is None
+    # Minggu: bukan hari pencatatan, tetapi ringkasan harian pagi dan sore tetap dijalankan
+    minggu = lambda j, m: datetime(2026, 10, 25, j, m, tzinfo=fs.WIB)  # noqa: E731
+    assert fs.jadwal_jatuh_tempo(akar, {}, minggu(12, 0)) == "07.30"
+    assert fs.jadwal_jatuh_tempo(akar, {"mulai": minggu(7, 35)}, minggu(12, 0)) is None  # pukul 11.45 tidak berlaku hari Minggu
+    assert fs.jadwal_jatuh_tempo(akar, {"mulai": minggu(7, 35)}, minggu(15, 50)) == "15.45"
+    import json
+    p = akar / "config" / "pengaturan.json"
+    cfg = json.loads(p.read_text(encoding="utf-8"))
+    cfg["notifikasi"]["ringkasan_harian"] = False
+    p.write_text(json.dumps(cfg), encoding="utf-8")
+    assert fs.jadwal_jatuh_tempo(akar, {}, minggu(12, 0)) is None

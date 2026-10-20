@@ -78,6 +78,8 @@ JAM_BERITA = 7  # berita lokal harian mulai pukul 07.00 WIB (bisa diubah di peng
 # Jam pemeriksaan rutin (data baru dari sumber resmi, peringatan, dan notifikasi Telegram). Dijalankan penjaga antrean
 # yang selalu menyala, karena jadwal bawaan GitHub sering terlambat berjam-jam. Bisa diubah di notifikasi.jam_periksa.
 JAM_PERIKSA = "07.30, 11.45, 15.45"
+# Ringkasan harga harian ke Telegram (pagi dan sore), setiap hari termasuk Sabtu dan Minggu (notifikasi.jam_ringkasan).
+JAM_RINGKASAN = "07.30, 15.45"
 
 JENIS_PERINTAH = ("perbarui", "cari_sumber", "berita", "uji_notifikasi")
 
@@ -479,16 +481,20 @@ def jam_periksa(teks: str | None) -> list[tuple[int, int]]:
 
 
 def jadwal_jatuh_tempo(akar: Path, status: dict, sekarang: datetime) -> str | None:
-    """Jam pemeriksaan rutin terakhir hari ini yang sudah lewat tetapi belum diikuti proses apa pun, mis. "11.45"."""
+    """Jam rutin terakhir hari ini yang sudah lewat tetapi belum diikuti proses apa pun, mis. "11.45". Jam pemeriksaan
+    berlaku pada hari pencatatan; jam ringkasan harian (pagi dan sore) berlaku setiap hari."""
     try:
         cfg = json.loads((akar / "config" / "pengaturan.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         cfg = {}
     w = sekarang.astimezone(WIB)
-    if w.weekday() not in cfg.get("hari_pencatatan", [0, 1, 2, 3, 4]):
-        return None
-    lewat = [w.replace(hour=j, minute=m, second=0, microsecond=0)
-             for j, m in jam_periksa(cfg.get("notifikasi", {}).get("jam_periksa", JAM_PERIKSA))]
+    notif = cfg.get("notifikasi", {})
+    jam = []
+    if w.weekday() in cfg.get("hari_pencatatan", [0, 1, 2, 3, 4]):
+        jam += jam_periksa(notif.get("jam_periksa", JAM_PERIKSA))
+    if notif.get("aktif", True) and notif.get("ringkasan_harian", True):
+        jam += jam_periksa(notif.get("jam_ringkasan", JAM_RINGKASAN))
+    lewat = sorted({w.replace(hour=j, minute=m, second=0, microsecond=0) for j, m in jam})
     lewat = [t for t in lewat if t <= w]
     if not lewat:
         return None
