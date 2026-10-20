@@ -376,8 +376,18 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
   Tanpa situs berlogin, isi secret `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID` lalu jalankan **Actions → Uji notifikasi**.
 - **Notifikasi email** (gratis, mis. Gmail): aktifkan verifikasi 2 langkah → buat *App Password* → secret
   `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=465`, `SMTP_USER`, `SMTP_PASSWORD` (App Password), `EMAIL_KE`.
-- Yang dikirim: sinyal aktif keparahan ≥ sedang yang belum pernah dikirim, dan buletin mingguan setelah minggu
-  berakhir. Catatan kiriman di `data/notifikasi/terkirim.json`. Mode demo tidak mengirim notifikasi.
+- Yang dikirim: peringatan aktif (tingkat paling rendahnya diatur di Pengaturan → Notifikasi) yang belum pernah dikirim,
+  dan buletin mingguan setelah minggu berakhir. Catatan kiriman di `data/notifikasi/terkirim.json`. Mode demo tidak
+  mengirim notifikasi.
+- **Bentuk pesan**: judul dan tanggal, lalu peringatan dikelompokkan menurut seberapa penting (*Perlu segera dicek*,
+  *Perlu dipantau*, *Untuk diketahui*). Tiap harga ditulis dengan angka rupiah, misalnya "Sekarang Rp13.400/kg, biasanya
+  Rp12.650/kg". Catatan kelengkapan data (pasar belum mengirim, angka tidak diperbarui) ada di bagian sendiri di bawah.
+  Pesan yang hanya berisi catatan data dikirim tanpa bunyi supaya grup tidak terganggu. Tautan di pesan mengarah ke
+  situs utama (Firebase Hosting).
+- **Kapan dikirim (lebih cepat)**: jadwal bawaan GitHub sering terlambat sampai berjam-jam, jadi pemeriksaan rutin kini
+  dijalankan oleh penjaga antrean yang selalu menyala, tepat pada jam di Pengaturan → Notifikasi → **Jam pemeriksaan
+  rutin** (bawaan 07.30, 11.45, 15.45 WIB pada hari pencatatan). Harga yang dikirim petugas dari situs tetap diproses saat
+  itu juga. Satu putaran pemeriksaan sampai pesan terkirim biasanya 8 sampai 10 menit.
 
 ## 6b. Fitur bantu untuk semua pengguna
 
@@ -391,8 +401,17 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
   AI situs, dan peran lain dijawab dari data saja.
 - **Pencarian cepat** (tombol Cari di bilah atas, atau tekan Ctrl+K atau /). Ketik nama barang, peringatan, atau halaman;
   barang langsung membuka grafiknya di halaman Harga.
-- **Mode Rapat TPID** (tombol "Mode Rapat" di Dasbor TPID, atau lewat pencarian cepat). Layar penuh untuk proyektor atau TV;
-  lima tampilan berganti tiap 12 detik. Panah kiri/kanan untuk pindah, P untuk jeda, Esc untuk keluar.
+- **Mode Videotron** (tombol "Mode Videotron" di Dasbor TPID, atau lewat pencarian cepat; untuk peran TPID, Analis, dan
+  Administrator). Layar penuh bergaya dashboard untuk rapat, TV, atau videotron, tanpa tombol di layar. Tampilan berganti
+  otomatis: ringkasan hari ini, harga semua bahan pokok (dibagi beberapa layar sesuai ukuran layar), pergerakan sebulan,
+  tren 30 hari, harga yang perlu diwaspadai, perkiraan 7 hari, dan menjelang hari raya. Di bawah layar ada teks berjalan
+  berisi semua harga, dan di atas ada jam serta tanggal data. Ukuran huruf menyesuaikan layar (proyektor, TV 4K, layar
+  tegak, sampai ponsel). Data baru masuk sendiri tanpa memuat ulang halaman, jadi layar penuh tidak terputus.
+  Kendali untuk operator: **Esc** atau ketuk dua kali untuk keluar, panah kiri/kanan untuk pindah, spasi untuk jeda,
+  **F** untuk layar penuh lagi.
+  **Untuk videotron yang menyala terus**: masuk dengan akun TPID di komputer videotron, buka alamat situs ditambah
+  `index.html#videotron`, lalu jalankan peramban dalam mode kios (mis. Chrome dengan `--kiosk`). Bila halaman dimuat
+  ulang, mode videotron terbuka lagi sendiri.
 - **Grafik**: tombol + dan − di pojok grafik untuk memperbesar, lalu seret ke kiri atau kanan; ketuk dua kali untuk kembali
   ke semua tanggal. Halaman Harga punya grafik **Bandingkan harga** untuk sampai 4 barang sekaligus.
 - **Pasang aplikasi**: bila peramban mengizinkan, tombol "Pasang aplikasi" muncul di kaki halaman supaya situs bisa dibuka
@@ -452,6 +471,15 @@ di sana Tanya Takar memakai kunci AI situs milik Administrator.
 4. Di tab **Aktif**, peran dan izin bisa diubah atau akun dinonaktifkan. Akun yang ditolak atau nonaktif bisa
    diaktifkan lagi atau dihapus.
 5. Semua tindakan tercatat di **Jejak tindakan admin**. Admin tidak bisa mencabut hak adminnya sendiri.
+
+### Pendaftaran otomatis untuk masyarakat (bila memakai Firebase)
+
+Saat situs disebar ke publik, menyetujui warga satu per satu akan lambat. Di halaman **Pengguna** ada saklar **Setujui
+otomatis pendaftar baru sebagai Masyarakat** (hanya peran Administrator yang bisa mengubahnya). Bila dinyalakan, siapa pun
+yang masuk dengan akun Google (yang emailnya sudah terverifikasi) langsung aktif sebagai **Masyarakat**: bisa melihat
+harga, laporan, dan kamus, tetapi tidak bisa membuka halaman lain. Peran lain (petugas, TPID, analis, admin) tetap hanya
+diberikan Administrator. Pendaftar yang masih menunggu ikut aktif sebagai Masyarakat saat masuk berikutnya. Aturan
+Firestore yang menjaga semua ini, jadi tidak bisa diakali dari peramban. Saklar ini tercatat di jejak tindakan admin.
 
 ### Pengguna aktif, lokasi, dan log aktivitas (bila memakai Firebase)
 

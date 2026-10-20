@@ -1,0 +1,8 @@
+# Takar Pangan 10•21: data hanya bisa dibuka setelah masuk, jadi mesin pencari cukup mengenal halaman depan.
+User-agent: *
+Allow: /index.html
+Allow: /masuk.html
+Allow: /tentang.html
+Disallow: /data/
+Disallow: /pengaturan.html
+Disallow: /pengguna.html

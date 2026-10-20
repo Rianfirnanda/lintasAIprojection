@@ -1,15 +1,21 @@
 {
-  "name": "Takar Pangan 10•21 · Input Harga Pasar BPS Bengkulu Tengah",
-  "short_name": "Input Harga",
-  "description": "Pencatatan harga pasar luring-ke-daring untuk pemantauan harga pangan TPID Kabupaten Bengkulu Tengah.",
-  "start_url": "input.html",
+  "id": "./",
+  "name": "Takar Pangan 10•21 · Harga Pangan Bengkulu Tengah",
+  "short_name": "Takar Pangan",
+  "description": "Harga pangan harian, peringatan, dan perkiraan harga Kabupaten Bengkulu Tengah dari BPS Kabupaten Bengkulu Tengah.",
+  "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#09121f",
   "theme_color": "#09121f",
   "lang": "id",
+  "categories": ["government", "business", "news"],
   "icons": [
     { "src": "assets/ikon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "assets/ikon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Harga hari ini", "short_name": "Harga", "url": "harga.html", "icons": [{ "src": "assets/ikon-192.png", "sizes": "192x192" }] },
+    { "name": "Catat harga pasar (petugas)", "short_name": "Catat harga", "url": "input.html", "icons": [{ "src": "assets/ikon-192.png", "sizes": "192x192" }] }
   ]
 }

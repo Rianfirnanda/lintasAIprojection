@@ -5,15 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Pemantauan Harga Pangan TPID · Takar Pangan 10•21</title>
   <meta name="description" content="Dashboard pemantauan harga pangan berbasis AI dan Big Data dari BPS Kabupaten Bengkulu Tengah untuk TPID.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:site_name" content="Takar Pangan 10•21">
+  <meta property="og:title" content="Dashboard Pemantauan Harga Pangan TPID · Takar Pangan 10•21">
+  <meta property="og:description" content="Dashboard pemantauan harga pangan berbasis AI dan Big Data dari BPS Kabupaten Bengkulu Tengah untuk TPID.">
+  <meta property="og:image" content="assets/ikon-512.png">
   <meta name="theme-color" content="#09121f">
   <link rel="icon" href="assets/ikon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/ikon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preload" href="vendor/font/plus-jakarta-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="vendor/font/plus-jakarta-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/app.css">
   <script src="assets/tema-awal.js"></script>
   <link rel="stylesheet" href="assets/dasbor.css">
-  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-  <script src="vendor/chart.umd.js"></script>
-  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="vendor/chart.umd.js" defer></script>
 </head>
 <body class="halaman-dash">
 <div class="utama tab-beranda-bungkus" id="tab-beranda" hidden></div>
@@ -27,7 +34,7 @@
       <p class="dash-wilayah">Kabupaten Bengkulu Tengah · data untuk pengendalian inflasi daerah</p>
     </div>
     <div class="baris-kontrol">
-      <button type="button" class="tombol tombol-rapat" id="tombol-rapat" title="Layar penuh untuk proyektor atau TV, berganti otomatis">Mode Rapat</button>
+      <button type="button" class="tombol tombol-rapat" id="tombol-rapat" title="Layar penuh untuk rapat, TV, atau videotron. Berganti otomatis, Esc untuk keluar">Mode Videotron</button>
       <div class="dash-periode" id="dash-ikon-kalender"><div><small>Periode data</small><strong id="periode">memuat…</strong></div></div>
     </div>
   </header>
@@ -112,7 +119,7 @@
 </main>
 
 <script type="module">
-import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah, STATUS_SINYAL, tampilkanGalat } from "./assets/app.js";
+import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah, STATUS_SINYAL, tampilkanGalat, muatLeaflet } from "./assets/app.js";
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./assets/grafik.js";
 import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime, selisihHarga, htmlSelisih, tglPendek, LANGKAH_SINYAL, ringkasHariIni } from "./assets/dashboard.js";
 import { bukaRincian, isiSinyal, isiKomoditas, isiBlankSpot, isiKetepatan, isiUptime } from "./assets/rincian.js";
@@ -190,6 +197,11 @@ document.querySelectorAll("[data-ikon]").forEach((e) => { e.innerHTML = ikon(e.d
 const tombolRapat = document.getElementById("tombol-rapat");
 tombolRapat.insertAdjacentHTML("afterbegin", ikon("layar", 18));
 tombolRapat.addEventListener("click", () => import("./assets/rapat.js").then((m) => m.bukaModeRapat()));
+// Untuk layar videotron yang menyala terus: buka index.html#videotron, atau mode ini dibuka lagi otomatis setelah halaman
+// dimuat ulang selama belum ditutup dengan Esc.
+let videotronLanjut = false;
+try { videotronLanjut = sessionStorage.getItem("lbp-videotron") === "1"; } catch { /* abaikan */ }
+if (tampilanTpid && (location.hash === "#videotron" || videotronLanjut)) import("./assets/rapat.js").then((m) => m.bukaModeRapat());
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 20));
 // Harga yang baru dikirim petugas langsung tampil (real-time), sebelum selesai diolah.
 if (meta?.login === "firebase") import("./assets/harga-masuk.js").then((m) => m.pasangHargaMasuk(meta, utama)).catch(() => {});
@@ -507,8 +519,8 @@ if (tampilanTpid) try {
   renderHariRaya(ringkasan.hari_raya);
   renderTindakLanjut(sinyal.sinyal, pasar.pasar);
   renderKaki(meta);
-  renderPeta(pasar.pasar, master, sinyal.sinyal);
   siapkanGrafik(ringkasan.varian, master, model);
+  muatLeaflet().catch(() => null).then(() => renderPeta(pasar.pasar, master, sinyal.sinyal)).catch((e) => console.error(e));
 } catch (e) {
   console.error(e);
   tampilkanGalat(utama, e);

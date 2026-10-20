@@ -28,7 +28,7 @@ async function bangunDaftar(halaman) {
   const isi = halaman.filter((h) => boleh(h.href)).map((h) => ({ jenis: "Halaman", ikon: "dokumen", judul: h.label, sub: h.ket || "", href: h.href, awal: true, bobot: 1 }));
   const perintah = [];
   if (boleh("index.html") && ["tpid", "analis", "admin"].includes(peran)) {
-    perintah.push({ jenis: "Perintah", ikon: "layar", judul: "Mode Rapat TPID", sub: "Layar penuh untuk proyektor, berganti otomatis", kata: "presentasi rapat tpid proyektor",
+    perintah.push({ jenis: "Perintah", ikon: "layar", judul: "Mode Videotron", sub: "Layar penuh untuk rapat, TV, atau videotron, berganti otomatis", kata: "presentasi rapat tpid proyektor videotron layar tv",
       jalankan: () => import("./rapat.js").then((m) => m.bukaModeRapat()), awal: true, bobot: 2 });
   }
   perintah.push({ jenis: "Perintah", ikon: "ai", judul: "Tanya Takar", sub: "Tanya soal harga dengan kalimat biasa", kata: "tanya ai chatbot asisten bantuan",

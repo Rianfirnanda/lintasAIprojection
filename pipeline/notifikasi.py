@@ -63,30 +63,93 @@ def pilih_sinyal(sinyal: list[dict], sudah: dict, cfg: dict) -> list[dict]:
     ]
 
 
-def susun_pesan_sinyal(sinyal: list[dict], url: str, maks: int) -> str:
-    baris = [f"Sinyal harga pangan Kab. Bengkulu Tengah ({len(sinyal)} baru)", ""]
-    for s in sinyal[:maks]:
-        baris.append(f"• [{s['keparahan'].upper()}] {LABEL_JENIS.get(s['jenis'], s['jenis'])}: {s['judul']}")
-        if s.get("narasi"):
-            baris.append(f"  {s['narasi'][:280]}")
-        if s.get("url_issue"):
-            baris.append(f"  Tindak lanjut: {s['url_issue']}")
-    if len(sinyal) > maks:
-        baris.append(f"… dan {len(sinyal) - maks} sinyal lainnya.")
-    baris += ["", "Sinyal wajib diverifikasi sebelum menjadi dasar keputusan."]
+HARI = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
+BULAN = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+# Peringatan tentang kelengkapan data (bukan harga) dikumpulkan di bagian sendiri, di bawah peringatan harga.
+JENIS_DATA = ("data_terlambat", "data_beku", "drift")
+TINGKAT_HARGA = [("tinggi", "\U0001F534 Perlu segera dicek"), ("sedang", "\U0001F7E0 Perlu dipantau"), ("rendah", "\U0001F7E1 Untuk diketahui")]
+
+
+def _esc(teks) -> str:
+    return str(teks).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _rp(x) -> str:
+    return "Rp" + f"{round(float(x)):,}".replace(",", ".")
+
+
+def _tanggal(hari: date | None) -> str:
+    return f"{HARI[hari.weekday()]}, {hari.day} {BULAN[hari.month - 1]} {hari.year}" if hari else ""
+
+
+def tanpa_tag(html: str) -> str:
+    """Versi teks biasa (untuk email) dari pesan HTML Telegram."""
+    import re
+    teks = re.sub(r'<a href="([^"]+)">([^<]*)</a>', r"\2: \1", html)
+    teks = re.sub(r"</?(b|i|u)>", "", teks)
+    return teks.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
+
+
+def _angka_sinyal(s: dict, satuan: str) -> str:
+    """Satu kalimat angka yang mudah dibaca: harga sekarang dibanding harga biasa atau perkiraannya."""
+    per = f"/{satuan}" if satuan else ""
+    kini = s.get("nilai_aktual")
+    if not kini:
+        return ""
+    if s.get("baseline"):
+        beda = kini - s["baseline"]
+        arah = "lebih mahal" if beda > 0 else "lebih murah"
+        return f"Sekarang {_rp(kini)}{per}, biasanya {_rp(s['baseline'])}{per} ({_rp(abs(beda))} {arah})."
+    h7 = (s.get("proyeksi_h7") or {}).get("prediksi")
+    if h7:
+        return f"Sekarang {_rp(kini)}{per}, perkiraan 7 hari lagi sekitar {_rp(h7)}{per}."
+    return f"Harga sekarang {_rp(kini)}{per}."
+
+
+def susun_pesan_sinyal(sinyal: list[dict], url: str, maks: int, satuan: dict | None = None, hari_ini: date | None = None) -> str:
+    """Pesan peringatan dalam HTML Telegram: dikelompokkan menurut seberapa penting, angka dalam rupiah, bahasa sehari-hari."""
+    satuan = satuan or {}
+    harga = [s for s in sinyal if s["jenis"] not in JENIS_DATA]
+    data = [s for s in sinyal if s["jenis"] in JENIS_DATA]
+    baris = ["<b>\u26A0\uFE0F Peringatan Harga Pangan</b>", f"Kabupaten Bengkulu Tengah{' · ' + _tanggal(hari_ini) if hari_ini else ''}", ""]
+    if harga:
+        baris.append(f"Ada <b>{len(harga)} harga</b> yang bergerak di luar kebiasaan." if len(harga) > 1 else
+                     "Ada <b>1 harga</b> yang bergerak di luar kebiasaan.")
+    sisa = maks
+    for tingkat, judul in TINGKAT_HARGA:
+        kelompok = [s for s in harga if s["keparahan"] == tingkat]
+        if not kelompok or sisa <= 0:
+            continue
+        baris += ["", f"<b>{judul} ({len(kelompok)})</b>"]
+        for i, s in enumerate(kelompok[:sisa], 1):
+            baris.append(f"{i}. {_esc(s['judul'])}")
+            angka = _angka_sinyal(s, satuan.get(s.get("kode_varian"), ""))
+            if angka:
+                baris.append(f"    {angka}")
+            if s.get("narasi"):
+                baris.append(f"    <i>{_esc(s['narasi'][:220])}</i>")
+        sisa -= len(kelompok[:sisa])
+    if data and sisa > 0:
+        baris += ["", f"<b>\U0001F4CB Catatan untuk petugas data ({len(data)})</b>"]
+        baris += [f"\u2022 {_esc(s['judul'])}" for s in data[:sisa]]
+        sisa -= len(data[:sisa])
+    lebih = len(sinyal) - (maks - max(sisa, 0))
+    if lebih > 0:
+        baris.append(f"… dan {lebih} peringatan lainnya di dashboard.")
+    baris += ["", "<i>Tanda ini dibuat otomatis dari data harga. Mohon dicek ke pasar sebelum dijadikan dasar keputusan.</i>"]
     if url:
-        baris.append(f"Dashboard: {url}sinyal.html")
+        baris.append(f'\U0001F449 <a href="{url}sinyal.html">Lihat semua peringatan</a>')
     return "\n".join(baris)
 
 
 def susun_pesan_buletin(periode: dict, url: str) -> str:
-    baris = [f"{periode['judul']}, {periode['label']}", ""]
-    baris += [f"• {r}" for r in periode["ringkasan"]]
+    baris = [f"<b>\U0001F4F0 {_esc(periode['judul'])}</b>", _esc(periode["label"]), ""]
+    baris += [f"\u2022 {_esc(r)}" for r in periode["ringkasan"]]
     if periode.get("rekomendasi"):
-        baris += ["", "Rekomendasi (bahan pertimbangan):"]
-        baris += [f"{i}. {r}" for i, r in enumerate(periode["rekomendasi"][:5], 1)]
+        baris += ["", "<b>Saran tindak lanjut</b> (bahan pertimbangan):"]
+        baris += [f"{i}. {_esc(r)}" for i, r in enumerate(periode["rekomendasi"][:5], 1)]
     if url:
-        baris += ["", f"Buletin lengkap (bisa dicetak/PDF): {url}laporan.html"]
+        baris += ["", f'\U0001F449 <a href="{url}laporan.html">Baca buletin lengkap</a> (bisa dicetak atau disimpan PDF)']
     return "\n".join(baris)
 
 
@@ -133,10 +196,36 @@ def panggil_telegram(token: str, metode: str, data: dict | None = None, batas_wa
     return hasil.get("result")
 
 
-def kirim_telegram(token: str, chat_id: str, teks: str) -> None:
-    for i in range(0, len(teks), BATAS_TELEGRAM):
-        panggil_telegram(token, "sendMessage", {"chat_id": chat_id, "text": teks[i:i + BATAS_TELEGRAM],
-                                                 "disable_web_page_preview": True})
+def potong_pesan(teks: str, batas: int = BATAS_TELEGRAM) -> list[str]:
+    """Bagi pesan panjang di batas baris (bukan di tengah kata atau tag HTML)."""
+    bagian, kini = [], ""
+    for baris in teks.split("\n"):
+        while len(baris) > batas:  # satu baris sangat panjang: potong paksa
+            if kini:
+                bagian.append(kini)
+                kini = ""
+            bagian.append(baris[:batas])
+            baris = baris[batas:]
+        if len(kini) + len(baris) + 1 > batas:
+            bagian.append(kini)
+            kini = baris
+        else:
+            kini = f"{kini}\n{baris}" if kini else baris
+    if kini:
+        bagian.append(kini)
+    return bagian
+
+
+def kirim_telegram(token: str, chat_id: str, teks: str, html: bool = False, senyap: bool = False) -> None:
+    """Kirim pesan (dipecah bila lebih dari batas Telegram). `html` memakai format tebal/miring/tautan;
+    `senyap` mengirim tanpa bunyi (untuk catatan yang tidak mendesak)."""
+    for bagian in potong_pesan(teks):
+        data = {"chat_id": chat_id, "text": bagian, "disable_web_page_preview": True}
+        if html:
+            data["parse_mode"] = "HTML"
+        if senyap:
+            data["disable_notification"] = True
+        panggil_telegram(token, "sendMessage", data)
 
 
 def obrolan_bot(token: str, panggil=panggil_telegram) -> list[dict]:
@@ -255,15 +344,18 @@ def kanal_tersedia(env: dict, ke_pengguna: bool = True) -> list[str]:
     return kanal
 
 
-def _kirim(kanal: list[str], env: dict, subjek: str, teks: str, pengirim: dict | None, ke_pengguna: bool = True) -> list[str]:
+def _kirim(kanal: list[str], env: dict, subjek: str, html: str, pengirim: dict | None, ke_pengguna: bool = True,
+           senyap: bool = False) -> list[str]:
+    """`html` dikirim apa adanya ke Telegram; email menerima versi teks biasanya."""
     pengirim = pengirim or {}
     berhasil = []
     for k in kanal:
         try:
             if k == "telegram":
-                (pengirim.get("telegram") or kirim_telegram)(env["TELEGRAM_BOT_TOKEN"], env["TELEGRAM_CHAT_ID"], teks)
+                kirim = pengirim.get("telegram") or (lambda t, c, x: kirim_telegram(t, c, x, html=True, senyap=senyap))
+                kirim(env["TELEGRAM_BOT_TOKEN"], env["TELEGRAM_CHAT_ID"], html)
             else:
-                (pengirim.get("email") or kirim_email)(env, subjek, teks, penerima_email(env, ke_pengguna))
+                (pengirim.get("email") or kirim_email)(env, subjek, tanpa_tag(html), penerima_email(env, ke_pengguna))
             berhasil.append(k)
         except Exception as e:  # jangan gagalkan pipeline karena kanal notifikasi bermasalah
             log.warning("gagal mengirim notifikasi lewat %s: %s", k, e)
@@ -290,8 +382,16 @@ def jalankan(konf, sinyal: list[dict], laporan_mingguan: list[dict], url_dashboa
     berubah = False
     baru = pilih_sinyal(sinyal, status["sinyal"], cfg)
     if baru:
-        teks = susun_pesan_sinyal(baru, url_dashboard, cfg["maks_sinyal_per_pesan"])
-        ok = _kirim(kanal, env, f"[Sinyal harga] {len(baru)} sinyal baru di Kab. Bengkulu Tengah", teks, pengirim, ke_pengguna)
+        # Yang paling penting di atas; peringatan harga sebelum catatan kelengkapan data.
+        baru.sort(key=lambda s: (s["jenis"] in JENIS_DATA, -TINGKAT[s["keparahan"]]))
+        satuan = {k: getattr(v, "satuan", "") for k, v in getattr(konf, "varian", {}).items()}
+        teks = susun_pesan_sinyal(baru, url_dashboard, cfg["maks_sinyal_per_pesan"], satuan, konf.hari_ini)
+        # Hanya catatan data (tanpa peringatan harga sedang atau tinggi): kirim tanpa bunyi supaya grup tidak terganggu.
+        senyap = not any(s["jenis"] not in JENIS_DATA and TINGKAT[s["keparahan"]] >= 1 for s in baru)
+        jumlah_harga = sum(s["jenis"] not in JENIS_DATA for s in baru)
+        subjek = (f"[Peringatan harga] {jumlah_harga} harga perlu dicek di Kab. Bengkulu Tengah" if jumlah_harga
+                  else f"[Catatan data] {len(baru)} catatan kelengkapan data harga Kab. Bengkulu Tengah")
+        ok = _kirim(kanal, env, subjek, teks, pengirim, ke_pengguna, senyap=senyap)
         if ok:
             for s in baru:
                 status["sinyal"][s["id"]] = konf.hari_ini.isoformat()

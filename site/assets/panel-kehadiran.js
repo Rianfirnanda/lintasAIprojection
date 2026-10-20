@@ -60,7 +60,10 @@ export async function pasangPanelKehadiran(el, meta) {
   }
 
   function gambarPeta(baris) {
-    if (!window.L) { petaEl.innerHTML = `<p class="kosong">Peta belum bisa dimuat.</p>`; return; }
+    if (!window.L) {
+      import("./app.js").then((m) => m.muatLeaflet()).then(() => gambarPeta(baris)).catch(() => { petaEl.innerHTML = `<p class="kosong">Peta belum bisa dimuat.</p>`; });
+      return;
+    }
     if (!peta) {
       peta = L.map(petaEl, { scrollWheelZoom: false }).setView(PUSAT, 9);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© kontributor OpenStreetMap" }).addTo(peta);

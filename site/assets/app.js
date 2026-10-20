@@ -33,6 +33,33 @@ let metaCache = null;
 const BERKAS_PUBLIK = new Set(["meta.json", "firebase.json", "pengguna.json", "pengaturan.json", "skema_pengaturan.json", "master.json", "ai_prompt.json"]);
 const modeFirebase = () => metaCache?.login === "firebase";
 
+/* Simpanan data di perangkat (Cache Storage), per akun dan per versi data (meta.dibuat). Membuka halaman berikutnya
+ * tidak perlu membaca Firestore lagi selama datanya belum berganti, jadi halaman tampil jauh lebih cepat. Dihapus saat keluar. */
+const AWALAN_SIMPANAN = "lbp-data-";
+const namaSimpanan = () => `${AWALAN_SIMPANAN}${sesi()?.uid || sesi()?.id || "umum"}`;
+const kunciSimpanan = (nama) => `/__lbp-data/${encodeURIComponent(nama)}`;
+async function bacaSimpanan(nama) {
+  try {
+    if (!("caches" in window)) return null;
+    const r = await (await caches.open(namaSimpanan())).match(kunciSimpanan(nama));
+    return r ? { versi: r.headers.get("x-versi") || "", teks: await r.text() } : null;
+  } catch { return null; }
+}
+async function tulisSimpanan(nama, versi, teks) {
+  try {
+    if (!("caches" in window) || !versi) return;
+    await (await caches.open(namaSimpanan())).put(kunciSimpanan(nama),
+      new Response(teks, { headers: { "content-type": "application/json", "x-versi": versi } }));
+  } catch { /* simpanan hanya mempercepat; gagal menyimpan tidak apa-apa */ }
+}
+/** Hapus semua data tersimpan di perangkat (dipanggil saat keluar). */
+export async function hapusSimpananData() {
+  try {
+    if (!("caches" in window)) return;
+    for (const k of await caches.keys()) if (k.startsWith(AWALAN_SIMPANAN)) await caches.delete(k);
+  } catch { /* abaikan */ }
+}
+
 async function teksDariFirestore(nama) {
   try {
     const fk = await import("./firebase-klien.js");
@@ -72,27 +99,64 @@ export async function muatTeks(nama) {
 }
 
 export async function muatJSON(nama) {
-  // Halaman kadang memuat data bersamaan dengan pasangKerangka; mode situs (login Firebase atau bukan) perlu diketahui dulu.
-  if (!metaCache && nama !== "meta.json") await muatMeta().catch(() => null);
+  // Halaman kadang memuat data bersamaan dengan pasangKerangka; mode situs dan versi data (meta) harus pasti dulu, supaya
+  // simpanan data di perangkat tidak dipakai dengan versi yang keliru.
+  if (nama !== "meta.json") await muatMeta().catch(() => null);
   if (modeFirebase() && !BERKAS_PUBLIK.has(nama)) {
+    const versi = String(metaCache?.dibuat || "");
+    const simpan = versi && sesi()?.sumber === "firebase" ? await bacaSimpanan(nama) : null;
+    if (simpan && simpan.versi === versi) return JSON.parse(simpan.teks);
     const t = await teksDariFirestore(nama);
-    if (t !== null) return JSON.parse(t);
+    if (t !== null) {
+      tulisSimpanan(nama, versi, t);
+      return JSON.parse(t);
+    }
   }
   return (await muatBerkas(nama)).json();
 }
 
+/** Muat pustaka peta (Leaflet) hanya saat peta benar-benar ditampilkan, supaya halaman lain tidak ikut menanggung bebannya. */
+let janjiLeaflet = null;
+export function muatLeaflet() {
+  if (window.L) return Promise.resolve(window.L);
+  janjiLeaflet ||= new Promise((selesai, gagal) => {
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "vendor/leaflet/leaflet.css";
+    document.head.append(css);
+    const s = document.createElement("script");
+    s.src = "vendor/leaflet/leaflet.js";
+    s.onload = () => selesai(window.L);
+    s.onerror = () => { janjiLeaflet = null; gagal(new Error("pustaka peta tidak termuat")); };
+    document.head.append(s);
+  });
+  return janjiLeaflet;
+}
+
 let janjiMeta = null;
+/** Catat meta data terbaru (dipakai Mode Videotron yang memperbarui isinya tanpa memuat ulang halaman). */
+export function catatMetaBaru(baru) {
+  if (baru?.dibuat && String(baru.dibuat) > String(metaCache?.dibuat || "")) metaCache = { ...(metaCache || {}), ...baru, login: metaCache?.login ?? baru.login };
+}
+
 export function muatMeta() {
   janjiMeta ||= (async () => {
     const m = await (await muatBerkas("meta.json")).json();
     metaCache = m;
     // meta.json di Firestore selalu yang terbaru (ditulis mesin begitu data baru siap, sebelum situs terbit ulang).
+    // Bila meta yang tersimpan di perangkat sudah sama baru dengan yang di hosting, pakai itu langsung supaya halaman
+    // tidak menunggu Firebase; pantauDataBaru tetap memeriksa Firestore dan memuat ulang bila ada data lebih baru.
     if (m.login === "firebase" && sesi()?.sumber === "firebase") {
-      const t = await teksDariFirestore("meta.json");
-      if (t !== null) {
-        const baru = JSON.parse(t);
-        if (String(baru.dibuat || "") > String(m.dibuat || "")) metaCache = { ...m, ...baru };
+      const simpan = await bacaSimpanan("meta.json");
+      let baru = null;
+      try { baru = simpan ? JSON.parse(simpan.teks) : null; } catch { baru = null; }
+      if (!baru || String(baru.dibuat || "") < String(m.dibuat || "")) {
+        const t = await teksDariFirestore("meta.json");
+        baru = t !== null ? JSON.parse(t) : null;
+        if (baru) tulisSimpanan("meta.json", String(baru.dibuat || ""), t);
       }
+      // Cara masuk situs (login) selalu mengikuti meta di hosting, yang terbit bersama halaman ini.
+      if (baru && String(baru.dibuat || "") > String(m.dibuat || "")) metaCache = { ...m, ...baru, login: m.login };
     }
     return metaCache;
   })();
@@ -274,6 +338,11 @@ async function ikonUI(nama, ukuran) {
 
 /** Memasang bilah atas dan kaki halaman, memeriksa hak akses, lalu mengembalikan data meta. */
 export async function pasangKerangka(aktif) {
+  // Aplikasi terpasang dibuka petugas tanpa sinyal (pasar blank spot): langsung ke formulir Catat Harga yang bisa luring.
+  if (aktif === "index.html" && navigator.onLine === false && sesi()?.peran === "petugas") {
+    location.replace("input.html");
+    return tundaSelamanya();
+  }
   // Situs dengan login Google: semua orang, termasuk masyarakat, wajib masuk dulu. Sebelum masuk, yang tampil hanya
   // halaman Masuk, tanpa menu.
   let wajibMasuk = false;
@@ -660,11 +729,20 @@ async function pantauDataBaru(meta) {
     if (!(await fk.penggunaKini())) return;
     const { fb, db } = await fk.firebaseSiap();
     let ditawarkan = false;
-    fb.onSnapshot(fb.doc(db, "lbp_data", "meta.json"), (d) => {
+    fb.onSnapshot(fb.doc(db, "lbp_data", "meta.json"), async (d) => {
       if (!d.exists()) return;
       let baru;
       try { baru = JSON.parse(d.data().isi); } catch { return; }
       if (!baru.dibuat || String(baru.dibuat) <= String(meta.dibuat)) return;
+      // Simpan dulu (ditunggu) sebelum memuat ulang, supaya halaman berikutnya memakai versi data yang baru.
+      await tulisSimpanan("meta.json", String(baru.dibuat), d.data().isi);
+      // Mode Videotron memperbarui isinya sendiri, supaya layar penuh tidak terputus oleh muat ulang.
+      if (document.querySelector(".videotron")) {
+        catatMetaBaru(baru);
+        meta = { ...meta, dibuat: baru.dibuat };
+        window.dispatchEvent(new CustomEvent("lbp:data-baru", { detail: baru }));
+        return;
+      }
       const muatUlang = () => {
         try { sessionStorage.setItem(KUNCI_GULIR, JSON.stringify({ url: location.href, y: scrollY })); } catch { /* abaikan */ }
         location.reload();

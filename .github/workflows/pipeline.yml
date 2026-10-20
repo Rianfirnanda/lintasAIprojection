@@ -173,6 +173,9 @@ jobs:
           EMAIL_KE: ${{ secrets.EMAIL_KE }}
           EMAIL_DARI: ${{ secrets.EMAIL_DARI }}
           FIREBASE_WEB_CONFIG: ${{ secrets.FIREBASE_WEB_CONFIG }}
+          # Tautan di pesan Telegram/email mengarah ke situs utama (Firebase Hosting), bukan GitHub Pages.
+          URL_DASHBOARD: ${{ vars.URL_DASHBOARD }}
+          FIREBASE_HOSTING_SITE: ${{ secrets.FIREBASE_HOSTING_SITE }}
         run: python -m pipeline jalankan --keluaran site/data ${MODE_DEMO:+--demo "$MODE_DEMO"}
 
       # Situs dengan login Firebase membaca data dashboard langsung dari Firestore (lbp_data): langsung terlihat begitu
@@ -227,6 +230,10 @@ jobs:
           python -m pipeline firestore-lapor --hasil "${{ job.status }}" --url "$URL_PROSES" \
             --pesan "${{ steps.tarik.outcome == 'failure' && 'Kiriman dari situs gagal diambil. Lihat log proses.' || '' }}"
           rm -f "$RUNNER_TEMP/akun-layanan.json"
+
+      # Tiap terbitan memakai nama cache baru di service worker, supaya pengunjung langsung mendapat tampilan terbaru.
+      - name: Tandai versi cache situs
+        run: sed -i -E "s/lintas-benteng-v[0-9]+/lintas-benteng-${GITHUB_SHA::10}/" site/sw.js
 
       - uses: actions/configure-pages@v5
 
@@ -317,6 +324,8 @@ jobs:
       - name: Terbitkan ke Firebase Hosting
         if: steps.cek.outputs.siap == 'ya'
         run: |
+          # Gambar pratinjau saat tautan dibagikan (WhatsApp, Facebook) harus berupa alamat lengkap.
+          sed -i "s#<meta property=\"og:image\" content=\"assets/#<meta property=\"og:image\" content=\"https://${FIREBASE_HOSTING_SITE}.web.app/assets/#" site/*.html
           npx --yes "$FIREBASE_TOOLS" target:apply hosting lbp "$FIREBASE_HOSTING_SITE" --project "$FIREBASE_PROYEK"
           npx --yes "$FIREBASE_TOOLS" deploy --only hosting:lbp --project "$FIREBASE_PROYEK" --non-interactive --message "commit ${GITHUB_SHA::7}"
 

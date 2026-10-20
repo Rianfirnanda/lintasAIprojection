@@ -75,6 +75,9 @@ KIRIMAN_SEGERA = ("lbp_validasi", "lbp_tindak_lanjut", "lbp_persetujuan_model", 
 WIB = timezone(timedelta(hours=7))
 JAM_AI_HARIAN = 8  # AI Data Finder harian mulai pukul 08.00 WIB
 JAM_BERITA = 7  # berita lokal harian mulai pukul 07.00 WIB (bisa diubah di pengaturan berita.jam_mulai)
+# Jam pemeriksaan rutin (data baru dari sumber resmi, peringatan, dan notifikasi Telegram). Dijalankan penjaga antrean
+# yang selalu menyala, karena jadwal bawaan GitHub sering terlambat berjam-jam. Bisa diubah di notifikasi.jam_periksa.
+JAM_PERIKSA = "07.30, 11.45, 15.45"
 
 JENIS_PERINTAH = ("perbarui", "cari_sumber", "berita", "uji_notifikasi")
 
@@ -465,6 +468,35 @@ def tulis_adopsi(akar: Path, data: dict) -> bool:
     return True
 
 
+def jam_periksa(teks: str | None) -> list[tuple[int, int]]:
+    """"07.30, 11.45" -> [(7, 30), (11, 45)]. Isian yang salah dilewati."""
+    hasil = []
+    for bagian in re.split(r"[,;\s]+", teks or ""):
+        m = re.fullmatch(r"(\d{1,2})[.:](\d{2})", bagian.strip())
+        if m and int(m[1]) < 24 and int(m[2]) < 60:
+            hasil.append((int(m[1]), int(m[2])))
+    return sorted(set(hasil))
+
+
+def jadwal_jatuh_tempo(akar: Path, status: dict, sekarang: datetime) -> str | None:
+    """Jam pemeriksaan rutin terakhir hari ini yang sudah lewat tetapi belum diikuti proses apa pun, mis. "11.45"."""
+    try:
+        cfg = json.loads((akar / "config" / "pengaturan.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        cfg = {}
+    w = sekarang.astimezone(WIB)
+    if w.weekday() not in cfg.get("hari_pencatatan", [0, 1, 2, 3, 4]):
+        return None
+    lewat = [w.replace(hour=j, minute=m, second=0, microsecond=0)
+             for j, m in jam_periksa(cfg.get("notifikasi", {}).get("jam_periksa", JAM_PERIKSA))]
+    lewat = [t for t in lewat if t <= w]
+    if not lewat:
+        return None
+    terakhir = lewat[-1]
+    mulai = _waktu(status.get("mulai"))
+    return None if mulai and mulai >= terakhir else terakhir.strftime("%H.%M")
+
+
 def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harga_menit: int = 0) -> tuple[bool, str]:
     """Untuk pemeriksa berkala: apakah ada yang perlu diproses sekarang?
 
@@ -492,6 +524,9 @@ def perlu_jalan(akar: Path, db=None, sekarang: datetime | None = None, jeda_harg
         return True, "AI Data Finder harian"
     if berita_jatuh_tempo(akar, db, sekarang):
         return True, "berita lokal harian"
+    jadwal = jadwal_jatuh_tempo(akar, status, sekarang)
+    if jadwal:
+        return True, f"pemeriksaan rutin pukul {jadwal}"
     if any(_baru_sejak(db, k, _waktu(tanda.get(k)), batas=1) for k in ("lbp_harga", "lbp_kunjungan")):
         selesai = _waktu(status.get("selesai"))
         if selesai and sekarang - selesai < timedelta(minutes=jeda_harga_menit):

@@ -56,7 +56,43 @@ def test_kanal_email_terdeteksi():
 
 def test_pesan_dipotong_dan_dibatasi():
     teks = notifikasi.susun_pesan_sinyal([_s(str(i)) for i in range(15)], "", 10)
-    assert "… dan 5 sinyal lainnya." in teks
+    assert "… dan 5 peringatan lainnya di dashboard." in teks
+
+
+def test_pesan_mudah_dibaca_dikelompokkan_dan_berangka_rupiah():
+    from datetime import date
+    sinyal = [
+        {**_s("a"), "judul": "Harga Beras naik 6% dari harga normal", "nilai_aktual": 13400, "baseline": 12650, "kode_varian": "BRS"},
+        {**_s("b", keparahan="sedang", jenis="proyeksi_naik"), "nilai_aktual": 80000, "proyeksi_h7": {"prediksi": 89600}, "kode_varian": "CRW"},
+        {**_s("c", jenis="data_terlambat"), "judul": "Data Pasar A belum masuk 5 hari kerja"},
+        {**_s("d"), "judul": "Harga <Telur> & susu", "narasi": ""},
+    ]
+    h = notifikasi.susun_pesan_sinyal(sinyal, "https://situs.web.app/", 10, {"BRS": "kg", "CRW": "kg"}, date(2026, 10, 20))
+    assert "Selasa, 20 Oktober 2026" in h and "Ada <b>3 harga</b>" in h
+    assert h.index("Perlu segera dicek (2)") < h.index("Perlu dipantau (1)") < h.index("Catatan untuk petugas data (1)")
+    assert "Sekarang Rp13.400/kg, biasanya Rp12.650/kg (Rp750 lebih mahal)." in h
+    assert "perkiraan 7 hari lagi sekitar Rp89.600/kg" in h
+    assert "Harga &lt;Telur&gt; &amp; susu" in h  # aman untuk mode HTML Telegram
+    assert '<a href="https://situs.web.app/sinyal.html">' in h
+    teks = notifikasi.tanpa_tag(h)
+    assert "<b>" not in teks and "Harga <Telur> & susu" in teks and "https://situs.web.app/sinyal.html" in teks
+
+
+def test_hanya_catatan_data_dikirim_tanpa_bunyi(konf, akar_sementara, monkeypatch):
+    panggilan = []
+    monkeypatch.setattr(notifikasi, "panggil_telegram", lambda token, metode, data=None, batas_waktu=30: panggilan.append(data))
+    notifikasi.jalankan(konf, [_s("x", jenis="data_terlambat")], [], "", False, env=ENV_TG)
+    assert panggilan[0]["parse_mode"] == "HTML" and panggilan[0]["disable_notification"] is True
+    panggilan.clear()
+    notifikasi.jalankan(konf, [_s("y")], [], "", False, env=ENV_TG)
+    assert "disable_notification" not in panggilan[0]
+
+
+def test_pesan_panjang_dipecah_di_batas_baris():
+    teks = "\n".join(f"<b>baris {i}</b> " + "x" * 90 for i in range(100))
+    bagian = notifikasi.potong_pesan(teks, 1000)
+    assert all(len(b) <= 1000 for b in bagian) and "\n".join(bagian) == teks
+    assert all(b.count("<b>") == b.count("</b>") for b in bagian)
 
 
 def test_email_ke_semua_pengguna_terdaftar_tanpa_dobel():
