@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-10-19T07:07:02+07:00",
+ "diperbarui": "2026-10-20T07:10:58+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-20",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Berdasarkan laporan berita, harga cabai merah di wilayah Bengkulu dilaporkan masih tinggi. Namun, isi berita tidak dapat dibaca secara otomatis sehingga informasi mengenai kondisi pasokan dan besaran dampak harga tidak jelas. Berita ini juga tidak menyebutkan Kabupaten Bengkulu Tengah secara spesifik. Oleh karena itu, perkembangan harga dan pasokan cabai merah di pasar lokal Bengkulu Tengah tetap perlu dipantau secara langsung.",
+   "poin": [
+    "Harga cabai merah di wilayah Bengkulu masih tinggi berdasarkan judul berita RRI.co.id.",
+    "Informasi sangat terbatas karena isi berita tidak dapat dibaca otomatis dan dampak harga tidak jelas.",
+    "Kabupaten Bengkulu Tengah tidak disebutkan secara spesifik dalam berita tersebut."
+   ],
+   "perlu_dipantau": [
+    "Harga cabai merah di wilayah Bengkulu Tengah"
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-19",
    "metode": "ekstraktif",
@@ -155,6 +170,39 @@
   }
  ],
  "berita": [
+  {
+   "id": "b5ffdfba04b0",
+   "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPQzhvZ2tmMjg1SF9GMW13b21FQUNGZnpMazNVLW1WaHM5SEZRVl9lSjhBOHIxd18xSUdyQjhvbGFadm9QeEhfeThiRXQyRDhlVDBZNGt5OENLbFZYSUFvS1JId29xaTd1NkIxdDFxUVJZdUxseHBucGdVQl9pWUdtdlk5XzdpSm9EY3d0aWpkaw?oc=5",
+   "judul": "Harga Cabai Merah di Bengkulu Masih Tinggi",
+   "sumber": "RRI.co.id",
+   "tanggal": "2026-10-18",
+   "diakses": "2026-10-20T07:10:58+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "6bf247a9e51e",
    "url": "https://bengkulu.antaranews.com/berita/480129/tips-belanja-cabai-tetap-hemat-saat-harga-mengalami-kenaikan",
@@ -2570,13 +2618,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 176,
-  "setelah_duplikat": 153,
-  "berita_baru": 0,
-  "total_arsip": 30,
+  "hasil_pencarian": 171,
+  "setelah_duplikat": 146,
+  "berita_baru": 1,
+  "total_arsip": 31,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
+  "isi_tidak_terbaca": 1,
   "penyedia_ai": "",
   "model_ai": ""
  },
