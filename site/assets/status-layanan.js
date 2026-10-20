@@ -2,6 +2,7 @@
 // langsung: jaringan tiap 30 detik, layanan tiap menit, dan seketika saat internet putus atau tersambung lagi.
 // Tidak ada data yang dikirim ke mana pun; yang dicek hanya apakah alamat layanan bisa dijangkau.
 import { esc, waktu } from "./app.js";
+import { peranAktif } from "./akses.js";
 
 const JEDA_JARINGAN = 30000;
 const JEDA_LAYANAN = 60000;
@@ -159,8 +160,11 @@ export function pasangStatusLayanan(wadah, { meta, firebase = false, masuk = fal
     gambar();
   }
 
-  // Bila sudah masuk: status mesin dan sambungan basis data dibaca langsung dari Firestore (lbp_status/pipeline).
-  if (firebase && masuk) {
+  // Bila sudah masuk sebagai petugas data, analis, TPID, atau admin: status mesin dan sambungan basis data dibaca langsung
+  // dari Firestore (lbp_status/pipeline). Peran Masyarakat dan Petugas Lapangan memakai pemeriksaan ringan saja, supaya
+  // kuota baca Firestore hemat saat situs ramai.
+  const peranStaf = ["operator", "analis", "tpid", "admin"].includes(peranAktif());
+  if (firebase && masuk && peranStaf) {
     import("./firebase-klien.js").then(({ firebaseSiap }) => firebaseSiap()).then(({ fb, db }) => {
       fb.onSnapshot(fb.doc(db, "lbp_status", "pipeline"), { includeMetadataChanges: true }, (d) => {
         lewatSnapshot = true;

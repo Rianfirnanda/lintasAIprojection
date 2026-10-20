@@ -3,7 +3,7 @@
 // { perluAi: true } dan tampilan (tanya.js) memutuskan apakah AI boleh dipakai.
 //
 // Hasil: { baris: [teks], tautan: [{ href, label }], saran: [pertanyaan lanjutan], perluAi, niat }
-import { selisihHarga, ringkasHariIni } from "./selisih.js";
+import { selisihHarga, ringkasHariIni, bandingPerkiraan } from "./selisih.js";
 
 const rp = (x) => `Rp${Math.round(x).toLocaleString("id-ID")}`;
 const persen = (x, d = 1) => `${x > 0 ? "+" : ""}${Number(x).toLocaleString("id-ID", { minimumFractionDigits: d, maximumFractionDigits: d })}%`;
@@ -143,9 +143,11 @@ export async function jawab(pertanyaan, data, muatSeri = null) {
         p = seri?.proyeksi?.[hari - 1] || seri?.proyeksi?.[seri.proyeksi.length - 1] || null;
       }
       if (!p) { baris.push(`${x.nama}: perkiraan ${hari} hari belum tersedia.`); continue; }
-      const beda = p.prediksi - x.harga_terakhir;
-      baris.push(`${x.nama}: sekitar ${rp(p.prediksi)} per ${x.satuan} dalam ${hari} hari (sekarang ${rp(x.harga_terakhir)}${beda ? `, ${beda > 0 ? "naik" : "turun"} ${rp(Math.abs(beda))}` : ", tetap"}).` +
-        ` Kisarannya ${rp(p.bawah)} sampai ${rp(p.atas)}.`);
+      const k = bandingPerkiraan(x.harga_terakhir, p);
+      const kisaran = Math.round(p.bawah) === Math.round(p.atas) ? "" : ` Kisarannya ${rp(p.bawah)} sampai ${rp(p.atas)}.`;
+      baris.push(k?.tetap
+        ? `${x.nama}: dalam ${hari} hari diperkirakan tetap sekitar ${rp(x.harga_terakhir)} per ${x.satuan}.${kisaran}`
+        : `${x.nama}: sekitar ${rp(p.prediksi)} per ${x.satuan} dalam ${hari} hari (sekarang ${rp(x.harga_terakhir)}, ${k.selisih > 0 ? "naik" : "turun"} ${rp(Math.abs(k.selisih))}).${kisaran}`);
     }
     baris.push("Perkiraan bukan angka resmi; harga sebenarnya biasanya jatuh di dalam kisaran itu.");
     return hasil("perkiraan", baris, barang.slice(0, 2).map(tautanBarang), hari === 7 ? [`Perkiraan harga ${barang[0].nama} 30 hari`] : []);
@@ -198,7 +200,7 @@ export async function jawab(pertanyaan, data, muatSeri = null) {
 export function konteksAi(data) {
   const v = data.ringkasan?.varian || [];
   const baris = v.map((x) => `${x.nama}: ${rp(x.harga_terakhir)}/${x.satuan}, mingguan ${ada(x.perubahan?.mingguan) ? persen(x.perubahan.mingguan) : "-"}, ` +
-    `bulanan ${ada(x.perubahan?.bulanan) ? persen(x.perubahan.bulanan) : "-"}${x.proyeksi_h7 ? `, perkiraan 7 hari ${rp(x.proyeksi_h7.prediksi)}` : ""}${x.sinyal ? ", perlu diwaspadai" : ""}`);
+    `bulanan ${ada(x.perubahan?.bulanan) ? persen(x.perubahan.bulanan) : "-"}${x.proyeksi_h7 ? `, perkiraan 7 hari ${bandingPerkiraan(x.harga_terakhir, x.proyeksi_h7)?.tetap ? "tetap" : rp(x.proyeksi_h7.prediksi)}` : ""}${x.sinyal ? ", perlu diwaspadai" : ""}`);
   const sinyal = (data.sinyal?.sinyal || []).filter((s) => s.aktif).slice(0, 8).map((s) => `- ${s.judul}${s.narasi ? `. ${s.narasi}` : ""}`);
   const hr = data.ringkasan?.hari_raya?.berikutnya;
   return [`Tanggal data terakhir: ${tgl(data.meta?.tanggal_data_terakhir)}. Wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu.`,

@@ -10,6 +10,13 @@ import { muatJSON } from "./app.js";
 
 const KUNCI = ["GEMINI_API_KEY", "TAVILY_API_KEY", "GROQ_API_KEY", "CEREBRAS_API_KEY", "OPENROUTER_API_KEY", "MISTRAL_API_KEY"];
 const BATAS_WAKTU = 60000;
+/** Sinyal batas waktu; AbortSignal.timeout belum ada di Safari sebelum versi 16. */
+function batasWaktu(ms) {
+  if (typeof AbortSignal.timeout === "function") return AbortSignal.timeout(ms);
+  const k = new AbortController();
+  setTimeout(() => k.abort(), ms);
+  return k.signal;
+}
 const KOLOM_TEKS = 400;
 
 class Lewati extends Error {}
@@ -56,9 +63,9 @@ async function kirim(url, header, badan) {
   let r;
   try {
     r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json", ...header }, body: JSON.stringify(badan),
-      signal: AbortSignal.timeout(BATAS_WAKTU) });
+      signal: batasWaktu(BATAS_WAKTU) });
   } catch (e) {
-    throw new Lewati(e?.name === "TimeoutError" ? "waktu habis" : "tidak bisa dihubungi dari browser (diblokir atau jaringan)");
+    throw new Lewati(["TimeoutError", "AbortError"].includes(e?.name) ? "waktu habis" : "tidak bisa dihubungi dari browser (diblokir atau jaringan)");
   }
   const teks = await r.text();
   if (!r.ok) {

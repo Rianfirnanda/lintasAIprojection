@@ -15,6 +15,10 @@ export const SIMPAN_HARI = 90;
 const DETAK_MS = 5 * 60e3;
 const LOKASI_MS = 10 * 60e3;
 const PERAN_TEPAT = ["petugas"];
+// Hemat kuota Firestore (paket gratis: sekitar 20.000 tulis per hari): kehadiran ditulis paling sering tiap menit
+// saat berpindah halaman, dan peran Masyarakat hanya dicatat saat masuk, keluar, dan berbagi lokasi (tidak tiap halaman).
+const JEDA_TULIS_MS = 60e3;
+const PERAN_TANPA_LOG_HALAMAN = ["masyarakat"];
 
 /** Lokasi yang dikirim: tepat untuk petugas lapangan, dibulatkan sekitar 1 km untuk peran lain. */
 export function bulatkanLokasi(koordinat, peran) {
@@ -91,9 +95,22 @@ function dataKehadiran(status) {
   };
 }
 
+/** Keadaan per sesi peramban (izin lokasi, lokasi terakhir, kapan terakhir menulis), supaya tiap halaman tidak membaca
+ *  dan menulis Firestore dari awal lagi. */
+const KUNCI_SESI = (uid) => `lbp-hadir-${uid}`;
+function simpanSesi() {
+  try {
+    sessionStorage.setItem(KUNCI_SESI(st.uid), JSON.stringify({ izin: st.izin, lokasi: st.lokasi, lokasiWaktu: st.lokasiWaktu,
+      tulis: st.tulisTerakhir || 0, halaman: st.halamanTerakhir || "", status: st.statusTerkirim, log: st.logHalaman || "" }));
+  } catch { /* abaikan */ }
+}
+
 async function detak(status) {
   if (!st) return;
   st.statusTerkirim = status;
+  st.tulisTerakhir = Date.now();
+  st.halamanTerakhir = halamanKini();
+  simpanSesi();
   try { await st.fb.setDoc(st.fb.doc(st.db, KOLEKSI_KEHADIRAN, st.uid), dataKehadiran(status)); } catch { /* dicoba lagi pada detak berikutnya */ }
 }
 
@@ -190,15 +207,31 @@ export async function pasangKehadiran(sesi) {
   const s = await siap().catch(() => null);
   if (!s) return;
   st = { ...s, peran: sesi.peran, nama: sesi.nama, izin: "belum", lokasi: null, lokasiWaktu: 0, dipakai: true, statusTerkirim: "" };
-  try {
-    const lama = await s.fb.getDoc(s.fb.doc(s.db, KOLEKSI_KEHADIRAN, s.uid));
-    const d = lama.exists() ? lama.data() : null;
-    st.izin = d?.izin_lokasi || localStorage.getItem(KUNCI_IZIN(s.uid)) || "belum";
-    if (st.izin === "ya" && d?.lokasi) { st.lokasi = d.lokasi; st.lokasiWaktu = milidetik(d.lokasi_waktu); }
-  } catch { /* pakai bawaan */ }
+  let sesiLama = null;
+  try { sesiLama = JSON.parse(sessionStorage.getItem(KUNCI_SESI(s.uid))); } catch { sesiLama = null; }
+  if (sesiLama) {
+    Object.assign(st, { izin: sesiLama.izin || "belum", lokasi: sesiLama.lokasi || null, lokasiWaktu: sesiLama.lokasiWaktu || 0,
+      tulisTerakhir: sesiLama.tulis || 0, halamanTerakhir: sesiLama.halaman || "", statusTerkirim: sesiLama.status || "",
+      logHalaman: sesiLama.log || "" });
+  } else {
+    // halaman pertama di sesi ini: baca sekali dari Firestore
+    try {
+      const lama = await s.fb.getDoc(s.fb.doc(s.db, KOLEKSI_KEHADIRAN, s.uid));
+      const d = lama.exists() ? lama.data() : null;
+      st.izin = d?.izin_lokasi || localStorage.getItem(KUNCI_IZIN(s.uid)) || "belum";
+      if (st.izin === "ya" && d?.lokasi) { st.lokasi = d.lokasi; st.lokasiWaktu = milidetik(d.lokasi_waktu); }
+    } catch { /* pakai bawaan */ }
+  }
   if (st.izin === "ya" && Date.now() - st.lokasiWaktu > LOKASI_MS) await perbaruiLokasi();
-  await detak("aktif");
-  catat("buka", judulKini());
+  // Tulis kehadiran bila sudah lebih dari semenit, atau baru kembali aktif; kalau tidak, cukup pada detak berikutnya.
+  const sejak = Date.now() - (st.tulisTerakhir || 0);
+  if (sejak > JEDA_TULIS_MS || st.statusTerkirim !== "aktif") await detak("aktif");
+  else setTimeout(() => { if (!document.hidden && st.halamanTerakhir !== halamanKini()) detak("aktif"); }, JEDA_TULIS_MS - sejak);
+  if (!PERAN_TANPA_LOG_HALAMAN.includes(st.peran) && halamanKini() !== st.logHalaman) {
+    st.logHalaman = halamanKini();
+    simpanSesi();
+    catat("buka", judulKini());
+  }
   perbaruiMenu();
   if (st.izin === "belum" && navigator.geolocation) setTimeout(tawarkanLokasi, 2500);
 

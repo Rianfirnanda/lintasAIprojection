@@ -52,7 +52,11 @@
 .kotak-status span { font-size: 0.74rem; font-weight: 700; }
 .kotak-status .merah { background: var(--d-lingkar-merah); color: var(--d-merah); }
 .kotak-status .oranye { background: var(--d-lingkar-oranye); color: var(--d-oranye); }
-.kotak-status .kuning { background: rgba(240, 180, 41, 0.16); color: #b58105; }
+.kotak-status .kuning { background: rgba(240, 180, 41, 0.16); color: #8d6403; }
+/* Tema terang: teks sedikit lebih gelap supaya kontrasnya cukup di latar pucat (WCAG AA). */
+:root:not([data-theme="dark"]) .kotak-status .merah { color: #c3281e; }
+:root:not([data-theme="dark"]) .kotak-status .oranye { color: #9c570b; }
+:root:not([data-theme="dark"]) .kotak-status .hijau { color: #137541; }
 :root[data-theme="dark"] .kotak-status .kuning { color: #f0c15a; }
 .kotak-status .hijau { background: var(--d-lingkar-hijau); color: var(--d-hijau); }
 
@@ -88,7 +92,7 @@
 .arsitektur { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 14px; }
 .lapis-daftar { display: grid; gap: 4px; }
 .lapis { display: grid; grid-template-columns: 178px minmax(0, 1fr); border-radius: 12px; border: 1.5px solid var(--warna); background: var(--bg-lapis); overflow: hidden; }
-.lapis-label { background: var(--warna); color: #fff; display: flex; align-items: center; gap: 12px; padding: 0 14px; min-height: 84px; }
+.lapis-label { background: var(--warna-label, var(--warna)); color: #fff; display: flex; align-items: center; gap: 12px; padding: 0 14px; min-height: 84px; }
 .lapis-label b { font-size: 2.4rem; line-height: 1; font-weight: 800; }
 .lapis-label span { font-size: 1rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; line-height: 1.15; }
 .lapis-isi { display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-around; gap: 8px 6px; padding: 10px 12px; }
@@ -106,10 +110,10 @@
 .lapis-ukuran b { font-size: 0.86rem; }
 .panah-naik { display: grid; place-items: center; height: 16px; color: var(--warna-panah); }
 .panah-naik svg { width: 26px; height: 16px; }
-.l6 { --warna: #ee9a2a; --bg-lapis: #fff5e6; --warna-panah: #ee9a2a; }
-.l5 { --warna: #2f9a4f; --bg-lapis: #e9f6ec; --warna-panah: #2f9a4f; }
-.l4 { --warna: #1b9c8e; --bg-lapis: #e3f5f2; --warna-panah: #1b9c8e; }
-.l3 { --warna: #33a1e8; --bg-lapis: #e6f3fd; --warna-panah: #33a1e8; }
+.l6 { --warna: #ee9a2a; --warna-label: #a1681c; --bg-lapis: #fff5e6; --warna-panah: #ee9a2a; }
+.l5 { --warna: #2f9a4f; --warna-label: #288443; --bg-lapis: #e9f6ec; --warna-panah: #2f9a4f; }
+.l4 { --warna: #1b9c8e; --warna-label: #168377; --bg-lapis: #e3f5f2; --warna-panah: #1b9c8e; }
+.l3 { --warna: #33a1e8; --warna-label: #267ab0; --bg-lapis: #e6f3fd; --warna-panah: #33a1e8; }
 .l2 { --warna: #1f70d2; --bg-lapis: #e4edfb; --warna-panah: #1f70d2; }
 .l1 { --warna: #143d75; --bg-lapis: #e7edf6; --warna-panah: #143d75; }
 :root[data-theme="dark"] .l6 { --bg-lapis: rgba(238, 154, 42, 0.1); }

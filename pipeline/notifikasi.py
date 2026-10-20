@@ -185,6 +185,27 @@ def _tgl_panjang(iso: str | None) -> str:
     return f"{d.day} {BULAN[d.month - 1]} {d.year}"
 
 
+def _bagian_lapangan(ringkasan: dict, sinyal: list[dict]) -> list[str]:
+    """Catatan pagi untuk petugas lapangan: pasar yang catatannya belum masuk dan barang yang belum dicatat di pasar
+    Bengkulu Tengah (sementara memakai harga rata-rata provinsi). Kosong bila semuanya lengkap."""
+    telat = [s for s in sinyal if s.get("aktif") and s["jenis"] == "data_terlambat"]
+    pengganti = [v for v in ringkasan.get("varian", []) if (v.get("sumber") or {}).get("pengganti")]
+    if not telat and not pengganti:
+        return []
+    baris = ["", "<b>\U0001F4CB Untuk petugas lapangan</b>"]
+    lengkap = (ringkasan.get("kpi") or {}).get("kelengkapan_persen")
+    if lengkap is not None:
+        baris.append(f"Catatan harga yang sudah masuk 30 hari terakhir: <b>{round(lengkap)}%</b> dari yang seharusnya.")
+    baris += [f"\u2022 {_esc(s['judul'])}" for s in telat[:3]]
+    if len(telat) > 3:
+        baris.append(f"\u2022 … dan {len(telat) - 3} pasar lainnya")
+    if pengganti:
+        nama = ", ".join(_esc(v["nama"]) for v in pengganti[:4]) + (f", dan {len(pengganti) - 4} lainnya" if len(pengganti) > 4 else "")
+        baris.append(f"\u2022 {len(pengganti)} barang belum dicatat di pasar Bengkulu Tengah, sementara memakai harga rata-rata "
+                     f"provinsi: {nama}.")
+    return baris
+
+
 def susun_pesan_harian(ringkasan: dict, sinyal: list[dict], url: str, waktu: str, hari_ini: date | None = None) -> str:
     """Ringkasan harga rutin (pagi/sore): gambaran umum, naik dan turun terbanyak seminggu, yang perlu diwaspadai,
     dan perkiraan 7 hari. Bahasa sehari-hari, angka rupiah."""
@@ -245,6 +266,10 @@ def susun_pesan_harian(ringkasan: dict, sinyal: list[dict], url: str, waktu: str
             baris.append(f"\u2022 {_esc(v['nama'])}: sekitar {_rp(h7)}/{v.get('satuan') or 'kg'} "
                          f"({'naik' if beda > 0 else 'turun'} {_rp(abs(beda))})")
         baris.append("<i>Perkiraan bukan angka resmi.</i>")
+    elif any((v.get("proyeksi_h7") or {}).get("prediksi") for v in varian):
+        baris += ["", "\U0001F52E Seminggu ke depan harga diperkirakan belum banyak berubah."]
+    if waktu == "pagi":
+        baris += _bagian_lapangan(ringkasan, sinyal)
     if url:
         baris += ["", f'\U0001F449 <a href="{url}harga.html">Lihat semua harga</a>']
     return "\n".join(baris)

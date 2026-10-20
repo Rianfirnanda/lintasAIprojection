@@ -96,9 +96,10 @@ import { pasangKerangka, muatJSON, esc, angka, waktu, tgl, tampilkanGalat } from
 import { sesi } from "./assets/akses.js";
 
 const meta = await pasangKerangka("sumber.html");
-let data;
+let data, dataAi;
 try {
-  data = await muatJSON("sumber.json");
+  // Riwayat pencarian AI ada di berkas terpisah (besar); bila belum ada, halaman tetap tampil tanpa riwayat.
+  [data, dataAi] = await Promise.all([muatJSON("sumber.json"), muatJSON("sumber_ai.json").catch(() => ({}))]);
 } catch (e) {
   tampilkanGalat(document.querySelector("main"), e);
   throw e;
@@ -165,7 +166,7 @@ if (meta?.login === "firebase") finder.href = "pengaturan.html#jalankan";
 else if (meta?.url_repo) finder.href = `${meta.url_repo}/actions/workflows/ai-data-finder.yml`;
 else finder.href = "tentang.html#ai-data-finder";
 
-const pencarian = data.kandidat_ai?.pencarian || [];
+const pencarian = (dataAi.kandidat_ai || data.kandidat_ai)?.pencarian || [];
 const katalog = data.katalog_ai || [];
 const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
 const KANDIDAT = new Map(); // id kandidat -> { k, pencarian }

@@ -90,7 +90,7 @@
 <script type="module">
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, rentangRp, persen, lencanaKeparahan, kelasPerubahan, tampilkanGalat, saatTemaBerubah } from "./assets/app.js";
-import { selisihHarga, htmlSelisih, tglPendek, gambarKomoditas } from "./assets/dashboard.js";
+import { selisihHarga, htmlSelisih, tglPendek, gambarKomoditas, bandingPerkiraan, teksPerkiraan } from "./assets/dashboard.js";
 import { pasangKlikRincian, rincianArahHarga, bukaRincian } from "./assets/rincian.js";
 import { gambarGrafikHarga, legendaHarga, gambarBanding } from "./assets/grafik.js";
 import { peranAktif } from "./assets/akses.js";
@@ -154,13 +154,13 @@ try {
   /* ---------- tampilan kartu */
   function kartuHarga(v) {
     const b = selisihHarga(v);
-    const h7 = v.proyeksi_h7;
+    const k7 = bandingPerkiraan(v.harga_terakhir, v.proyeksi_h7);
     return `<button type="button" class="kartu-harga" data-kode="${esc(v.kode)}" aria-haspopup="dialog">
       <span class="kh-atas">${gambarKomoditas(v.kode)}<span class="kh-nama">${esc(v.nama)}${v.sinyal ? `<span class="kh-waspada" title="Harga jauh dari biasanya">Waspada</span>` : ""}</span></span>
       <span class="kh-harga">${rp(v.harga_terakhir)}<small>/${esc(v.satuan)}</small></span>
       ${b ? htmlSelisih(b, { kelas: "kh-ubah" }) : '<span class="selisih datar kh-ubah">Belum ada pembanding</span>'}
       <span class="kh-spark" data-spark="${esc(v.kode)}"></span>
-      <span class="kh-bawah"><span>${b ? `Sebulan lalu ${rp(b.lalu)}` : "&nbsp;"}</span>${h7 ? `<span>7 hari lagi sekitar ${rp(h7.prediksi)}</span>` : ""}</span>
+      <span class="kh-bawah"><span>${b ? `Sebulan lalu ${rp(b.lalu)}` : "&nbsp;"}</span>${k7 ? `<span>7 hari lagi ${teksPerkiraan(k7)}</span>` : ""}</span>
     </button>`;
   }
   function gambarKartu() {
@@ -213,7 +213,7 @@ try {
           <td class="angka" data-kolom="selisih">${b ? htmlSelisih(b) : "–"}</td>${sel(v.deviasi_persen, v.kelompok, "normal")}
           ${sel(p.harian, v.kelompok, "harian")}${sel(p.mingguan, v.kelompok, "mingguan")}${sel(p.bulanan, v.kelompok, "bulanan")}
           ${sel(p.triwulanan, v.kelompok, "triwulanan")}${sel(p.semesteran, v.kelompok, "semesteran")}${sel(p.tahunan, v.kelompok, "tahunan")}
-          <td class="angka" data-kolom="perkiraan">${h7 ? `${rp(h7.prediksi)}<br><span class="meta-kecil">${rentangRp(h7.bawah, h7.atas)}</span>` : "–"}</td>
+          <td class="angka" data-kolom="perkiraan">${h7 ? `${bandingPerkiraan(v.harga_terakhir, h7)?.tetap ? "Tetap" : rp(h7.prediksi)}<br><span class="meta-kecil">${rentangRp(h7.bawah, h7.atas).replace(/^tetap /, "")}</span>` : "–"}</td>
           <td data-kolom="peringatan">${lencanaKeparahan(v.sinyal) || '<span class="kosong">–</span>'}</td></tr>`;
       }
     }
@@ -241,13 +241,14 @@ try {
   async function bukaGrafik(kode) {
     const v = perKode[kode];
     if (!v) return;
-    const b = selisihHarga(v), h7 = v.proyeksi_h7;
+    const b = selisihHarga(v), k7 = bandingPerkiraan(v.harga_terakhir, v.proyeksi_h7);
     await bukaRincian({
       judul: v.nama, sub: `Harga ${v.tanggal_terakhir ? `per ${tglPendek(v.tanggal_terakhir)}` : "terakhir"} · per ${v.satuan}`, ikonNama: "tren",
       isi: `<div class="ks-angka">
           <div class="ks-angka-isi"><small>Harga sekarang</small><b>${rp(v.harga_terakhir)}</b></div>
           ${b ? `<div class="ks-angka-isi ${b.selisih > 0 ? "naik" : b.selisih < 0 ? "turun" : ""}"><small>Dibanding sebulan lalu</small><b>${htmlSelisih(b)}</b></div>` : ""}
-          ${h7 ? `<div class="ks-angka-isi"><small>Perkiraan 7 hari lagi</small><b>${rp(h7.prediksi)}</b></div>` : ""}
+          ${k7 ? `<div class="ks-angka-isi"><small>Perkiraan 7 hari lagi</small><b>${k7.tetap ? "Tetap" : rp(k7.prediksi)}</b>
+            ${k7.bawah !== null && k7.atas !== null && Math.round(k7.bawah) !== Math.round(k7.atas) ? `<small>bisa ${rentangRp(k7.bawah, k7.atas)}</small>` : ""}</div>` : ""}
         </div>
         <div class="wadah-grafik kecil"><canvas id="grafik-jendela" role="img" aria-label="Grafik harga ${esc(v.nama)}"></canvas></div>
         <div class="legenda" id="legenda-jendela"></div>

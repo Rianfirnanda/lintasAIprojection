@@ -24,6 +24,11 @@ from .konfigurasi import Konfigurasi
 from .masukan import Observasi
 
 DIPAKAI = ("lolos", "divalidasi")
+# Sumber resmi yang datanya diambil otomatis dan sudah diperiksa penerbitnya (Kemendag, Bank Indonesia, Bapanas).
+# Lonjakan dari sumber ini tidak ditahan untuk dicek manual: antrean cek dipakai untuk salah ketik petugas, bukan untuk
+# gejolak harga cabai atau bawang yang memang terjadi. Batas kewajaran, konflik, dan data beku tetap berlaku.
+SUMBER_RESMI_BAWAAN = ["BD-SP2KP", "BD-PIHPS", "BD-BAPANAS"]
+TANDA_TIDAK_MENAHAN = {"lonjakan_terkonfirmasi", "lonjakan_sumber_resmi"}
 
 KETERANGAN_TANDA = {
     "duplikat_konflik": "Ada dua catatan untuk hari, pasar, varian, dan sumber yang sama, tetapi harganya berbeda",
@@ -131,6 +136,7 @@ def jalankan(observasi: list[Observasi], konf: Konfigurasi, keputusan: dict[str,
     z_ambang = aturan["z_pencilan"]
     toleransi = aturan["toleransi_konfirmasi_persen"] / 100
     temporal = {"perubahan_ekstrem", "pencilan_statistik"}
+    sumber_resmi = set(aturan.get("sumber_resmi", SUMBER_RESMI_BAWAAN))
 
     def terima(o: Observasi) -> None:
         terakhir = terakhir_pasar.get((o.kode_pasar, o.kode_varian))
@@ -185,8 +191,13 @@ def jalankan(observasi: list[Observasi], konf: Konfigurasi, keputusan: dict[str,
                 sebelum.status = "lolos"
                 terima(sebelum)
 
+        # Lonjakan dari sumber resmi otomatis: dicatat, tetapi tidak ditahan.
         for o in harian:
-            blokir = [t for t in o.tanda if t != "lonjakan_terkonfirmasi"]
+            if o.kode_sumber in sumber_resmi and hanya_temporal(o):
+                o.tanda = [t for t in o.tanda if t not in temporal] + ["lonjakan_sumber_resmi"]
+
+        for o in harian:
+            blokir = [t for t in o.tanda if t not in TANDA_TIDAK_MENAHAN]
             kep = keputusan.get(o.id)
             if kep and kep.keputusan == "tolak":
                 o.status = "ditolak_validator"

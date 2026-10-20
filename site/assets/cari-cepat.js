@@ -1,6 +1,6 @@
 // Pencarian cepat (Ctrl+K, / atau tombol cari di bilah atas): ketik "cabai", "beras", "peringatan", dan langsung
 // lompat ke barang, peringatan, halaman, atau perintah. Isinya disaring sesuai halaman yang boleh dibuka peran.
-import { muatJSON, esc, rp, persen } from "./app.js";
+import { muatJSON, esc, rp, persen, pastikanDialog } from "./app.js";
 import { ikon } from "./dashboard.js";
 import { peranAktif, bolehAkses } from "./akses.js";
 
@@ -48,7 +48,7 @@ async function bangunDaftar(halaman) {
 
 function siapkan() {
   if (dialog) return dialog;
-  dialog = document.createElement("dialog");
+  dialog = pastikanDialog(document.createElement("dialog"));
   dialog.className = "cari-cepat";
   dialog.setAttribute("aria-label", "Pencarian cepat");
   dialog.innerHTML = `<div class="cc-kotak">

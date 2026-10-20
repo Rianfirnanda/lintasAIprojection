@@ -504,6 +504,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "duplikat_dibuang": hasil_qc.jumlah_duplikat, "per_status": status_obs,
             "rekonsiliasi_melebihi_batas": sum(1 for r in hasil_qc.rekonsiliasi if r["melebihi_batas"]),
             "deret_beku": sum(1 for b in hasil_qc.beku if b["masih_beku"]), "observasi_beku": status_obs.get("beku", 0),
+            "lonjakan_sumber_resmi": sum(1 for o in hasil_qc.observasi if "lonjakan_sumber_resmi" in o.tanda),
         },
         "beku": hasil_qc.beku[:200],
         "keterangan_tanda": kualitas.KETERANGAN_TANDA,
@@ -652,10 +653,12 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0),
                     "satuan_jumlah": satuan_jumlah.get(s.kode, "baris harga"),
                     "terakhir": terakhir_per_sumber.get(s.kode)} for s in konf.sumber.values()] + diterima,
-        "kandidat_ai": kandidat,
         "katalog_ai": katalog, "ringkas_katalog": pencari_data.ringkas_katalog(katalog),
         "ambang_skor": {"layak": pencari_data.AMBANG_LAYAK, "sedang": pencari_data.AMBANG_SEDANG},
     })
+    # Riwayat lengkap pencarian AI besar (ratusan KB) dan hanya dipakai halaman Sumber Data, jadi dipisah supaya Beranda
+    # dan Kamus yang membaca sumber.json tidak ikut mengunduhnya.
+    _tulis_json(keluaran / "sumber_ai.json", {"kandidat_ai": kandidat})
 
     # ---------- berita.json (halaman Berita Lokal; hasil pencarian harian di data/berita/berita.json)
     _tulis_json(keluaran / "berita.json", berita.untuk_situs(

@@ -78,6 +78,12 @@ di bawah hanya untuk situs tanpa login Google.
 Catatan: lonjakan yang dikonfirmasi oleh pasar/responden lain pada hari yang sama, atau bertahan pada observasi
 berikutnya di pasar yang sama, otomatis dianggap nyata dan tidak perlu divalidasi manual.
 
+Lonjakan dari sumber resmi yang diambil otomatis (SP2KP Kemendag, PIHPS Bank Indonesia, Bapanas) juga tidak ditahan:
+angkanya sudah diperiksa penerbitnya, dan gejolak cabai atau bawang memang terjadi. Lonjakan itu tetap dicatat (tanda
+`lonjakan_sumber_resmi`, jumlahnya tampil di kotak *Menunggu keputusan*), sedangkan harga di luar batas wajar, harga
+ganda yang berbeda, dan harga yang tidak diperbarui tetap ditahan. Antrean cek jadi khusus untuk kemungkinan salah ketik
+petugas. Daftar sumbernya bisa diubah di Pengaturan → tab *Data* → bagian *Pemeriksaan data* → **Sumber resmi yang lonjakannya tidak ditahan**.
+
 **Harga yang tidak diperbarui sumbernya (data beku).** Sumber resmi kadang terus melaporkan angka yang sama persis,
 misalnya cabai merah besar di Pasar Panorama tercatat Rp35.000 setiap hari sejak September 2025, padahal harga cabai di
 pasar dan sumber lain sudah bergeser lebih dari 70%. Mesin menandai angka seperti ini sebagai `data_beku` bila:
@@ -386,7 +392,10 @@ dan portal Bengkulu baru diketahui setelah beberapa hari berjalan; lihat "Catata
   situs utama (Firebase Hosting).
 - **Ringkasan harga rutin pagi dan sore** (Telegram, setiap hari termasuk Sabtu dan Minggu): berisi gambaran harga hari
   itu (berapa yang naik, turun, dan stabil), tiga barang yang naik dan turun paling banyak dalam seminggu dengan angka
-  rupiahnya, harga yang perlu diwaspadai, dan perkiraan 7 hari bila ada yang diperkirakan berubah. Jamnya diatur di
+  rupiahnya, harga yang perlu diwaspadai, dan perkiraan 7 hari bila ada yang diperkirakan berubah (bila tidak ada,
+  pesannya menyebut harga diperkirakan belum banyak berubah). Ringkasan pagi juga memuat bagian **Untuk petugas
+  lapangan**: persentase catatan harga yang sudah masuk 30 hari terakhir, pasar yang catatannya belum masuk, dan barang
+  yang belum dicatat di pasar Bengkulu Tengah sehingga sementara memakai harga rata-rata provinsi. Jamnya diatur di
   Pengaturan → Notifikasi → **Jam ringkasan harian** (bawaan 07.30 dan 15.45 WIB; pesan tiba sekitar 10 menit
   kemudian) dan bisa dimatikan dengan saklar **Kirim ringkasan harga rutin pagi dan sore**. Tiap jam hanya dikirim sekali
   per hari; bila prosesnya terlambat lebih dari 3 jam, ringkasan jam itu dilewati supaya tidak ada "ringkasan pagi" yang
@@ -478,6 +487,9 @@ di sana Tanya Takar memakai kunci AI situs milik Administrator.
 4. Di tab **Aktif**, peran dan izin bisa diubah atau akun dinonaktifkan. Akun yang ditolak atau nonaktif bisa
    diaktifkan lagi atau dihapus.
 5. Semua tindakan tercatat di **Jejak tindakan admin**. Admin tidak bisa mencabut hak adminnya sendiri.
+6. Perubahan peran, izin, atau penonaktifan terbaca di perangkat orang itu paling lama 3 menit kemudian (akun diperiksa
+   ulang paling sering tiap 3 menit supaya kuota Firestore hemat), atau segera bila ia keluar lalu masuk lagi. Hak akses
+   data yang sebenarnya dijaga aturan Firestore di server dan langsung berlaku.
 
 ### Pendaftaran otomatis untuk masyarakat (bila memakai Firebase)
 
@@ -499,7 +511,8 @@ Di Beranda Administrator, tab **Ringkasan Administrator**, ada panel **Pengguna 
 - **Daftar**: nama, peran, status, halaman yang sedang dibuka, lokasi, jenis perangkat, dan kapan terakhir aktif.
   Ketuk koordinat untuk melompat ke titiknya di peta.
 - **Log aktivitas**: siapa masuk, membuka halaman apa, keluar, dan mulai atau berhenti berbagi lokasi, beserta waktu dan
-  lokasinya. Bisa disaring per peran dan diunduh sebagai CSV.
+  lokasinya. Bisa disaring per peran dan diunduh sebagai CSV. Untuk peran Masyarakat, yang dicatat hanya masuk, keluar,
+  dan izin lokasi (bukan setiap halaman), supaya kuota Firestore cukup saat situs dipakai banyak warga.
 
 **Lokasi selalu atas izin pengguna.** Saat pertama memakai aplikasi, setiap pengguna ditanya "Bagikan lokasi Anda dengan
 Administrator?" dan bisa menjawab *Jangan*. Pilihan bisa diubah kapan saja lewat menu akun (pojok kanan atas). Browser
@@ -516,7 +529,20 @@ Supaya benar-benar terhapus, buka Firebase Console → **Firestore Database** �
 isi *Collection group* `lbp_aktivitas` dan *Timestamp field* `hapus_pada`, lalu simpan. Fitur ini gratis.
 
 Bila aturan Firestore digabung sendiri (`FIREBASE_TERBITKAN_ATURAN` = `tidak`), salin juga blok
-`match /lbp_kehadiran/...`, `match /lbp_aktivitas/...`, dan fungsi `lokasiSah` dari `firestore.rules`.
+`match /lbp_kehadiran/...`, `match /lbp_aktivitas/...`, `match /lbp_galat/...`, dan fungsi `lokasiSah` dari
+`firestore.rules`.
+
+### Galat di perangkat pengguna (bila memakai Firebase)
+
+Di tab **Ringkasan Administrator** ada panel **Galat di perangkat pengguna**. Bila sebuah halaman rusak di ponsel atau
+peramban tertentu (misalnya tombol tidak bekerja karena galat skrip), catatannya masuk otomatis: pesan galat, letaknya di
+kode, halaman, peran, peramban, dan ukuran layar. Isi formulir dan data pribadi lain tidak ikut. Galat yang sama
+dikelompokkan dan dihitung berapa kali terjadi dan pada berapa orang. Setelah diperbaiki, tekan **Tandai sudah
+ditangani** untuk menghapus catatan kelompok itu.
+
+Supaya hemat kuota, satu sesi paling banyak mengirim 3 catatan dan galat yang sama hanya sekali. Galat dari ekstensi
+peramban dan gangguan sinyal tidak dicatat. Catatan membawa tanggal hapus 30 hari ke depan; buat juga kebijakan TTL
+untuk *Collection group* `lbp_galat`, *Timestamp field* `hapus_pada` (langkahnya sama seperti log aktivitas di atas).
 
 ### Panel Pengaturan (AI, kunci, dan fungsi)
 

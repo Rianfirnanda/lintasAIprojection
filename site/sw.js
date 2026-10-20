@@ -2,7 +2,7 @@
 // Versi cache: diganti otomatis dengan kode commit saat situs terbit (pipeline.yml), jadi tiap terbitan memakai cache baru.
 const CACHE = "lintas-benteng-v34";
 const ASET = [
-  "input.html", "masuk.html", "assets/app.css", "assets/tema-awal.js", "assets/app.js", "assets/gerak.js", "assets/kehadiran.js", "assets/status-layanan.js", "assets/akses.js", "assets/peran.js", "assets/dashboard.js", "assets/gambar-komoditas.js", "assets/selisih.js", "assets/rincian.js", "assets/kiriman.js", "assets/firebase-klien.js", "vendor/firebase/firebase.js", "assets/logo-bps.png", "assets/logo-takar-pangan.webp", "assets/logo-lintas-benteng.webp", "assets/logo-takar-pangan-lengkap.webp", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
+  "input.html", "masuk.html", "assets/app.css", "assets/tema-awal.js", "assets/app.js", "assets/gerak.js", "assets/kehadiran.js", "assets/galat-klien.js", "assets/status-layanan.js", "assets/akses.js", "assets/peran.js", "assets/dashboard.js", "assets/gambar-komoditas.js", "assets/selisih.js", "assets/rincian.js", "assets/kiriman.js", "assets/firebase-klien.js", "vendor/firebase/firebase.js", "vendor/firebase/firebase-bersama.js", "assets/logo-bps.png", "assets/logo-takar-pangan.webp", "assets/logo-lintas-benteng.webp", "assets/logo-takar-pangan-lengkap.webp", "assets/ikon-64.png", "assets/ikon-192.png", "manifest.webmanifest",
   "data/master.json", "data/meta.json",
   ...["plus-jakarta-sans-latin-400-normal", "plus-jakarta-sans-latin-500-normal", "plus-jakarta-sans-latin-600-normal",
       "plus-jakarta-sans-latin-700-normal", "plus-jakarta-sans-latin-800-normal", "ibm-plex-mono-latin-400-normal",

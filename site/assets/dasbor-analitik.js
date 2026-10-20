@@ -64,7 +64,7 @@ const KERANGKA = `
     <div class="dsb-isi-penuh" id="dsb-dispar"></div></section>
   <section class="dsb-kartu dsb-diag"><div class="dsb-kartu-kepala"><h2 id="dsb-judul-diag">Ciri Pergerakan Harga</h2></div><div class="dsb-isi-penuh" id="dsb-diag"></div></section>
   <section class="dsb-kartu dsb-metrik"><div class="dsb-kartu-kepala"><h2 id="dsb-judul-metrik">Ketepatan Perkiraan</h2></div><div class="dsb-isi-penuh" id="dsb-metrik"></div></section>
-  <section class="dsb-kartu dsb-faktor"><div class="dsb-kartu-kepala"><h2>Faktor Pendorong Harga</h2></div><div class="dsb-isi-penuh" id="dsb-faktor"></div></section>
+  <section class="dsb-kartu dsb-faktor"><div class="dsb-kartu-kepala"><h2>Faktor Pendorong Harga</h2></div><div class="dsb-isi-penuh" id="dsb-faktor" tabindex="0" role="region" aria-label="Faktor pendorong harga, bisa digulir"></div></section>
 </div>
 <div class="dsb-bawah">
   <section class="dsb-kartu dsb-lineage"><div class="dsb-kartu-kepala"><h2>Asal Data sampai Perkiraan</h2></div><div class="dsb-isi-penuh" id="dsb-lineage"></div></section>
@@ -263,7 +263,7 @@ export async function pasangDasborInternal(wadah, meta) {
     ada.forEach((d) => { n[golongan(d.x)] += 1; });
     const rata = ada.length ? ada.reduce((a, d) => a + d.x, 0) / ada.length : null;
     const urut = [...ada].sort((a, b) => b.x - a.x);
-    const naikMaks = urut[0], turunMaks = urut.at(-1);
+    const naikMaks = urut[0], turunMaks = urut[urut.length - 1];
     const total = ada.length || 1;
     const pil = (kunci, simbol, label) => `<button type="button" class="dsb-arah-pil ${kunci}" data-arah="${kunci}" aria-pressed="${S.arah === kunci}"
       title="Tampilkan hanya komoditas yang ${label.toLowerCase()}"><span class="dsb-arah-simbol">${simbol}</span><strong>${n[kunci]}</strong><span>${label}</span></button>`;
@@ -687,7 +687,7 @@ export async function pasangDasborInternal(wadah, meta) {
     const label = [...riw.map((x) => x.bulan), ...info.bulan_target];
     const kosong = (n) => Array(n).fill(null);
     const c = { a: warna("series-1"), p: warna("series-2"), s3: warna("series-3"), s4: warna("series-4"), grid: warna("grid"), muted: warna("muted") };
-    const sambung = (arr) => [...kosong(riw.length - 1), riw.at(-1)?.rata ?? null, ...arr];
+    const sambung = (arr) => [...kosong(riw.length - 1), riw[riw.length - 1]?.rata ?? null, ...arr];
     S.grafikPeriodik = new window.Chart(wadahP.querySelector("canvas"), {
       type: "line",
       data: { labels: label, datasets: [

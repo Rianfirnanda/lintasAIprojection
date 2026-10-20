@@ -269,9 +269,21 @@ def test_ringkasan_harian_mudah_dibaca():
     assert "<b>1 naik</b>, <b>1 turun</b>, 1 stabil dari 3 barang" in h
     assert "Cabai Rawit Hijau <b>Rp80.000/kg</b> (naik Rp10.000, +14,3%)" in h
     assert "Daging Ayam Ras Segar <b>Rp35.000/kg</b> (turun Rp2.000, -5,4%)" in h
-    assert "Perlu diwaspadai (1)" in h and "Judul a" in h and "Judul b" not in h  # catatan data tidak ikut
+    waspada, lapangan = h.split("Untuk petugas lapangan")
+    assert "Perlu diwaspadai (1)" in waspada and "Judul a" in waspada and "Judul b" not in waspada  # catatan data tidak ikut
+    assert "Judul b" in lapangan  # catatan data masuk bagian petugas lapangan
     assert "sekitar Rp84.000/kg (naik Rp4.000)" in h
     assert '<a href="https://situs.web.app/harga.html">' in h
+    assert "belum banyak berubah" not in h
+
+
+def test_ringkasan_harian_perkiraan_tetap_ditulis_jujur():
+    from datetime import date
+    import copy
+    r = copy.deepcopy(RINGKASAN)
+    r["varian"][0]["proyeksi_h7"] = {"prediksi": 80000}
+    h = notifikasi.susun_pesan_harian(r, [], "", "sore", date(2026, 10, 21))
+    assert "Perkiraan 7 hari ke depan" not in h and "harga diperkirakan belum banyak berubah" in h
 
 
 def test_ringkasan_harian_pagi_dan_sore_sekali_saja_setiap_hari(konf, akar_sementara):
@@ -303,3 +315,21 @@ def test_ringkasan_harian_hanya_telegram_dan_bisa_dimatikan(konf, akar_sementara
     pesan = notifikasi.jalankan(konf, [], [], "", False, env=ENV_TG, pengirim={"telegram": lambda *a: None},
                                 ringkasan=RINGKASAN, sekarang=datetime(2026, 10, 21, 7, 40, tzinfo=notifikasi.WIB))
     assert "ringkasan" not in pesan
+
+
+def test_ringkasan_pagi_memuat_catatan_untuk_petugas_lapangan():
+    from datetime import date
+    import copy
+    r = copy.deepcopy(RINGKASAN)
+    r["kpi"] = {"kelengkapan_persen": 71.4}
+    r["varian"][2]["sumber"] = {"pengganti": True}
+    telat = _s("t", jenis="data_terlambat")
+    telat["judul"] = "Data Pasar Karang Tinggi belum masuk 22 hari kerja"
+    pagi = notifikasi.susun_pesan_harian(r, [telat], "", "pagi", date(2026, 10, 21))
+    assert "Untuk petugas lapangan" in pagi and "<b>71%</b>" in pagi
+    assert "Data Pasar Karang Tinggi belum masuk 22 hari kerja" in pagi
+    assert "1 barang belum dicatat di pasar Bengkulu Tengah, sementara memakai harga rata-rata provinsi: Beras Medium." in pagi
+    sore = notifikasi.susun_pesan_harian(r, [telat], "", "sore", date(2026, 10, 21))
+    assert "Untuk petugas lapangan" not in sore
+    lengkap = notifikasi.susun_pesan_harian(RINGKASAN, [], "", "pagi", date(2026, 10, 21))
+    assert "Untuk petugas lapangan" not in lengkap

@@ -127,4 +127,4 @@ export const LANGKAH_SINYAL = {
 };
 
 /* ---------- selisih harga dalam rupiah (logika murni ada di selisih.js supaya bisa diuji di Node) */
-export { tglPendek, selisihHarga, teksSelisih, arahSelisih, TANDA_ARAH, htmlSelisih, ringkasHariIni } from "./selisih.js";
+export { tglPendek, selisihHarga, teksSelisih, arahSelisih, TANDA_ARAH, htmlSelisih, ringkasHariIni, bandingPerkiraan, teksPerkiraan } from "./selisih.js";

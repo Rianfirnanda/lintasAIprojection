@@ -124,7 +124,7 @@ async function berandaPetugas(el, meta) {
           <div class="kanan"><b>${t.kelengkapan_persen === null || t.kelengkapan_persen === undefined ? "–" : persen(t.kelengkapan_persen, 0)}</b><div class="sub">lengkap</div></div></div>`; }).join("") || '<p class="kosong">Belum ada pasar.</p>'}
       </section>
       <section class="kartu"><div class="kartu-kepala"><div><h2>Harga terakhir</h2><p>Acuan saat mencatat</p></div></div>
-        <div style="max-height:300px;overflow:auto">${ringkasan.varian.map((x) => `<div class="baris-info"><div class="nama" style="font-weight:500">${esc(x.nama)}</div>
+        <div style="max-height:300px;overflow:auto" tabindex="0" role="region" aria-label="Harga terakhir semua barang, bisa digulir">${ringkasan.varian.map((x) => `<div class="baris-info"><div class="nama" style="font-weight:500">${esc(x.nama)}</div>
           <div class="kanan"><b>${rp(x.harga_terakhir)}</b><span class="sub">/${esc(x.satuan)}</span></div></div>`).join("")}</div>
       </section>
     </div>`);
@@ -137,6 +137,7 @@ async function berandaOperator(el, meta) {
   const lolos = r.per_status?.lolos ?? 0;
   const berkas = [...kualitas.batch].filter((b) => b.jenis === "harga" || !b.jenis).slice(-8).reverse();
   const unggah = meta.url_repo ? `${meta.url_repo}/upload/main/data/masuk/harga` : "";
+  const provinsi = ringkasan.varian.filter((v) => v.sumber?.pengganti);
   kosongkan(el, `${salam("operator", PERAN.operator.judulBeranda, `Data ${tgl(meta.tanggal_data_terakhir, true)}`,
     (unggah ? tombol(unggah, "Unggah berkas", true, ' target="_blank" rel="noopener"') : "") + tombol("kualitas.html", "Cek data", !unggah))}
     <div class="ind-baris">
@@ -155,9 +156,11 @@ async function berandaOperator(el, meta) {
       </section>
       <section class="kartu"><div class="kartu-kepala"><div><h2>Per pasar</h2><p>Kelengkapan dan ketepatan waktu</p></div></div>
         ${(kualitas.ketepatan.per_pasar || []).map((p) => `<div class="baris-info"><div><div class="nama">${esc(p.nama_pasar)}</div>
-          <div class="sub">Tepat waktu ${p.ketepatan_persen === null ? "–" : persen(p.ketepatan_persen, 0)}</div></div>
+          <div class="sub">${p.tanggal_terakhir ? `Catatan terakhir ${tgl(p.tanggal_terakhir)}` : "Belum pernah mengirim catatan"} · tepat waktu ${p.ketepatan_persen === null ? "–" : persen(p.ketepatan_persen, 0)}</div></div>
           <div class="batang-mini"><span style="width:${jepit(p.kelengkapan_persen ?? 0)}%;background:var(--d-hijau)"></span></div>
           <div class="kanan"><b>${persen(p.kelengkapan_persen, 0)}</b></div></div>`).join("")}
+        ${provinsi.length ? `<p class="meta-kecil" style="margin-top:10px">${provinsi.length} barang belum dicatat di pasar Bengkulu Tengah, sementara
+          memakai harga rata-rata provinsi: ${provinsi.map((v) => esc(v.nama)).join(", ")}.</p>` : ""}
       </section>
     </div>`);
 }
@@ -245,6 +248,7 @@ async function berandaAdmin(el, meta) {
       ${ind({ i: "database", label: "Berkas masuk", nilai: angka(meta.jumlah.berkas), sub: `${angka(meta.jumlah.observasi_dipakai)} data dipakai` })}
     </div>
     <section class="kartu panel-kehadiran" id="panel-kehadiran" aria-label="Pengguna aktif dan lokasi"></section>
+    <section class="kartu" id="panel-galat" aria-label="Galat di perangkat pengguna"></section>
     <section class="kartu" id="panel-data"></section>
     <div class="grid dua-kolom">
       <section class="kartu"><div class="kartu-kepala"><div><h2>Pemeriksaan sistem</h2></div></div>
@@ -268,6 +272,8 @@ async function berandaAdmin(el, meta) {
   });
   import("./panel-kehadiran.js").then((m) => m.pasangPanelKehadiran(el.querySelector("#panel-kehadiran"), meta))
     .catch((e) => { el.querySelector("#panel-kehadiran").innerHTML = `<p class="kosong">Panel pengguna aktif belum bisa dimuat: ${esc(e.message || e)}</p>`; });
+  import("./panel-galat.js").then((m) => m.pasangPanelGalat(el.querySelector("#panel-galat"), meta))
+    .catch((e) => { el.querySelector("#panel-galat").innerHTML = `<p class="kosong">Panel galat belum bisa dimuat: ${esc(e.message || e)}</p>`; });
   if (meta.login === "firebase") pengingatPersetujuan(el);
 }
 

@@ -5,7 +5,7 @@
 :root {
   --dsb-kartu: #ffffff; --dsb-ubin: #f4f7fb; --dsb-ubin-2: #eaf0f7; --dsb-garis: rgba(16, 48, 92, 0.10);
   --dsb-th: #f3f6fa; --dsb-th-ink: #4a5d73;
-  --dsb-biru: #0a62ad; --dsb-judul: #0f1d2c; --dsb-hijau: #17894c; --dsb-oranye: #b45f00; --dsb-merah: #c23434;
+  --dsb-biru: #0a62ad; --dsb-judul: #0f1d2c; --dsb-hijau: #12703e; --dsb-oranye: #b45f00; --dsb-merah: #c23434;
   --dsb-hijau-lembut: rgba(23, 137, 76, 0.12); --dsb-oranye-lembut: rgba(224, 140, 0, 0.14); --dsb-merah-lembut: rgba(194, 52, 52, 0.11);
   --dsb-biru-lembut: rgba(10, 98, 173, 0.10); --dsb-abu-lembut: rgba(80, 98, 120, 0.12);
   --dsb-valid-bg: #d9f2e3; --dsb-valid-ink: #11683a; --dsb-eksp-bg: #fdebd2; --dsb-eksp-ink: #8a4a06;
@@ -449,4 +449,8 @@ button.dsb-arah-angka:focus-visible { outline: 2px solid var(--aksen); }
   .dsb-harga-dua strong { font-size: 1.12rem; }
   .dsb-panel { padding: 12px; }
   .dsb-kaki { justify-content: center; text-align: center; }
+}
+
+@supports not (background: color-mix(in srgb, red 50%, transparent)) {
+  .dsb-rentang-vis .pita { background: var(--series-2); opacity: 0.3; }
 }

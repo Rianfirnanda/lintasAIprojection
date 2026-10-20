@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { KODE_GAMBAR, gambarKomoditas } from "../site/assets/gambar-komoditas.js";
-import { arahSelisih, htmlSelisih, ringkasHariIni, selisihHarga, teksSelisih, tglPendek } from "../site/assets/selisih.js";
+import { arahSelisih, bandingPerkiraan, htmlSelisih, ringkasHariIni, selisihHarga, teksPerkiraan, teksSelisih, tglPendek } from "../site/assets/selisih.js";
 
 const varianCsv = readFileSync(new URL("../config/komoditas.csv", import.meta.url), "utf-8")
   .trim().split("\n").slice(1).map((baris) => baris.split(",")[2]);
@@ -81,4 +81,13 @@ test("ringkasan hari ini memakai rupiah, ambang 0,5%, dan kalimat biasa", () => 
   assert.match(ringkasHariIni([v("Beras", 14375, 14375)]).kalimat, /stabil/);
   assert.match(ringkasHariIni([]).kalimat, /Belum ada harga minggu lalu/);
   assert.match(ringkasHariIni([v("Gula", 18000, 20000)]).kalimat, /tidak ada harga yang naik dan 1 harga turun\.$/);
+});
+
+test("perkiraan yang praktis sama dengan harga sekarang ditulis tetap", () => {
+  assert.equal(teksPerkiraan(bandingPerkiraan(35000, { prediksi: 35000, bawah: 29242, atas: 41892 })), "diperkirakan tetap");
+  assert.equal(bandingPerkiraan(40000, { prediksi: 40150 }).tetap, true); // 0,375%
+  assert.equal(teksPerkiraan(bandingPerkiraan(80000, { prediksi: 84000 })), "sekitar Rp84.000 (naik Rp4.000)");
+  assert.equal(teksPerkiraan(bandingPerkiraan(80000, { prediksi: 76000 })), "sekitar Rp76.000 (turun Rp4.000)");
+  assert.equal(bandingPerkiraan(80000, null), null);
+  assert.equal(teksPerkiraan(null), "belum ada perkiraan");
 });
