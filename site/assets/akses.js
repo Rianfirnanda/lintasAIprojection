@@ -125,6 +125,7 @@ export async function keluar() {
   const s = sesi();
   try { localStorage.removeItem(KUNCI); } catch { /* abaikan */ }
   if (s?.sumber === "firebase") {
+    await import("./app.js").then((m) => m.hapusSimpananData()).catch(() => {});
     await import("./kehadiran.js").then((m) => m.catatMasukKeluar("keluar", s)).catch(() => {});
     const { keluarFirebase } = await import("./firebase-klien.js");
     await keluarFirebase();

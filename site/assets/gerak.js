@@ -20,10 +20,13 @@ function pasangTanya() {
     tutupSemua(d);
     const isi = d.querySelector(".tanya-isi");
     if (!isi) return;
-    isi.style.marginLeft = "0px";
-    const r = isi.getBoundingClientRect(), tepi = 12;
-    const geser = r.left < tepi ? tepi - r.left : r.right > innerWidth - tepi ? innerWidth - tepi - r.right : 0;
-    isi.style.marginLeft = `${geser}px`;
+    // Hitung dari posisi tombol "?" dan lebar kotak (bukan dari kotak yang sedang beranimasi), lalu geser supaya
+    // kotak tetap di dalam layar.
+    const ringkas = d.querySelector("summary").getBoundingClientRect(), lebar = isi.offsetWidth, tepi = 12;
+    const kiriAsal = ringkas.left + ringkas.width / 2 - lebar / 2;
+    // clientWidth, bukan innerWidth: di ponsel, kotak yang sempat keluar layar ikut melebarkan innerWidth.
+    const kiri = Math.min(Math.max(kiriAsal, tepi), document.documentElement.clientWidth - tepi - lebar);
+    isi.style.marginLeft = `${Math.round(kiri - kiriAsal)}px`;
   }, true);
   document.addEventListener("click", (e) => { if (!e.target.closest?.("details.tanya")) tutupSemua(null); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") tutupSemua(null); });

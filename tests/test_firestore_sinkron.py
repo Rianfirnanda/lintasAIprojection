@@ -378,3 +378,18 @@ def test_hasil_ai_dari_situs_diambil_sekali(akar):
     db.data["lbp_kandidat_ai"] = {"a": {"permintaan": {"komoditas": "cabai"}, "hasil": "{}", "diperbarui": T0}}
     assert fs.tarik(akar, db=db)["kandidat_situs"][0]["permintaan"] == {"komoditas": "cabai"}
     assert "kandidat_situs" not in fs.tarik(akar, db=db)
+
+
+def test_pemeriksaan_rutin_tepat_waktu_tanpa_menunggu_jadwal_github(akar):
+    """Penjaga antrean menjalankan pemeriksaan rutin begitu jamnya lewat, sekali per jam yang ditentukan."""
+    db = DBTiruan()
+    db.data["lbp_status"] = {"ai_harian": {"tanggal": "2026-10-20"}, "berita_harian": {"tanggal": "2026-10-20"}}
+    selasa = lambda j, m: datetime(2026, 10, 20, j, m, tzinfo=fs.WIB)  # noqa: E731
+    assert fs.jam_periksa("07.30, 11:45 ;15.45, 25.00, x") == [(7, 30), (11, 45), (15, 45)]
+    assert fs.jadwal_jatuh_tempo(akar, {}, selasa(7, 0)) is None  # belum ada jam yang lewat
+    assert fs.perlu_jalan(akar, db, selasa(11, 50)) == (True, "pemeriksaan rutin pukul 11.45")
+    db.data["lbp_status"]["pipeline"] = {"status": "selesai", "mulai": selasa(11, 51), "selesai": selasa(12, 0)}
+    assert fs.perlu_jalan(akar, db, selasa(12, 30)) == (False, "tidak ada yang baru")  # sudah jalan setelah 11.45
+    assert fs.perlu_jalan(akar, db, selasa(15, 46)) == (True, "pemeriksaan rutin pukul 15.45")
+    minggu = datetime(2026, 10, 25, 12, 0, tzinfo=fs.WIB)  # bukan hari pencatatan
+    assert fs.jadwal_jatuh_tempo(akar, {}, minggu) is None

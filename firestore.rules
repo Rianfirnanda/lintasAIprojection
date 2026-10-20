@@ -84,6 +84,13 @@ service cloud.firestore {
                    'SMTP_USER', 'SMTP_PASSWORD', 'EMAIL_KE', 'EMAIL_DARI', 'BPS_API_KEY'];
     }
 
+    // Pendaftaran otomatis (diatur Administrator di halaman Pengguna): pendaftar baru langsung aktif sebagai Masyarakat.
+    function jalurPendaftaran() { return /databases/$(database)/documents/lbp_akses/pendaftaran; }
+    function daftarOtomatis() {
+      return exists(jalurPendaftaran()) && get(jalurPendaftaran()).data.otomatis == true
+        && request.auth.token.email_verified == true;
+    }
+
     function kolomSah(d) {
       return d.keys().hasOnly(['email', 'nama', 'foto', 'status', 'peran', 'halaman', 'dibuat', 'diperbarui',
                                'diputus_oleh', 'diputus_pada', 'catatan', 'terakhir_aktif']);
@@ -102,6 +109,23 @@ service cloud.firestore {
         && request.resource.data.email == request.auth.token.email
         && teksPendek(request.resource.data.nama, 120)
         && request.resource.data.dibuat == request.time;
+
+      // Pendaftaran otomatis: langsung aktif, tetapi hanya sebagai Masyarakat tanpa izin halaman tambahan.
+      allow create: if masuk() && request.auth.uid == uid && daftarOtomatis()
+        && kolomSah(request.resource.data)
+        && request.resource.data.status == 'aktif'
+        && request.resource.data.peran == 'masyarakat'
+        && request.resource.data.halaman == null
+        && request.resource.data.email == request.auth.token.email
+        && teksPendek(request.resource.data.nama, 120)
+        && request.resource.data.dibuat == request.time;
+      // Pendaftar yang masih menunggu ikut aktif sebagai Masyarakat begitu pendaftaran otomatis dinyalakan.
+      allow update: if masuk() && request.auth.uid == uid && daftarOtomatis()
+        && resource.data.status == 'menunggu'
+        && request.resource.data.status == 'aktif'
+        && request.resource.data.peran == 'masyarakat'
+        && request.resource.data.halaman == null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'peran', 'halaman', 'diperbarui']);
 
       // Admin pertama mengangkat dirinya sendiri (hanya email di daftarAdminAwal()).
       allow create: if adminAwal() && request.auth.uid == uid
@@ -195,7 +219,12 @@ service cloud.firestore {
     // Tabel hak akses per peran (halaman Pengguna). Semua akun aktif membacanya untuk menyusun menu; hanya peran
     // Administrator yang mengubahnya. Peran Administrator sendiri selalu membuka semua halaman, jadi tidak ada di sini.
     match /lbp_akses/{id} {
-      allow read: if aktif();
+      allow read: if aktif() || (masuk() && id == 'pendaftaran');
+      allow create, update: if adminAktif() && id == 'pendaftaran'
+        && baru().keys().hasOnly(['otomatis', 'diubah_oleh', 'diubah_pada'])
+        && baru().otomatis is bool
+        && baru().diubah_oleh == request.auth.token.email
+        && baru().diubah_pada == request.time;
       allow create, update: if adminAktif() && id == 'peran'
         && baru().keys().hasOnly(['halaman', 'diubah_oleh', 'diubah_pada'])
         && baru().halaman is map

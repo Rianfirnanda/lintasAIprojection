@@ -26,10 +26,13 @@ jobs:
       - name: Periksa dashboard
         env:
           URL_DASHBOARD: ${{ vars.URL_DASHBOARD }}
+          # Situs utama pengguna (Firebase Hosting); GitHub Pages hanya cadangan bila Firebase belum diatur.
+          FIREBASE_HOSTING_SITE: ${{ secrets.FIREBASE_HOSTING_SITE }}
           PEMILIK: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
-          URL="${URL_DASHBOARD:-https://${PEMILIK,,}.github.io/${REPO}/}"
+          if [ -n "$FIREBASE_HOSTING_SITE" ]; then CADANGAN="https://${FIREBASE_HOSTING_SITE}.web.app/"; else CADANGAN="https://${PEMILIK,,}.github.io/${REPO}/"; fi
+          URL="${URL_DASHBOARD:-$CADANGAN}"
           WAKTU=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           HALAMAN=$(curl -s -o /dev/null -w '%{http_code} %{time_total}' --max-time 30 "$URL" || echo "000 0")
           KODE_HALAMAN=${HALAMAN%% *}

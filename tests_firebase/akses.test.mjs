@@ -97,3 +97,29 @@ test("tabel hak akses menolak isian asing, termasuk mengatur peran Administrator
   await assertFails(setDoc(doc(d, "lbp_akses", "peran"), isi({ tpid: [] }, { kolom: 1 })));
   await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), "lbp_akses", "peran")));
 });
+
+test("pendaftaran otomatis: hanya bila dinyalakan Administrator, dan hanya sebagai Masyarakat", async () => {
+  await akun("adm", "admin");
+  await akun("wakil", "analis", "aktif", ["index.html", "pengguna.html"]);
+  const baru = { email: "warga@contoh.go.id", nama: "Warga", foto: null, status: "aktif", peran: "masyarakat", halaman: null,
+    dibuat: serverTimestamp(), diperbarui: serverTimestamp() };
+  const warga = env.authenticatedContext("warga", { email: "warga@contoh.go.id", email_verified: true }).firestore();
+  await assertFails(setDoc(doc(warga, "lbp_pengguna", "warga"), baru)); // belum dinyalakan
+  await assertSucceeds(getDoc(doc(warga, "lbp_akses", "pendaftaran")));  // pendaftar boleh membaca pengaturannya
+  const aturan = (email) => ({ otomatis: true, diubah_oleh: email, diubah_pada: serverTimestamp() });
+  await assertFails(setDoc(doc(db("wakil"), "lbp_akses", "pendaftaran"), aturan("wakil@contoh.go.id"))); // hanya peran Administrator
+  await assertFails(setDoc(doc(warga, "lbp_akses", "pendaftaran"), aturan("warga@contoh.go.id")));
+  await assertSucceeds(setDoc(doc(db("adm"), "lbp_akses", "pendaftaran"), aturan("adm@contoh.go.id")));
+  await assertFails(setDoc(doc(warga, "lbp_pengguna", "warga"), { ...baru, peran: "admin" }));
+  await assertFails(setDoc(doc(warga, "lbp_pengguna", "warga"), { ...baru, peran: "petugas" }));
+  await assertFails(setDoc(doc(warga, "lbp_pengguna", "warga"), { ...baru, halaman: ["pengaturan.html"] }));
+  await assertSucceeds(setDoc(doc(warga, "lbp_pengguna", "warga"), baru));
+  // email belum terverifikasi tidak ikut otomatis
+  const palsu = env.authenticatedContext("palsu", { email: "palsu@contoh.go.id", email_verified: false }).firestore();
+  await assertFails(setDoc(doc(palsu, "lbp_pengguna", "palsu"), { ...baru, email: "palsu@contoh.go.id" }));
+  // pendaftar lama yang menunggu ikut aktif sebagai Masyarakat, tidak bisa memilih peran lain
+  await akun("lama", null, "menunggu");
+  const lama = env.authenticatedContext("lama", { email: "lama@contoh.go.id", email_verified: true }).firestore();
+  await assertFails(updateDoc(doc(lama, "lbp_pengguna", "lama"), { status: "aktif", peran: "tpid", diperbarui: serverTimestamp() }));
+  await assertSucceeds(updateDoc(doc(lama, "lbp_pengguna", "lama"), { status: "aktif", peran: "masyarakat", diperbarui: serverTimestamp() }));
+});

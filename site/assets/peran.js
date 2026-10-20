@@ -200,8 +200,11 @@ async function berandaAnalis(el, meta) {
 
 /* ---------- administrator */
 async function berandaAdmin(el, meta) {
-  const [ringkasan, kualitas, sinyal, kinerja, master, sumber] = await Promise.all([muatJSON("ringkasan.json"), muatJSON("kualitas.json"), muatJSON("sinyal.json"), muatJSON("kinerja.json").catch(() => null),
-    muatJSON("master.json"), muatJSON("sumber.json").catch(() => null)]);
+  // sumber.json besar (daftar kandidat sumber), jadi dimuat belakangan dan tidak menahan tampilan beranda.
+  const janjiSumber = muatJSON("sumber.json").catch(() => null);
+  const [ringkasan, kualitas, sinyal, kinerja, master] = await Promise.all([muatJSON("ringkasan.json"), muatJSON("kualitas.json"), muatJSON("sinyal.json"), muatJSON("kinerja.json").catch(() => null),
+    muatJSON("master.json")]);
+  let sumber = null;
   let jumlahAkun = "–";
   if (meta.login === "contoh") { try { jumlahAkun = (await (await fetch("data/pengguna.json")).json()).akun.length; } catch { /* abaikan */ } }
   const umur = (Date.now() - new Date(meta.dibuat).getTime()) / 3.6e6;
@@ -219,13 +222,13 @@ async function berandaAdmin(el, meta) {
   const repo = meta.url_repo;
   const repoBerkas = (nama) => (repo ? `${repo}/blob/main/config/${nama}` : "");
   // Sama dengan halaman Sumber Data: sumber aktif yang mengirim data (saluran isian petugas dihitung setelah ada isinya).
-  const sumberAktif = (sumber?.sumber || []).filter((x) => x.status === "aktif" && x.jumlah_observasi > 0);
+  const sumberAktif = () => (sumber?.sumber || []).filter((x) => x.status === "aktif" && x.jumlah_observasi > 0);
   const aksi = tombol("pengaturan.html", "Pengaturan", true) + tombol("pengguna.html", "Pengguna dan peran") + tombol("#beranda-tpid", "Ke dashboard TPID") +
     (meta.url_run ? tombol(meta.url_run, "Log proses", false, ' target="_blank" rel="noopener"') : "");
-  const ubinStatis = `        ${ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: `${master.varian.filter((v) => v.aktif !== false).length} varian aktif`, href: repoBerkas("komoditas.csv") })}
+  const ubinStatis = () => `        ${ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: `${master.varian.filter((v) => v.aktif !== false).length} varian aktif`, href: repoBerkas("komoditas.csv") })}
         ${ind({ i: "toko", label: "Pasar", nilai: master.pasar.length, sub: `${master.pasar.filter((x) => x.blank_spot).length} blank spot`, href: repoBerkas("pasar.csv") })}
         ${ind({ i: "peta", label: "Wilayah", nilai: master.wilayah.length, sub: "target dan pembanding", href: repoBerkas("wilayah.csv") })}
-        ${ind({ i: "database", label: "Sumber data aktif", nilai: sumberAktif.length || "–", sub: sumber ? "semua mengirim data" : "belum ada", href: "sumber.html" })}
+        ${ind({ i: "database", label: "Sumber data aktif", nilai: sumberAktif().length || "–", sub: sumber ? "semua mengirim data" : "memuat…", href: "sumber.html" })}
         ${ind({ i: "kalender", label: "Hari raya", nilai: master.kalender.length, sub: "tanggal terjadwal", href: repoBerkas("kalender.csv") })}
         ${ind({ i: "orang", label: "Akun", nilai: jumlahAkun, sub: meta.login === "firebase" ? "diatur di Firebase" : "akun contoh", href: "pengguna.html" })}`;
   const ubinDinamis = `        ${ind({ i: "kalender", label: "Harga terakhir", nilai: tgl(meta.tanggal_data_terakhir), sub: jamLalu })}
@@ -257,7 +260,12 @@ async function berandaAdmin(el, meta) {
         </div>
       </section>
     </div>`);
-  pasangPanelData(el.querySelector("#panel-data"), { ubinStatis, ubinDinamis, master, sumber, ringkasan, sinyal, kualitas });
+  const panelData = el.querySelector("#panel-data");
+  pasangPanelData(panelData, { ubinStatis: ubinStatis(), ubinDinamis, master, sumber, ringkasan, sinyal, kualitas });
+  janjiSumber.then((x) => {
+    sumber = x;
+    pasangPanelData(panelData, { ubinStatis: ubinStatis(), ubinDinamis, master, sumber, ringkasan, sinyal, kualitas });
+  });
   import("./panel-kehadiran.js").then((m) => m.pasangPanelKehadiran(el.querySelector("#panel-kehadiran"), meta))
     .catch((e) => { el.querySelector("#panel-kehadiran").innerHTML = `<p class="kosong">Panel pengguna aktif belum bisa dimuat: ${esc(e.message || e)}</p>`; });
   if (meta.login === "firebase") pengingatPersetujuan(el);
@@ -321,8 +329,13 @@ function pasangPanelData(el, { ubinStatis, ubinDinamis, master, sumber, ringkasa
       },
     },
   };
-  let mode = "statis", isi = { statis: "komoditas", dinamis: "harga" };
+  // Pilihan disimpan di elemen supaya tidak kembali ke awal saat panel digambar ulang (mis. setelah sumber.json termuat).
+  el._pilihan ||= { mode: "statis", isi: { statis: "komoditas", dinamis: "harga" } };
+  const pilihan = el._pilihan;
+  let { mode } = pilihan;
+  const { isi } = pilihan;
   function gambar() {
+    pilihan.mode = mode;
     const d = SET[mode];
     el.innerHTML = `<div class="kartu-kepala"><div><h2>${d.judul}</h2><p>${d.ket}</p></div>
       <div class="segmen" role="group" aria-label="Jenis data">${Object.entries(SET).map(([k, v]) => `<button type="button" data-mode="${k}" aria-pressed="${k === mode}">${v.judul}</button>`).join("")}</div></div>

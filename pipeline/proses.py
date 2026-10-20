@@ -171,6 +171,16 @@ def terapkan_keputusan_sumber(kandidat: dict, keputusan: dict[str, dict]) -> lis
     return list(diterima.values())
 
 
+def alamat_dashboard(env, repo: str | None) -> str:
+    """Alamat situs untuk tautan di Telegram, email, dan catatan GitHub: URL_DASHBOARD bila diisi, lalu situs Firebase
+    Hosting (situs utama yang dipakai pengguna), baru GitHub Pages sebagai cadangan."""
+    if env.get("URL_DASHBOARD"):
+        return env["URL_DASHBOARD"].rstrip("/") + "/"
+    if env.get("FIREBASE_HOSTING_SITE"):
+        return f"https://{env['FIREBASE_HOSTING_SITE'].strip()}.web.app/"
+    return f"https://{repo.split('/')[0].lower()}.github.io/{repo.split('/')[1]}/" if repo else ""
+
+
 def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, sinkron_github: bool = True,
              kirim_notifikasi: bool = True) -> dict:
     akar = konf.akar
@@ -234,8 +244,7 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
                                                beku=hasil_qc.beku)
     buku, terlewat = ({}, []) if pakai_demo else tindak_lanjut.baca_buku(akar / "data" / "tindak_lanjut")
     repo = os.environ.get("GITHUB_REPOSITORY")
-    url_dashboard = os.environ.get("URL_DASHBOARD") or (
-        f"https://{repo.split('/')[0].lower()}.github.io/{repo.split('/')[1]}/" if repo else "")
+    url_dashboard = alamat_dashboard(os.environ, repo)
     status_issue, pesan_github = ({}, "sinkronisasi GitHub dilewati")
     if sinkron_github:
         status_issue, pesan_github = tindak_lanjut.sinkronisasi_github(

@@ -71,7 +71,8 @@
     "maks_sinyal_per_pesan": 10,
     "email_ke_pengguna": true,
     "buletin_mingguan": true,
-    "kirim_saat_demo": false
+    "kirim_saat_demo": false,
+    "jam_periksa": "07.30, 11.45, 15.45"
   },
   "layanan": {
     "url_pengaduan_eksternal": "https://test.com",

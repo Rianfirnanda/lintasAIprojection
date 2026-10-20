@@ -120,14 +120,35 @@ export async function pastikanAkun(user) {
       }
     } catch (e) {
       if (!kodeIzinDitolak(e)) throw e;
+      // Bila Administrator menyalakan pendaftaran otomatis, akun baru langsung aktif sebagai Masyarakat.
+      const otomatis = (await muatPendaftaran()).otomatis;
       if (!dok.exists()) {
-        await fb.setDoc(ref, { email: user.email, nama, foto: user.photoURL || null, status: "menunggu", peran: null,
-          halaman: null, dibuat: fb.serverTimestamp(), diperbarui: fb.serverTimestamp() });
+        await fb.setDoc(ref, { email: user.email, nama, foto: user.photoURL || null, status: otomatis ? "aktif" : "menunggu",
+          peran: otomatis ? "masyarakat" : null, halaman: null, dibuat: fb.serverTimestamp(), diperbarui: fb.serverTimestamp() });
+      } else if (otomatis) {
+        await fb.updateDoc(ref, { status: "aktif", peran: "masyarakat", halaman: null, diperbarui: fb.serverTimestamp() })
+          .catch(() => {}); // tetap menunggu bila aturan menolak
       }
     }
     dok = await fb.getDoc(ref);
   }
   return { uid: user.uid, ...dok.data() };
+}
+
+/** Pengaturan pendaftaran: { otomatis } (pendaftar baru langsung aktif sebagai Masyarakat). */
+export async function muatPendaftaran() {
+  const { fb, db } = await firebaseSiap();
+  try {
+    const d = await fb.getDoc(fb.doc(db, "lbp_akses", "pendaftaran"));
+    return { otomatis: d.exists() && d.data().otomatis === true };
+  } catch { return { otomatis: false }; }
+}
+
+/** Nyalakan/matikan pendaftaran otomatis (hanya peran Administrator) dan catat jejaknya. */
+export async function simpanPendaftaran(otomatis) {
+  const { fb, db, auth } = await firebaseSiap();
+  await fb.setDoc(fb.doc(db, "lbp_akses", "pendaftaran"), { otomatis: Boolean(otomatis), diubah_oleh: auth.currentUser.email, diubah_pada: fb.serverTimestamp() });
+  await catatJejak("pendaftaran", { uid: "", email: "" }, otomatis ? "pendaftaran otomatis dinyalakan" : "pendaftaran otomatis dimatikan");
 }
 
 /** Pantau perubahan akun sendiri (misalnya saat admin menyetujui). Mengembalikan fungsi untuk berhenti. */
