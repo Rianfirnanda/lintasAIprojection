@@ -216,6 +216,26 @@ service cloud.firestore {
         && baru().hapus_pada < request.time + duration.value(366, 'd');
     }
 
+    // Galat di perangkat pengguna (galat-klien.js): hanya pesan galat, letaknya di kode, halaman, peramban, dan ukuran
+    // layar. Ditambah oleh pemilik akun aktif, dibaca dan dihapus pengelola pengguna. Terhapus sendiri lewat TTL hapus_pada
+    // (paling lama 31 hari).
+    match /lbp_galat/{id} {
+      allow read, delete: if kelolaPengguna();
+      allow create: if aktif()
+        && baru().keys().hasOnly(['uid', 'peran', 'halaman', 'pesan', 'sumber', 'tumpukan', 'jenis', 'peramban', 'layar',
+                                  'daring', 'waktu', 'hapus_pada'])
+        && baru().uid == request.auth.uid
+        && baru().peran == get(akun(request.auth.uid)).data.peran
+        && teksPendek(baru().halaman, 60) && teksPendek(baru().pesan, 300) && baru().pesan.size() > 0
+        && teksPendek(baru().sumber, 200) && teksPendek(baru().tumpukan, 1200)
+        && baru().jenis in ['galat', 'janji']
+        && teksPendek(baru().peramban, 250) && teksPendek(baru().layar, 20)
+        && baru().daring is bool
+        && baru().waktu == request.time
+        && baru().hapus_pada is timestamp && baru().hapus_pada > request.time
+        && baru().hapus_pada < request.time + duration.value(31, 'd');
+    }
+
     // Tabel hak akses per peran (halaman Pengguna). Semua akun aktif membacanya untuk menyusun menu; hanya peran
     // Administrator yang mengubahnya. Peran Administrator sendiri selalu membuka semua halaman, jadi tidak ada di sini.
     match /lbp_akses/{id} {

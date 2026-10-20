@@ -61,3 +61,16 @@ test("tanpa data harga tidak rusak", () => {
   assert.equal(t.length, 1);
   assert.match(t[0].isi, /belum tersedia/);
 });
+
+test("perkiraan: yang bergeser di bawah 0,5% ditulis tetap; bila semua tetap, kisaran terlebar tampil dulu", () => {
+  const p = susunTampilan(DATA, { perHalaman: 12 }).find((x) => x.kunci === "perkiraan");
+  assert.match(p.isi, /Cabai Rawit Hijau/);
+  assert.doesNotMatch(p.isi, /Beras Kualitas Medium I/); // tetap, tidak masuk daftar yang berubah
+  const tetap = structuredClone(DATA);
+  tetap.ringkasan.varian[0].proyeksi_h7 = { prediksi: 80000, bawah: 70000, atas: 95000 };
+  const q = susunTampilan(tetap, { perHalaman: 12 }).find((x) => x.kunci === "perkiraan");
+  assert.match(q.sub, /Semua harga diperkirakan tetap/);
+  assert.match(q.isi, /Belum ada tanda harga akan naik atau turun/);
+  assert.ok(q.isi.indexOf("Cabai Rawit Hijau") < q.isi.indexOf("Beras Kualitas Medium I"));
+  assert.doesNotMatch(q.isi, /Rp80\.000<\/b>/);
+});

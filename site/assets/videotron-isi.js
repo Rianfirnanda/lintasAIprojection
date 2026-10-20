@@ -1,7 +1,7 @@
 // Isi Mode Videotron (layar rapat, TV, atau videotron): menyusun tampilan dari data situs. Murni tanpa DOM supaya bisa
 // diuji di Node; rapat.js yang menampilkan dan memutarnya. Semua angka dari ringkasan.json, sinyal.json, dan seri/*.json.
 import { gambarKomoditas } from "./gambar-komoditas.js";
-import { selisihHarga, ringkasHariIni } from "./selisih.js";
+import { selisihHarga, ringkasHariIni, bandingPerkiraan } from "./selisih.js";
 
 export const rp = (x) => `Rp${Math.round(Number(x)).toLocaleString("id-ID")}`;
 export const persen = (x, d = 1) => `${x > 0 ? "+" : ""}${Number(x).toLocaleString("id-ID", { minimumFractionDigits: d, maximumFractionDigits: d })}%`;
@@ -74,7 +74,10 @@ function daftarBatang(isi, periode, kelas) {
 function angkaSinyal(s, satuan) {
   const per = satuan ? `/${satuan}` : "";
   if (ada(s.nilai_aktual) && ada(s.baseline)) return `Sekarang <b>${rp(s.nilai_aktual)}${per}</b>, biasanya ${rp(s.baseline)}${per}`;
-  if (ada(s.nilai_aktual) && s.proyeksi_h7?.prediksi) return `Sekarang <b>${rp(s.nilai_aktual)}${per}</b>, 7 hari lagi sekitar ${rp(s.proyeksi_h7.prediksi)}${per}`;
+  if (ada(s.nilai_aktual) && s.proyeksi_h7?.prediksi) {
+    const k = bandingPerkiraan(s.nilai_aktual, s.proyeksi_h7);
+    return `Sekarang <b>${rp(s.nilai_aktual)}${per}</b>, 7 hari lagi ${k?.tetap ? "diperkirakan tetap" : `sekitar ${rp(s.proyeksi_h7.prediksi)}${per}`}`;
+  }
   if (ada(s.nilai_aktual)) return `Sekarang <b>${rp(s.nilai_aktual)}${per}</b>`;
   return esc(s.narasi || "");
 }
@@ -157,15 +160,22 @@ export function susunTampilan(data, opsi = {}) {
         <h3>${esc(s.judul)}</h3><p>${angkaSinyal(s, satuan[s.kode_varian])}</p></div></article>`).join("")}</div>`
       : `<div class="vt-aman">${ikon("centang", 64)}<p class="vt-kalimat">Tidak ada harga yang bergerak jauh dari kebiasaan. Semua masih dalam pola biasa.</p></div>` });
 
-  // 6. Perkiraan 7 hari
-  const kira = v.filter((x) => x.proyeksi_h7?.prediksi).map((x) => ({ x, beda: (x.proyeksi_h7.prediksi - x.harga_terakhir) / x.harga_terakhir * 100 }))
-    .sort((a, c) => Math.abs(c.beda) - Math.abs(a.beda)).slice(0, opsi.barisKira || 8);
-  if (kira.length) {
-    daftar.push({ kunci: "perkiraan", judul: "Perkiraan harga 7 hari ke depan", sub: "Barang yang diperkirakan paling banyak berubah", lama: 20, isi: `
+  // 6. Perkiraan 7 hari. Barang yang diperkirakan bergeser kurang dari 0,5% ditulis "tetap"; bila semuanya tetap, layar
+  // menampilkan kisaran yang mungkin (paling lebar dulu) supaya penonton tahu barang mana yang paling mungkin bergejolak.
+  const kira = v.map((x) => ({ x, k: bandingPerkiraan(x.harga_terakhir, x.proyeksi_h7) })).filter(({ k }) => k);
+  const bergerak = kira.filter(({ k }) => !k.tetap).sort((a, c) => Math.abs(c.k.persen) - Math.abs(a.k.persen));
+  const lebar = ({ x, k }) => (ada(k.bawah) && ada(k.atas) ? (k.atas - k.bawah) / x.harga_terakhir : 0);
+  const tampil = (bergerak.length ? bergerak : [...kira].sort((a, c) => lebar(c) - lebar(a))).slice(0, opsi.barisKira || 8);
+  if (tampil.length) {
+    const semuaTetap = !bergerak.length;
+    daftar.push({ kunci: "perkiraan", judul: "Perkiraan harga 7 hari ke depan",
+      sub: semuaTetap ? "Semua harga diperkirakan tetap. Kisaran menunjukkan seberapa jauh harga masih bisa bergeser"
+        : "Barang yang diperkirakan paling banyak berubah", lama: 20, isi: `
+      ${semuaTetap ? `<p class="vt-kalimat">Belum ada tanda harga akan naik atau turun dalam seminggu ke depan.</p>` : ""}
       <table class="vt-tabel"><thead><tr><th>Barang</th><th>Sekarang</th><th>7 hari lagi</th><th class="vt-sembunyi-sempit">Kisaran</th></tr></thead>
-      <tbody>${kira.map(({ x, beda }) => { const a = arah(beda), h = x.proyeksi_h7; return `<tr><td>${gambarKomoditas(x.kode)}<span>${esc(x.nama)}</span></td>
-        <td>${rp(x.harga_terakhir)}</td><td class="${a}"><b>${rp(h.prediksi)}</b> ${TANDA[a]}</td>
-        <td class="vt-redup vt-sembunyi-sempit">${ada(h.bawah) && ada(h.atas) ? `${rp(h.bawah)} – ${rp(h.atas)}` : "–"}</td></tr>`; }).join("")}</tbody></table>
+      <tbody>${tampil.map(({ x, k }) => { const a = k.tetap ? "datar" : arah(k.persen); return `<tr><td>${gambarKomoditas(x.kode)}<span>${esc(x.nama)}</span></td>
+        <td>${rp(x.harga_terakhir)}</td><td class="${a}"><b>${k.tetap ? "Tetap" : rp(k.prediksi)}</b> ${TANDA[a]}</td>
+        <td class="vt-redup vt-sembunyi-sempit">${ada(k.bawah) && ada(k.atas) && Math.round(k.bawah) !== Math.round(k.atas) ? `${rp(k.bawah)} – ${rp(k.atas)}` : "tidak bergeser"}</td></tr>`; }).join("")}</tbody></table>
       <p class="vt-catatan">Perkiraan bukan angka resmi. Harga sebenarnya biasanya jatuh di dalam kisaran.</p>` });
   }
 

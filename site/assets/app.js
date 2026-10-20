@@ -24,6 +24,12 @@ export const STATUS_SINYAL = {
   selesai: "Selesai",
 };
 
+// Galat yang terjadi sebelum pencatat galat (galat-klien.js) termuat ditampung dulu, paling banyak tiga.
+const galatAwal = [];
+const tampungGalat = (e) => { if (galatAwal.length < 3 && (e.type !== "error" || e.target === window)) galatAwal.push(e); };
+addEventListener("error", tampungGalat);
+addEventListener("unhandledrejection", tampungGalat);
+
 let metaCache = null;
 
 /* ---------- data dashboard
@@ -162,6 +168,21 @@ export function muatMeta() {
   })();
   janjiMeta.catch(() => { janjiMeta = null; metaCache = null; });
   return janjiMeta;
+}
+
+/** Safari sebelum 15.4 belum mengenal <dialog>: beri showModal, close, dan open sederhana pada elemen ini supaya jendela
+ *  rincian dan pencarian cepat tetap bisa dibuka dan ditutup. Peramban lain tidak berubah. */
+export function pastikanDialog(d) {
+  if (typeof d.showModal === "function") return d;
+  Object.defineProperty(d, "open", { get: () => d.hasAttribute("open"), configurable: true });
+  d.showModal = () => { d.setAttribute("open", ""); d.classList.add("dialog-cadangan"); };
+  d.close = () => {
+    if (!d.hasAttribute("open")) return;
+    d.removeAttribute("open");
+    d.dispatchEvent(new Event("close"));
+  };
+  d.addEventListener("keydown", (e) => { if (e.key === "Escape") d.close(); });
+  return d;
 }
 
 export function esc(s) {
@@ -327,6 +348,7 @@ function tandaiSiap() {
   const selesai = () => {
     try { sessionStorage.setItem(KUNCI_PEMBUKA, "1"); } catch { /* abaikan */ }
     document.body.classList.add("siap");
+    document.documentElement.classList.add("halaman-siap"); // untuk peramban tanpa :has() (Safari di bawah 15.4)
   };
   if (sisa > 0) setTimeout(selesai, sisa); else selesai();
 }
@@ -570,15 +592,34 @@ export async function pasangKerangka(aktif) {
   pasangPembaruan(meta);
   pasangHitungNaik();
   pasangGerak();
+  pasangGulirTabel();
   // Tombol "Tanya" (chatbot Tanya Takar) di pojok kanan bawah semua halaman.
   if (!wajibMasuk) import("./tanya.js").then((m) => m.pasangTombolTanya(meta)).catch(() => {});
-  if (pengguna?.sumber === "firebase") segarkanSesiFirebase(pengguna);
+  if (pengguna?.sumber === "firebase") {
+    segarkanSesiFirebase(pengguna);
+    // Galat di perangkat ini dicatat untuk Administrator (beranda admin, panel Galat di perangkat pengguna).
+    import("./galat-klien.js").then((m) => {
+      removeEventListener("error", tampungGalat);
+      removeEventListener("unhandledrejection", tampungGalat);
+      m.pasangCatatGalat(pengguna, galatAwal.splice(0));
+    }).catch(() => {});
+  }
   return izin === "tolak" ? tundaSelamanya() : meta;
 }
 
 /* ---------- akun Firebase: cocokkan sesi lokal dengan data akun terbaru di Firestore
  * Kalau admin mengubah peran atau izin, menonaktifkan, atau menghapus akun, perubahan itu berlaku saat halaman dibuka. */
+// Akun diperiksa ulang paling sering tiap 3 menit per tab (bukan tiap halaman), supaya kuota baca Firestore hemat.
+// Hak akses yang sebenarnya tetap dijaga aturan Firestore di server, jadi jeda ini hanya memengaruhi menu yang tampil.
+const JEDA_CEK_AKUN_MS = 3 * 60e3;
 async function segarkanSesiFirebase(lama) {
+  const kunciCek = `lbp-cek-akun-${lama.uid || lama.id}`;
+  let terakhir = 0;
+  try { terakhir = Number(sessionStorage.getItem(kunciCek)) || 0; } catch { /* abaikan */ }
+  if (Date.now() - terakhir < JEDA_CEK_AKUN_MS) {
+    import("./kehadiran.js").then((m) => m.pasangKehadiran(lama)).catch(() => {});
+    return;
+  }
   try {
     const fk = await import("./firebase-klien.js");
     const user = await fk.penggunaKini();
@@ -595,6 +636,7 @@ async function segarkanSesiFirebase(lama) {
     }
     catatPemakaian(fk, user.uid);
     const baru = await fk.sesiAkun(akun);
+    try { sessionStorage.setItem(kunciCek, String(Date.now())); } catch { /* abaikan */ }
     const beda = baru.peran !== lama.peran || JSON.stringify(baru.halaman) !== JSON.stringify(lama.halaman ?? null) || baru.nama !== lama.nama;
     // Kehadiran dan log aktivitas (dilihat Administrator di beranda); lokasi hanya bila pengguna memilih membagikan.
     if (!beda) import("./kehadiran.js").then((m) => m.pasangKehadiran(baru)).catch(() => {});
@@ -623,6 +665,22 @@ async function catatPemakaian(fk, uid) {
     await fb.updateDoc(fb.doc(db, fk.KOLEKSI_PENGGUNA, uid), { terakhir_aktif: fb.serverTimestamp() });
     localStorage.setItem(kunci, hari);
   } catch { /* dicoba lagi saat halaman berikutnya */ }
+}
+
+/* ---------- tabel lebar yang digeser ke samping bisa dijangkau keyboard (Tab lalu panah kiri/kanan), WCAG 2.1 */
+function tandaiGulir(akar) {
+  for (const el of akar.querySelectorAll?.(".gulir-tabel:not([tabindex])") || []) {
+    const judul = el.closest("section, .kartu")?.querySelector("h2, h3")?.textContent?.trim();
+    el.tabIndex = 0;
+    el.setAttribute("role", "region");
+    el.setAttribute("aria-label", `${judul ? `${judul}: ` : ""}tabel, geser ke samping untuk melihat semua kolom`);
+  }
+}
+function pasangGulirTabel() {
+  tandaiGulir(document);
+  new MutationObserver((ubah) => {
+    for (const u of ubah) for (const n of u.addedNodes) if (n.nodeType === 1) tandaiGulir(n.parentElement || n);
+  }).observe(document.body, { childList: true, subtree: true });
 }
 
 /* ---------- angka indikator menghitung naik saat muncul (mis. 0 → 92%) */

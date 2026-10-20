@@ -8,7 +8,7 @@ import pytest
 from pipeline import proses
 from tests.conftest import tulis_csv
 
-BERKAS = ["meta.json", "master.json", "ringkasan.json", "sinyal.json", "kualitas.json", "model.json", "pasar.json", "sumber.json",
+BERKAS = ["meta.json", "master.json", "ringkasan.json", "sinyal.json", "kualitas.json", "model.json", "pasar.json", "sumber.json", "sumber_ai.json",
           "kinerja.json", "laporan.json"]
 
 

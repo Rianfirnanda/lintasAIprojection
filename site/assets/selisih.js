@@ -59,3 +59,20 @@ export function ringkasHariIni(varian, periode = "mingguan") {
   }
   return { naik: naik.length, turun: turun.length, kalimat };
 }
+
+/** Perkiraan dibanding harga sekarang: { prediksi, bawah, atas, selisih, persen, tetap } atau null. Selisih di bawah 0,5%
+ *  (ambang yang sama dengan naik/turun di beranda) dianggap tetap, supaya angka yang praktis sama tidak terbaca naik atau
+ *  turun. Untuk harga yang jarang berubah, cara perkiraan terbaik memang "sama dengan harga terakhir". */
+export const AMBANG_TETAP_PERSEN = 0.5;
+export function bandingPerkiraan(kini, p) {
+  if (!p || p.prediksi === null || p.prediksi === undefined || !kini) return null;
+  const selisih = p.prediksi - kini, pr = (selisih / kini) * 100;
+  return { prediksi: p.prediksi, bawah: p.bawah ?? null, atas: p.atas ?? null, selisih, persen: pr, tetap: Math.abs(pr) < AMBANG_TETAP_PERSEN };
+}
+
+/** Kalimat perkiraan untuk semua kalangan: "diperkirakan tetap" atau "sekitar Rp36.000 (naik Rp1.000)". */
+export function teksPerkiraan(b) {
+  if (!b) return "belum ada perkiraan";
+  if (b.tetap) return "diperkirakan tetap";
+  return `sekitar ${rp(b.prediksi)} (${b.selisih > 0 ? "naik" : "turun"} ${rp(Math.abs(b.selisih))})`;
+}

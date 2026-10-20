@@ -2,7 +2,7 @@
   "hosting": {
     "target": "lbp",
     "public": "site",
-    "ignore": ["**/.*", "vendor/firebase/entri.js", "vendor/sealedbox/entri.js"],
+    "ignore": ["**/.*", "vendor/firebase/entri.js", "vendor/firebase/entri-ai.js", "vendor/sealedbox/entri.js"],
     "headers": [
       {
         "source": "**/*.@(html|js|mjs|css|json|csv|webmanifest|geojson)",

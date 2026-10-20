@@ -20,8 +20,9 @@ dalam situs sudah disiapkan dan diuji. Kerjakan berurutan; tiap langkah hanya be
 
 ## Sangat disarankan
 
-5. **Hapus otomatis log aktivitas lama** (perlindungan data pribadi): Firebase Console → Firestore Database → **TTL** →
-   *Create policy*: collection group `lbp_aktivitas`, timestamp field `hapus_pada`.
+5. **Hapus otomatis log aktivitas dan catatan galat lama** (perlindungan data pribadi): Firebase Console → Firestore
+   Database → **TTL** → *Create policy*: collection group `lbp_aktivitas`, timestamp field `hapus_pada`. Ulangi untuk
+   collection group `lbp_galat` dengan field yang sama.
 6. **AI Tanya Takar untuk semua pengguna**: Firebase Console → **AI Logic** → *Get started* → *Gemini Developer API*.
    Lalu pasang **App Check** (reCAPTCHA v3) supaya jatah AI tidak dipakai pihak lain. Langkahnya di
    `PANDUAN_OPERASIONAL.md` bagian 6b.
@@ -47,3 +48,9 @@ dalam situs sudah disiapkan dan diuji. Kerjakan berurutan; tiap langkah hanya be
   bernama "Takar Pangan" yang membuka Beranda (petugas tanpa sinyal langsung diarahkan ke formulir Catat Harga).
 - Header keamanan hosting: tidak bisa disisipkan ke situs lain, izin kamera dan mikrofon ditutup, lokasi hanya untuk
   situs ini sendiri.
+- Aksesibilitas: semua halaman untuk keenam peran lolos pemeriksaan otomatis axe-core untuk WCAG 2.1 tingkat AA (kontras
+  warna, label, tabel lebar bisa digeser dengan keyboard), di tema gelap dan terang, ponsel dan komputer.
+- Peramban: diuji di Chromium (Chrome, Edge, Samsung Internet, dan peramban Android lain memakai mesin yang sama). Safari
+  (iPhone) tidak bisa diuji langsung di mesin uji, jadi kodenya diperiksa untuk fitur yang belum didukung Safari lama dan
+  diberi cadangan. Dukungan penuh mulai iOS 15.4; iPhone 6s ke atas bisa diperbarui ke versi itu.
+- Galat yang muncul di perangkat pengguna tercatat otomatis untuk Administrator (Beranda → Ringkasan Administrator).

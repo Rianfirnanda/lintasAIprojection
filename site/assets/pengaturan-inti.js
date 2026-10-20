@@ -6,7 +6,7 @@ export function ambil(data, jalur) {
   let sekarang = data;
   for (const bagian of jalur.split(".")) {
     if (Array.isArray(sekarang) && /^\d+$/.test(bagian) && Number(bagian) < sekarang.length) sekarang = sekarang[Number(bagian)];
-    else if (sekarang !== null && typeof sekarang === "object" && !Array.isArray(sekarang) && Object.hasOwn(sekarang, bagian)) sekarang = sekarang[bagian];
+    else if (sekarang !== null && typeof sekarang === "object" && !Array.isArray(sekarang) && Object.prototype.hasOwnProperty.call(sekarang, bagian)) sekarang = sekarang[bagian];
     else return { ada: false, nilai: undefined };
   }
   return { ada: true, nilai: sekarang };

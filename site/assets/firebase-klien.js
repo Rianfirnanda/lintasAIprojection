@@ -41,14 +41,15 @@ export function firebaseSiap() {
  *  Bila kunci reCAPTCHA diisi, App Check dinyalakan dulu supaya skrip di luar situs ditolak Firebase. */
 export async function aiFirebase() {
   ai ||= (async () => {
-    const { fb, app } = await firebaseSiap();
+    // Bagian AI dan App Check dimuat terpisah (firebase-ai.js) supaya halaman lain tidak ikut mengunduhnya.
+    const [{ app }, fbAi] = await Promise.all([firebaseSiap(), import("../vendor/firebase/firebase-ai.js")]);
     const lokal = ["localhost", "127.0.0.1"].includes(location.hostname);
     if (kunciAppCheck && !lokal) {
       try {
-        fb.initializeAppCheck(app, { provider: new fb.ReCaptchaV3Provider(kunciAppCheck), isTokenAutoRefreshEnabled: true });
+        fbAi.initializeAppCheck(app, { provider: new fbAi.ReCaptchaV3Provider(kunciAppCheck), isTokenAutoRefreshEnabled: true });
       } catch { /* sudah dinyalakan sebelumnya */ }
     }
-    return { fb, ai: fb.getAI(app, { backend: new fb.GoogleAIBackend() }) };
+    return { fb: fbAi, ai: fbAi.getAI(app, { backend: new fbAi.GoogleAIBackend() }) };
   })();
   ai.catch(() => { ai = null; });
   return ai;

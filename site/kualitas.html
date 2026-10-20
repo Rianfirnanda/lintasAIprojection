@@ -141,7 +141,9 @@ const ps = r.per_status || {};
 const lolosN = (ps.lolos || 0) + (ps.divalidasi || 0);
 document.getElementById("kpi").innerHTML = [
   ind({ i: "centang", warna: "hijau", label: "Baris lolos", nilai: angka(lolosN), sub: `${angka(ps.divalidasi || 0)} lewat pemeriksaan manusia`, warnaNilai: "hijau" }),
-  ind({ i: "peringatan", warna: "merah", label: "Menunggu keputusan", nilai: angka(q.jumlah_perlu_validasi), sub: "menunggu pemeriksa", warnaNilai: q.jumlah_perlu_validasi ? "merah" : "" }),
+  ind({ i: "peringatan", warna: "merah", label: "Menunggu keputusan", nilai: angka(q.jumlah_perlu_validasi),
+    sub: r.lonjakan_sumber_resmi ? `${angka(r.lonjakan_sumber_resmi)} lonjakan dari sumber resmi dicatat tanpa ditahan` : "menunggu pemeriksa",
+    warnaNilai: q.jumlah_perlu_validasi ? "merah" : "" }),
   ind({ i: "jam", warna: r.deret_beku ? "oranye" : "hijau", label: "Harga tidak diperbarui", nilai: angka(r.deret_beku || 0), kecil: "deret",
     sub: `${angka(r.observasi_beku || 0)} angka tidak dipakai`, warnaNilai: r.deret_beku ? "oranye" : "" }),
   ind({ i: "tukar", label: "Beda antar sumber", nilai: angka(r.rekonsiliasi_melebihi_batas), sub: "selisihnya terlalu besar" }),

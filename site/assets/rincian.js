@@ -1,6 +1,6 @@
 // Jendela rincian untuk kotak indikator di beranda TPID. Klik "1 Sinyal prioritas" (atau kotak lain)
 // dan isinya muncul di sini: apa saja yang dihitung, di mana, dan apa langkah berikutnya.
-import { esc, rp, persen, angka, tgl, muatJSON, lencanaStatus, lencanaKeparahan, JENIS_SINYAL } from "./app.js";
+import { esc, rp, persen, angka, tgl, muatJSON, lencanaStatus, lencanaKeparahan, JENIS_SINYAL, pastikanDialog } from "./app.js";
 import { ikon, gambarKomoditas, selisihHarga, htmlSelisih, tglPendek, LANGKAH_SINYAL } from "./dashboard.js";
 import { bolehAkses } from "./akses.js";
 
@@ -9,7 +9,7 @@ let asal = null;
 
 function siapkan() {
   if (dialog) return dialog;
-  dialog = document.createElement("dialog");
+  dialog = pastikanDialog(document.createElement("dialog"));
   dialog.className = "rincian";
   dialog.setAttribute("aria-labelledby", "rincian-judul");
   dialog.innerHTML = `<div class="rincian-kotak">

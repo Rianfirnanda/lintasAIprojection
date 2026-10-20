@@ -123,7 +123,7 @@ import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, saatTemaBerubah,
 import { gambarGrafikHarga, legendaDashboard, potongSeri } from "./assets/grafik.js";
 import { ikon, gambarKomoditas, bulanTahun, hitungMutu, nilaiUptime, selisihHarga, htmlSelisih, tglPendek, LANGKAH_SINYAL, ringkasHariIni } from "./assets/dashboard.js";
 import { bukaRincian, isiSinyal, isiKomoditas, isiBlankSpot, isiKetepatan, isiUptime } from "./assets/rincian.js";
-import { peranAktif, PERAN } from "./assets/akses.js";
+import { peranAktif, PERAN, bolehAkses } from "./assets/akses.js";
 import { renderBerandaPeran } from "./assets/peran.js";
 
 const meta = await pasangKerangka("index.html");
@@ -204,7 +204,8 @@ try { videotronLanjut = sessionStorage.getItem("lbp-videotron") === "1"; } catch
 if (tampilanTpid && (location.hash === "#videotron" || videotronLanjut)) import("./assets/rapat.js").then((m) => m.bukaModeRapat());
 document.getElementById("dash-ikon-kalender").insertAdjacentHTML("afterbegin", ikon("kalender", 20));
 // Harga yang baru dikirim petugas langsung tampil (real-time), sebelum selesai diolah.
-if (meta?.login === "firebase") import("./assets/harga-masuk.js").then((m) => m.pasangHargaMasuk(meta, utama)).catch(() => {});
+// Hanya untuk peran yang boleh membaca kiriman harga (cek data); peran lain akan ditolak Firestore, jadi tidak perlu dicoba.
+if (meta?.login === "firebase" && bolehAkses(peran, "kualitas.html")) import("./assets/harga-masuk.js").then((m) => m.pasangHargaMasuk(meta, utama)).catch(() => {});
 
 /* ---------- indikator utama (tiap kotak bisa diklik untuk melihat rinciannya) */
 function kartuKpi(jenis, ikonNama, warna, angkaHtml, label, sub, ada = false) {

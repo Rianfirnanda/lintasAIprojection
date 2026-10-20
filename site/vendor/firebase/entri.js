@@ -9,7 +9,4 @@ export {
   getFirestore, connectFirestoreEmulator, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, orderBy, limit,
   onSnapshot, addDoc, serverTimestamp, Timestamp, where, getDocs, writeBatch,
 } from "firebase/firestore";
-// AI Logic (Gemini lewat Firebase): kunci Gemini dikelola Firebase, tidak pernah ada di browser. Dipakai Tanya Takar.
-export { getAI, getGenerativeModel, GoogleAIBackend } from "firebase/ai";
-// App Check (reCAPTCHA v3): memastikan permintaan AI datang dari situs ini, bukan dari skrip orang lain. Opsional.
-export { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+// AI Logic dan App Check ada di entri-ai.js (firebase-ai.js), dimuat hanya saat Tanya Takar memakai AI.

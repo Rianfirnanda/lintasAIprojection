@@ -78,6 +78,29 @@ def test_salah_ketik_sekali_tetap_ditahan(konf):
     assert st[akhir - timedelta(days=1)] == "perlu_validasi" and st[akhir] == "lolos"
 
 
+def test_lonjakan_sumber_resmi_dicatat_tetapi_tidak_ditahan(konf):
+    akhir = date(2026, 9, 28)
+    riwayat = [obs(akhir - timedelta(days=i), 40000, pasar="PSR91", sumber="BD-SP2KP") for i in range(25, 1, -1)]
+    lonjak = obs(akhir - timedelta(days=1), 55000, pasar="PSR91", sumber="BD-SP2KP")
+    hasil = kualitas.jalankan(riwayat + [lonjak], konf, {})
+    o = next(x for x in hasil.observasi if x.tanggal == akhir - timedelta(days=1))
+    assert o.status == "lolos" and o.tanda == ["lonjakan_sumber_resmi"]
+    # di luar batas wajar tetap ditahan walau dari sumber resmi
+    hasil = kualitas.jalankan(riwayat + [obs(akhir - timedelta(days=1), 900000, pasar="PSR91", sumber="BD-SP2KP")], konf, {})
+    o = next(x for x in hasil.observasi if x.tanggal == akhir - timedelta(days=1))
+    assert o.status == "perlu_validasi" and "di_luar_batas_wajar" in o.tanda
+
+
+def test_sumber_resmi_bisa_diatur(konf):
+    akhir = date(2026, 9, 28)
+    riwayat = [obs(akhir - timedelta(days=i), 40000, pasar="PSR91", sumber="BD-SP2KP") for i in range(25, 1, -1)]
+    lonjak = obs(akhir - timedelta(days=1), 55000, pasar="PSR91", sumber="BD-SP2KP")
+    konf.pengaturan["kualitas"]["sumber_resmi"] = []
+    hasil = kualitas.jalankan(riwayat + [lonjak], konf, {})
+    o = next(x for x in hasil.observasi if x.tanggal == akhir - timedelta(days=1))
+    assert o.status == "perlu_validasi"
+
+
 def test_keputusan_validator(konf):
     t = date(2026, 9, 28)
     a, b = obs(t, 400000), obs(t, 500000, responden="R2")

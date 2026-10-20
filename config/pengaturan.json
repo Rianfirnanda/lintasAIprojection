@@ -22,6 +22,7 @@
     "toleransi_konfirmasi_persen": 10,
     "selisih_rekonsiliasi_persen": 15,
     "jendela_evaluasi_ketepatan_hari": 30,
+    "sumber_resmi": ["BD-SP2KP", "BD-PIHPS", "BD-BAPANAS"],
     "beku": {
       "aktif": true,
       "min_hari": {"volatil": 14, "protein": 30, "pokok": 30, "pabrikan": 30},
