@@ -67,7 +67,8 @@ function susun() {
   layar.querySelector(".vt-jalan-trek").innerHTML = (() => { const t = teksBerjalan(data.ringkasan.varian); return `<div>${t}</div><div aria-hidden="true">${t}</div>`; })();
   const jumlah = (data.ringkasan.varian || []).length;
   layar.querySelector(".vt-jalan-trek").style.setProperty("--lama", `${Math.max(40, jumlah * 5)}s`);
-  const tanggal = data.meta?.tanggal_data_terakhir || data.ringkasan.varian?.[0]?.tanggal_terakhir;
+  // tanggal data dari harga itu sendiri (ikut berganti saat data baru masuk), meta hanya cadangan
+  const tanggal = (data.ringkasan.varian || []).map((v) => v.tanggal_terakhir || "").sort().pop() || data.meta?.tanggal_data_terakhir;
   layar.querySelector(".vt-data").innerHTML = `<i></i>Data ${esc(tglPanjang(tanggal))}`;
   if (urutan >= tampilan.length) urutan = 0;
 }

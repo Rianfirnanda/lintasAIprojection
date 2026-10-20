@@ -250,3 +250,56 @@ def test_tombol_kirim_pesan_uji_dari_situs_mencatat_hasil_untuk_admin(akar_semen
     assert dicatat["jenis"] == "uji_notifikasi" and dicatat["status"] == "gagal" and dicatat["obrolan"][0]["id"] == "555123"
     keluaran = capsys.readouterr().out
     assert "chat not found" in keluaran and "555123" not in keluaran  # ID obrolan tidak masuk catatan proses publik
+
+
+RINGKASAN = {"varian": [
+    {"kode": "CRW01", "nama": "Cabai Rawit Hijau", "satuan": "kg", "harga_terakhir": 80000, "tanggal_terakhir": "2026-10-20",
+     "perubahan": {"mingguan": 14.29}, "harga_acuan": {"mingguan": {"harga": 70000}}, "proyeksi_h7": {"prediksi": 84000}},
+    {"kode": "DAM01", "nama": "Daging Ayam Ras Segar", "satuan": "kg", "harga_terakhir": 35000, "tanggal_terakhir": "2026-10-20",
+     "perubahan": {"mingguan": -5.41}, "harga_acuan": {"mingguan": {"harga": 37000}}},
+    {"kode": "BRS03", "nama": "Beras Medium", "satuan": "kg", "harga_terakhir": 14375, "tanggal_terakhir": "2026-10-19",
+     "perubahan": {"mingguan": 0.0}, "harga_acuan": {"mingguan": {"harga": 14375}}},
+]}
+
+
+def test_ringkasan_harian_mudah_dibaca():
+    from datetime import date
+    h = notifikasi.susun_pesan_harian(RINGKASAN, [_s("a"), _s("b", jenis="data_terlambat")], "https://situs.web.app/", "pagi", date(2026, 10, 21))
+    assert "Ringkasan Harga Pangan Pagi Ini" in h and "Rabu, 21 Oktober 2026" in h and "Harga terakhir per 20 Oktober 2026" in h
+    assert "<b>1 naik</b>, <b>1 turun</b>, 1 stabil dari 3 barang" in h
+    assert "Cabai Rawit Hijau <b>Rp80.000/kg</b> (naik Rp10.000, +14,3%)" in h
+    assert "Daging Ayam Ras Segar <b>Rp35.000/kg</b> (turun Rp2.000, -5,4%)" in h
+    assert "Perlu diwaspadai (1)" in h and "Judul a" in h and "Judul b" not in h  # catatan data tidak ikut
+    assert "sekitar Rp84.000/kg (naik Rp4.000)" in h
+    assert '<a href="https://situs.web.app/harga.html">' in h
+
+
+def test_ringkasan_harian_pagi_dan_sore_sekali_saja_setiap_hari(konf, akar_sementara):
+    from datetime import datetime
+    terkirim = []
+    pengirim = {"telegram": lambda token, chat, teks: terkirim.append(teks)}
+    wib = notifikasi.WIB
+    jalan = lambda j, m, hari=21: notifikasi.jalankan(konf, [], [], "", False, env=ENV_TG, pengirim=pengirim,  # noqa: E731
+                                                     ringkasan=RINGKASAN, sekarang=datetime(2026, 10, hari, j, m, tzinfo=wib))
+    assert "ringkasan" not in jalan(6, 0)  # belum jamnya
+    assert "ringkasan pagi dikirim lewat telegram" in jalan(7, 40)
+    assert "ringkasan" not in jalan(8, 0)  # sudah terkirim pagi ini
+    assert "ringkasan" not in jalan(11, 50)  # jam pagi sudah lewat lebih dari 3 jam
+    assert "ringkasan sore dikirim lewat telegram" in jalan(15, 55)
+    assert "ringkasan pagi dikirim" in jalan(7, 35, hari=25)  # hari Minggu juga dikirim
+    assert len(terkirim) == 3 and "Pagi Ini" in terkirim[0] and "Sore Ini" in terkirim[1]
+    status = json.loads((akar_sementara / "data/notifikasi/terkirim.json").read_text())
+    assert status["harian"] == ["2026-10-21 pagi", "2026-10-21 sore", "2026-10-25 pagi"]
+
+
+def test_ringkasan_harian_hanya_telegram_dan_bisa_dimatikan(konf, akar_sementara):
+    from datetime import datetime
+    env_email = {"SMTP_HOST": "h", "SMTP_USER": "u", "SMTP_PASSWORD": "p", "EMAIL_KE": "a@b.c"}
+    surel = []
+    pesan = notifikasi.jalankan(konf, [], [], "", False, env=env_email, pengirim={"email": lambda *a: surel.append(a)},
+                                ringkasan=RINGKASAN, sekarang=datetime(2026, 10, 21, 7, 40, tzinfo=notifikasi.WIB))
+    assert "ringkasan" not in pesan and surel == []  # email tidak dibanjiri pesan rutin
+    konf.pengaturan["notifikasi"] = {**konf.pengaturan.get("notifikasi", {}), "ringkasan_harian": False}
+    pesan = notifikasi.jalankan(konf, [], [], "", False, env=ENV_TG, pengirim={"telegram": lambda *a: None},
+                                ringkasan=RINGKASAN, sekarang=datetime(2026, 10, 21, 7, 40, tzinfo=notifikasi.WIB))
+    assert "ringkasan" not in pesan
