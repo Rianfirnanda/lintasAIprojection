@@ -1,20 +1,18 @@
 {
- "diperbarui": "2026-10-21T07:13:17+07:00",
+ "diperbarui": "2026-10-21T13:36:09+07:00",
  "kesimpulan": [
   {
    "tanggal": "2026-10-21",
    "metode": "ai",
    "penyedia": "gemini",
-   "ringkas": "Di Kabupaten Bengkulu Tengah, harga ayam potong tercatat mengalami kenaikan dalam sepekan terakhir hingga mencapai Rp45 ribu per kilogram. Sementara itu di wilayah tetangga, Kota Bengkulu, kemarau diduga memicu kenaikan harga beras, ayam, dan cabai, yang direspons pemda setempat dengan rencana pasar murah di 67 kelurahan untuk menjaga pasokan bahan pokok. Selain itu, terdapat informasi pelaksanaan pasar murah di luar daerah yaitu di wilayah Riau. Dengan kondisi tersebut, TPID perlu memantau tren harga ayam potong di Bengkulu Tengah serta mengantisipasi potensi kenaikan harga beras dan cabai.",
+   "ringkas": "DKP Bengkulu Selatan berencana mengadakan Pasar Murah untuk menurunkan harga pangan. Kegiatan ini tidak menyebutkan wilayah target yang spesifik di Bengkulu Tengah, karena berada di wilayah Bengkulu Selatan.",
    "poin": [
-    "Harga ayam potong di Kabupaten Bengkulu Tengah naik dalam sepekan terakhir hingga mencapai Rp45 ribu per kilogram.",
-    "Di Kota Bengkulu, musim kemarau diduga memicu kenaikan harga beras serta kenaikan harga pangan lainnya seperti ayam dan cabai.",
-    "Pemerintah Kota Bengkulu menganggarkan Rp200 juta untuk menggelar pasar murah keliling di 67 kelurahan guna menjaga ketersediaan pasokan beras, cabai, minyak goreng, dan daging.",
-    "TPID Riau bersama mitra menyelenggarakan operasi pasar murah di 5 titik wilayah Pekanbaru dan Kampa."
+    "DKP Bengkulu Selatan akan menggelar Pasar Murah untuk menurunkan harga pangan.",
+    "Berita ini tidak menyebutkan wilayah target secara spesifik.",
+    "Perlu dibedakan bahwa kejadian ini berada di wilayah Bengkulu Selatan, bukan Bengkulu Tengah."
    ],
    "perlu_dipantau": [
-    "Kenaikan harga ayam potong di Kabupaten Bengkulu Tengah yang telah mencapai Rp45 ribu per kilogram.",
-    "Potensi imbas kenaikan harga beras dan cabai dari wilayah Kota Bengkulu ke Kabupaten Bengkulu Tengah."
+    "Perlu memantau pelaksanaan Pasar Murah di Bengkulu Selatan serta dampaknya terhadap harga pangan."
    ],
    "kalimat_dibuang": 0
   },
@@ -234,7 +232,7 @@
    "dampak_harga": "stabil",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -285,8 +283,48 @@
    "dampak_harga": "stabil",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
+  },
+  {
+   "id": "4b73ad2c7c74",
+   "url": "https://rri.co.id/bintuhan/regional/2827604/dkp-bengkulu-selatan-akan-gelar-pasar-murah",
+   "judul": "DKP Bengkulu Selatan Akan Gelar Pasar Murah - RRI.co.id",
+   "sumber": "rri.co.id",
+   "tanggal": "2026-10-20",
+   "diakses": "2026-10-21T13:36:09+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Minyak Goreng",
+    "Gula Pasir"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 4098,
+   "sidik_sha256": "40dc2ac2fbbce33f6c40d8cdfafad47f529ce824b21dd0a166b882b085663459",
+   "kutipan": "‎Kepala Dinas DKP Bengkulu Selatan, Ir. Haroni mengatakan, berbagai komoditas pangan penting seperti beras, minyak goreng, gula pasir, dan telur ayam akan dijual dengan harga di bawah pasar. Seluruh produk yang disediaka",
+   "ringkasan": "DKP Bengkulu Selatan akan mengadakan Pasar Murah untuk menurunkan harga pangan.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "turun",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "openrouter"
   },
   {
    "id": "0f91098d9405",
@@ -371,7 +409,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -412,7 +450,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -490,7 +528,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -2941,15 +2979,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 197,
+  "hasil_pencarian": 202,
   "setelah_duplikat": 155,
-  "berita_baru": 5,
-  "total_arsip": 36,
-  "kandidat_harga_baru": 4,
-  "harga_dinilai_ai": 4,
+  "berita_baru": 1,
+  "total_arsip": 37,
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 0,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "penyedia_ai": "openrouter",
+  "model_ai": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
  },
  "galat": []
 }
