@@ -1,0 +1,1125 @@
+{
+ "waktu": "2026-10-21T02:34:14+00:00",
+ "kunci": "ada",
+ "kunci_sah": true,
+ "pesan": "Kunci diterima BPS. Ditemukan 85 variabel dan 55 tabel statis tentang harga, inflasi, atau komoditas pangan; 0 dari 6 contoh variabel berhasil diambil angkanya.",
+ "wilayah": {
+  "1709": {
+   "nama": "Kabupaten Bengkulu Tengah",
+   "variabel": 29,
+   "tabel_statis": 2
+  },
+  "1700": {
+   "nama": "Provinsi Bengkulu",
+   "variabel": 26,
+   "tabel_statis": 35
+  },
+  "1771": {
+   "nama": "Kota Bengkulu",
+   "variabel": 30,
+   "tabel_statis": 18
+  }
+ },
+ "domain_bengkulu": [
+  {
+   "id": "1701",
+   "nama": "Bengkulu Selatan"
+  },
+  {
+   "id": "1702",
+   "nama": "Rejang Lebong"
+  },
+  {
+   "id": "1703",
+   "nama": "Bengkulu Utara"
+  },
+  {
+   "id": "1704",
+   "nama": "Kaur"
+  },
+  {
+   "id": "1705",
+   "nama": "Seluma"
+  },
+  {
+   "id": "1706",
+   "nama": "Mukomuko"
+  },
+  {
+   "id": "1707",
+   "nama": "Lebong"
+  },
+  {
+   "id": "1708",
+   "nama": "Kepahiang"
+  },
+  {
+   "id": "1709",
+   "nama": "Bengkulu Tengah"
+  },
+  {
+   "id": "1771",
+   "nama": "Bengkulu"
+  }
+ ],
+ "variabel": [
+  {
+   "wilayah": "1709",
+   "var_id": 78,
+   "judul": "Indeks Harga Konsumen (IHK) per Bulan Menurut  Kelompok Pengeluaran di Kabupaten/Kota Bengkulu",
+   "subjek": "Keuangan",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 147,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Kabupaten Bengkulu Tengah Atas Dasar Harga Berlaku Menurut Lapangan Usaha",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Milyar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 148,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Kabupaten Bengkulu Tengah Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 149,
+   "judul": "Distribusi Persentase Produk Domestik Regional Bruto (PDRB) Kabupaten Bengkulu Tengah Atas Dasar Harga Berlaku Menurut Lapangan Usaha",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 150,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto (PDRB) Kabupaten Bengkulu Tengah Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 417,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Kabupaten Bengkulu Tengah Menurut Lapangan Usaha Atas Dasar Harga Berlaku",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 418,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Kabupaten Bengkulu Tengah Menurut Lapangan Usaha Atas Dasar Harga Konstan",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 422,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Kabupaten Bengkulu Tengah Menurut Lapangan Usaha Atas Dasar Harga Berlaku",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 469,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Berlaku Menurut 17 Kategori Lapangan Usaha  Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Milyar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 470,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Milyar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 471,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Berlaku Menurut 17 Kategori Lapangan Usaha  Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 472,
+   "judul": "Laju Pertumbuhan (q-to-q) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kabupaten Bengkulu Tengah2026",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 473,
+   "judul": "Laju Pertumbuhan (y-on-y) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 474,
+   "judul": "Laju Pertumbuhan (c-to-c) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Lapangan Usaha)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 152,
+   "judul": "[Seri 2010] Produk Domestik Regional Bruto (PDRB) Seri 2010 Kabupaten Bengkulu Tengah Atas Dasar Harga Berlaku Menurut Pengeluaran",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Juta Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 155,
+   "judul": "[Seri 2010] Produk Domestik Regional Bruto (PDRB) Seri 2010 Kabupaten Bengkulu Tengah Atas Dasar Harga Konstan 2010 Menurut Pengeluaran",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 158,
+   "judul": "[Seri 2010] Laju Pertumbuhan Produk Domestik Regional Bruto (PDRB) Kabupaten Bengkulu Tengah Atas Dasar Harga Konstan 2010 Menurut Pengeluaran",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 163,
+   "judul": "[Seri 2010] Distribusi Produk Domestik Regional Bruto (PDRB) Kabupaten Bengkulu Tengah Atas Dasar Harga Berlaku Menurut Pengeluaran",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 322,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto (PDRB) Kabupaten/Kota di Provinsi Bengkulu Atas  Dasar Harga Konstan 2010",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 423,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Kabupaten Bengkulu Tengah Menurut Pengeluaran Atas Dasar Harga Berlaku",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 427,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Kabupaten Bengkulu Tengah Menurut Pengeluaran Atas Dasar Harga Konstan 2010",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 429,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Kabupaten Bengkulu Tengah Menurut Pengeluaran Atas Dasar Harga Berlaku",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 462,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut 6 Komponen Pengeluaran Atas Dasar Harga Konstan (2010=100) Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 463,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut 6 Komponen Pengeluaran Atas Dasar Harga Berlaku Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 464,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut 6 Komponen Pengeluaran Atas Dasar Harga Berlaku Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 465,
+   "judul": "Laju Pertumbuhan (q-to-q) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 6 Komponen Pengeluaran Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 466,
+   "judul": "Laju Pertumbuhan (c-to-c) Produk Domestik Regional Bruto (PDRB) Triwulanan  Atas Dasar Harga Konstan (2010=100) Menurut 6 Komponen Pengeluaran Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 468,
+   "judul": "Laju Pertumbuhan (y-on-y) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 6 Komponen Pengeluaran Kabupaten Bengkulu Tengah",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 273,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di  Kabupaten/Kota Bengkulu (2018=100)",
+   "subjek": "Keuangan",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 554,
+   "judul": "[2022=100] Indeks Harga Konsumen (IHK) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 558,
+   "judul": "[2022=100] Indeks Harga Konsumen menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 561,
+   "judul": "[2018=100] Indeks Harga Konsumen menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 322,
+   "judul": "PDRB Perkapita Atas Dasar Harga Berlaku",
+   "subjek": "Produk Domestik Regional Bruto (Kabupaten/Kota)",
+   "satuan": "Juta Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 323,
+   "judul": "PDRB Perkapita Atas Dasar Harga Konstan",
+   "subjek": "Produk Domestik Regional Bruto (Kabupaten/Kota)",
+   "satuan": "Juta Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 420,
+   "judul": "Laju Pertumbuhan PDRB Perkapita Atas Dasar Harga Konstan",
+   "subjek": "Produk Domestik Regional Bruto (Kabupaten/Kota)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 536,
+   "judul": "Distribusi Persentase PDRB Atas Dasar Harga Berlaku Menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "subjek": "Produk Domestik Regional Bruto (Kabupaten/Kota)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 575,
+   "judul": "PDRB Triwulanan Menurut Kabupaten/Kota Atas Dasar Harga Berlaku Provinsi Bengkulu",
+   "subjek": "Produk Domestik Regional Bruto (Kabupaten/Kota)",
+   "satuan": "Milyar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 577,
+   "judul": "PDRB Triwulanan Menurut Kabupaten/Kota Atas Dasar Harga Konstan Provinsi Bengkulu",
+   "subjek": "Produk Domestik Regional Bruto (Kabupaten/Kota)",
+   "satuan": "Milyar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 578,
+   "judul": "Distribusi PDRB Triwulanan Menurut Kabupaten/Kota Atas Dasar Harga Berlaku Provinsi Bengkulu",
+   "subjek": "Produk Domestik Regional Bruto (Kabupaten/Kota)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 421,
+   "judul": "Indeks Harga yang Diterima oleh Petani (lt)",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 422,
+   "judul": "Indeks Harga yang Dibayar oleh Petani (Ib)",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 424,
+   "judul": "Indeks Harga yang Diterima oleh Petani (lt) gabungan tanpa perikanan",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 425,
+   "judul": "Indeks Harga yang Dibayar oleh Petani (Ib) Gabungan Tanpa Perikanan",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 212,
+   "judul": "Distribusi Persentase PDRB Triwulanan atas dasar harga berlaku menurut Pengeluaran",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 376,
+   "judul": "Distribusi Persentase PDRB Tahunan Atas Dasar Harga Berlaku Menurut Pengeluaran",
+   "subjek": "Produk Domestik Regional Bruto (Pengeluaran)",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 63,
+   "judul": "Inflasi Pedesaan",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 145,
+   "judul": "Inflasi Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 555,
+   "judul": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 556,
+   "judul": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 557,
+   "judul": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 559,
+   "judul": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 560,
+   "judul": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 562,
+   "judul": "[2018=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 563,
+   "judul": "[2018=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 564,
+   "judul": "[2018=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 2,
+   "judul": "Indeks Harga Konsumen",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 85,
+   "judul": "PDRB Kota Bengkulu Atas Dasar Harga Berlaku Menurut Lapangan Usaha",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Juta Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 87,
+   "judul": "PDRB Kota Bengkulu Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Juta Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 231,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Lapangan Usaha Atas Dasar Harga Berlaku Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 232,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Lapangan Usaha Atas Dasar Harga Konstan Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 233,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Lapangan Usaha Atas Dasar Harga Berlaku Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 251,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Berlaku Menurut 17 Kategori Lapangan Usaha Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 252,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 253,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Berlaku Menurut 17 Kategori Lapangan Usaha Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 254,
+   "judul": "Laju Pertumbuhan (q-to-q) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 255,
+   "judul": "Laju Pertumbuhan (y-on-y) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 256,
+   "judul": "Laju Pertumbuhan (c-to-c) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 17 Kategori Lapangan Usaha Kota Bengkulu",
+   "subjek": "PDRB Menurut Lapangan Usaha",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 93,
+   "judul": "Produk Domestik Regional Bruto Kota Bengkulu Atas Dasar Harga Berlaku Menurut Pengeluaran",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Juta Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 94,
+   "judul": "Produk Domestik Regional Bruto Kota Bengkulu Atas Dasar Harga Konstan Menurut Pengeluaran",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Juta Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 95,
+   "judul": "Laju Pertumbuhan PDRB Kota Bengkulu Atas Dasar Harga Konstan menurut Pengeluaran",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 96,
+   "judul": "Distribusi PDRB Kota Bengkulu Atas Dasar Harga Berlaku menurut Pengeluaran",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 238,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Pengeluaran Atas Dasar Harga Berlaku Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 239,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Pengeluaran Atas Dasar Harga Konstan Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 240,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Pengeluaran Atas Dasar Harga Berlaku Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 245,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut 6 Komponen Pengeluaran Atas Dasar Harga Berlaku Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 246,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut 6 Komponen Pengeluaran Atas Dasar Harga Konstan (2010=100) Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Miliar Rupiah",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 247,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut 6 Komponen Pengeluaran Atas Dasar Harga Berlaku Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 248,
+   "judul": "Laju Pertumbuhan (q-to-q) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 6 Komponen Pengeluaran Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 249,
+   "judul": "Laju Pertumbuhan (y-on-y) Produk Domestik Regional Bruto (PDRB) Triwulanan Atas Dasar Harga Konstan (2010=100) Menurut 6 Komponen Pengeluaran Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 250,
+   "judul": "Laju Pertumbuhan (c-to-c) Produk Domestik Regional Bruto (PDRB) Triwulanan  Atas Dasar Harga Konstan (2010=100) Menurut 6 Komponen Pengeluaran Kota Bengkulu",
+   "subjek": "PDRB Menurut Pengeluaran",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 1,
+   "judul": "Inflasi (m-to-m)",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 244,
+   "judul": "Inflasi (y-on-y)",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 197,
+   "judul": "Produksi Daging Ternak Menurut Jenis Ternak di Kota Bengkulu",
+   "subjek": "Peternakan",
+   "satuan": "Ton",
+   "kata": "daging"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 198,
+   "judul": "Produksi Daging Unggas Menurut Jenis Unggas di Kota Bengkulu",
+   "subjek": "Peternakan",
+   "satuan": "Ton",
+   "kata": "daging"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 199,
+   "judul": "Produksi Telur Unggas dan Susu Sapi di Kota Bengkulu",
+   "subjek": "Peternakan",
+   "satuan": "Ton",
+   "kata": "telur"
+  }
+ ],
+ "tabel_statis": [
+  {
+   "wilayah": "1709",
+   "table_id": 29,
+   "judul": "Produk Domestik Regional Bruto Kabupaten Bengkulu Tengah Atas Dasar Harga Berlaku menurut Lapangan Usaha 2011 - 2014  (000.000 Rp)",
+   "diperbarui": "2018-09-05"
+  },
+  {
+   "wilayah": "1709",
+   "table_id": 28,
+   "judul": "Produk Domestik Regional Bruto Kabupaten Bengkulu Tengah Atas Dasar Harga Konstan 2000 Menurut Lapangan Usaha 2011 - 2014 (000.000 Rp)",
+   "diperbarui": "2018-09-05"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1713,
+   "judul": "PDRB Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu  2017-2022 (Juta Rupiah)",
+   "diperbarui": "2023-05-15"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1256,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (Miliar rupiah), 2016–2021",
+   "diperbarui": "2022-06-24"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1261,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto per Kapita Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (persen), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1260,
+   "judul": "Produk Domestik Regional Bruto per Kapita Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (Ribu rupiah), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1259,
+   "judul": "Produk Domestik Regional Bruto per Kapita Atas Dasar Harga Berlaku Menurut Kabupaten/Kota di Provinsi Bengkulu (Ribu rupiah), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1258,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (persen), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1257,
+   "judul": "Distribusi Persentase Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Kabupaten/Kota di Provinsi Bengkulu, 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1255,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Kabupaten/Kota di Provinsi Bengkulu (Miliar rupiah), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1254,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha di Provinsi Bengkulu (persen), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1253,
+   "judul": "Distribusi Persentase Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Lapangan Usaha di Provinsi Bengkulu, 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1252,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha di Provinsi Bengkulu (Miliar rupiah), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1251,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Lapangan Usaha di Provinsi Bengkulu (Miliar rupiah), 2017–2021",
+   "diperbarui": "2022-03-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 707,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan Kelompok Pengeluaran Pakaian dan Alas Kaki  (IHK  2018=100) ",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 706,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan  (Ihk  2018=100) Subklompok Tembakau",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 705,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan  (Ihk  2018=100) Subklompok Minuman Yang Tidak Beralkohol",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 704,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan  (IHK  2018=100)",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 703,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan Kelompok Pengeluaran Bahan Makanan, Minuman, dan Tembakau  (IHK  2018=100)",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 702,
+   "judul": "Indeks Harga Konsumen Umum Kota Bengkulu 2020  Dan Persentase Perubahan  (IHK  2018=100)",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 677,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto per Kapita Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (persen), 2016–2020",
+   "diperbarui": "2021-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 676,
+   "judul": "Produk Domestik Regional Bruto per Kapita Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (Ribu rupiah), 2016–2020",
+   "diperbarui": "2021-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 675,
+   "judul": "Produk Domestik Regional Bruto per Kapita Atas Dasar Harga Berlaku Menurut Kabupaten/Kota di Provinsi Bengkulu (Ribu rupiah), 2016–2020",
+   "diperbarui": "2021-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 674,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (persen), 2016–2020",
+   "diperbarui": "2021-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 673,
+   "judul": "Distribusi Persentase Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Kabupaten/Kota di Provinsi Bengkulu, 2016–2020",
+   "diperbarui": "2021-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 672,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Kabupaten/Kota di Provinsi Bengkulu (Miliar rupiah), 2016–2020",
+   "diperbarui": "2021-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 671,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Kabupaten/Kota di Provinsi Bengkulu (Miliar rupiah), 2016–2020",
+   "diperbarui": "2021-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 360,
+   "judul": "Tabel Input-Output Provinsi Bengkulu Transaksi Domestik Atas Dasar Harga Produsen (52 Industri), 2016 (Juta Rupiah)",
+   "diperbarui": "2021-05-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 359,
+   "judul": " Tabel Input-Output Provinsi Bengkulu Transaksi Domestik Atas Dasar Harga Produsen (17 Lapangan Usaha), 2016 (Juta Rupiah)",
+   "diperbarui": "2021-05-31"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 356,
+   "judul": "[Seri 2010] PDRB Menurut Pengeluaran Atas Dasar Harga Berlaku (Juta Rupiah), 2014 - 2018",
+   "diperbarui": "2019-05-22"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 355,
+   "judul": "[Seri 2010] PDRB Menurut Pengeluaran Atas Dasar Harga Konstan  (Juta Rupiah), 2014 - 2018",
+   "diperbarui": "2019-05-22"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 354,
+   "judul": "[Seri 2010] Distribusi PDRB Menurut Pengeluaran Atas Dasar Harga Berlaku (Persen), 2014 - 2018",
+   "diperbarui": "2019-05-22"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1683,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di Kabupaten/Kota Bengkulu (2019=100), 2022",
+   "diperbarui": "2023-05-11"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1262,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di Kabupaten/Kota Bengkulu (2018=100), 2021",
+   "diperbarui": "2022-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 708,
+   "judul": "IHK dan Inflasi Kota Bengkulu 2007-2009",
+   "diperbarui": "2021-08-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 54,
+   "judul": "Indeks Harga Konsumen (IHK) dan Inflasi Kota Bengkulu 2010-2016",
+   "diperbarui": "2016-10-06"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 156,
+   "judul": "Inflasi Perdesaan Provinsi Bengkulu per Bulan, Tahun 2008-2014",
+   "diperbarui": "2015-04-17"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 268,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Atas Dasar Harga Berlaku Menurut Pengeluaran Kota Bengkulu (Miliar Rupiah), 2010-2024",
+   "diperbarui": "2025-03-20"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 267,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Atas Dasar Harga Konstan 2010 Menurut Pengeluaran Kota Bengkulu (Miliar Rupiah), 2010-2024",
+   "diperbarui": "2025-03-20"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 266,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Lapangan Usaha di Kota Bengkulu (miliar rupiah), 2010–2024",
+   "diperbarui": "2025-03-20"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 265,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha di Kota Bengkulu (miliar rupiah), 2010–2024",
+   "diperbarui": "2025-03-20"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 259,
+   "judul": "Distribusi Persentase Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Lapangan Usaha di Kota Bengkulu (Persen), 2020–2024",
+   "diperbarui": "2025-03-04"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 264,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Pengeluaran di  Kota Bengkulu (Persen), 2020–2024",
+   "diperbarui": "2025-02-28"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 263,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Atas Dasar Harga Berlaku Menurut Pengeluaran Kota Bengkulu (Persen), 2020-2024",
+   "diperbarui": "2025-02-28"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 262,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Atas Dasar Harga Konstan 2010 Menurut Pengeluaran Kota Bengkulu (Miliar Rupiah), 2020-2024",
+   "diperbarui": "2025-02-28"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 261,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Atas Dasar Harga Berlaku Menurut Pengeluaran Kota Bengkulu (Miliar Rupiah), 2020-2024",
+   "diperbarui": "2025-02-28"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 260,
+   "judul": "Laju Pertumbuhan Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha di  Kota Bengkulu (Persen), 2020–2024",
+   "diperbarui": "2025-02-28"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 258,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Konstan 2010 Menurut Lapangan Usaha di Kota Bengkulu (miliar rupiah), 2020–2024",
+   "diperbarui": "2025-02-28"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 257,
+   "judul": "Produk Domestik Regional Bruto Atas Dasar Harga Berlaku Menurut Lapangan Usaha di Kota Bengkulu (miliar rupiah), 2020–2024",
+   "diperbarui": "2025-02-28"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 252,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Pengeluaran Atas Dasar Harga Berlaku Kota Bengkulu, 2022 - 2024 (persen)",
+   "diperbarui": "2024-12-16"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 251,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Pengeluaran Atas Dasar Harga Konstan Kota Bengkulu, 2022 - 2024 (Miliar Rupiah)",
+   "diperbarui": "2024-12-16"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 250,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Pengeluaran Atas Dasar Harga Berlaku Kota Bengkulu, 2022 - 2024 (Miliar Rupiah)",
+   "diperbarui": "2024-12-16"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 246,
+   "judul": "Distribusi Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Lapangan Usaha Atas Dasar Harga Berlaku Kota Bengkulu, 2022 - 2024 (persen)",
+   "diperbarui": "2024-12-16"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 245,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Lapangan Usaha Atas Dasar Harga Konstan Kota Bengkulu, 2022 - 2024 (Miliar Rupiah)",
+   "diperbarui": "2024-12-16"
+  },
+  {
+   "wilayah": "1771",
+   "table_id": 244,
+   "judul": "Produk Domestik Regional Bruto (PDRB) Triwulanan Menurut Lapangan Usaha Atas Dasar Harga Berlaku Kota Bengkulu, 2022 - 2024 (Miliar Rupiah)",
+   "diperbarui": "2024-12-16"
+  }
+ ],
+ "contoh_data": [
+  {
+   "wilayah": "1709",
+   "var_id": 273,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di  Kabupaten/Kota Bengkulu (2018=100)",
+   "bisa_diambil": false,
+   "galat": "'th' parameter is required and must be an integer, separated by colon (:) for range or semicolon (;) for multiple values."
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 63,
+   "judul": "Inflasi Pedesaan",
+   "bisa_diambil": false,
+   "galat": "'th' parameter is required and must be an integer, separated by colon (:) for range or semicolon (;) for multiple values."
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 145,
+   "judul": "Inflasi Kota Bengkulu",
+   "bisa_diambil": false,
+   "galat": "'th' parameter is required and must be an integer, separated by colon (:) for range or semicolon (;) for multiple values."
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 555,
+   "judul": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "bisa_diambil": false,
+   "galat": "'th' parameter is required and must be an integer, separated by colon (:) for range or semicolon (;) for multiple values."
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 556,
+   "judul": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "bisa_diambil": false,
+   "galat": "'th' parameter is required and must be an integer, separated by colon (:) for range or semicolon (;) for multiple values."
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 557,
+   "judul": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "bisa_diambil": false,
+   "galat": "'th' parameter is required and must be an integer, separated by colon (:) for range or semicolon (;) for multiple values."
+  }
+ ],
+ "galat": [],
+ "asal_kunci": "situs"
+}
