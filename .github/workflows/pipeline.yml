@@ -118,6 +118,15 @@ jobs:
         continue-on-error: true
         run: python -m pipeline ambil-resmi
 
+      # Inflasi resmi BPS (Provinsi Bengkulu, kota IHK, dan Berita Resmi Statistik) lewat BPS Web API. BPS memperbaruinya
+      # sebulan sekali, jadi langkah ini mengambil paling sering sehari sekali dan selebihnya langsung dilewati. Kunci dari
+      # Pengaturan situs (Firestore) atau GitHub Secret BPS_API_KEY; kunci disamarkan di log.
+      - name: Ambil inflasi resmi BPS (BPS Web API)
+        continue-on-error: true
+        env:
+          BPS_API_KEY: ${{ secrets.BPS_API_KEY }}
+        run: python -m pipeline ambil-bps
+
       # Harga harian pasar acuan SP2KP Kemendag: Pasar Taba Penanjung (Bengkulu Tengah), Pasar Kepahiang, Pasar Panorama
       # (Kota Bengkulu). Data mentah di data/mentah/sp2kp; hanya varian dengan pemetaan disetujui yang masuk berkas harga.
       - name: Ambil harga harian SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)
@@ -141,10 +150,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/masuk/konteks data/masuk/harga data/mentah config/peta_varian_sp2kp.csv
+          if [ -f data/sumber/bps_seri.json ]; then git add data/sumber/bps_seri.json; fi
           if git diff --cached --quiet; then
             echo "Tidak ada data konektor baru."
           else
-            git commit -m "data: perbarui cuaca Open-Meteo, prakiraan BMKG, harga SP2KP, dan harga PIHPS"
+            git commit -m "data: perbarui cuaca Open-Meteo, prakiraan BMKG, harga SP2KP, harga PIHPS, dan inflasi BPS"
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

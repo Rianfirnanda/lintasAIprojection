@@ -327,3 +327,37 @@ def test_ambil_bps_cli_melewati_bila_masih_baru_dan_tidak_menimpa_dengan_hasil_k
     assert m._ambil_bps(tmp_path, paksa=True) == 1
     assert bps.baca(tmp_path, bps.BERKAS_SERI)["seri"]["yoy"]["terbaru"] == "2026-05"
     assert datetime.fromisoformat(tersimpan["waktu"]) <= datetime.now(timezone.utc)
+
+
+def test_status_finder_bps_dari_deret_yang_diambil(tmp_path, monkeypatch):
+    from datetime import date
+
+    from pipeline import tata_data
+
+    monkeypatch.setenv("BPS_API_KEY", KUNCI)
+    bps.simpan(tmp_path, bps.ambil_seri(KUNCI, ambil_fn=bps_seri_tiruan, tidur=lambda _: None), bps.BERKAS_SERI)
+    f = tata_data.finder_bps(tmp_path, date(2026, 7, 20))
+    assert f["status"] == "lulus" and f["data_terakhir"] == "2026-07-01"  # tanggal terbit rilis Juni 2026
+    assert "rilis terbaru Juni 2026" in f["alasan"] and "sampai Mei 2026" in f["alasan"]
+    assert [g["lolos"] for g in f["gerbang"]] == [True, True, True]
+    basi = tata_data.finder_bps(tmp_path, date(2026, 10, 21))
+    assert basi["status"] == "perlu_perhatian" and "lebih dari dua bulan" in basi["alasan"]
+    assert basi["gerbang"][2] == {"gerbang": "Data bulanan terbaru", "lolos": False, "nilai": "Juni 2026",
+                                  "target": "paling lama 2 bulan lalu"}
+    monkeypatch.delenv("BPS_API_KEY")
+    assert tata_data.finder_bps(tmp_path)["status"] == "menunggu"
+
+
+def test_per_bulan_menambal_tabel_kelompok_dengan_tabel_kota_dan_rilis():
+    d = {"seri": {
+        "yoy": {"data": [{"periode": "2025-01", "kategori": "Umum", "nilai": 1.0},
+                         {"periode": "2025-01", "kategori": "Makanan, Minuman, dan Tembakau", "nilai": 2.0}]},
+        "yoy_wilayah": {"data": [{"periode": "2025-01", "kategori": "Provinsi Bengkulu", "nilai": 9.9},
+                                 {"periode": "2025-02", "kategori": "Provinsi Bengkulu", "nilai": 1.1},
+                                 {"periode": "2025-02", "kategori": "Kota Bengkulu", "nilai": 1.3}]},
+        "mtm_wilayah": {"data": [{"periode": "2025-02", "kategori": "Provinsi Bengkulu", "nilai": 0.2}]}},
+        "rilis": [{"periode": "2025-03", "yoy": 1.2, "mtm": 0.1}, {"periode": "2025-02", "yoy": 7.7, "mtm": 7.7}]}
+    b = bps.per_bulan(d)
+    assert b["2025-01"] == {"asal": "tabel", "yoy": 1.0, "makanan_yoy": 2.0}  # tabel kelompok didahulukan
+    assert b["2025-02"] == {"asal": "tabel", "yoy": 1.1, "mtm": 0.2}  # bulan kosong ditambal baris Provinsi Bengkulu
+    assert b["2025-03"] == {"asal": "rilis", "yoy": 1.2, "mtm": 0.1}

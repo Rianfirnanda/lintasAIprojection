@@ -562,6 +562,7 @@ button.dash-kpi-kartu:hover .kpi-buka { opacity: 1; color: var(--aksen); transfo
 .dash-baris-1 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1.5fr); }
 .dash-baris-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
 .dash-baris-3 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+.dash-baris-inflasi { grid-template-columns: minmax(0, 1fr); }
 
 .dash-panel {
   background: var(--surface); border: 1px solid var(--kaca-garis); border-radius: var(--radius); padding: 16px 18px 16px;
@@ -683,6 +684,32 @@ td .selisih small { display: block; }
 .hr-risiko strong { color: var(--d-merah); font-size: 0.86rem; }
 .hr-risiko ul { margin: 6px 0 0; padding-left: 1.1em; }
 .hr-risiko li { margin: 3px 0; }
+
+/* inflasi resmi BPS (Provinsi Bengkulu) */
+.inf-grid { display: grid; grid-template-columns: minmax(180px, 0.85fr) minmax(0, 2.2fr) minmax(200px, 1fr); gap: 16px; align-items: stretch; }
+.inf-utama { background: var(--aksen-lembut); border-radius: 12px; padding: 14px 14px 12px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.inf-label { font-size: 0.78rem; color: var(--ink-2); font-weight: 600; }
+.inf-angka { font-size: 2.3rem; font-weight: 800; color: var(--aksen); line-height: 1.05; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.inf-periode { font-size: 0.76rem; color: var(--muted); }
+.inf-utama .pil { align-self: flex-start; margin-top: 6px; }
+.inf-kecil { margin: 10px 0 0; display: grid; gap: 6px; }
+.inf-kecil div { display: flex; justify-content: space-between; gap: 8px; font-size: 0.8rem; border-top: 1px solid var(--rule); padding-top: 6px; }
+.inf-kecil dt { color: var(--ink-2); }
+.inf-kecil dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.inf-grafik { margin: 0; min-width: 0; display: flex; flex-direction: column; }
+.inf-grafik .wadah-grafik { height: 200px; flex: 1; min-height: 190px; }
+.inf-samping { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.inf-samping li { background: var(--surface-2); border-radius: 10px; padding: 9px 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 10px; align-items: baseline; }
+.inf-samping span { font-size: 0.8rem; color: var(--ink-2); }
+.inf-samping b { font-size: 1.05rem; color: var(--d-biru); font-variant-numeric: tabular-nums; }
+.inf-samping small { grid-column: 1 / -1; font-size: 0.7rem; color: var(--muted); }
+.inf-catatan { margin: 12px 0 0; font-size: 0.74rem; color: var(--muted); line-height: 1.5; }
+tr.inf-umum td { font-weight: 700; }
+@media (max-width: 1100px) {
+  .inf-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .inf-grafik { grid-column: 1 / -1; order: 3; }
+}
+@media (max-width: 640px) { .inf-grid { grid-template-columns: minmax(0, 1fr); } .inf-grafik { order: 2; } .inf-samping { order: 3; } }
 
 /* tindak lanjut sinyal */
 .tabel-tl { font-size: 0.82rem; }

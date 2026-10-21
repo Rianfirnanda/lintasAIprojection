@@ -340,7 +340,7 @@ def hitung_data_sumber(konf, observasi, konteks, katalog, kandidat) -> tuple[Cou
     for k in konteks:
         catat(k.kode_sumber, k.tanggal)
     satuan = {"BD-CUACA": "catatan cuaca", "BD-BMKG": "catatan prakiraan", "BD-KALENDER": "tanggal",
-              "AI-FINDER": "kandidat sumber", "BD-BERITA": "berita"}
+              "AI-FINDER": "kandidat sumber", "BD-BERITA": "berita", "BD-BPSAPI": "angka BPS"}
     if "BD-KALENDER" in konf.sumber:
         jumlah["BD-KALENDER"] = len(konf.kalender)
     if "AI-FINDER" in konf.sumber:
@@ -348,6 +348,13 @@ def hitung_data_sumber(konf, observasi, konteks, katalog, kandidat) -> tuple[Cou
         waktu = [p.get("waktu") for p in kandidat.get("pencarian", []) if p.get("waktu")]
         if waktu:
             terakhir["AI-FINDER"] = date.fromisoformat(max(waktu)[:10])
+    if "BD-BPSAPI" in konf.sumber:
+        # angka inflasi, IHK, dan indeks petani yang diambil dari BPS Web API, ditambah angka dari Berita Resmi Statistik
+        bps = konektor_bps.baca(konf.akar, konektor_bps.BERKAS_SERI) or {}
+        jumlah["BD-BPSAPI"] = (sum(len(s.get("data") or []) for s in (bps.get("seri") or {}).values())
+                               + len(bps.get("rilis") or []) + len(bps.get("rilis_ntp") or []))
+        if jumlah["BD-BPSAPI"] and bps.get("waktu"):
+            terakhir["BD-BPSAPI"] = date.fromisoformat(str(bps["waktu"])[:10])
     path_berita = konf.akar / "data" / "berita" / "berita.json"
     if "BD-BERITA" in konf.sumber and path_berita.exists():
         try:
@@ -605,6 +612,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         _tulis_json(keluaran / "kebijakan.json", data_kinerja["kebijakan"])
 
     # ---------- laporan.json (mingguan, bulanan, triwulanan, semesteran, tahunan)
+    data_bps = konektor_bps.baca(konf.akar, konektor_bps.BERKAS_SERI)  # inflasi resmi BPS (python -m pipeline ambil-bps)
     kinerja_model = {"ringkasan": ringkasan_model, "evaluasi_anomali": evaluasi, "target": tk}
     _tulis_json(keluaran / "laporan.json", laporan.bentuk_semua(
         konf, {kode: per for (w, kode), per in harian.items() if w == target}, hasil_varian, daftar_sinyal,
@@ -614,7 +622,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             **{jenis: {"kinerja_model": kinerja_model, "waktu_respons": data_kinerja.get("respons", {}),
                        "stabilitas_segmen": data_kinerja.get("stabilitas", {}), "indikator": indikator}
                for jenis in ("triwulanan", "semesteran", "tahunan")},
-        }))
+        }, inflasi=konektor_bps.per_bulan(data_bps)))
 
     # ---------- pasar.json
     pasar_out = []
@@ -702,7 +710,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
                           "prioritas_ditindaklanjuti_persen": round(ditindak / len(prioritas) * 100, 1) if prioritas else None},
         "prioritas": [s["id"] for s in aktif[:8]],
         # Inflasi resmi BPS (Provinsi Bengkulu dan kota IHK); null bila deretnya belum pernah diambil (python -m pipeline ambil-bps).
-        "inflasi_bps": konektor_bps.ringkas_untuk_situs(konektor_bps.baca(konf.akar, konektor_bps.BERKAS_SERI)),
+        "inflasi_bps": konektor_bps.ringkas_untuk_situs(data_bps),
     }
     _tulis_json(keluaran / "ringkasan.json", ringkasan)
 

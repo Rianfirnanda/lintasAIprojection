@@ -144,7 +144,28 @@ def _rekomendasi(konf, jenis, baris_varian, sinyal_periode, kelengkapan, hari_ra
     return rek
 
 
-def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, mulai, akhir, label, terbaru, ekstra) -> dict:
+def _kalimat_inflasi(inflasi: dict[str, dict], mulai: date, label: str, terbaru: bool) -> tuple[str | None, dict | None]:
+    """Kalimat inflasi resmi BPS (Provinsi Bengkulu) untuk laporan bulanan, beserta angkanya."""
+    kunci = f"{mulai.year}-{mulai.month:02d}"
+    x = inflasi.get(kunci) or {}
+    if x.get("yoy") is not None:
+        kal = (f"Menurut BPS, inflasi Provinsi Bengkulu {label} sebesar {_a(x['yoy'], 2)}% dibanding "
+               f"{BULAN[mulai.month - 1]} {mulai.year - 1}")
+        if x.get("mtm") is not None:
+            kal += f" dan {_a(x['mtm'], 2)}% dibanding bulan sebelumnya"
+        if x.get("makanan_yoy") is not None:
+            kal += f"; kelompok makanan, minuman, dan tembakau {_a(x['makanan_yoy'], 2)}% setahun"
+        return kal + ".", {"periode": kunci, **x}
+    lalu = max((p for p, v in inflasi.items() if p < kunci and v.get("yoy") is not None), default=None)
+    if terbaru and lalu:
+        th, bl = (int(v) for v in lalu.split("-"))
+        return (f"Angka inflasi BPS untuk {label} belum terbit; angka terakhir ({BULAN[bl - 1]} {th}) "
+                f"{_a(inflasi[lalu]['yoy'], 2)}% setahun untuk Provinsi Bengkulu."), None
+    return None, None
+
+
+def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, mulai, akhir, label, terbaru, ekstra,
+                  inflasi=None) -> dict:
     s_mulai, s_akhir, s_label = _sebelumnya(jenis, mulai)
     y_mulai, y_akhir, y_label = _tahun_lalu(jenis, mulai)
     baris_varian = []
@@ -213,6 +234,11 @@ def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, m
         ringkasan.append("Tidak ada harga janggal pada periode ini.")
     if kelengkapan["rata_persen"] is not None:
         ringkasan.append(f"Rata-rata kelengkapan data pasar {_a(kelengkapan['rata_persen'])}%.")
+    inflasi_bps = None
+    if jenis == "bulanan" and inflasi:
+        kalimat, inflasi_bps = _kalimat_inflasi(inflasi, mulai, label, terbaru)
+        if kalimat:
+            ringkasan.append(kalimat)
 
     hasil = {
         "jenis": jenis, "judul": JUDUL[jenis], "label": label, "mulai": mulai.isoformat(), "akhir": akhir.isoformat(),
@@ -226,14 +252,17 @@ def _satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi, m
         "rekomendasi": _rekomendasi(konf, jenis, baris_varian, sinyal_periode, kelengkapan, hari_raya, drift),
         "periode_berjalan": akhir >= konf.hari_ini,
     }
+    if inflasi_bps:
+        hasil["inflasi_bps"] = inflasi_bps
     if terbaru:
         hasil.update(ekstra.get(jenis, {}))
     return hasil
 
 
 def bentuk_semua(konf, harian_target: dict, hasil_varian: dict, sinyal: list[dict], observasi: list,
-                 tanggal_data: date | None, ekstra: dict | None = None) -> dict:
-    """Kembalikan {jenis: [periode terbaru dahulu]} untuk mingguan, bulanan, triwulanan, semesteran, tahunan."""
+                 tanggal_data: date | None, ekstra: dict | None = None, inflasi: dict | None = None) -> dict:
+    """Kembalikan {jenis: [periode terbaru dahulu]} untuk mingguan, bulanan, triwulanan, semesteran, tahunan.
+    `inflasi`: angka inflasi resmi BPS per bulan (konektor_bps.per_bulan) untuk kalimat di laporan bulanan."""
     if tanggal_data is None:
         return {j: [] for j in JUMLAH_PERIODE}
     ekstra = ekstra or {}
@@ -243,7 +272,7 @@ def bentuk_semua(konf, harian_target: dict, hasil_varian: dict, sinyal: list[dic
         mulai, akhir, label = _periode(jenis, tanggal_data)
         for k in range(jumlah):
             daftar.append(_satu_periode(jenis, konf, harian_target, hasil_varian, sinyal, observasi,
-                                        mulai, akhir, label, k == 0, ekstra))
+                                        mulai, akhir, label, k == 0, ekstra, inflasi))
             mulai, akhir, label = _sebelumnya(jenis, mulai)
         hasil[jenis] = [d for d in daftar if d["varian"]]
     return hasil

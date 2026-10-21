@@ -159,6 +159,23 @@ Kunci BPS ikut di dalam alamat URL, sedangkan log Actions repositori ini bisa di
 dimuat dari situs didaftarkan sebagai rahasia Actions (otomatis disamarkan di log), dan hasil cek tidak pernah memuat
 kunci.
 
+**Inflasi resmi BPS di dashboard.** Setiap pembaruan, langkah `python -m pipeline ambil-bps` mengambil angka inflasi
+Provinsi Bengkulu dari BPS Web API, paling sering sehari sekali (selebihnya langsung dilewati tanpa memanggil BPS). Yang
+diambil: inflasi bulanan, sejak Januari, dan setahun per kelompok pengeluaran; inflasi per kota penghitung IHK (Kota
+Bengkulu dan Mukomuko); indeks harga yang diterima dan dibayar petani; serta judul Berita Resmi Statistik inflasi dan
+Nilai Tukar Petani. Hasilnya di `data/sumber/bps_seri.json` (tanpa kunci) dan tampil di:
+
+- **Dasbor TPID**, panel *Inflasi Resmi BPS*: angka setahun dengan tanda sasaran nasional 2,5 ± 1%, grafik 25 bulan,
+  angka kota IHK, Nilai Tukar Petani, dan tombol *Rincian* berisi tabel per kelompok serta tautan ke halaman rilis BPS;
+- **Mode Videotron**, satu layar inflasi; **Tanya Takar**, pertanyaan seperti "berapa inflasi bulan ini?";
+- **Laporan bulanan**, satu kalimat angka inflasi BPS untuk bulan itu (atau angka terakhir bila bulan itu belum terbit).
+
+Hal yang perlu diketahui: Bengkulu Tengah belum termasuk kota penghitung IHK, jadi angka provinsi dipakai sebagai
+acuan. Tabel per kelompok pengeluaran di Web API berlubang dan baru sampai Mei 2026 saat diperiksa 21 Oktober 2026,
+sehingga angka utama diambil dari Berita Resmi Statistik yang terbit tiap awal bulan, dan bulan yang kosong ditambal dari
+tabel per kota IHK. BPS juga membatasi permintaan data paling banyak dua tahun sekali minta. Untuk mengambil ulang
+sekarang juga: Actions → **Penjajakan sumber data** → jenis `bps-seri`.
+
 ## 4c. Harga harian Bengkulu Tengah: SP2KP Kemendag, dengan cadangan PIHPS Provinsi Bengkulu
 
 Sistem selalu memakai data asli (`mode_demo: tidak` di `config/pengaturan.json`) dan wilayah sasarannya **Kabupaten Bengkulu Tengah**

@@ -469,6 +469,47 @@ def gabung_seri(lama: dict | None, baru: dict) -> dict:
             "rilis_ntp": baru.get("rilis_ntp") or (lama or {}).get("rilis_ntp") or []}
 
 
+def nama_bulan(periode: str | None) -> str:
+    """'2026-09' menjadi 'September 2026'."""
+    try:
+        th, bl = (int(x) for x in str(periode).split("-")[:2])
+        return f"{BULAN[bl - 1].capitalize()} {th}"
+    except (ValueError, IndexError):
+        return str(periode or "-")
+
+
+def per_bulan(d: dict | None) -> dict[str, dict]:
+    """Inflasi umum Provinsi Bengkulu per bulan {YYYY-MM: {yoy, mtm, ytd, makanan_yoy, asal}}.
+
+    Tabel per kelompok pengeluaran di Web API berlubang (banyak bulan 2025 kosong) dan berhenti lebih awal, sedangkan tabel
+    per kabupaten/kota (baris Provinsi Bengkulu) lebih lengkap. Urutan sumber: tabel per kelompok, tabel per kota IHK,
+    lalu Berita Resmi Statistik untuk bulan yang belum ada di tabel mana pun (asal "rilis")."""
+    seri = (d or {}).get("seri") or {}
+    hasil: dict[str, dict] = {}
+
+    def isi(kode: str, cocok, kunci: str) -> None:
+        for x in (seri.get(kode) or {}).get("data", []):
+            if cocok(x["kategori"]):
+                b = hasil.setdefault(x["periode"], {"asal": "tabel"})
+                if b.get(kunci) is None:
+                    b[kunci] = x["nilai"]
+
+    umum, provinsi = (lambda k: k == "Umum"), (lambda k: k.lower().startswith("provinsi"))
+    for kode in ("yoy", "mtm", "ytd"):
+        isi(kode, umum, kode)
+    isi("yoy", lambda k: k.lower().startswith("makanan"), "makanan_yoy")
+    isi("yoy_wilayah", provinsi, "yoy")
+    isi("mtm_wilayah", provinsi, "mtm")
+    for r in (d or {}).get("rilis") or []:
+        if not isinstance(r, dict) or not r.get("periode"):
+            continue
+        b = hasil.setdefault(r["periode"], {"asal": "rilis"})
+        for kode in ("yoy", "mtm"):
+            if b.get(kode) is None and r.get(kode) is not None:
+                b[kode] = r[kode]
+    return hasil
+
+
 def ringkas_untuk_situs(d: dict | None, bulan_tren: int = 25) -> dict | None:
     """Ringkasan kecil untuk ringkasan.json: angka bulan terbaru per kelompok dan per kota IHK, serta tren tahunan."""
     seri = (d or {}).get("seri") or {}
@@ -485,7 +526,11 @@ def ringkas_untuk_situs(d: dict | None, bulan_tren: int = 25) -> dict | None:
     periode = max((p for p in (*mtm, *yoy) if "Umum" in mtm.get(p, {}) or "Umum" in yoy.get(p, {})), default=None)
     if not periode:
         return None
-    nama = list(dict.fromkeys([*mtm.get(periode, {}), *yoy.get(periode, {}), *ytd.get(periode, {})]))
+    # Urutan kelompok pengeluaran baku BPS (COICOP 2018), dengan Umum di depan.
+    urutan = ("umum", "makanan", "pakaian", "perumahan", "perlengkapan", "kesehatan", "transportasi", "informasi",
+              "rekreasi", "pendidikan", "penyediaan", "perawatan")
+    nama = sorted(dict.fromkeys([*mtm.get(periode, {}), *yoy.get(periode, {}), *ytd.get(periode, {})]),
+                  key=lambda k: next((i for i, u in enumerate(urutan) if k.lower().startswith(u)), len(urutan)))
     kelompok = [{"nama": k, "mtm": mtm.get(periode, {}).get(k), "ytd": ytd.get(periode, {}).get(k),
                  "yoy": yoy.get(periode, {}).get(k)} for k in nama]
     umum = next((k for k in kelompok if k["nama"] == "Umum"), None)
@@ -496,16 +541,12 @@ def ringkas_untuk_situs(d: dict | None, bulan_tren: int = 25) -> dict | None:
     wilayah = [{"nama": k, "mtm": w_mtm.get(p_wil, {}).get(k), "yoy": w_yoy.get(p_wil, {}).get(k)}
                for k in dict.fromkeys([*w_mtm.get(p_wil, {}), *w_yoy.get(p_wil, {})])] if p_wil else []
 
-    # Tren tahunan dari tabel, disambung angka Berita Resmi Statistik untuk bulan-bulan sesudah tabel berakhir.
+    # Tren bulanan: tabel per kelompok, ditambal tabel per kota IHK, lalu Berita Resmi Statistik (lihat per_bulan).
     rilis = [r for r in (d or {}).get("rilis") or [] if isinstance(r, dict) and r.get("periode")][:6]
-    tren = {p: {"periode": p, "mtm": mtm.get(p, {}).get("Umum"), "yoy": yoy.get(p, {}).get("Umum"),
-                "yoy_makanan": yoy.get(p, {}).get(makanan["nama"]) if makanan else None, "asal": "tabel"}
-            for p in {*mtm, *yoy}}
-    for r in rilis:
-        if r["periode"] > periode:
-            tren[r["periode"]] = {"periode": r["periode"], "mtm": r.get("mtm"), "yoy": r.get("yoy"), "yoy_makanan": None,
-                                  "asal": "rilis"}
-    tren = [tren[p] for p in sorted(tren)[-bulan_tren:]]
+    bulanan = per_bulan(d)
+    tren = [{"periode": p, "mtm": bulanan[p].get("mtm"), "yoy": bulanan[p].get("yoy"),
+             "yoy_makanan": bulanan[p].get("makanan_yoy"), "asal": bulanan[p]["asal"]}
+            for p in sorted(p for p, v in bulanan.items() if v.get("yoy") is not None)[-bulan_tren:]]
 
     # Nilai Tukar Petani: angka resmi dari judul Berita Resmi Statistik bila ada. Bila belum ada, dihitung It / Ib x 100
     # dari indeks gabungan (kategori Umum atau Gabungan) untuk bulan yang punya keduanya.

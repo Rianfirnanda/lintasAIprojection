@@ -98,6 +98,16 @@
     </section>
   </div>
 
+  <!-- Inflasi resmi BPS (Provinsi Bengkulu). Tersembunyi sampai pipeline pernah mengambil deretnya dari BPS Web API. -->
+  <div class="dash-baris dash-baris-inflasi" id="baris-inflasi" hidden>
+    <section class="dash-panel" aria-labelledby="judul-inflasi">
+      <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="denyut"></span>
+        <div><h2 id="judul-inflasi">Inflasi Resmi BPS</h2><p>Provinsi Bengkulu, acuan untuk Bengkulu Tengah</p></div>
+        <button type="button" class="dash-tautan tautan-tombol" id="buka-inflasi" aria-haspopup="dialog">Rincian</button></div>
+      <div id="inflasi"></div>
+    </section>
+  </div>
+
   <div class="dash-baris dash-baris-3">
     <section class="dash-panel" aria-labelledby="judul-hariraya">
       <div class="dash-judul"><span class="dash-judul-ikon" data-ikon="kalender"></span>
@@ -305,6 +315,24 @@ function renderBanding(varian, master) {
       <div class="ubin-nilai ${arah}"><span class="segitiga">${tanda}</span>${persen(nilai, 1, true)}</div>
       <div class="ubin-kecil">(${singkat})</div><span class="pil ${pil[1]}">${pil[0]}</span></div>`;
   }).join("");
+}
+
+/* ---------- inflasi resmi BPS (Provinsi Bengkulu); modulnya dimuat hanya bila datanya ada */
+async function renderInflasi(ib) {
+  if (!ib) return;
+  const m = await import("./assets/inflasi-bps.js");
+  document.getElementById("baris-inflasi").hidden = false;
+  document.getElementById("inflasi").innerHTML = m.panelInflasi(ib);
+  let grafik = null;
+  const gambar = () => {
+    grafik?.destroy();
+    const kanvas = document.getElementById("grafik-inflasi");
+    grafik = kanvas ? m.gambarTrenInflasi(kanvas, ib) : null;
+  };
+  gambar();
+  saatTemaBerubah(gambar);
+  document.getElementById("buka-inflasi").addEventListener("click", () => bukaRincian({ judul: "Inflasi resmi BPS",
+    sub: "Provinsi Bengkulu, acuan untuk Bengkulu Tengah", ikonNama: "denyut", isi: () => m.isiInflasi(ib) }));
 }
 
 /* ---------- situasi hari raya */
@@ -518,6 +546,7 @@ if (tampilanTpid) try {
   renderMutu(model, sinyal.sinyal);
   renderBanding(ringkasan.varian, master);
   renderHariRaya(ringkasan.hari_raya);
+  renderInflasi(ringkasan.inflasi_bps).catch((e) => console.error(e));
   renderTindakLanjut(sinyal.sinyal, pasar.pasar);
   renderKaki(meta);
   siapkanGrafik(ringkasan.varian, master, model);

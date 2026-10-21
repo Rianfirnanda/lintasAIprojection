@@ -56,3 +56,20 @@ def test_bentuk_semua(konf):
     assert any(r.startswith("Kenaikan terbesar terjadi pada Cabai Rawit Merah") and "varian lain tidak turun" in r for r in m["ringkasan"])
     assert not any("penurunan terbesar" in r for r in m["ringkasan"])
     assert laporan.bentuk_semua(konf, {}, {}, [], [], None) == {j: [] for j in ("mingguan", "bulanan", "triwulanan", "semesteran", "tahunan")}
+
+
+def test_laporan_bulanan_memuat_inflasi_resmi_bps(konf):
+    akhir = date(2026, 9, 25)
+    harian = {"BRS03": {akhir - timedelta(days=i): 13500.0 for i in range(120)}}
+    inflasi = {"2026-08": {"yoy": 3.99, "mtm": 0.31}, "2026-07": {"yoy": 3.78, "mtm": 0.23, "makanan_yoy": 6.1}}
+    bulanan = laporan.bentuk_semua(konf, harian, {}, [], [], akhir, inflasi=inflasi)["bulanan"]
+    sep, agu, jul = bulanan[0], bulanan[1], bulanan[2]
+    # September belum ada angkanya: laporan bulan berjalan menyebut angka terakhir yang tersedia
+    assert any(r == "Angka inflasi BPS untuk September 2026 belum terbit; angka terakhir (Agustus 2026) 3,99% setahun "
+                    "untuk Provinsi Bengkulu." for r in sep["ringkasan"]) and "inflasi_bps" not in sep
+    assert ("Menurut BPS, inflasi Provinsi Bengkulu Agustus 2026 sebesar 3,99% dibanding Agustus 2025 dan 0,31% dibanding "
+            "bulan sebelumnya.") in agu["ringkasan"] and agu["inflasi_bps"] == {"periode": "2026-08", "yoy": 3.99, "mtm": 0.31}
+    assert any("kelompok makanan, minuman, dan tembakau 6,10% setahun" in r for r in jul["ringkasan"])
+    # laporan mingguan dan bulan yang lebih lama tanpa angka BPS tidak diberi kalimat inflasi
+    assert not any("BPS" in r for p in bulanan[3:] for r in p["ringkasan"])
+    assert not any("inflasi" in r.lower() for r in laporan.bentuk_semua(konf, harian, {}, [], [], akhir, inflasi=inflasi)["mingguan"][0]["ringkasan"])

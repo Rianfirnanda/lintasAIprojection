@@ -4,6 +4,7 @@
 //
 // Hasil: { baris: [teks], tautan: [{ href, label }], saran: [pertanyaan lanjutan], perluAi, niat }
 import { selisihHarga, ringkasHariIni, bandingPerkiraan } from "./selisih.js";
+import { angkaUtama, statusSasaran, sasaran } from "./inflasi-inti.js";
 
 const rp = (x) => `Rp${Math.round(x).toLocaleString("id-ID")}`;
 const persen = (x, d = 1) => `${x > 0 ? "+" : ""}${Number(x).toLocaleString("id-ID", { minimumFractionDigits: d, maximumFractionDigits: d })}%`;
@@ -106,6 +107,28 @@ export async function jawab(pertanyaan, data, muatSeri = null) {
     ], [{ href: "sinyal.html", label: "Buka halaman Peringatan" }], ["Apa yang naik paling tinggi?"]);
   }
 
+  // inflasi resmi BPS (Provinsi Bengkulu) dan nilai tukar petani
+  if (/(inflasi|deflasi|\bihk\b|indeks harga konsumen|nilai tukar petani|\bntp\b)/.test(teks) && !barang.length) {
+    const ib = data.ringkasan?.inflasi_bps, u = ib ? angkaUtama(ib) : null;
+    if (!u || !ada(u.yoy)) return hasil("inflasi", ["Angka inflasi resmi BPS belum tersedia di situs ini."]);
+    const [th, bl] = String(u.periode).split("-").map(Number);
+    const st = statusSasaran(u.yoy, u.periode), sas = sasaran(u.periode);
+    const pr = (x) => `${Number(x).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+    const baris = [`Inflasi setahun Provinsi Bengkulu ${BULAN[bl - 1]} ${th} sebesar ${pr(u.yoy)}${ada(u.mtm) ? `, dan ${pr(u.mtm)} dibanding bulan sebelumnya` : ""}` +
+      `${u.asal === "rilis" && u.tanggal ? ` (rilis BPS ${tgl(u.tanggal)})` : ""}.` +
+      (st && sas ? ` Angka ini ${st[0] === "Dalam sasaran" ? "masih dalam" : st[0] === "Di atas sasaran" ? "di atas" : "di bawah"} sasaran nasional ${sas.teks}.` : "")];
+    if (ib.makanan && ada(ib.makanan.yoy)) {
+      const [tm, bm] = String(ib.periode).split("-").map(Number);
+      baris.push(`Kelompok makanan, minuman, dan tembakau ${pr(ib.makanan.yoy)} setahun (${BULAN[bm - 1]} ${tm}, angka rinci terakhir).`);
+    }
+    if (/(petani|ntp)/.test(teks) && ib.ntp) {
+      const [tn, bn] = String(ib.ntp.periode).split("-").map(Number);
+      baris.push(`Nilai tukar petani ${BULAN[bn - 1]} ${tn}: ${Number(ib.ntp.nilai).toLocaleString("id-ID", { maximumFractionDigits: 2 })}. Di atas 100 berarti petani surplus.`);
+    }
+    baris.push("Bengkulu Tengah belum punya angka inflasi sendiri, jadi angka provinsi dipakai sebagai acuan.");
+    return hasil("inflasi", baris, [], ["Apa yang naik paling tinggi?", "Harga cabai hari ini"]);
+  }
+
   // kesegaran data dan sumber
   if (/(data terakhir|diperbarui|update|kapan data|sumber data|dari mana data|asal data)/.test(teks) && !barang.length) {
     const m = data.meta || {};
@@ -203,7 +226,10 @@ export function konteksAi(data) {
     `bulanan ${ada(x.perubahan?.bulanan) ? persen(x.perubahan.bulanan) : "-"}${x.proyeksi_h7 ? `, perkiraan 7 hari ${bandingPerkiraan(x.harga_terakhir, x.proyeksi_h7)?.tetap ? "tetap" : rp(x.proyeksi_h7.prediksi)}` : ""}${x.sinyal ? ", perlu diwaspadai" : ""}`);
   const sinyal = (data.sinyal?.sinyal || []).filter((s) => s.aktif).slice(0, 8).map((s) => `- ${s.judul}${s.narasi ? `. ${s.narasi}` : ""}`);
   const hr = data.ringkasan?.hari_raya?.berikutnya;
-  return [`Tanggal data terakhir: ${tgl(data.meta?.tanggal_data_terakhir)}. Wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu.`,
+  const ib = data.ringkasan?.inflasi_bps, u = ib ? angkaUtama(ib) : null;
+  const inflasi = u && ada(u.yoy) ? `Inflasi resmi BPS Provinsi Bengkulu ${u.periode}: ${persen(u.yoy, 2)} setahun${ada(u.mtm) ? `, ${persen(u.mtm, 2)} sebulan` : ""}` +
+    " (Bengkulu Tengah belum punya angka inflasi sendiri)." : "";
+  return [`Tanggal data terakhir: ${tgl(data.meta?.tanggal_data_terakhir)}. Wilayah: Kabupaten Bengkulu Tengah, Provinsi Bengkulu.`, inflasi,
     "Harga terakhir per barang:", ...baris,
     sinyal.length ? "Peringatan aktif:" : "Tidak ada peringatan aktif.", ...sinyal,
     hr ? `Hari raya berikutnya: ${hr.nama}, ${tgl(hr.tanggal)} (${hr.hari_menuju} hari lagi).` : "",
