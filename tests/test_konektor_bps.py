@@ -165,7 +165,7 @@ NILAI_SERI = {
 RILIS = [
     {"brs_id": 1, "title": "Inflasi Year-on-Year (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen",
      "abstract": "<p>Juni 2026 terjadi inflasi month-to-month (m-to-m) sebesar 0,45 persen dan year-on-year (y-on-y) sebesar 3,96 persen.</p>",
-     "rl_date": "2026-07-01", "pdf": "https://bengkulu.bps.go.id/id/pressrelease/download.html?nrbvfeve=MTAxMA"},
+     "rl_date": "2026-07-01", "pdf": "https://webapi.bps.go.id/download.php?f=abc"},
     {"brs_id": 2, "title": "Inflasi Year-on-Year (y-on-y) Provinsi Bengkulu Mei 2026 sebesar 3,01 persen", "abstract": "",
      "rl_date": "2026-06-02", "pdf": "http://contoh.test/palsu.pdf"},
     {"brs_id": 3, "title": "Nilai Tukar Petani (NTP) Provinsi Bengkulu Juni 2026 sebesar 150,1", "rl_date": "2026-07-01"},
@@ -174,6 +174,9 @@ RILIS = [
 
 def bps_seri_tiruan(url, *_):
     assert f"/key/{KUNCI}/" in url
+    if "/model/pressrelease/" in url and "/keyword/nilai%20tukar%20petani/" in url:
+        return _jawab(200, _daftar([{"brs_id": 9, "rl_date": "2026-07-01",
+                                     "title": "Nilai Tukar Petani (NTP) Provinsi Bengkulu Juni 2026 sebesar 196,87 atau turun 0,41 persen"}]))
     if "/model/pressrelease/" in url:
         assert "/domain/1700/keyword/inflasi/" in url
         return _jawab(200, _daftar(RILIS))
@@ -222,10 +225,13 @@ def test_ambil_seri_inflasi_dan_ringkasannya_untuk_situs():
     assert h["seri"]["it"]["data"] == [{"periode": "2026-05", "kategori": "Gabungan", "nilai": 150.0}]
     assert "6 dari 7 deret" in h["pesan"] and "2026-05" in h["pesan"]
     assert [r["periode"] for r in h["rilis"]] == ["2026-06", "2026-05"]
-    assert h["rilis"][0] | {} == {"periode": "2026-06", "yoy": 3.96, "mtm": 0.45, "judul": RILIS[0]["title"],
-                                  "tanggal": "2026-07-01", "url": RILIS[0]["pdf"]}
-    assert h["rilis"][1]["url"] is None and h["rilis"][1]["mtm"] is None  # tautan di luar bps.go.id tidak dipakai
+    assert h["rilis"][0] == {"periode": "2026-06", "yoy": 3.96, "mtm": 0.45, "judul": RILIS[0]["title"], "tanggal": "2026-07-01",
+                             "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1/inflasi-year-on-year--y-on-y--"
+                                    "provinsi-bengkulu-juni-2026-sebesar-3-96-persen.html"}
+    assert "download" not in json.dumps(h)  # tautan unduh dari API tidak disimpan
+    assert h["rilis"][1]["mtm"] is None
     assert h["rilis_dilewati"] == [RILIS[2]["title"]]
+    assert h["rilis_ntp"][0]["ntp"] == 196.87 and h["rilis_ntp"][0]["ubah_persen"] == -0.41
 
     r = bps.ringkas_untuk_situs(h)
     assert r["periode"] == "2026-05" and r["wilayah"] == "Provinsi Bengkulu"
@@ -233,9 +239,12 @@ def test_ambil_seri_inflasi_dan_ringkasannya_untuk_situs():
     assert r["makanan"]["yoy"] == 6.07
     assert r["wilayah_ihk"]["periode"] == "2026-05"
     assert {"nama": "Mukomuko", "mtm": 0.5, "yoy": 2.1} in r["wilayah_ihk"]["daftar"]
-    assert [t["periode"] for t in r["tren"]] == ["2025-05", "2026-04", "2026-05"]
-    assert r["tren"][-1] == {"periode": "2026-05", "mtm": 0.86, "yoy": 3.01, "yoy_makanan": 6.07}
-    assert r["ntp"] is None  # Ib tidak terambil, jadi NTP tidak dihitung
+    # tren dari tabel, disambung Berita Resmi Statistik Juni 2026 yang terbit sesudah tabel berakhir
+    assert [t["periode"] for t in r["tren"]] == ["2025-05", "2026-04", "2026-05", "2026-06"]
+    assert r["tren"][2] == {"periode": "2026-05", "mtm": 0.86, "yoy": 3.01, "yoy_makanan": 6.07, "asal": "tabel"}
+    assert r["tren"][3] == {"periode": "2026-06", "mtm": 0.45, "yoy": 3.96, "yoy_makanan": None, "asal": "rilis"}
+    assert [x["periode"] for x in r["rilis"]] == ["2026-06", "2026-05"]
+    assert r["ntp"]["asal"] == "rilis" and r["ntp"]["nilai"] == 196.87  # Ib tidak terambil, NTP dari rilis resmi
     assert bps.ringkas_untuk_situs(None) is None and bps.ringkas_untuk_situs({"seri": {}}) is None
 
 
@@ -260,16 +269,36 @@ def test_gabung_seri_mempertahankan_deret_yang_gagal_kali_ini():
     assert g["seri"]["yoy"]["terbaru"] == "2026-05" and g["seri"]["it"]["terbaru"] == "2026-03"
 
 
-def test_ntp_dihitung_dari_it_dan_ib_bulan_yang_sama():
+def test_ntp_resmi_dari_rilis_atau_dihitung_dari_it_dan_ib():
     seri = {"mtm": {"data": [{"periode": "2026-05", "kategori": "Umum", "nilai": 0.5}]},
-            "it": {"data": [{"periode": "2026-05", "kategori": "Tanaman Pangan", "nilai": 120.0},
-                            {"periode": "2026-05", "kategori": "Gabungan", "nilai": 150.0}]},
-            "ib": {"data": [{"periode": "2026-05", "kategori": "Tanaman Pangan", "nilai": 100.0},
-                            {"periode": "2026-05", "kategori": "Gabungan", "nilai": 120.0},
-                            {"periode": "2026-06", "kategori": "Gabungan", "nilai": 121.0}]}}
+            "it": {"data": [{"periode": "2026-04", "kategori": "Umum", "nilai": 240.0},
+                            {"periode": "2026-05", "kategori": "Umum", "nilai": 262.61},
+                            {"periode": "2026-05", "kategori": "Tanaman Pangan", "nilai": 120.0}]},
+            "ib": {"data": [{"periode": "2026-04", "kategori": "Umum", "nilai": 120.0},
+                            {"periode": "2026-05", "kategori": "Umum", "nilai": 133.39},
+                            {"periode": "2026-06", "kategori": "Umum", "nilai": 134.0}]}}
     n = bps.ringkas_untuk_situs({"seri": seri})["ntp"]
-    assert n["periode"] == "2026-05" and n["utama"] == "Gabungan"
-    assert {"nama": "Gabungan", "it": 150.0, "ib": 120.0, "ntp": 125.0} in n["subsektor"]
+    # It / Ib x 100 untuk bulan yang punya keduanya; Juni hanya punya Ib
+    assert n == {"periode": "2026-05", "nilai": 196.87, "ubah_persen": -1.56, "asal": "indeks", "url": None,
+                 "riwayat": [{"periode": "2026-04", "nilai": 200.0}, {"periode": "2026-05", "nilai": 196.87}]}
+    judul = "Nilai Tukar Petani (NTP) Provinsi Bengkulu September 2026 sebesar 206,79 atau turun 0,5 persen"
+    rilis_ntp = [bps.baca_rilis_ntp(judul) | {"tanggal": "2026-10-01", "url": "https://bengkulu.bps.go.id/id/x.html"}]
+    n = bps.ringkas_untuk_situs({"seri": seri, "rilis_ntp": rilis_ntp})["ntp"]
+    assert n["asal"] == "rilis" and n["periode"] == "2026-09" and n["nilai"] == 206.79 and n["ubah_persen"] == -0.5
+    assert n["url"] == "https://bengkulu.bps.go.id/id/x.html"
+
+
+def test_bulan_singkatan_dan_tautan_halaman_rilis():
+    assert [bps._no_bulan(x) for x in ("Jan", "Agt", "Sept", "Nop", "Desember", "Tahunan", "Umum")] == [1, 8, 9, 11, 12, None, None]
+    baris = [{"rincian": "Umum", "turunan": "Tidak ada", "tahun": "2026", "periode": "Agt", "nilai": "0,5"},
+             {"rincian": "Umum", "turunan": "Tidak ada", "tahun": "2026", "periode": "Sep", "nilai": 0.38},
+             {"rincian": "Umum", "turunan": "Tidak ada", "tahun": "2026", "periode": "Tahunan", "nilai": 3.1}]
+    assert bps.baris_bulanan(baris) == [{"periode": "2026-09", "kategori": "Umum", "nilai": 0.38}]  # "0,5" bukan angka JSON
+    assert bps.label_bukan_bulan(baris) == ["Tahunan"]
+    x = {"rl_date": "2026-07-01", "brs_id": 1010, "title": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen"}
+    assert bps.alamat_rilis(x) == ("https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1010/"
+                                   "inflasi-year-on-year--y-on-y--provinsi-bengkulu-juni-2026-sebesar-3-96-persen.html")
+    assert bps.alamat_rilis({**x, "brs_id": None}) is None
 
 
 def test_ambil_bps_cli_melewati_bila_masih_baru_dan_tidak_menimpa_dengan_hasil_kosong(tmp_path, monkeypatch, capsys):

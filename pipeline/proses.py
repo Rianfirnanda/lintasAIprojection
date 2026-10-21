@@ -28,6 +28,7 @@ from . import berita
 from . import ews as modul_ews
 from . import tata_data
 from . import konektor_resmi
+from . import konektor_bps
 from . import kebijakan as modul_kebijakan
 
 log = logging.getLogger(__name__)
@@ -700,6 +701,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "tindak_lanjut": {"status_anomali": status_count,
                           "prioritas_ditindaklanjuti_persen": round(ditindak / len(prioritas) * 100, 1) if prioritas else None},
         "prioritas": [s["id"] for s in aktif[:8]],
+        # Inflasi resmi BPS (Provinsi Bengkulu dan kota IHK); null bila deretnya belum pernah diambil (python -m pipeline ambil-bps).
+        "inflasi_bps": konektor_bps.ringkas_untuk_situs(konektor_bps.baca(konf.akar, konektor_bps.BERKAS_SERI)),
     }
     _tulis_json(keluaran / "ringkasan.json", ringkasan)
 

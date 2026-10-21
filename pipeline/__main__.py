@@ -186,10 +186,15 @@ def _ambil_bps(akar: Path, paksa: bool = False, jeda_jam: float = 20) -> int:
     print(konektor_bps.samarkan(hasil["pesan"], kunci))
     for kode, s in hasil["seri"].items():
         kategori = list(dict.fromkeys(x["kategori"] for x in s["data"]))
-        print(f"  {kode}: {s['judul']}, {len(s['data'])} angka, terbaru {s['terbaru']}; rincian: {'; '.join(kategori[:12])}")
+        bulan = sorted({x["periode"] for x in s["data"]})
+        print(f"  {kode}: {s['judul']}, {len(s['data'])} angka, {len(bulan)} bulan ({bulan[0]} s.d. {bulan[-1]}); "
+              f"rincian: {'; '.join(kategori[:12])}" + (f"; label lain: {', '.join(s['label_lain'])}" if s.get("label_lain") else ""))
     for r in hasil.get("rilis", []):
         print(f"  rilis {r['periode']} (terbit {r.get('tanggal') or '-'}): y-on-y {r['yoy']}"
               + (f", m-to-m {r['mtm']}" if r.get("mtm") is not None else ""))
+    for r in hasil.get("rilis_ntp", []):
+        print(f"  rilis NTP {r['periode']} (terbit {r.get('tanggal') or '-'}): {r['ntp']}"
+              + (f", berubah {r['ubah_persen']}%" if r.get("ubah_persen") is not None else ""))
     for j in hasil.get("rilis_dilewati", []):
         print(f"  rilis tidak terbaca: {j}")
     for g in hasil["galat"]:
