@@ -1,0 +1,759 @@
+{
+ "waktu": "2026-10-21T02:38:08+00:00",
+ "kunci": "ada",
+ "kunci_sah": true,
+ "pesan": "Kunci diterima BPS. Ditemukan 25 variabel dan 11 tabel statis tentang harga, inflasi, atau komoditas pangan; 6 dari 6 contoh variabel berhasil diambil angkanya.",
+ "wilayah": {
+  "1709": {
+   "nama": "Kabupaten Bengkulu Tengah",
+   "variabel": 2,
+   "tabel_statis": 0
+  },
+  "1700": {
+   "nama": "Provinsi Bengkulu",
+   "variabel": 17,
+   "tabel_statis": 11
+  },
+  "1771": {
+   "nama": "Kota Bengkulu",
+   "variabel": 6,
+   "tabel_statis": 0
+  }
+ },
+ "domain_bengkulu": [
+  {
+   "id": "1701",
+   "nama": "Bengkulu Selatan"
+  },
+  {
+   "id": "1702",
+   "nama": "Rejang Lebong"
+  },
+  {
+   "id": "1703",
+   "nama": "Bengkulu Utara"
+  },
+  {
+   "id": "1704",
+   "nama": "Kaur"
+  },
+  {
+   "id": "1705",
+   "nama": "Seluma"
+  },
+  {
+   "id": "1706",
+   "nama": "Mukomuko"
+  },
+  {
+   "id": "1707",
+   "nama": "Lebong"
+  },
+  {
+   "id": "1708",
+   "nama": "Kepahiang"
+  },
+  {
+   "id": "1709",
+   "nama": "Bengkulu Tengah"
+  },
+  {
+   "id": "1771",
+   "nama": "Bengkulu"
+  }
+ ],
+ "variabel": [
+  {
+   "wilayah": "1709",
+   "var_id": 78,
+   "judul": "Indeks Harga Konsumen (IHK) per Bulan Menurut  Kelompok Pengeluaran di Kabupaten/Kota Bengkulu",
+   "subjek": "Keuangan",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1709",
+   "var_id": 273,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di  Kabupaten/Kota Bengkulu (2018=100)",
+   "subjek": "Keuangan",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 554,
+   "judul": "[2022=100] Indeks Harga Konsumen (IHK) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 558,
+   "judul": "[2022=100] Indeks Harga Konsumen menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 561,
+   "judul": "[2018=100] Indeks Harga Konsumen menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 421,
+   "judul": "Indeks Harga yang Diterima oleh Petani (lt)",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 422,
+   "judul": "Indeks Harga yang Dibayar oleh Petani (Ib)",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 424,
+   "judul": "Indeks Harga yang Diterima oleh Petani (lt) gabungan tanpa perikanan",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 425,
+   "judul": "Indeks Harga yang Dibayar oleh Petani (Ib) Gabungan Tanpa Perikanan",
+   "subjek": "Nilai Tukar Petani",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 63,
+   "judul": "Inflasi Pedesaan",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 145,
+   "judul": "Inflasi Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Tidak Ada Satuan",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 555,
+   "judul": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 556,
+   "judul": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 557,
+   "judul": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 559,
+   "judul": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 560,
+   "judul": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 562,
+   "judul": "[2018=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 563,
+   "judul": "[2018=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 564,
+   "judul": "[2018=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Kota Bengkulu",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 2,
+   "judul": "Indeks Harga Konsumen",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "harga"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 1,
+   "judul": "Inflasi (m-to-m)",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 244,
+   "judul": "Inflasi (y-on-y)",
+   "subjek": "Inflasi",
+   "satuan": "Persen",
+   "kata": "inflasi"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 197,
+   "judul": "Produksi Daging Ternak Menurut Jenis Ternak di Kota Bengkulu",
+   "subjek": "Peternakan",
+   "satuan": "Ton",
+   "kata": "daging"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 198,
+   "judul": "Produksi Daging Unggas Menurut Jenis Unggas di Kota Bengkulu",
+   "subjek": "Peternakan",
+   "satuan": "Ton",
+   "kata": "daging"
+  },
+  {
+   "wilayah": "1771",
+   "var_id": 199,
+   "judul": "Produksi Telur Unggas dan Susu Sapi di Kota Bengkulu",
+   "subjek": "Peternakan",
+   "satuan": "Ton",
+   "kata": "telur"
+  }
+ ],
+ "tabel_statis": [
+  {
+   "wilayah": "1700",
+   "table_id": 707,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan Kelompok Pengeluaran Pakaian dan Alas Kaki  (IHK  2018=100) ",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 706,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan  (Ihk  2018=100) Subklompok Tembakau",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 705,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan  (Ihk  2018=100) Subklompok Minuman Yang Tidak Beralkohol",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 704,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan  (IHK  2018=100)",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 703,
+   "judul": "Indeks Harga Konsumen Kota Bengkulu 2020  Dan Persentase Perubahan Kelompok Pengeluaran Bahan Makanan, Minuman, dan Tembakau  (IHK  2018=100)",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 702,
+   "judul": "Indeks Harga Konsumen Umum Kota Bengkulu 2020  Dan Persentase Perubahan  (IHK  2018=100)",
+   "diperbarui": "2021-07-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1683,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di Kabupaten/Kota Bengkulu (2019=100), 2022",
+   "diperbarui": "2023-05-11"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 1262,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di Kabupaten/Kota Bengkulu (2018=100), 2021",
+   "diperbarui": "2022-07-08"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 708,
+   "judul": "IHK dan Inflasi Kota Bengkulu 2007-2009",
+   "diperbarui": "2021-08-13"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 54,
+   "judul": "Indeks Harga Konsumen (IHK) dan Inflasi Kota Bengkulu 2010-2016",
+   "diperbarui": "2016-10-06"
+  },
+  {
+   "wilayah": "1700",
+   "table_id": 156,
+   "judul": "Inflasi Perdesaan Provinsi Bengkulu per Bulan, Tahun 2008-2014",
+   "diperbarui": "2015-04-17"
+  }
+ ],
+ "contoh_data": [
+  {
+   "wilayah": "1709",
+   "var_id": 273,
+   "judul": "Laju Inflasi Bulanan Menurut Kelompok Pengeluaran di  Kabupaten/Kota Bengkulu (2018=100)",
+   "bisa_diambil": true,
+   "jumlah_angka": 262,
+   "tahun": [
+    "2023",
+    "2024"
+   ],
+   "terbaru": "Tahunan 2024",
+   "contoh": [
+    {
+     "rincian": "Januari",
+     "turunan": "Makanan minuman dan tembakau",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": -0.13
+    },
+    {
+     "rincian": "Januari",
+     "turunan": "Pakaian dan alas kaki",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": -0.61
+    },
+    {
+     "rincian": "Januari",
+     "turunan": "Perumahan Air Listrik dan Bahan Bakar Rumah Tangga",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": 0.63
+    },
+    {
+     "rincian": "Januari",
+     "turunan": "Perlengkapan Peralatan dan Pemeliharaan Rutin",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": 0.61
+    },
+    {
+     "rincian": "Januari",
+     "turunan": "Kesehatan",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": -0.14
+    },
+    {
+     "rincian": "Januari",
+     "turunan": "Transportasi",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": -0.21
+    },
+    {
+     "rincian": "Januari",
+     "turunan": "Informasi Komunikasi dan Jasa Keuangan",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": -0.35
+    },
+    {
+     "rincian": "Januari",
+     "turunan": "Rekreasi Olahraga dan Budaya",
+     "tahun": "2024",
+     "periode": "Tahunan",
+     "nilai": 1.59
+    }
+   ]
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 63,
+   "judul": "Inflasi Pedesaan",
+   "bisa_diambil": true,
+   "jumlah_angka": 24,
+   "tahun": [
+    "2013",
+    "2014"
+   ],
+   "terbaru": "Tahun 2014",
+   "contoh": [
+    {
+     "rincian": "Januari",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": 1.62
+    },
+    {
+     "rincian": "Februari",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": -0.09
+    },
+    {
+     "rincian": "Maret",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": 0.08
+    },
+    {
+     "rincian": "April",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": -0.09
+    },
+    {
+     "rincian": "Mei",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": 0.28
+    },
+    {
+     "rincian": "Juni",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": 0.23
+    },
+    {
+     "rincian": "Juli",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": 1.1
+    },
+    {
+     "rincian": "Agustus",
+     "turunan": "Tidak ada",
+     "tahun": "2014",
+     "periode": "Tahun",
+     "nilai": 0.55
+    }
+   ]
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 145,
+   "judul": "Inflasi Kota Bengkulu",
+   "bisa_diambil": true,
+   "jumlah_angka": 26,
+   "tahun": [
+    "2022",
+    "2023"
+   ],
+   "terbaru": "Tahun 2023",
+   "contoh": [
+    {
+     "rincian": "Januari",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": 0.62
+    },
+    {
+     "rincian": "Februari",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": 0.04
+    },
+    {
+     "rincian": "Maret",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": 0.25
+    },
+    {
+     "rincian": "April",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": 0.28
+    },
+    {
+     "rincian": "Mei",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": 0.17
+    },
+    {
+     "rincian": "Juni",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": 0.21
+    },
+    {
+     "rincian": "Juli",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": 0.49
+    },
+    {
+     "rincian": "Agustus",
+     "turunan": "Tidak ada",
+     "tahun": "2023",
+     "periode": "Tahun",
+     "nilai": -0.07
+    }
+   ]
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 555,
+   "judul": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "bisa_diambil": true,
+   "jumlah_angka": 90,
+   "tahun": [
+    "2025",
+    "2026"
+   ],
+   "terbaru": "Mei 2026",
+   "contoh": [
+    {
+     "rincian": "Umum",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.86
+    },
+    {
+     "rincian": "Makanan, Minuman, dan Tembakau",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.85
+    },
+    {
+     "rincian": "Pakaian dan Alas Kaki",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.09
+    },
+    {
+     "rincian": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.3
+    },
+    {
+     "rincian": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.45
+    },
+    {
+     "rincian": "Kesehatan",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.44
+    },
+    {
+     "rincian": "Transportasi",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.43
+    },
+    {
+     "rincian": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.1
+    }
+   ]
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 556,
+   "judul": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "bisa_diambil": true,
+   "jumlah_angka": 191,
+   "tahun": [
+    "2024",
+    "2026"
+   ],
+   "terbaru": "Mei 2026",
+   "contoh": [
+    {
+     "rincian": "Umum",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.39
+    },
+    {
+     "rincian": "Makanan, Minuman, dan Tembakau",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.19
+    },
+    {
+     "rincian": "Pakaian dan Alas Kaki",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.31
+    },
+    {
+     "rincian": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.73
+    },
+    {
+     "rincian": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.17
+    },
+    {
+     "rincian": "Kesehatan",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": -0.34
+    },
+    {
+     "rincian": "Transportasi",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 2.29
+    },
+    {
+     "rincian": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.77
+    }
+   ]
+  },
+  {
+   "wilayah": "1700",
+   "var_id": 557,
+   "judul": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "bisa_diambil": true,
+   "jumlah_angka": 71,
+   "tahun": [
+    "2025",
+    "2026"
+   ],
+   "terbaru": "Mei 2026",
+   "contoh": [
+    {
+     "rincian": "Umum",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 3.01
+    },
+    {
+     "rincian": "Makanan, Minuman, dan Tembakau",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 6.07
+    },
+    {
+     "rincian": "Pakaian dan Alas Kaki",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.87
+    },
+    {
+     "rincian": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 1.24
+    },
+    {
+     "rincian": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.75
+    },
+    {
+     "rincian": "Kesehatan",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.05
+    },
+    {
+     "rincian": "Transportasi",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 3.04
+    },
+    {
+     "rincian": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "turunan": "Tidak ada",
+     "tahun": "2026",
+     "periode": "Mei",
+     "nilai": 0.85
+    }
+   ]
+  }
+ ],
+ "galat": [],
+ "asal_kunci": "situs"
+}

@@ -5,6 +5,7 @@
   python -m pipeline ambil-cuaca [--hari 30] # konektor Big Data cuaca (Open-Meteo)
   python -m pipeline ambil-resmi             # konektor Big Data resmi: prakiraan BMKG dan harga PIHPS Bank Indonesia
   python -m pipeline ambil-sp2kp [--riwayat-hari 1830]   # harga harian pasar SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)
+  python -m pipeline cek-bps                  # uji kunci BPS Web API dan petakan data harga/inflasi (hasil di data/sumber/hasil_bps.json)
   python -m pipeline sp2kp-ke-harga          # salin harga SP2KP yang pemetaan variannya disetujui menjadi berkas harga
   python -m pipeline berita [--tanpa-ai]      # berita lokal: cari, baca, ambil harga, ringkas (juga jalan otomatis tiap hari)
   python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
@@ -130,6 +131,33 @@ def _firestore(a) -> int:
         keluaran["demo"] = demo
     _keluaran_github(**keluaran)
     return 0
+
+
+def _cek_bps(akar: Path) -> int:
+    """Uji kunci BPS dan petakan data yang tersedia. Kunci dari situs dipakai bila ada (lebih dulu daripada GitHub Secret);
+    yang dicetak hanya ringkasan tanpa kunci."""
+    import os
+
+    from . import firestore_sinkron, konektor_bps
+
+    dari_situs = "BPS_API_KEY" in firestore_sinkron.pasang_rahasia_dari_firestore(akar)
+    kunci = os.environ.get("BPS_API_KEY", "").strip()
+    firestore_sinkron.samarkan_di_log(kunci)
+    print(f"Kunci BPS: {'dari Pengaturan situs' if dari_situs else 'dari GitHub Secret' if kunci else 'belum diisi'}", flush=True)
+    hasil = konektor_bps.cek(kunci)
+    hasil["asal_kunci"] = "situs" if dari_situs else "github_secret" if kunci else "belum"
+    konektor_bps.simpan(akar, hasil)
+    print(konektor_bps.samarkan(hasil["pesan"], kunci))
+    for kode, w in hasil["wilayah"].items():
+        print(f"  {w['nama']} ({kode}): {w['variabel']} variabel, {w['tabel_statis']} tabel statis")
+    for c in hasil["contoh_data"]:
+        rinci = (f"{c.get('jumlah_angka')} angka, terbaru {c.get('terbaru')}: "
+                 + "; ".join(f"{x['rincian'] or x['turunan']} {x['nilai']}" for x in c.get("contoh", [])[:4])
+                 if c.get("bisa_diambil") else c.get("galat"))
+        print(konektor_bps.samarkan(f"  contoh [{c['wilayah']}] {c['judul']}: {rinci}", kunci))
+    for g in hasil["galat"][:10]:
+        print(konektor_bps.samarkan(f"  galat: {g}", kunci))
+    return 0 if hasil["kunci_sah"] else 1
 
 
 def _uji_notifikasi_dari_situs(akar: Path, url: str) -> None:
@@ -348,6 +376,7 @@ def main(argv: list[str] | None = None) -> int:
     pl.add_argument("--tahap", type=int, default=1)
 
     sub.add_parser("pihps-ke-harga", help="salin harga PIHPS Provinsi Bengkulu menjadi berkas harga utama sementara")
+    sub.add_parser("cek-bps", help="uji kunci BPS Web API (dari Pengaturan situs atau GitHub Secret) dan petakan data yang tersedia")
     s2 = sub.add_parser("ambil-sp2kp", help="ambil harga harian pasar SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)")
     s2.add_argument("--hari", type=int, default=30)
     s2.add_argument("--riwayat-hari", type=int, default=None, help="ambil riwayat sejauh sekian hari ke belakang walau data sudah ada")
@@ -479,8 +508,12 @@ def main(argv: list[str] | None = None) -> int:
             for r in hasil[k]:
                 print(f"[{k}] {r['status']} {r['byte']}B wilayah={r['wilayah_disebut']} {r['url'][:110]}")
         return 0
+    if a.perintah == "cek-bps":
+        return _cek_bps(konf.akar)
     if a.perintah == "probe-lanjut":
-        from . import probe_lanjut
+        from . import firestore_sinkron, probe_lanjut
+
+        firestore_sinkron.pasang_rahasia_dari_firestore(konf.akar)  # kunci BPS yang diisi di situs ikut dipakai
 
         if a.tahap == 6:
             hasil = probe_lanjut.jalankan_tahap6(konf.akar)["disperindag"]

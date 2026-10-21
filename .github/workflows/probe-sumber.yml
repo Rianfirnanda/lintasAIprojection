@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       jenis:
-        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2/lanjut3 = tahap 2/3; lanjut4 = sumber yang diterima analis (SIGAHADA, BEN CONNECT, Simponi Ternak); sp2kp = riwayat harga harian SP2KP 5 tahun"
+        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2/lanjut3 = tahap 2/3; lanjut4 = sumber yang diterima analis (SIGAHADA, BEN CONNECT, Simponi Ternak); sp2kp = riwayat harga harian SP2KP 5 tahun; bps = uji kunci BPS Web API dan petakan data harga/inflasi"
         default: "lanjut"
 
 permissions:
@@ -27,6 +27,17 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r requirements.txt
+      # Kunci yang diisi Administrator di Pengaturan situs (mis. BPS_API_KEY) tersimpan di Firestore. Kunci itu dimuat
+      # saat proses berjalan dan didaftarkan sebagai rahasia (::add-mask::), jadi tidak tampil di log publik.
+      - name: Sambungkan ke Firestore (kunci dari Pengaturan situs)
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then echo "Firebase belum diatur, hanya GitHub Secrets yang dipakai."; exit 0; fi
+          pip install -q -r requirements-firebase.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-layanan.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/akun-layanan.json" >> "$GITHUB_ENV"
       - name: Jajaki sumber
         env:
           BPS_API_KEY: ${{ secrets.BPS_API_KEY }}
@@ -40,9 +51,15 @@ jobs:
             lanjut5) python -m pipeline probe-lanjut --tahap 5 ;;
             lanjut6) python -m pipeline probe-lanjut --tahap 6 ;;
             sp2kp) python -m pipeline ambil-sp2kp --riwayat-hari 1830 && python -m pipeline sp2kp-ke-harga ;;
+            bps) python -m pipeline cek-bps ;;
             *) python -m pipeline probe-lanjut ;;
           esac
+      - name: Hapus kredensial
+        if: always()
+        run: rm -f "$RUNNER_TEMP/akun-layanan.json"
+      # Hasil tetap disimpan walau kunci ditolak, supaya halaman Sumber Data bisa menampilkan alasannya.
       - name: Simpan hasil
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
