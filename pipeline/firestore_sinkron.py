@@ -316,12 +316,25 @@ def nama_rahasia(akar: Path) -> list[str]:
     return [r["nama"] for r in skema.get("rahasia", []) if not r["nama"].startswith("FIREBASE_")]
 
 
+def samarkan_di_log(nilai: str) -> None:
+    """Di GitHub Actions, daftarkan nilai sebagai rahasia supaya tidak pernah tampil di log (repositori ini publik).
+    GitHub Secret otomatis disamarkan, tetapi kunci dari situs dimuat saat proses berjalan, jadi harus didaftarkan
+    sendiri. Baris perintah ::add-mask:: tidak ikut tampil di log. Nilai pendek (mis. port 587) bukan rahasia dan tidak
+    disamarkan, supaya angka yang sama di log lain tidak ikut berubah menjadi ***."""
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        return
+    for baris in str(nilai).splitlines():
+        if len(baris.strip()) >= 6:
+            print(f"::add-mask::{baris.strip()}", flush=True)
+
+
 def terapkan_rahasia(nilai: dict[str, str], env: dict | None = None) -> list[str]:
     """Pasang kunci dari situs ke lingkungan proses. Kunci dari situs menggantikan GitHub Secret yang sama."""
     env = os.environ if env is None else env
     terpasang = []
     for nama, v in sorted(nilai.items()):
         if isinstance(v, str) and v.strip():
+            samarkan_di_log(v)
             env[nama] = v.strip()
             terpasang.append(nama)
     return terpasang

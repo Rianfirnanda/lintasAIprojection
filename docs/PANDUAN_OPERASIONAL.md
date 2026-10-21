@@ -144,6 +144,21 @@ Setiap kali pipeline jalan, `python -m pipeline ambil-resmi` mengambil:
 Bila salah satu sumber gangguan, pipeline tetap jalan; galatnya tercatat di log langkah "Ambil prakiraan BMKG dan
 harga PIHPS".
 
+### Kunci BPS Web API (cek kunci dan peta data BPS)
+
+Kunci BPS gratis (daftar di webapi.bps.go.id). Isi di Pengaturan → tab *Data* → bagian *Kunci sumber data* → **Kunci
+BPS Web API**, atau sebagai GitHub Secret `BPS_API_KEY`. Kunci dari Pengaturan situs dipakai lebih dulu.
+
+Untuk mengecek kunci: GitHub → **Actions** → **Penjajakan sumber data** → **Run workflow** → jenis `bps`. Mesin menguji
+kunci ke BPS, lalu mencari variabel dan tabel tentang harga, inflasi, dan komoditas pangan untuk Bengkulu Tengah,
+Provinsi Bengkulu, dan Kota Bengkulu, beserta contoh angkanya. Hasilnya ada di `data/sumber/hasil_bps.json` dan di
+kartu **BPS Web API Finder** (Sumber Data dan Dasbor Analitik). Bila kunci ditolak, prosesnya ditandai gagal dan
+alasannya ikut tercatat.
+
+Kunci BPS ikut di dalam alamat URL, sedangkan log Actions repositori ini bisa dilihat publik. Karena itu kunci yang
+dimuat dari situs didaftarkan sebagai rahasia Actions (otomatis disamarkan di log), dan hasil cek tidak pernah memuat
+kunci.
+
 ## 4c. Harga harian Bengkulu Tengah: SP2KP Kemendag, dengan cadangan PIHPS Provinsi Bengkulu
 
 Sistem selalu memakai data asli (`mode_demo: tidak` di `config/pengaturan.json`) dan wilayah sasarannya **Kabupaten Bengkulu Tengah**

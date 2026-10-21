@@ -58,6 +58,32 @@ def _baca_probe(akar: Path) -> dict:
     return hasil
 
 
+def finder_bps(akar: Path) -> dict:
+    """Status BPS Web API Finder. Alasannya diambil dari hasil cek kunci terakhir (python -m pipeline cek-bps), bukan
+    dugaan: belum ada kunci, kunci ditolak BPS (beserta alasannya), atau kunci diterima dan berapa data yang ditemukan."""
+    from . import konektor_bps  # noqa: PLC0415
+
+    ada_kunci = bool(os.environ.get("BPS_API_KEY"))
+    cek_bps = konektor_bps.baca(akar) or {}
+    sah = cek_bps.get("kunci_sah") if ada_kunci else None
+    tanggal = str(cek_bps.get("waktu", ""))[:10]
+    if not ada_kunci:
+        alasan = ("Kunci BPS Web API belum dipasang. Daftar gratis di webapi.bps.go.id, lalu isi di Pengaturan "
+                  "(Kunci sumber data) atau simpan sebagai GitHub Secret BPS_API_KEY.")
+    elif sah is False:
+        alasan = f"Kunci ditolak BPS saat dicek {tanggal}: {cek_bps.get('pesan', '')}"
+    elif sah:
+        alasan = (f"Kunci diterima BPS (dicek {tanggal}). {len(cek_bps.get('variabel', []))} variabel dan "
+                  f"{len(cek_bps.get('tabel_statis', []))} tabel ditemukan; belum diambil rutin ke dashboard.")
+    else:
+        alasan = "Kunci tersedia tetapi belum dicek. Jalankan Actions, Penjajakan sumber data, dengan jenis bps."
+    return {"no": 1, "nama": "BPS Web API Finder", "objek": "Harga produsen, produksi, luas panen, indikator bulanan",
+            "status": "menunggu", "data_terakhir": None, "alasan": alasan,
+            "gerbang": [_gerbang("Kunci API tersedia", ada_kunci, "ada" if ada_kunci else "belum", "tersedia"),
+                        _gerbang("Kunci diterima BPS", sah, "ya" if sah else "belum dicek" if sah is None else "ditolak", "ya")],
+            "tindakan_gagal": "Ulangi 3 kali; pakai rilis resmi terakhir; tandai basi dan turunkan keyakinan."}
+
+
 def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> list[dict]:
     """Status 10 AI Data Finder dari data yang masuk pada jalannya pipeline ini."""
     hari = konf.hari_ini
@@ -70,13 +96,7 @@ def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> lis
     probe = _baca_probe(konf.akar)
 
     # 1. BPS Web API
-    ada_kunci = bool(os.environ.get("BPS_API_KEY"))
-    hasil.append({"no": 1, "nama": "BPS Web API Finder", "objek": "Harga produsen, produksi, luas panen, indikator bulanan",
-                  "status": "menunggu", "data_terakhir": None,
-                  "alasan": "Kunci BPS Web API belum dipasang. Daftar gratis di webapi.bps.go.id lalu simpan sebagai GitHub Secret BPS_API_KEY."
-                  if not ada_kunci else "Kunci tersedia; variabel harga Bengkulu Tengah sedang dipetakan.",
-                  "gerbang": [_gerbang("Kunci API tersedia", ada_kunci, "ada" if ada_kunci else "belum", "tersedia")],
-                  "tindakan_gagal": "Ulangi 3 kali; pakai rilis resmi terakhir; tandai basi dan turunkan keyakinan."})
+    hasil.append(finder_bps(konf.akar))
 
     # 2. PIHPS
     p = [k for k in per_ind.get("harga_pihps", []) if k.kode_wilayah == "17"]
