@@ -128,3 +128,236 @@ def test_status_finder_bps_mengikuti_hasil_cek(tmp_path, monkeypatch):
     bps.simpan(tmp_path, bps.cek(KUNCI, ambil_fn=bps_tiruan, tidur=lambda _: None, sekarang=None))
     f = tata_data.finder_bps(tmp_path)
     assert "Kunci diterima BPS" in f["alasan"] and "3 variabel dan 1 tabel" in f["alasan"] and f["gerbang"][1]["lolos"] is True
+
+
+# ---------------------------------------------------------------- deret inflasi untuk dashboard
+
+BULAN_UJI = {4: "April", 5: "Mei"}
+
+
+TAHUN_UJI = {127: "2024", 125: "2025", 126: "2026"}
+
+
+def _data_bulanan(var_id, rincian, nilai_per_bulan, th_diminta, turvar=("0", "Tidak ada")):
+    """Jawaban data BPS bentuk baru: rincian di vervar, bulan di turtahun. nilai_per_bulan: {(th_id, bulan): {rincian: nilai}}.
+    Hanya tahun yang diminta yang dikembalikan, seperti BPS."""
+    isi = {}
+    for (th_id, bl), per in nilai_per_bulan.items():
+        for kode, nilai in per.items():
+            if th_id in th_diminta:
+                isi[f"{kode}{var_id}{turvar[0]}{th_id}{bl}"] = nilai
+    return {"status": "OK", "data-availability": "available",
+            "var": [{"val": var_id, "label": f"Judul BPS {var_id}", "unit": "Persen"}],
+            "vervar": [{"val": k, "label": v} for k, v in rincian.items()], "turvar": [{"val": turvar[0], "label": turvar[1]}],
+            "tahun": [{"val": t, "label": TAHUN_UJI[t]} for t in th_diminta],
+            "turtahun": [{"val": b, "label": n} for b, n in BULAN_UJI.items()] + [{"val": 13, "label": "Tahunan"}],
+            "datacontent": isi}
+
+
+KELOMPOK = {1: "Umum", 2: "Makanan, Minuman, dan Tembakau"}
+NILAI_SERI = {
+    555: {(126, 4): {1: 0.12, 2: 0.4}, (126, 5): {1: 0.86, 2: 1.85}},
+    556: {(126, 4): {1: 0.53, 2: -0.65}, (126, 5): {1: 1.39, 2: 1.19}},
+    557: {(125, 5): {1: 1.5, 2: 2.0}, (126, 4): {1: 2.7, 2: 5.1}, (126, 5): {1: 3.01, 2: 6.07}},
+}
+
+
+RILIS = [
+    {"brs_id": 1, "title": "Inflasi Year-on-Year (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen",
+     "abstract": "<p>Juni 2026 terjadi inflasi month-to-month (m-to-m) sebesar 0,45 persen dan year-on-year (y-on-y) sebesar 3,96 persen.</p>",
+     "rl_date": "2026-07-01", "pdf": "https://webapi.bps.go.id/download.php?f=abc"},
+    {"brs_id": 2, "title": "Inflasi Year-on-Year (y-on-y) Provinsi Bengkulu Mei 2026 sebesar 3,01 persen", "abstract": "",
+     "rl_date": "2026-06-02", "pdf": "http://contoh.test/palsu.pdf"},
+    {"brs_id": 3, "title": "Nilai Tukar Petani (NTP) Provinsi Bengkulu Juni 2026 sebesar 150,1", "rl_date": "2026-07-01"},
+]
+
+
+def bps_seri_tiruan(url, *_):
+    assert f"/key/{KUNCI}/" in url
+    if "/model/pressrelease/" in url and "/keyword/nilai%20tukar%20petani/" in url:
+        return _jawab(200, _daftar([{"brs_id": 9, "rl_date": "2026-07-01",
+                                     "title": "Nilai Tukar Petani (NTP) Provinsi Bengkulu Juni 2026 sebesar 196,87 atau turun 0,41 persen"}]))
+    if "/model/pressrelease/" in url:
+        assert "/domain/1700/keyword/inflasi/" in url
+        return _jawab(200, _daftar(RILIS))
+    if "/model/th/" in url:
+        if "/var/422/" in url:
+            return _jawab(200, _daftar([]))  # variabel tanpa daftar tahun
+        # th_id 127 berlabel 2024: urutan tahun dari labelnya, bukan dari nomor th_id
+        return _jawab(200, _daftar([{"th_id": 127, "th": "2024"}, {"th_id": 125, "th": "2025"}, {"th_id": 126, "th": "2026"}]))
+    if "/model/data/" in url:
+        th_diminta = [int(x) for x in url.split("/th/")[1].split("/")[0].split(";")]
+        assert th_diminta in ([125, 126], [127])  # paling banyak dua tahun per permintaan, yang terbaru lebih dulu
+        TH_DIMINTA.append(th_diminta)
+        var_id = int(url.split("/var/")[1].split("/")[0])
+        if var_id in NILAI_SERI:
+            return _jawab(200, _data_bulanan(var_id, KELOMPOK, NILAI_SERI[var_id], th_diminta))
+        if var_id in (559, 560):
+            if th_diminta == [127]:
+                return _jawab(503, b"sibuk")  # tahun lama gagal: angka terbaru tetap dipakai
+            wil = {1771: "Kota Bengkulu", 1706: "Mukomuko", 1700: "Provinsi Bengkulu"}
+            n = {(126, 5): {1771: 0.9 if var_id == 559 else 3.2, 1706: 0.5 if var_id == 559 else 2.1, 1700: 0.86 if var_id == 559 else 3.01}}
+            return _jawab(200, _data_bulanan(var_id, wil, n, th_diminta))
+        if var_id == 421:  # bentuk lama: bulan di vervar, kategori di turvar
+            if th_diminta == [127]:
+                return _jawab(200, {"status": "OK", "data-availability": "list-not-available", "datacontent": {}})
+            return _jawab(200, {"status": "OK", "var": [{"val": 421, "label": "It", "unit": ""}],
+                                "vervar": [{"val": 5, "label": "Mei"}], "turvar": [{"val": 7, "label": "Gabungan"}],
+                                "tahun": [{"val": 126, "label": "2026"}], "turtahun": [{"val": 0, "label": "Tahunan"}],
+                                "datacontent": {"54217126" + "0": 150.0, "54217126" + "9": "-"}})
+    raise AssertionError(url)
+
+
+TH_DIMINTA: list = []
+
+
+def test_ambil_seri_inflasi_dan_ringkasannya_untuk_situs():
+    TH_DIMINTA.clear()
+    h = bps.ambil_seri(KUNCI, ambil_fn=bps_seri_tiruan, tidur=lambda _: None)
+    assert TH_DIMINTA[:2] == [[125, 126], [127]]
+    assert KUNCI not in json.dumps(h)
+    assert set(h["seri"]) == {"mtm", "ytd", "yoy", "mtm_wilayah", "yoy_wilayah", "it"}
+    assert any("var 422" in g and "tahun" in g for g in h["galat"])
+    yoy = h["seri"]["yoy"]
+    assert yoy["satuan"] == "Persen" and yoy["terbaru"] == "2026-05" and yoy["judul_bps"] == "Judul BPS 557"
+    assert {"periode": "2025-05", "kategori": "Umum", "nilai": 1.5} in yoy["data"]
+    assert all(x["periode"][5:] in ("04", "05") for x in yoy["data"])  # baris "Tahunan" tidak ikut
+    assert h["seri"]["it"]["data"] == [{"periode": "2026-05", "kategori": "Gabungan", "nilai": 150.0}]
+    assert "6 dari 7 deret" in h["pesan"] and "2026-05" in h["pesan"]
+    assert [r["periode"] for r in h["rilis"]] == ["2026-06", "2026-05"]
+    assert h["rilis"][0] == {"periode": "2026-06", "yoy": 3.96, "mtm": 0.45, "judul": RILIS[0]["title"], "tanggal": "2026-07-01",
+                             "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1/inflasi-year-on-year--y-on-y--"
+                                    "provinsi-bengkulu-juni-2026-sebesar-3-96-persen.html"}
+    assert "download" not in json.dumps(h)  # tautan unduh dari API tidak disimpan
+    assert h["rilis"][1]["mtm"] is None
+    assert h["rilis_dilewati"] == [RILIS[2]["title"]]
+    assert h["rilis_ntp"][0]["ntp"] == 196.87 and h["rilis_ntp"][0]["ubah_persen"] == -0.41
+
+    r = bps.ringkas_untuk_situs(h)
+    assert r["periode"] == "2026-05" and r["wilayah"] == "Provinsi Bengkulu"
+    assert r["umum"] == {"nama": "Umum", "mtm": 0.86, "ytd": 1.39, "yoy": 3.01}
+    assert r["makanan"]["yoy"] == 6.07
+    assert r["wilayah_ihk"]["periode"] == "2026-05"
+    assert {"nama": "Mukomuko", "mtm": 0.5, "yoy": 2.1} in r["wilayah_ihk"]["daftar"]
+    # tren dari tabel, disambung Berita Resmi Statistik Juni 2026 yang terbit sesudah tabel berakhir
+    assert [t["periode"] for t in r["tren"]] == ["2025-05", "2026-04", "2026-05", "2026-06"]
+    assert r["tren"][2] == {"periode": "2026-05", "mtm": 0.86, "yoy": 3.01, "yoy_makanan": 6.07, "asal": "tabel"}
+    assert r["tren"][3] == {"periode": "2026-06", "mtm": 0.45, "yoy": 3.96, "yoy_makanan": None, "asal": "rilis"}
+    assert [x["periode"] for x in r["rilis"]] == ["2026-06", "2026-05"]
+    assert r["ntp"]["asal"] == "rilis" and r["ntp"]["nilai"] == 196.87  # Ib tidak terambil, NTP dari rilis resmi
+    assert bps.ringkas_untuk_situs(None) is None and bps.ringkas_untuk_situs({"seri": {}}) is None
+
+
+def test_ambil_seri_berhenti_bila_permintaan_pertama_ditolak():
+    panggil = []
+
+    def tolak(url, *_):
+        panggil.append(url)
+        return _jawab(200, {"status": "Error", "message": f"Invalid key {KUNCI}"})
+
+    h = bps.ambil_seri(KUNCI, ambil_fn=tolak, tidur=lambda _: None)
+    assert len(panggil) == 1 and not h["seri"] and "Invalid key ***" in h["galat"][0]
+    assert "belum bisa diambil" in h["pesan"] and KUNCI not in json.dumps(h)
+    assert bps.ambil_seri(" ", ambil_fn=tolak)["pesan"].startswith("Kunci BPS_API_KEY belum diisi")
+
+
+def test_gabung_seri_mempertahankan_deret_yang_gagal_kali_ini():
+    lama = {"waktu": "2026-10-01T00:00:00+00:00", "seri": {"yoy": {"terbaru": "2026-04"}, "it": {"terbaru": "2026-03"}}}
+    baru = {"waktu": "2026-10-21T00:00:00+00:00", "seri": {"mtm": {"terbaru": "2026-05"}, "yoy": {"terbaru": "2026-05"}}, "galat": ["it"]}
+    g = bps.gabung_seri(lama, baru)
+    assert g["waktu"] == baru["waktu"] and list(g["seri"]) == ["mtm", "yoy", "it"]
+    assert g["seri"]["yoy"]["terbaru"] == "2026-05" and g["seri"]["it"]["terbaru"] == "2026-03"
+
+
+def test_ntp_resmi_dari_rilis_atau_dihitung_dari_it_dan_ib():
+    seri = {"mtm": {"data": [{"periode": "2026-05", "kategori": "Umum", "nilai": 0.5}]},
+            "it": {"data": [{"periode": "2026-04", "kategori": "Umum", "nilai": 240.0},
+                            {"periode": "2026-05", "kategori": "Umum", "nilai": 262.61},
+                            {"periode": "2026-05", "kategori": "Tanaman Pangan", "nilai": 120.0}]},
+            "ib": {"data": [{"periode": "2026-04", "kategori": "Umum", "nilai": 120.0},
+                            {"periode": "2026-05", "kategori": "Umum", "nilai": 133.39},
+                            {"periode": "2026-06", "kategori": "Umum", "nilai": 134.0}]}}
+    n = bps.ringkas_untuk_situs({"seri": seri})["ntp"]
+    # It / Ib x 100 untuk bulan yang punya keduanya; Juni hanya punya Ib
+    assert n == {"periode": "2026-05", "nilai": 196.87, "ubah_persen": -1.56, "asal": "indeks", "url": None,
+                 "riwayat": [{"periode": "2026-04", "nilai": 200.0}, {"periode": "2026-05", "nilai": 196.87}]}
+    judul = "Nilai Tukar Petani (NTP) Provinsi Bengkulu September 2026 sebesar 206,79 atau turun 0,5 persen"
+    rilis_ntp = [bps.baca_rilis_ntp(judul) | {"tanggal": "2026-10-01", "url": "https://bengkulu.bps.go.id/id/x.html"}]
+    n = bps.ringkas_untuk_situs({"seri": seri, "rilis_ntp": rilis_ntp})["ntp"]
+    assert n["asal"] == "rilis" and n["periode"] == "2026-09" and n["nilai"] == 206.79 and n["ubah_persen"] == -0.5
+    assert n["url"] == "https://bengkulu.bps.go.id/id/x.html"
+
+
+def test_bulan_singkatan_dan_tautan_halaman_rilis():
+    assert [bps._no_bulan(x) for x in ("Jan", "Agt", "Sept", "Nop", "Desember", "Tahunan", "Umum")] == [1, 8, 9, 11, 12, None, None]
+    baris = [{"rincian": "Umum", "turunan": "Tidak ada", "tahun": "2026", "periode": "Agt", "nilai": "0,5"},
+             {"rincian": "Umum", "turunan": "Tidak ada", "tahun": "2026", "periode": "Sep", "nilai": 0.38},
+             {"rincian": "Umum", "turunan": "Tidak ada", "tahun": "2026", "periode": "Tahunan", "nilai": 3.1}]
+    assert bps.baris_bulanan(baris) == [{"periode": "2026-09", "kategori": "Umum", "nilai": 0.38}]  # "0,5" bukan angka JSON
+    assert bps.label_bukan_bulan(baris) == ["Tahunan"]
+    x = {"rl_date": "2026-07-01", "brs_id": 1010, "title": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen"}
+    assert bps.alamat_rilis(x) == ("https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1010/"
+                                   "inflasi-year-on-year--y-on-y--provinsi-bengkulu-juni-2026-sebesar-3-96-persen.html")
+    assert bps.alamat_rilis({**x, "brs_id": None}) is None
+
+
+def test_ambil_bps_cli_melewati_bila_masih_baru_dan_tidak_menimpa_dengan_hasil_kosong(tmp_path, monkeypatch, capsys):
+    from datetime import datetime, timezone
+
+    from pipeline import __main__ as m
+
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    monkeypatch.setenv("BPS_API_KEY", KUNCI)
+    monkeypatch.setattr(fs, "pasang_satu_rahasia", lambda akar, nama: True)
+    asli = bps.ambil_seri
+    monkeypatch.setattr(bps, "ambil_seri", lambda kunci: asli(kunci, ambil_fn=bps_seri_tiruan, tidur=lambda _: None))
+    assert m._ambil_bps(tmp_path) == 0
+    out = capsys.readouterr().out
+    assert "dari Pengaturan situs" in out and "yoy:" in out and "Makanan, Minuman, dan Tembakau" in out and KUNCI not in out
+    tersimpan = bps.baca(tmp_path, bps.BERKAS_SERI)
+    assert tersimpan["seri"]["yoy"]["terbaru"] == "2026-05"
+
+    # hasil masih baru: tidak membaca kunci dan tidak memanggil BPS
+    monkeypatch.setattr(fs, "pasang_satu_rahasia", lambda *a: (_ for _ in ()).throw(AssertionError("tidak boleh membaca kunci")))
+    assert m._ambil_bps(tmp_path) == 0 and "belum perlu diambil lagi" in capsys.readouterr().out
+
+    # dipaksa tetapi BPS menolak: berkas lama tetap utuh
+    monkeypatch.setattr(fs, "pasang_satu_rahasia", lambda akar, nama: False)
+    monkeypatch.setattr(bps, "ambil_seri", lambda kunci: {"seri": {}, "galat": ["ditolak"], "pesan": "Deret BPS belum bisa diambil: ditolak"})
+    assert m._ambil_bps(tmp_path, paksa=True) == 1
+    assert bps.baca(tmp_path, bps.BERKAS_SERI)["seri"]["yoy"]["terbaru"] == "2026-05"
+    assert datetime.fromisoformat(tersimpan["waktu"]) <= datetime.now(timezone.utc)
+
+
+def test_status_finder_bps_dari_deret_yang_diambil(tmp_path, monkeypatch):
+    from datetime import date
+
+    from pipeline import tata_data
+
+    monkeypatch.setenv("BPS_API_KEY", KUNCI)
+    bps.simpan(tmp_path, bps.ambil_seri(KUNCI, ambil_fn=bps_seri_tiruan, tidur=lambda _: None), bps.BERKAS_SERI)
+    f = tata_data.finder_bps(tmp_path, date(2026, 7, 20))
+    assert f["status"] == "lulus" and f["data_terakhir"] == "2026-07-01"  # tanggal terbit rilis Juni 2026
+    assert "rilis terbaru Juni 2026" in f["alasan"] and "sampai Mei 2026" in f["alasan"]
+    assert [g["lolos"] for g in f["gerbang"]] == [True, True, True]
+    basi = tata_data.finder_bps(tmp_path, date(2026, 10, 21))
+    assert basi["status"] == "perlu_perhatian" and "lebih dari dua bulan" in basi["alasan"]
+    assert basi["gerbang"][2] == {"gerbang": "Data bulanan terbaru", "lolos": False, "nilai": "Juni 2026",
+                                  "target": "paling lama 2 bulan lalu"}
+    monkeypatch.delenv("BPS_API_KEY")
+    assert tata_data.finder_bps(tmp_path)["status"] == "menunggu"
+
+
+def test_per_bulan_menambal_tabel_kelompok_dengan_tabel_kota_dan_rilis():
+    d = {"seri": {
+        "yoy": {"data": [{"periode": "2025-01", "kategori": "Umum", "nilai": 1.0},
+                         {"periode": "2025-01", "kategori": "Makanan, Minuman, dan Tembakau", "nilai": 2.0}]},
+        "yoy_wilayah": {"data": [{"periode": "2025-01", "kategori": "Provinsi Bengkulu", "nilai": 9.9},
+                                 {"periode": "2025-02", "kategori": "Provinsi Bengkulu", "nilai": 1.1},
+                                 {"periode": "2025-02", "kategori": "Kota Bengkulu", "nilai": 1.3}]},
+        "mtm_wilayah": {"data": [{"periode": "2025-02", "kategori": "Provinsi Bengkulu", "nilai": 0.2}]}},
+        "rilis": [{"periode": "2025-03", "yoy": 1.2, "mtm": 0.1}, {"periode": "2025-02", "yoy": 7.7, "mtm": 7.7}]}
+    b = bps.per_bulan(d)
+    assert b["2025-01"] == {"asal": "tabel", "yoy": 1.0, "makanan_yoy": 2.0}  # tabel kelompok didahulukan
+    assert b["2025-02"] == {"asal": "tabel", "yoy": 1.1, "mtm": 0.2}  # bulan kosong ditambal baris Provinsi Bengkulu
+    assert b["2025-03"] == {"asal": "rilis", "yoy": 1.2, "mtm": 0.1}

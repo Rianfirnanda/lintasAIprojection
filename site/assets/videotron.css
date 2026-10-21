@@ -55,6 +55,7 @@
 
 /* ringkasan */
 .vt-kpi { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1em; }
+.vt-kpi-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .vt-kpi-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .vt-kpi div { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0 0.6em; padding: 0.9em 1.1em; border-radius: 1em;
   background: var(--vt-panel); border: 1px solid var(--vt-garis); }
 .vt-kpi .ikon { grid-row: span 2; width: 1.9em; height: 1.9em; }

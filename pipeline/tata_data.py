@@ -58,29 +58,48 @@ def _baca_probe(akar: Path) -> dict:
     return hasil
 
 
-def finder_bps(akar: Path) -> dict:
-    """Status BPS Web API Finder. Alasannya diambil dari hasil cek kunci terakhir (python -m pipeline cek-bps), bukan
-    dugaan: belum ada kunci, kunci ditolak BPS (beserta alasannya), atau kunci diterima dan berapa data yang ditemukan."""
+def finder_bps(akar: Path, hari_ini: date | None = None) -> dict:
+    """Status BPS Web API Finder dari hasil sebenarnya: cek kunci terakhir (python -m pipeline cek-bps) dan deret inflasi
+    yang diambil rutin (python -m pipeline ambil-bps). Tidak ada dugaan: belum ada kunci, kunci ditolak BPS beserta
+    alasannya, atau data apa yang sudah masuk dan sampai bulan apa."""
     from . import konektor_bps  # noqa: PLC0415
 
+    hari_ini = hari_ini or date.today()
     ada_kunci = bool(os.environ.get("BPS_API_KEY"))
     cek_bps = konektor_bps.baca(akar) or {}
-    sah = cek_bps.get("kunci_sah") if ada_kunci else None
+    seri = konektor_bps.baca(akar, konektor_bps.BERKAS_SERI) or {}
+    r = konektor_bps.ringkas_untuk_situs(seri)
+    # deret yang berhasil diambil membuktikan kunci diterima, walau cek kunci terakhir lebih lama
+    sah = (True if r else cek_bps.get("kunci_sah")) if ada_kunci else None
     tanggal = str(cek_bps.get("waktu", ""))[:10]
+    rilis = (r or {}).get("rilis") or []
+    terbaru = max([x["periode"] for x in rilis] + ([r["periode"]] if r else []), default=None)
+    umur_bulan = ((hari_ini.year * 12 + hari_ini.month) - (int(terbaru[:4]) * 12 + int(terbaru[5:7]))) if terbaru else None
+    segar = None if umur_bulan is None else umur_bulan <= 2
     if not ada_kunci:
         alasan = ("Kunci BPS Web API belum dipasang. Daftar gratis di webapi.bps.go.id, lalu isi di Pengaturan "
                   "(Kunci sumber data) atau simpan sebagai GitHub Secret BPS_API_KEY.")
     elif sah is False:
         alasan = f"Kunci ditolak BPS saat dicek {tanggal}: {cek_bps.get('pesan', '')}"
+    elif r:
+        alasan = (f"Inflasi resmi Provinsi Bengkulu diambil rutin dari BPS Web API (terakhir {str(seri.get('waktu', ''))[:10]}): "
+                  + (f"rilis terbaru {konektor_bps.nama_bulan(rilis[0]['periode'])}, " if rilis else "")
+                  + f"tabel rinci per kelompok sampai {konektor_bps.nama_bulan(r['periode'])}."
+                  + ("" if segar else " Angka terbaru sudah lebih dari dua bulan; periksa apakah BPS sudah merilis bulan berikutnya."))
     elif sah:
         alasan = (f"Kunci diterima BPS (dicek {tanggal}). {len(cek_bps.get('variabel', []))} variabel dan "
-                  f"{len(cek_bps.get('tabel_statis', []))} tabel ditemukan; belum diambil rutin ke dashboard.")
+                  f"{len(cek_bps.get('tabel_statis', []))} tabel ditemukan; deret inflasi belum diambil. "
+                  "Jalankan pipeline atau python -m pipeline ambil-bps.")
     else:
         alasan = "Kunci tersedia tetapi belum dicek. Jalankan Actions, Penjajakan sumber data, dengan jenis bps."
-    return {"no": 1, "nama": "BPS Web API Finder", "objek": "Harga produsen, produksi, luas panen, indikator bulanan",
-            "status": "menunggu", "data_terakhir": None, "alasan": alasan,
-            "gerbang": [_gerbang("Kunci API tersedia", ada_kunci, "ada" if ada_kunci else "belum", "tersedia"),
-                        _gerbang("Kunci diterima BPS", sah, "ya" if sah else "belum dicek" if sah is None else "ditolak", "ya")],
+    gerbang = [_gerbang("Kunci API tersedia", ada_kunci, "ada" if ada_kunci else "belum", "tersedia"),
+               _gerbang("Kunci diterima BPS", sah, "ya" if sah else "belum dicek" if sah is None else "ditolak", "ya"),
+               _gerbang("Data bulanan terbaru", segar if r else None,
+                        konektor_bps.nama_bulan(terbaru) if terbaru else "belum ada", "paling lama 2 bulan lalu")]
+    return {"no": 1, "nama": "BPS Web API Finder", "objek": "Inflasi, IHK, dan NTP Provinsi Bengkulu (indikator bulanan resmi)",
+            "status": _status(gerbang, bool(r)) if ada_kunci else "menunggu",
+            "data_terakhir": (rilis[0].get("tanggal") if rilis else None) or (f"{r['periode']}-01" if r else None),
+            "alasan": alasan, "gerbang": gerbang,
             "tindakan_gagal": "Ulangi 3 kali; pakai rilis resmi terakhir; tandai basi dan turunkan keyakinan."}
 
 
@@ -96,7 +115,7 @@ def status_finder(konf, hasil_masuk, hasil_qc, tanggal_data: date | None) -> lis
     probe = _baca_probe(konf.akar)
 
     # 1. BPS Web API
-    hasil.append(finder_bps(konf.akar))
+    hasil.append(finder_bps(konf.akar, hari))
 
     # 2. PIHPS
     p = [k for k in per_ind.get("harga_pihps", []) if k.kode_wilayah == "17"]

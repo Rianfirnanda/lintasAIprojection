@@ -2,6 +2,7 @@
 // diuji di Node; rapat.js yang menampilkan dan memutarnya. Semua angka dari ringkasan.json, sinyal.json, dan seri/*.json.
 import { gambarKomoditas } from "./gambar-komoditas.js";
 import { selisihHarga, ringkasHariIni, bandingPerkiraan } from "./selisih.js";
+import { angkaUtama, statusSasaran, sasaran } from "./inflasi-inti.js";
 
 export const rp = (x) => `Rp${Math.round(Number(x)).toLocaleString("id-ID")}`;
 export const persen = (x, d = 1) => `${x > 0 ? "+" : ""}${Number(x).toLocaleString("id-ID", { minimumFractionDigits: d, maximumFractionDigits: d })}%`;
@@ -187,6 +188,26 @@ export function susunTampilan(data, opsi = {}) {
         <div>${(hr.profil_top || []).length ? `<h3>Yang biasanya naik menjelang hari raya</h3><ol class="vt-batang naik">${hr.profil_top.slice(0, 5).map((p) =>
           `<li>${gambarKomoditas(p.kode)}<span class="vt-batang-nama">${esc(p.nama)}</span><span class="vt-batang-isi"><i style="--lebar:${Math.min(100, (p.kenaikan_puncak_persen / Math.max(...hr.profil_top.slice(0, 5).map((q) => q.kenaikan_puncak_persen), 1)) * 100)}%"></i></span><b>${persen(p.kenaikan_puncak_persen, 0)}</b></li>`).join("")}</ol>
           <p class="vt-catatan">Kenaikan tertinggi pada hari raya tahun-tahun sebelumnya.</p>` : `<p class="vt-kalimat">Pantau harga bahan pokok menjelang hari raya.</p>`}</div></div>` });
+  }
+  // 8. Inflasi resmi BPS (Provinsi Bengkulu; Bengkulu Tengah belum dihitung inflasinya sendiri)
+  const ib = ringkasan.inflasi_bps;
+  const u = ib ? angkaUtama(ib) : null;
+  if (u && ada(u.yoy)) {
+    const [bl, th] = [Number(String(u.periode).slice(5, 7)), String(u.periode).slice(0, 4)];
+    const st = statusSasaran(u.yoy, u.periode), sas = sasaran(u.periode);
+    const pr = (x) => `${Number(x).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+    const kota = (ib.wilayah_ihk?.daftar || []).filter((k) => !/provinsi/i.test(k.nama) && ada(k.yoy)).slice(0, 2);
+    const kotak = [
+      `<div class="${st?.[1] === "perhatian" ? "waspada" : "datar"}">${ikon("denyut", 34)}<b>${pr(u.yoy)}</b><span>setahun</span></div>`,
+      ada(u.mtm) ? `<div class="datar">${ikon("kalender", 34)}<b>${pr(u.mtm)}</b><span>sebulan</span></div>` : "",
+      ...kota.map((k) => `<div class="datar">${ikon("pin", 34)}<b>${pr(k.yoy)}</b><span>${esc(k.nama)}, setahun</span></div>`),
+    ].filter(Boolean);
+    daftar.push({ kunci: "inflasi", judul: "Inflasi resmi BPS", sub: `Provinsi Bengkulu, ${BULAN[bl - 1]} ${th}`, lama: 16, isi: `
+      <p class="vt-kalimat">Inflasi setahun Provinsi Bengkulu ${BULAN[bl - 1]} ${th} sebesar ${pr(u.yoy)}${st && sas
+        ? `, ${st[0] === "Dalam sasaran" ? "masih dalam" : st[0] === "Di atas sasaran" ? "di atas" : "di bawah"} sasaran nasional ${sas.teks}` : ""}.</p>
+      <div class="vt-kpi vt-kpi-${kotak.length}">${kotak.join("")}</div>
+      <p class="vt-catatan">Sumber: ${u.asal === "rilis" ? `Berita Resmi Statistik BPS, terbit ${esc(tglPanjang(u.tanggal))}` : "tabel BPS Web API"}.
+        Bengkulu Tengah belum punya angka inflasi sendiri, jadi angka provinsi dipakai sebagai acuan.</p>` });
   }
   return daftar;
 }

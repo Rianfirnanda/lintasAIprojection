@@ -1,0 +1,4446 @@
+{
+ "waktu": "2026-10-21T03:06:48+00:00",
+ "sumber": "BPS Web API (webapi.bps.go.id)",
+ "kunci": "ada",
+ "seri": {
+  "mtm": {
+   "wilayah": "1700",
+   "nama_wilayah": "Provinsi Bengkulu",
+   "var_id": 555,
+   "judul": "Inflasi bulanan (m-to-m) menurut kelompok pengeluaran",
+   "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "satuan": "Persen",
+   "diambil": "2026-10-21T03:06:48+00:00",
+   "terbaru": "2026-05",
+   "label_lain": [],
+   "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.35
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Kesehatan",
+     "nilai": -0.14
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.13
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.61
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.59
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 1.31
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.61
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.63
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.59
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Transportasi",
+     "nilai": -0.21
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Umum",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Kesehatan",
+     "nilai": -0.07
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 2.25
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.19
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.37
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.13
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.18
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.03
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.17
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Transportasi",
+     "nilai": 0.28
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Umum",
+     "nilai": 0.79
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Kesehatan",
+     "nilai": 0.37
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 0.47
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.08
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.11
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.54
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.35
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.9
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Transportasi",
+     "nilai": -0.14
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Umum",
+     "nilai": 0.22
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.02
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Kesehatan",
+     "nilai": -0.03
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.05
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.02
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.03
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 1.13
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.69
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.05
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.19
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Transportasi",
+     "nilai": 0.79
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Umum",
+     "nilai": 0.13
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.36
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Kesehatan",
+     "nilai": 0.96
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 0.49
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.64
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.82
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.25
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": -0.03
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.24
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Transportasi",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Umum",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Kesehatan",
+     "nilai": 0.68
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.25
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.05
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.54
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.49
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.28
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Transportasi",
+     "nilai": -0.17
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Umum",
+     "nilai": -0.04
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Kesehatan",
+     "nilai": -0.03
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -2.23
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.05
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Pendidikan",
+     "nilai": 0.95
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.04
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": -0.1
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.19
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.01
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.49
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Transportasi",
+     "nilai": -0.17
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Umum",
+     "nilai": -0.7
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Kesehatan",
+     "nilai": 0.23
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.87
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Pendidikan",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.49
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.68
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.05
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.34
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Transportasi",
+     "nilai": 0.1
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Umum",
+     "nilai": -0.18
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Kesehatan",
+     "nilai": 0.1
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.95
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.31
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.34
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.18
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.02
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.71
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Transportasi",
+     "nilai": -0.14
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Umum",
+     "nilai": -0.28
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Kesehatan",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.42
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Pendidikan",
+     "nilai": 0.87
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.07
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.02
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.16
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Transportasi",
+     "nilai": -0.45
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Umum",
+     "nilai": -0.09
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Kesehatan",
+     "nilai": 0.23
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 0.47
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.23
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.26
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.18
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.41
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.02
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.23
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Transportasi",
+     "nilai": 0.11
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Umum",
+     "nilai": 0.2
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Kesehatan",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 1.08
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": -0.08
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.12
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.19
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Transportasi",
+     "nilai": 0.03
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Umum",
+     "nilai": 0.34
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Kesehatan",
+     "nilai": 0.06
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 2.6
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.17
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Pendidikan",
+     "nilai": 0.0
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.31
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.32
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.08
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": -10.13
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.27
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Transportasi",
+     "nilai": 0.53
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Umum",
+     "nilai": -0.59
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.0
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Kesehatan",
+     "nilai": 0.04
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.52
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.18
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Pendidikan",
+     "nilai": 0.0
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.0
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 1.3
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.12
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": -3.9
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.04
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Transportasi",
+     "nilai": 0.49
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Umum",
+     "nilai": -0.57
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.0
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Kesehatan",
+     "nilai": 0.83
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.14
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Pendidikan",
+     "nilai": 0.0
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.0
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 0.92
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.42
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 9.52
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.36
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Transportasi",
+     "nilai": -0.49
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Umum",
+     "nilai": 1.28
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Kesehatan",
+     "nilai": -1.25
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -2.61
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.12
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 2.76
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.1
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.04
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.98
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Transportasi",
+     "nilai": -0.32
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Umum",
+     "nilai": -0.75
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Kesehatan",
+     "nilai": 0.32
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 1.63
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.06
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.44
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 1.3
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.05
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.03
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.7
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Transportasi",
+     "nilai": -0.16
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Umum",
+     "nilai": 0.66
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.01
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Kesehatan",
+     "nilai": 0.18
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 0.5
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.29
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.43
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": -0.3
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.11
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.22
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.18
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Transportasi",
+     "nilai": 0.44
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Umum",
+     "nilai": 0.28
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.52
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Kesehatan",
+     "nilai": -0.02
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.12
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.45
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.43
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": -0.41
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.56
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.14
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.67
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Transportasi",
+     "nilai": 0.88
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Umum",
+     "nilai": 0.35
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.1
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Kesehatan",
+     "nilai": 0.44
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 1.85
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.02
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": -0.39
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.45
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.26
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Transportasi",
+     "nilai": 1.43
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Umum",
+     "nilai": 0.86
+    }
+   ]
+  },
+  "ytd": {
+   "wilayah": "1700",
+   "nama_wilayah": "Provinsi Bengkulu",
+   "var_id": 556,
+   "judul": "Inflasi tahun kalender (y-to-d) menurut kelompok pengeluaran",
+   "judul_bps": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "satuan": "Persen",
+   "diambil": "2026-10-21T03:06:48+00:00",
+   "terbaru": "2026-05",
+   "label_lain": [],
+   "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.35
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Kesehatan",
+     "nilai": -0.14
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.13
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.61
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.59
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 1.31
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.61
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.63
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.59
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Transportasi",
+     "nilai": -0.21
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Umum",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.35
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Kesehatan",
+     "nilai": -0.2
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 2.12
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.8
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.96
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 1.45
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.43
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.66
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.77
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Transportasi",
+     "nilai": 0.06
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Umum",
+     "nilai": 0.94
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.35
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Kesehatan",
+     "nilai": 0.16
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 2.59
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.73
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.07
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 2.0
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.77
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.65
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.69
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Transportasi",
+     "nilai": -0.08
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Umum",
+     "nilai": 1.16
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.37
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Kesehatan",
+     "nilai": 0.14
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 2.54
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.74
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.1
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 3.15
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.08
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.7
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.88
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Transportasi",
+     "nilai": 0.71
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Umum",
+     "nilai": 1.29
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.73
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Kesehatan",
+     "nilai": 1.09
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 3.04
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.66
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.74
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 4.0
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.17
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.67
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.13
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Transportasi",
+     "nilai": 1.01
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Umum",
+     "nilai": 1.6
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.73
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Kesehatan",
+     "nilai": 1.78
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 2.79
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.51
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.79
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 4.56
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.32
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.66
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.84
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Transportasi",
+     "nilai": 0.84
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Umum",
+     "nilai": 1.56
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.73
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Kesehatan",
+     "nilai": 1.75
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 0.5
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.46
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Pendidikan",
+     "nilai": 0.95
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.83
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 4.45
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.13
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.67
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.35
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Transportasi",
+     "nilai": 0.67
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Umum",
+     "nilai": 0.85
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.73
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Kesehatan",
+     "nilai": 1.98
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.37
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.31
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Pendidikan",
+     "nilai": 1.04
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.34
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.16
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.08
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.67
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.99
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Transportasi",
+     "nilai": 0.77
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Umum",
+     "nilai": 0.67
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.73
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Kesehatan",
+     "nilai": 2.09
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -1.32
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Pendidikan",
+     "nilai": 1.04
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.34
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.52
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.26
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.69
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.26
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Transportasi",
+     "nilai": 0.63
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Umum",
+     "nilai": 0.38
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.74
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Kesehatan",
+     "nilai": 2.18
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -1.73
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Pendidikan",
+     "nilai": 1.91
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.49
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.84
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.19
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.71
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.45
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Transportasi",
+     "nilai": 0.17
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Umum",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.75
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Kesehatan",
+     "nilai": 2.42
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -1.27
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.32
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Pendidikan",
+     "nilai": 1.91
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.75
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 6.03
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.22
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.73
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.69
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Transportasi",
+     "nilai": 0.28
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Umum",
+     "nilai": 0.49
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.75
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Kesehatan",
+     "nilai": 2.57
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.21
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.31
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Pendidikan",
+     "nilai": 1.91
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.75
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.94
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.34
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.73
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.49
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Transportasi",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Umum",
+     "nilai": 0.84
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Kesehatan",
+     "nilai": -1.25
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -2.61
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.12
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 2.76
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.1
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.04
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.98
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Transportasi",
+     "nilai": -0.32
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Umum",
+     "nilai": -0.75
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.14
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Kesehatan",
+     "nilai": -0.93
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -1.03
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.07
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.44
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 4.09
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.05
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.07
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.68
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Transportasi",
+     "nilai": -0.48
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Umum",
+     "nilai": -0.1
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Kesehatan",
+     "nilai": -0.76
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.53
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": -0.23
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.87
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 3.77
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.16
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.29
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.5
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Transportasi",
+     "nilai": -0.04
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Umum",
+     "nilai": 0.17
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.67
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Kesehatan",
+     "nilai": -0.77
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.65
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.22
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.31
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 3.35
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.72
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.43
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.17
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Transportasi",
+     "nilai": 0.84
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Umum",
+     "nilai": 0.52
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.77
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Kesehatan",
+     "nilai": -0.34
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 1.19
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.31
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.33
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 2.94
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 1.17
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.73
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.9
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Transportasi",
+     "nilai": 2.29
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Umum",
+     "nilai": 1.39
+    }
+   ]
+  },
+  "yoy": {
+   "wilayah": "1700",
+   "nama_wilayah": "Provinsi Bengkulu",
+   "var_id": 557,
+   "judul": "Inflasi tahunan (y-on-y) menurut kelompok pengeluaran",
+   "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
+   "satuan": "Persen",
+   "diambil": "2026-10-21T03:06:48+00:00",
+   "terbaru": "2026-05",
+   "label_lain": [],
+   "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.02
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Kesehatan",
+     "nilai": -0.19
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 5.2
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.56
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Pendidikan",
+     "nilai": 1.64
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.59
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 2.68
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 2.13
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 1.49
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.12
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Transportasi",
+     "nilai": 2.73
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Umum",
+     "nilai": 2.83
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.06
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Kesehatan",
+     "nilai": -0.3
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 7.86
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.29
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Pendidikan",
+     "nilai": 1.64
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.96
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 2.91
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 1.68
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 1.52
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.96
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Transportasi",
+     "nilai": 2.73
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Umum",
+     "nilai": 3.68
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.02
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Kesehatan",
+     "nilai": 0.11
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 7.61
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.9
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Pendidikan",
+     "nilai": 1.64
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.98
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 3.09
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 2.06
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 1.51
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.84
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Transportasi",
+     "nilai": 2.06
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Umum",
+     "nilai": 3.56
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Kesehatan",
+     "nilai": 0.24
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 7.75
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.75
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Pendidikan",
+     "nilai": 1.64
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.0
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 3.76
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 1.0
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 1.57
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.04
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Transportasi",
+     "nilai": 2.27
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Umum",
+     "nilai": 3.62
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.44
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Kesehatan",
+     "nilai": 0.84
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 7.88
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.96
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Pendidikan",
+     "nilai": 1.44
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.48
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 4.06
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 1.4
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.75
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Transportasi",
+     "nilai": 2.75
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Umum",
+     "nilai": 3.71
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.43
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Kesehatan",
+     "nilai": 1.31
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 7.54
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.9
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Pendidikan",
+     "nilai": 1.44
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.53
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.1
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.39
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 1.19
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.46
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Transportasi",
+     "nilai": 2.76
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Umum",
+     "nilai": 3.64
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.63
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Kesehatan",
+     "nilai": 1.87
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 3.84
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.61
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Pendidikan",
+     "nilai": 1.87
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.55
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.5
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.2
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.89
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.82
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Transportasi",
+     "nilai": 1.62
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Umum",
+     "nilai": 2.31
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.59
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Kesehatan",
+     "nilai": 1.99
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 4.26
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Pendidikan",
+     "nilai": 1.04
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.71
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.92
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.12
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.85
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.36
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Transportasi",
+     "nilai": 1.37
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Umum",
+     "nilai": 2.34
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.69
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Kesehatan",
+     "nilai": 1.93
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 1.77
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.24
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Pendidikan",
+     "nilai": 1.04
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.6
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 6.1
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.29
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.74
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.63
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Transportasi",
+     "nilai": 0.89
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Umum",
+     "nilai": 1.48
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.7
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Kesehatan",
+     "nilai": 2.24
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 1.28
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.18
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Pendidikan",
+     "nilai": 1.91
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.54
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 6.55
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.16
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.77
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.11
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Transportasi",
+     "nilai": 0.24
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Umum",
+     "nilai": 1.34
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.71
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Kesehatan",
+     "nilai": 2.32
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.42
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.27
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Pendidikan",
+     "nilai": 1.91
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.75
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 6.03
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.28
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.74
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 2.6
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Transportasi",
+     "nilai": 0.38
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Umum",
+     "nilai": 0.82
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.75
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Kesehatan",
+     "nilai": 2.57
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": -0.21
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.31
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Pendidikan",
+     "nilai": 1.91
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.75
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 5.94
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.34
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.73
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 3.49
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Transportasi",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Umum",
+     "nilai": 0.84
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": -0.41
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Kesehatan",
+     "nilai": 2.77
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 2.52
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.75
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Pendidikan",
+     "nilai": 1.91
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 2.47
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 4.9
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.86
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": -10.04
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 1.6
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Transportasi",
+     "nilai": 1.06
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Umum",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.07
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Kesehatan",
+     "nilai": -0.28
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 1.61
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.0
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Pendidikan",
+     "nilai": -9.55
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 0.95
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 12.22
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.05
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 12.02
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": -0.37
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Transportasi",
+     "nilai": 0.87
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Umum",
+     "nilai": 2.61
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.22
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 3.81
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.76
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Pendidikan",
+     "nilai": -9.55
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.39
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 12.21
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.02
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 16.6
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.36
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Transportasi",
+     "nilai": 0.22
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Umum",
+     "nilai": 3.88
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.23
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Kesehatan",
+     "nilai": -0.64
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 4.34
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 0.32
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Pendidikan",
+     "nilai": -9.55
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 1.82
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 10.85
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": -0.29
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 6.71
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.55
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Transportasi",
+     "nilai": 1.16
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Umum",
+     "nilai": 2.85
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 1.24
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Kesehatan",
+     "nilai": -0.31
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 3.27
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.71
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Pendidikan",
+     "nilai": -9.55
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 3.21
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 8.81
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.29
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 0.82
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.83
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Transportasi",
+     "nilai": 1.41
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Umum",
+     "nilai": 1.87
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Informasi, Komunikasi, dan Jasa Keuangan",
+     "nilai": 0.85
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Kesehatan",
+     "nilai": 0.05
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Makanan, Minuman, dan Tembakau",
+     "nilai": 6.07
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Pakaian dan Alas Kaki",
+     "nilai": 1.87
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Pendidikan",
+     "nilai": -9.55
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Penyediaan Makanan dan Minuman/Restoran",
+     "nilai": 3.09
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perawatan Pribadi dan Jasa Lainnya",
+     "nilai": 8.27
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perlengkapan, Peralatan, dan Pemeliharaan Rutin Rumah Tangga",
+     "nilai": 0.75
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Perumahan, Air, Listrik, dan Bahan Bakar Rumah Tangga",
+     "nilai": 1.24
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Rekreasi, Olahraga, dan Budaya",
+     "nilai": 0.25
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Transportasi",
+     "nilai": 3.04
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Umum",
+     "nilai": 3.01
+    }
+   ]
+  },
+  "mtm_wilayah": {
+   "wilayah": "1700",
+   "nama_wilayah": "Provinsi Bengkulu",
+   "var_id": 559,
+   "judul": "Inflasi bulanan (m-to-m) menurut kabupaten/kota IHK",
+   "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "satuan": "Persen",
+   "diambil": "2026-10-21T03:06:48+00:00",
+   "terbaru": "2026-05",
+   "label_lain": [],
+   "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.12
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 1.37
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.61
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.79
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.04
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.22
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.03
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.16
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.13
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.4
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.27
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.08
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.07
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.04
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -1.53
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.44
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.7
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.48
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.07
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.18
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.67
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.17
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.28
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.25
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.03
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.09
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.37
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.15
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.2
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.46
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.34
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.36
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.91
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.59
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.84
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.47
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.57
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 1.27
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.29
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 1.28
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 1.55
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.22
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 1.31
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.33
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.24
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.26
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.87
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.72
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.75
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.85
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.6
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.66
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.81
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.1
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.28
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.07
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.48
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.35
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.83
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.87
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.86
+    }
+   ]
+  },
+  "yoy_wilayah": {
+   "wilayah": "1700",
+   "nama_wilayah": "Provinsi Bengkulu",
+   "var_id": 560,
+   "judul": "Inflasi tahunan (y-on-y) menurut kabupaten/kota IHK",
+   "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kabupaten/Kota di Provinsi Bengkulu",
+   "satuan": "Persen",
+   "diambil": "2026-10-21T03:06:48+00:00",
+   "terbaru": "2026-09",
+   "label_lain": [],
+   "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 2.76
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.85
+    },
+    {
+     "periode": "2024-01",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.83
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 4.48
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.42
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.68
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 3.8
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.48
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.56
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 3.78
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.57
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.62
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 4.01
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.61
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.71
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 4.79
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.28
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.64
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 2.39
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.27
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.31
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 2.44
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.31
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.34
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.38
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.84
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 1.48
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.77
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.52
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 1.34
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.1
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.13
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.82
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.46
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.17
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.84
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.08
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.09
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -2.1
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.98
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -1.26
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.83
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Kota Bengkulu",
+     "nilai": -0.01
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.22
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 0.69
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.05
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.96
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -0.05
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.53
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 0.39
+    },
+    {
+     "periode": "2025-06",
+     "kategori": "Kab. Mukomuko",
+     "nilai": -1.34
+    },
+    {
+     "periode": "2025-06",
+     "kategori": "Kota Bengkulu",
+     "nilai": 0.3
+    },
+    {
+     "periode": "2025-06",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": -0.1
+    },
+    {
+     "periode": "2025-07",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 1.01
+    },
+    {
+     "periode": "2025-07",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.02
+    },
+    {
+     "periode": "2025-07",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 1.01
+    },
+    {
+     "periode": "2025-08",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 1.83
+    },
+    {
+     "periode": "2025-08",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.11
+    },
+    {
+     "periode": "2025-08",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 1.3
+    },
+    {
+     "periode": "2025-09",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 4.09
+    },
+    {
+     "periode": "2025-09",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.08
+    },
+    {
+     "periode": "2025-09",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.57
+    },
+    {
+     "periode": "2025-10",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 4.46
+    },
+    {
+     "periode": "2025-10",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.33
+    },
+    {
+     "periode": "2025-10",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.85
+    },
+    {
+     "periode": "2025-11",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 3.88
+    },
+    {
+     "periode": "2025-11",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.28
+    },
+    {
+     "periode": "2025-11",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.68
+    },
+    {
+     "periode": "2025-12",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 3.83
+    },
+    {
+     "periode": "2025-12",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.43
+    },
+    {
+     "periode": "2025-12",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.77
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 2.55
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.63
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.61
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 4.3
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.74
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.88
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 3.83
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.52
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 2.85
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 2.16
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Kota Bengkulu",
+     "nilai": 1.77
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 1.87
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 3.35
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Kota Bengkulu",
+     "nilai": 2.9
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.01
+    },
+    {
+     "periode": "2026-06",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 5.02
+    },
+    {
+     "periode": "2026-06",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.61
+    },
+    {
+     "periode": "2026-06",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.96
+    },
+    {
+     "periode": "2026-07",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 5.1
+    },
+    {
+     "periode": "2026-07",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.36
+    },
+    {
+     "periode": "2026-07",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.78
+    },
+    {
+     "periode": "2026-08",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 5.03
+    },
+    {
+     "periode": "2026-08",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.65
+    },
+    {
+     "periode": "2026-08",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.99
+    },
+    {
+     "periode": "2026-09",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 4.39
+    },
+    {
+     "periode": "2026-09",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.05
+    },
+    {
+     "periode": "2026-09",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.38
+    }
+   ]
+  },
+  "it": {
+   "wilayah": "1700",
+   "nama_wilayah": "Provinsi Bengkulu",
+   "var_id": 421,
+   "judul": "Indeks harga yang diterima petani (It)",
+   "judul_bps": "Indeks Harga yang Diterima oleh Petani (lt)",
+   "satuan": null,
+   "diambil": "2026-10-21T03:06:48+00:00",
+   "terbaru": "2026-09",
+   "label_lain": [],
+   "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Umum",
+     "nilai": 195.17
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Umum",
+     "nilai": 200.82
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Umum",
+     "nilai": 209.47
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Umum",
+     "nilai": 219.17
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Umum",
+     "nilai": 218.34
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Umum",
+     "nilai": 228.13
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Umum",
+     "nilai": 235.35
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Umum",
+     "nilai": 231.34
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Umum",
+     "nilai": 236.88
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Umum",
+     "nilai": 238.61
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Umum",
+     "nilai": 250.52
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Umum",
+     "nilai": 254.01
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Umum",
+     "nilai": 247.03
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Umum",
+     "nilai": 254.44
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Umum",
+     "nilai": 261.52
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Umum",
+     "nilai": 245.02
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Umum",
+     "nilai": 255.99
+    },
+    {
+     "periode": "2025-06",
+     "kategori": "Umum",
+     "nilai": 253.42
+    },
+    {
+     "periode": "2025-07",
+     "kategori": "Umum",
+     "nilai": 247.97
+    },
+    {
+     "periode": "2025-08",
+     "kategori": "Umum",
+     "nilai": 259.72
+    },
+    {
+     "periode": "2025-09",
+     "kategori": "Umum",
+     "nilai": 270.33
+    },
+    {
+     "periode": "2025-10",
+     "kategori": "Umum",
+     "nilai": 273.46
+    },
+    {
+     "periode": "2025-11",
+     "kategori": "Umum",
+     "nilai": 269.86
+    },
+    {
+     "periode": "2025-12",
+     "kategori": "Umum",
+     "nilai": 268.6
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Umum",
+     "nilai": 264.91
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Umum",
+     "nilai": 265.83
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Umum",
+     "nilai": 265.52
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Umum",
+     "nilai": 265.03
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Umum",
+     "nilai": 267.86
+    },
+    {
+     "periode": "2026-06",
+     "kategori": "Umum",
+     "nilai": 262.61
+    },
+    {
+     "periode": "2026-07",
+     "kategori": "Umum",
+     "nilai": 266.67
+    },
+    {
+     "periode": "2026-08",
+     "kategori": "Umum",
+     "nilai": 271.4
+    },
+    {
+     "periode": "2026-09",
+     "kategori": "Umum",
+     "nilai": 279.04
+    }
+   ]
+  },
+  "ib": {
+   "wilayah": "1700",
+   "nama_wilayah": "Provinsi Bengkulu",
+   "var_id": 422,
+   "judul": "Indeks harga yang dibayar petani (Ib)",
+   "judul_bps": "Indeks Harga yang Dibayar oleh Petani (Ib)",
+   "satuan": null,
+   "diambil": "2026-10-21T03:06:48+00:00",
+   "terbaru": "2026-09",
+   "label_lain": [],
+   "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Umum",
+     "nilai": 121.89
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Umum",
+     "nilai": 123.24
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Umum",
+     "nilai": 124.37
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Umum",
+     "nilai": 124.79
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Umum",
+     "nilai": 124.72
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Umum",
+     "nilai": 125.92
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Umum",
+     "nilai": 125.54
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Umum",
+     "nilai": 124.92
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Umum",
+     "nilai": 124.57
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Umum",
+     "nilai": 124.29
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Umum",
+     "nilai": 124.53
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Umum",
+     "nilai": 125.35
+    },
+    {
+     "periode": "2025-01",
+     "kategori": "Umum",
+     "nilai": 124.92
+    },
+    {
+     "periode": "2025-02",
+     "kategori": "Umum",
+     "nilai": 127.76
+    },
+    {
+     "periode": "2025-03",
+     "kategori": "Umum",
+     "nilai": 125.73
+    },
+    {
+     "periode": "2025-04",
+     "kategori": "Umum",
+     "nilai": 126.98
+    },
+    {
+     "periode": "2025-05",
+     "kategori": "Umum",
+     "nilai": 127.14
+    },
+    {
+     "periode": "2025-06",
+     "kategori": "Umum",
+     "nilai": 126.79
+    },
+    {
+     "periode": "2025-07",
+     "kategori": "Umum",
+     "nilai": 127.65
+    },
+    {
+     "periode": "2025-08",
+     "kategori": "Umum",
+     "nilai": 128.7
+    },
+    {
+     "periode": "2025-09",
+     "kategori": "Umum",
+     "nilai": 129.51
+    },
+    {
+     "periode": "2025-10",
+     "kategori": "Umum",
+     "nilai": 129.54
+    },
+    {
+     "periode": "2025-11",
+     "kategori": "Umum",
+     "nilai": 129.79
+    },
+    {
+     "periode": "2025-12",
+     "kategori": "Umum",
+     "nilai": 130.44
+    },
+    {
+     "periode": "2026-01",
+     "kategori": "Umum",
+     "nilai": 129.23
+    },
+    {
+     "periode": "2026-02",
+     "kategori": "Umum",
+     "nilai": 129.94
+    },
+    {
+     "periode": "2026-03",
+     "kategori": "Umum",
+     "nilai": 130.19
+    },
+    {
+     "periode": "2026-04",
+     "kategori": "Umum",
+     "nilai": 131.21
+    },
+    {
+     "periode": "2026-05",
+     "kategori": "Umum",
+     "nilai": 132.64
+    },
+    {
+     "periode": "2026-06",
+     "kategori": "Umum",
+     "nilai": 133.39
+    },
+    {
+     "periode": "2026-07",
+     "kategori": "Umum",
+     "nilai": 133.22
+    },
+    {
+     "periode": "2026-08",
+     "kategori": "Umum",
+     "nilai": 133.52
+    },
+    {
+     "periode": "2026-09",
+     "kategori": "Umum",
+     "nilai": 134.16
+    }
+   ]
+  }
+ },
+ "galat": [],
+ "rilis": [
+  {
+   "periode": "2026-09",
+   "yoy": 3.38,
+   "mtm": 0.38,
+   "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu September 2026 sebesar 3,38 persen",
+   "tanggal": "2026-10-01",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/10/01/1031/inflasi-year-on-year--y-on-y--provinsi-bengkulu-september-2026-sebesar-3-38-persen.html"
+  },
+  {
+   "periode": "2026-08",
+   "yoy": 3.99,
+   "mtm": 0.31,
+   "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Agustus 2026 sebesar 3,99 persen",
+   "tanggal": "2026-09-01",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/09/01/1023/inflasi-year-on-year--y-on-y--provinsi-bengkulu-agustus-2026-sebesar-3-99-persen.html"
+  },
+  {
+   "periode": "2026-07",
+   "yoy": 3.78,
+   "mtm": 0.23,
+   "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Juli 2026 sebesar 3,78 persen",
+   "tanggal": "2026-08-03",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/08/03/1020/inflasi-year-on-year--y-on-y--provinsi-bengkulu-juli-2026-sebesar-3-78-persen.html"
+  },
+  {
+   "periode": "2026-06",
+   "yoy": 3.96,
+   "mtm": 0.38,
+   "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen",
+   "tanggal": "2026-07-01",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1010/inflasi-year-on-year--y-on-y--provinsi-bengkulu-juni-2026-sebesar-3-96-persen.html"
+  },
+  {
+   "periode": "2026-05",
+   "yoy": 3.01,
+   "mtm": 0.86,
+   "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Mei 2026 sebesar 3,01 persen",
+   "tanggal": "2026-06-02",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/1006/inflasi-year-on-year--y-on-y--provinsi-bengkulu-mei-2026-sebesar-3-01-persen.html"
+  },
+  {
+   "periode": "2026-04",
+   "yoy": 1.87,
+   "mtm": 0.35,
+   "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu April 2026 sebesar 1,87 persen",
+   "tanggal": "2026-05-04",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/05/04/998/inflasi-year-on-year--y-on-y--provinsi-bengkulu-april-2026-sebesar-1-87-persen.html"
+  }
+ ],
+ "rilis_dilewati": [],
+ "rilis_ntp": [
+  {
+   "periode": "2026-09",
+   "ntp": 206.79,
+   "ubah_persen": 1.73,
+   "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu September 2026 sebesar 206,79 atau naik 1,73 persen",
+   "tanggal": "2026-10-01",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/10/01/1029/nilai-tukar-petani--ntp--provinsi-bengkulu-september-2026-sebesar-206-79-atau-naik-1-73-persen.html"
+  },
+  {
+   "periode": "2026-08",
+   "ntp": 203.27,
+   "ubah_persen": 1.54,
+   "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada Agustus 2026 sebesar 203,27 atau naik 1,54 persen",
+   "tanggal": "2026-09-01",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/09/01/1025/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-agustus-2026-sebesar-203-27-atau-naik-1-54-persen.html"
+  },
+  {
+   "periode": "2026-07",
+   "ntp": 200.18,
+   "ubah_persen": 1.68,
+   "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada Juli 2026 tercatat sebesar 200,18 atau naik 1,68 persen",
+   "tanggal": "2026-08-03",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/08/03/1018/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-juli-2026-tercatat-sebesar-200-18-atau-naik-1-68-persen.html"
+  },
+  {
+   "periode": "2026-06",
+   "ntp": 196.87,
+   "ubah_persen": -2.52,
+   "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada Juni 2026 sebesar 196,87 atau turun 2,52 persen",
+   "tanggal": "2026-07-01",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1011/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-juni-2026-sebesar-196-87-atau-turun-2-52-persen.html"
+  },
+  {
+   "periode": "2026-05",
+   "ntp": 201.95,
+   "ubah_persen": -0.02,
+   "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu Mei 2026 sebesar 201,95 atau turun 0,02 persen",
+   "tanggal": "2026-06-02",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/1004/nilai-tukar-petani--ntp--provinsi-bengkulu-mei-2026-sebesar-201-95-atau-turun-0-02-persen.html"
+  },
+  {
+   "periode": "2026-04",
+   "ntp": 201.99,
+   "ubah_persen": -0.96,
+   "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada April 2026 sebesar 201,99 atau turun 0,96 persen",
+   "tanggal": "2026-05-04",
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/05/04/996/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-april-2026-sebesar-201-99-atau-turun-0-96-persen.html"
+  }
+ ],
+ "pesan": "7 dari 7 deret BPS berhasil diambil, data terbaru 2026-09."
+}

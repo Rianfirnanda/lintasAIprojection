@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       jenis:
-        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2/lanjut3 = tahap 2/3; lanjut4 = sumber yang diterima analis (SIGAHADA, BEN CONNECT, Simponi Ternak); sp2kp = riwayat harga harian SP2KP 5 tahun; bps = uji kunci BPS Web API dan petakan data harga/inflasi"
+        description: "dasar = penjajakan awal; lanjut = SP2KP, Tableau, Bapanas, data terbuka daerah, BPS, PIHPS 5 tahun; lanjut2/lanjut3 = tahap 2/3; lanjut4 = sumber yang diterima analis (SIGAHADA, BEN CONNECT, Simponi Ternak); sp2kp = riwayat harga harian SP2KP 5 tahun; bps = uji kunci BPS Web API dan petakan data harga/inflasi; bps-seri = ambil deret inflasi BPS untuk dashboard"
         default: "lanjut"
 
 permissions:
@@ -52,6 +52,7 @@ jobs:
             lanjut6) python -m pipeline probe-lanjut --tahap 6 ;;
             sp2kp) python -m pipeline ambil-sp2kp --riwayat-hari 1830 && python -m pipeline sp2kp-ke-harga ;;
             bps) python -m pipeline cek-bps ;;
+            bps-seri) python -m pipeline ambil-bps --paksa ;;
             *) python -m pipeline probe-lanjut ;;
           esac
       - name: Hapus kredensial
