@@ -90,10 +90,16 @@ def test_cek_bps_cli_menyimpan_hasil_tanpa_kunci(tmp_path, monkeypatch, capsys):
     asli = bps.cek
     monkeypatch.setattr(bps, "cek", lambda kunci: {**asli(kunci, ambil_fn=bps_tiruan, tidur=lambda _: None),
                                                     "galat": [f"contoh galat dengan {kunci}"]})
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
     assert m._cek_bps(tmp_path) == 0
     keluaran = capsys.readouterr().out
     assert "Kunci BPS: dari Pengaturan situs" in keluaran and "Kunci diterima BPS" in keluaran
     assert KUNCI not in keluaran
+    # Di GitHub Actions kunci hanya muncul di baris ::add-mask::, perintah ke runner yang tidak ikut tampil di log.
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    assert m._cek_bps(tmp_path) == 0
+    baris_berkunci = [b for b in capsys.readouterr().out.splitlines() if KUNCI in b]
+    assert baris_berkunci == [f"::add-mask::{KUNCI}"]
     tersimpan = (tmp_path / bps.BERKAS).read_text(encoding="utf-8")
     assert json.loads(tersimpan)["asal_kunci"] == "situs"
 
