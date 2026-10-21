@@ -6,6 +6,7 @@
   python -m pipeline ambil-resmi             # konektor Big Data resmi: prakiraan BMKG dan harga PIHPS Bank Indonesia
   python -m pipeline ambil-sp2kp [--riwayat-hari 1830]   # harga harian pasar SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)
   python -m pipeline cek-bps                  # uji kunci BPS Web API dan petakan data harga/inflasi (hasil di data/sumber/hasil_bps.json)
+  python -m pipeline ambil-bps [--paksa]      # deret inflasi resmi BPS Provinsi Bengkulu untuk dashboard (paling sering sehari sekali)
   python -m pipeline sp2kp-ke-harga          # salin harga SP2KP yang pemetaan variannya disetujui menjadi berkas harga
   python -m pipeline berita [--tanpa-ai]      # berita lokal: cari, baca, ambil harga, ringkas (juga jalan otomatis tiap hari)
   python -m pipeline cari-sumber --komoditas "cabai rawit merah" --periode "Oktober 2026" [--penyedia gemini]
@@ -158,6 +159,40 @@ def _cek_bps(akar: Path) -> int:
     for g in hasil["galat"][:10]:
         print(konektor_bps.samarkan(f"  galat: {g}", kunci))
     return 0 if hasil["kunci_sah"] else 1
+
+
+def _ambil_bps(akar: Path, paksa: bool = False, jeda_jam: float = 20) -> int:
+    """Deret inflasi resmi BPS untuk dashboard. BPS memperbarui angka ini sebulan sekali, jadi bila hasil terakhir
+    umurnya belum `jeda_jam` jam, langkah ini dilewati tanpa membaca Firestore atau memanggil BPS. Kunci tidak pernah dicetak."""
+    import os
+    from datetime import datetime, timezone
+
+    from . import firestore_sinkron, konektor_bps
+
+    lama = konektor_bps.baca(akar, konektor_bps.BERKAS_SERI)
+    if lama and not paksa:
+        try:
+            umur = (datetime.now(timezone.utc) - datetime.fromisoformat(lama["waktu"])).total_seconds() / 3600
+        except (KeyError, TypeError, ValueError):
+            umur = jeda_jam
+        if umur < jeda_jam:
+            print(f"Data BPS diambil {umur:.0f} jam lalu, belum perlu diambil lagi.")
+            return 0
+    dari_situs = firestore_sinkron.pasang_satu_rahasia(akar, "BPS_API_KEY")
+    kunci = os.environ.get("BPS_API_KEY", "").strip()
+    firestore_sinkron.samarkan_di_log(kunci)
+    print(f"Kunci BPS: {'dari Pengaturan situs' if dari_situs else 'dari GitHub Secret' if kunci else 'belum diisi'}", flush=True)
+    hasil = konektor_bps.ambil_seri(kunci)
+    print(konektor_bps.samarkan(hasil["pesan"], kunci))
+    for kode, s in hasil["seri"].items():
+        kategori = list(dict.fromkeys(x["kategori"] for x in s["data"]))
+        print(f"  {kode}: {s['judul']}, {len(s['data'])} angka, terbaru {s['terbaru']}; rincian: {'; '.join(kategori[:12])}")
+    for g in hasil["galat"]:
+        print(konektor_bps.samarkan(f"  galat: {g}", kunci))
+    if not hasil["seri"]:
+        return 1  # hasil lama tetap dipakai dashboard; tidak ditimpa dengan hasil kosong
+    konektor_bps.simpan(akar, konektor_bps.gabung_seri(lama, hasil), konektor_bps.BERKAS_SERI)
+    return 0
 
 
 def _uji_notifikasi_dari_situs(akar: Path, url: str) -> None:
@@ -377,6 +412,8 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("pihps-ke-harga", help="salin harga PIHPS Provinsi Bengkulu menjadi berkas harga utama sementara")
     sub.add_parser("cek-bps", help="uji kunci BPS Web API (dari Pengaturan situs atau GitHub Secret) dan petakan data yang tersedia")
+    ab = sub.add_parser("ambil-bps", help="ambil deret inflasi resmi BPS Provinsi Bengkulu untuk dashboard")
+    ab.add_argument("--paksa", action="store_true", help="ambil walau hasil terakhir belum sehari")
     s2 = sub.add_parser("ambil-sp2kp", help="ambil harga harian pasar SP2KP Kemendag (Bengkulu Tengah, Kepahiang, Kota Bengkulu)")
     s2.add_argument("--hari", type=int, default=30)
     s2.add_argument("--riwayat-hari", type=int, default=None, help="ambil riwayat sejauh sekian hari ke belakang walau data sudah ada")
@@ -510,6 +547,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if a.perintah == "cek-bps":
         return _cek_bps(konf.akar)
+    if a.perintah == "ambil-bps":
+        return _ambil_bps(konf.akar, paksa=a.paksa)
     if a.perintah == "probe-lanjut":
         from . import firestore_sinkron, probe_lanjut
 

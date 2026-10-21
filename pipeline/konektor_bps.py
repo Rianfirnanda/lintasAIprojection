@@ -216,16 +216,182 @@ def cek(kunci: str, ambil_fn=ambil, tidur=time.sleep, sekarang=None) -> dict:
     return hasil
 
 
-def simpan(akar: Path, hasil: dict) -> Path:
-    path = akar / BERKAS
+def simpan(akar: Path, hasil: dict, berkas: Path = BERKAS) -> Path:
+    path = akar / berkas
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(hasil, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     return path
 
 
-def baca(akar: Path) -> dict | None:
-    path = akar / BERKAS
+def baca(akar: Path, berkas: Path = BERKAS) -> dict | None:
+    path = akar / berkas
     try:
         return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
     except ValueError:
         return None
+
+
+# ---------------------------------------------------------------- deret inflasi untuk dashboard
+
+# Bengkulu Tengah belum termasuk kota penghitung IHK, jadi TPID memakai angka Provinsi Bengkulu dan kota IHK di
+# provinsi ini (Kota Bengkulu dan Mukomuko) sebagai acuan. Semua deret IHK tahun dasar 2022=100.
+SERI = (
+    ("mtm", "1700", 555, "Inflasi bulanan (m-to-m) menurut kelompok pengeluaran"),
+    ("ytd", "1700", 556, "Inflasi tahun kalender (y-to-d) menurut kelompok pengeluaran"),
+    ("yoy", "1700", 557, "Inflasi tahunan (y-on-y) menurut kelompok pengeluaran"),
+    ("mtm_wilayah", "1700", 559, "Inflasi bulanan (m-to-m) menurut kabupaten/kota IHK"),
+    ("yoy_wilayah", "1700", 560, "Inflasi tahunan (y-on-y) menurut kabupaten/kota IHK"),
+    ("it", "1700", 421, "Indeks harga yang diterima petani (It)"),
+    ("ib", "1700", 422, "Indeks harga yang dibayar petani (Ib)"),
+)
+TAHUN_SERI = 3
+BERKAS_SERI = Path("data/sumber/bps_seri.json")
+BULAN = ("januari", "februari", "maret", "april", "mei", "juni", "juli", "agustus", "september", "oktober", "november",
+         "desember")
+TANPA_RINCIAN = ("", "-", "tidak ada", "tidak ada turunan variabel")
+
+
+def _no_bulan(label) -> int | None:
+    s = str(label or "").strip().lower()
+    return BULAN.index(s) + 1 if s in BULAN else None
+
+
+def baris_bulanan(baris: list[dict]) -> list[dict]:
+    """Baris hasil `uraikan_data` menjadi {periode YYYY-MM, kategori, nilai}. Tabel BPS versi baru menaruh bulan di
+    turunan tahun (kategori di rincian); versi lama menaruh bulan di rincian (kategori di turunan). Baris tahunan dan
+    angka yang bukan bilangan dilewati."""
+    hasil = []
+    for b in baris:
+        turunan = str(b.get("turunan") or "").strip()
+        bulan = _no_bulan(b.get("periode"))
+        if bulan:
+            kategori = str(b.get("rincian") or "").strip()
+            if turunan.lower() not in TANPA_RINCIAN:
+                kategori = f"{kategori}, {turunan}" if kategori else turunan
+        else:
+            bulan = _no_bulan(b.get("rincian"))
+            kategori = "" if turunan.lower() in TANPA_RINCIAN else turunan
+        tahun = str(b.get("tahun") or "").strip()
+        try:
+            nilai = round(float(b.get("nilai")), 2)
+        except (TypeError, ValueError):
+            continue
+        if bulan and tahun.isdigit():
+            hasil.append({"periode": f"{tahun}-{bulan:02d}", "kategori": kategori or "Umum", "nilai": nilai})
+    return sorted(hasil, key=lambda x: (x["periode"], x["kategori"]))
+
+
+def _tahun_terakhir(d: dict | None, n: int) -> list[dict]:
+    _, th = daftar(d)
+    th = [x for x in th if isinstance(x, dict) and str(x.get("th_id", "")).isdigit()]
+    # Urut menurut tahunnya, bukan nomor th_id: nomor BPS tidak selalu searah dengan tahun.
+    th.sort(key=lambda x: (int(x["th"]) if str(x.get("th", "")).isdigit() else 0, int(x["th_id"])))
+    return th[-n:]
+
+
+def _satu_seri(wilayah: str, var_id: int, kunci: str, ambil_fn, tidur) -> tuple[dict | None, list, str | None, bool]:
+    """(keterangan variabel, baris bulanan, galat, ditolak). `ditolak` berarti permintaannya sendiri gagal (kunci salah,
+    diblokir, situs bermasalah), bukan sekadar variabelnya kosong."""
+    d, g = minta(f"list/model/th/lang/ind/domain/{wilayah}/var/{var_id}", kunci, ambil_fn)
+    if g:
+        return None, [], g, True
+    th = _tahun_terakhir(d, TAHUN_SERI)
+    if not th:
+        return None, [], "BPS tidak mencantumkan tahun untuk variabel ini", False
+    tidur(JEDA)
+    d, g = minta(f"list/model/data/lang/ind/domain/{wilayah}/var/{var_id}/th/{';'.join(str(x['th_id']) for x in th)}",
+                 kunci, ambil_fn)
+    if g:
+        return None, [], g, True
+    data = baris_bulanan(uraikan_data(d, var_id))
+    if not data:
+        return None, [], "angka bulanan kosong", False
+    v = d.get("var")
+    return (v[0] if isinstance(v, list) and v and isinstance(v[0], dict) else {}), data, None, False
+
+
+def ambil_seri(kunci: str, ambil_fn=ambil, tidur=time.sleep, sekarang=None) -> dict:
+    """Tarik deret inflasi Provinsi Bengkulu (SERI) untuk tiga tahun terakhir. Tidak pernah melempar galat dan tidak
+    memuat kunci. Bila permintaan pertama sudah ditolak (kunci salah, diblokir), deret lain tidak dicoba."""
+    kunci = (kunci or "").strip()
+    waktu = (sekarang or datetime.now(timezone.utc)).isoformat(timespec="seconds")
+    hasil = {"waktu": waktu, "sumber": "BPS Web API (webapi.bps.go.id)", "kunci": "ada" if kunci else "belum",
+             "seri": {}, "galat": []}
+    if not kunci:
+        hasil["pesan"] = "Kunci BPS_API_KEY belum diisi. Isi di Pengaturan situs (Kunci sumber data) atau sebagai GitHub Secret."
+        return hasil
+    for i, (kode, wilayah, var_id, judul) in enumerate(SERI):
+        tidur(JEDA)
+        info, data, g, ditolak = _satu_seri(wilayah, var_id, kunci, ambil_fn, tidur)
+        if g:
+            hasil["galat"].append(samarkan(f"{judul} (var {var_id}): {g}", kunci))
+            if ditolak and i == 0:
+                break  # permintaan pertama sudah ditolak: deret lain pasti bernasib sama
+            continue
+        hasil["seri"][kode] = {"wilayah": wilayah, "nama_wilayah": WILAYAH.get(wilayah, wilayah), "var_id": var_id,
+                               "judul": judul, "judul_bps": str(info.get("label") or "").strip() or None,
+                               "satuan": str(info.get("unit") or "").strip() or None, "diambil": waktu,
+                               "terbaru": data[-1]["periode"], "data": data}
+    n = len(hasil["seri"])
+    terbaru = max((s["terbaru"] for s in hasil["seri"].values()), default=None)
+    hasil["pesan"] = (f"{n} dari {len(SERI)} deret BPS berhasil diambil" + (f", data terbaru {terbaru}." if terbaru else ".")
+                      if n else "Deret BPS belum bisa diambil: " + (hasil["galat"][0] if hasil["galat"] else "tanpa keterangan"))
+    return hasil
+
+
+def gabung_seri(lama: dict | None, baru: dict) -> dict:
+    """Deret yang gagal diambil kali ini tetap memakai hasil sebelumnya (dengan tanggal ambilnya sendiri), supaya
+    dashboard tidak kosong hanya karena satu permintaan gagal."""
+    seri = {**((lama or {}).get("seri") or {}), **baru.get("seri", {})}
+    return {**baru, "seri": {k: seri[k] for k, *_ in SERI if k in seri}}
+
+
+def ringkas_untuk_situs(d: dict | None, bulan_tren: int = 25) -> dict | None:
+    """Ringkasan kecil untuk ringkasan.json: angka bulan terbaru per kelompok dan per kota IHK, serta tren tahunan."""
+    seri = (d or {}).get("seri") or {}
+    if not any(k in seri for k in ("mtm", "yoy")):
+        return None
+
+    def per_periode(kode: str) -> dict[str, dict[str, float]]:
+        hasil: dict[str, dict[str, float]] = {}
+        for x in (seri.get(kode) or {}).get("data", []):
+            hasil.setdefault(x["periode"], {})[x["kategori"]] = x["nilai"]
+        return hasil
+
+    mtm, ytd, yoy = per_periode("mtm"), per_periode("ytd"), per_periode("yoy")
+    periode = max((p for p in (*mtm, *yoy) if "Umum" in mtm.get(p, {}) or "Umum" in yoy.get(p, {})), default=None)
+    if not periode:
+        return None
+    nama = list(dict.fromkeys([*mtm.get(periode, {}), *yoy.get(periode, {}), *ytd.get(periode, {})]))
+    kelompok = [{"nama": k, "mtm": mtm.get(periode, {}).get(k), "ytd": ytd.get(periode, {}).get(k),
+                 "yoy": yoy.get(periode, {}).get(k)} for k in nama]
+    umum = next((k for k in kelompok if k["nama"] == "Umum"), None)
+    makanan = next((k for k in kelompok if k["nama"].lower().startswith("makanan")), None)
+
+    w_mtm, w_yoy = per_periode("mtm_wilayah"), per_periode("yoy_wilayah")
+    p_wil = max((*w_mtm, *w_yoy), default=None)
+    wilayah = [{"nama": k, "mtm": w_mtm.get(p_wil, {}).get(k), "yoy": w_yoy.get(p_wil, {}).get(k)}
+               for k in dict.fromkeys([*w_mtm.get(p_wil, {}), *w_yoy.get(p_wil, {})])] if p_wil else []
+
+    semua = sorted({*mtm, *yoy})[-bulan_tren:]
+    tren = [{"periode": p, "mtm": mtm.get(p, {}).get("Umum"), "yoy": yoy.get(p, {}).get("Umum"),
+             "yoy_makanan": yoy.get(p, {}).get(makanan["nama"]) if makanan else None} for p in semua]
+
+    # Nilai Tukar Petani = It / Ib x 100 untuk bulan yang punya keduanya (kategori yang sama, mis. subsektor gabungan).
+    it, ib = per_periode("it"), per_periode("ib")
+    ntp = None
+    for p in sorted(set(it) & set(ib), reverse=True):
+        sama = [k for k in it[p] if k in ib[p] and ib[p][k]]
+        if sama:
+            utama = next((k for k in sama if "gabungan" in k.lower() or k == "Umum"), None)
+            ntp = {"periode": p, "subsektor": [{"nama": k, "it": it[p][k], "ib": ib[p][k],
+                                                "ntp": round(it[p][k] / ib[p][k] * 100, 2)} for k in sama],
+                   "utama": utama}
+            break
+
+    ambil = [s.get("diambil") for s in seri.values() if s.get("diambil")]
+    return {"sumber": "BPS Web API", "wilayah": "Provinsi Bengkulu", "periode": periode,
+            "diambil": min(ambil)[:10] if ambil else str((d or {}).get("waktu", ""))[:10] or None,
+            "umum": umum, "makanan": makanan, "kelompok": kelompok,
+            "wilayah_ihk": {"periode": p_wil, "daftar": wilayah} if wilayah else None,
+            "tren": tren, "ntp": ntp}

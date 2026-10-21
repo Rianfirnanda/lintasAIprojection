@@ -128,3 +128,139 @@ def test_status_finder_bps_mengikuti_hasil_cek(tmp_path, monkeypatch):
     bps.simpan(tmp_path, bps.cek(KUNCI, ambil_fn=bps_tiruan, tidur=lambda _: None, sekarang=None))
     f = tata_data.finder_bps(tmp_path)
     assert "Kunci diterima BPS" in f["alasan"] and "3 variabel dan 1 tabel" in f["alasan"] and f["gerbang"][1]["lolos"] is True
+
+
+# ---------------------------------------------------------------- deret inflasi untuk dashboard
+
+BULAN_UJI = {4: "April", 5: "Mei"}
+
+
+def _data_bulanan(var_id, rincian, nilai_per_bulan, th=(125, "2025"), th2=(126, "2026"), turvar=("0", "Tidak ada")):
+    """Jawaban data BPS bentuk baru: rincian di vervar, bulan di turtahun. nilai_per_bulan: {(th_id, bulan): {rincian: nilai}}."""
+    isi = {}
+    for (th_id, bl), per in nilai_per_bulan.items():
+        for kode, nilai in per.items():
+            isi[f"{kode}{var_id}{turvar[0]}{th_id}{bl}"] = nilai
+    return {"status": "OK", "data-availability": "available",
+            "var": [{"val": var_id, "label": f"Judul BPS {var_id}", "unit": "Persen"}],
+            "vervar": [{"val": k, "label": v} for k, v in rincian.items()], "turvar": [{"val": turvar[0], "label": turvar[1]}],
+            "tahun": [{"val": th[0], "label": th[1]}, {"val": th2[0], "label": th2[1]}],
+            "turtahun": [{"val": b, "label": n} for b, n in BULAN_UJI.items()] + [{"val": 13, "label": "Tahunan"}],
+            "datacontent": isi}
+
+
+KELOMPOK = {1: "Umum", 2: "Makanan, Minuman, dan Tembakau"}
+NILAI_SERI = {
+    555: {(126, 4): {1: 0.12, 2: 0.4}, (126, 5): {1: 0.86, 2: 1.85}},
+    556: {(126, 4): {1: 0.53, 2: -0.65}, (126, 5): {1: 1.39, 2: 1.19}},
+    557: {(125, 5): {1: 1.5, 2: 2.0}, (126, 4): {1: 2.7, 2: 5.1}, (126, 5): {1: 3.01, 2: 6.07}},
+}
+
+
+def bps_seri_tiruan(url, *_):
+    assert f"/key/{KUNCI}/" in url
+    if "/model/th/" in url:
+        if "/var/422/" in url:
+            return _jawab(200, _daftar([]))  # variabel tanpa daftar tahun
+        # th_id 127 berlabel 2024: urutan tahun dari labelnya, bukan dari nomor th_id
+        return _jawab(200, _daftar([{"th_id": 127, "th": "2024"}, {"th_id": 125, "th": "2025"}, {"th_id": 126, "th": "2026"}]))
+    if "/model/data/" in url:
+        assert "/th/127;125;126/" in url
+        var_id = int(url.split("/var/")[1].split("/")[0])
+        if var_id in NILAI_SERI:
+            return _jawab(200, _data_bulanan(var_id, KELOMPOK, NILAI_SERI[var_id]))
+        if var_id in (559, 560):
+            wil = {1771: "Kota Bengkulu", 1706: "Mukomuko", 1700: "Provinsi Bengkulu"}
+            n = {(126, 5): {1771: 0.9 if var_id == 559 else 3.2, 1706: 0.5 if var_id == 559 else 2.1, 1700: 0.86 if var_id == 559 else 3.01}}
+            return _jawab(200, _data_bulanan(var_id, wil, n))
+        if var_id == 421:  # bentuk lama: bulan di vervar, kategori di turvar
+            return _jawab(200, {"status": "OK", "var": [{"val": 421, "label": "It", "unit": ""}],
+                                "vervar": [{"val": 5, "label": "Mei"}], "turvar": [{"val": 7, "label": "Gabungan"}],
+                                "tahun": [{"val": 126, "label": "2026"}], "turtahun": [{"val": 0, "label": "Tahunan"}],
+                                "datacontent": {"54217126" + "0": 150.0, "54217126" + "9": "-"}})
+    raise AssertionError(url)
+
+
+def test_ambil_seri_inflasi_dan_ringkasannya_untuk_situs():
+    h = bps.ambil_seri(KUNCI, ambil_fn=bps_seri_tiruan, tidur=lambda _: None)
+    assert KUNCI not in json.dumps(h)
+    assert set(h["seri"]) == {"mtm", "ytd", "yoy", "mtm_wilayah", "yoy_wilayah", "it"}
+    assert any("var 422" in g and "tahun" in g for g in h["galat"])
+    yoy = h["seri"]["yoy"]
+    assert yoy["satuan"] == "Persen" and yoy["terbaru"] == "2026-05" and yoy["judul_bps"] == "Judul BPS 557"
+    assert {"periode": "2025-05", "kategori": "Umum", "nilai": 1.5} in yoy["data"]
+    assert all(x["periode"][5:] in ("04", "05") for x in yoy["data"])  # baris "Tahunan" tidak ikut
+    assert h["seri"]["it"]["data"] == [{"periode": "2026-05", "kategori": "Gabungan", "nilai": 150.0}]
+    assert "6 dari 7 deret" in h["pesan"] and "2026-05" in h["pesan"]
+
+    r = bps.ringkas_untuk_situs(h)
+    assert r["periode"] == "2026-05" and r["wilayah"] == "Provinsi Bengkulu"
+    assert r["umum"] == {"nama": "Umum", "mtm": 0.86, "ytd": 1.39, "yoy": 3.01}
+    assert r["makanan"]["yoy"] == 6.07
+    assert r["wilayah_ihk"]["periode"] == "2026-05"
+    assert {"nama": "Mukomuko", "mtm": 0.5, "yoy": 2.1} in r["wilayah_ihk"]["daftar"]
+    assert [t["periode"] for t in r["tren"]] == ["2025-05", "2026-04", "2026-05"]
+    assert r["tren"][-1] == {"periode": "2026-05", "mtm": 0.86, "yoy": 3.01, "yoy_makanan": 6.07}
+    assert r["ntp"] is None  # Ib tidak terambil, jadi NTP tidak dihitung
+    assert bps.ringkas_untuk_situs(None) is None and bps.ringkas_untuk_situs({"seri": {}}) is None
+
+
+def test_ambil_seri_berhenti_bila_permintaan_pertama_ditolak():
+    panggil = []
+
+    def tolak(url, *_):
+        panggil.append(url)
+        return _jawab(200, {"status": "Error", "message": f"Invalid key {KUNCI}"})
+
+    h = bps.ambil_seri(KUNCI, ambil_fn=tolak, tidur=lambda _: None)
+    assert len(panggil) == 1 and not h["seri"] and "Invalid key ***" in h["galat"][0]
+    assert "belum bisa diambil" in h["pesan"] and KUNCI not in json.dumps(h)
+    assert bps.ambil_seri(" ", ambil_fn=tolak)["pesan"].startswith("Kunci BPS_API_KEY belum diisi")
+
+
+def test_gabung_seri_mempertahankan_deret_yang_gagal_kali_ini():
+    lama = {"waktu": "2026-10-01T00:00:00+00:00", "seri": {"yoy": {"terbaru": "2026-04"}, "it": {"terbaru": "2026-03"}}}
+    baru = {"waktu": "2026-10-21T00:00:00+00:00", "seri": {"mtm": {"terbaru": "2026-05"}, "yoy": {"terbaru": "2026-05"}}, "galat": ["it"]}
+    g = bps.gabung_seri(lama, baru)
+    assert g["waktu"] == baru["waktu"] and list(g["seri"]) == ["mtm", "yoy", "it"]
+    assert g["seri"]["yoy"]["terbaru"] == "2026-05" and g["seri"]["it"]["terbaru"] == "2026-03"
+
+
+def test_ntp_dihitung_dari_it_dan_ib_bulan_yang_sama():
+    seri = {"mtm": {"data": [{"periode": "2026-05", "kategori": "Umum", "nilai": 0.5}]},
+            "it": {"data": [{"periode": "2026-05", "kategori": "Tanaman Pangan", "nilai": 120.0},
+                            {"periode": "2026-05", "kategori": "Gabungan", "nilai": 150.0}]},
+            "ib": {"data": [{"periode": "2026-05", "kategori": "Tanaman Pangan", "nilai": 100.0},
+                            {"periode": "2026-05", "kategori": "Gabungan", "nilai": 120.0},
+                            {"periode": "2026-06", "kategori": "Gabungan", "nilai": 121.0}]}}
+    n = bps.ringkas_untuk_situs({"seri": seri})["ntp"]
+    assert n["periode"] == "2026-05" and n["utama"] == "Gabungan"
+    assert {"nama": "Gabungan", "it": 150.0, "ib": 120.0, "ntp": 125.0} in n["subsektor"]
+
+
+def test_ambil_bps_cli_melewati_bila_masih_baru_dan_tidak_menimpa_dengan_hasil_kosong(tmp_path, monkeypatch, capsys):
+    from datetime import datetime, timezone
+
+    from pipeline import __main__ as m
+
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    monkeypatch.setenv("BPS_API_KEY", KUNCI)
+    monkeypatch.setattr(fs, "pasang_satu_rahasia", lambda akar, nama: True)
+    asli = bps.ambil_seri
+    monkeypatch.setattr(bps, "ambil_seri", lambda kunci: asli(kunci, ambil_fn=bps_seri_tiruan, tidur=lambda _: None))
+    assert m._ambil_bps(tmp_path) == 0
+    out = capsys.readouterr().out
+    assert "dari Pengaturan situs" in out and "yoy:" in out and "Makanan, Minuman, dan Tembakau" in out and KUNCI not in out
+    tersimpan = bps.baca(tmp_path, bps.BERKAS_SERI)
+    assert tersimpan["seri"]["yoy"]["terbaru"] == "2026-05"
+
+    # hasil masih baru: tidak membaca kunci dan tidak memanggil BPS
+    monkeypatch.setattr(fs, "pasang_satu_rahasia", lambda *a: (_ for _ in ()).throw(AssertionError("tidak boleh membaca kunci")))
+    assert m._ambil_bps(tmp_path) == 0 and "belum perlu diambil lagi" in capsys.readouterr().out
+
+    # dipaksa tetapi BPS menolak: berkas lama tetap utuh
+    monkeypatch.setattr(fs, "pasang_satu_rahasia", lambda akar, nama: False)
+    monkeypatch.setattr(bps, "ambil_seri", lambda kunci: {"seri": {}, "galat": ["ditolak"], "pesan": "Deret BPS belum bisa diambil: ditolak"})
+    assert m._ambil_bps(tmp_path, paksa=True) == 1
+    assert bps.baca(tmp_path, bps.BERKAS_SERI)["seri"]["yoy"]["terbaru"] == "2026-05"
+    assert datetime.fromisoformat(tersimpan["waktu"]) <= datetime.now(timezone.utc)

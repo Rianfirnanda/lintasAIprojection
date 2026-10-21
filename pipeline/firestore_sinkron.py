@@ -363,6 +363,19 @@ def email_pengguna_aktif(db) -> list[str]:
     return sorted(hasil)
 
 
+def pasang_satu_rahasia(akar: Path, nama: str) -> bool:
+    """Pasang satu kunci dari situs dengan sekali baca Firestore, untuk perintah yang hanya butuh kunci itu (mis. BPS).
+    Lebih hemat kuota daripada pasang_rahasia_dari_firestore yang membaca semua kunci dan daftar pengguna."""
+    if not aktif() or nama not in nama_rahasia(akar):
+        return False
+    try:
+        d = klien().collection("lbp_rahasia").document(nama).get()
+    except Exception as e:  # noqa: BLE001
+        log.warning("kunci %s dari situs tidak bisa dibaca, memakai GitHub Secret: %s", nama, e)
+        return False
+    return bool(d.exists and terapkan_rahasia({nama: (d.to_dict() or {}).get("nilai", "")}))
+
+
 def pasang_rahasia_dari_firestore(akar: Path) -> list[str]:
     """Dipanggil sebelum pipeline/AI jalan. Gagal membaca bukan alasan berhenti: GitHub Secrets tetap dipakai.
     Email pengguna aktif ikut dipasang (EMAIL_PENGGUNA) supaya notifikasi email bisa dikirim ke semua pengguna."""
