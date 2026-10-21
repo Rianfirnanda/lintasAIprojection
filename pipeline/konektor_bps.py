@@ -29,7 +29,9 @@ MAKS_CONTOH = 6
 JEDA = 0.5
 BERKAS = Path("data/sumber/hasil_bps.json")
 # Variabel yang paling berguna untuk dashboard ini diambil contohnya lebih dulu.
-PRIORITAS = ("inflasi", "indeks harga konsumen", "harga eceran", "harga produsen", "harga")
+PRIORITAS = ("inflasi", "indeks harga konsumen", "harga eceran", "harga produsen", "nilai tukar petani", "harga")
+# Judul yang cocok dengan kata "harga" hanya karena istilah "atas dasar harga berlaku/konstan": bukan data harga.
+BUKAN_HARGA = ("produk domestik regional bruto", "pdrb", "input-output", "input output")
 
 
 def samarkan(isi, kunci: str) -> str:
@@ -91,9 +93,10 @@ def _semua_halaman(jalur: str, kunci: str, ambil_fn, tidur) -> tuple[list, str |
 
 
 def _cocok(x: dict, kata: str, *kolom: str) -> bool:
-    """Semua kata pencarian ada di judul atau subjeknya. Penyaring kedua, bila BPS mengabaikan parameter kata kunci."""
+    """Semua kata pencarian ada di judul atau subjeknya (penyaring kedua, bila BPS mengabaikan parameter kata kunci), dan
+    bukan PDRB atau tabel input-output yang hanya memuat istilah "atas dasar harga"."""
     isi = " ".join(str(x.get(k) or "") for k in kolom).lower()
-    return all(k in isi for k in kata.lower().split())
+    return all(k in isi for k in kata.lower().split()) and not any(b in isi for b in BUKAN_HARGA)
 
 
 def _skor(judul: str) -> int:
@@ -101,18 +104,52 @@ def _skor(judul: str) -> int:
     return next((len(PRIORITAS) - i for i, kata in enumerate(PRIORITAS) if kata in j), 0)
 
 
-def _contoh_data(wilayah: str, var_id, kunci: str, ambil_fn) -> dict:
-    """Ringkas angka satu variabel: berapa angka, tahun yang tersedia, dan satu contoh terbaru."""
-    d, g = minta(f"list/model/data/lang/ind/domain/{wilayah}/var/{var_id}", kunci, ambil_fn)
-    if g:
-        return {"bisa_diambil": False, "galat": g}
+def _label(daftar_label) -> list[tuple[str, str]]:
+    return [(str(x.get("val")), str(x.get("label") or "").strip()) for x in (daftar_label or []) if isinstance(x, dict)]
+
+
+def uraikan_data(d: dict, var_id) -> list[dict]:
+    """Ubah datacontent BPS menjadi baris berlabel. Kunci datacontent BPS = kode vervar + var + turvar + tahun + turtahun."""
     isi = d.get("datacontent") or {}
-    tahun = [str(t.get("label")) for t in (d.get("tahun") or []) if isinstance(t, dict) and t.get("label")]
-    if not isi:
-        return {"bisa_diambil": False, "galat": "variabel ada, tetapi angkanya kosong", "tahun": tahun[-5:]}
-    kunci_terakhir = sorted(isi)[-1]
-    return {"bisa_diambil": True, "jumlah_angka": len(isi), "tahun": tahun[-5:], "contoh_kode": kunci_terakhir,
-            "contoh_nilai": isi[kunci_terakhir]}
+    if not isinstance(isi, dict):
+        return []
+    vervar = _label(d.get("vervar")) or [("", "")]
+    turvar = _label(d.get("turvar")) or [("0", "")]
+    tahun = _label(d.get("tahun"))
+    turtahun = _label(d.get("turtahun")) or [("0", "")]
+    baris = []
+    for (v, vl) in vervar:
+        for (tv, tvl) in turvar:
+            for (th, thl) in tahun:
+                for (tt, ttl) in turtahun:
+                    k = f"{v}{var_id}{tv}{th}{tt}"
+                    if k in isi and isi[k] not in (None, ""):
+                        baris.append({"rincian": vl, "turunan": tvl, "tahun": thl, "periode": ttl,
+                                      "urut": (int(th) if th.isdigit() else 0, int(tt) if tt.isdigit() else 0), "nilai": isi[k]})
+    return baris
+
+
+def _contoh_data(wilayah: str, var_id, kunci: str, ambil_fn) -> dict:
+    """Tarik angka dua tahun terakhir satu variabel (BPS mewajibkan parameter tahun) dan tampilkan contoh terbarunya."""
+    d, g = minta(f"list/model/th/lang/ind/domain/{wilayah}/var/{var_id}", kunci, ambil_fn)
+    if g:
+        return {"bisa_diambil": False, "galat": f"daftar tahun: {g}"}
+    _, th = daftar(d)
+    th = sorted((x for x in th if isinstance(x, dict) and str(x.get("th_id", "")).isdigit()), key=lambda x: int(x["th_id"]))
+    if not th:
+        return {"bisa_diambil": False, "galat": "BPS tidak mencantumkan tahun untuk variabel ini"}
+    pilih = th[-2:]
+    d, g = minta(f"list/model/data/lang/ind/domain/{wilayah}/var/{var_id}/th/{';'.join(str(x['th_id']) for x in pilih)}",
+                 kunci, ambil_fn)
+    if g:
+        return {"bisa_diambil": False, "galat": g, "tahun": [str(x.get("th")) for x in pilih]}
+    baris = uraikan_data(d, var_id)
+    if not baris:
+        return {"bisa_diambil": False, "galat": "variabel ada, tetapi angkanya kosong", "tahun": [str(x.get("th")) for x in pilih]}
+    terbaru = max(b["urut"] for b in baris)
+    contoh = [{k: b[k] for k in ("rincian", "turunan", "tahun", "periode", "nilai")} for b in baris if b["urut"] == terbaru][:8]
+    return {"bisa_diambil": True, "jumlah_angka": len(baris), "tahun": [str(x.get("th")) for x in pilih],
+            "terbaru": f"{contoh[0]['periode']} {contoh[0]['tahun']}".strip(), "contoh": contoh}
 
 
 def cek(kunci: str, ambil_fn=ambil, tidur=time.sleep, sekarang=None) -> dict:

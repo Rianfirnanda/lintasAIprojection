@@ -28,14 +28,21 @@ def bps_tiruan(url, *_):
         if "/page/1/" in url:
             return _jawab(200, _daftar([{"var_id": 7, "title": "Harga Eceran Beras", "sub_name": "Harga", "unit": "Rp/kg"}], 1, 2))
         return _jawab(200, _daftar([{"var_id": 8, "title": "Harga Produsen Gabah", "sub_name": "Harga", "unit": "Rp/kg"},
-                                    {"var_id": 7, "title": "Harga Eceran Beras", "sub_name": "Harga", "unit": "Rp/kg"}], 2, 2))
+                                    {"var_id": 7, "title": "Harga Eceran Beras", "sub_name": "Harga", "unit": "Rp/kg"},
+                                    {"var_id": 9, "title": "PDRB Atas Dasar Harga Berlaku", "sub_name": "PDRB"}], 2, 2))
     if "/model/var/" in url and "/domain/1700/" in url and "/keyword/beras/" in url:  # kata kunci diabaikan BPS
         return _jawab(200, _daftar([{"var_id": 90, "title": "Jumlah Penduduk", "sub_name": "Kependudukan"}]))
     if "/model/statictable/" in url and "/domain/1709/" in url and "/keyword/harga/" in url:
         return _jawab(200, _daftar([{"table_id": 55, "title": "Rata-rata Harga Eceran Bahan Pokok", "updt_date": "2026-03-01"}]))
+    if "/model/th/" in url and "/var/1/" in url:
+        return _jawab(200, _daftar([{"th_id": 124, "th": "2024"}, {"th_id": 125, "th": "2025"}, {"th_id": 126, "th": "2026"}]))
     if "/model/data/" in url and "/var/1/" in url:
-        return _jawab(200, {"status": "OK", "data-availability": "available", "tahun": [{"val": 125, "label": "2025"}],
-                            "datacontent": {"177110125101": 0.21, "177110125102": 0.35}})
+        assert "/th/125;126/" in url  # dua tahun terakhir
+        isi = {f"1771{1}0{th}{bl}": nilai for th, bl, nilai in ((125, 9, 0.1), (126, 8, 0.35), (126, 9, 0.21))}
+        return _jawab(200, {"status": "OK", "data-availability": "available",
+                            "vervar": [{"val": 1771, "label": "Kota Bengkulu"}], "turvar": [{"val": 0, "label": "Tidak Ada"}],
+                            "tahun": [{"val": 125, "label": "2025"}, {"val": 126, "label": "2026"}],
+                            "turtahun": [{"val": 8, "label": "Agustus"}, {"val": 9, "label": "September"}], "datacontent": isi})
     if "/model/data/" in url:
         return _jawab(200, {"status": "OK", "data-availability": "list-not-available", "datacontent": {}})
     return _jawab(200, {"status": "OK", "data-availability": "list-not-available", "data": ""})
@@ -46,10 +53,12 @@ def test_kunci_sah_memetakan_variabel_tabel_dan_contoh_angka():
     assert h["kunci_sah"] is True and h["kunci"] == "ada"
     assert {d["id"] for d in h["domain_bengkulu"]} == {"1709", "1771"}
     assert sorted(v["var_id"] for v in h["variabel"] if v["wilayah"] == "1709") == [7, 8]  # dua halaman, tanpa ganda
-    assert all(v["var_id"] != 90 for v in h["variabel"])  # judul tanpa kata yang dicari tidak ikut
+    assert all(v["var_id"] not in (90, 9) for v in h["variabel"])  # judul tanpa kata yang dicari dan PDRB tidak ikut
     assert h["wilayah"]["1709"] == {"nama": "Kabupaten Bengkulu Tengah", "variabel": 2, "tabel_statis": 1}
     assert h["contoh_data"][0]["judul"] == "Inflasi Bulanan Kota Bengkulu"  # inflasi diambil contohnya lebih dulu
-    assert h["contoh_data"][0]["bisa_diambil"] and h["contoh_data"][0]["jumlah_angka"] == 2
+    c = h["contoh_data"][0]
+    assert c["bisa_diambil"] and c["jumlah_angka"] == 3 and c["terbaru"] == "September 2026"
+    assert c["contoh"] == [{"rincian": "Kota Bengkulu", "turunan": "Tidak Ada", "tahun": "2026", "periode": "September", "nilai": 0.21}]
     assert any(not c["bisa_diambil"] for c in h["contoh_data"])
     assert "Kunci diterima BPS" in h["pesan"] and "3 variabel dan 1 tabel" in h["pesan"]
     assert KUNCI not in json.dumps(h)

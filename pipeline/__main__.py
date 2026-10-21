@@ -151,7 +151,9 @@ def _cek_bps(akar: Path) -> int:
     for kode, w in hasil["wilayah"].items():
         print(f"  {w['nama']} ({kode}): {w['variabel']} variabel, {w['tabel_statis']} tabel statis")
     for c in hasil["contoh_data"]:
-        rinci = f"{c.get('jumlah_angka')} angka, tahun {', '.join(c.get('tahun') or [])}" if c.get("bisa_diambil") else c.get("galat")
+        rinci = (f"{c.get('jumlah_angka')} angka, terbaru {c.get('terbaru')}: "
+                 + "; ".join(f"{x['rincian'] or x['turunan']} {x['nilai']}" for x in c.get("contoh", [])[:4])
+                 if c.get("bisa_diambil") else c.get("galat"))
         print(konektor_bps.samarkan(f"  contoh [{c['wilayah']}] {c['judul']}: {rinci}", kunci))
     for g in hasil["galat"][:10]:
         print(konektor_bps.samarkan(f"  galat: {g}", kunci))
