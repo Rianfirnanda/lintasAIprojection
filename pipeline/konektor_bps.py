@@ -300,16 +300,24 @@ def _satu_seri(wilayah: str, var_id: int, kunci: str, ambil_fn, tidur) -> tuple[
     th = _tahun_terakhir(d, TAHUN_SERI)
     if not th:
         return None, [], "BPS tidak mencantumkan tahun untuk variabel ini", False
-    tidur(JEDA)
-    d, g = minta(f"list/model/data/lang/ind/domain/{wilayah}/var/{var_id}/th/{';'.join(str(x['th_id']) for x in th)}",
-                 kunci, ambil_fn)
-    if g:
-        return None, [], g, True
-    data = baris_bulanan(uraikan_data(d, var_id))
+    # BPS membatasi parameter tahun paling banyak 2 tahun per permintaan. Pasangan tahun terbaru diminta lebih dulu;
+    # bila tahun yang lebih lama gagal, angka terbaru tetap dipakai (trennya saja yang lebih pendek).
+    info, data = {}, []
+    for j in range(len(th), 0, -2):
+        bagian = th[max(0, j - 2):j]
+        tidur(JEDA)
+        d, g = minta(f"list/model/data/lang/ind/domain/{wilayah}/var/{var_id}/th/{';'.join(str(x['th_id']) for x in bagian)}",
+                     kunci, ambil_fn)
+        if g:
+            if data:
+                break
+            return None, [], g, True
+        data += baris_bulanan(uraikan_data(d, var_id))
+        v = d.get("var")
+        info = info or (v[0] if isinstance(v, list) and v and isinstance(v[0], dict) else {})
     if not data:
         return None, [], "angka bulanan kosong", False
-    v = d.get("var")
-    return (v[0] if isinstance(v, list) and v and isinstance(v[0], dict) else {}), data, None, False
+    return info, sorted(data, key=lambda x: (x["periode"], x["kategori"])), None, False
 
 
 def _angka_setelah(t: str, penanda: str) -> float | None:

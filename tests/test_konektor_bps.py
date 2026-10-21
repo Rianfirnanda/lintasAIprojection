@@ -135,16 +135,21 @@ def test_status_finder_bps_mengikuti_hasil_cek(tmp_path, monkeypatch):
 BULAN_UJI = {4: "April", 5: "Mei"}
 
 
-def _data_bulanan(var_id, rincian, nilai_per_bulan, th=(125, "2025"), th2=(126, "2026"), turvar=("0", "Tidak ada")):
-    """Jawaban data BPS bentuk baru: rincian di vervar, bulan di turtahun. nilai_per_bulan: {(th_id, bulan): {rincian: nilai}}."""
+TAHUN_UJI = {127: "2024", 125: "2025", 126: "2026"}
+
+
+def _data_bulanan(var_id, rincian, nilai_per_bulan, th_diminta, turvar=("0", "Tidak ada")):
+    """Jawaban data BPS bentuk baru: rincian di vervar, bulan di turtahun. nilai_per_bulan: {(th_id, bulan): {rincian: nilai}}.
+    Hanya tahun yang diminta yang dikembalikan, seperti BPS."""
     isi = {}
     for (th_id, bl), per in nilai_per_bulan.items():
         for kode, nilai in per.items():
-            isi[f"{kode}{var_id}{turvar[0]}{th_id}{bl}"] = nilai
+            if th_id in th_diminta:
+                isi[f"{kode}{var_id}{turvar[0]}{th_id}{bl}"] = nilai
     return {"status": "OK", "data-availability": "available",
             "var": [{"val": var_id, "label": f"Judul BPS {var_id}", "unit": "Persen"}],
             "vervar": [{"val": k, "label": v} for k, v in rincian.items()], "turvar": [{"val": turvar[0], "label": turvar[1]}],
-            "tahun": [{"val": th[0], "label": th[1]}, {"val": th2[0], "label": th2[1]}],
+            "tahun": [{"val": t, "label": TAHUN_UJI[t]} for t in th_diminta],
             "turtahun": [{"val": b, "label": n} for b, n in BULAN_UJI.items()] + [{"val": 13, "label": "Tahunan"}],
             "datacontent": isi}
 
@@ -178,15 +183,21 @@ def bps_seri_tiruan(url, *_):
         # th_id 127 berlabel 2024: urutan tahun dari labelnya, bukan dari nomor th_id
         return _jawab(200, _daftar([{"th_id": 127, "th": "2024"}, {"th_id": 125, "th": "2025"}, {"th_id": 126, "th": "2026"}]))
     if "/model/data/" in url:
-        assert "/th/127;125;126/" in url
+        th_diminta = [int(x) for x in url.split("/th/")[1].split("/")[0].split(";")]
+        assert th_diminta in ([125, 126], [127])  # paling banyak dua tahun per permintaan, yang terbaru lebih dulu
+        TH_DIMINTA.append(th_diminta)
         var_id = int(url.split("/var/")[1].split("/")[0])
         if var_id in NILAI_SERI:
-            return _jawab(200, _data_bulanan(var_id, KELOMPOK, NILAI_SERI[var_id]))
+            return _jawab(200, _data_bulanan(var_id, KELOMPOK, NILAI_SERI[var_id], th_diminta))
         if var_id in (559, 560):
+            if th_diminta == [127]:
+                return _jawab(503, b"sibuk")  # tahun lama gagal: angka terbaru tetap dipakai
             wil = {1771: "Kota Bengkulu", 1706: "Mukomuko", 1700: "Provinsi Bengkulu"}
             n = {(126, 5): {1771: 0.9 if var_id == 559 else 3.2, 1706: 0.5 if var_id == 559 else 2.1, 1700: 0.86 if var_id == 559 else 3.01}}
-            return _jawab(200, _data_bulanan(var_id, wil, n))
+            return _jawab(200, _data_bulanan(var_id, wil, n, th_diminta))
         if var_id == 421:  # bentuk lama: bulan di vervar, kategori di turvar
+            if th_diminta == [127]:
+                return _jawab(200, {"status": "OK", "data-availability": "list-not-available", "datacontent": {}})
             return _jawab(200, {"status": "OK", "var": [{"val": 421, "label": "It", "unit": ""}],
                                 "vervar": [{"val": 5, "label": "Mei"}], "turvar": [{"val": 7, "label": "Gabungan"}],
                                 "tahun": [{"val": 126, "label": "2026"}], "turtahun": [{"val": 0, "label": "Tahunan"}],
@@ -194,8 +205,13 @@ def bps_seri_tiruan(url, *_):
     raise AssertionError(url)
 
 
+TH_DIMINTA: list = []
+
+
 def test_ambil_seri_inflasi_dan_ringkasannya_untuk_situs():
+    TH_DIMINTA.clear()
     h = bps.ambil_seri(KUNCI, ambil_fn=bps_seri_tiruan, tidur=lambda _: None)
+    assert TH_DIMINTA[:2] == [[125, 126], [127]]
     assert KUNCI not in json.dumps(h)
     assert set(h["seri"]) == {"mtm", "ytd", "yoy", "mtm_wilayah", "yoy_wilayah", "it"}
     assert any("var 422" in g and "tahun" in g for g in h["galat"])
