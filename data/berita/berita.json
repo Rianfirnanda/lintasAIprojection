@@ -1,6 +1,23 @@
 {
- "diperbarui": "2026-10-20T07:10:58+07:00",
+ "diperbarui": "2026-10-21T07:13:17+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-21",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Di Kabupaten Bengkulu Tengah, harga ayam potong tercatat mengalami kenaikan dalam sepekan terakhir hingga mencapai Rp45 ribu per kilogram. Sementara itu di wilayah tetangga, Kota Bengkulu, kemarau diduga memicu kenaikan harga beras, ayam, dan cabai, yang direspons pemda setempat dengan rencana pasar murah di 67 kelurahan untuk menjaga pasokan bahan pokok. Selain itu, terdapat informasi pelaksanaan pasar murah di luar daerah yaitu di wilayah Riau. Dengan kondisi tersebut, TPID perlu memantau tren harga ayam potong di Bengkulu Tengah serta mengantisipasi potensi kenaikan harga beras dan cabai.",
+   "poin": [
+    "Harga ayam potong di Kabupaten Bengkulu Tengah naik dalam sepekan terakhir hingga mencapai Rp45 ribu per kilogram.",
+    "Di Kota Bengkulu, musim kemarau diduga memicu kenaikan harga beras serta kenaikan harga pangan lainnya seperti ayam dan cabai.",
+    "Pemerintah Kota Bengkulu menganggarkan Rp200 juta untuk menggelar pasar murah keliling di 67 kelurahan guna menjaga ketersediaan pasokan beras, cabai, minyak goreng, dan daging.",
+    "TPID Riau bersama mitra menyelenggarakan operasi pasar murah di 5 titik wilayah Pekanbaru dan Kampa."
+   ],
+   "perlu_dipantau": [
+    "Kenaikan harga ayam potong di Kabupaten Bengkulu Tengah yang telah mencapai Rp45 ribu per kilogram.",
+    "Potensi imbas kenaikan harga beras dan cabai dari wilayah Kota Bengkulu ke Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-20",
    "metode": "ai",
@@ -171,6 +188,312 @@
  ],
  "berita": [
   {
+   "id": "5600ce01b76e",
+   "url": "https://bengkulu.antaranews.com/amp/berita/482969/pemkot-bengkulu-anggarkan-rp200-juta-untuk-pasar-murah-di-67-titik",
+   "judul": "Pemkot Bengkulu anggarkan Rp200 juta untuk pasar murah di 67 titik",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-20",
+   "diakses": "2026-10-21T07:13:17+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 8,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 3023,
+   "sidik_sha256": "9cc50f9fb6b82faf268ff89fc0b10a8d04918b7abf926b45e2517c1f126982ce",
+   "kutipan": "Pemerintah Kota (Pemkot) Bengkulu, Provinsi Bengkulu, menganggarkan dana sebesar Rp200 juta dari anggaran pendapatan dan belanja daerah (APBD) perubahan",
+   "ringkasan": "Pemerintah Kota Bengkulu menganggarkan dana Rp200 juta melalui APBD Perubahan untuk menggelar operasi pasar murah keliling di 67 kelurahan menjelang Natal dan Tahun Baru. Pasar murah ini akan menjual komoditas pangan seperti beras, cabai, minyak goreng, dan daging di bawah harga pasar. Kegiatan ini bertujuan menjaga ketersediaan pasokan dan mencegah lonjakan harga bahan pokok di akhir tahun.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "272e555ff234",
+   "url": "https://www.teropongpublik.co.id/pemkot-bengkulu-anggarkan-rp200-juta-untuk-pasar-murah-akhir-tahun",
+   "judul": "Pemkot Bengkulu Anggarkan Rp200 Juta untuk Pasar Murah Akhir Tahun | Teropong Publik",
+   "sumber": "teropongpublik.co.id",
+   "tanggal": "2026-10-20",
+   "diakses": "2026-10-21T07:13:17+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 8,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Ikan",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "pasokan",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 15187,
+   "sidik_sha256": "b9d1bcbcef3ba20662e82fbde1b378cc9f899d0b13fc119210c47b25eb23a3fe",
+   "kutipan": "Dalam pelaksanaannya, pasar murah akan menghadirkan berbagai kebutuhan pangan sehari-hari. Komoditas yang disiapkan antara lain beras program Stabilisasi Pasokan dan Harga Pangan (SPHP), minyak goreng, telur ayam, gula p",
+   "ringkasan": "Pemerintah Kota Bengkulu menyiapkan anggaran Rp200 juta dari APBD Perubahan untuk melaksanakan operasi pasar murah di 67 kelurahan menjelang Natal 2026 dan Tahun Baru 2027. Program ini dilakukan untuk menjaga stabilitas harga kebutuhan pokok serta melindungi daya beli masyarakat.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "0f91098d9405",
+   "url": "https://www.isbcenter.com/tpid-riau-dan-pt-riau-pangan-bertuah-gelar-operasi-pasar-murah-di-5-titik-pekanbaru-dan-kampa",
+   "judul": "TPID Riau dan PT Riau Pangan Bertuah Gelar Operasi Pasar Murah di 5 Titik Pekanbaru dan Kampa - ISBCenter.com",
+   "sumber": "isbcenter.com",
+   "tanggal": "2026-10-19",
+   "diakses": "2026-10-21T07:13:17+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Garam",
+    "Garam Beryodium"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 11917,
+   "sidik_sha256": "2ff46ad998027784e48c5e969f684794081e345a208004583bcc2a7e21a0d6f3",
+   "kutipan": "Riau||ISBCenter.com – Pemerintah Provinsi Riau melalui Tim Pengendalian Inflasi Daerah (TPID) bersama BUMD PT Riau Pangan Bertuah terus menjaga pasokan bahan kebutuhan pokok agar tetap tersedia dan terjangkau bagi masyar",
+   "ringkasan": "TPID Riau bersama PT Riau Pangan Bertuah mengadakan kegiatan operasi pasar murah di lima titik wilayah Pekanbaru dan Kampa.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 120000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "* [Cabai Merah Tembus Rp120 Ribu per Kg, TPID Pekanbaru Sidak Pasar Induk AKAP Tengah Malam](https://www.isbcenter.com/cabai-merah-tembus-rp120-ribu-per-kg-tpid-pekanbaru-sidak-pasar-induk-akap-tengah-malam/ \"Permalink ke: Cabai Merah Tembus Rp120 Ribu per Kg, TPID Pekanbaru Sidak Pasar Induk AKAP T",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah di pasar wilayah Pekanbaru luar Provinsi Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-21"
+     }
+    },
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": null,
+     "nilai": 18000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "> “Untuk gula pasir dibandrol dengan harga Rp18rb per kg, minyak goreng kemasan minyakita Rp15.500 per bungkus,” ungkapnya.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga penjualan gula pasir pada kegiatan operasi pasar murah di Riau.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-21"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "039790dd096f",
+   "url": "https://bengkulu.antaranews.com/berita/482285/pedagang-sebut-kemarau-diduga-pengaruhi-kenaikan-harga-beras-di-bengkulu",
+   "judul": "Pedagang sebut kemarau diduga pengaruhi kenaikan harga beras di Bengkulu - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-18",
+   "diakses": "2026-10-21T07:13:17+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "cuaca"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 7897,
+   "sidik_sha256": "359e4c54a46d09a9f56293e9926f2ef9bf0253bd08d59e2e2e03eebd2aa31d77",
+   "kutipan": "Untuk beras program Stabilisasi Pasokan dan Harga Pangan (SPHP), Yobi menyebut harga di tingkat pedagang berkisar Rp60.000 hingga Rp65.000 per kemasan lima kilogram. Kenaikan harga turut mempengaruhi pola belanja masyara",
+   "ringkasan": "Pedagang di Kota Bengkulu menduga musim kemarau menjadi pemicu kenaikan harga beras di pasaran. Kenaikan harga tersebut juga dilaporkan terjadi pada komoditas pangan lainnya seperti ayam dan cabai.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "60b465f7de65",
+   "url": "https://rri.co.id/bengkulu/regional/2820420/harga-ayam-potong-di-bengkulu-tengah-naik-jadi-rp45-ribu-per-kilogram",
+   "judul": "Harga Ayam Potong di Bengkulu tengah Naik Jadi Rp45 Ribu per Kilogram - RRI.co.id",
+   "sumber": "rri.co.id",
+   "tanggal": "2026-10-18",
+   "diakses": "2026-10-21T07:13:17+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Daging Ayam"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 4204,
+   "sidik_sha256": "263e6c2abb50e2515e3fd9f813b11963043278716664a22e0e555ac96e68033d",
+   "kutipan": "RRI.CO.ID, Bengkulu - Harga ayam potong di Kabupaten Bengkulu Tengah mengalami kenaikan dalam sepekan terakhir, dari Rp38 ribu menjadi Rp45 ribu per kilogram. Kenaikan ini menambah beban belanja masyarakat di tengah meni",
+   "ringkasan": "Harga ayam potong di Kabupaten Bengkulu Tengah mengalami kenaikan dalam sepekan terakhir. Kenaikan tersebut menyebabkan harga ayam potong mencapai Rp45 ribu per kilogram.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": null,
+     "nilai": 45000,
+     "satuan": "kg",
+     "peran_wilayah": "target",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "# Harga Ayam Potong di Bengkulu tengah Naik Jadi Rp45 Ribu per Kilogram",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "bengkulu tengah",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar ayam potong terkini di Kabupaten Bengkulu Tengah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-21"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": null,
+     "nilai": 40000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Pedagang berharap harga ayam potong dapat kembali turun ke kisaran Rp40 ribu per kilogram agar lebih terjangkau bagi konsumen.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "bengkulu tengah",
+      "komoditas_cocok": true,
+      "alasan": "Merupakan harga harapan pedagang bukan harga transaksi saat ini.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-21"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "b5ffdfba04b0",
    "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPQzhvZ2tmMjg1SF9GMW13b21FQUNGZnpMazNVLW1WaHM5SEZRVl9lSjhBOHIxd18xSUdyQjhvbGFadm9QeEhfeThiRXQyRDhlVDBZNGt5OENLbFZYSUFvS1JId29xaTd1NkIxdDFxUVJZdUxseHBucGdVQl9pWUdtdlk5XzdpSm9EY3d0aWpkaw?oc=5",
    "judul": "Harga Cabai Merah di Bengkulu Masih Tinggi",
@@ -201,7 +524,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "6bf247a9e51e",
@@ -2618,15 +2941,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 171,
-  "setelah_duplikat": 146,
-  "berita_baru": 1,
-  "total_arsip": 31,
-  "kandidat_harga_baru": 0,
-  "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 1,
-  "penyedia_ai": "",
-  "model_ai": ""
+  "hasil_pencarian": 197,
+  "setelah_duplikat": 155,
+  "berita_baru": 5,
+  "total_arsip": 36,
+  "kandidat_harga_baru": 4,
+  "harga_dinilai_ai": 4,
+  "isi_tidak_terbaca": 0,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
