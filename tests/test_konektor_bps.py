@@ -157,8 +157,21 @@ NILAI_SERI = {
 }
 
 
+RILIS = [
+    {"brs_id": 1, "title": "Inflasi Year-on-Year (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen",
+     "abstract": "<p>Juni 2026 terjadi inflasi month-to-month (m-to-m) sebesar 0,45 persen dan year-on-year (y-on-y) sebesar 3,96 persen.</p>",
+     "rl_date": "2026-07-01", "pdf": "https://bengkulu.bps.go.id/id/pressrelease/download.html?nrbvfeve=MTAxMA"},
+    {"brs_id": 2, "title": "Inflasi Year-on-Year (y-on-y) Provinsi Bengkulu Mei 2026 sebesar 3,01 persen", "abstract": "",
+     "rl_date": "2026-06-02", "pdf": "http://contoh.test/palsu.pdf"},
+    {"brs_id": 3, "title": "Nilai Tukar Petani (NTP) Provinsi Bengkulu Juni 2026 sebesar 150,1", "rl_date": "2026-07-01"},
+]
+
+
 def bps_seri_tiruan(url, *_):
     assert f"/key/{KUNCI}/" in url
+    if "/model/pressrelease/" in url:
+        assert "/domain/1700/keyword/inflasi/" in url
+        return _jawab(200, _daftar(RILIS))
     if "/model/th/" in url:
         if "/var/422/" in url:
             return _jawab(200, _daftar([]))  # variabel tanpa daftar tahun
@@ -192,6 +205,11 @@ def test_ambil_seri_inflasi_dan_ringkasannya_untuk_situs():
     assert all(x["periode"][5:] in ("04", "05") for x in yoy["data"])  # baris "Tahunan" tidak ikut
     assert h["seri"]["it"]["data"] == [{"periode": "2026-05", "kategori": "Gabungan", "nilai": 150.0}]
     assert "6 dari 7 deret" in h["pesan"] and "2026-05" in h["pesan"]
+    assert [r["periode"] for r in h["rilis"]] == ["2026-06", "2026-05"]
+    assert h["rilis"][0] | {} == {"periode": "2026-06", "yoy": 3.96, "mtm": 0.45, "judul": RILIS[0]["title"],
+                                  "tanggal": "2026-07-01", "url": RILIS[0]["pdf"]}
+    assert h["rilis"][1]["url"] is None and h["rilis"][1]["mtm"] is None  # tautan di luar bps.go.id tidak dipakai
+    assert h["rilis_dilewati"] == [RILIS[2]["title"]]
 
     r = bps.ringkas_untuk_situs(h)
     assert r["periode"] == "2026-05" and r["wilayah"] == "Provinsi Bengkulu"

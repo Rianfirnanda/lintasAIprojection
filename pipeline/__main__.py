@@ -187,6 +187,11 @@ def _ambil_bps(akar: Path, paksa: bool = False, jeda_jam: float = 20) -> int:
     for kode, s in hasil["seri"].items():
         kategori = list(dict.fromkeys(x["kategori"] for x in s["data"]))
         print(f"  {kode}: {s['judul']}, {len(s['data'])} angka, terbaru {s['terbaru']}; rincian: {'; '.join(kategori[:12])}")
+    for r in hasil.get("rilis", []):
+        print(f"  rilis {r['periode']} (terbit {r.get('tanggal') or '-'}): y-on-y {r['yoy']}"
+              + (f", m-to-m {r['mtm']}" if r.get("mtm") is not None else ""))
+    for j in hasil.get("rilis_dilewati", []):
+        print(f"  rilis tidak terbaca: {j}")
     for g in hasil["galat"]:
         print(konektor_bps.samarkan(f"  galat: {g}", kunci))
     if not hasil["seri"]:

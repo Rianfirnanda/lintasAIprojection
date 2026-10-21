@@ -12,7 +12,9 @@ memuat harga, inflasi, atau nama komoditas pangan untuk Bengkulu Tengah, Provins
 
 from __future__ import annotations
 
+import html
 import json
+import re
 import time
 import urllib.parse
 from datetime import datetime, timezone
@@ -310,6 +312,56 @@ def _satu_seri(wilayah: str, var_id: int, kunci: str, ambil_fn, tidur) -> tuple[
     return (v[0] if isinstance(v, list) and v and isinstance(v[0], dict) else {}), data, None, False
 
 
+def _angka_setelah(t: str, penanda: str) -> float | None:
+    """Angka "sebesar X persen" pertama sesudah penanda terakhir (mis. y-on-y), supaya angka bulanan di kalimat yang
+    sama tidak terbaca sebagai angka tahunan."""
+    letak = [m.end() for m in re.finditer(penanda, t)]
+    m = re.search(r"sebesar\s+(-?\d+(?:[.,]\d+)?)\s*persen", t[letak[-1]:]) if letak else None
+    return float(m.group(1).replace(",", ".")) if m else None
+
+
+def baca_rilis(judul: str, abstrak: str = "") -> dict | None:
+    """Angka inflasi Provinsi Bengkulu dari judul (dan ringkasan) Berita Resmi Statistik, mis. "Inflasi Year-on-Year
+    (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen". Rilis lain (NTP, kota saja, ekspor) dilewati."""
+    t = " ".join(str(judul or "").lower().split())
+    a = " ".join(re.sub(r"<[^>]+>", " ", html.unescape(str(abstrak or ""))).lower().split())
+    tahunan = r"y-on-y|year[- ]on[- ]year"
+    if "provinsi bengkulu" not in t or not re.search(tahunan, t):
+        return None
+    b = re.search(rf"\b({'|'.join(BULAN)})\s+(\d{{4}})\b", t)
+    yoy = _angka_setelah(t, tahunan)
+    if not b or yoy is None:
+        return None
+    deflasi = "deflasi" in t and "inflasi" not in t.replace("deflasi", "")
+    mtm = _angka_setelah(a, r"m-to-m|month[- ]to[- ]month")
+    return {"periode": f"{b.group(2)}-{BULAN.index(b.group(1)) + 1:02d}", "yoy": -abs(yoy) if deflasi else yoy,
+            "mtm": mtm, "judul": " ".join(str(judul).split())}
+
+
+def ambil_rilis(kunci: str, ambil_fn=ambil, maks: int = 6) -> tuple[list[dict], list[str], str | None]:
+    """Berita Resmi Statistik inflasi Provinsi Bengkulu terbaru: (rilis terbaca, judul yang dilewati, galat). Rilis ini
+    terbit awal bulan, biasanya beberapa bulan lebih cepat daripada tabel dinamis Web API, jadi angka utamanya dipakai
+    sebagai angka resmi terbaru."""
+    d, g = minta("list/model/pressrelease/lang/ind/domain/1700/keyword/inflasi/page/1", kunci, ambil_fn)
+    if g:
+        return [], [], g
+    hasil, lewat = {}, []
+    for x in daftar(d)[1]:
+        if not isinstance(x, dict):
+            continue
+        r = baca_rilis(x.get("title"), x.get("abstract"))
+        if not r:
+            lewat.append(" ".join(str(x.get("title") or "").split())[:200])
+            continue
+        if r["periode"] in hasil:
+            continue
+        url = str(x.get("pdf") or "")
+        r["tanggal"] = str(x.get("rl_date") or "")[:10] or None
+        r["url"] = url if re.match(r"^https://([a-z0-9-]+\.)*bps\.go\.id/", url) else None
+        hasil[r["periode"]] = r
+    return [hasil[p] for p in sorted(hasil, reverse=True)[:maks]], lewat[:10], None
+
+
 def ambil_seri(kunci: str, ambil_fn=ambil, tidur=time.sleep, sekarang=None) -> dict:
     """Tarik deret inflasi Provinsi Bengkulu (SERI) untuk tiga tahun terakhir. Tidak pernah melempar galat dan tidak
     memuat kunci. Bila permintaan pertama sudah ditolak (kunci salah, diblokir), deret lain tidak dicoba."""
@@ -332,6 +384,12 @@ def ambil_seri(kunci: str, ambil_fn=ambil, tidur=time.sleep, sekarang=None) -> d
                                "judul": judul, "judul_bps": str(info.get("label") or "").strip() or None,
                                "satuan": str(info.get("unit") or "").strip() or None, "diambil": waktu,
                                "terbaru": data[-1]["periode"], "data": data}
+    if hasil["seri"]:
+        tidur(JEDA)
+        rilis, lewat, g = ambil_rilis(kunci, ambil_fn)
+        if g:
+            hasil["galat"].append(samarkan(f"Berita Resmi Statistik inflasi: {g}", kunci))
+        hasil["rilis"], hasil["rilis_dilewati"] = rilis, lewat
     n = len(hasil["seri"])
     terbaru = max((s["terbaru"] for s in hasil["seri"].values()), default=None)
     hasil["pesan"] = (f"{n} dari {len(SERI)} deret BPS berhasil diambil" + (f", data terbaru {terbaru}." if terbaru else ".")
@@ -343,7 +401,8 @@ def gabung_seri(lama: dict | None, baru: dict) -> dict:
     """Deret yang gagal diambil kali ini tetap memakai hasil sebelumnya (dengan tanggal ambilnya sendiri), supaya
     dashboard tidak kosong hanya karena satu permintaan gagal."""
     seri = {**((lama or {}).get("seri") or {}), **baru.get("seri", {})}
-    return {**baru, "seri": {k: seri[k] for k, *_ in SERI if k in seri}}
+    return {**baru, "seri": {k: seri[k] for k, *_ in SERI if k in seri},
+            "rilis": baru.get("rilis") or (lama or {}).get("rilis") or []}
 
 
 def ringkas_untuk_situs(d: dict | None, bulan_tren: int = 25) -> dict | None:
