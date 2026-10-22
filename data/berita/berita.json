@@ -1,6 +1,20 @@
 {
- "diperbarui": "2026-10-21T13:36:09+07:00",
+ "diperbarui": "2026-10-22T07:09:51+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-22",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Berita yang tersedia hanya mencakup wilayah Kota Bengkulu terkait anggaran pasar murah dan wilayah Bengkulu Utara terkait Gerakan Pangan Murah.",
+   "poin": [
+    "Pemerintah Kota Bengkulu menganggarkan Rp200 juta untuk pasar murah di 67 kelurahan.",
+    "Bengkulu Utara mengadakan Gerakan Pangan Murah dengan beras SPHP dijual Rp58 ribu per 5 kilogram."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga dan pasokan pangan khusus di wilayah Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 1
+  },
   {
    "tanggal": "2026-10-21",
    "metode": "ai",
@@ -186,6 +200,91 @@
  ],
  "berita": [
   {
+   "id": "fb89df8124e5",
+   "url": "https://rri.co.id/bengkulu/regional/2828891/pemkot-bengkulu-anggarkan-rp200-juta-untuk-pasar-murah",
+   "judul": "Pemkot Bengkulu Anggarkan Rp200 Juta untuk Pasar Murah - RRI.co.id",
+   "sumber": "rri.co.id",
+   "tanggal": "2026-10-21",
+   "diakses": "2026-10-22T07:09:51+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 5255,
+   "sidik_sha256": "307f7bff323a409ba9adef170da7b8dae98f17f5829ae650710773879b04f589",
+   "kutipan": "Sejumlah kebutuhan pokok akan disediakan dengan harga terjangkau, bahkan di bawah harga pasar. Komoditas tersebut meliputi beras, cabai, minyak goreng, bawang merah, bawang putih, gula pasir, telur ayam, daging ayam poto",
+   "ringkasan": "Pemerintah Kota Bengkulu menganggarkan dana sebesar Rp200 juta untuk mengadakan pasar murah di 67 kelurahan.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "c5e27c9efdac",
+   "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOWVNtdy1WNmZhMjVXc1U0NC1HNWU4U21KdEdWOTEzTWg5ajZPWTZkQlpDTTdQakQ2a3c0enhYZHktY2FZSlFKMnlqbExaZWFOUFNMOXlielUwT2ZtTExhVmRfWWliVkZSZC02LWtZamliclBETnV4Tm1YeGs2UTdCbHh3OWZweW53d3VHcFdVRU5lM3pZN0V3UWZVYlF6bkRfa2loaGpja2pTdzZ0YzVTWUxnQ3FYT1liWlNoSElGLVNjUV9KcEFB?oc=5",
+   "judul": "Gerakan Pangan Murah di Bengkulu Utara, Beras SPHP Dijual Rp58 Ribu per 5 Kilogram",
+   "sumber": "RRI.co.id",
+   "tanggal": "2026-10-21",
+   "diakses": "2026-10-22T07:09:51+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "turun",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "5600ce01b76e",
    "url": "https://bengkulu.antaranews.com/amp/berita/482969/pemkot-bengkulu-anggarkan-rp200-juta-untuk-pasar-murah-di-67-titik",
    "judul": "Pemkot Bengkulu anggarkan Rp200 juta untuk pasar murah di 67 titik",
@@ -323,7 +422,7 @@
    "dampak_harga": "turun",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -2979,15 +3078,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 202,
-  "setelah_duplikat": 155,
-  "berita_baru": 1,
-  "total_arsip": 37,
+  "hasil_pencarian": 211,
+  "setelah_duplikat": 172,
+  "berita_baru": 2,
+  "total_arsip": 39,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
-  "penyedia_ai": "openrouter",
-  "model_ai": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
+  "isi_tidak_terbaca": 1,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
