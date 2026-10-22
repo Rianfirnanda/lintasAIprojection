@@ -218,7 +218,8 @@ def test_halaman_pengaturan_dikunci_dan_tanpa_pihak_ketiga():
           "https://openrouter.ai", "https://api.mistral.ai"]
     assert sorted(arah["connect-src"]) == sorted(["'self'", "https://api.github.com", *firebase, *ai,
                                                   "http://127.0.0.1:8080", "http://127.0.0.1:9099"])
-    assert arah["frame-src"] == ["https://*.firebaseapp.com", "https://*.web.app"]
+    # 'self': bingkai login Firebase dari alamat situs sendiri, bila authDomain diisi domain sendiri (panduan migrasi).
+    assert arah["frame-src"] == ["'self'", "https://*.firebaseapp.com", "https://*.web.app"]
     assert arah["default-src"] == ["'self'"] and arah["object-src"] == ["'none'"] and arah["form-action"] == ["'none'"]
     assert not re.search(r"<script(?![^>]*\bsrc=)", html), "tanpa skrip inline"
     assert 'name="referrer" content="no-referrer"' in html

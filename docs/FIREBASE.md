@@ -8,8 +8,8 @@ Setelah Firebase aktif, **pekerjaan sehari-hari cukup lewat situs**. Petugas, op
 perlu membuka GitHub sama sekali (lihat [Kerja harian lewat situs](#kerja-harian-lewat-situs)). GitHub hanya dipakai
 sekali di awal untuk menyimpan kunci Firebase.
 
-Selama masa peralihan, situs tetap terbit juga ke GitHub Pages. Setelah alamat Firebase berjalan baik, GitHub Pages
-boleh dimatikan.
+Situs tetap terbit juga ke GitHub Pages sebagai cadangan. Biarkan GitHub Pages aktif, karena proses bangun memeriksanya
+lebih dulu (lihat langkah 9).
 
 ## Cara kerja akun
 
@@ -110,8 +110,11 @@ Di panel Pengaturan, tekan **Perbarui data dan dashboard sekarang**, atau tunggu
 3. Minta anggota tim masuk dengan Google. Setujui mereka di halaman **Pengguna**.
 
 ### 9. Setelah semua berjalan
-- Matikan GitHub Pages: GitHub → Settings → Pages → Source: None.
-- Repositori boleh dijadikan **private**. GitHub Actions tetap berjalan, dengan kuota gratis 2.000 menit per bulan.
+- Biarkan GitHub Pages aktif (Settings → Pages → Source: **GitHub Actions**). Proses bangun di `pipeline.yml` memeriksa
+  Pages lebih dulu, jadi bila Pages dimatikan, situs Firebase ikut tidak terbit. Pengguna cukup diberi alamat Firebase.
+- Biarkan repositori tetap **publik**. Penjaga antrean (`antrean.yml`) berjalan terus-menerus, sedangkan repositori
+  private hanya mendapat 2.000 menit GitHub Actions gratis per bulan.
+- Untuk pindah ke akun GitHub, proyek Firebase, atau domain lain, ikuti `docs/Panduan_Migrasi_Takar_Pangan.pdf`.
 
 ## Kerja harian lewat situs
 

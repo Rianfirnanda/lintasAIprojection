@@ -52,6 +52,9 @@ jobs:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Alamat situs untuk identitas pembaca berita (ikut berubah bila situs pindah alamat).
+          URL_DASHBOARD: ${{ vars.URL_DASHBOARD }}
+          FIREBASE_HOSTING_SITE: ${{ secrets.FIREBASE_HOSTING_SITE }}
         run: python -m pipeline berita
 
       - name: Simpan hasil
