@@ -17,6 +17,8 @@
   python -m pipeline firestore-jaga --menit 340 [--lanjutkan]   # penjaga antrean (antrean.yml)
   python -m pipeline firestore-lapor --hasil success|failure [--url URL]
   python -m pipeline firestore-terbit --folder site/data [--sembunyikan]   # data dashboard ke Firestore (lbp_data)
+  python -m pipeline migrasi salin-akun --lama lama.json --baru baru.json  # pindah proyek: akun, peran, jejak admin
+  python -m pipeline migrasi pengalih --situs NAMA-SITUS-LAMA              # pindah proyek: situs pengalih alamat lama
 """
 
 from __future__ import annotations
@@ -465,9 +467,21 @@ def main(argv: list[str] | None = None) -> int:
     lp.add_argument("--url", default="")
     lp.add_argument("--pesan", default="")
 
+    mg = sub.add_parser("migrasi", help="pindah ke proyek Firebase baru: salin akun pengguna, atau siapkan pengalih alamat lama")
+    mg.add_argument("tugas", choices=["salin-akun", "pengalih"])
+    mg.add_argument("--lama", type=Path, help="salin-akun: berkas kunci akun layanan proyek lama")
+    mg.add_argument("--baru", type=Path, help="salin-akun: berkas kunci akun layanan proyek baru")
+    mg.add_argument("--situs", default="", help="pengalih: nama situs Hosting lama")
+    mg.add_argument("--alamat-baru", default="", help="pengalih: alamat situs baru (bawaan: URL_DASHBOARD)")
+    mg.add_argument("--keluaran", type=Path, default=Path("build/pengalih"))
+
     a = p.parse_args(argv)
     if a.perintah.startswith("firestore-"):
         return _firestore(a)
+    if a.perintah == "migrasi":
+        from . import migrasi
+
+        return migrasi.perintah(a)
     if a.perintah == "sandi":
         data = pengguna.muat((a.akar or konfigurasi.AKAR) / "config" / "pengguna.json") or {}
         garam = data.get("garam") or "lintas-ai-bengkulu-tengah"

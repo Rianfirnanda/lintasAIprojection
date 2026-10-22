@@ -63,3 +63,5 @@ jobs:
         run: |
           pip install -q -r requirements-firebase.txt
           npm run uji:mesin
+      - name: Uji alat migrasi proyek di emulator (dua proyek, Auth dan Firestore)
+        run: npm run uji:migrasi

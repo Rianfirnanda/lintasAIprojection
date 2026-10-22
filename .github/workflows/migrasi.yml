@@ -1,0 +1,83 @@
+name: Migrasi ke proyek baru
+
+# Dipakai hanya saat sistem pindah ke proyek Firebase baru. Panduan lengkap: docs/Panduan_Migrasi_Takar_Pangan.pdf.
+# Butuh Secret sementara FIREBASE_SERVICE_ACCOUNT_LAMA (seluruh isi berkas kunci akun layanan proyek lama). Hapus Secret
+# itu setelah semua selesai.
+#   salin-akun           Akun login, peran, izin, tabel hak akses, dan jejak tindakan admin disalin ke proyek baru dengan
+#                        UID yang sama. Jalankan sebelum siapa pun masuk ke situs baru. Proyek lama hanya dibaca.
+#   alihkan-alamat-lama  Isi situs Hosting lama diganti halaman yang mengarahkan pengunjung ke alamat baru (URL_DASHBOARD),
+#                        dan aplikasi lama yang terpasang di ponsel dicabut. Jalankan setelah situs baru berjalan.
+# Log hanya berisi jumlah, tanpa nama atau email, karena repositori ini publik.
+on:
+  workflow_dispatch:
+    inputs:
+      tugas:
+        description: "Pekerjaan"
+        type: choice
+        options: [salin-akun, alihkan-alamat-lama]
+        default: salin-akun
+      situs_lama:
+        description: "Khusus alihkan-alamat-lama: nama situs Hosting lama, misalnya lintas-benteng-proyeksi"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: migrasi
+  cancel-in-progress: false
+
+jobs:
+  migrasi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FIREBASE_SERVICE_ACCOUNT_LAMA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LAMA }}
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      FIREBASE_HOSTING_SITE: ${{ secrets.FIREBASE_HOSTING_SITE }}
+      URL_DASHBOARD: ${{ vars.URL_DASHBOARD }}
+      FIREBASE_TOOLS: firebase-tools@14.27.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Siapkan kunci
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT_LAMA" ]; then
+            echo "::error::Secret FIREBASE_SERVICE_ACCOUNT_LAMA belum diisi. Isi dengan seluruh isi berkas kunci akun layanan proyek lama."
+            exit 1
+          fi
+          pip install -q -r requirements-firebase.txt
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_LAMA" > "$RUNNER_TEMP/akun-lama.json"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/akun-baru.json"
+
+      - name: Salin akun pengguna ke proyek baru
+        if: inputs.tugas == 'salin-akun'
+        run: python -m pipeline migrasi salin-akun --lama "$RUNNER_TEMP/akun-lama.json" --baru "$RUNNER_TEMP/akun-baru.json"
+
+      - uses: actions/setup-node@v4
+        if: inputs.tugas == 'alihkan-alamat-lama'
+        with:
+          node-version: "20"
+
+      # Nama situs dari formulir dibaca lewat env, tidak disisipkan langsung ke skrip.
+      - name: Alihkan alamat lama ke alamat baru
+        if: inputs.tugas == 'alihkan-alamat-lama'
+        env:
+          SITUS_LAMA: ${{ inputs.situs_lama }}
+        run: |
+          python -m pipeline migrasi pengalih --situs "$SITUS_LAMA" --keluaran "$RUNNER_TEMP/pengalih"
+          PROYEK_LAMA=$(python -c "import json, sys; print(json.load(open(sys.argv[1]))['project_id'])" "$RUNNER_TEMP/akun-lama.json")
+          cd "$RUNNER_TEMP/pengalih"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/akun-lama.json" npx --yes "$FIREBASE_TOOLS" deploy --only hosting \
+            --project "$PROYEK_LAMA" --non-interactive --message "pengalih ke alamat baru"
+
+      - name: Hapus kunci
+        if: always()
+        run: rm -f "$RUNNER_TEMP/akun-lama.json" "$RUNNER_TEMP/akun-baru.json"

@@ -894,3 +894,12 @@ def test_pipeline_menulis_berita_json_untuk_situs(tmp_path):
     proses.jalankan(konf, keluaran, sinkron_github=False)
     isi = json.loads((keluaran / "berita.json").read_text(encoding="utf-8"))
     assert len(isi["berita"]) == 3 and isi["kesimpulan"][0]["tanggal"] == "2026-10-09" and isi["statistik"]["berita_baru"] == 3
+
+
+def test_identitas_pembaca_berita_mengikuti_alamat_situs():
+    """Alamat di identitas pembaca ikut berubah saat sistem pindah alamat, tanpa mengubah kode."""
+    assert berita.ua_bot({"URL_DASHBOARD": "https://takar.contoh.go.id/", "FIREBASE_HOSTING_SITE": "x"}).endswith(
+        "; +https://takar.contoh.go.id/tentang.html)")
+    assert "; +https://takar-baru.web.app/tentang.html)" in berita.ua_bot({"FIREBASE_HOSTING_SITE": "takar-baru"})
+    assert berita.ua_bot({"GITHUB_REPOSITORY": "pemilik/repo"}).endswith("; +https://github.com/pemilik/repo)")
+    assert berita.ua_bot({}) == f"{berita.TOKEN_ROBOTS}/1.0 (pemantauan harga pangan BPS Kabupaten Bengkulu Tengah)"

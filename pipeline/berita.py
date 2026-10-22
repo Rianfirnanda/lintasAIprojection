@@ -47,8 +47,6 @@ log = logging.getLogger(__name__)
 
 WIB = ZoneInfo("Asia/Jakarta")
 TOKEN_ROBOTS = "LintasBentengBot"
-UA_BOT = (f"{TOKEN_ROBOTS}/1.0 (pemantauan harga pangan BPS Kabupaten Bengkulu Tengah; "
-          "+https://lintas-benteng-projection.web.app/tentang.html)")
 MAKS_BYTE_HALAMAN = 2 * 1024 * 1024
 MAKS_BYTE_ROBOTS = 200 * 1024
 MAKS_TEKS = 30_000
@@ -164,9 +162,25 @@ def pengaturan_berita(konf: Konfigurasi) -> dict:
 
 # ---------------------------------------------------------------- pengambilan halaman
 
+def ua_bot(env=None) -> str:
+    """Identitas pembaca berita untuk pengelola situs berita. Alamatnya mengikuti situs yang sedang dipakai (URL_DASHBOARD,
+    lalu situs Firebase Hosting, lalu repositori), jadi ikut berubah saat sistem pindah alamat."""
+    env = os.environ if env is None else env
+    alamat = (env.get("URL_DASHBOARD") or "").strip()
+    if not alamat and (env.get("FIREBASE_HOSTING_SITE") or "").strip():
+        alamat = f"https://{env['FIREBASE_HOSTING_SITE'].strip()}.web.app/"
+    if alamat.startswith("https://"):
+        tautan = f"; +{alamat.rstrip('/')}/tentang.html"
+    elif (env.get("GITHUB_REPOSITORY") or "").strip():
+        tautan = f"; +https://github.com/{env['GITHUB_REPOSITORY'].strip()}"
+    else:
+        tautan = ""
+    return f"{TOKEN_ROBOTS}/1.0 (pemantauan harga pangan BPS Kabupaten Bengkulu Tengah{tautan})"
+
+
 def ambil_http(url: str, batas_waktu: int = 20, maks_byte: int = MAKS_BYTE_HALAMAN) -> tuple[str, bytes, str]:
     """GET sederhana. Mengembalikan (url akhir setelah pengalihan, isi, jenis isi). Galat HTTP dilempar apa adanya."""
-    req = urllib.request.Request(url, headers={"User-Agent": UA_BOT, "Accept": "text/html,application/xhtml+xml,application/xml,"
+    req = urllib.request.Request(url, headers={"User-Agent": ua_bot(), "Accept": "text/html,application/xhtml+xml,application/xml,"
                                                "application/rss+xml;q=0.9,*/*;q=0.5", "Accept-Language": "id,en;q=0.5",
                                                "Accept-Encoding": "identity"})
     with urllib.request.urlopen(req, timeout=batas_waktu) as r:
