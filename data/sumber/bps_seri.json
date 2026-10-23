@@ -1,5 +1,5 @@
 {
- "waktu": "2026-10-22T00:11:51+00:00",
+ "waktu": "2026-10-23T00:08:41+00:00",
  "sumber": "BPS Web API (webapi.bps.go.id)",
  "kunci": "ada",
  "seri": {
@@ -10,7 +10,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-22T00:11:51+00:00",
+   "diambil": "2026-10-23T00:08:41+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -1093,7 +1093,7 @@
    "judul": "Inflasi tahun kalender (y-to-d) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-22T00:11:51+00:00",
+   "diambil": "2026-10-23T00:08:41+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -2061,7 +2061,7 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-22T00:11:51+00:00",
+   "diambil": "2026-10-23T00:08:41+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3139,7 +3139,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-22T00:11:51+00:00",
+   "diambil": "2026-10-23T00:08:41+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3482,7 +3482,7 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-22T00:11:51+00:00",
+   "diambil": "2026-10-23T00:08:41+00:00",
    "terbaru": "2026-09",
    "label_lain": [],
    "data": [
@@ -3990,7 +3990,7 @@
    "judul": "Indeks harga yang diterima petani (It)",
    "judul_bps": "Indeks Harga yang Diterima oleh Petani (lt)",
    "satuan": null,
-   "diambil": "2026-10-22T00:11:51+00:00",
+   "diambil": "2026-10-23T00:08:41+00:00",
    "terbaru": "2026-09",
    "label_lain": [],
    "data": [
@@ -4168,7 +4168,7 @@
    "judul": "Indeks harga yang dibayar petani (Ib)",
    "judul_bps": "Indeks Harga yang Dibayar oleh Petani (Ib)",
    "satuan": null,
-   "diambil": "2026-10-22T00:11:51+00:00",
+   "diambil": "2026-10-23T00:08:41+00:00",
    "terbaru": "2026-09",
    "label_lain": [],
    "data": [
