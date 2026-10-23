@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-10-22T07:09:51+07:00",
+ "diperbarui": "2026-10-23T07:07:30+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-23",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-10-22",
    "metode": "ai",
@@ -245,7 +253,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -282,7 +290,7 @@
    "dampak_harga": "turun",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "5600ce01b76e",
@@ -3078,15 +3086,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 211,
-  "setelah_duplikat": 172,
-  "berita_baru": 2,
+  "hasil_pencarian": 231,
+  "setelah_duplikat": 178,
+  "berita_baru": 0,
   "total_arsip": 39,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 1,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "isi_tidak_terbaca": 0,
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
