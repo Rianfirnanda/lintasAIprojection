@@ -1,6 +1,23 @@
 {
- "diperbarui": "2026-10-23T07:07:30+07:00",
+ "diperbarui": "2026-10-24T07:11:38+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-24",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Laporan hari ini tidak memuat informasi mengenai perkembangan harga maupun pasokan pangan secara khusus di Kabupaten Bengkulu Tengah. Di wilayah lain, Pemkab Rejang Lebong dan Pemkab OKI menggelar pasar murah untuk menekan inflasi dan menyediakan pangan bersubsidi, meskipun rincian dampaknya tidak dijelaskan. Sementara itu, BULOG Bengkulu mengadakan Gerakan Pangan Murah dengan menjual beras SPHP seharga Rp58 ribu per 5 kg yang berdampak menurunkan harga. TPID perlu memantau ketersediaan pasokan beras SPHP serta potensi pelaksanaan pasar murah serupa di wilayah Bengkulu Tengah.",
+   "poin": [
+    "Tidak ada berita yang secara spesifik menyebutkan kondisi harga atau pasokan di Kabupaten Bengkulu Tengah.",
+    "Pemkab Rejang Lebong menggelar pasar murah atau Gerakan Pangan Murah (GPM) untuk menekan laju inflasi.",
+    "Pemkab OKI mengadakan pasar murah pangan bersubsidi bagi warga.",
+    "BULOG Bengkulu menjual beras SPHP seharga Rp58 ribu per 5 kg melalui Gerakan Pangan Murah yang berdampak pada penurunan harga."
+   ],
+   "perlu_dipantau": [
+    "Penyaluran dan ketersediaan beras SPHP dari BULOG Bengkulu untuk wilayah Kabupaten Bengkulu Tengah.",
+    "Pelaksanaan intervensi pasar murah di Bengkulu Tengah menyusul kegiatan serupa di daerah tetangga seperti Rejang Lebong."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-23",
    "metode": "ekstraktif",
@@ -207,6 +224,332 @@
   }
  ],
  "berita": [
+  {
+   "id": "bdf4ddf95a97",
+   "url": "https://bengkulu.antaranews.com/amp/berita/483351/pemkab-rejang-lebong-gelar-pasar-murah-untuk-menekan-laju-inflasi",
+   "judul": "Pemkab Rejang Lebong gelar pasar murah untuk menekan laju inflasi - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-23",
+   "diakses": "2026-10-24T07:11:38+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9972,
+   "sidik_sha256": "eea4e67a6b30a22d070b2ff8170067769335fd6460317402ab483f39b2a9fd91",
+   "kutipan": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus. Selain itu, panitia menyediakan sa",
+   "ringkasan": "Pemerintah Kabupaten Rejang Lebong, Provinsi Bengkulu, menggelar pasar murah atau Gerakan Pangan Murah (GPM). Kegiatan ini dilakukan untuk menekan laju inflasi.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 65000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah yang dijual pada kegiatan pasar murah Pemkab Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 80000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah di pasaran umum wilayah Rejang Lebong saat berita dibuat.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": null,
+     "nilai": 28000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga bawang merah yang dijual dalam kegiatan operasi pasar murah Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 25000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga bawang putih yang dijual dalam kegiatan operasi pasar murah Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 21000,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga minyak goreng Fortune pada pasar murah di Kabupaten Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 15000,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga Minyakita pada kegiatan operasi pasar murah di Kabupaten Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": null,
+     "nilai": 17000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga gula pasir pada kegiatan pasar murah Pemkab Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Tepung Terigu",
+     "kode_komoditas": "TPG",
+     "kode_varian": "TPG01",
+     "nilai": 10000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga tepung terigu pada program pasar murah di Kabupaten Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 46000,
+     "satuan": "karpet",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selain itu, panitia menyediakan satu ton beras Stabilisasi Pasokan dan Harga Pangan (SPHP) seharga Rp58.000 per kemasan 5 kilogram, serta 100 karpet telur ayam yang dijual Rp46.000 per karpet.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga telur ayam yang disediakan pada kegiatan pasar murah Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "8955f6be69a8",
+   "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNNVZJVTlfeXpsd2xwUkxyUXp6Xy1FbmV0amI2bldEZEZNX1VxbjF5MnJlWElPeHM3d0hubExJWXlvVHNCQ3NoMkRDLU9FSmhySHFLZG9nWGc4QkFxbW9TdTVCWnRsNXVfZnlWVEtLMDJwYmF0V1FQdkwwV0ttWW5iN2JCM3FTNjg4dEpVSlVHamNiOGpIVWJYUFMzN3VWSWJfYXc0UkJkNFpaU0FXWFlyZTBVeERWdUhDMEY1dlRwN2F1YzI0NmYxWHBzc0NIVmFaamtPRzd4WdIB1wFBVV95cUxNNVZJVTlfeXpsd2xwUkxyUXp6Xy1FbmV0amI2bldEZEZNX1VxbjF5MnJlWElPeHM3d0hubExJWXlvVHNCQ3NoMkRDLU9FSmhySHFLZG9nWGc4QkFxbW9TdTVCWnRsNXVfZnlWVEtLMDJwYmF0V1FQdkwwV0ttWW5iN2JCM3FTNjg4dEpVSlVHamNiOGpIVWJYUFMzN3VWSWJfYXc0UkJkNFpaU0FXWFlyZTBVeERWdUhDMEY1dlRwN2F1YzI0NmYxWHBzc0NIVmFaamtPRzd4WQ?oc=5",
+   "judul": "BULOG Bengkulu Gelar Gerakan Pangan Murah, Beras SPHP Dijual Rp58 Ribu per 5 Kg - Bengkulu Network",
+   "sumber": "Bengkulu Network",
+   "tanggal": "2026-10-23",
+   "diakses": "2026-10-24T07:11:38+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "turun",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "875bdce11263",
+   "url": "https://beritaanda.net/adakan-pasar-murah-pemkab-oki-hadirkan-pangan-bersubsidi-untuk-warga",
+   "judul": "Adakan Pasar Murah, Pemkab OKI Hadirkan Pangan Bersubsidi untuk Warga - BERITAANDA.NET",
+   "sumber": "beritaanda.net",
+   "tanggal": "2026-10-22",
+   "diakses": "2026-10-24T07:11:38+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Ikan"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 30000,
+   "sidik_sha256": "3ee4fdf12403ded846058c1dc1775d3462b82449adb479245b046937ea4435ba",
+   "kutipan": "Sahrul menambahkan, operasi pasar murah tersebut dilaksanakan Pemkab OKI bersama TPID dan Bank Sumsel Babel sebagai upaya menjaga stabilitas harga pangan sekaligus meningkatkan daya beli masyarakat. Hasil sidak dan penin",
+   "ringkasan": "Pemerintah Kabupaten OKI mengadakan pasar murah untuk menyediakan pangan bersubsidi bagi warga.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 11500,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Adapun tujuh kelompok komoditas pangan yang dijual dengan harga subsidi terdiri atas minyak goreng Minyakita seharga Rp11.500 per liter, turun dari harga normal Rp15.500.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga subsidi Minyakita dalam pasar murah di Kabupaten OKI Sumatera Selatan.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-24"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "fb89df8124e5",
    "url": "https://rri.co.id/bengkulu/regional/2828891/pemkot-bengkulu-anggarkan-rp200-juta-untuk-pasar-murah",
@@ -3086,15 +3429,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 231,
-  "setelah_duplikat": 178,
-  "berita_baru": 0,
-  "total_arsip": 39,
-  "kandidat_harga_baru": 0,
-  "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
-  "penyedia_ai": "",
-  "model_ai": ""
+  "hasil_pencarian": 250,
+  "setelah_duplikat": 189,
+  "berita_baru": 3,
+  "total_arsip": 42,
+  "kandidat_harga_baru": 10,
+  "harga_dinilai_ai": 10,
+  "isi_tidak_terbaca": 1,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
