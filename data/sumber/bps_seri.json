@@ -1,5 +1,5 @@
 {
- "waktu": "2026-10-24T00:18:22+00:00",
+ "waktu": "2026-10-25T00:09:35+00:00",
  "sumber": "BPS Web API (webapi.bps.go.id)",
  "kunci": "ada",
  "seri": {
@@ -10,7 +10,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-24T00:18:22+00:00",
+   "diambil": "2026-10-25T00:09:35+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -1093,7 +1093,7 @@
    "judul": "Inflasi tahun kalender (y-to-d) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-24T00:18:22+00:00",
+   "diambil": "2026-10-25T00:09:35+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -2061,7 +2061,7 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-24T00:18:22+00:00",
+   "diambil": "2026-10-25T00:09:35+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3139,7 +3139,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-24T00:18:22+00:00",
+   "diambil": "2026-10-25T00:09:35+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3482,7 +3482,7 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-10-24T00:18:22+00:00",
+   "diambil": "2026-10-25T00:09:35+00:00",
    "terbaru": "2026-09",
    "label_lain": [],
    "data": [
@@ -3989,8 +3989,8 @@
    "var_id": 421,
    "judul": "Indeks harga yang diterima petani (It)",
    "judul_bps": "Indeks Harga yang Diterima oleh Petani (lt)",
-   "satuan": null,
-   "diambil": "2026-10-24T00:18:22+00:00",
+   "satuan": "Tidak Ada Satuan",
+   "diambil": "2026-10-25T00:09:35+00:00",
    "terbaru": "2026-09",
    "label_lain": [],
    "data": [
@@ -4167,8 +4167,8 @@
    "var_id": 422,
    "judul": "Indeks harga yang dibayar petani (Ib)",
    "judul_bps": "Indeks Harga yang Dibayar oleh Petani (Ib)",
-   "satuan": null,
-   "diambil": "2026-10-24T00:18:22+00:00",
+   "satuan": "Tidak Ada Satuan",
+   "diambil": "2026-10-25T00:09:35+00:00",
    "terbaru": "2026-09",
    "label_lain": [],
    "data": [
@@ -4348,7 +4348,7 @@
    "mtm": 0.38,
    "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu September 2026 sebesar 3,38 persen",
    "tanggal": "2026-10-01",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/10/01/1031/inflasi-year-on-year--y-on-y--provinsi-bengkulu-september-2026-sebesar-3-38-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/10/01/170321/inflasi-year-on-year--y-on-y--provinsi-bengkulu-september-2026-sebesar-3-38-persen.html"
   },
   {
    "periode": "2026-08",
@@ -4356,7 +4356,7 @@
    "mtm": 0.31,
    "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Agustus 2026 sebesar 3,99 persen",
    "tanggal": "2026-09-01",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/09/01/1023/inflasi-year-on-year--y-on-y--provinsi-bengkulu-agustus-2026-sebesar-3-99-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/09/01/170286/inflasi-year-on-year--y-on-y--provinsi-bengkulu-agustus-2026-sebesar-3-99-persen.html"
   },
   {
    "periode": "2026-07",
@@ -4364,7 +4364,7 @@
    "mtm": 0.23,
    "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Juli 2026 sebesar 3,78 persen",
    "tanggal": "2026-08-03",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/08/03/1020/inflasi-year-on-year--y-on-y--provinsi-bengkulu-juli-2026-sebesar-3-78-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/08/03/170251/inflasi-year-on-year--y-on-y--provinsi-bengkulu-juli-2026-sebesar-3-78-persen.html"
   },
   {
    "periode": "2026-06",
@@ -4372,7 +4372,7 @@
    "mtm": 0.38,
    "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Juni 2026 sebesar 3,96 persen",
    "tanggal": "2026-07-01",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1010/inflasi-year-on-year--y-on-y--provinsi-bengkulu-juni-2026-sebesar-3-96-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/170216/inflasi-year-on-year--y-on-y--provinsi-bengkulu-juni-2026-sebesar-3-96-persen.html"
   },
   {
    "periode": "2026-05",
@@ -4380,7 +4380,7 @@
    "mtm": 0.86,
    "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu Mei 2026 sebesar 3,01 persen",
    "tanggal": "2026-06-02",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/1006/inflasi-year-on-year--y-on-y--provinsi-bengkulu-mei-2026-sebesar-3-01-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/174441/inflasi-year-on-year--y-on-y--provinsi-bengkulu-mei-2026-sebesar-3-01-persen.html"
   },
   {
    "periode": "2026-04",
@@ -4388,7 +4388,7 @@
    "mtm": 0.35,
    "judul": "Inflasi year-on-year (y-on-y) Provinsi Bengkulu April 2026 sebesar 1,87 persen",
    "tanggal": "2026-05-04",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/05/04/998/inflasi-year-on-year--y-on-y--provinsi-bengkulu-april-2026-sebesar-1-87-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/05/04/174440/inflasi-year-on-year--y-on-y--provinsi-bengkulu-april-2026-sebesar-1-87-persen.html"
   }
  ],
  "rilis_dilewati": [],
@@ -4399,7 +4399,7 @@
    "ubah_persen": 1.73,
    "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu September 2026 sebesar 206,79 atau naik 1,73 persen",
    "tanggal": "2026-10-01",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/10/01/1029/nilai-tukar-petani--ntp--provinsi-bengkulu-september-2026-sebesar-206-79-atau-naik-1-73-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/10/01/171104/nilai-tukar-petani--ntp--provinsi-bengkulu-september-2026-sebesar-206-79-atau-naik-1-73-persen.html"
   },
   {
    "periode": "2026-08",
@@ -4407,7 +4407,7 @@
    "ubah_persen": 1.54,
    "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada Agustus 2026 sebesar 203,27 atau naik 1,54 persen",
    "tanggal": "2026-09-01",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/09/01/1025/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-agustus-2026-sebesar-203-27-atau-naik-1-54-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/09/01/171069/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-agustus-2026-sebesar-203-27-atau-naik-1-54-persen.html"
   },
   {
    "periode": "2026-07",
@@ -4415,7 +4415,7 @@
    "ubah_persen": 1.68,
    "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada Juli 2026 tercatat sebesar 200,18 atau naik 1,68 persen",
    "tanggal": "2026-08-03",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/08/03/1018/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-juli-2026-tercatat-sebesar-200-18-atau-naik-1-68-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/08/03/171034/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-juli-2026-tercatat-sebesar-200-18-atau-naik-1-68-persen.html"
   },
   {
    "periode": "2026-06",
@@ -4423,7 +4423,7 @@
    "ubah_persen": -2.52,
    "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada Juni 2026 sebesar 196,87 atau turun 2,52 persen",
    "tanggal": "2026-07-01",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/1011/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-juni-2026-sebesar-196-87-atau-turun-2-52-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/07/01/170999/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-juni-2026-sebesar-196-87-atau-turun-2-52-persen.html"
   },
   {
    "periode": "2026-05",
@@ -4431,7 +4431,7 @@
    "ubah_persen": -0.02,
    "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu Mei 2026 sebesar 201,95 atau turun 0,02 persen",
    "tanggal": "2026-06-02",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/1004/nilai-tukar-petani--ntp--provinsi-bengkulu-mei-2026-sebesar-201-95-atau-turun-0-02-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/170964/nilai-tukar-petani--ntp--provinsi-bengkulu-mei-2026-sebesar-201-95-atau-turun-0-02-persen.html"
   },
   {
    "periode": "2026-04",
@@ -4439,7 +4439,7 @@
    "ubah_persen": -0.96,
    "judul": "Nilai Tukar Petani (NTP) Provinsi Bengkulu pada April 2026 sebesar 201,99 atau turun 0,96 persen",
    "tanggal": "2026-05-04",
-   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/05/04/996/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-april-2026-sebesar-201-99-atau-turun-0-96-persen.html"
+   "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/05/04/170929/nilai-tukar-petani--ntp--provinsi-bengkulu-pada-april-2026-sebesar-201-99-atau-turun-0-96-persen.html"
   }
  ],
  "pesan": "7 dari 7 deret BPS berhasil diambil, data terbaru 2026-09."
