@@ -1,6 +1,23 @@
 {
- "diperbarui": "2026-10-24T07:11:38+07:00",
+ "diperbarui": "2026-10-25T07:04:44+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-25",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Seluruh laporan yang diterima hari ini berasal dari wilayah sekitar dan tidak ada berita yang menyebutkan kondisi Kabupaten Bengkulu Tengah secara langsung. Di Kabupaten Rejang Lebong, terjadi kenaikan harga sejumlah bahan pokok sehingga pemerintah setempat menggelar pasar murah untuk menekan laju inflasi. Sementara itu, Bengkulu Utara menyalurkan bahan pangan seperti beras SPHP, Minyak Kita, bawang, telur, ayam, dan cabai merah di bawah harga pasar melalui Gerakan Pangan Murah, serta Bengkulu Selatan turut menggelar pasar murah meski rincian harga dan komoditasnya belum jelas. TPID perlu mewaspadai dan memantau potensi perembetan kenaikan harga bahan pokok dari daerah tetangga ke pasar Bengkulu Tengah.",
+   "poin": [
+    "Tidak ada laporan berita mengenai perkembangan harga maupun pasokan di Kabupaten Bengkulu Tengah.",
+    "Pemkab Rejang Lebong menggelar pasar murah di Curup Tengah untuk menekan inflasi akibat kenaikan harga sejumlah bahan pokok.",
+    "Dinas Ketahanan Pangan Bengkulu Utara mengadakan Gerakan Pangan Murah menjual beras SPHP, Minyak Kita, bawang, telur, daging ayam ras, dan cabai merah keriting di bawah harga pasar.",
+    "DKP Bengkulu Selatan menggelar pasar murah Hari Pangan, namun rincian komoditas dan harganya belum jelas."
+   ],
+   "perlu_dipantau": [
+    "Dampak kenaikan harga bahan pokok di Rejang Lebong terhadap stabilitas harga di Bengkulu Tengah.",
+    "Ketersediaan pasokan dan harga komoditas pangan pokok seperti beras SPHP, Minyak Kita, cabai merah, bawang, telur, dan daging ayam ras."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-24",
    "metode": "ai",
@@ -225,6 +242,272 @@
  ],
  "berita": [
   {
+   "id": "c443445b6a78",
+   "url": "https://bengkulu.antaranews.com/berita/483351/pemkab-rejang-lebong-gelar-pasar-murah-untuk-menekan-laju-inflasi",
+   "judul": "Pemkab Rejang Lebong gelar pasar murah untuk menekan laju inflasi - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-24",
+   "diakses": "2026-10-25T07:04:44+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9026,
+   "sidik_sha256": "b7974c0e47fe8c3e0ed485ab0ebfb7ea80ef628ceba9bf55208a3307d5b5f753",
+   "kutipan": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus. Selain itu, panitia menyediakan sa",
+   "ringkasan": "Pemerintah Kabupaten Rejang Lebong menyelenggarakan pasar murah atau Gerakan Pangan Murah di Kecamatan Curup Tengah pada 22 Oktober 2026. Langkah ini dilakukan untuk menekan laju inflasi akibat kenaikan harga sejumlah bahan pokok di wilayah tersebut.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 65000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah yang dijual pada kegiatan pasar murah Pemkab Rejang Lebong.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 80000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah di pasaran umum sebagai pembanding.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": null,
+     "nilai": 28000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga komoditas bawang merah dalam kegiatan pasar murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 25000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sejumlah komoditas yang dijual antara lain cabai merah seharga Rp65.000 per kilogram dari harga pasaran yang mencapai Rp80.000 per kg, bawang merah Rp28.000 per kg, dan bawang putih Rp25.000 per kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga komoditas bawang putih dalam kegiatan pasar murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 21000,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga minyak goreng Fortune yang dijual pada pasar murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 15000,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga Minyakita yang dijual pada operasi pasar murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": null,
+     "nilai": 17000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga gula pasir pada kegiatan pasar murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Tepung Terigu",
+     "kode_komoditas": "TPG",
+     "kode_varian": "TPG01",
+     "nilai": 10000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, minyak goreng Fortune dijual Rp21.000 per liter, Minyakita Rp15.000 per liter, gula pasir Rp17.000 per kg, tepung terigu Rp10.000 per kg, dan mi instan Rp3.000 per bungkus.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga tepung terigu yang dijual pada pasar murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 46000,
+     "satuan": "karpet",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selain itu, panitia menyediakan satu ton beras Stabilisasi Pasokan dan Harga Pangan (SPHP) seharga Rp58.000 per kemasan 5 kilogram, serta 100 karpet telur ayam yang dijual Rp46.000 per karpet.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga telur ayam yang disediakan pada kegiatan pasar murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "09325e9a6155",
+   "url": "https://rri.co.id/bintuhan/regional/2835378/dkp-bengkulu-selatan-gelar-pasar-murah",
+   "judul": "DKP Bengkulu Selatan Gelar Pasar Murah - RRI.co.id",
+   "sumber": "rri.co.id",
+   "tanggal": "2026-10-24",
+   "diakses": "2026-10-25T07:04:44+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Minyak Goreng",
+    "Gula Pasir"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 4078,
+   "sidik_sha256": "0875fb6abd0065c8c70238c490ca3725cf5dca104175dcd2fb957ee74540e168",
+   "kutipan": "‎Berbagai bahan kebutuhan pokok yang disediakan meliputi beras SPHP, beras premium, minyak goreng, gula pasir, hingga telur ayam. Kehadiran komoditas tersebut diharapkan mampu menekan laju inflasi daerah dan meringankan ",
+   "ringkasan": "Dinas Ketahanan Pangan Bengkulu Selatan menggelar kegiatan pasar murah dalam rangka momentum Hari Pangan. Teks berita belum merinci daftar komoditas maupun harga yang ditawarkan dalam kegiatan tersebut.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "bdf4ddf95a97",
    "url": "https://bengkulu.antaranews.com/amp/berita/483351/pemkab-rejang-lebong-gelar-pasar-murah-untuk-menekan-laju-inflasi",
    "judul": "Pemkab Rejang Lebong gelar pasar murah untuk menekan laju inflasi - ANTARA News Bengkulu",
@@ -447,7 +730,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -484,7 +767,171 @@
    "dampak_harga": "turun",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
+  },
+  {
+   "id": "84f92db20cfa",
+   "url": "https://radarutara.disway.id/amp/685031/gpm-diserbu-warga-beras-sphp-hingga-cabai-merah-di-bawah-harga-pasar",
+   "judul": "GPM Diserbu Warga, Beras SPHP hingga Cabai Merah di Bawah Harga Pasar",
+   "sumber": "radarutara.disway.id",
+   "tanggal": "2026-10-22",
+   "diakses": "2026-10-25T07:04:44+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 10,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Cabai Merah",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 8048,
+   "sidik_sha256": "7368d767244d40d9e86e737b7559999f5ec515f1a8bbed64e19c0548c509d57f",
+   "kutipan": "Kegiatan ini menyediakan berbagai kebutuhan pokok dengan harga terjangkau, di antaranya beras SPHP Rp58 ribu per 5 kilogram, Minyak Kita Rp15.500 per kilogram, bawang merah Rp30 ribu per kilogram, bawang putih Rp29 ribu ",
+   "ringkasan": "Dinas Ketahanan Pangan Kabupaten Bengkulu Utara mengadakan Gerakan Pangan Murah (GPM) pada 21-22 Oktober 2026 untuk menstabilkan harga dan menjaga daya beli masyarakat. Berbagai kebutuhan pokok seperti beras SPHP, Minyak Kita, bawang, telur, daging ayam ras, dan cabai merah keriting dijual dengan harga di bawah harga pasar.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 15500,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Kegiatan ini menyediakan berbagai kebutuhan pokok dengan harga terjangkau, di antaranya beras SPHP Rp58 ribu per 5 kilogram, Minyak Kita Rp15.500 per kilogram, bawang merah Rp30 ribu per kilogram, bawang putih Rp29 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Merupakan harga untuk Minyak Kita dalam program bukan beras.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": null,
+     "nilai": 30000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Kegiatan ini menyediakan berbagai kebutuhan pokok dengan harga terjangkau, di antaranya beras SPHP Rp58 ribu per 5 kilogram, Minyak Kita Rp15.500 per kilogram, bawang merah Rp30 ribu per kilogram, bawang putih Rp29 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga bawang merah yang dijual dalam kegiatan Gerakan Pangan Murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 29000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Kegiatan ini menyediakan berbagai kebutuhan pokok dengan harga terjangkau, di antaranya beras SPHP Rp58 ribu per 5 kilogram, Minyak Kita Rp15.500 per kilogram, bawang merah Rp30 ribu per kilogram, bawang putih Rp29 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga bawang putih yang dijual dalam kegiatan Gerakan Pangan Murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 49000,
+     "satuan": "karpet",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Serta telur Rp49 ribu per karpet, daging ayam ras Rp35 ribu per kilogram, dan cabai merah keriting Rp68 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga telur dalam kegiatan Gerakan Pangan Murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": null,
+     "nilai": 35000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Serta telur Rp49 ribu per karpet, daging ayam ras Rp35 ribu per kilogram, dan cabai merah keriting Rp68 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga daging ayam ras dalam kegiatan Gerakan Pangan Murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 68000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Serta telur Rp49 ribu per karpet, daging ayam ras Rp35 ribu per kilogram, dan cabai merah keriting Rp68 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah keriting dalam kegiatan Gerakan Pangan Murah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-25"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
   },
   {
    "id": "875bdce11263",
@@ -547,7 +994,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -3429,13 +3876,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 250,
-  "setelah_duplikat": 189,
+  "hasil_pencarian": 240,
+  "setelah_duplikat": 194,
   "berita_baru": 3,
-  "total_arsip": 42,
-  "kandidat_harga_baru": 10,
-  "harga_dinilai_ai": 10,
-  "isi_tidak_terbaca": 1,
+  "total_arsip": 45,
+  "kandidat_harga_baru": 15,
+  "harga_dinilai_ai": 15,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
   "model_ai": "gemini-3.8-flash"
  },
