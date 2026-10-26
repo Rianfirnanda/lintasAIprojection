@@ -1,6 +1,19 @@
 {
- "diperbarui": "2026-10-25T07:04:44+07:00",
+ "diperbarui": "2026-10-26T07:09:23+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-26",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Sementara itu, tidak ada informasi spesifik mengenai harga dan pasokan yang secara khusus menyebutkan wilayah Kabupaten Bengkulu Tengah.",
+   "poin": [
+    "Bulog Bengkulu menargetkan penyaluran 5.000 ton beras SPHP hingga akhir 2026 untuk menjaga stabilitas harga."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga dan ketersediaan beras serta bahan pokok secara langsung di pasar-pasar dalam wilayah Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 2
+  },
   {
    "tanggal": "2026-10-25",
    "metode": "ai",
@@ -242,6 +255,320 @@
  ],
  "berita": [
   {
+   "id": "a0152117a085",
+   "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPeWVoQUhfUWFqdmlCdERCMjBMYXgybGhmMGJVS09PSmdHYUJOWlVQcVRZbkx1N3pocl9ZeEdkY3YwTFZ2VUFfZUJmell6Q3BjMUFFMlBveFNiYVM2NlhGc01uVDdFbWlFV0ZFR2I4N2p3MUQ5OVBfUXg0QzdWOUtLR1NNRGJjWF9Da21qOHlJT0J4QnZqNldmVmZNSjRRelZ0bFVmbmNLWU9DZExxNUx0ZU02aFlyMmgzekdoVmlXa1hKTG5CVmhHSVBKX3dScjEwN1ktdm9ESlU2aVg0OWRTRmtuQlg?oc=5",
+   "judul": "Jaga Harga Beras Stabil, Bulog Bengkulu Targetkan Penyaluran 5.000 Ton Beras SPHP hingga Akhir 2026",
+   "sumber": "Tribunbengkulu.com",
+   "tanggal": "2026-10-25",
+   "diakses": "2026-10-26T07:09:23+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "451d33411aa9",
+   "url": "https://www.pedomanbengkulu.com/2026/10/kami-belanja-rp50-ribu-di-pasar-bisa.html",
+   "judul": "Kami Belanja Rp50 Ribu di Pasar: Bisa Nyambal, Tak Dapat Sayuran - Pedoman Bengkulu",
+   "sumber": "pedomanbengkulu.com",
+   "tanggal": "2026-10-24",
+   "diakses": "2026-10-26T07:09:23+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Cabai Rawit",
+    "Minyak Goreng"
+   ],
+   "tag": [],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 28257,
+   "sidik_sha256": "81fe9b1131daf627f657a139ae2ea3a115cb13cc981843c215ac97e24e01d9c5",
+   "kutipan": "Sebagai gambaran, harga cabai rawit merah secara nasional pada Oktober 2025 tercatat sekitar Rp39.800 per kilogram, bawang merah Rp38.600 per kilogram, dan bawang putih Rp36.600 per kilogram. Sementara itu, berdasarkan d",
+   "ringkasan": "Berita nasional mengenai belanja di pasar dengan uang Rp50 ribu yang hanya bisa untuk membuat sambal tanpa mendapatkan sayuran.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 60000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Ia menyebut harga cabai merah keriting berada di kisaran Rp60 ribu per kilogram, sedangkan cabai rawit merah mencapai Rp85 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual barang di pasar yang dilaporkan narasumber.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 85000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Ia menyebut harga cabai merah keriting berada di kisaran Rp60 ribu per kilogram, sedangkan cabai rawit merah mencapai Rp85 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual barang di pasar saat berita ditulis.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 75000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Menurut Imron, harga cabai rawit merah sempat turun dari Rp85 ribu menjadi Rp75 ribu per kilogram, tetapi kembali naik setelah sekitar dua hari.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Menyatakan harga barang pada waktu lalu sebelum naik.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 18000,
+     "satuan": "liter",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Namun, kemudian ia menjelaskan bahwa seliter Minyakita memiliki harga lebih murah, Rp18.000 per liter.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual minyak di pasaran saat berita dimuat.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 39800,
+     "satuan": "kg",
+     "peran_wilayah": "nasional",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sebagai gambaran, harga cabai rawit merah secara nasional pada Oktober 2025 tercatat sekitar Rp39.800 per kilogram, bawang merah Rp38.600 per kilogram, dan bawang putih Rp36.600 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "nasional",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata secara nasional pada waktu lalu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": null,
+     "nilai": 38600,
+     "satuan": "kg",
+     "peran_wilayah": "nasional",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sebagai gambaran, harga cabai rawit merah secara nasional pada Oktober 2025 tercatat sekitar Rp39.800 per kilogram, bawang merah Rp38.600 per kilogram, dan bawang putih Rp36.600 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "nasional",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata secara nasional pada waktu lalu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 36600,
+     "satuan": "kg",
+     "peran_wilayah": "nasional",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sebagai gambaran, harga cabai rawit merah secara nasional pada Oktober 2025 tercatat sekitar Rp39.800 per kilogram, bawang merah Rp38.600 per kilogram, dan bawang putih Rp36.600 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "nasional",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata secara nasional pada waktu lalu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 77980,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sementara itu, berdasarkan data harga rata-rata di Jakarta pada 20 Oktober 2026, harga cabai rawit merah mencapai sekitar Rp77.980 per kilogram, bawang merah Rp45.640 per kilogram, dan bawang putih Rp40.333 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata komoditas di wilayah ibu kota.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": null,
+     "nilai": 45640,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sementara itu, berdasarkan data harga rata-rata di Jakarta pada 20 Oktober 2026, harga cabai rawit merah mencapai sekitar Rp77.980 per kilogram, bawang merah Rp45.640 per kilogram, dan bawang putih Rp40.333 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata komoditas di wilayah ibu kota.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 40333,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sementara itu, berdasarkan data harga rata-rata di Jakarta pada 20 Oktober 2026, harga cabai rawit merah mencapai sekitar Rp77.980 per kilogram, bawang merah Rp45.640 per kilogram, dan bawang putih Rp40.333 per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Data harga rata-rata komoditas di wilayah ibu kota.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 15047,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Di Jakarta, harga beras tercatat sekitar Rp15.047 per kilogram atau meningkat sekitar 10 persen secara tahunan.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "luar provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Catatan harga rata-rata komoditas di wilayah ibu kota.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": null,
+     "nilai": 27365,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sementara itu, harga telur ayam berada di kisaran Rp27.365 per kilogram dan sedikit lebih rendah dibandingkan tahun sebelumnya.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "tidak jelas",
+      "komoditas_cocok": true,
+      "alasan": "Kisaran harga rata-rata komoditas yang sedang dibahas.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-26"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "c443445b6a78",
    "url": "https://bengkulu.antaranews.com/berita/483351/pemkab-rejang-lebong-gelar-pasar-murah-untuk-menekan-laju-inflasi",
    "judul": "Pemkab Rejang Lebong gelar pasar murah untuk menekan laju inflasi - ANTARA News Bengkulu",
@@ -464,7 +791,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -504,7 +831,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -734,6 +1061,42 @@
    "penyedia_ai": "gemini"
   },
   {
+   "id": "4d2d5ced8515",
+   "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOb0R6YkFVWkxoUDQtNkx0MHZuWlNMajA4SlhhOGZGS0VYTDRxRjdOQS1NcWw5Y1ZuSFFvUkpCVy1sVUExRkliaXk5eGljRC1IQ1AwbWpCbTJFQU5KLXhpRU5ETlViR3lJMmpKTFFuekF0c0QzUXc1VjRJdUdGZFUxOGp4M3NnbW5CdHhQT2o2azVaWk5LMlFabEJKbllrWlF2SU90ZEE5MmJRbFVlWUxkdHFKWFczT0JPZHRjbmpNYlhQRGd5X2tGRlpYbkUya3o4QlHSAdcBQVVfeXFMTTVWSVU5X3l6bHdscFJMclF6el8tRW5ldGpiNm5XRGRGTV9VcW4xeTJyZVhJT3hzN3dIbmxMSVl5b1RzQkNzaDJEQy1PRUpockhxS2RvZ1hnOEJBcW1vU3U1Qlp0bDV1X2Z5VlRLSzAycGJhdFdRUHZMMFdLbVluYjdiQjNxUzY4OHRKVUpVR2pjYjhqSFViWFBTMzd1VkliX2F3NFJCZDRaWlNBV1hZcmUwVXhEVnVIQzBGNXZUcDdhdWMyNDZmMVhwc3NDSFZhWmprT0c3eFk?oc=5",
+   "judul": "BULOG Bengkulu Gelar Gerakan Pangan Murah, Beras SPHP Dijual Rp58 Ribu per 5 Kg - Bengkulu Network",
+   "sumber": "Bengkulu Network",
+   "tanggal": "2026-10-23",
+   "diakses": "2026-10-26T07:09:23+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "turun",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "8955f6be69a8",
    "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNNVZJVTlfeXpsd2xwUkxyUXp6Xy1FbmV0amI2bldEZEZNX1VxbjF5MnJlWElPeHM3d0hubExJWXlvVHNCQ3NoMkRDLU9FSmhySHFLZG9nWGc4QkFxbW9TdTVCWnRsNXVfZnlWVEtLMDJwYmF0V1FQdkwwV0ttWW5iN2JCM3FTNjg4dEpVSlVHamNiOGpIVWJYUFMzN3VWSWJfYXc0UkJkNFpaU0FXWFlyZTBVeERWdUhDMEY1dlRwN2F1YzI0NmYxWHBzc0NIVmFaamtPRzd4WdIB1wFBVV95cUxNNVZJVTlfeXpsd2xwUkxyUXp6Xy1FbmV0amI2bldEZEZNX1VxbjF5MnJlWElPeHM3d0hubExJWXlvVHNCQ3NoMkRDLU9FSmhySHFLZG9nWGc4QkFxbW9TdTVCWnRsNXVfZnlWVEtLMDJwYmF0V1FQdkwwV0ttWW5iN2JCM3FTNjg4dEpVSlVHamNiOGpIVWJYUFMzN3VWSWJfYXc0UkJkNFpaU0FXWFlyZTBVeERWdUhDMEY1dlRwN2F1YzI0NmYxWHBzc0NIVmFaamtPRzd4WQ?oc=5",
    "judul": "BULOG Bengkulu Gelar Gerakan Pangan Murah, Beras SPHP Dijual Rp58 Ribu per 5 Kg - Bengkulu Network",
@@ -930,7 +1293,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -3876,15 +4239,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 240,
-  "setelah_duplikat": 194,
+  "hasil_pencarian": 238,
+  "setelah_duplikat": 196,
   "berita_baru": 3,
-  "total_arsip": 45,
-  "kandidat_harga_baru": 15,
-  "harga_dinilai_ai": 15,
-  "isi_tidak_terbaca": 0,
+  "total_arsip": 48,
+  "kandidat_harga_baru": 12,
+  "harga_dinilai_ai": 12,
+  "isi_tidak_terbaca": 2,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "model_ai": "gemini-3.5-flash-lite"
  },
  "galat": []
 }
