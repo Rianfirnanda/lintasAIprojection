@@ -1,6 +1,16 @@
 {
- "diperbarui": "2026-10-26T07:09:23+07:00",
+ "diperbarui": "2026-10-27T07:11:31+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-27",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "1 berita baru dan 37 berita dalam 14 hari terakhir yang relevan dengan harga pangan Bengkulu. 1 di antaranya menyebut Bengkulu Tengah. 1 berita menyebut harga naik (Beras, Daging Ayam). 1 berita menyebut harga turun (Beras, Daging Ayam). 1 berita menyebut intervensi pemerintah (Beras, Daging Ayam).",
+   "poin": [
+    "Pemkot Bengkulu anggarkan Rp200 juta untuk pasar murah di 67 titik - ANTARA News Bengkulu (bengkulu.antaranews.com)"
+   ],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-10-26",
    "metode": "ai",
@@ -255,6 +265,55 @@
  ],
  "berita": [
   {
+   "id": "5a57ff889f69",
+   "url": "https://bengkulu.antaranews.com/berita/482969/pemkot-bengkulu-anggarkan-rp200-juta-untuk-pasar-murah-di-67-titik",
+   "judul": "Pemkot Bengkulu anggarkan Rp200 juta untuk pasar murah di 67 titik - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-10-26",
+   "diakses": "2026-10-27T07:11:31+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 8,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir",
+    "Tepung Terigu"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 10289,
+   "sidik_sha256": "f59f0a7e59a142a731b06c96314bb14632f602e8a261b06309f1bac929a44390",
+   "kutipan": "Untuk komoditi pangan yang akan disediakan dengan harga terjangkau atau di bawah harga pasar yaitu beras, cabai, minyak goreng, bawang merah, bawang putih, gula, telur ayam, daging ayam potong, daging sapi dan lainnya. [",
+   "ringkasan": "Pemerintah Kota Bengkulu menganggarkan dana sebesar Rp200 juta dari APBD perubahan untuk menyelenggarakan operasi pasar murah. Kegiatan pasar murah tersebut rencananya akan diadakan di 67 kelurahan yang mencakup sembilan kecamatan di Kota Bengkulu.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "a0152117a085",
    "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPeWVoQUhfUWFqdmlCdERCMjBMYXgybGhmMGJVS09PSmdHYUJOWlVQcVRZbkx1N3pocl9ZeEdkY3YwTFZ2VUFfZUJmell6Q3BjMUFFMlBveFNiYVM2NlhGc01uVDdFbWlFV0ZFR2I4N2p3MUQ5OVBfUXg0QzdWOUtLR1NNRGJjWF9Da21qOHlJT0J4QnZqNldmVmZNSjRRelZ0bFVmbmNLWU9DZExxNUx0ZU02aFlyMmgzekdoVmlXa1hKTG5CVmhHSVBKX3dScjEwN1ktdm9ESlU2aVg0OWRTRmtuQlg?oc=5",
    "judul": "Jaga Harga Beras Stabil, Bulog Bengkulu Targetkan Penyaluran 5.000 Ton Beras SPHP hingga Akhir 2026",
@@ -285,7 +344,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "451d33411aa9",
@@ -565,7 +624,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -1094,7 +1153,7 @@
    "dampak_harga": "turun",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "8955f6be69a8",
@@ -4239,15 +4298,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 238,
-  "setelah_duplikat": 196,
-  "berita_baru": 3,
-  "total_arsip": 48,
-  "kandidat_harga_baru": 12,
-  "harga_dinilai_ai": 12,
-  "isi_tidak_terbaca": 2,
+  "hasil_pencarian": 219,
+  "setelah_duplikat": 174,
+  "berita_baru": 1,
+  "total_arsip": 49,
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.5-flash-lite"
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
