@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-10-27T07:11:31+07:00",
+ "diperbarui": "2026-10-28T07:12:14+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-28",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Berdasarkan ringkasan berita yang tersedia, tidak ada informasi spesifik mengenai perkembangan harga dan pasokan pangan di Kabupaten Bengkulu Tengah. Berita yang ada hanya mencakup informasi umum bahwa mayoritas harga pangan turun sementara cabai dan beras masih tinggi, serta harga cabai rawit stabil di pasar modern, namun wilayah spesifiknya tidak disebutkan.",
+   "poin": [
+    "Mayoritas harga pangan dilaporkan turun, tetapi harga cabai dan beras masih tinggi.",
+    "Harga cabai rawit di pasar modern tercatat stabil di angka Rp91,2 ribu per kg tanpa menyebutkan lokasi spesifik.",
+    "Terdapat halaman repositori institusi UIN FAS Bengkulu untuk tahun 2026 yang tidak memuat data harga."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga pangan khusus di wilayah Kabupaten Bengkulu Tengah karena data saat ini belum spesifik.",
+    "Ketersediaan dan fluktuasi harga komoditas utama seperti cabai dan beras."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-27",
    "metode": "ekstraktif",
@@ -265,6 +281,327 @@
  ],
  "berita": [
   {
+   "id": "0e14f92cb37b",
+   "url": "https://www.pedomanbengkulu.com/2026/10/mayoritas-harga-pangan-turun-tapi-cabai.html",
+   "judul": "Mayoritas Harga Pangan Turun, tapi Cabai-Beras Masih Tinggi - Pedoman Bengkulu",
+   "sumber": "pedomanbengkulu.com",
+   "tanggal": "2026-10-27",
+   "diakses": "2026-10-28T07:12:14+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 10,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Cabai Merah",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Minyak Goreng",
+    "Gula Pasir"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9675,
+   "sidik_sha256": "ba98f23d7394385515b8e0bdccb5c663e8a14dc2e5098a67bc7e653ef9a29a14",
+   "kutipan": "Harga telur ayam ras segar turun 0,34% atau Rp100 menjadi Rp29.550/kg. Harga minyak goreng kemasan bermerek 1 turun 0,2% atau Rp50 menjadi Rp24.350/kg, dan harga minyak goreng kemasan bermerek 2 bertahan di Rp23.600/kg. ",
+   "ringkasan": "Mayoritas harga pangan mengalami penurunan, namun harga cabai dan beras masih terpantau tinggi.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 86100,
+     "satuan": "kg",
+     "peran_wilayah": "nasional",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Berdasarkan Pusat Informasi Harga Pangan Strategis (PIHPS) Bank Indonesia per pukul 8.20 WIB, harga cabai merah keriting turun 1,43% atau Rp1.250 menjadi Rp86.100/kg dan cabai rawit hijau turun 0,44% atau Rp350 menjadi Rp79.400/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga rata-rata dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW01",
+     "nilai": 79400,
+     "satuan": "kg",
+     "peran_wilayah": "nasional",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Berdasarkan Pusat Informasi Harga Pangan Strategis (PIHPS) Bank Indonesia per pukul 8.20 WIB, harga cabai merah keriting turun 1,43% atau Rp1.250 menjadi Rp86.100/kg dan cabai rawit hijau turun 0,44% atau Rp350 menjadi Rp79.400/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga rata-rata dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 102950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Kemudian, harga cabai rawit merah turun 0,96% atau Rp1.000 menjadi Rp102.950/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga rata-rata dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR01",
+     "nilai": 75600,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Sementara itu, harga cabai merah besar naik 0,73% atau Rp550 menjadi Rp75.600/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga rata-rata dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS01",
+     "nilai": 14900,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Harga beras kualitas bawah I tidak berubah atau bertahan di Rp14.900/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga rata-rata beras dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS02",
+     "nilai": 14750,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Beras kualitas bawah II bertahan di Rp14.750/kg, serta beras kualitas medium I bertahan di Rp16.650/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga rata-rata beras dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS03",
+     "nilai": 16650,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Beras kualitas bawah II bertahan di Rp14.750/kg, serta beras kualitas medium I bertahan di Rp16.650/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga rata-rata beras dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS04",
+     "nilai": 16450,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Beras kualitas medium II juga tetap di Rp16.450/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga rata-rata beras dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS05",
+     "nilai": 18000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Hanya beras kualitas super I yang mengalami kenaikan 0,28% atau Rp50 menjadi Rp18.000/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga rata-rata beras dari bank sentral.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 13500,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Seluruh jenis beras tersebut masih berada di atas HET pemerintah yang di patok Rp12.500 untuk kualitas bawah/SPHP, Rp13.500/kg untuk medum, dan Rp14.900/kg untuk premium.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "nasional",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga eceran tertinggi ketetapan pemerintah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 14900,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Seluruh jenis beras tersebut masih berada di atas HET pemerintah yang di patok Rp12.500 untuk kualitas bawah/SPHP, Rp13.500/kg untuk medum, dan Rp14.900/kg untuk premium.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "bukan_harga",
+      "lingkup": "nasional",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga eceran tertinggi ketetapan pemerintah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": "DAY01",
+     "nilai": 39950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Lalu, harga daging ayam ras segar turun 1,6% atau Rp650 menjadi Rp39.950/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga rata-rata daging ayam dari lembaga.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-28"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "07fadf1ebbd3",
+   "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPenduT2ZjS0JqS3hKZm9VZGstaWVlT3piY3A4LTlZbllvazBQckF4eks2UXVaLUs4VFF3RDJlTnJQdGNGeXRnNG9uN2V1emJnRUR3VzhLZEZQN3k3Qko4LTk2ODBMNWdZNmtNc3dmQWlKRGthSUF1eUFFSkpHaUpzUFE1djRSMGhpUzM3NE1wZXB5NnJFdkhnMEtOZ2h6cVFvVk84UFhEV1lLaU1HR0Vzc1FNSDFfUGp5ekJ0YXFSYjhrNzQ?oc=5",
+   "judul": "Harga Cabai Rawit di Pasar Modern Bengkulu Hari Ini Stabil di Rp91,2 Ribu per Kg, Update 26 Oktober 2026",
+   "sumber": "Databoks",
+   "tanggal": "2026-10-27",
+   "diakses": "2026-10-28T07:12:14+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Cabai Rawit"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "5a57ff889f69",
    "url": "https://bengkulu.antaranews.com/berita/482969/pemkot-bengkulu-anggarkan-rp200-juta-untuk-pasar-murah-di-67-titik",
    "judul": "Pemkot Bengkulu anggarkan Rp200 juta untuk pasar murah di 67 titik - ANTARA News Bengkulu",
@@ -309,6 +646,41 @@
    "metode_ringkas": "ai",
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
+   "harga": [],
+   "baru": false,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "b1d7a56b26bf",
+   "url": "https://repository.uinfasbengkulu.ac.id/view/year/2026.type.html",
+   "judul": "Items where Year is 2026 - Repository UIN FAS Bengkulu",
+   "sumber": "repository.uinfasbengkulu.ac.id",
+   "tanggal": "2026-10-26",
+   "diakses": "2026-10-28T07:12:14+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kepahiang",
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 30000,
+   "sidik_sha256": "345b9f19fbeea5cf785afd8c408ef1b24f76eddcc72d96d04f5ca12b51645f34",
+   "kutipan": "Lestari,, Fitri Indah (2026) IMPLEMENTASI NILAI AL-MAS’ULIYYAH TERHADAP DAMPAK SOSIAL PETERNAKAN AYAM RAS PETELUR: STUDI PADA PT PADANG JAYA FARM KABUPATEN BENGKULU UTARA. Undergraduate (S1) thesis, UIN Fatmawati Sukarno",
+   "ringkasan": "Halaman repositori institusi yang memuat daftar karya ilmiah dan artikel dari tahun 2026.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
    "harga": [],
    "baru": true,
    "penyedia_ai": "gemini"
@@ -4298,15 +4670,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 219,
-  "setelah_duplikat": 174,
-  "berita_baru": 1,
-  "total_arsip": 49,
-  "kandidat_harga_baru": 0,
-  "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
+  "hasil_pencarian": 212,
+  "setelah_duplikat": 165,
+  "berita_baru": 3,
+  "total_arsip": 52,
+  "kandidat_harga_baru": 12,
+  "harga_dinilai_ai": 12,
+  "isi_tidak_terbaca": 1,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "model_ai": "gemini-3.5-flash-lite"
  },
  "galat": []
 }
