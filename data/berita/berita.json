@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-10-28T07:12:14+07:00",
+ "diperbarui": "2026-10-29T07:08:31+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-29",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Informasi harga dan pasokan pangan yang tersedia saat ini sangat terbatas. Berdasarkan data per 26 Oktober 2026, harga cabai rawit di pasar modern Bengkulu terpantau stabil di angka Rp91,2 ribu per kg. Laporan tersebut tidak menyebutkan kondisi spesifik di Kabupaten Bengkulu Tengah dan tidak memuat informasi mengenai ketersediaan pasokan. TPID perlu terus memantau pergerakan harga cabai rawit serta kondisi pasokannya di pasar lokal Bengkulu Tengah.",
+   "poin": [
+    "Harga cabai rawit di pasar modern Bengkulu terpantau stabil pada level Rp91,2 ribu per kg per 26 Oktober 2026.",
+    "Laporan tidak menyebutkan wilayah Kabupaten Bengkulu Tengah secara spesifik.",
+    "Informasi mengenai kondisi pasokan cabai rawit tidak disebutkan dalam data."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga cabai rawit di wilayah Kabupaten Bengkulu Tengah.",
+    "Kondisi dan ketersediaan pasokan cabai rawit di pasar lokal."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-28",
    "metode": "ai",
@@ -280,6 +296,291 @@
   }
  ],
  "berita": [
+  {
+   "id": "55bcb4db96e1",
+   "url": "https://databoks.katadata.co.id/ekonomi-makro/statistik/33e14965358a391/harga-cabai-rawit-pasar-modern-bengkulu-hari-ini-2026",
+   "judul": "Harga Cabai Rawit di Pasar Modern Bengkulu Hari Ini Stabil di Rp91,2 Ribu per Kg, Update 26 Oktober 2026",
+   "sumber": "databoks.katadata.co.id",
+   "tanggal": "2026-10-27",
+   "diakses": "2026-10-29T07:08:31+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 10,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Cabai Rawit",
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Minyak Goreng",
+    "Gula Pasir"
+   ],
+   "tag": [],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 19372,
+   "sidik_sha256": "2c3ca57eb7218b8f8c394b95e4c2b4a64bda147768f87e269fa2230a143526e7",
+   "kutipan": "A Kecil A Sedang A Besar Terakhir diperbarui: 27 Oktober 2026. Sumber: PIHPS / Bank Indonesia. Harga cabai rawit di pasar modern Bengkulu hari ini, Senin, 26 Oktober 2026, tercatat Rp91,2 ribu per kg berdasarkan pantauan",
+   "ringkasan": "Harga cabai rawit di pasar modern Bengkulu terpantau stabil di angka Rp91,2 ribu per kg berdasarkan pembaruan data per 26 Oktober 2026.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": null,
+     "nilai": 91200,
+     "satuan": "kg",
+     "peran_wilayah": "provinsi",
+     "pasar": null,
+     "arah": "",
+     "bukti": "# Harga Cabai Rawit di Pasar Modern Bengkulu Hari Ini Stabil di Rp91,2 Ribu per Kg, Update 26 Oktober 2026",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata cabai rawit pasar modern dari panel data tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": "DAY01",
+     "nilai": 44950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Daging Ayam Ras Segar per Kg Rp44,95 ribu per kg (turun 10.01%)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Harga rata-rata daging ayam ras segar dari panel data tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": null,
+     "nilai": 44950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Daging Ayam per Kg Rp44,95 ribu per kg (turun 10.01%)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata daging ayam dari panel data pasar modern tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 24800,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Minyak Goreng Kemasan Bermerk 2 per Kg Rp24,8 ribu per kg (tidak berubah)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Harga rata-rata minyak goreng kemasan bermerk dua dari panel data tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 16100,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Beras per Kg Rp16,1 ribu per kg (naik 0.62%)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata beras dari panel data pasar modern tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 21400,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Minyak Goreng Kemasan Bermerk 1 per Kg Rp21,4 ribu per kg (naik 0.23%)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Harga rata-rata minyak goreng kemasan bermerk satu dari panel data tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Daging Sapi",
+     "kode_komoditas": "DSP",
+     "kode_varian": null,
+     "nilai": 161950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Daging Sapi per Kg Rp161,95 ribu per kg (naik 1.25%)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata daging sapi dari panel data pasar modern tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS05",
+     "nilai": 15250,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Beras Kualitas Super I per Kg Rp15,25 ribu per kg (tidak berubah)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Harga rata-rata beras kualitas super satu dari panel data tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": "BRS06",
+     "nilai": 17950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Beras Kualitas Super II per Kg Rp17,95 ribu per kg (naik 1.41%)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Harga rata-rata beras kualitas super dua dari panel data tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": null,
+     "nilai": 23100,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Minyak Goreng per Kg Rp23,1 ribu per kg (tidak berubah)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata minyak goreng dari panel data pasar modern tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": null,
+     "nilai": 17650,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Gula Pasir per Kg Rp17,65 ribu per kg (tidak berubah)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga rata-rata gula pasir dari panel data pasar modern tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 102450,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Cabai Rawit Merah per Kg Rp102,45 ribu per kg (naik 23.51%)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Harga rata-rata cabai rawit merah dari panel data tingkat provinsi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-10-29"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "0e14f92cb37b",
    "url": "https://www.pedomanbengkulu.com/2026/10/mayoritas-harga-pangan-turun-tapi-cabai.html",
@@ -564,7 +865,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -599,7 +900,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "5a57ff889f69",
@@ -682,7 +983,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -4670,15 +4971,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 212,
-  "setelah_duplikat": 165,
-  "berita_baru": 3,
-  "total_arsip": 52,
+  "hasil_pencarian": 218,
+  "setelah_duplikat": 158,
+  "berita_baru": 1,
+  "total_arsip": 53,
   "kandidat_harga_baru": 12,
   "harga_dinilai_ai": 12,
-  "isi_tidak_terbaca": 1,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.5-flash-lite"
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
