@@ -109,8 +109,8 @@ tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
 2026-10-28,1771,prakiraan_suhu_c,24.0,C,,BD-BMKG
 2026-10-29,1709,prakiraan_hujan_mm,11.7,mm,,BD-BMKG
 2026-10-29,1709,prakiraan_suhu_c,26.8,C,,BD-BMKG
-2026-10-29,1771,prakiraan_hujan_mm,13.2,mm,,BD-BMKG
-2026-10-29,1771,prakiraan_suhu_c,26.8,C,,BD-BMKG
+2026-10-29,1771,prakiraan_hujan_mm,11.1,mm,,BD-BMKG
+2026-10-29,1771,prakiraan_suhu_c,27.0,C,,BD-BMKG
 2026-10-30,1709,prakiraan_hujan_mm,8.7,mm,,BD-BMKG
 2026-10-30,1709,prakiraan_suhu_c,26.4,C,,BD-BMKG
 2026-10-30,1771,prakiraan_hujan_mm,7.2,mm,,BD-BMKG
@@ -118,4 +118,4 @@ tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
 2026-10-31,1709,prakiraan_hujan_mm,2.2,mm,,BD-BMKG
 2026-10-31,1709,prakiraan_suhu_c,26.4,C,,BD-BMKG
 2026-10-31,1771,prakiraan_hujan_mm,1.8,mm,,BD-BMKG
-2026-10-31,1771,prakiraan_suhu_c,26.2,C,,BD-BMKG
+2026-10-31,1771,prakiraan_suhu_c,26.4,C,,BD-BMKG
