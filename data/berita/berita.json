@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-10-29T07:08:31+07:00",
+ "diperbarui": "2026-10-30T07:09:41+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-30",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-10-29",
    "metode": "ai",
@@ -578,7 +586,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -4971,15 +4979,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 218,
-  "setelah_duplikat": 158,
-  "berita_baru": 1,
+  "hasil_pencarian": 229,
+  "setelah_duplikat": 168,
+  "berita_baru": 0,
   "total_arsip": 53,
-  "kandidat_harga_baru": 12,
-  "harga_dinilai_ai": 12,
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 0,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
