@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-10-30T15:23:41+07:00",
+ "diperbarui": "2026-10-31T07:13:12+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-10-31",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-10-30",
    "metode": "ekstraktif",
@@ -4979,8 +4987,8 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 205,
-  "setelah_duplikat": 155,
+  "hasil_pencarian": 195,
+  "setelah_duplikat": 145,
   "berita_baru": 0,
   "total_arsip": 53,
   "kandidat_harga_baru": 0,
