@@ -1,6 +1,20 @@
 {
- "diperbarui": "2026-10-31T07:13:12+07:00",
+ "diperbarui": "2026-11-01T07:13:10+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-01",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Berdasarkan ringkasan berita, Kapolda Bengkulu melakukan peninjauan demplot bawang putih dan penanaman pohon di wilayah Bengkulu Tengah dalam rangka mendukung swasembada pangan dan green policing. Namun, dampak dari kegiatan ini terhadap harga dan pasokan pangan tidak jelas karena rincian berita tidak dapat dibaca secara otomatis. Informasi yang tersedia sangat terbatas sehingga kondisi riil pasar belum dapat disimpulkan. Oleh karena itu, TPID perlu memantau perkembangan lebih lanjut terkait pasokan dan harga komoditas bawang putih di Bengkulu Tengah.",
+   "poin": [
+    "Kapolda Bengkulu meninjau demplot bawang putih dan menanam pohon di Bengkulu Tengah untuk swasembada pangan dan green policing.",
+    "Informasi sangat terbatas dan dampak terhadap harga maupun pasokan tidak jelas karena isi berita tidak dapat dibaca otomatis."
+   ],
+   "perlu_dipantau": [
+    "Dampak keberadaan demplot bawang putih terhadap pasokan dan harga di Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-10-31",
    "metode": "ekstraktif",
@@ -312,6 +326,39 @@
   }
  ],
  "berita": [
+  {
+   "id": "ea0d1fb44366",
+   "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQRFdCbEU5NF94cDdBTm9ZT1N2UjFLZHJkQ1dPY21pR1VMdTNkLXAtYzZTVkU4UFJ5QTg2ZFZzZ1ZoSkRGTi0zZnNIeGJ4QzhrLTB6MzlqMENPN1dYMGJuTXJzM01Cd0hDdG4zTWdhSDdqVzZrME0tYXZCeUZDUGpJNk5QbWczT0YyX3EtbjVvT3Azd1Y4b0s1WEFlNmZHUk91UTZmU0QwU3VQT0pCZEVRbGdlMENVTnZfWkxxdTFncU9TMUxtTzh4QTg0b3RNNmRZejkyYWVn?oc=5",
+   "judul": "Perkuat Green Policing dan Swasembada Pangan, Kapolda Bengkulu Tinjau Demplot Bawang Putih dan Tanam Pohon di Bengkulu Tengah",
+   "sumber": "Bengkulutoday",
+   "tanggal": "2026-10-30",
+   "diakses": "2026-11-01T07:13:10+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Bawang Putih"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "55bcb4db96e1",
    "url": "https://databoks.katadata.co.id/ekonomi-makro/statistik/33e14965358a391/harga-cabai-rawit-pasar-modern-bengkulu-hari-ini-2026",
@@ -4987,13 +5034,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 195,
-  "setelah_duplikat": 145,
-  "berita_baru": 0,
-  "total_arsip": 53,
+  "hasil_pencarian": 229,
+  "setelah_duplikat": 179,
+  "berita_baru": 1,
+  "total_arsip": 54,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
+  "isi_tidak_terbaca": 1,
   "penyedia_ai": "",
   "model_ai": ""
  },
