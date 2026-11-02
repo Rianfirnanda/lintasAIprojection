@@ -1,5 +1,5 @@
 {
-  "aktif_30_hari": 8,
+  "aktif_30_hari": 7,
   "akun_aktif": 10,
   "mulai": "2026-10-02",
   "per_peran": {
@@ -16,7 +16,7 @@
       "akun": 1
     },
     "tpid": {
-      "aktif_30_hari": 1,
+      "aktif_30_hari": 0,
       "akun": 1
     }
   },

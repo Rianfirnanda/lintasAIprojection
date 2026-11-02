@@ -42,7 +42,7 @@
     "penyedia": "otomatis",
     "harian_aktif": true,
     "harian_jumlah": 10,
-    "urutan_otomatis": ["gemini", "groq", "cerebras", "openrouter", "mistral"],
+    "urutan_otomatis": ["groq", "cerebras", "gemini", "openrouter", "mistral"],
     "model_gemini": "gemini-flash-latest",
     "model_groq": "openai/gpt-oss-120b",
     "model_cerebras": "gpt-oss-120b",

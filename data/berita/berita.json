@@ -1,13 +1,20 @@
 {
- "diperbarui": "2026-11-02T07:07:59+07:00",
+ "diperbarui": "2026-11-02T23:07:33+07:00",
  "kesimpulan": [
   {
    "tanggal": "2026-11-02",
-   "metode": "ekstraktif",
-   "penyedia": "",
-   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
-   "poin": [],
-   "perlu_dipantau": []
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Bupati dan Forkopimda Bengkulu Tengah telah membahas cadangan beras pemerintah serta langkah pengendalian inflasi daerah.",
+   "poin": [
+    "Bupati dan Forkopimda Bengkulu Tengah membahas cadangan beras pemerintah dan pengendalian inflasi daerah.",
+    "Cabai merah hingga beras menyumbang inflasi di Bengkulu pada Oktober 2026."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan cadangan beras pemerintah dan langkah pengendalian inflasi di Kabupaten Bengkulu Tengah.",
+    "Ketersediaan stok dan pergerakan harga cabai merah serta beras."
+   ],
+   "kalimat_dibuang": 1
   },
   {
    "tanggal": "2026-11-01",
@@ -334,6 +341,180 @@
   }
  ],
  "berita": [
+  {
+   "id": "afb57f217b55",
+   "url": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxNbm16ejlOaW5Jbk1UYmFYQlNxdFJNQ3hTS0JWLVhJYXlqV3o1dWp2d1JLLWVMVVd3MElhQzcyTkhKZVNYTHpjYjZBZFVPZENBdFNSN2xPcHYwQlQzUzZaXy15Z01sYThOTlYtVllaQTZOa19WRWVnSFJjaGpxcjdDc0wzU0xRUmJMZGNaQmd2QXcyMWszMy1ZY0xCYU5oblZ5aGFYZDNlQXVLallLaXFwcjJBT0x4QVJNUDE5eU1GZkVlR01JU24tQTZQZUpPNjhZbFVTLVBieFFaVXNPSWZLNzN1bkVPb3FlV1VwT1JiSHNoV0pZVVZDR3FTUXo?oc=5",
+   "judul": "BUPATI DAN FORKOPIMDA BENGKULU TENGAH BAHAS CADANGAN BERAS PEMERINTAH DAN LANGKAH PENGENDALIAN INFLASI DAERAH",
+   "sumber": "Pemerintah Kabupaten Bengkulu Tengah",
+   "tanggal": "2026-11-02",
+   "diakses": "2026-11-02T23:07:33+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "9b2ab793bf1f",
+   "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNMlFhTUJ0eGJiRl9XM19aZkZid1hRZnh3Z2lfa1E2dGxDQlJQNUROYnJuajVHR3lhNEduQms1VnNqaS1tWWgwNWE4LU10WjRFdDZnX3hmcHVVZ1U2Y205SENsaXRqZVFkbWoyS2Y0a28xYmhWSWNoN2dpZjBtUzd0VlN2bzdxY290Y3dGZG9NMldyYWdwUWVQNm1pNlgxZEU4S2tiam0zRXc1RUFzZFd5UUtlSUlOeDjSAbcBQVVfeXFMTTJRYU1CdHhiYkZfVzNfWmZGYndYUWZ4d2dpX2tRNnRsQ0JSUDVETmJybmo1R0d5YTRHbkJrNVZzamktbVloMDVhOC1NdFo0RXQ2Z194ZnB1VWdVNmNtOUhDbGl0amVRZG1qMktmNGtvMWJoVkljaDdnaWYwbVM3dFZTdm83cWNvdGN3RmRvTTJXcmFncFFlUDZtaTZYMWRFOEtrYmptM0V3NUVBc2RXeVFLZUlJTng4?oc=5",
+   "judul": "BPS: Cabai merah hingga beras sumbang inflasi Bengkulu Oktober 2026",
+   "sumber": "ANTARA News",
+   "tanggal": "2026-11-02",
+   "diakses": "2026-11-02T23:07:33+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 7,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Cabai Merah"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "48342ab49d80",
+   "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOZTlMRHVpN3dFbGI2RUhwM2tIaGlIVk1jQ1hVV2sxd2hHOERhNDFoT0ppX3llRFM3d1hwS3h1akY1MTJCdzRRdm41SFpfT2lMdTJuT0stU0dKWC11cFIwVWFyWEs3cU5ZZDVnOGNWN3YyU3VQQnNrZHJvWVR6cGc3bUJzWmMwd0Fmc1VHb01FMURxT05UelBGSmVNUmhiM3REZ2tLQVBOeFJjQ0VWWXVMVmdsRm1MYzTSAbcBQVVfeXFMTmU5TER1aTd3RWxiNkVIcDNrSGhpSFZNY0NYVVdrMXdoRzhEYTQxaE9KaV95ZURTN3dYcEt4dWpGNTEyQnc0UXZuNUhaX09pTHUybk9LLVNHSlgtdXBSMFVhclhLN3FOWWQ1ZzhjVjd2MlN1UEJza2Ryb1lUenBnN21Cc1pjMHdBZnNVR29NRTFEcU9OVHpQRkplTVJoYjN0RGdrS0FQTnhSY0NFVll1TFZnbEZtTGM0?oc=5",
+   "judul": "Stok Kurang, Harga Cabai Merah di Kota Bengkulu Capai Rp90 Ribu Per Kilogram",
+   "sumber": "Koran Jakarta ®",
+   "tanggal": "2026-11-02",
+   "diakses": "2026-11-02T23:07:33+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "bbb9af9312b1",
+   "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOWmJTWkI4TTM4bnVjakdGelhoZXI3dEFRY3lOb1o2NVF1ZHZya1doVGtRbHNKR0RqUHVwUnk1bkRySFdkTXdIZ1YwSDVMbTRTc2p2RjBBVG4yWXhpa3ZQXzVsWW1KNjFoZU1TMTJjODFwX2dFM3RQdlhRNk9ITHVjQy1BV0NIV1Q1M2U5UzRoU3Jsc24yclpfV3gzX0Y0OVQxbF9qMnZ0WEfSAasBQVVfeXFMUGhEY3FFcVQ1aEdHME50XzlhbEpaY1ppdFoycVhCOFlDQWVTemtnYjMtVlZ4NFp4V0pDdGY3OFNTS2dhOUdUMHBMUXctWW9MZmcwUEJwZ1dJd0g2U2xJaWdLN3NGLXJFX2JHTkNoWjZfSm03dWh1SDZkN1doSHAzWU13MnJfVF90UWlPWG96Uy1HUzh1clZtc2U3b2NDWWgtSEx0TGlrVV9hNEpZ?oc=5",
+   "judul": "Harga cabai merah di Kota Bengkulu capai Rp90 ribu per kilogram",
+   "sumber": "ANTARA News",
+   "tanggal": "2026-11-02",
+   "diakses": "2026-11-02T23:07:33+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "2c68fb6eb780",
+   "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE5XNkZKUDRFYTExamQwc1FNT3FoVWF4RXBHU1p2M1RQZHNfaF84UGhCbVdGeVZidVVNTk4tU1I4eEk0d0JYakpvRk1IcVdObWJ5U0xrdUlTWDRTb1RBSTZJQi1zY2ZCc0hMY3dJZjJSYmdYb2hmbEltMDNn?oc=5",
+   "judul": "Kumpulan Berita harga cabai merah di kota bengkulu",
+   "sumber": "ANTARA News",
+   "tanggal": "2026-11-02",
+   "diakses": "2026-11-02T23:07:33+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "ea0d1fb44366",
    "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQRFdCbEU5NF94cDdBTm9ZT1N2UjFLZHJkQ1dPY21pR1VMdTNkLXAtYzZTVkU4UFJ5QTg2ZFZzZ1ZoSkRGTi0zZnNIeGJ4QzhrLTB6MzlqMENPN1dYMGJuTXJzM01Cd0hDdG4zTWdhSDdqVzZrME0tYXZCeUZDUGpJNk5QbWczT0YyX3EtbjVvT3Azd1Y4b0s1WEFlNmZHUk91UTZmU0QwU3VQT0pCZEVRbGdlMENVTnZfWkxxdTFncU9TMUxtTzh4QTg0b3RNNmRZejkyYWVn?oc=5",
@@ -5042,13 +5223,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 241,
-  "setelah_duplikat": 178,
-  "berita_baru": 0,
-  "total_arsip": 54,
+  "hasil_pencarian": 277,
+  "setelah_duplikat": 215,
+  "berita_baru": 5,
+  "total_arsip": 59,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
+  "isi_tidak_terbaca": 5,
   "penyedia_ai": "",
   "model_ai": ""
  },
