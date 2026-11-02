@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-01T07:13:10+07:00",
+ "diperbarui": "2026-11-02T07:07:59+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-02",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-01",
    "metode": "ai",
@@ -357,7 +365,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "55bcb4db96e1",
@@ -5034,13 +5042,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 229,
-  "setelah_duplikat": 179,
-  "berita_baru": 1,
+  "hasil_pencarian": 241,
+  "setelah_duplikat": 178,
+  "berita_baru": 0,
   "total_arsip": 54,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 1,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "",
   "model_ai": ""
  },
