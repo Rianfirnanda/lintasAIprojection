@@ -1,5 +1,5 @@
 {
-  "aktif_30_hari": 9,
+  "aktif_30_hari": 8,
   "akun_aktif": 10,
   "mulai": "2026-10-02",
   "per_peran": {
@@ -8,7 +8,7 @@
       "akun": 6
     },
     "analis": {
-      "aktif_30_hari": 2,
+      "aktif_30_hari": 1,
       "akun": 2
     },
     "masyarakat": {
