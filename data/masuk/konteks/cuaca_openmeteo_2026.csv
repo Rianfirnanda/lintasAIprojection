@@ -1829,3 +1829,15 @@ tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
 2026-11-01,1709,suhu_rata_c,26.0,C,,BD-CUACA
 2026-11-01,1771,curah_hujan_mm,14.4,mm,,BD-CUACA
 2026-11-01,1771,suhu_rata_c,26.9,C,,BD-CUACA
+2026-11-02,1708,curah_hujan_mm,0.0,mm,,BD-CUACA
+2026-11-02,1708,suhu_rata_c,24.3,C,,BD-CUACA
+2026-11-02,1709,curah_hujan_mm,1.6,mm,,BD-CUACA
+2026-11-02,1709,suhu_rata_c,27.4,C,,BD-CUACA
+2026-11-02,1771,curah_hujan_mm,0.5,mm,,BD-CUACA
+2026-11-02,1771,suhu_rata_c,27.8,C,,BD-CUACA
+2026-11-03,1708,curah_hujan_mm,4.9,mm,,BD-CUACA
+2026-11-03,1708,suhu_rata_c,24.4,C,,BD-CUACA
+2026-11-03,1709,curah_hujan_mm,2.9,mm,,BD-CUACA
+2026-11-03,1709,suhu_rata_c,27.7,C,,BD-CUACA
+2026-11-03,1771,curah_hujan_mm,1.6,mm,,BD-CUACA
+2026-11-03,1771,suhu_rata_c,28.6,C,,BD-CUACA
