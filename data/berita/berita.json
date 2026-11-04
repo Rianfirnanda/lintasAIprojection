@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-02T23:07:33+07:00",
+ "diperbarui": "2026-11-04T14:58:28+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-04",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Di sisi lain, terdapat informasi kenaikan harga cabai merah hingga Rp90 ribu per kilogram akibat kurangnya pasokan petani yang terjadi di Kota Bengkulu, bukan di Bengkulu Tengah.",
+   "poin": [
+    "Kondisi pangan dan harga beras di Kabupaten Bengkulu Tengah terpantau stabil berkat Gerakan Pangan Murah.",
+    "Harga cabai merah mengalami kenaikan di Kota Bengkulu akibat pasokan petani yang kurang."
+   ],
+   "perlu_dipantau": [
+    "Ketersediaan cadangan beras pemerintah di Kabupaten Bengkulu Tengah",
+    "Perkembangan harga dan pasokan pangan daerah"
+   ],
+   "kalimat_dibuang": 1
+  },
   {
    "tanggal": "2026-11-02",
    "metode": "ai",
@@ -342,6 +357,343 @@
  ],
  "berita": [
   {
+   "id": "e9ad541a42c2",
+   "url": "https://bengkulu.antaranews.com/berita/484659/harga-cabai-merah-di-kota-bengkulu-capai-rp90-ribu-per-kilogram",
+   "judul": "Harga cabai merah di Kota Bengkulu capai Rp90 ribu per kilogram - ANTARA News Bengkulu",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-11-04",
+   "diakses": "2026-11-04T14:58:28+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 9,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Minyak Goreng",
+    "Gula Pasir"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9393,
+   "sidik_sha256": "35470f26442bab82df512e883dfbf3a8bd88a3c06d95059860c0f590c85dbcfc",
+   "kutipan": "Untuk komoditi pangan yang akan disediakan dengan harga terjangkau atau di bawah harga pasar yaitu beras, cabai, minyak goreng, bawang merah, bawang putih, gula, telur ayam, daging ayam potong, daging sapi dan lainnya. U",
+   "ringkasan": "Harga cabai merah di sejumlah pasar di Kota Bengkulu naik menjadi Rp80 ribu hingga Rp90 ribu per kilogram dari yang sebelumnya Rp60 ribu per kilogram. Kenaikan harga tersebut disebabkan oleh kurangnya pasokan cabai dari petani.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 90000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "",
+     "bukti": "* [Harga cabai merah di Kota Bengkulu capai Rp90 ribu per kilogram](https://bengkulu.antaranews.com/berita/484659/harga-cabai-merah-di-kota-bengkulu-capai-rp90-ribu-per-kilogram)",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar saat ini untuk komoditas cabai merah di Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-04"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 80,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Harga cabai merah di sejumlah pasar di Kota Bengkulu berkisar Rp80 hingga Rp90 ribu per kilogram, Senin (2/11/2026).",
+     "status": "ditolak: di luar batas wajar"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 80000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Kota Bengkulu (ANTARA) - Harga cabai merah saat ini di sejumlah pasar di Kota Bengkulu mengalami kenaikan Rp80 ribu hingga Rp90 ribu per kilogram yang sebelumnya Rp60 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual cabai merah saat ini di sejumlah pasar Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-04"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 60000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Kota Bengkulu (ANTARA) - Harga cabai merah saat ini di sejumlah pasar di Kota Bengkulu mengalami kenaikan Rp80 ribu hingga Rp90 ribu per kilogram yang sebelumnya Rp60 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Menunjukkan harga cabai merah pada waktu sebelumnya.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-04"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 100000,
+     "satuan": "kg",
+     "peran_wilayah": "pembanding",
+     "pasar": null,
+     "arah": "",
+     "bukti": "\"Beberapa hari lalu cabai merah harganya capai Rp100 ribu per kilogram, dan sekarang kembali ke Rp80 ribu hingga Rp90 ribu per kilogram,” ujar dia di Kota Bengkulu, Senin.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Menyebutkan harga cabai merah pada beberapa hari yang lalu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-04"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 80000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Selain harga cabai merah yang mengalami kenaikan, cabai jenis lainnya juga mengalami kenaikan harga seperti cabai rawit merah sebesar Rp80 ribu per kilogram yang sebelumnya Rp60 ribu, dan harga cabai hijau yaitu Rp40 hingga Rp45 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga pasar saat ini untuk komoditas cabai rawit merah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-04"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 40,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Selain harga cabai merah yang mengalami kenaikan, cabai jenis lainnya juga mengalami kenaikan harga seperti cabai rawit merah sebesar Rp80 ribu per kilogram yang sebelumnya Rp60 ribu, dan harga cabai hijau yaitu Rp40 hingga Rp45 ribu per kilogram.",
+     "status": "ditolak: di luar batas wajar"
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 45000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Selain harga cabai merah yang mengalami kenaikan, cabai jenis lainnya juga mengalami kenaikan harga seperti cabai rawit merah sebesar Rp80 ribu per kilogram yang sebelumnya Rp60 ribu, dan harga cabai hijau yaitu Rp40 hingga Rp45 ribu per kilogram.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": false,
+      "alasan": "Merupakan harga komoditas cabai hijau bukan cabai merah.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-04"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "8cc66d7c8d0f",
+   "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOVHpxbWtEdmQyYm1od2xOWmFEY25RSEtVYU5uTXZ5STNYM3FrdGpIVjN6LUhGNzVURG1CMTZqM0lMT2NPY2RNQjRaYmtkQWxSYzNidkZFOHNlY205TjROWkRCa2xqOEctVVhmcVdVdk1Dc1NvcC1fNUo0VjFGMmNIczAycXM?oc=5",
+   "judul": "Kumpulan Berita harga minyak goreng di bengkulu bertahan",
+   "sumber": "ANTARA News",
+   "tanggal": "2026-11-03",
+   "diakses": "2026-11-04T14:58:28+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Minyak Goreng"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "7db7c9d5d490",
+   "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNT3FTRWwwTG5SeXdXOTlsRVdTRkhjYnNqRWNmdE5xUUxYbC1Ja2ZzRlNRcHU4NlNnMWM1dWk0UWdPMnNiX0t3TDNIRUMzRGdWUFdzVHEyRDFmVGU1V2s2Z2p6eVo3S1VwR19mMENZNkg1b21PY3djX3ZRN1p2Yl96ck5fTUdWMnBmdlZ4MWg1cnYxanpXc3picURlMFZGXzhPVTBtSjRqdTF2T3J3TDV4QzVDbWxsUEZrTThUSl90Z1k?oc=5",
+   "judul": "Inflasi Kota Bengkulu Oktober 2026 Tembus 3,29 Persen, Harga Pangan Jadi Penyumbang Terbesar",
+   "sumber": "Teropong Publik",
+   "tanggal": "2026-11-03",
+   "diakses": "2026-11-04T14:58:28+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "7d163ef37351",
+   "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQdjhaVEZWZ2VWLUxPc0IzR21XcHRxTFFwU0lyLXJQYXNSTmpiRm1KZnNzczNNWTUxSTBGYUE1S09CaWZIakpHTnJvdTBYY1dVUm0xQW9sVEJvYWlLYm5MZ0tDV3BqY1pHX3RBOWlWNE9fLWNOemljU3FrOF9qOC1uYnQyTQ?oc=5",
+   "judul": "Inflasi Kota Bengkulu 3,29 Persen",
+   "sumber": "Pedoman Bengkulu",
+   "tanggal": "2026-11-03",
+   "diakses": "2026-11-04T14:58:28+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "b733e5117b8c",
+   "url": "https://bengkulutengahkab.go.id/postingan/detail_postingan/BUPATI-DAN-FORKOPIMDA-BENGKULU-TENGAH-BAHAS-CADANGAN-BERAS-PEMERINTAH-DAN-LANGKAH-PENGENDALIAN-INFLASI-DAERAH",
+   "judul": "BUPATI DAN FORKOPIMDA BENGKULU TENGAH BAHAS CADANGAN BERAS PEMERINTAH DAN LANGKAH PENGENDALIAN INFLASI DAERAH",
+   "sumber": "bengkulutengahkab.go.id",
+   "tanggal": "2026-11-02",
+   "diakses": "2026-11-04T14:58:28+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 8,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "cuaca",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 6784,
+   "sidik_sha256": "f0b7e0475f7519d1ef96b9a77d13da962432dab4e39bd0df72a625f8e4febcfc",
+   "kutipan": "Dalam pembahasan rapat, kondisi inflasi dan stabilitas pangan di Kabupaten Bengkulu Tengah secara umum masih terpantau aman dan relatif stabil. Meskipun dalam dua minggu terakhir sempat terjadi kenaikan harga pada komodi",
+   "ringkasan": "Pemerintah Kabupaten Bengkulu Tengah menggelar rapat Forkopimda untuk membahas cadangan beras dan pengendalian inflasi daerah. Kondisi pangan secara umum terpantau aman dan stabil, serta kenaikan harga beras yang sempat terjadi berhasil dikendalikan melalui Gerakan Pangan Murah.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
    "id": "afb57f217b55",
    "url": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxNbm16ejlOaW5Jbk1UYmFYQlNxdFJNQ3hTS0JWLVhJYXlqV3o1dWp2d1JLLWVMVVd3MElhQzcyTkhKZVNYTHpjYjZBZFVPZENBdFNSN2xPcHYwQlQzUzZaXy15Z01sYThOTlYtVllaQTZOa19WRWVnSFJjaGpxcjdDc0wzU0xRUmJMZGNaQmd2QXcyMWszMy1ZY0xCYU5oblZ5aGFYZDNlQXVLallLaXFwcjJBT0x4QVJNUDE5eU1GZkVlR01JU24tQTZQZUpPNjhZbFVTLVBieFFaVXNPSWZLNzN1bkVPb3FlV1VwT1JiSHNoV0pZVVZDR3FTUXo?oc=5",
    "judul": "BUPATI DAN FORKOPIMDA BENGKULU TENGAH BAHAS CADANGAN BERAS PEMERINTAH DAN LANGKAH PENGENDALIAN INFLASI DAERAH",
@@ -374,7 +726,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "9b2ab793bf1f",
@@ -395,6 +747,41 @@
    },
    "komoditas": [
     "Beras",
+    "Cabai Merah"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": false
+  },
+  {
+   "id": "a10f9ecdb44e",
+   "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOTTZDVjEzamNpNVZyR3hXWHdldUhueEJzSzNTVlV4T2oxLXJkR05yQVNQSHFmNkVvc2d6QkIzUWFXd2dtVFA4QkxNWG0wSTBXM3NxU09wUjRBQUhqUnNZLTlKMFZrZkxVRmhkMkpHcnduUFRmLVJ6RGlacVIwdmdyZ3d1dUs3cnpwdXJtOXFqdC1ZWFRjSndZSDhINnBGS290ZGZlSFRMMFVYR1V1bGfSAbMBQVVfeXFMTnBGaERha21fREtJS29LWEdWemRpY3dNMThEQmE1dUVIaUdhRTZHa2ZDTHZmaWVFbVV0SlhuZVk1elpzVkFpQW9TWHBxTXhNLXo3N2t4UW1sdWd5b3NOTGlmc05LbWJsU3QwT1RSVkxDVEE5a0VzQVkzd1B2MFo1bUhpbEJnaXJXYk5nSndEbXpWVmdMRHNIcXBLVm5GOHE5dWJaczhMZ2R4UkxoNFc0cU1Na0E?oc=5",
+   "judul": "Harga cabai merah di Kota Bengkulu capai Rp90 ribu per kilogram",
+   "sumber": "ANTARA News",
+   "tanggal": "2026-11-02",
+   "diakses": "2026-11-04T14:58:28+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
     "Cabai Merah"
    ],
    "tag": [],
@@ -443,7 +830,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "bbb9af9312b1",
@@ -478,7 +865,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "2c68fb6eb780",
@@ -513,7 +900,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "ea0d1fb44366",
@@ -5223,15 +5610,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 277,
-  "setelah_duplikat": 215,
-  "berita_baru": 5,
-  "total_arsip": 59,
-  "kandidat_harga_baru": 0,
-  "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 5,
-  "penyedia_ai": "",
-  "model_ai": ""
+  "hasil_pencarian": 252,
+  "setelah_duplikat": 202,
+  "berita_baru": 6,
+  "total_arsip": 65,
+  "kandidat_harga_baru": 6,
+  "harga_dinilai_ai": 6,
+  "isi_tidak_terbaca": 4,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
