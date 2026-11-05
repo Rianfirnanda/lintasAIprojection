@@ -1,6 +1,20 @@
 {
- "diperbarui": "2026-11-04T14:58:28+07:00",
+ "diperbarui": "2026-11-05T07:08:12+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-05",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Sementara itu, terdapat laporan terpisah bahwa harga pangan secara umum melanjutkan tren penurunan dan harga cabai mereda, meskipun wilayah spesifiknya tidak disebutkan. Informasi langsung mengenai kondisi harga dan pasokan di Kabupaten Bengkulu Tengah sendiri belum tersedia dalam ringkasan ini.",
+   "poin": [
+    "Inflasi tahunan Kota Bengkulu Oktober 2026 mencapai 3,29 persen akibat kenaikan harga pangan.",
+    "Harga pangan secara umum dilaporkan melanjutkan tren penurunan dan harga cabai mereda (wilayah tidak disebutkan)."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga pangan dan tingkat inflasi secara langsung di wilayah Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 1
+  },
   {
    "tanggal": "2026-11-04",
    "metode": "ai",
@@ -547,6 +561,317 @@
      }
     }
    ],
+   "baru": false,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "122bb797643a",
+   "url": "https://www.teropongpublik.co.id/inflasi-kota-bengkulu-oktober-2026-tembus-329-persen-harga-pangan-jadi-penyumbang-terbesar",
+   "judul": "Inflasi Kota Bengkulu Oktober 2026 Tembus 3,29 Persen, Harga Pangan Jadi Penyumbang Terbesar | Teropong Publik",
+   "sumber": "teropongpublik.co.id",
+   "tanggal": "2026-11-04",
+   "diakses": "2026-11-05T07:08:12+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 8,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Bawang Merah",
+    "Cabai Merah",
+    "Cabai Rawit",
+    "Ikan"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 14240,
+   "sidik_sha256": "fd7646b8df9e151399e4c1317722ee59702a898f8db0f7c023769ac0e4acc549",
+   "kutipan": "Melalui penyampaian Berita Resmi Statistik Oktober 2026 ini, perkembangan inflasi di Kota Bengkulu diharapkan dapat menjadi bahan evaluasi bagi pemerintah daerah dalam menjaga stabilitas ekonomi sekaligus melindungi daya",
+   "ringkasan": "Inflasi tahunan Kota Bengkulu pada Oktober 2026 tercatat sebesar 3,29 persen dengan harga pangan menjadi penyumbang terbesar.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "naik",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "e7943bbf1364",
+   "url": "https://www.pedomanbengkulu.com/2026/11/harga-pangan-lanjutkan-tren-penurunan.html",
+   "judul": "Harga Pangan Lanjutkan Tren Penurunan, Pedas Cabai Mereda - Pedoman Bengkulu",
+   "sumber": "pedomanbengkulu.com",
+   "tanggal": "2026-11-04",
+   "diakses": "2026-11-05T07:08:12+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 8,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Minyak Goreng"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 9286,
+   "sidik_sha256": "c63197416e0d6b77a8fa1933026b5fbc305a8f39d8f2f78c230b6f5c7558b9a2",
+   "kutipan": "Harga bawang merah ukuran sedang juga turun sebesar 0.27% menjadi Rp37.050/kg, dari hari sebelumnya di harga Rp37.200/kg. Sedangkan, bawang putih naik 0.26% menjadi Rp38.400/kg. Harga beras kualitas bawah hingga super ra",
+   "ringkasan": "Harga pangan melanjutkan tren penurunan dan harga cabai dilaporkan mereda.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "turun",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR01",
+     "nilai": 65200,
+     "satuan": "kg",
+     "peran_wilayah": "nasional",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Berdasarkan data Pusat Informasi Harga Pangan Strategis (PIHPS) Bank Indonesia per pukul 10.00 WIB, harga cabai merah besar mengalami penurunan terdalam mencapai Rp65.200/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan data rata-rata dari lembaga resmi.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW01",
+     "nilai": 71750,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Harga cabai rawit hijau juga turun 9.97% menjadi Rp71.750/kg di hari sebelumnya Rp77.300/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan data rata-rata lembaga.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW01",
+     "nilai": 77300,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Harga cabai rawit hijau juga turun 9.97% menjadi Rp71.750/kg di hari sebelumnya Rp77.300/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merujuk pada harga hari sebelumnya.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Minyak Goreng",
+     "kode_komoditas": "MGR",
+     "kode_varian": "MGR01",
+     "nilai": 19800,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Minyak goreng curah juga turun 2.46% atau di harga Rp19.800/kg, yang mana di hari sebelumnya di harga Rp20.350.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka menunjukkan harga rata-rata lembaga.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": "TLR01",
+     "nilai": 27950,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Harga telur ayam ras segar turun 5.25% atau di harga Rp27.950/kg, yang mana di hari sebelumnya Rp29.300/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga rata-rata lembaga.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Telur Ayam",
+     "kode_komoditas": "TLR",
+     "kode_varian": "TLR01",
+     "nilai": 29300,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Harga telur ayam ras segar turun 5.25% atau di harga Rp27.950/kg, yang mana di hari sebelumnya Rp29.300/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga pada hari sebelumnya.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": "DAY01",
+     "nilai": 38100,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Sementara itu daging ayam ras segar turun 3.54% menjadi Rp38.100/kg, yang di hari sebelumnya Rp39.000/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka menunjukkan harga rata-rata lembaga.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": "DAY01",
+     "nilai": 39000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Sementara itu daging ayam ras segar turun 3.54% menjadi Rp38.100/kg, yang di hari sebelumnya Rp39.000/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga pada hari sebelumnya.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": "BWM01",
+     "nilai": 37050,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Harga bawang merah ukuran sedang juga turun sebesar 0.27% menjadi Rp37.050/kg, dari hari sebelumnya di harga Rp37.200/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka merupakan harga rata-rata lembaga.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Bawang Merah",
+     "kode_komoditas": "BWM",
+     "kode_varian": "BWM01",
+     "nilai": 37200,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Harga bawang merah ukuran sedang juga turun sebesar 0.27% menjadi Rp37.050/kg, dari hari sebelumnya di harga Rp37.200/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "lama",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka adalah harga pada hari sebelumnya.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 38400,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "Sedangkan, bawang putih naik 0.26% menjadi Rp38.400/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Angka menunjukkan harga rata-rata lembaga.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-05"
+     }
+    }
+   ],
    "baru": true,
    "penyedia_ai": "gemini"
   },
@@ -581,7 +906,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "7db7c9d5d490",
@@ -616,7 +941,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "7d163ef37351",
@@ -649,7 +974,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "b733e5117b8c",
@@ -690,7 +1015,7 @@
    "dampak_harga": "stabil",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -795,7 +1120,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "48342ab49d80",
@@ -5610,15 +5935,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 252,
-  "setelah_duplikat": 202,
-  "berita_baru": 6,
-  "total_arsip": 65,
-  "kandidat_harga_baru": 6,
-  "harga_dinilai_ai": 6,
-  "isi_tidak_terbaca": 4,
+  "hasil_pencarian": 201,
+  "setelah_duplikat": 155,
+  "berita_baru": 2,
+  "total_arsip": 67,
+  "kandidat_harga_baru": 11,
+  "harga_dinilai_ai": 11,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "model_ai": "gemini-3.5-flash-lite"
  },
  "galat": []
 }
