@@ -140,9 +140,9 @@ tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
 2026-11-05,1771,prakiraan_hujan_mm,0.0,mm,,BD-BMKG
 2026-11-05,1771,prakiraan_suhu_c,25.0,C,,BD-BMKG
 2026-11-06,1709,prakiraan_hujan_mm,2.7,mm,,BD-BMKG
-2026-11-06,1709,prakiraan_suhu_c,27.2,C,,BD-BMKG
+2026-11-06,1709,prakiraan_suhu_c,27.0,C,,BD-BMKG
 2026-11-06,1771,prakiraan_hujan_mm,2.9,mm,,BD-BMKG
-2026-11-06,1771,prakiraan_suhu_c,27.4,C,,BD-BMKG
+2026-11-06,1771,prakiraan_suhu_c,27.2,C,,BD-BMKG
 2026-11-07,1709,prakiraan_hujan_mm,1.1,mm,,BD-BMKG
 2026-11-07,1709,prakiraan_suhu_c,26.5,C,,BD-BMKG
 2026-11-07,1771,prakiraan_hujan_mm,1.0,mm,,BD-BMKG
