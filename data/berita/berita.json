@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-05T07:08:12+07:00",
+ "diperbarui": "2026-11-06T07:06:12+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-06",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Berdasarkan ringkasan berita yang tersedia untuk tanggal tersebut, tidak ada informasi spesifik mengenai perkembangan harga dan pasokan di Kabupaten Bengkulu Tengah. Informasi yang ada hanya mencatat kenaikan harga tanah untuk investasi properti di Kota Bengkulu. Oleh karena itu, kondisi harga dan pasokan di Bengkulu Tengah belum dapat disimpulkan dari data ini.",
+   "poin": [
+    "Harga tanah di Kota Bengkulu dilaporkan terus naik.",
+    "Tidak ada data mengenai harga atau pasokan untuk wilayah Kabupaten Bengkulu Tengah."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga dan pasokan kebutuhan pokok di Kabupaten Bengkulu Tengah.",
+    "Informasi lebih lanjut terkait dampak ekonomi di luar wilayah Kota Bengkulu."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-05",
    "metode": "ai",
@@ -371,6 +386,41 @@
  ],
  "berita": [
   {
+   "id": "ea7103e4ee0e",
+   "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOTkZsdUhJNklmeWdaX09SbTc3THpCRHJTaHdGVnJMbjc1M0ZPRE9kMmtNNDh2bGc0OUxzZkQxU3ZhTGRVa2l6MzdqM0p0UHlJRVJhQS1qSzQzMllaQnZyOFQ3YXRjbmw4Y2NqekNGbVVNT1hEaU1STnpEWUo1d1hRR0VyWWxOOWVGd2I4UjJTZElILWNfYktMUTBQQlJCdlpqc0M1dG01SlN2aEY4bHJTMTF1LWNCcGR2SmtOaWIyQdIBvwFBVV95cUxOTkZsdUhJNklmeWdaX09SbTc3THpCRHJTaHdGVnJMbjc1M0ZPRE9kMmtNNDh2bGc0OUxzZkQxU3ZhTGRVa2l6MzdqM0p0UHlJRVJhQS1qSzQzMllaQnZyOFQ3YXRjbmw4Y2NqekNGbVVNT1hEaU1STnpEWUo1d1hRR0VyWWxOOWVGd2I4UjJTZElILWNfYktMUTBQQlJCdlpqc0M1dG01SlN2aEY4bHJTMTF1LWNCcGR2SmtOaWIyQQ?oc=5",
+   "judul": "Harga Tanah di Kota Bengkulu Terus Naik, Investasi Properti Makin Menjanjikan - bengkuluekspress.disway.id",
+   "sumber": "Bengkulu Ekspress",
+   "tanggal": "2026-11-05",
+   "diakses": "2026-11-06T07:06:12+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "e9ad541a42c2",
    "url": "https://bengkulu.antaranews.com/berita/484659/harga-cabai-merah-di-kota-bengkulu-capai-rp90-ribu-per-kilogram",
    "judul": "Harga cabai merah di Kota Bengkulu capai Rp90 ribu per kilogram - ANTARA News Bengkulu",
@@ -606,7 +656,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -872,7 +922,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -5935,15 +5985,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 201,
-  "setelah_duplikat": 155,
-  "berita_baru": 2,
-  "total_arsip": 67,
-  "kandidat_harga_baru": 11,
-  "harga_dinilai_ai": 11,
-  "isi_tidak_terbaca": 0,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.5-flash-lite"
+  "hasil_pencarian": 209,
+  "setelah_duplikat": 170,
+  "berita_baru": 1,
+  "total_arsip": 68,
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
+  "isi_tidak_terbaca": 1,
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
