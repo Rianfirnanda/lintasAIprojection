@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-11-06T07:06:12+07:00",
+ "diperbarui": "2026-11-07T07:10:08+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-07",
+   "metode": "ai",
+   "penyedia": "openrouter",
+   "ringkas": "Stok cadangan beras di Bengkulu Tengah turun menjadi 8 ton. Harga beras mulai naik di wilayah tersebut. Dampak harga terhadap konsumen masih belum jelas. Perlu memantau perkembangan harga dan stok selanjutnya.",
+   "poin": [
+    "Stok cadangan beras Bengkulu Tengah turun menjadi 8 ton",
+    "Harga beras mulai naik di wilayah tersebut",
+    "Dampak harga terhadap konsumen belum jelas"
+   ],
+   "perlu_dipantau": [
+    "Tren harga beras di Bengkulu Tengah",
+    "Perkembangan stok cadangan beras"
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-06",
    "metode": "ai",
@@ -386,6 +402,42 @@
  ],
  "berita": [
   {
+   "id": "7ea437cf4ad3",
+   "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQVEY4T01NamFaMjMxdXR4c0ljeVRfdjJQNlVTV2V1Ujdkdjk4UEI5bEdqZE1qUU1yU3piQUJ4eUIwcnV0Zlh0OHFQdUk3MkRNd3JROWp3MVhjWnBxc1ZUdXRDOFlMSUx0aUZpczM1eTdseUxCd05fVnA4ejdhQ3c4YjFyUEpYVU93OVkyWDAwTFgxRjdIUVZjQUhwYTc1c1hxaGo2Ui1GX3FWQmd0VThoQ3JiUnFPMlFZdVZhZ1ByQ2RYQQ?oc=5",
+   "judul": "Stok Cadangan Beras Bengkulu Tengah Turun Jadi 8 Ton, Harga Mulai Naik",
+   "sumber": "Tribunbengkulu.com",
+   "tanggal": "2026-11-06",
+   "diakses": "2026-11-07T07:10:08+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "tinggi",
+   "skor": 7,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "ea7103e4ee0e",
    "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOTkZsdUhJNklmeWdaX09SbTc3THpCRHJTaHdGVnJMbjc1M0ZPRE9kMmtNNDh2bGc0OUxzZkQxU3ZhTGRVa2l6MzdqM0p0UHlJRVJhQS1qSzQzMllaQnZyOFQ3YXRjbmw4Y2NqekNGbVVNT1hEaU1STnpEWUo1d1hRR0VyWWxOOWVGd2I4UjJTZElILWNfYktMUTBQQlJCdlpqc0M1dG01SlN2aEY4bHJTMTF1LWNCcGR2SmtOaWIyQdIBvwFBVV95cUxOTkZsdUhJNklmeWdaX09SbTc3THpCRHJTaHdGVnJMbjc1M0ZPRE9kMmtNNDh2bGc0OUxzZkQxU3ZhTGRVa2l6MzdqM0p0UHlJRVJhQS1qSzQzMllaQnZyOFQ3YXRjbmw4Y2NqekNGbVVNT1hEaU1STnpEWUo1d1hRR0VyWWxOOWVGd2I4UjJTZElILWNfYktMUTBQQlJCdlpqc0M1dG01SlN2aEY4bHJTMTF1LWNCcGR2SmtOaWIyQQ?oc=5",
    "judul": "Harga Tanah di Kota Bengkulu Terus Naik, Investasi Properti Makin Menjanjikan - bengkuluekspress.disway.id",
@@ -418,7 +470,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "e9ad541a42c2",
@@ -5985,10 +6037,10 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 209,
-  "setelah_duplikat": 170,
+  "hasil_pencarian": 185,
+  "setelah_duplikat": 153,
   "berita_baru": 1,
-  "total_arsip": 68,
+  "total_arsip": 69,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 1,
