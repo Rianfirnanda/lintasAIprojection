@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-07T07:10:08+07:00",
+ "diperbarui": "2026-11-08T07:05:10+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-08",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Informasi yang tersedia pada hari ini sangat terbatas karena isi berita tidak dapat dibaca secara otomatis. Berita yang terpantau hanya menyebutkan kenaikan harga tanah dan investasi properti di Kota Bengkulu, bukan di Kabupaten Bengkulu Tengah. Tidak terdapat informasi mengenai perkembangan harga maupun pasokan komoditas pangan pada data hari ini. Perkembangan harga dan pasokan di wilayah Kabupaten Bengkulu Tengah tetap perlu dipantau langsung karena tidak adanya laporan spesifik.",
+   "poin": [
+    "Harga tanah di Kota Bengkulu dilaporkan terus naik untuk investasi properti.",
+    "Wilayah Kabupaten Bengkulu Tengah tidak disebut dalam pemberitaan.",
+    "Informasi detail berita tidak dapat dibaca secara otomatis sehingga data yang diperoleh sangat terbatas."
+   ],
+   "perlu_dipantau": [
+    "Kondisi harga dan pasokan komoditas di Kabupaten Bengkulu Tengah yang tidak termuat dalam ringkasan berita hari ini."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-07",
    "metode": "ai",
@@ -402,6 +417,41 @@
  ],
  "berita": [
   {
+   "id": "1c73aca01e01",
+   "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNYW14aUdTN0lmcWs5aGYzRU84SzBzc0pXX0NYWkxxcnVNcVJqa25wN2dLQnJ4d3NxelhJdWFSYWktcDFSYWZNWlk5TEZsTFZJVC1kY2FtYjJFQUhPakhEQXk0N1F4cXpGdzN2MDQ2NEw4VnF3YWV2aFpBS3FDUEIzZVp3cllVelBjdG9fYWZLZFdNRFl1SW9IMGRDay0yQ1VnaG1jRDFEMThiMzkwYlZiYkdsTU5TYktXeUlMNNIBvAFBVV95cUxNYW14aUdTN0lmcWs5aGYzRU84SzBzc0pXX0NYWkxxcnVNcVJqa25wN2dLQnJ4d3NxelhJdWFSYWktcDFSYWZNWlk5TEZsTFZJVC1kY2FtYjJFQUhPakhEQXk0N1F4cXpGdzN2MDQ2NEw4VnF3YWV2aFpBS3FDUEIzZVp3cllVelBjdG9fYWZLZFdNRFl1SW9IMGRDay0yQ1VnaG1jRDFEMThiMzkwYlZiYkdsTU5TYktXeUlMNA?oc=5",
+   "judul": "Harga Tanah di Kota Bengkulu Terus Naik, Investasi Properti Makin Menjanjikan - radarkepahiang.disway.id",
+   "sumber": "Radar Kepahiang",
+   "tanggal": "2026-11-07",
+   "diakses": "2026-11-08T07:05:10+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "7ea437cf4ad3",
    "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQVEY4T01NamFaMjMxdXR4c0ljeVRfdjJQNlVTV2V1Ujdkdjk4UEI5bEdqZE1qUU1yU3piQUJ4eUIwcnV0Zlh0OHFQdUk3MkRNd3JROWp3MVhjWnBxc1ZUdXRDOFlMSUx0aUZpczM1eTdseUxCd05fVnA4ejdhQ3c4YjFyUEpYVU93OVkyWDAwTFgxRjdIUVZjQUhwYTc1c1hxaGo2Ui1GX3FWQmd0VThoQ3JiUnFPMlFZdVZhZ1ByQ2RYQQ?oc=5",
    "judul": "Stok Cadangan Beras Bengkulu Tengah Turun Jadi 8 Ton, Harga Mulai Naik",
@@ -435,7 +485,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "ea7103e4ee0e",
@@ -6037,10 +6087,10 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 185,
-  "setelah_duplikat": 153,
+  "hasil_pencarian": 169,
+  "setelah_duplikat": 133,
   "berita_baru": 1,
-  "total_arsip": 69,
+  "total_arsip": 70,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 1,
