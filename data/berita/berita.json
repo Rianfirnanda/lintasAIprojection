@@ -1,20 +1,13 @@
 {
- "diperbarui": "2026-11-09T07:07:49+07:00",
+ "diperbarui": "2026-11-09T14:23:54+07:00",
  "kesimpulan": [
   {
    "tanggal": "2026-11-09",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "TPID Kabupaten Bengkulu Tengah dilaporkan rutin memantau harga sembako untuk memperkuat langkah antisipasi inflasi di wilayah tersebut. Namun, perkembangan rinci mengenai kondisi harga dan pasokan tidak dapat diketahui karena isi berita tidak terbaca secara otomatis. Oleh karena itu, situasi harga serta ketersediaan sembako di Bengkulu Tengah tetap perlu dipantau lebih lanjut.",
-   "poin": [
-    "TPID Bengkulu Tengah memperkuat langkah antisipasi inflasi melalui pemantauan rutin harga sembako.",
-    "Detail pergerakan harga dan ketersediaan pasokan tidak jelas karena kendala pembacaan isi berita."
-   ],
-   "perlu_dipantau": [
-    "Perkembangan harga komoditas sembako di Kabupaten Bengkulu Tengah.",
-    "Kondisi pasokan sembako di Kabupaten Bengkulu Tengah."
-   ],
-   "kalimat_dibuang": 0
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
   },
   {
    "tanggal": "2026-11-08",
@@ -462,7 +455,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "1c73aca01e01",
@@ -6135,15 +6128,17 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 160,
-  "setelah_duplikat": 133,
-  "berita_baru": 1,
+  "hasil_pencarian": 139,
+  "setelah_duplikat": 115,
+  "berita_baru": 0,
   "total_arsip": 71,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 1,
+  "isi_tidak_terbaca": 0,
   "penyedia_ai": "",
   "model_ai": ""
  },
- "galat": []
+ "galat": [
+  "Tavily dilewati untuk 6 kueri: jatah pencarian web hari ini sudah habis (kuota bulanan Tavily dijaga sampai akhir bulan). Pencarian tetap jalan lewat Google Berita."
+ ]
 }
