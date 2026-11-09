@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-08T07:05:10+07:00",
+ "diperbarui": "2026-11-09T07:07:49+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-09",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "TPID Kabupaten Bengkulu Tengah dilaporkan rutin memantau harga sembako untuk memperkuat langkah antisipasi inflasi di wilayah tersebut. Namun, perkembangan rinci mengenai kondisi harga dan pasokan tidak dapat diketahui karena isi berita tidak terbaca secara otomatis. Oleh karena itu, situasi harga serta ketersediaan sembako di Bengkulu Tengah tetap perlu dipantau lebih lanjut.",
+   "poin": [
+    "TPID Bengkulu Tengah memperkuat langkah antisipasi inflasi melalui pemantauan rutin harga sembako.",
+    "Detail pergerakan harga dan ketersediaan pasokan tidak jelas karena kendala pembacaan isi berita."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga komoditas sembako di Kabupaten Bengkulu Tengah.",
+    "Kondisi pasokan sembako di Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-08",
    "metode": "ai",
@@ -417,6 +432,39 @@
  ],
  "berita": [
   {
+   "id": "7ad7a6730113",
+   "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNN3JqTDU5aUFDbFAybW9iNFNSMGk4QW5EMjJiYlJBTDAzS1B4SnV1dUMzbzVwSXFpSFNBY0FibnFUYktRZHVzTHNWTlQ4YzQ3TTZyTTg1SzJGM0lpbVhJWTRyZ195ZlJaYjhGRThZa2tqM3BZbUV5Tk9BVmVmZ2pzcXJ2ZVh6aXI3V0RUdTUzMWFESHJjY2pIMm1Sb1Q3LUFyRjI5UEp3ejR1YXRyUEZqc2s2UEFXb211NWY5QzZRRzM?oc=5",
+   "judul": "TPID Bengkulu Tengah Rutin Pantau Harga Sembako, Langkah Antisipasi Inflasi Terus Diperkuat",
+   "sumber": "Teropong Publik",
+   "tanggal": "2026-11-08",
+   "diakses": "2026-11-09T07:07:49+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
    "id": "1c73aca01e01",
    "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNYW14aUdTN0lmcWs5aGYzRU84SzBzc0pXX0NYWkxxcnVNcVJqa25wN2dLQnJ4d3NxelhJdWFSYWktcDFSYWZNWlk5TEZsTFZJVC1kY2FtYjJFQUhPakhEQXk0N1F4cXpGdzN2MDQ2NEw4VnF3YWV2aFpBS3FDUEIzZVp3cllVelBjdG9fYWZLZFdNRFl1SW9IMGRDay0yQ1VnaG1jRDFEMThiMzkwYlZiYkdsTU5TYktXeUlMNNIBvAFBVV95cUxNYW14aUdTN0lmcWs5aGYzRU84SzBzc0pXX0NYWkxxcnVNcVJqa25wN2dLQnJ4d3NxelhJdWFSYWktcDFSYWZNWlk5TEZsTFZJVC1kY2FtYjJFQUhPakhEQXk0N1F4cXpGdzN2MDQ2NEw4VnF3YWV2aFpBS3FDUEIzZVp3cllVelBjdG9fYWZLZFdNRFl1SW9IMGRDay0yQ1VnaG1jRDFEMThiMzkwYlZiYkdsTU5TYktXeUlMNA?oc=5",
    "judul": "Harga Tanah di Kota Bengkulu Terus Naik, Investasi Properti Makin Menjanjikan - radarkepahiang.disway.id",
@@ -449,7 +497,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "7ea437cf4ad3",
@@ -6087,10 +6135,10 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 169,
+  "hasil_pencarian": 160,
   "setelah_duplikat": 133,
   "berita_baru": 1,
-  "total_arsip": 70,
+  "total_arsip": 71,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 1,
