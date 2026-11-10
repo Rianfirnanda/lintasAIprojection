@@ -11,9 +11,13 @@
       "aktif_30_hari": 0,
       "akun": 1
     },
+    "masyarakat": {
+      "aktif_30_hari": 1,
+      "akun": 1
+    },
     "tpid": {
-      "aktif_30_hari": 3,
-      "akun": 4
+      "aktif_30_hari": 2,
+      "akun": 3
     }
   },
   "periode_hari": 30
