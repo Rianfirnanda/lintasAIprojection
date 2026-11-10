@@ -4,16 +4,16 @@
   "mulai": "2026-10-02",
   "per_peran": {
     "admin": {
-      "aktif_30_hari": 5,
-      "akun": 6
+      "aktif_30_hari": 4,
+      "akun": 5
     },
     "analis": {
       "aktif_30_hari": 0,
       "akun": 1
     },
     "tpid": {
-      "aktif_30_hari": 3,
-      "akun": 4
+      "aktif_30_hari": 4,
+      "akun": 5
     }
   },
   "periode_hari": 30
