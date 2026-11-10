@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-09T14:23:54+07:00",
+ "diperbarui": "2026-11-10T07:10:18+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-10",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Pemerintah Kabupaten Bengkulu Tengah melalui TPID dan Disperindag terus memperkuat koordinasi rutin mingguan untuk mengantisipasi inflasi dan menjaga stabilitas harga sembako. Namun, rincian pergerakan harga maupun kondisi pasokan di wilayah Bengkulu Tengah tidak dijelaskan secara spesifik dalam ringkasan berita yang tersedia karena data sangat terbatas. Upaya pengendalian harga tetap ditekankan guna melindungi daya beli masyarakat setempat. Oleh karena itu, perkembangan riil terkait harga dan ketersediaan bahan pokok di lapangan perlu terus dipantau.",
+   "poin": [
+    "TPID dan Disperindag Kabupaten Bengkulu Tengah rutin memantau harga kebutuhan pokok setiap pekan melalui rapat koordinasi pengendalian inflasi.",
+    "Informasi detail mengenai fluktuasi harga dan kondisi pasokan bahan pokok di Bengkulu Tengah tidak dijelaskan dalam berita."
+   ],
+   "perlu_dipantau": [
+    "Stabilitas harga bahan pokok di Kabupaten Bengkulu Tengah.",
+    "Ketersediaan pasokan sembako di Kabupaten Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-09",
    "metode": "ekstraktif",
@@ -405,25 +420,90 @@
     "Perkembangan harga beras dan ternak di pasar karena ketiadaan data harga pada laporan saat ini."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-10",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Informasi pergerakan harga komoditas di Kabupaten Bengkulu Tengah tidak dilaporkan secara spesifik pada periode ini. Dari sisi pasokan, penyaluran Bantuan Pangan Beras alokasi Juli–September 2026 di Bengkulu Tengah telah mencapai 99,26 persen dari target 459.390 kilogram untuk 15.314 penerima. Selain itu, Pemkab Bengkulu Tengah memperkuat koordinasi dengan menandatangani Kerja Sama Antar Daerah saat rakor TPID di Bengkulu Utara. Ke depan, penyelesaian sisa bantuan beras dan implementasi kerja sama tersebut perlu dipantau bersama.",
-   "poin": [
-    "Penyaluran Bantuan Pangan Beras Juli–September 2026 di Kabupaten Bengkulu Tengah mencapai 99,26 persen (target 15.314 penerima dan 459.390 kg beras).",
-    "Pemkab Bengkulu Tengah menandatangani Kerja Sama Antar Daerah (KAD) pada Rakor TPID dan TP2DD di Bengkulu Utara untuk pengendalian inflasi dan percepatan digitalisasi.",
-    "Kondisi pergerakan harga komoditas di wilayah Bengkulu Tengah tidak dijelaskan dalam ringkasan berita."
-   ],
-   "perlu_dipantau": [
-    "Penyelesaian sisa penyaluran Bantuan Pangan Beras di Kabupaten Bengkulu Tengah.",
-    "Tindak lanjut implementasi Kerja Sama Antar Daerah (KAD) dengan Bengkulu Utara dalam pengendalian inflasi."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
+  {
+   "id": "60b560767235",
+   "url": "https://www.teropongpublik.co.id/tpid-bengkulu-tengah-rutin-pantau-harga-sembako-langkah-antisipasi-inflasi-terus-diperkuat",
+   "judul": "TPID Bengkulu Tengah Rutin Pantau Harga Sembako, Langkah Antisipasi Inflasi Terus Diperkuat | Teropong Publik",
+   "sumber": "teropongpublik.co.id",
+   "tanggal": "2026-11-09",
+   "diakses": "2026-11-10T07:10:18+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "tinggi",
+   "skor": 9,
+   "wilayah": {
+    "target": true,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Merah",
+    "Minyak Goreng",
+    "Gula Pasir"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 14486,
+   "sidik_sha256": "39f5cbc2be676b656d6bcdca0a40f1e58bb12174ad56218fcb91b668dd3f0e83",
+   "kutipan": "Kegiatan koordinasi tersebut dilaksanakan secara daring melalui aplikasi Zoom Meeting dan diikuti dari Ruang Rapat Bupati Bengkulu Tengah. Salah satu agenda utama dalam pertemuan mingguan ini adalah memantau perkembangan",
+   "ringkasan": "Pemerintah Kabupaten Bengkulu Tengah melalui TPID rutin memantau harga bahan pokok setiap pekan melalui rapat koordinasi pengendalian inflasi. Upaya ini diperkuat untuk menjaga stabilitas harga kebutuhan pokok dan melindungi daya beli masyarakat.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": true,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
+  {
+   "id": "237dca881065",
+   "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNU1Y2WGRvTVR6TGFNdFZCT0hnNXhQaTdfRURWWEFUNGNkU3FRVTY0bnIyMXU0VkxpU2x2dzNmc1RfLUlPM05uZHJfUHNfdThOYWZDT1pxZVIyeFZqdDJqWTE5Q1hhc0xVUlV1ZFBxM1BHaTRLYVZZeUdxWW5LZzVLVFRMVWx6d1RXUXVPMnp2TGlQTllBV0pVSW5qdHRTVkFZSFZxWUdaS2ZtSzNBUTMyb29fdnNfYzEtWkpnc25wLXVKQjJCNnVBSXhR?oc=5",
+   "judul": "Disperindag Bengkulu Tengah Dampingi Bupati dalam Zoom Meeting TPID, Gunawan Tekankan Pengendalian Harga",
+   "sumber": "Teropong Publik",
+   "tanggal": "2026-11-09",
+   "diakses": "2026-11-10T07:10:18+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "7ad7a6730113",
    "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNN3JqTDU5aUFDbFAybW9iNFNSMGk4QW5EMjJiYlJBTDAzS1B4SnV1dUMzbzVwSXFpSFNBY0FibnFUYktRZHVzTHNWTlQ4YzQ3TTZyTTg1SzJGM0lpbVhJWTRyZ195ZlJaYjhGRThZa2tqM3BZbUV5Tk9BVmVmZ2pzcXJ2ZVh6aXI3V0RUdTUzMWFESHJjY2pIMm1Sb1Q3LUFyRjI5UEp3ejR1YXRyUEZqc2s2UEFXb211NWY5QzZRRzM?oc=5",
@@ -6128,17 +6208,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 139,
-  "setelah_duplikat": 115,
-  "berita_baru": 0,
-  "total_arsip": 71,
+  "hasil_pencarian": 180,
+  "setelah_duplikat": 141,
+  "berita_baru": 2,
+  "total_arsip": 73,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
-  "penyedia_ai": "",
-  "model_ai": ""
+  "isi_tidak_terbaca": 1,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.8-flash"
  },
- "galat": [
-  "Tavily dilewati untuk 6 kueri: jatah pencarian web hari ini sudah habis (kuota bulanan Tavily dijaga sampai akhir bulan). Pencarian tetap jalan lewat Google Berita."
- ]
+ "galat": []
 }
