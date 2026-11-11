@@ -51,20 +51,18 @@
     <p class="meta-kecil" style="margin-top:6px">*Dihitung dari data yang punya catatan waktu pengisian (otomatis ada kalau memakai halaman Catat Harga). Dianggap tepat waktu kalau masuk sebelum pukul <span id="jam-batas"></span> WIB di hari pencatatan.</p>
   </section>
 
-  <section class="kartu" aria-labelledby="j-beku">
-    <div class="kartu-kepala">
-      <div>
-        <h2 id="j-beku">Harga yang tidak diperbarui sumbernya</h2>
-        <div class="teks-tanya">Angka yang sama terus dilaporkan, padahal harga di tempat lain sudah bergeser.
-          <details class="tanya"><summary aria-label="Penjelasan harga yang tidak diperbarui">?</summary><div class="tanya-isi">
-            Angka yang sama persis terus dilaporkan sebuah pasar, padahal harga barang yang sama di pasar dan sumber lain sudah bergeser jauh.
-            Angka sesudah pergeseran itu tidak dipakai dalam perhitungan, peringatan, maupun prakiraan, sampai sumbernya memperbarui harga.</div></details></div>
-      </div>
-    </div>
-    <p class="meta-kecil">Sumber data harga harian: SP2KP, PIHPS Bank Indonesia (BI), dan AI Data Finder.</p>
+  <section class="kartu" aria-labelledby="j-sumber-harian">
+    <div class="kartu-kepala"><div>
+      <h2 id="j-sumber-harian">Sumber data harian SP2KP dan PIHPS</h2>
+      <p>Harga harian dari SP2KP Kemendag dan PIHPS Bank Indonesia (BI), termasuk data pembanding antarwilayah.</p>
+    </div></div>
+    <div id="sumber-harian"></div>
+    <details style="margin-top:16px"><summary><b>Pemeriksaan harga yang tidak diperbarui sumbernya</b></summary>
+    <p class="meta-kecil">Angka yang sama terus dilaporkan, padahal harga di tempat lain sudah bergeser. Angka sesudah pergeseran tidak dipakai dalam analisis sampai sumber memperbarui harga.</p>
     <p class="meta-kecil" id="ket-beku"></p>
     <div class="gulir-tabel" style="max-height:420px"><table id="tabel-beku"><thead><tr><th>Pasar</th><th>Varian</th><th>Sumber</th>
       <th class="angka">Angka yang dilaporkan</th><th>Tidak berubah</th><th class="angka">Harga di tempat lain bergeser</th><th>Tidak dipakai sejak</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+    </details>
   </section>
 
   <section class="kartu">
@@ -121,6 +119,7 @@
 </main>
 
 <script type="module">
+import { tampilkanSumberHarian } from "./assets/sumber-harian.js";
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, rp, persen, tgl, angka, tampilkanGalat, keCSV, unduhTeks } from "./assets/app.js";
 import { sesi } from "./assets/akses.js";
@@ -135,6 +134,7 @@ try {
   tampilkanGalat(document.querySelector("main"), e);
   throw e;
 }
+tampilkanSumberHarian(document.getElementById("sumber-harian"), q.sumber_harian);
 const namaVarian = Object.fromEntries(master.varian.map((v) => [v.kode, v.nama]));
 const namaPasar = Object.fromEntries(master.pasar.map((p) => [p.kode, p.nama]));
 const r = q.ringkasan;

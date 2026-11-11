@@ -24,7 +24,7 @@ from . import (VERSI, agregasi, analisis, analitik, demo, proyeksi_acara, proyek
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
 from . import firestore_sinkron
-from . import berita
+from . import berita, sumber_harian
 from . import ews as modul_ews
 from . import tata_data
 from . import konektor_resmi
@@ -504,6 +504,8 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "pesan_github": pesan_github,
     })
 
+    harian_sumber = sumber_harian.rangkum(konf, hasil_qc.observasi, hasil_masuk.konteks)
+
     # ---------- kualitas.json
     perlu = sorted(hasil_qc.perlu_validasi(), key=lambda o: o.tanggal, reverse=True)
     _tulis_json(keluaran / "kualitas.json", {
@@ -514,6 +516,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "deret_beku": sum(1 for b in hasil_qc.beku if b["masih_beku"]), "observasi_beku": status_obs.get("beku", 0),
             "lonjakan_sumber_resmi": sum(1 for o in hasil_qc.observasi if "lonjakan_sumber_resmi" in o.tanda),
         },
+        "sumber_harian": harian_sumber,
         "beku": hasil_qc.beku[:200],
         "keterangan_tanda": kualitas.KETERANGAN_TANDA,
         "pengaturan": {"jam_batas_tepat_waktu": konf.pengaturan["jam_batas_tepat_waktu"], **konf.pengaturan["kualitas"]},
@@ -659,6 +662,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             d["jumlah_observasi_terkait"] = jumlah_per_sumber.get(terkait, 0)
         d["catatan"] = d["catatan"].replace(" Datanya belum diambil.", "") + " " + d["sambungan"]["keterangan"]
     _tulis_json(keluaran / "sumber.json", {
+        "sumber_harian": harian_sumber,
         "sumber": [{**s.__dict__, "jumlah_observasi": jumlah_per_sumber.get(s.kode, 0),
                     "satuan_jumlah": satuan_jumlah.get(s.kode, "baris harga"),
                     "terakhir": terakhir_per_sumber.get(s.kode)} for s in konf.sumber.values()] + diterima,

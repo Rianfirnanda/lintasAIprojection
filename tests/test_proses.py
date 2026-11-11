@@ -184,3 +184,11 @@ def test_status_sambungan_sumber_yang_diterima(akar_sementara):
     # tanpa aturan khusus: situs yang sama dengan sumber aktif dianggap sudah tersambung
     assert proses.status_sambungan("https://www.bi.go.id/lain", [], aktif)["sumber_terkait"] == "BD-PIHPS"
     assert proses.baca_sambungan(akar_sementara) == aturan  # salinan config uji memuat berkas yang sama
+
+
+def test_data_harian_sama_di_kualitas_dan_sumber(keluaran_demo):
+    keluaran, _ = keluaran_demo
+    kualitas = baca(keluaran, 'kualitas.json')
+    sumber = baca(keluaran, 'sumber.json')
+    assert isinstance(kualitas['sumber_harian'], list)
+    assert kualitas['sumber_harian'] == sumber['sumber_harian']

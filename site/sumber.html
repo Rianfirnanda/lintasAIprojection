@@ -57,6 +57,12 @@
     <p class="meta-kecil" id="ket-sumber-lain" style="margin-top:12px" hidden></p>
   </section>
 
+  <section class="kartu" aria-labelledby="j-sumber-harian">
+    <div class="kartu-kepala"><div><h2 id="j-sumber-harian">Sumber data harian SP2KP dan PIHPS</h2>
+      <p>Harga harian dari SP2KP Kemendag dan PIHPS Bank Indonesia (BI), termasuk data pembanding antarwilayah.</p></div></div>
+    <div id="sumber-harian"></div>
+  </section>
+
   <section class="kartu" aria-labelledby="j-ai">
     <div class="kartu-kepala">
       <div>
@@ -91,6 +97,7 @@
 </main>
 
 <script type="module">
+import { tampilkanSumberHarian } from "./assets/sumber-harian.js";
 import { ind } from "./assets/peran.js";
 import { pasangKerangka, muatJSON, esc, angka, waktu, tgl, tampilkanGalat } from "./assets/app.js";
 import { sesi } from "./assets/akses.js";
@@ -168,6 +175,8 @@ else finder.href = "tentang.html#ai-data-finder";
 
 const pencarian = (dataAi.kandidat_ai || data.kandidat_ai)?.pencarian || [];
 const katalog = data.katalog_ai || [];
+tampilkanSumberHarian(document.getElementById("sumber-harian"), data.sumber_harian);
+
 const kiriman = meta?.login === "firebase" ? await import("./assets/kiriman.js") : null;
 const KANDIDAT = new Map(); // id kandidat -> { k, pencarian }
 let keputusanLangsung = new Map(); // keputusan di Firestore yang mungkin belum diolah mesin
