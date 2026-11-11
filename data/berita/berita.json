@@ -1,6 +1,24 @@
 {
- "diperbarui": "2026-11-10T07:10:18+07:00",
+ "diperbarui": "2026-11-11T07:11:51+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-11",
+   "metode": "ai",
+   "penyedia": "openrouter",
+   "ringkas": "Harga cabai di Pasar Purwodadi, Arga Makmur, Bengkulu Utara masih tinggi dan dampaknya stabil. Harga tanah di Kota Bengkulu pada 2026 naik hingga 15 persen. Isi berita harga tanah tidak bisa dibaca otomatis. Pasokan tidak disebutkan. Berita ini tidak menyebut wilayah Bengkulu Tengah.",
+   "poin": [
+    "Harga cabai di Pasar Purwodadi, Arga Makmur, Bengkulu Utara masih tinggi.",
+    "Dampak harga cabai stabil.",
+    "Harga tanah di Kota Bengkulu naik hingga 15 persen.",
+    "Isi berita harga tanah tidak bisa dibaca otomatis."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga cabai di Pasar Purwodadi, Arga Makmur, Bengkulu Utara.",
+    "Materi berita harga tanah di Kota Bengkulu karena isinya tidak bisa dibaca otomatis.",
+    "Kabar terkait harga dan pasokan di wilayah Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-10",
    "metode": "ai",
@@ -403,26 +421,73 @@
     "Kondisi pasokan dan kestabilan harga bahan pokok, khususnya beras, di wilayah Kabupaten Bengkulu Tengah."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-11",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Pemerintah Kabupaten Bengkulu Tengah saat ini tengah mempercepat vaksinasi PMK terhadap 4.000 hewan ternak untuk menjaga kesehatan populasi ternak, meskipun dampak langsungnya terhadap harga daging belum dijelaskan. Sementara itu, di tingkat Provinsi Bengkulu, BULOG memastikan stok aman dengan realisasi penyaluran bantuan beras mencapai 97,45 persen, namun rincian beritanya tidak dapat dibaca lebih lanjut dan tidak secara khusus menyebut Bengkulu Tengah. Secara keseluruhan, informasi mengenai pergerakan harga komoditas pangan dari sumber yang tersedia masih sangat minim dan tidak jelas. Oleh karena itu, TPID perlu memantau kelancaran vaksinasi ternak di Bengkulu Tengah serta memastikan ketersediaan pasokan beras di tingkat lokal.",
-   "poin": [
-    "Dinas Pertanian Kabupaten Bengkulu Tengah mengerahkan lima tim untuk vaksinasi PMK jemput bola pada 4.000 sapi, kerbau, dan kambing dengan target rampung akhir Oktober 2026.",
-    "BULOG memastikan stok aman dan penyaluran bantuan beras di wilayah Bengkulu mencapai 97,45 persen, tetapi isi detail berita tidak bisa dibaca otomatis dan tidak menyebut Bengkulu Tengah secara khusus.",
-    "Dampak kedua isu terhadap harga komoditas ternak maupun beras tidak dijelaskan dalam ringkasan berita."
-   ],
-   "perlu_dipantau": [
-    "Pelaksanaan dan penyelesaian vaksinasi PMK pada 4.000 hewan ternak di Bengkulu Tengah.",
-    "Ketersediaan stok dan penyaluran beras dari BULOG untuk wilayah Bengkulu Tengah.",
-    "Perkembangan harga beras dan ternak di pasar karena ketiadaan data harga pada laporan saat ini."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
+  {
+   "id": "a0a06c78e7ab",
+   "url": "https://rri.co.id/bengkulu/regional/2881297/harga-cabai-di-pasar-purwodadi-arga-makmur-masih-tinggi",
+   "judul": "Harga Cabai di Pasar Purwodadi Arga Makmur Masih Tinggi - RRI.co.id",
+   "sumber": "rri.co.id",
+   "tanggal": "2026-11-10",
+   "diakses": "2026-11-11T07:11:51+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 9,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Ikan"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 4744,
+   "sidik_sha256": "d5d277880a1ae7019b07b1e2ae282255b7a0b2a9854b9ed4733e633a58d345d6",
+   "kutipan": "Berbeda dengan cabai, harga bawang merah dan bawang putih masih relatif stabil. Bawang merah saat ini dijual 33 ribu rupiah per kilogram, sedangkan bawang putih 30 ribu rupiah per kilogram pedagang menyebut pasokan bawan",
+   "ringkasan": "Harga komoditas cabai di Pasar Purwodadi, Arga Makmur, Bengkulu Utara dilaporkan masih tinggi.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 100000,
+     "satuan": "kg",
+     "peran_wilayah": "provinsi",
+     "pasar": null,
+     "arah": "naik",
+     "bukti": "| **Baca juga:** [Harga Cabai Merah di Pasar Minggu Bengkulu Tembus Rp100 Ribu per Kilogram](https://rri.co.id/bengkulu/regional/2872770/harga-cabai-merah-di-pasar-minggu-bengkulu-tembus-rp100-ribu-per-kilogram) |",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga jual cabai merah di Pasar Minggu Kota Bengkulu.",
+      "penyedia": "gemini",
+      "tanggal": "2026-11-11"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "60b560767235",
    "url": "https://www.teropongpublik.co.id/tpid-bengkulu-tengah-rutin-pantau-harga-sembako-langkah-antisipasi-inflasi-terus-diperkuat",
@@ -468,7 +533,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -500,6 +565,41 @@
    "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
    "metode_ringkas": "judul",
    "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": false
+  },
+  {
+   "id": "e26dcc038b0b",
+   "url": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxOZG9ZWHBNSlpDcVh3Q3p1enZXZ0JCSWJfcG9qOG5zNTc2ODVhVXVnbW9aSGloeUp1bnVRNW5penJMd0VnSHBLZElVejRxNG1lMFNkUk1uSUF1OXZici1xcmdiVmVMWEdzXzN3ZFF5ODljendxZWx2aEMwUk5xQ1pvOU9NRG1QbktkQzFaZFYyVk43MlU1eVdGV1FNRVNpamRlNV9vemZ3VnRBaklqUThWWmhoeW12TXQtRWdJdGdTZmhjVGl3TzJxaUdHQk54MTZvem4wNDdSYXp6YmZ3Qi1yQ1NjbHBTd0nSAecBQVVfeXFMTmRvWVhwTUpaQ3FYd0N6dXp2V2dCQkliX3BvajhuczU3Njg1YVV1Z21vWkhpaHlKdW51UTVuaXpyTHdFZ0hwS2RJVXo0cTRtZTBTZFJNbklBdTl2YnItcXJnYlZlTFhHc18zd2RReTg5Y3p3cWVsdmhDMFJOcUNabzlPTURtUG5LZEMxWmRWMlZONzJVNXlXRldRTUVTaWpkZTVfb3pmd1Z0QWpJalE4VlpoaHltdk10LUVnSXRnU2ZoY1Rpd08ycWlHR0JOeDE2b3puMDQ3UmF6emJmd0ItckNTY2xwU3dJ?oc=5",
+   "judul": "Harga Tanah di Kota Bengkulu 2026 Naik hingga 15 Persen, Segini Kisaran Harga per Meter di Sejumlah Kawasan - bengkuluekspress.disway.id",
+   "sumber": "Bengkulu Ekspress",
+   "tanggal": "2026-11-09",
+   "diakses": "2026-11-11T07:11:51+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
    "baru": true
@@ -6208,12 +6308,12 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 180,
-  "setelah_duplikat": 141,
+  "hasil_pencarian": 192,
+  "setelah_duplikat": 159,
   "berita_baru": 2,
-  "total_arsip": 73,
-  "kandidat_harga_baru": 0,
-  "harga_dinilai_ai": 0,
+  "total_arsip": 75,
+  "kandidat_harga_baru": 1,
+  "harga_dinilai_ai": 1,
   "isi_tidak_terbaca": 1,
   "penyedia_ai": "gemini",
   "model_ai": "gemini-3.8-flash"
