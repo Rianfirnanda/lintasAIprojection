@@ -504,7 +504,9 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
         "pesan_github": pesan_github,
     })
 
-    harian_sumber = sumber_harian.rangkum(konf, hasil_qc.observasi, hasil_masuk.konteks)
+    riwayat_sumber = sumber_harian.rangkum(konf, hasil_qc.observasi, hasil_masuk.konteks, riwayat=True)
+    harian_sumber = [{k: v for k, v in b.items() if k != "riwayat"} for b in riwayat_sumber]
+    _tulis_json(keluaran / "sumber_harian_riwayat.json", riwayat_sumber)
 
     # ---------- kualitas.json
     perlu = sorted(hasil_qc.perlu_validasi(), key=lambda o: o.tanggal, reverse=True)

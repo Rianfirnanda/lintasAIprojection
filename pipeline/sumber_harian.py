@@ -1,9 +1,9 @@
-"""Harga terakhir per sumber, pasar/wilayah, dan varian untuk pemeriksaan harian."""
+"""Harga terakhir dan riwayat per sumber, pasar/wilayah, dan varian."""
 from collections import defaultdict
 from statistics import median
 
 
-def rangkum(konf, observasi, konteks):
+def rangkum(konf, observasi, konteks, *, riwayat=False):
     kelompok = defaultdict(list)
     cakupan = set()
     for o in observasi:
@@ -22,7 +22,7 @@ def rangkum(konf, observasi, konteks):
         tanggal = max(x[0] for x in nilai)
         terbaru = [x for x in nilai if x[0] == tanggal]
         sumber_master = konf.sumber[sumber]
-        hasil.append({
+        baris = {
             "kode_sumber": sumber,
             "sumber": "SP2KP Kemendag" if sumber == "BD-SP2KP" else "PIHPS Bank Indonesia (BI)",
             "url": sumber_master.url,
@@ -32,5 +32,16 @@ def rangkum(konf, observasi, konteks):
             "peran": "Wilayah utama" if wilayah == konf.wilayah_target else "Pembanding wilayah",
             "status": ("Data konteks pembanding" if not pasar else "Lolos pemeriksaan" if all(x[2] for x in terbaru)
                        else "Ada data tidak dipakai"),
-        })
+        }
+        if riwayat:
+            per_tanggal = defaultdict(list)
+            for t, harga, lolos in nilai:
+                per_tanggal[t].append((harga, lolos))
+            baris["riwayat"] = [
+                [t.isoformat(), median(x[0] for x in items),
+                 "Data konteks pembanding" if not pasar else "Lolos pemeriksaan" if all(x[1] for x in items)
+                 else "Ada data tidak dipakai"]
+                for t, items in sorted(per_tanggal.items())
+            ]
+        hasil.append(baris)
     return hasil
