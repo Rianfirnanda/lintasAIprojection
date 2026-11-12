@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-11T07:11:51+07:00",
+ "diperbarui": "2026-11-12T07:11:07+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-12",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-11",
    "metode": "ai",
@@ -405,22 +413,6 @@
     "Potensi dampak pergerakan harga komoditas dari Kota Bengkulu ke Bengkulu Tengah"
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-12",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Informasi harian yang tersedia saat ini terbatas pada wilayah Kota Bengkulu, sementara laporan khusus untuk Kabupaten Bengkulu Tengah tidak ditemukan. Pemerintah Kota Bengkulu bersama TPID setempat berencana menggelar Bazar Pasar Murah pada 13 Oktober 2026 di halaman Kantor Wali Kota. Program tersebut menyediakan bahan pokok seperti beras dengan harga terjangkau guna menjaga kestabilan harga dan pasokan serta mengendalikan inflasi daerah. TPID Kabupaten Bengkulu Tengah perlu tetap memantau perkembangan pasokan dan harga bahan pokok di wilayah sendiri mengingat minimnya data lokal pada laporan ini.",
-   "poin": [
-    "Pemkot Bengkulu bersama TPID menggelar Bazar Pasar Murah pada 13 Oktober 2026 di halaman Kantor Wali Kota Bengkulu.",
-    "Kegiatan pasar murah menyediakan sembako seperti beras dengan harga terjangkau guna menjaga stabilitas harga dan mengendalikan inflasi.",
-    "Tidak terdapat laporan atau data perkembangan harga dan pasokan untuk wilayah Kabupaten Bengkulu Tengah."
-   ],
-   "perlu_dipantau": [
-    "Pelaksanaan kegiatan Bazar Pasar Murah di Kota Bengkulu pada 13 Oktober 2026.",
-    "Kondisi pasokan dan kestabilan harga bahan pokok, khususnya beras, di wilayah Kabupaten Bengkulu Tengah."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
@@ -485,7 +477,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -602,7 +594,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "7ad7a6730113",
@@ -6308,15 +6300,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 192,
-  "setelah_duplikat": 159,
-  "berita_baru": 2,
+  "hasil_pencarian": 200,
+  "setelah_duplikat": 166,
+  "berita_baru": 0,
   "total_arsip": 75,
-  "kandidat_harga_baru": 1,
-  "harga_dinilai_ai": 1,
-  "isi_tidak_terbaca": 1,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
+  "isi_tidak_terbaca": 0,
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
