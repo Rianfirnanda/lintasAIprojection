@@ -224,6 +224,10 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     wajib_setuju = konf.pengaturan["analisis"].get("wajib_persetujuan_model", False)
     hasil_varian: dict[str, analisis.HasilVarian] = {}
     seri_pembanding: dict[str, dict[str, analisis.SeriHarian]] = defaultdict(dict)
+    cuaca_wilayah = defaultdict(dict)
+    for k in hasil_masuk.konteks:
+        if k.kode_sumber == "BD-CUACA" and k.indikator in ("curah_hujan_mm", "suhu_rata_c"):
+            cuaca_wilayah[k.kode_wilayah][(k.tanggal, k.indikator)] = k.nilai
     for v in konf.varian_aktif:
         w_seri = pilih_wilayah_seri(harian, v.kode, target, cadangan, tanggal_data, minimal_hari)
         if w_seri is None:
@@ -232,7 +236,7 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
         hv = analisis.analisis_varian(
             seri, v.kelompok, konf.hari_raya(), konf.pengaturan,
             model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju, kode=v.kode,
-            libur_pasar=hasil_qc.libur)
+            libur_pasar=hasil_qc.libur, cuaca=cuaca_wilayah.get(w_seri, {}), kalender=konf.kalender)
         hv.sumber_seri = keterangan_sumber(konf, dipakai, w_seri, v.kode, tanggal_data)
         hasil_varian[v.kode] = hv
         for w in konf.wilayah:

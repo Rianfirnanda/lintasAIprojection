@@ -454,3 +454,5 @@ button.dsb-arah-angka:focus-visible { outline: 2px solid var(--aksen); }
 @supports not (background: color-mix(in srgb, red 50%, transparent)) {
   .dsb-rentang-vis .pita { background: var(--series-2); opacity: 0.3; }
 }
+
+.dsb-interval { font-size: 0.68rem; font-weight: 400; line-height: 1.5; color: var(--muted); font-variant-numeric: tabular-nums; }

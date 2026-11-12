@@ -297,6 +297,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
     }
     return {
         "dibuat_untuk": tanggal_data.isoformat() if tanggal_data else None,
+        "tanggal_hari_ini": konf.hari_ini.isoformat(),
         "wilayah": {"kode": konf.wilayah_target, "nama": konf.wilayah[konf.wilayah_target].nama, "peran": konf.wilayah[konf.wilayah_target].peran},
         "mode_demo": pakai_demo, "horizon": list(HORIZON_TAMPIL), "tingkat_interval": konf.pengaturan["analisis"]["tingkat_interval"],
         "horizon_maks": konf.pengaturan["analisis"]["horizon_hari"],

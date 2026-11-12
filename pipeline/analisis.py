@@ -35,7 +35,7 @@ from typing import Callable
 
 import numpy as np
 
-from . import model_ml
+from . import model_ml, musiman
 from .konfigurasi import Acara
 
 
@@ -197,6 +197,10 @@ def offset_hari_raya(tgl: date, acara: list[Acara], sebelum: int, sesudah: int) 
 
 def model_hari_raya(y: np.ndarray, asal: date, h: int, k: dict) -> np.ndarray:
     profil, acara, sebelum, sesudah = k.get("profil", {}), k.get("acara", []), k.get("sebelum", 14), k.get("sesudah", 3)
+    if k.get("_seri") is not None:
+        seri = k["_seri"]
+        n = min(seri.n, seri.indeks(asal) + 1)
+        profil = profil_hari_raya(SeriHarian(seri.tanggal[:n], seri.nilai[:n]), acara, sebelum, sesudah) or {}
     if not profil:
         return model_naif(y, asal, h, k)
 
@@ -233,6 +237,7 @@ MODEL: dict[str, Callable] = {
     "holt_redam": model_holt_redam,
     "ses": model_ses,
     "hari_raya": model_hari_raya,
+    "musiman_cuaca": musiman.prediksi,
     "ml_challenger": model_ml_challenger,
     "ml_hgb": model_ml_hgb,
     "ml_rf": model_ml_rf,
@@ -246,6 +251,7 @@ NAMA_MODEL = {
     "holt_redam": "Tren melandai (Damped Holt)",
     "ses": "Penghalusan eksponensial (SES)",
     "hari_raya": "Harga terakhir ditambah pola hari raya sebelumnya",
+    "musiman_cuaca": "Ridge musiman tahunan, hari raya, dan cuaca historis",
     "ml_challenger": "Machine learning Ridge (regresi linear)",
     "ml_hgb": "Machine learning Gradient Boosting (setara LightGBM)",
     "ml_rf": "Machine learning Random Forest",
@@ -253,12 +259,12 @@ NAMA_MODEL = {
 }
 
 MODEL_BASELINE = {"naif", "naif_musiman7", "rata7", "holt_redam", "ses", "hari_raya"}
-MODEL_ML = ("ml_challenger", "ml_hgb", "ml_rf")
+MODEL_ML = ("musiman_cuaca", "ml_challenger", "ml_hgb", "ml_rf")
 MODEL_CHALLENGER = set(MODEL_ML) | {"ensemble"}
 URUT_BASELINE = ("naif", "naif_musiman7", "rata7", "ses", "holt_redam", "hari_raya")  # urutan kesederhanaan bila seri
 # Kandidat per kelas volatilitas (laporan: "Alur Pemilihan Model Berdasarkan Volatilitas").
 KANDIDAT_KELAS = {
-    "rendah": URUT_BASELINE + ("ml_challenger",),
+    "rendah": URUT_BASELINE + ("musiman_cuaca", "ml_challenger",),
     "sedang": URUT_BASELINE + MODEL_ML,
     "tinggi": URUT_BASELINE + MODEL_ML,
 }
@@ -1074,7 +1080,7 @@ def simpanan_fitur(terisi: np.ndarray, tanggal: list[date], acara: list[Acara]) 
 
 def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengaturan: dict,
                     model_disetujui: str | None = None, wajib_persetujuan: bool = False, kode: str | None = None,
-                    libur_pasar: set | None = None) -> HasilVarian:
+                    libur_pasar: set | None = None, cuaca: dict | None = None, kalender: list[Acara] | None = None) -> HasilVarian:
     a = pengaturan["analisis"]
     s = pengaturan["sinyal"]
     jhr = pengaturan["jendela_hari_raya"]
@@ -1091,6 +1097,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     anomali, dievaluasi = deteksi_anomali(seri, a["jendela_baseline_hari"], s["z_ambang"], s["ambang_persen"][kelompok])
     profil = profil_hari_raya(seri, acara, jhr["sebelum"], jhr["sesudah"])
     konteks = {"profil": profil or {}, "acara": acara, "sebelum": jhr["sebelum"], "sesudah": jhr["sesudah"], "kelompok": kelompok}
+    konteks["_seri"] = seri
+    konteks["_musim"] = musiman.siapkan(seri, kalender or acara, cuaca or {}, terisi) if seri.n >= 730 else None
     kelas = kelas_volatilitas(kelompok, kode)
     kandidat = [m for m in KANDIDAT_KELAS[kelas] if a.get("model_pohon", True) or m not in ("ml_hgb", "ml_rf")]
 
@@ -1102,6 +1110,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     # Seri volatil diuji dengan lebih banyak origin. Bila riwayat cukup, holdout final disisihkan: tidak dipakai memilih model.
     jumlah_origin = max(int(a["jumlah_origin_backtest"]), int(v["origin_tinggi"])) if kelompok == "volatil" else int(a["jumlah_origin_backtest"])
     jarak_sel = int(a["jarak_origin_hari"])
+    if seri.n >= 1460:
+        jarak_sel = max(jarak_sel, 28)  # Sebarkan origin seleksi lintas musim, bukan hanya bulan terbaru.
     hold = int(v["holdout_hari"])
     butuh = hold + horizon + (jumlah_origin - 1) * jarak_sel + int(a["minimal_hari_riwayat"])
     geser = hold if seri.n >= butuh else 0
@@ -1191,7 +1201,11 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
                 degradasi_mae_ens = ((bt_ens.metrik["mae"] - bt_kini.metrik["mae"]) / bt_kini.metrik["mae"] * 100) if bt_kini.metrik["mae"] > 0 else 0.0
                 konteks["ensemble"] = {"a": baseline_champion, "b": ml_terbaik, "w": w}
                 hasil_bt["ensemble"] = bt_ens
-                if perbaikan_ens >= 2.0 and degradasi_mae_ens <= 2.0 and bt_ens.metrik["smape"] <= bt_kini.metrik["smape"]:
+                menang_ens, total_ens = _menang(bt_ens, bt_kini)
+                stabil_ens = total_ens > 0 and menang_ens >= math.ceil(total_ens * 2 / 3)
+                bias_ens = abs(bt_ens.metrik.get("bias_persen", 0.)) <= (3. if kelas == "rendah" else 5.)
+                if (perbaikan_ens >= 2.0 and degradasi_mae_ens <= 2.0 and stabil_ens and bias_ens
+                        and bt_ens.metrik["smape"] <= bt_kini.metrik["smape"]):
                     rekomendasi = "ensemble"
                     catatan.append(f"Dynamic Ensemble aktif: {round(w * 100)}% '{baseline_champion}' + {round((1 - w) * 100)}% "
                                    f"'{ml_terbaik}' memperbaiki sMAPE {perbaikan_ens:.1f}% (target >= 2%).")
@@ -1298,6 +1312,10 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         ps = parameter_ses(y_akhir)
         if ps:
             parameter["ses"] = {"alpha": ps[0]}
+        if konteks.get("_musim") is not None:
+            parameter["musiman_cuaca"] = {"maks_hari_latih": 1460, "minimal_riwayat_hari": 730,
+                                          "cuaca_historis_tersedia": bool(cuaca), "lag_cuaca_hari": 1,
+                                          "fitur": "Kalender tujuan, fase hari raya, return tahun sebelumnya, cuaca 7 dan 30 hari"}
         if konteks.get("ensemble"):
             parameter["ensemble"] = dict(konteks["ensemble"])
         if any(m in hasil_bt for m in MODEL_ML):
