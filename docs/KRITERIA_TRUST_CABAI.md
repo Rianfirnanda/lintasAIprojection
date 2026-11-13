@@ -151,4 +151,4 @@ Retensi arsip maksimal 3.650 hari agar kebutuhan sampel arah bulanan dapat dipen
 
 Syarat 60/90 hari prospektif menghitung tanggal penerbitan berbeda yang ramalannya telah mempunyai aktual sah, bukan sekadar umur kalender sejak aktivasi. Harga/rentang dan arah dinilai kembali pada ramalan terbit tersebut. Karena itu, level tinggi tidak langsung diberikan ketika kebijakan pertama kali diaktifkan. Buku yang rusak dilaporkan dan tidak ditimpa.
 
-Dashboard menambahkan kolom Trust cabai H+1/H+7/H+30, rincian seluruh gerbang, dan level arah terpisah. CSV memuat versi serta level eksplisit. Keluaran audit tersedia di `trust_cabai.json`, `audit_model.json`, `model.json`, `analitik.json`, dan seri masing-masing varian. Angka syarat uji umum serta status Valid/Eksperimen tetap ditampilkan untuk perbandingan.
+Tabel proyeksi dashboard menampilkan angka syarat uji umum serta status Valid/Eksperimen. Rincian kriteria cabai H+1/H+7/H+30 dan level arah terpisah tersedia pada tab Uji ketepatan. CSV memuat versi serta level eksplisit. Keluaran audit tersedia di `trust_cabai.json`, `audit_model.json`, `model.json`, `analitik.json`, dan seri masing-masing varian.
