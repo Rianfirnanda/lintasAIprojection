@@ -1,6 +1,6 @@
-# Usulan kriteria trust proyeksi harga cabai
+# Kriteria trust proyeksi harga cabai
 
-Versi: `cabai-v1-usulan`, 13 November 2026. Status: rancangan, belum diaktifkan dalam pipeline.
+Versi: `cabai-v1`, 13 November 2026. Status: aktif untuk evaluasi berdampingan dengan protokol umum. Batas kebijakan merupakan target awal yang masih perlu divalidasi pada data baru.
 
 Berlaku untuk CMR01 (cabai merah besar), CMR02 (cabai merah keriting), CRW01 (cabai rawit hijau), dan CRW02 (cabai rawit merah). Objek penilaian adalah proyeksi harga, bukan produktivitas tanaman atau kesehatan tanaman.
 
@@ -77,7 +77,7 @@ Untuk harga diskret atau konstan, laporkan cakupan mentah dan diagnostik PIT unt
 
 Ambang ditetapkan sebelum evaluasi baru. Pisahkan training, validasi pemilihan fitur/model, kalibrasi, dan holdout. Holdout tidak memilih model atau mengubah ambang.
 
-| Bukti minimum per horizon | Sedang | Tinggi |
+| Bukti minimum harga dan rentang per horizon | Sedang | Tinggi |
 | --- | ---: | ---: |
 | Periode validasi terpisah sebelum holdout | 3 periode | 3 periode |
 | Lama holdout H+1 / H+7 / H+30 | 90 / 90 / 180 hari | 180 / 180 / 360 hari |
@@ -101,6 +101,8 @@ Penilaian arah dipisahkan agar ramalan nilai harga yang cukup akurat tidak dikla
 | Jumlah kasus uji sah per kelas | Minimal 10 | Minimal 20 |
 
 Balanced accuracy = rata-rata recall naik, stabil, dan turun. Kelas yang tidak mempunyai bukti cukup tidak dihapus dari denominator agar angka terlihat lebih tinggi; trust arah dinyatakan belum cukup bukti. Ketepatan tidak boleh lebih rendah daripada pembanding pada label dan periode yang sama. Hitung kasus dengan blok waktu yang menghormati horizon, bukan menggandakan satu lonjakan menjadi banyak bukti.
+
+Masa uji minimum harga tidak membatasi panjang bukti arah. Jika jumlah kelas pada holdout harga belum cukup, arah tetap belum cukup bukti sampai arsip ramalan terbit menyediakan sampel yang memadai. Evaluator dapat menggunakan arsip tersebut sebagai dasar penilaian arah dengan syarat data, sumber, dan gerbang arah yang sama. Misalnya, 10 kasus independen untuk masing-masing tiga kelas pada H+30 memerlukan setidaknya 30 jendela bulanan; hal ini tidak dapat dibuktikan oleh holdout harga 180 hari saja. Dasar retrospektif atau prospektif dicatat terpisah pada setiap tingkat.
 
 ## 8. Syarat khusus fitur musiman, cuaca, dan wilayah
 
@@ -127,4 +129,26 @@ Aturan lama dan arti skor diambil dari `pipeline/analisis.py`, `pipeline/analiti
 
 Angka dalam rancangan ini merupakan **target kebijakan awal untuk diuji**, bukan standar resmi SP2KP, BI, atau BMKG dan bukan ambang yang telah tervalidasi menjamin akurasi cabai. Batas 15% pada H+30 tingkat tinggi mempertahankan acuan volatil yang ada; batas horizon lain dan level sedang adalah usulan operasional. Validasi baru, analisis sensitivitas, serta evaluasi kesalahan peringatan diperlukan sebelum mengganti kebijakan produksi.
 
-Representasi yang dapat dibaca mesin berada di `docs/kriteria_trust_cabai.usulan.json`. File tersebut belum dibaca pipeline dan tidak mengubah model, status valid, maupun skor produksi.
+Rancangan awal tetap disimpan di `docs/kriteria_trust_cabai.usulan.json`. Konfigurasi aktif berada di `config/trust_cabai.json`. Implementasi menghitung level per horizon tanpa memetakan ulang persentase syarat umum atau mengubah izin proyeksi resmi secara otomatis.
+
+## 11. Penerapan pada pipeline dan dashboard
+
+`pipeline/trust_cabai.py` menghitung evaluasi untuk empat kode cabai. Pemilihan model menyisihkan 450 hari terakhir: maksimum 360 hari holdout ditambah ruang awal 90 hari untuk kalibrasi. Tiga periode validasi berada sebelum batas pemilihan tersebut. Evaluasi memakai target asli dan origin yang jendela prediksinya tidak bertumpang tindih. Masing-masing periode membutuhkan minimal 15, 6, dan 2 origin untuk H+1, H+7, dan H+30. Evaluator mencari tiga periode yang cukup bukti dari paling banyak enam blok 90 hari, mulai dari yang terbaru sebelum batas seleksi. Periode dipilih menurut jumlah observasi, bukan menurut besar galat; periode yang dilewati beserta alasannya tetap dicatat. Jika tetap belum ada tiga periode yang cukup, hasilnya belum cukup bukti.
+
+Kalibrasi historis merekonstruksi jalur ACI yang sama dengan produksi menggunakan harga yang sudah tersedia pada origin. Metode PIT untuk harga kembar tetap menjadi diagnostik, sedangkan gerbang cakupan menggunakan harga aktual dan batas interval yang terbit. Sebelum memberi level, batas interval hasil rekonstruksi pada tanggal terakhir dibandingkan dengan batas yang benar-benar diterbitkan. Ketidakcocokan ditandai belum dievaluasi, bukan dianggap lolos. Model dengan kesalahan nol dan interval nol mempunyai pengecualian konstan yang diaudit.
+
+Jika ACI belum mempunyai bukti cukup pada suatu origin historis, rekonstruksi memakai kuantil empiris dari galat origin mingguan sebelumnya. Ini simulasi metode pada snapshot, bukan arsip ramalan yang benar-benar pernah diterbitkan. Bukti prospektif dinilai terpisah dari arsip penerbitan nyata; diagnostik PIT protokol umum tetap tersedia di keluaran model dan audit.
+
+Kalender kelengkapan memakai hari pencatatan serta acara pasti berjenis libur nasional, hari raya, atau cuti bersama. Libur yang hanya disimpulkan dari data kosong tidak mengurangi denominator trust. MASE per horizon memakai selisih pasangan harga asli sebelum origin; skala nol ditandai tidak terdefinisi.
+
+Kondisi hujan tinggi didefinisikan untuk pilot sebagai rata-rata hujan tujuh hari sebelum origin yang melampaui kuantil 90% observasi hujan 365 hari sebelumnya, dengan minimal 60 observasi historis dan empat observasi dalam tujuh hari. Label ini bukan klaim penyebab pergerakan harga. Klaim gangguan pasokan tetap belum tersedia jika tidak ada label terverifikasi.
+
+Label normal berarti tidak ada pemicu kondisi khusus yang teramati pada data yang tersedia, bukan kepastian bahwa tidak ada gangguan. Kelengkapan cuaca dan ketersediaan label tetap dicatat di audit fitur.
+
+Ramalan prospektif disimpan secara idempoten di `data/registry/trust_cabai_prospektif.json`; pengulangan run tidak mengganti ramalan pertama pada tanggal yang sama. Hanya run nyata pada tanggal eksekusi Jakarta, sebelum target terjadi, yang dapat menulis bukti. Demo dan backfill tidak dihitung. Bukti dipisahkan menurut varian, wilayah, sumber, model, konfigurasi, versi implementasi, serta versi kebijakan.
+
+Retensi arsip maksimal 3.650 hari agar kebutuhan sampel arah bulanan dapat dipenuhi jika model dan kebijakannya stabil. Retensi panjang tidak otomatis meloloskan arah: setiap kelas tetap harus cukup sampel, akurat, dan sesuai firma sumber/model yang sedang dinilai.
+
+Syarat 60/90 hari prospektif menghitung tanggal penerbitan berbeda yang ramalannya telah mempunyai aktual sah, bukan sekadar umur kalender sejak aktivasi. Harga/rentang dan arah dinilai kembali pada ramalan terbit tersebut. Karena itu, level tinggi tidak langsung diberikan ketika kebijakan pertama kali diaktifkan. Buku yang rusak dilaporkan dan tidak ditimpa.
+
+Dashboard menambahkan kolom Trust cabai H+1/H+7/H+30, rincian seluruh gerbang, dan level arah terpisah. CSV memuat versi serta level eksplisit. Keluaran audit tersedia di `trust_cabai.json`, `audit_model.json`, `model.json`, `analitik.json`, dan seri masing-masing varian. Angka syarat uji umum serta status Valid/Eksperimen tetap ditampilkan untuk perbandingan.

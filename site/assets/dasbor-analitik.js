@@ -1,4 +1,5 @@
 import { selRentang, hargaHariIni } from "./rentang-proyeksi.js";
+import { selTrustCabai, rincianTrustCabai, kolomTrustCabai } from "./trust-cabai.js";
 // Dashboard Internal BPS: indikator, pilihan tanggal perkiraan, tabel 21 varian yang bergulir sendiri, grafik, diagnostik,
 // kinerja model, asal data, rekomendasi, lalu analisis lanjutan dan mutu data dalam tab. Dipakai di dasbor.html dan
 // beranda admin/analis. Semua angka dibaca dari analitik.json, proyeksi_acara.json, proyeksi_periodik.json, dan seri/<varian>.json.
@@ -303,7 +304,7 @@ export async function pasangDasborInternal(wadah, meta) {
         <th colspan="${kolomH.length}" class="tengah">Perkiraan harga (Rp)</th>
         <th rowspan="2" class="angka" title="Interval prediksi nominal ${persenTingkat}%; cakupan aktual diperiksa pada data uji">Rentang wajar ${labelH(S.h)}</th>
         <th rowspan="2" class="angka k-ubah" data-urut="ubah">Perubahan ${labelH(S.h)}</th><th rowspan="2" class="k-cara" data-urut="model">Cara perkiraan</th>
-        <th rowspan="2" class="tengah" data-urut="status">Status uji</th><th rowspan="2" class="k-yakin" data-urut="percaya" title="Persentase syarat uji yang lolos, bukan probabilitas prediksi benar">Syarat uji lolos</th></tr>
+        <th rowspan="2" class="tengah" data-urut="status">Status uji</th><th rowspan="2" class="k-trust" title="Trust khusus empat varian cabai, dinilai terpisah untuk 1, 7, dan 30 hari setelah tanggal data">Trust cabai</th><th rowspan="2" class="k-yakin" data-urut="percaya" title="Persentase syarat uji umum yang lolos, bukan probabilitas prediksi benar">Syarat uji lolos</th></tr>
       <tr>${kolomH.map((h) => `<th class="angka${h === S.h ? " dipilih" : ""}" data-urut="${kunciH(h)}">${labelH(h)}</th>`).join("")}</tr>`;
     const baris = daftarTampil();
     const ubahMaks = Math.max(5, ...A.varian.map((v) => Math.abs(proy(v, S.h)?.perubahan_persen ?? 0)));
@@ -322,13 +323,15 @@ export async function pasangDasborInternal(wadah, meta) {
         <td class="angka"><span class="dsb-ubah-sel"><span class="dsb-ubah-batang ${kelasUbah(x)}" style="--lebar:${lebar.toFixed(1)}%"></span><b class="dsb-ubah ${kelasUbah(x)}">${persen(x, 1, true)}</b></span></td>
         <td class="dsb-model k-cara" title="${esc(v.nama_model)}">${esc(NAMA_PENDEK[v.model] || v.nama_model)}</td>
         <td class="tengah">${lencanaStatus(v.status)}</td>
+        <td>${selTrustCabai(v.trust_cabai)}</td>
         <td title="${v.syarat_lolos} dari ${v.syarat_total} syarat uji lolos (${esc(NAMA_PERCAYA[v.kepercayaan] || "")})">${s === null ? "–" : `<span class="dsb-yakin"><span class="dsb-meter kecil ${s >= 80 ? "hijau" : s >= 50 ? "kuning" : "merah"}"><span style="width:${s}%"></span></span><b>${s}</b></span>`}</td></tr>`;
     }).join("") || `<tr><td colspan="${10 + kolomH.length}" class="kosong">Tidak ada komoditas yang cocok dengan pilihan.</td></tr>`;
     $("dsb-tabel").querySelectorAll("th[data-urut]").forEach((th) => {
       th.setAttribute("aria-sort", th.dataset.urut === S.urut.kunci ? (S.urut.arah > 0 ? "ascending" : "descending") : "none");
     });
     const valid = A.varian.filter((v) => v.status === "valid").length;
-    $("dsb-catatan-status").innerHTML = `<span>Rentang prediksi nominal ${persenTingkat}%. Skor menunjukkan syarat uji yang lolos.</span><span><span class="lencana baik">Valid</span> ${valid} lolos semua uji</span>
+    $("dsb-catatan-status").innerHTML = `<span>Rentang prediksi nominal ${persenTingkat}%. Skor menunjukkan syarat uji umum yang lolos.</span><span><span class="lencana baik">Valid</span> ${valid} lolos semua uji</span>
+      ${A.varian.some(v => v.trust_cabai) ? '<span>Kriteria cabai awal: level dinilai per horizon; klik baris untuk melihat alasannya.</span>' : ''}
       <span><span class="lencana sedang">Eksperimen</span> ${A.varian.length - valid} bahan pertimbangan</span>
       ${A.varian.some((v) => v.sumber?.pengganti) ? '<span title="Pasar Bengkulu Tengah belum mencatat varian ini, jadi dipakai rata-rata Provinsi Bengkulu (PIHPS)."><sup class="dsb-prov">prov</sup> pakai rata-rata provinsi</span>' : ""}
       ${S.arah ? `<button type="button" class="dsb-hapus-saring" data-arah="">Tampilkan semua (${baris.length} dari ${A.varian.length})</button>` : '<span class="dsb-petunjuk">Klik baris untuk rinciannya</span>'}`;
@@ -337,7 +340,8 @@ export async function pasangDasborInternal(wadah, meta) {
   function ekspor() {
     const kolom = ["kode", "varian", "kelompok", "satuan", "tanggal_harga", "harga_aktual", "tanggal_hari_ini", "jenis_harga_hari_ini", "prediksi_hari_ini", "bawah_hari_ini", "atas_hari_ini", "prediksi_7", "bawah_7", "atas_7", "prediksi_14", "bawah_14", "atas_14",
       "prediksi_30", "bawah_30", "atas_30", "tanggal_pilihan", "prediksi_pilihan", "bawah_pilihan", "atas_pilihan", "perubahan_pilihan_persen",
-      "cara_prakiraan", "status_validasi", "keyakinan_persen", "smape_uji_akhir", "cakupan_uji_akhir"];
+      "cara_prakiraan", "status_validasi", "keyakinan_persen", "smape_uji_akhir", "cakupan_uji_akhir", "versi_trust_cabai",
+      ...[1,7,30].flatMap(h => [`trust_cabai_${h}`, `trust_arah_cabai_${h}`])];
     const baris = daftarTampil().map((v) => {
       const pp = proy(v, S.h);
       const kini = hargaHariIni(v, hariIni, A.dibuat_untuk, proy);
@@ -345,7 +349,7 @@ export async function pasangDasborInternal(wadah, meta) {
         tanggal_hari_ini: hariIni, jenis_harga_hari_ini: kini ? (kini.tercatat ? "tercatat" : "proyeksi") : "belum_tersedia", prediksi_hari_ini: kini?.prediksi, bawah_hari_ini: kini?.bawah, atas_hari_ini: kini?.atas,
         tanggal_pilihan: S.tanggal, prediksi_pilihan: pp?.prediksi, bawah_pilihan: pp?.bawah, atas_pilihan: pp?.atas, perubahan_pilihan_persen: pp?.perubahan_persen,
         cara_prakiraan: v.nama_model, status_validasi: v.status, keyakinan_persen: skor(v),
-        smape_uji_akhir: v.holdout?.smape, cakupan_uji_akhir: v.holdout?.cakupan_persen };
+        smape_uji_akhir: v.holdout?.smape, cakupan_uji_akhir: v.holdout?.cakupan_persen, ...kolomTrustCabai(v.trust_cabai) };
       for (const h of HORIZON_CEPAT) { const p = proy(v, h); o[`prediksi_${h}`] = p?.prediksi; o[`bawah_${h}`] = p?.bawah; o[`atas_${h}`] = p?.atas; }
       return o;
     });
@@ -574,7 +578,7 @@ export async function pasangDasborInternal(wadah, meta) {
       </dl>`;
     }
     if (va.gagal?.length) isi += `<p class="pesan peringatan" style="margin-top:10px">Belum lolos: ${va.gagal.map(esc).join(", ")}.</p>`;
-    $("dsb-kinerja").innerHTML = isi;
+    $("dsb-kinerja").innerHTML = rincianTrustCabai(v.trust_cabai) + isi;
   }
 
   function gambarUji(v) {

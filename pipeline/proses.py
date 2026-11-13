@@ -24,7 +24,7 @@ from . import (VERSI, agregasi, analisis, analitik, demo, proyeksi_acara, proyek
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
 from . import firestore_sinkron
-from . import berita, sumber_harian, kebijakan_model
+from . import berita, sumber_harian, kebijakan_model, trust_cabai
 from . import ews as modul_ews
 from . import tata_data
 from . import konektor_resmi
@@ -225,6 +225,7 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     hasil_varian: dict[str, analisis.HasilVarian] = {}
     seri_pembanding: dict[str, dict[str, analisis.SeriHarian]] = defaultdict(dict)
     aturan_model = kebijakan_model.muat(konf.akar)
+    aturan_cabai = trust_cabai.muat(konf.akar)
     cuaca_wilayah = defaultdict(dict)
     for k in hasil_masuk.konteks:
         if k.kode_sumber == "BD-CUACA" and k.indikator in ("curah_hujan_mm", "suhu_rata_c"):
@@ -251,7 +252,8 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
             seri, v.kelompok, konf.hari_raya(), konf.pengaturan,
             model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju, kode=v.kode,
             libur_pasar=hasil_qc.libur, cuaca=cuaca_wilayah.get(w_seri, {}), kalender=konf.kalender,
-            regional=pembanding_model, kebijakan=aturan_model, boleh_training=boleh)
+            regional=pembanding_model, kebijakan=aturan_model, boleh_training=boleh,
+            kriteria_cabai=aturan_cabai if not pakai_demo and boleh else None, hari_penilaian=konf.hari_ini)
         observasi_asal = ([o for o in dipakai if o.kode_sumber == asal_model.get('kode_sumber')]
                            if riwayat_resmi and not pakai_demo else dipakai)
         hv.sumber_seri = keterangan_sumber(konf, observasi_asal, w_seri, v.kode, tanggal_data)
@@ -265,6 +267,8 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
         hv.sumber_seri['training'] = asal_model
         hv.parameter['kebijakan_model'] = aturan_model
         hv.parameter['sumber_regional'] = asal_regional
+        if v.kode in trust_cabai.KODE and aturan_cabai:
+            trust_cabai.lengkapi(konf, hv, asal_model, aturan_cabai, v.kode, pakai_demo)
         hasil_varian[v.kode] = hv
         for w in konf.wilayah:
             if w != w_seri and harian.get((w, v.kode)):
@@ -499,7 +503,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "aktual": _nilai_list(seri.nilai[i0:]), "baseline": _nilai_list(hv.baseline[i0:]),
             "rata7": _nilai_list(hv.rata7[i0:]), "proyeksi": hv.proyeksi, "pembanding": pembanding,
             "per_pasar": per_pasar, "anomali": tgl_anomali, "model_terpilih": hv.model_terpilih,
-            "catatan": hv.catatan, "sumber_seri": hv.sumber_seri,
+            "catatan": hv.catatan, "sumber_seri": hv.sumber_seri, "trust_cabai": hv.trust_cabai or None,
         })
 
         idx = np.where(~np.isnan(seri.nilai))[0]
@@ -581,6 +585,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "persetujuan": {k: v for k, v in data_kinerja.get("persetujuan", {}).get(kode, {}).items() if k != "riwayat"},
             "segmen": hv.segmen,
             "holdout": hv.holdout, "validasi": hv.validasi, "diagnostik": hv.diagnostik,
+            "trust_cabai": hv.trust_cabai or None,
             "kelengkapan_persen": hv.kelengkapan_persen, "jumlah_obs": hv.jumlah_obs,
         }
         if m:
@@ -628,11 +633,15 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
                         "sumber_training": hv.sumber_seri.get("training", {}),
                         "sumber_regional": hv.parameter.get("sumber_regional", {}),
                         "audit_fitur": hv.parameter.get("audit_fitur_bertahap", []),
-                        "validasi": hv.validasi, "holdout": hv.holdout}
+                        "validasi": hv.validasi, "holdout": hv.holdout, "trust_cabai": hv.trust_cabai or None}
                        for kode, hv in hasil_varian.items()],
     })
 
     # ---------- kinerja.json (indikator SMART Rancangan Aksi Perubahan)
+    _tulis_json(keluaran / 'trust_cabai.json', {
+        'kebijakan': trust_cabai.muat(konf.akar), 'tanggal_penilaian': konf.hari_ini, 'mode_demo': pakai_demo,
+        'per_varian': {kode: hv.trust_cabai for kode, hv in hasil_varian.items() if hv.trust_cabai},
+        'catatan': 'Level per horizon bukan probabilitas. Skor dan sertifikasi umum tetap tersedia.'})
     status_persetujuan = {kode: hv.status_persetujuan for kode, hv in hasil_varian.items()}
     indikator = kinerja.indikator_smart(
         konf, hasil_qc, hasil_masuk, ringkasan_model, evaluasi, daftar_sinyal, data_kinerja.get("respons", {}),

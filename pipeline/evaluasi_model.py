@@ -5,7 +5,7 @@ import json
 from datetime import date, timedelta
 from pathlib import Path
 import numpy as np
-from . import analisis, konfigurasi, kebijakan_model, masukan, kualitas
+from . import analisis, konfigurasi, kebijakan_model, masukan, kualitas, trust_cabai
 
 
 def kasus_sintetis():
@@ -74,12 +74,16 @@ def main():
             hasil.append({'kode': kode, 'sumber': sumber, 'model': None}); continue
         hv = analisis.analisis_varian(seri, kelompok, konf.hari_raya(), peng,
                                       kode=kode if args.data_nyata else None, cuaca=wx, kalender=konf.kalender,
-                                      regional=regional, kebijakan=aturan)
+                                      regional=regional, kebijakan=aturan,
+                                      kriteria_cabai=trust_cabai.muat(konf.akar) if args.data_nyata else None,
+                                      hari_penilaian=konf.hari_ini)
+        if args.data_nyata and kode in trust_cabai.KODE and hv.trust_cabai:
+            trust_cabai.lengkapi(konf, hv, sumber, trust_cabai.muat(konf.akar), kode, catat=False)
         if not args.data_nyata:
             hv.validasi['boleh_proyeksi_resmi'] = False
         hasil.append({'kode': kode, 'sumber': sumber, 'model': hv.model_terpilih,
                       'validasi': hv.validasi, 'holdout': hv.holdout, 'audit_fitur': hv.parameter['audit_fitur_bertahap'],
-                      'proyeksi': hv.proyeksi, 'catatan': hv.catatan})
+                      'proyeksi': hv.proyeksi, 'catatan': hv.catatan, 'trust_cabai': hv.trust_cabai or None})
         print(f'{kode}: {hv.model_terpilih}, {hv.validasi["status"]}', flush=True)
     output = {'mode': 'data_nyata' if args.data_nyata else 'skenario_sintetis', 'model_pohon': args.model_pohon,
               'kebijakan': aturan, 'hari_penilaian': konf.hari_ini.isoformat(), 'hasil': hasil}

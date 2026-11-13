@@ -456,3 +456,9 @@ button.dsb-arah-angka:focus-visible { outline: 2px solid var(--aksen); }
 }
 
 .dsb-interval { font-size: 0.68rem; font-weight: 400; line-height: 1.5; color: var(--muted); font-variant-numeric: tabular-nums; }
+.dsb-trust { display: grid; gap: 3px; font-size: 0.65rem; font-weight: 400; }
+.dsb-trust-baris { display: flex; gap: 5px; align-items: center; justify-content: space-between; }
+.dsb-trust-baris .lencana { font-size: 0.62rem; }
+.dsb-trust-rincian { margin-bottom: 16px; padding: 12px; border: 1px solid var(--dsb-garis); border-radius: 8px; }
+.dsb-trust-rincian summary { cursor: pointer; font-weight: 600; }
+.dsb-trust-rincian details { margin-top: 10px; }

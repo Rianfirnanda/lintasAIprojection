@@ -14,7 +14,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import numpy as np
-from . import kebijakan_model
+from . import kebijakan_model, trust_cabai
 
 from . import analisis
 
@@ -32,6 +32,7 @@ def hash_json(obj) -> str:
 def versi_konfigurasi(konf):
     return hash_json({
         'pengaturan': konf.pengaturan, 'kebijakan_model': kebijakan_model.muat(konf.akar),
+        'trust_cabai': trust_cabai.muat(konf.akar),
         'kalender': [a.__dict__ for a in konf.kalender],
         'master': {key: {kode: item.__dict__ for kode, item in getattr(konf, key).items()}
                    for key in ('varian', 'pasar', 'wilayah', 'sumber')},
@@ -266,6 +267,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
             "model": hv.model_terpilih, "nama_model": analisis.NAMA_MODEL.get(hv.model_terpilih or "", "-"),
             "jenis_model": "challenger" if hv.model_terpilih in analisis.MODEL_CHALLENGER else "baseline" if hv.model_terpilih else None,
             "status": status, "kepercayaan": kepercayaan(hv.validasi), "validasi": hv.validasi,
+            "trust_cabai": hv.trust_cabai or None,
             "syarat_lolos": sum(1 for x in (hv.validasi or {}).get("syarat", []) if x["lolos"] is True),
             "syarat_total": len((hv.validasi or {}).get("syarat", [])),
             "holdout": {k: ho.get(k) for k in ("hari", "jumlah_origin", "n", "smape", "mae", "mase", "bias_persen", "akurasi_arah", "cakupan_persen",

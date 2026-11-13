@@ -35,7 +35,7 @@ from typing import Callable
 
 import numpy as np
 
-from . import model_ml, musiman, kebijakan_model, evaluasi_fitur
+from . import model_ml, musiman, kebijakan_model, evaluasi_fitur, trust_cabai
 from functools import partial
 from .konfigurasi import Acara
 
@@ -710,6 +710,7 @@ class HasilVarian:
     parameter: dict = field(default_factory=dict)
     terbaik_per_horizon: dict = field(default_factory=dict)
     sumber_seri: dict = field(default_factory=dict)
+    trust_cabai: dict = field(default_factory=dict)
 
 
 def smape_segmen(bt: HasilBacktest, acara: list[Acara], sebelum: int, sesudah: int) -> dict:
@@ -1092,7 +1093,8 @@ def simpanan_fitur(terisi: np.ndarray, tanggal: list[date], acara: list[Acara]) 
 def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengaturan: dict,
                     model_disetujui: str | None = None, wajib_persetujuan: bool = False, kode: str | None = None,
                     libur_pasar: set | None = None, cuaca: dict | None = None, kalender: list[Acara] | None = None, regional: dict | None = None,
-                    kebijakan: dict | None = None, boleh_training: bool = True) -> HasilVarian:
+                    kebijakan: dict | None = None, boleh_training: bool = True, kriteria_cabai: dict | None = None,
+                    hari_penilaian: date | None = None) -> HasilVarian:
     a = pengaturan["analisis"]
     s = pengaturan["sinyal"]
     jhr = pengaturan["jendela_hari_raya"]
@@ -1125,6 +1127,9 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     if seri.n >= 1460:
         jarak_sel = max(jarak_sel, 28)  # Sebarkan origin seleksi lintas musim, bukan hanya bulan terbaru.
     hold = int(v["holdout_hari"])
+    khusus_cabai = bool(kriteria_cabai and kode in trust_cabai.KODE)
+    if khusus_cabai:
+        hold = max(hold, trust_cabai.cadangan_hari(kriteria_cabai))
     butuh = hold + horizon + (jumlah_origin - 1) * jarak_sel + int(a["minimal_hari_riwayat"])
     geser = hold if seri.n >= butuh else 0
     if not geser and jumlah_obs >= a["minimal_hari_riwayat"]:
@@ -1359,6 +1364,13 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
             terbaik = min(ada, key=ada.get)
             terbaik_per_horizon[str(hz)] = {"model": terbaik, "smape": ada[terbaik]}
 
+    trust = {}
+    if khusus_cabai:
+        trust = trust_cabai.evaluasi(seri, terisi, terpilih, konteks, pengaturan, kalender or acara,
+                                    cuaca or {}, regional or {}, kriteria_cabai,
+                                    seri.tanggal[-1]-timedelta(days=geser) if geser else None,
+                                    asof=hari_penilaian, audit=audit_fitur)
+
     return HasilVarian(
         seri=seri, baseline=baseline, rata7=rata7, model_terpilih=terpilih,
         metrik_model={m: bt.metrik for m, bt in hasil_bt.items()},
@@ -1369,4 +1381,5 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
         metrik_horizon=metrik_horizon, proyeksi_multi_horizon=proyeksi_multi,
         holdout=holdout, validasi=validasi, diagnostik=diagnostik, kelengkapan_persen=kelengkapan, jumlah_obs=jumlah_obs,
         kelas_volatilitas=kelas, parameter=parameter, terbaik_per_horizon=terbaik_per_horizon,
+        trust_cabai=trust,
     )

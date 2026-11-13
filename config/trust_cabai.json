@@ -1,0 +1,212 @@
+{
+  "versi": "cabai-v1",
+  "tanggal": "2026-11-13",
+  "status": "aktif_evaluasi_berdampingan",
+  "ambang_belum_tervalidasi": true,
+  "mengubah_skor_produksi": false,
+  "kode_varian": [
+    "CMR01",
+    "CMR02",
+    "CRW01",
+    "CRW02"
+  ],
+  "horizon_hari": [
+    1,
+    7,
+    30
+  ],
+  "level": [
+    "belum_cukup_bukti",
+    "rendah",
+    "sedang",
+    "tinggi"
+  ],
+  "agregasi": "seluruh_gerbang_wajib_lolos_per_horizon",
+  "level_gabungan": "minimum_level_horizon_yang_dicakup",
+  "trust_arah_terpisah": true,
+  "skor_probabilitas": false,
+  "gerbang_promosi_model_tetap": true,
+  "data": {
+    "sedang": {
+      "rentang_kalender_min_hari": 730,
+      "observasi_asli_min": 500,
+      "kelengkapan_90_min_persen": 90,
+      "kelengkapan_365_min_persen": 80,
+      "umur_maks_hari_pencatatan": 2
+    },
+    "tinggi": {
+      "rentang_kalender_min_hari": 1095,
+      "observasi_asli_min": 730,
+      "kelengkapan_90_min_persen": 95,
+      "kelengkapan_365_min_persen": 90,
+      "umur_maks_hari_pencatatan": 1
+    },
+    "imputasi_bukan_observasi": true,
+    "maks_carry_hari_pencatatan": 3,
+    "larangan_mencampur_sumber_training": true,
+    "wilayah_trust_mengikuti_target_seri": true
+  },
+  "harga": {
+    "sedang": {
+      "smape_maks_persen": {
+        "1": 8,
+        "7": 12,
+        "30": 20
+      },
+      "bias_absolut_maks_persen": {
+        "1": 3,
+        "7": 5,
+        "30": 8
+      }
+    },
+    "tinggi": {
+      "smape_maks_persen": {
+        "1": 5,
+        "7": 8,
+        "30": 15
+      },
+      "bias_absolut_maks_persen": {
+        "1": 2,
+        "7": 3,
+        "30": 5
+      }
+    },
+    "smape_tidak_lebih_buruk_dari_naif": true,
+    "mae_tidak_lebih_buruk_dari_naif": true,
+    "mase_diagnostik_tetap_dilaporkan": true,
+    "metrik_tidak_terdefinisi_bukan_poin_lolos": true
+  },
+  "interval": {
+    "nominal_persen": 80,
+    "sedang": {
+      "cakupan_min_persen": 70,
+      "cakupan_maks_persen": 90,
+      "rasio_skor_interval_maks_vs_naif": 1.05,
+      "rasio_lebar_relatif_maks_vs_naif": 1.2
+    },
+    "tinggi": {
+      "cakupan_min_persen": 75,
+      "cakupan_maks_persen": 85,
+      "rasio_skor_interval_maks_vs_naif": 1.0,
+      "rasio_lebar_relatif_maks_vs_naif": 1.05
+    },
+    "pengecualian_konstan": "seluruh_galat_nol_dan_interval_nol_diaudit",
+    "laporkan_cakupan_mentah_dan_pit_terpisah": true,
+    "cakupan_tinggi_tidak_memberi_bonus": true
+  },
+  "bukti": {
+    "periode_validasi_min": 3,
+    "periode_wajib_lolos_min": 2,
+    "holdout_bukan_seleksi": true,
+    "sedang": {
+      "holdout_min_hari": {
+        "1": 90,
+        "7": 90,
+        "30": 180
+      },
+      "origin_nonoverlap_min": {
+        "1": 30,
+        "7": 12,
+        "30": 6
+      }
+    },
+    "tinggi": {
+      "holdout_min_hari": {
+        "1": 180,
+        "7": 180,
+        "30": 360
+      },
+      "origin_nonoverlap_min": {
+        "1": 60,
+        "7": 24,
+        "30": 12
+      },
+      "prospektif_min_hari": {
+        "1": 60,
+        "7": 60,
+        "30": 90
+      }
+    },
+    "kondisi_uji": [
+      "normal",
+      "menjelang_hari_raya",
+      "hujan_tinggi",
+      "gangguan_pasokan_jika_ada_label_sah"
+    ],
+    "kondisi_tanpa_sampel_cukup": "belum_teruji"
+  },
+  "arah": {
+    "pita_stabil_persen": {
+      "1": 2,
+      "7": 3,
+      "30": 5
+    },
+    "sedang": {
+      "balanced_accuracy_min_persen": 55,
+      "recall_naik_min_persen": 60,
+      "kasus_per_kelas_min": 10
+    },
+    "tinggi": {
+      "balanced_accuracy_min_persen": 60,
+      "recall_naik_min_persen": 70,
+      "kasus_per_kelas_min": 20
+    },
+    "kelas": [
+      "naik",
+      "stabil",
+      "turun"
+    ],
+    "kelas_tidak_cukup_bukan_dihapus_dari_denominator": true,
+    "tidak_lebih_buruk_dari_pembanding": true
+  },
+  "klaim_fitur": {
+    "hari_raya": {
+      "kejadian_beda_tahun_min": 2,
+      "jendela_sebelum_hari": 35,
+      "observasi_asli_per_kejadian_min": 20
+    },
+    "cuaca": {
+      "lag_observasi_min_hari": 1,
+      "riwayat_min_hari": 365,
+      "kelengkapan_min_persen": 80,
+      "prakiraan_memerlukan_arsip_waktu_terbit": true
+    },
+    "regional": {
+      "carry_maks_hari": 3,
+      "kode_kota_bengkulu": "1771",
+      "kode_kepahiang": "1708",
+      "kode_provinsi_bengkulu": "17"
+    },
+    "fitur_hadir_bukan_poin_trust": true
+  },
+  "migrasi": {
+    "bandingkan_kebijakan_lama_dan_usulan": true,
+    "larangan_memetakan_skor_lama_ke_persen_baru": true,
+    "laporkan_versi_horizon_sumber_bukti_dan_alasan": true,
+    "ambang_dibekukan_sebelum_evaluasi_baru": true,
+    "sumber_dasar": [
+      "pipeline/analisis.py",
+      "pipeline/analitik.py",
+      "site/assets/dasbor-analitik.js",
+      "config/kebijakan_model.json"
+    ]
+  },
+  "aktif": true,
+  "tanggal_aktivasi": "2026-11-13",
+  "runtime": {
+    "kalibrasi_awal_hari": 90,
+    "panjang_periode_hari": 90,
+    "origin_validasi_min": {
+      "1": 15,
+      "7": 6,
+      "30": 2
+    },
+    "kasus_kondisi_min": {
+      "1": 20,
+      "7": 5,
+      "30": 3
+    },
+    "retensi_prospektif_hari": 3650,
+    "periode_cari_maks": 6
+  }
+}
