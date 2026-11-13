@@ -303,7 +303,7 @@ export async function pasangDasborInternal(wadah, meta) {
       <tr><th rowspan="2" class="angka k-no" data-urut="no">No</th><th rowspan="2" class="k-nama" data-urut="nama">Komoditas</th><th rowspan="2" class="angka" data-urut="harga">Harga tercatat</th><th rowspan="2" class="angka" title="Rentang prediksi hari ini, atau harga tercatat jika laporan hari ini sudah tersedia">Hari ini</th>
         <th colspan="${kolomH.length}" class="tengah">Perkiraan harga (Rp)</th>
         <th rowspan="2" class="angka" title="Interval prediksi nominal ${persenTingkat}%; cakupan aktual diperiksa pada data uji">Rentang wajar ${labelH(S.h)}</th>
-        <th rowspan="2" class="angka k-ubah" data-urut="ubah">Perubahan ${labelH(S.h)}</th><th rowspan="2" class="k-cara" data-urut="model">Cara perkiraan</th>
+        <th rowspan="2" class="angka k-ubah" data-urut="ubah">Perubahan ${labelH(S.h)}</th>
         <th rowspan="2" class="tengah" data-urut="status">Status uji</th><th rowspan="2" class="k-yakin" data-urut="percaya" title="Persentase syarat uji umum yang lolos, bukan probabilitas prediksi benar">Syarat uji lolos</th></tr>
       <tr>${kolomH.map((h) => `<th class="angka${h === S.h ? " dipilih" : ""}" data-urut="${kunciH(h)}">${labelH(h)}</th>`).join("")}</tr>`;
     const baris = daftarTampil();
@@ -321,10 +321,9 @@ export async function pasangDasborInternal(wadah, meta) {
         ${kolomH.map((h) => { const q = proy(v, h); return `<td class="angka${h === S.h ? " dipilih" : ""}">${selRentang(q)}</td>`; }).join("")}
         <td class="angka dsb-rentang">${!p ? "–" : Math.round(p.bawah) === Math.round(p.atas) ? `<span>tetap</span> ${angkaRp(p.bawah)}` : `${angkaRp(p.bawah)}<span>–</span>${angkaRp(p.atas)}`}</td>
         <td class="angka"><span class="dsb-ubah-sel"><span class="dsb-ubah-batang ${kelasUbah(x)}" style="--lebar:${lebar.toFixed(1)}%"></span><b class="dsb-ubah ${kelasUbah(x)}">${persen(x, 1, true)}</b></span></td>
-        <td class="dsb-model k-cara" title="${esc(v.nama_model)}">${esc(NAMA_PENDEK[v.model] || v.nama_model)}</td>
         <td class="tengah">${lencanaStatus(v.status)}</td>
         <td title="${v.syarat_lolos} dari ${v.syarat_total} syarat uji lolos (${esc(NAMA_PERCAYA[v.kepercayaan] || "")})">${s === null ? "–" : `<span class="dsb-yakin"><span class="dsb-meter kecil ${s >= 80 ? "hijau" : s >= 50 ? "kuning" : "merah"}"><span style="width:${s}%"></span></span><b>${s}</b></span>`}</td></tr>`;
-    }).join("") || `<tr><td colspan="${9 + kolomH.length}" class="kosong">Tidak ada komoditas yang cocok dengan pilihan.</td></tr>`;
+    }).join("") || `<tr><td colspan="${8 + kolomH.length}" class="kosong">Tidak ada komoditas yang cocok dengan pilihan.</td></tr>`;
     $("dsb-tabel").querySelectorAll("th[data-urut]").forEach((th) => {
       th.setAttribute("aria-sort", th.dataset.urut === S.urut.kunci ? (S.urut.arah > 0 ? "ascending" : "descending") : "none");
     });
