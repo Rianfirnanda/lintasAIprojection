@@ -35,7 +35,8 @@ from typing import Callable
 
 import numpy as np
 
-from . import model_ml, musiman
+from . import model_ml, musiman, kebijakan_model, evaluasi_fitur
+from functools import partial
 from .konfigurasi import Acara
 
 
@@ -237,6 +238,8 @@ MODEL: dict[str, Callable] = {
     "holt_redam": model_holt_redam,
     "ses": model_ses,
     "hari_raya": model_hari_raya,
+    "musiman_kalender": partial(musiman.prediksi, tahap="kalender"),
+    "musiman_regional": partial(musiman.prediksi, tahap="regional"),
     "musiman_cuaca": musiman.prediksi,
     "ml_challenger": model_ml_challenger,
     "ml_hgb": model_ml_hgb,
@@ -251,6 +254,8 @@ NAMA_MODEL = {
     "holt_redam": "Tren melandai (Damped Holt)",
     "ses": "Penghalusan eksponensial (SES)",
     "hari_raya": "Harga terakhir ditambah pola hari raya sebelumnya",
+    "musiman_kalender": "Ridge kalender tahunan dan per jenis hari raya",
+    "musiman_regional": "Ridge kalender, cuaca, dan spread wilayah pembanding",
     "musiman_cuaca": "Ridge musiman tahunan, hari raya, dan cuaca historis",
     "ml_challenger": "Machine learning Ridge (regresi linear)",
     "ml_hgb": "Machine learning Gradient Boosting (setara LightGBM)",
@@ -259,12 +264,12 @@ NAMA_MODEL = {
 }
 
 MODEL_BASELINE = {"naif", "naif_musiman7", "rata7", "holt_redam", "ses", "hari_raya"}
-MODEL_ML = ("musiman_cuaca", "ml_challenger", "ml_hgb", "ml_rf")
+MODEL_ML = ("musiman_kalender", "musiman_cuaca", "musiman_regional", "ml_challenger", "ml_hgb", "ml_rf")
 MODEL_CHALLENGER = set(MODEL_ML) | {"ensemble"}
 URUT_BASELINE = ("naif", "naif_musiman7", "rata7", "ses", "holt_redam", "hari_raya")  # urutan kesederhanaan bila seri
 # Kandidat per kelas volatilitas (laporan: "Alur Pemilihan Model Berdasarkan Volatilitas").
 KANDIDAT_KELAS = {
-    "rendah": URUT_BASELINE + ("musiman_cuaca", "ml_challenger",),
+    "rendah": URUT_BASELINE + ("musiman_kalender", "musiman_cuaca", "musiman_regional", "ml_challenger",),
     "sedang": URUT_BASELINE + MODEL_ML,
     "tinggi": URUT_BASELINE + MODEL_ML,
 }
@@ -858,6 +863,12 @@ def nilai_validasi(kelompok: str, v: dict, jumlah_obs: int, kelengkapan: float |
             None if nilai_cak is None else v["cakupan_min_persen"] <= nilai_cak <= v["cakupan_maks_persen"], nilai_cak,
             f"{v['cakupan_min_persen']:g}-{v['cakupan_maks_persen']:g}%")
         cek("MASE holdout", None if holdout.get("mase") is None else holdout["mase"] < 1, holdout.get("mase"), "< 1")
+        if holdout.get("model") and holdout["model"] != "naif":
+            nilai_naif = [holdout.get(k) for k in ('smape_naif', 'mae_naif', 'mae')]
+            aman = (holdout['smape'] <= nilai_naif[0] and nilai_naif[2] <= nilai_naif[1]) if all(x is not None for x in nilai_naif) else None
+            cek('Tidak memburuk terhadap naif pada holdout', aman,
+                {'smape': holdout['smape'], 'smape_naif': nilai_naif[0], 'mae': nilai_naif[2], 'mae_naif': nilai_naif[1]},
+                'sMAPE dan MAE tidak lebih buruk dari naif')
         if holdout.get("model") != "naif":
             # Stabilitas (Protokol Validasi): menang terhadap cara naif pada sedikitnya 2/3 origin uji (8 dari 12).
             beda = holdout.get("origin_berbeda_vs_naif") or 0
@@ -1080,7 +1091,8 @@ def simpanan_fitur(terisi: np.ndarray, tanggal: list[date], acara: list[Acara]) 
 
 def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengaturan: dict,
                     model_disetujui: str | None = None, wajib_persetujuan: bool = False, kode: str | None = None,
-                    libur_pasar: set | None = None, cuaca: dict | None = None, kalender: list[Acara] | None = None) -> HasilVarian:
+                    libur_pasar: set | None = None, cuaca: dict | None = None, kalender: list[Acara] | None = None, regional: dict | None = None,
+                    kebijakan: dict | None = None, boleh_training: bool = True) -> HasilVarian:
     a = pengaturan["analisis"]
     s = pengaturan["sinyal"]
     jhr = pengaturan["jendela_hari_raya"]
@@ -1098,7 +1110,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     profil = profil_hari_raya(seri, acara, jhr["sebelum"], jhr["sesudah"])
     konteks = {"profil": profil or {}, "acara": acara, "sebelum": jhr["sebelum"], "sesudah": jhr["sesudah"], "kelompok": kelompok}
     konteks["_seri"] = seri
-    konteks["_musim"] = musiman.siapkan(seri, kalender or acara, cuaca or {}, terisi) if seri.n >= 730 else None
+    konteks["_musim"] = musiman.siapkan(seri, kalender or acara, cuaca or {}, terisi, regional) if seri.n >= 730 else None
     kelas = kelas_volatilitas(kelompok, kode)
     kandidat = [m for m in KANDIDAT_KELAS[kelas] if a.get("model_pohon", True) or m not in ("ml_hgb", "ml_rf")]
 
@@ -1118,8 +1130,25 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     if not geser and jumlah_obs >= a["minimal_hari_riwayat"]:
         catatan.append(f"Riwayat belum cukup untuk menyisihkan holdout {hold} hari; evaluasi memakai seluruh riwayat dan model berstatus eksperimen.")
 
-    if jumlah_obs >= a["minimal_hari_riwayat"] and len(y_akhir) >= 14:
-        if any(m in MODEL_ML for m in kandidat):
+    aturan_fitur = {**kebijakan_model.BAWAAN, **(kebijakan or {})}
+    audit_fitur = []
+    if boleh_training and geser and any(m in MODEL_ML for m in kandidat):
+        konteks['_fitur'] = simpanan_fitur(terisi, seri.tanggal, acara)
+    if boleh_training and geser:
+        diterima, audit_fitur = evaluasi_fitur.audit(
+            seri, terisi, konteks, horizon, a['minimal_hari_riwayat'], hold, a['tingkat_interval'],
+            aturan_fitur, kelas, backtest, interval_empiris, kandidat)
+        kandidat = [m for m in kandidat if m not in MODEL_ML or m in diterima]
+    else:
+        kandidat = [m for m in kandidat if m not in MODEL_ML]
+        if boleh_training:
+            catatan.append('Kandidat ML belum dipromosikan: riwayat belum cukup untuk validasi beberapa periode sebelum holdout.')
+    if not boleh_training:
+        kandidat = []
+        catatan.append('Data lapangan hanya untuk pemeriksaan silang; training resmi menunggu sumber resmi yang layak.')
+
+    if boleh_training and jumlah_obs >= a["minimal_hari_riwayat"] and len(y_akhir) >= 14:
+        if any(m in MODEL_ML for m in kandidat) and "_fitur" not in konteks:
             konteks["_fitur"] = simpanan_fitur(terisi, seri.tanggal, acara)
         for nama in kandidat:
             if nama == "hari_raya" and not profil:
@@ -1128,12 +1157,12 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
                           jarak_sel, a["minimal_hari_riwayat"], ambang_gejolak, geser)
             if bt:
                 hasil_bt[nama] = bt
-    elif jumlah_obs >= a["minimal_hari_riwayat"]:
+    elif boleh_training and jumlah_obs >= a["minimal_hari_riwayat"]:
         catatan.append(
             f"Data terbaru terputus: baru {len(y_akhir)} hari berturut-turut sejak celah terakhir (dibutuhkan 14). "
             "Sementara proyeksi memakai harga terakhir tanpa evaluasi backtest; penilaian kembali setelah datanya bersambung."
         )
-    else:
+    elif boleh_training:
         catatan.append(
             f"Riwayat baru {jumlah_obs} hari observasi (minimal {a['minimal_hari_riwayat']}); "
             "proyeksi memakai model naif tanpa evaluasi backtest."
@@ -1142,7 +1171,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     # -------------------------------- Seleksi Champion vs Challenger Sesuai Bab 6
     baseline_champion = None
     if not hasil_bt:
-        rekomendasi = "naif" if len(y_akhir) else None
+        rekomendasi = "naif" if len(y_akhir) and boleh_training else None
         baseline_champion = rekomendasi
     else:
         naif_bt = hasil_bt.get("naif")
@@ -1206,8 +1235,13 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
                 bias_ens = abs(bt_ens.metrik.get("bias_persen", 0.)) <= (3. if kelas == "rendah" else 5.)
                 if (perbaikan_ens >= 2.0 and degradasi_mae_ens <= 2.0 and stabil_ens and bias_ens
                         and bt_ens.metrik["smape"] <= bt_kini.metrik["smape"]):
-                    rekomendasi = "ensemble"
-                    catatan.append(f"Dynamic Ensemble aktif: {round(w * 100)}% '{baseline_champion}' + {round((1 - w) * 100)}% "
+                    ensemble_ok, audit_ensemble = evaluasi_fitur.audit(
+                        seri, terisi, konteks, horizon, a['minimal_hari_riwayat'], hold, a['tingkat_interval'],
+                        aturan_fitur, kelas, backtest, interval_empiris, ['ensemble'], rekomendasi)
+                    audit_fitur.extend(audit_ensemble)
+                    if 'ensemble' in ensemble_ok:
+                        rekomendasi = "ensemble"
+                    catatan.append(f"Dynamic Ensemble {'diterima' if rekomendasi == 'ensemble' else 'belum lolos validasi beberapa periode'}: {round(w * 100)}% '{baseline_champion}' + {round((1 - w) * 100)}% "
                                    f"'{ml_terbaik}' memperbaiki sMAPE {perbaikan_ens:.1f}% (target >= 2%).")
 
     # Persetujuan manusia: model baseline (naif) selalu boleh; model lain perlu disetujui bila diwajibkan.
@@ -1236,12 +1270,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     if geser and terpilih in hasil_bt:
         holdout, bt_hold, _ = evaluasi_holdout(seri, terisi, terpilih, konteks, horizon, v, a["minimal_hari_riwayat"], ambang_gejolak,
                                                bt_kalibrasi(terpilih), a["tingkat_interval"])
-        dm = (holdout or {}).get("uji_dm") or {}
-        if (holdout and terpilih in MODEL_CHALLENGER and dm.get("p") is not None and dm["p"] < 0.05 and (dm.get("statistik") or 0) > 0):
-            catatan.append(f"Uji Diebold-Mariano pada holdout menunjukkan '{terpilih}' lebih buruk dari cara naif (p={dm['p']}); kembali ke '{baseline_champion}'.")
-            rekomendasi = terpilih = baseline_champion
-            holdout, bt_hold, _ = evaluasi_holdout(seri, terisi, terpilih, konteks, horizon, v, a["minimal_hari_riwayat"], ambang_gejolak,
-                                                   bt_kalibrasi(terpilih), a["tingkat_interval"])
+        # Holdout akhir hanya untuk pelaporan dan sertifikasi, bukan memilih ulang model.
         if holdout is None:
             catatan.append("Holdout tidak dapat dihitung (origin tidak cukup); model berstatus eksperimen.")
         else:
@@ -1250,6 +1279,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
     kelengkapan = kelengkapan_seri(seri, list(pengaturan.get("hari_pencatatan", [0, 1, 2, 3, 4])), libur=libur_pasar)
     validasi = nilai_validasi(kelompok, v, jumlah_obs, kelengkapan, holdout, kode) if terpilih else {"status": "eksperimen", "syarat": [],
                                                                                               "gagal": ["Tidak ada model"], "belum_dinilai": []}
+    validasi['boleh_proyeksi_resmi'] = validasi['status'] == 'valid' and boleh_training
+    validasi['holdout_untuk_seleksi'] = False
     diagnostik = diagnostik_deret(seri, terisi)
 
     segmen: dict = {}
@@ -1304,7 +1335,7 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
 
     # Parameter hasil tuning pada data terakhir (untuk kartu model) dan model terbaik per horizon (laporan: champion per
     # varian dan horizon; produksi memakai satu champion per varian, sisanya informasi).
-    parameter: dict = {}
+    parameter: dict = {"audit_fitur_bertahap": audit_fitur, "training_diizinkan": boleh_training}
     if len(y_akhir):
         ph = parameter_holt(y_akhir)
         if ph:
@@ -1314,7 +1345,8 @@ def analisis_varian(seri: SeriHarian, kelompok: str, acara: list[Acara], pengatu
             parameter["ses"] = {"alpha": ps[0]}
         if konteks.get("_musim") is not None:
             parameter["musiman_cuaca"] = {"maks_hari_latih": 1460, "minimal_riwayat_hari": 730,
-                                          "cuaca_historis_tersedia": bool(cuaca), "lag_cuaca_hari": 1,
+                                          "cuaca_historis_tersedia": bool(cuaca), "lag_cuaca_hari": 1, "imputasi_fitur_regional_maks_hari": 3,
+                                          "target_training_harus_teramati": True,
                                           "fitur": "Kalender tujuan, fase hari raya, return tahun sebelumnya, cuaca 7 dan 30 hari"}
         if konteks.get("ensemble"):
             parameter["ensemble"] = dict(konteks["ensemble"])

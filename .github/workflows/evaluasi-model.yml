@@ -1,0 +1,41 @@
+name: Evaluasi model bertahap
+on:
+  workflow_dispatch:
+    inputs:
+      data_nyata:
+        description: Evaluasi 21 varian data nyata (false untuk tujuh skenario sintetis)
+        type: boolean
+        default: false
+      model_pohon:
+        description: Sertakan RF dan Boosting (lebih mahal)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  evaluasi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      DATA_NYATA: ${{ inputs.data_nyata }}
+      MODEL_POHON: ${{ inputs.model_pohon }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Evaluasi tanpa publikasi
+        shell: bash
+        run: |
+          args=()
+          if [ "$DATA_NYATA" = "true" ]; then args+=(--data-nyata); fi
+          if [ "$MODEL_POHON" = "true" ]; then args+=(--model-pohon); fi
+          python -m pipeline.evaluasi_model "${args[@]}" --keluaran "$RUNNER_TEMP/evaluasi-model.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evaluasi-model
+          path: ${{ runner.temp }}/evaluasi-model.json

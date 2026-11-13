@@ -192,3 +192,26 @@ def test_data_harian_sama_di_kualitas_dan_sumber(keluaran_demo):
     sumber = baca(keluaran, 'sumber.json')
     assert isinstance(kualitas['sumber_harian'], list)
     assert kualitas['sumber_harian'] == sumber['sumber_harian']
+
+
+def test_kebijakan_training_resmi_dan_keluaran_situs_tetap_kompatibel(konf, akar_sementara):
+    baris=['tanggal,kode_pasar,kode_varian,harga,satuan,kode_sumber,responden']
+    hari=date(2026,9,29)
+    for i in range(100):
+        t=hari-timedelta(days=i)
+        if t.weekday()<5:
+            baris.extend([f'{t},PSR01,BRS03,18000,kg,PSR-ENUM,R1',f'{t},PSR01,BRS03,15000,kg,BD-SP2KP,R2'])
+    tulis_csv(akar_sementara/'data/masuk/harga/uji.csv','\n'.join(baris))
+    folder=akar_sementara/'site/data'
+    proses.jalankan(konf,folder,sinkron_github=False,kirim_notifikasi=False)
+    model=baca(folder,'model.json')['per_varian'][0]
+    assert model['sumber_seri']['training']['kode_sumber']=='BD-SP2KP'
+    assert model['sumber_seri']['training']['jenis_data']=='observasi_asli'
+    seri=baca(folder,'seri/BRS03.json')
+    assert {x for x in seri['aktual'] if x is not None}=={15000}
+    audit=baca(folder,'audit_model.json')
+    assert not audit['holdout_dipakai_untuk_seleksi']
+    assert audit['per_varian'][0]['sumber_training']['boleh_training']
+    assert 'sumber_harian' in baca(folder,'kualitas.json')
+    assert 'sumber_harian' in baca(folder,'sumber.json')
+    assert isinstance(baca(folder,'sumber_harian_riwayat.json'),list)

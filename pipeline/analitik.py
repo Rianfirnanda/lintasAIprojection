@@ -14,6 +14,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import numpy as np
+from . import kebijakan_model
 
 from . import analisis
 
@@ -26,6 +27,15 @@ SEED = None  # semua model deterministik (tanpa komponen acak); dicatat di jejak
 def hash_json(obj) -> str:
     teks = json.dumps(obj, sort_keys=True, ensure_ascii=False, default=str, separators=(",", ":"))
     return hashlib.sha256(teks.encode("utf-8")).hexdigest()
+
+
+def versi_konfigurasi(konf):
+    return hash_json({
+        'pengaturan': konf.pengaturan, 'kebijakan_model': kebijakan_model.muat(konf.akar),
+        'kalender': [a.__dict__ for a in konf.kalender],
+        'master': {key: {kode: item.__dict__ for kode, item in getattr(konf, key).items()}
+                   for key in ('varian', 'pasar', 'wilayah', 'sumber')},
+    })
 
 
 def kepercayaan(validasi: dict) -> str:
@@ -313,7 +323,7 @@ def bentuk(konf, hasil_varian: dict, hasil_qc, hasil_masuk, tanggal_data: date |
         "protokol": analisis.pengaturan_validasi(konf.pengaturan),
         "ringkasan_model": ringkasan_model,
         "garis_data": {
-            "versi_data": versi_data, "versi_konfigurasi": hash_json(konf.pengaturan), "commit": os.environ.get("GITHUB_SHA"),
+            "versi_data": versi_data, "versi_konfigurasi": versi_konfigurasi(konf), "commit": os.environ.get("GITHUB_SHA"),
             "seed": SEED, "keterangan_seed": "Semua model deterministik (tanpa komponen acak), jadi hasilnya identik untuk data dan konfigurasi yang sama.",
             "url_run": f"{server}/{repo}/actions/runs/{run}" if repo and run else None,
             "berkas_mentah": [{"berkas": b.berkas, "sha256": b.sha256, "ukuran_byte": b.ukuran_byte, "baris": b.jumlah_baris,

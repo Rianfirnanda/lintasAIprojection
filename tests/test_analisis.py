@@ -226,7 +226,8 @@ def test_seleksi_champion_vs_challenger_bab6():
     # Model naif atau ses harus menang/bertahan atas ML
     assert hv.model_terpilih in analisis.MODEL_BASELINE
     # Catatan audit harus mendokumentasikan seleksi model
-    assert any("juara tetap" in c for c in hv.catatan) and any("Cara statistik" in c for c in hv.catatan)
+    assert any("belum dipromosikan" in c for c in hv.catatan)
+    assert hv.validasi["holdout_untuk_seleksi"] is False
     # Proyeksi multi-horizon harus terisi
     assert 7 in hv.proyeksi_multi_horizon
     assert 14 in hv.proyeksi_multi_horizon

@@ -1,0 +1,13 @@
+{
+  "sumber_training": ["BD-SP2KP", "BD-PIHPS"],
+  "minimal_hari_sumber": 60,
+  "maks_umur_hari": 7,
+  "tahap_fitur": ["kalender", "cuaca", "regional"],
+  "periode_validasi": 3,
+  "panjang_periode_hari": 90,
+  "perbaikan_smape_min_persen": 2.0,
+  "degradasi_mae_maks_persen": 2.0,
+  "cakupan_min_persen": 70.0,
+  "kenaikan_skor_interval_maks_persen": 5.0,
+  "kenaikan_lebar_maks_persen": 20.0
+}

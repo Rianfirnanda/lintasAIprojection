@@ -24,7 +24,7 @@ from . import (VERSI, agregasi, analisis, analitik, demo, proyeksi_acara, proyek
 from .konfigurasi import Konfigurasi
 from . import firebase as modul_firebase
 from . import firestore_sinkron
-from . import berita, sumber_harian
+from . import berita, sumber_harian, kebijakan_model
 from . import ews as modul_ews
 from . import tata_data
 from . import konektor_resmi
@@ -224,20 +224,47 @@ def jalankan(konf: Konfigurasi, keluaran: Path, mode_demo: str | None = None, si
     wajib_setuju = konf.pengaturan["analisis"].get("wajib_persetujuan_model", False)
     hasil_varian: dict[str, analisis.HasilVarian] = {}
     seri_pembanding: dict[str, dict[str, analisis.SeriHarian]] = defaultdict(dict)
+    aturan_model = kebijakan_model.muat(konf.akar)
     cuaca_wilayah = defaultdict(dict)
     for k in hasil_masuk.konteks:
         if k.kode_sumber == "BD-CUACA" and k.indikator in ("curah_hujan_mm", "suhu_rata_c"):
             cuaca_wilayah[k.kode_wilayah][(k.tanggal, k.indikator)] = k.nilai
     for v in konf.varian_aktif:
-        w_seri = pilih_wilayah_seri(harian, v.kode, target, cadangan, tanggal_data, minimal_hari)
+        riwayat_resmi, asal_model = kebijakan_model.pilih(
+            hasil_qc.observasi, v.kode, target, cadangan, konf.hari_ini, aturan_model)
+        boleh = pakai_demo or asal_model['boleh_training']
+        w_seri = (asal_model.get('kode_wilayah') if riwayat_resmi and not pakai_demo else
+                  pilih_wilayah_seri(harian, v.kode, target, cadangan, tanggal_data, minimal_hari))
         if w_seri is None:
             continue
-        seri = analisis.bentuk_seri(harian[(w_seri, v.kode)], akhir=tanggal_data)
+        harga_model = riwayat_resmi if riwayat_resmi and not pakai_demo else harian[(w_seri, v.kode)]
+        seri = analisis.bentuk_seri(harga_model, akhir=tanggal_data)
+        pembanding_model, asal_regional = {}, {}
+        for w in konf.wilayah:
+            if w == w_seri:
+                continue
+            harga_p, asal_p = kebijakan_model.pilih(hasil_qc.observasi, v.kode, w, None, konf.hari_ini, aturan_model)
+            if harga_p:
+                pembanding_model[w] = analisis.bentuk_seri(harga_p, akhir=tanggal_data)
+                asal_regional[w] = asal_p
         hv = analisis.analisis_varian(
             seri, v.kelompok, konf.hari_raya(), konf.pengaturan,
             model_disetujui=persetujuan.get(v.kode, {}).get("model"), wajib_persetujuan=wajib_setuju, kode=v.kode,
-            libur_pasar=hasil_qc.libur, cuaca=cuaca_wilayah.get(w_seri, {}), kalender=konf.kalender)
-        hv.sumber_seri = keterangan_sumber(konf, dipakai, w_seri, v.kode, tanggal_data)
+            libur_pasar=hasil_qc.libur, cuaca=cuaca_wilayah.get(w_seri, {}), kalender=konf.kalender,
+            regional=pembanding_model, kebijakan=aturan_model, boleh_training=boleh)
+        observasi_asal = ([o for o in dipakai if o.kode_sumber == asal_model.get('kode_sumber')]
+                           if riwayat_resmi and not pakai_demo else dipakai)
+        hv.sumber_seri = keterangan_sumber(konf, observasi_asal, w_seri, v.kode, tanggal_data)
+        if pakai_demo:
+            hv.validasi['boleh_proyeksi_resmi'] = False
+            asal_model = {'boleh_training': True, 'jenis_data': 'sintetis_demo', 'cadangan': False}
+        elif riwayat_resmi and w_seri != target and harian.get((target, v.kode)):
+            hv.sumber_seri['catatan'] = (
+                f"Sumber resmi di {konf.wilayah[target].nama} belum memenuhi syarat training. "
+                f"Deret memakai {hv.sumber_seri['label']}; data lapangan tetap menjadi pembanding.")
+        hv.sumber_seri['training'] = asal_model
+        hv.parameter['kebijakan_model'] = aturan_model
+        hv.parameter['sumber_regional'] = asal_regional
         hasil_varian[v.kode] = hv
         for w in konf.wilayah:
             if w != w_seri and harian.get((w, v.kode)):
@@ -549,7 +576,7 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
             "nama_model": analisis.NAMA_MODEL.get(hv.model_terpilih or "", "-"), "metrik": hv.metrik_model,
             "perbaikan_vs_naif_persen": hv.perbaikan_vs_naif_persen,
             "cakupan_interval_persen": hv.cakupan_interval_persen, "drift": hv.drift, "catatan": hv.catatan,
-            "profil_hari_raya": hv.profil_hari_raya, "sumber_seri": hv.sumber_seri,
+            "profil_hari_raya": hv.profil_hari_raya, "sumber_seri": hv.sumber_seri, "parameter": hv.parameter,
             "model_rekomendasi": hv.model_rekomendasi, "status_persetujuan": hv.status_persetujuan,
             "persetujuan": {k: v for k, v in data_kinerja.get("persetujuan", {}).get(kode, {}).items() if k != "riwayat"},
             "segmen": hv.segmen,
@@ -590,7 +617,19 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     _tulis_json(keluaran / "model.json", {
         "ringkasan": ringkasan_model, "per_varian": per_varian_model, "evaluasi_anomali": evaluasi,
         "target": tk, "nama_model": analisis.NAMA_MODEL,
-        "pengaturan": {"analisis": konf.pengaturan["analisis"], "sinyal": konf.pengaturan["sinyal"]},
+        "pengaturan": {"analisis": konf.pengaturan["analisis"], "sinyal": konf.pengaturan["sinyal"],
+                       "kebijakan_model": kebijakan_model.muat(konf.akar)},
+    })
+
+    _tulis_json(keluaran / "audit_model.json", {
+        "tanggal_penilaian": konf.hari_ini, "kebijakan": kebijakan_model.muat(konf.akar),
+        "mode_demo": pakai_demo, "holdout_dipakai_untuk_seleksi": False,
+        "per_varian": [{"kode": kode, "model": hv.model_terpilih,
+                        "sumber_training": hv.sumber_seri.get("training", {}),
+                        "sumber_regional": hv.parameter.get("sumber_regional", {}),
+                        "audit_fitur": hv.parameter.get("audit_fitur_bertahap", []),
+                        "validasi": hv.validasi, "holdout": hv.holdout}
+                       for kode, hv in hasil_varian.items()],
     })
 
     # ---------- kinerja.json (indikator SMART Rancangan Aksi Perubahan)
@@ -725,10 +764,10 @@ def publikasikan(konf, keluaran, pakai_demo, hasil_masuk, hasil_qc, harian, hari
     _tulis_json(keluaran / "ringkasan.json", ringkasan)
 
     # ---------- proyeksi_acara.json (H-30/H-14/H-7/H-3 menuju Hari H, dan H+3/H+7/H+14 sesudahnya)
-    _tulis_json(keluaran / "proyeksi_acara.json", proyeksi_acara.bentuk(konf, hasil_varian, tanggal_data))
+    _tulis_json(keluaran / "proyeksi_acara.json", proyeksi_acara.bentuk(konf, {k: h for k, h in hasil_varian.items() if h.sumber_seri["training"]["boleh_training"]}, tanggal_data))
 
     # ---------- proyeksi_periodik.json (triwulanan, semesteran, tahunan; skenario rendah/dasar/tinggi)
-    _tulis_json(keluaran / "proyeksi_periodik.json", proyeksi_periodik.bentuk(konf, hasil_varian, tanggal_data))
+    _tulis_json(keluaran / "proyeksi_periodik.json", proyeksi_periodik.bentuk(konf, {k: h for k, h in hasil_varian.items() if h.sumber_seri["training"]["boleh_training"]}, tanggal_data))
 
     # ---------- analitik.json (Dasbor Analitik: tabel varian, proyeksi 7/14/30, status validasi, jejak data)
     hasil_analitik = analitik.bentuk(
