@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-12T07:11:07+07:00",
+ "diperbarui": "2026-11-13T07:03:38+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-13",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-12",
    "metode": "ekstraktif",
@@ -397,22 +405,6 @@
     "Kondisi pasokan daging ayam yang terbatas dan ketergantungan pada suplai dari Lampung."
    ],
    "kalimat_dibuang": 1
-  },
-  {
-   "tanggal": "2026-10-13",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Laporan berita saat ini hanya memuat informasi dari Kota Bengkulu dan belum ada berita yang menyebutkan kondisi di Kabupaten Bengkulu Tengah. Di Kota Bengkulu, terjadi kenaikan harga cabai setan, cabai rawit hijau, dan cabai merah di Pasar Pagar Dewa, sedangkan komoditas unggas dan bawang dilaporkan turun. Sebagai langkah pengendalian inflasi, Pemerintah Kota Bengkulu bersama TPID menggelar Bazar Pasar Murah sembako pada 13 Oktober 2026. TPID Kabupaten Bengkulu Tengah perlu memantau potensi rambatan pergerakan harga aneka cabai dari wilayah tetangga tersebut.",
-   "poin": [
-    "Harga cabai setan, cabai rawit hijau, dan cabai merah naik di Pasar Pagar Dewa Kota Bengkulu, sementara komoditas unggas dan bawang turun.",
-    "Pemerintah Kota Bengkulu bersama TPID menggelar Bazar Pasar Murah untuk menyediakan sembako harga terjangkau dan mengendalikan inflasi.",
-    "Tidak terdapat laporan spesifik mengenai perkembangan harga maupun pasokan di Kabupaten Bengkulu Tengah."
-   ],
-   "perlu_dipantau": [
-    "Perkembangan harga komoditas cabai (cabai setan, cabai rawit hijau, dan cabai merah)",
-    "Potensi dampak pergerakan harga komoditas dari Kota Bengkulu ke Bengkulu Tengah"
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
@@ -6300,8 +6292,8 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 200,
-  "setelah_duplikat": 166,
+  "hasil_pencarian": 205,
+  "setelah_duplikat": 167,
   "berita_baru": 0,
   "total_arsip": 75,
   "kandidat_harga_baru": 0,
