@@ -2369,7 +2369,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-01-30,1771,118,3,Ketimun Sedang,kg,1,9333
 2025-01-30,1771,118,4,Kacang Panjang,kg,1,15000
 2025-01-30,1771,118,5,Sawi Hijau,kg,1,15000
-2025-01-30,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-01-30,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-01-30,1771,118,10,Cabai Rawit Merah,kg,1,93333
 2025-01-30,1771,118,11,Cabai Rawit Hijau,kg,1,75000
 2025-01-30,1771,118,13,Bawang Merah,kg,1,60000
@@ -2503,7 +2503,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-01-31,1771,118,3,Ketimun Sedang,kg,1,9333
 2025-01-31,1771,118,4,Kacang Panjang,kg,1,15000
 2025-01-31,1771,118,5,Sawi Hijau,kg,1,15000
-2025-01-31,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-01-31,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-01-31,1771,118,10,Cabai Rawit Merah,kg,1,93333
 2025-01-31,1771,118,11,Cabai Rawit Hijau,kg,1,75000
 2025-01-31,1771,118,13,Bawang Merah,kg,1,60000
@@ -2637,7 +2637,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-03,1771,118,3,Ketimun Sedang,kg,1,8500
 2025-02-03,1771,118,4,Kacang Panjang,kg,1,15000
 2025-02-03,1771,118,5,Sawi Hijau,kg,1,15000
-2025-02-03,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-02-03,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-02-03,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-02-03,1771,118,11,Cabai Rawit Hijau,kg,1,75000
 2025-02-03,1771,118,13,Bawang Merah,kg,1,60000
@@ -2731,7 +2731,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-04,1709,117,5,Sawi Hijau,kg,1,8000
 2025-02-04,1709,117,9,Cabai Merah Besar,kg,1,58000
 2025-02-04,1709,117,10,Cabai Rawit Merah,kg,1,60000
-2025-02-04,1709,117,11,Cabai Rawit Hijau,kg,1,60000
+2025-02-04,1709,117,11,Cabai Rawit Hijau,kg,1,65000
 2025-02-04,1709,117,13,Bawang Merah,kg,1,35000
 2025-02-04,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-02-04,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -2771,7 +2771,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-04,1771,118,3,Ketimun Sedang,kg,1,8500
 2025-02-04,1771,118,4,Kacang Panjang,kg,1,15000
 2025-02-04,1771,118,5,Sawi Hijau,kg,1,15000
-2025-02-04,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-02-04,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-02-04,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-02-04,1771,118,11,Cabai Rawit Hijau,kg,1,75000
 2025-02-04,1771,118,13,Bawang Merah,kg,1,60000
@@ -2865,7 +2865,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-05,1709,117,5,Sawi Hijau,kg,1,8000
 2025-02-05,1709,117,9,Cabai Merah Besar,kg,1,58000
 2025-02-05,1709,117,10,Cabai Rawit Merah,kg,1,60000
-2025-02-05,1709,117,11,Cabai Rawit Hijau,kg,1,60000
+2025-02-05,1709,117,11,Cabai Rawit Hijau,kg,1,65000
 2025-02-05,1709,117,13,Bawang Merah,kg,1,35000
 2025-02-05,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-02-05,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -2905,7 +2905,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-05,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-02-05,1771,118,4,Kacang Panjang,kg,1,15000
 2025-02-05,1771,118,5,Sawi Hijau,kg,1,15000
-2025-02-05,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-02-05,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-02-05,1771,118,10,Cabai Rawit Merah,kg,1,90000
 2025-02-05,1771,118,11,Cabai Rawit Hijau,kg,1,80000
 2025-02-05,1771,118,13,Bawang Merah,kg,1,43333
@@ -2999,7 +2999,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-06,1709,117,5,Sawi Hijau,kg,1,8000
 2025-02-06,1709,117,9,Cabai Merah Besar,kg,1,60000
 2025-02-06,1709,117,10,Cabai Rawit Merah,kg,1,60000
-2025-02-06,1709,117,11,Cabai Rawit Hijau,kg,1,60000
+2025-02-06,1709,117,11,Cabai Rawit Hijau,kg,1,65000
 2025-02-06,1709,117,13,Bawang Merah,kg,1,35000
 2025-02-06,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-02-06,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -3039,7 +3039,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-06,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-02-06,1771,118,4,Kacang Panjang,kg,1,15000
 2025-02-06,1771,118,5,Sawi Hijau,kg,1,15000
-2025-02-06,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-02-06,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-02-06,1771,118,10,Cabai Rawit Merah,kg,1,90000
 2025-02-06,1771,118,11,Cabai Rawit Hijau,kg,1,80000
 2025-02-06,1771,118,13,Bawang Merah,kg,1,43333
@@ -3173,7 +3173,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-07,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-02-07,1771,118,4,Kacang Panjang,kg,1,15000
 2025-02-07,1771,118,5,Sawi Hijau,kg,1,15000
-2025-02-07,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-02-07,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-02-07,1771,118,10,Cabai Rawit Merah,kg,1,93333
 2025-02-07,1771,118,11,Cabai Rawit Hijau,kg,1,91667
 2025-02-07,1771,118,13,Bawang Merah,kg,1,43333
@@ -4983,7 +4983,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-27,1709,117,5,Sawi Hijau,kg,1,8000
 2025-02-27,1709,117,9,Cabai Merah Besar,kg,1,40000
 2025-02-27,1709,117,10,Cabai Rawit Merah,kg,1,70000
-2025-02-27,1709,117,11,Cabai Rawit Hijau,kg,1,70000
+2025-02-27,1709,117,11,Cabai Rawit Hijau,kg,1,55000
 2025-02-27,1709,117,13,Bawang Merah,kg,1,34000
 2025-02-27,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-02-27,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -5114,7 +5114,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-02-28,1709,117,5,Sawi Hijau,kg,1,8000
 2025-02-28,1709,117,9,Cabai Merah Besar,kg,1,50000
 2025-02-28,1709,117,10,Cabai Rawit Merah,kg,1,70000
-2025-02-28,1709,117,11,Cabai Rawit Hijau,kg,1,70000
+2025-02-28,1709,117,11,Cabai Rawit Hijau,kg,1,55000
 2025-02-28,1709,117,13,Bawang Merah,kg,1,40000
 2025-02-28,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-02-28,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -7151,7 +7151,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-03-21,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-03-21,1771,118,4,Kacang Panjang,kg,1,15000
 2025-03-21,1771,118,5,Sawi Hijau,kg,1,15000
-2025-03-21,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-03-21,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-03-21,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-03-21,1771,118,11,Cabai Rawit Hijau,kg,1,76667
 2025-03-21,1771,118,13,Bawang Merah,kg,1,50000
@@ -7285,7 +7285,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-03-24,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-03-24,1771,118,4,Kacang Panjang,kg,1,15000
 2025-03-24,1771,118,5,Sawi Hijau,kg,1,15000
-2025-03-24,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-03-24,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-03-24,1771,118,10,Cabai Rawit Merah,kg,1,88333
 2025-03-24,1771,118,11,Cabai Rawit Hijau,kg,1,73333
 2025-03-24,1771,118,13,Bawang Merah,kg,1,50000
@@ -7419,7 +7419,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-03-25,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-03-25,1771,118,4,Kacang Panjang,kg,1,15000
 2025-03-25,1771,118,5,Sawi Hijau,kg,1,15000
-2025-03-25,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-03-25,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-03-25,1771,118,10,Cabai Rawit Merah,kg,1,88333
 2025-03-25,1771,118,11,Cabai Rawit Hijau,kg,1,73333
 2025-03-25,1771,118,13,Bawang Merah,kg,1,50000
@@ -7553,7 +7553,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-03-26,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-03-26,1771,118,4,Kacang Panjang,kg,1,15000
 2025-03-26,1771,118,5,Sawi Hijau,kg,1,15000
-2025-03-26,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-03-26,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-03-26,1771,118,10,Cabai Rawit Merah,kg,1,93333
 2025-03-26,1771,118,11,Cabai Rawit Hijau,kg,1,73333
 2025-03-26,1771,118,13,Bawang Merah,kg,1,50000
@@ -7687,7 +7687,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-03-27,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-03-27,1771,118,4,Kacang Panjang,kg,1,15000
 2025-03-27,1771,118,5,Sawi Hijau,kg,1,15000
-2025-03-27,1771,118,9,Cabai Merah Besar,kg,1,40000
+2025-03-27,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-03-27,1771,118,10,Cabai Rawit Merah,kg,1,93333
 2025-03-27,1771,118,11,Cabai Rawit Hijau,kg,1,73333
 2025-03-27,1771,118,13,Bawang Merah,kg,1,50000
@@ -7780,8 +7780,8 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-08,1709,117,4,Kacang Panjang,kg,1,10000
 2025-04-08,1709,117,5,Sawi Hijau,kg,1,8000
 2025-04-08,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-04-08,1709,117,10,Cabai Rawit Merah,kg,1,65000
-2025-04-08,1709,117,11,Cabai Rawit Hijau,kg,1,60000
+2025-04-08,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-04-08,1709,117,11,Cabai Rawit Hijau,kg,1,65000
 2025-04-08,1709,117,13,Bawang Merah,kg,1,40000
 2025-04-08,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-04-08,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -7913,8 +7913,8 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-09,1709,117,4,Kacang Panjang,kg,1,10000
 2025-04-09,1709,117,5,Sawi Hijau,kg,1,8000
 2025-04-09,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-04-09,1709,117,10,Cabai Rawit Merah,kg,1,65000
-2025-04-09,1709,117,11,Cabai Rawit Hijau,kg,1,60000
+2025-04-09,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-04-09,1709,117,11,Cabai Rawit Hijau,kg,1,65000
 2025-04-09,1709,117,13,Bawang Merah,kg,1,40000
 2025-04-09,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-04-09,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -8999,7 +8999,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-22,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-04-22,1771,118,4,Kacang Panjang,kg,1,15000
 2025-04-22,1771,118,5,Sawi Hijau,kg,1,12000
-2025-04-22,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-04-22,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-04-22,1771,118,10,Cabai Rawit Merah,kg,1,80000
 2025-04-22,1771,118,11,Cabai Rawit Hijau,kg,1,60000
 2025-04-22,1771,118,13,Bawang Merah,kg,1,60000
@@ -9129,7 +9129,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-23,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-04-23,1771,118,4,Kacang Panjang,kg,1,15000
 2025-04-23,1771,118,5,Sawi Hijau,kg,1,12000
-2025-04-23,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-04-23,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-04-23,1771,118,10,Cabai Rawit Merah,kg,1,80000
 2025-04-23,1771,118,11,Cabai Rawit Hijau,kg,1,60000
 2025-04-23,1771,118,13,Bawang Merah,kg,1,60000
@@ -9259,7 +9259,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-24,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-04-24,1771,118,4,Kacang Panjang,kg,1,15000
 2025-04-24,1771,118,5,Sawi Hijau,kg,1,12000
-2025-04-24,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-04-24,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-04-24,1771,118,10,Cabai Rawit Merah,kg,1,70000
 2025-04-24,1771,118,11,Cabai Rawit Hijau,kg,1,53333
 2025-04-24,1771,118,13,Bawang Merah,kg,1,60000
@@ -9389,7 +9389,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-25,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-04-25,1771,118,4,Kacang Panjang,kg,1,15000
 2025-04-25,1771,118,5,Sawi Hijau,kg,1,12000
-2025-04-25,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-04-25,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-04-25,1771,118,10,Cabai Rawit Merah,kg,1,70000
 2025-04-25,1771,118,11,Cabai Rawit Hijau,kg,1,53333
 2025-04-25,1771,118,13,Bawang Merah,kg,1,60000
@@ -9479,7 +9479,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-28,1709,117,4,Kacang Panjang,kg,1,10000
 2025-04-28,1709,117,5,Sawi Hijau,kg,1,8000
 2025-04-28,1709,117,9,Cabai Merah Besar,kg,1,50000
-2025-04-28,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-04-28,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-04-28,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-04-28,1709,117,13,Bawang Merah,kg,1,45000
 2025-04-28,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -9609,7 +9609,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-29,1709,117,4,Kacang Panjang,kg,1,10000
 2025-04-29,1709,117,5,Sawi Hijau,kg,1,8000
 2025-04-29,1709,117,9,Cabai Merah Besar,kg,1,50000
-2025-04-29,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-04-29,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-04-29,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-04-29,1709,117,13,Bawang Merah,kg,1,45000
 2025-04-29,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -9739,7 +9739,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-04-30,1709,117,4,Kacang Panjang,kg,1,10000
 2025-04-30,1709,117,5,Sawi Hijau,kg,1,8000
 2025-04-30,1709,117,9,Cabai Merah Besar,kg,1,50000
-2025-04-30,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-04-30,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-04-30,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-04-30,1709,117,13,Bawang Merah,kg,1,45000
 2025-04-30,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -9864,13 +9864,13 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-02,1708,116,56,Tomat,kg,1,12000
 2025-05-02,1708,116,57,Kentang Sedang,kg,1,16000
 2025-05-02,1708,116,58,Kangkung,kg,1,8000
-2025-05-02,1709,117,2,Cabai Merah Keriting,kg,1,55000
+2025-05-02,1709,117,2,Cabai Merah Keriting,kg,1,45000
 2025-05-02,1709,117,3,Ketimun Sedang,kg,1,6000
 2025-05-02,1709,117,4,Kacang Panjang,kg,1,10000
 2025-05-02,1709,117,5,Sawi Hijau,kg,1,8000
-2025-05-02,1709,117,9,Cabai Merah Besar,kg,1,50000
-2025-05-02,1709,117,10,Cabai Rawit Merah,kg,1,50000
-2025-05-02,1709,117,11,Cabai Rawit Hijau,kg,1,40000
+2025-05-02,1709,117,9,Cabai Merah Besar,kg,1,40000
+2025-05-02,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-05-02,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-05-02,1709,117,13,Bawang Merah,kg,1,45000
 2025-05-02,1709,117,14,Gula Pasir Curah,kg,1,18000
 2025-05-02,1709,117,15,Gula Pasir Kemasan,kg,1,18500
@@ -9994,12 +9994,12 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-05,1708,116,56,Tomat,kg,1,12000
 2025-05-05,1708,116,57,Kentang Sedang,kg,1,16000
 2025-05-05,1708,116,58,Kangkung,kg,1,8000
-2025-05-05,1709,117,2,Cabai Merah Keriting,kg,1,55000
+2025-05-05,1709,117,2,Cabai Merah Keriting,kg,1,45000
 2025-05-05,1709,117,3,Ketimun Sedang,kg,1,6000
 2025-05-05,1709,117,4,Kacang Panjang,kg,1,10000
 2025-05-05,1709,117,5,Sawi Hijau,kg,1,8000
-2025-05-05,1709,117,9,Cabai Merah Besar,kg,1,50000
-2025-05-05,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-05-05,1709,117,9,Cabai Merah Besar,kg,1,40000
+2025-05-05,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-05-05,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-05-05,1709,117,13,Bawang Merah,kg,1,45000
 2025-05-05,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -10124,12 +10124,12 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-06,1708,116,56,Tomat,kg,1,12000
 2025-05-06,1708,116,57,Kentang Sedang,kg,1,16000
 2025-05-06,1708,116,58,Kangkung,kg,1,8000
-2025-05-06,1709,117,2,Cabai Merah Keriting,kg,1,55000
+2025-05-06,1709,117,2,Cabai Merah Keriting,kg,1,45000
 2025-05-06,1709,117,3,Ketimun Sedang,kg,1,6000
 2025-05-06,1709,117,4,Kacang Panjang,kg,1,10000
 2025-05-06,1709,117,5,Sawi Hijau,kg,1,8000
-2025-05-06,1709,117,9,Cabai Merah Besar,kg,1,50000
-2025-05-06,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-05-06,1709,117,9,Cabai Merah Besar,kg,1,40000
+2025-05-06,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-05-06,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-05-06,1709,117,13,Bawang Merah,kg,1,45000
 2025-05-06,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -10254,12 +10254,12 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-07,1708,116,56,Tomat,kg,1,12000
 2025-05-07,1708,116,57,Kentang Sedang,kg,1,16000
 2025-05-07,1708,116,58,Kangkung,kg,1,8000
-2025-05-07,1709,117,2,Cabai Merah Keriting,kg,1,55000
+2025-05-07,1709,117,2,Cabai Merah Keriting,kg,1,45000
 2025-05-07,1709,117,3,Ketimun Sedang,kg,1,6000
 2025-05-07,1709,117,4,Kacang Panjang,kg,1,10000
 2025-05-07,1709,117,5,Sawi Hijau,kg,1,8000
-2025-05-07,1709,117,9,Cabai Merah Besar,kg,1,50000
-2025-05-07,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-05-07,1709,117,9,Cabai Merah Besar,kg,1,40000
+2025-05-07,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-05-07,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-05-07,1709,117,13,Bawang Merah,kg,1,45000
 2025-05-07,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -10389,7 +10389,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-08,1709,117,4,Kacang Panjang,kg,1,10000
 2025-05-08,1709,117,5,Sawi Hijau,kg,1,8000
 2025-05-08,1709,117,9,Cabai Merah Besar,kg,1,40000
-2025-05-08,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-05-08,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-05-08,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-05-08,1709,117,13,Bawang Merah,kg,1,40000
 2025-05-08,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -10519,7 +10519,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-09,1709,117,4,Kacang Panjang,kg,1,10000
 2025-05-09,1709,117,5,Sawi Hijau,kg,1,8000
 2025-05-09,1709,117,9,Cabai Merah Besar,kg,1,40000
-2025-05-09,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-05-09,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-05-09,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-05-09,1709,117,13,Bawang Merah,kg,1,40000
 2025-05-09,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -10649,7 +10649,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-14,1709,117,4,Kacang Panjang,kg,1,10000
 2025-05-14,1709,117,5,Sawi Hijau,kg,1,8000
 2025-05-14,1709,117,9,Cabai Merah Besar,kg,1,40000
-2025-05-14,1709,117,10,Cabai Rawit Merah,kg,1,50000
+2025-05-14,1709,117,10,Cabai Rawit Merah,kg,1,40000
 2025-05-14,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-05-14,1709,117,13,Bawang Merah,kg,1,40000
 2025-05-14,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -10689,7 +10689,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-14,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-14,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-14,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-14,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-14,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-14,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-14,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-14,1771,118,13,Bawang Merah,kg,1,48333
@@ -10819,7 +10819,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-15,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-15,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-15,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-15,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-15,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-15,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-15,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-15,1771,118,13,Bawang Merah,kg,1,48333
@@ -10865,7 +10865,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-16,1708,116,4,Kacang Panjang,kg,1,10000
 2025-05-16,1708,116,5,Sawi Hijau,kg,1,7000
 2025-05-16,1708,116,9,Cabai Merah Besar,kg,1,35000
-2025-05-16,1708,116,10,Cabai Rawit Merah,kg,1,35000
+2025-05-16,1708,116,10,Cabai Rawit Merah,kg,1,45000
 2025-05-16,1708,116,11,Cabai Rawit Hijau,kg,1,35000
 2025-05-16,1708,116,13,Bawang Merah,kg,1,45000
 2025-05-16,1708,116,14,Gula Pasir Curah,kg,1,18000
@@ -10949,7 +10949,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-16,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-16,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-16,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-16,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-16,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-16,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-16,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-16,1771,118,13,Bawang Merah,kg,1,48333
@@ -10995,7 +10995,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-19,1708,116,4,Kacang Panjang,kg,1,10000
 2025-05-19,1708,116,5,Sawi Hijau,kg,1,7000
 2025-05-19,1708,116,9,Cabai Merah Besar,kg,1,35000
-2025-05-19,1708,116,10,Cabai Rawit Merah,kg,1,35000
+2025-05-19,1708,116,10,Cabai Rawit Merah,kg,1,45000
 2025-05-19,1708,116,11,Cabai Rawit Hijau,kg,1,30000
 2025-05-19,1708,116,13,Bawang Merah,kg,1,45000
 2025-05-19,1708,116,14,Gula Pasir Curah,kg,1,18000
@@ -11079,7 +11079,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-19,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-19,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-19,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-19,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-19,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-19,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-19,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-19,1771,118,13,Bawang Merah,kg,1,48333
@@ -11125,7 +11125,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-20,1708,116,4,Kacang Panjang,kg,1,10000
 2025-05-20,1708,116,5,Sawi Hijau,kg,1,7000
 2025-05-20,1708,116,9,Cabai Merah Besar,kg,1,35000
-2025-05-20,1708,116,10,Cabai Rawit Merah,kg,1,35000
+2025-05-20,1708,116,10,Cabai Rawit Merah,kg,1,45000
 2025-05-20,1708,116,11,Cabai Rawit Hijau,kg,1,30000
 2025-05-20,1708,116,13,Bawang Merah,kg,1,45000
 2025-05-20,1708,116,14,Gula Pasir Curah,kg,1,18000
@@ -11209,7 +11209,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-20,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-20,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-20,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-20,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-20,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-20,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-20,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-20,1771,118,13,Bawang Merah,kg,1,48333
@@ -11255,7 +11255,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-21,1708,116,4,Kacang Panjang,kg,1,10000
 2025-05-21,1708,116,5,Sawi Hijau,kg,1,7000
 2025-05-21,1708,116,9,Cabai Merah Besar,kg,1,35000
-2025-05-21,1708,116,10,Cabai Rawit Merah,kg,1,35000
+2025-05-21,1708,116,10,Cabai Rawit Merah,kg,1,45000
 2025-05-21,1708,116,11,Cabai Rawit Hijau,kg,1,30000
 2025-05-21,1708,116,13,Bawang Merah,kg,1,45000
 2025-05-21,1708,116,14,Gula Pasir Curah,kg,1,18000
@@ -11339,7 +11339,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-21,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-21,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-21,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-21,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-21,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-21,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-21,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-21,1771,118,13,Bawang Merah,kg,1,48333
@@ -11385,7 +11385,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-22,1708,116,4,Kacang Panjang,kg,1,10000
 2025-05-22,1708,116,5,Sawi Hijau,kg,1,7000
 2025-05-22,1708,116,9,Cabai Merah Besar,kg,1,35000
-2025-05-22,1708,116,10,Cabai Rawit Merah,kg,1,35000
+2025-05-22,1708,116,10,Cabai Rawit Merah,kg,1,45000
 2025-05-22,1708,116,11,Cabai Rawit Hijau,kg,1,30000
 2025-05-22,1708,116,13,Bawang Merah,kg,1,45000
 2025-05-22,1708,116,14,Gula Pasir Curah,kg,1,18000
@@ -11469,7 +11469,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-22,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-22,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-22,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-22,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-22,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-22,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-22,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-22,1771,118,13,Bawang Merah,kg,1,48333
@@ -11515,7 +11515,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-23,1708,116,4,Kacang Panjang,kg,1,10000
 2025-05-23,1708,116,5,Sawi Hijau,kg,1,7000
 2025-05-23,1708,116,9,Cabai Merah Besar,kg,1,35000
-2025-05-23,1708,116,10,Cabai Rawit Merah,kg,1,35000
+2025-05-23,1708,116,10,Cabai Rawit Merah,kg,1,45000
 2025-05-23,1708,116,11,Cabai Rawit Hijau,kg,1,30000
 2025-05-23,1708,116,13,Bawang Merah,kg,1,45000
 2025-05-23,1708,116,14,Gula Pasir Curah,kg,1,18000
@@ -11599,7 +11599,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-23,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-23,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-23,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-23,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-23,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-23,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-23,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-23,1771,118,13,Bawang Merah,kg,1,48333
@@ -11729,7 +11729,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-26,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-05-26,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-26,1771,118,5,Sawi Hijau,kg,1,12000
-2025-05-26,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-26,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-26,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-26,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-26,1771,118,13,Bawang Merah,kg,1,48333
@@ -11859,7 +11859,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-27,1771,118,3,Ketimun Sedang,kg,1,7000
 2025-05-27,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-27,1771,118,5,Sawi Hijau,kg,1,13000
-2025-05-27,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-27,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-27,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-27,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-27,1771,118,13,Bawang Merah,kg,1,48333
@@ -11989,7 +11989,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-05-28,1771,118,3,Ketimun Sedang,kg,1,7000
 2025-05-28,1771,118,4,Kacang Panjang,kg,1,15000
 2025-05-28,1771,118,5,Sawi Hijau,kg,1,13000
-2025-05-28,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-05-28,1771,118,9,Cabai Merah Besar,kg,1,35000
 2025-05-28,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-05-28,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-05-28,1771,118,13,Bawang Merah,kg,1,48333
@@ -12119,7 +12119,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-02,1771,118,3,Ketimun Sedang,kg,1,7000
 2025-06-02,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-02,1771,118,5,Sawi Hijau,kg,1,13000
-2025-06-02,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-02,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-02,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-06-02,1771,118,11,Cabai Rawit Hijau,kg,1,38333
 2025-06-02,1771,118,13,Bawang Merah,kg,1,48333
@@ -12639,7 +12639,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-10,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-10,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-10,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-10,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-10,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-10,1771,118,10,Cabai Rawit Merah,kg,1,52667
 2025-06-10,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-06-10,1771,118,13,Bawang Merah,kg,1,46667
@@ -12769,7 +12769,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-11,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-11,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-11,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-11,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-11,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-11,1771,118,10,Cabai Rawit Merah,kg,1,52667
 2025-06-11,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-06-11,1771,118,13,Bawang Merah,kg,1,46667
@@ -12899,7 +12899,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-12,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-12,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-12,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-12,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-12,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-12,1771,118,10,Cabai Rawit Merah,kg,1,52667
 2025-06-12,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-06-12,1771,118,13,Bawang Merah,kg,1,46667
@@ -13029,7 +13029,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-13,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-13,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-13,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-13,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-13,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-13,1771,118,10,Cabai Rawit Merah,kg,1,52667
 2025-06-13,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-06-13,1771,118,13,Bawang Merah,kg,1,46667
@@ -13159,7 +13159,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-16,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-16,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-16,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-16,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-16,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-16,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-06-16,1771,118,11,Cabai Rawit Hijau,kg,1,43333
 2025-06-16,1771,118,13,Bawang Merah,kg,1,50000
@@ -13204,7 +13204,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-17,1708,116,3,Ketimun Sedang,kg,1,10000
 2025-06-17,1708,116,4,Kacang Panjang,kg,1,10000
 2025-06-17,1708,116,5,Sawi Hijau,kg,1,8000
-2025-06-17,1708,116,9,Cabai Merah Besar,kg,1,30000
+2025-06-17,1708,116,9,Cabai Merah Besar,kg,1,25000
 2025-06-17,1708,116,10,Cabai Rawit Merah,kg,1,35000
 2025-06-17,1708,116,11,Cabai Rawit Hijau,kg,1,40000
 2025-06-17,1708,116,13,Bawang Merah,kg,1,40000
@@ -13289,7 +13289,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-17,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-17,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-17,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-17,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-17,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-17,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-06-17,1771,118,11,Cabai Rawit Hijau,kg,1,43333
 2025-06-17,1771,118,13,Bawang Merah,kg,1,50000
@@ -13334,7 +13334,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-18,1708,116,3,Ketimun Sedang,kg,1,10000
 2025-06-18,1708,116,4,Kacang Panjang,kg,1,10000
 2025-06-18,1708,116,5,Sawi Hijau,kg,1,8000
-2025-06-18,1708,116,9,Cabai Merah Besar,kg,1,30000
+2025-06-18,1708,116,9,Cabai Merah Besar,kg,1,25000
 2025-06-18,1708,116,10,Cabai Rawit Merah,kg,1,50000
 2025-06-18,1708,116,11,Cabai Rawit Hijau,kg,1,40000
 2025-06-18,1708,116,13,Bawang Merah,kg,1,50000
@@ -13419,7 +13419,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-18,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-18,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-18,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-18,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-18,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-18,1771,118,10,Cabai Rawit Merah,kg,1,40000
 2025-06-18,1771,118,11,Cabai Rawit Hijau,kg,1,32667
 2025-06-18,1771,118,13,Bawang Merah,kg,1,51667
@@ -13464,7 +13464,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-19,1708,116,3,Ketimun Sedang,kg,1,10000
 2025-06-19,1708,116,4,Kacang Panjang,kg,1,10000
 2025-06-19,1708,116,5,Sawi Hijau,kg,1,8000
-2025-06-19,1708,116,9,Cabai Merah Besar,kg,1,30000
+2025-06-19,1708,116,9,Cabai Merah Besar,kg,1,25000
 2025-06-19,1708,116,10,Cabai Rawit Merah,kg,1,50000
 2025-06-19,1708,116,11,Cabai Rawit Hijau,kg,1,40000
 2025-06-19,1708,116,13,Bawang Merah,kg,1,50000
@@ -13509,7 +13509,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-19,1709,117,4,Kacang Panjang,kg,1,10000
 2025-06-19,1709,117,5,Sawi Hijau,kg,1,8000
 2025-06-19,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-06-19,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-06-19,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-06-19,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-06-19,1709,117,13,Bawang Merah,kg,1,44000
 2025-06-19,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -13549,7 +13549,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-19,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-19,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-19,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-19,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-19,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-19,1771,118,10,Cabai Rawit Merah,kg,1,40000
 2025-06-19,1771,118,11,Cabai Rawit Hijau,kg,1,32667
 2025-06-19,1771,118,13,Bawang Merah,kg,1,51667
@@ -13590,11 +13590,11 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-19,1771,118,56,Tomat,kg,1,10000
 2025-06-19,1771,118,57,Kentang Sedang,kg,1,18000
 2025-06-19,1771,118,58,Kangkung,kg,1,7500
-2025-06-20,1708,116,2,Cabai Merah Keriting,kg,1,35000
+2025-06-20,1708,116,2,Cabai Merah Keriting,kg,1,30000
 2025-06-20,1708,116,3,Ketimun Sedang,kg,1,10000
 2025-06-20,1708,116,4,Kacang Panjang,kg,1,10000
 2025-06-20,1708,116,5,Sawi Hijau,kg,1,8000
-2025-06-20,1708,116,9,Cabai Merah Besar,kg,1,30000
+2025-06-20,1708,116,9,Cabai Merah Besar,kg,1,25000
 2025-06-20,1708,116,10,Cabai Rawit Merah,kg,1,50000
 2025-06-20,1708,116,11,Cabai Rawit Hijau,kg,1,40000
 2025-06-20,1708,116,13,Bawang Merah,kg,1,50000
@@ -13639,7 +13639,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-20,1709,117,4,Kacang Panjang,kg,1,10000
 2025-06-20,1709,117,5,Sawi Hijau,kg,1,8000
 2025-06-20,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-06-20,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-06-20,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-06-20,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-06-20,1709,117,13,Bawang Merah,kg,1,44000
 2025-06-20,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -13679,7 +13679,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-20,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-06-20,1771,118,4,Kacang Panjang,kg,1,15000
 2025-06-20,1771,118,5,Sawi Hijau,kg,1,15000
-2025-06-20,1771,118,9,Cabai Merah Besar,kg,1,30000
+2025-06-20,1771,118,9,Cabai Merah Besar,kg,1,15000
 2025-06-20,1771,118,10,Cabai Rawit Merah,kg,1,40000
 2025-06-20,1771,118,11,Cabai Rawit Hijau,kg,1,32667
 2025-06-20,1771,118,13,Bawang Merah,kg,1,51667
@@ -13720,7 +13720,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-20,1771,118,56,Tomat,kg,1,15000
 2025-06-20,1771,118,57,Kentang Sedang,kg,1,18000
 2025-06-20,1771,118,58,Kangkung,kg,1,7500
-2025-06-23,1708,116,2,Cabai Merah Keriting,kg,1,35000
+2025-06-23,1708,116,2,Cabai Merah Keriting,kg,1,30000
 2025-06-23,1708,116,3,Ketimun Sedang,kg,1,10000
 2025-06-23,1708,116,4,Kacang Panjang,kg,1,10000
 2025-06-23,1708,116,5,Sawi Hijau,kg,1,8000
@@ -13769,7 +13769,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-23,1709,117,4,Kacang Panjang,kg,1,10000
 2025-06-23,1709,117,5,Sawi Hijau,kg,1,8000
 2025-06-23,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-06-23,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-06-23,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-06-23,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-06-23,1709,117,13,Bawang Merah,kg,1,44000
 2025-06-23,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -13850,7 +13850,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-23,1771,118,56,Tomat,kg,1,16000
 2025-06-23,1771,118,57,Kentang Sedang,kg,1,18000
 2025-06-23,1771,118,58,Kangkung,kg,1,7500
-2025-06-24,1708,116,2,Cabai Merah Keriting,kg,1,35000
+2025-06-24,1708,116,2,Cabai Merah Keriting,kg,1,30000
 2025-06-24,1708,116,3,Ketimun Sedang,kg,1,10000
 2025-06-24,1708,116,4,Kacang Panjang,kg,1,10000
 2025-06-24,1708,116,5,Sawi Hijau,kg,1,8000
@@ -13899,7 +13899,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-24,1709,117,4,Kacang Panjang,kg,1,10000
 2025-06-24,1709,117,5,Sawi Hijau,kg,1,8000
 2025-06-24,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-06-24,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-06-24,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-06-24,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-06-24,1709,117,13,Bawang Merah,kg,1,44000
 2025-06-24,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -13980,7 +13980,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-24,1771,118,56,Tomat,kg,1,16000
 2025-06-24,1771,118,57,Kentang Sedang,kg,1,18000
 2025-06-24,1771,118,58,Kangkung,kg,1,7500
-2025-06-25,1708,116,2,Cabai Merah Keriting,kg,1,35000
+2025-06-25,1708,116,2,Cabai Merah Keriting,kg,1,30000
 2025-06-25,1708,116,3,Ketimun Sedang,kg,1,10000
 2025-06-25,1708,116,4,Kacang Panjang,kg,1,10000
 2025-06-25,1708,116,5,Sawi Hijau,kg,1,8000
@@ -14029,7 +14029,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-25,1709,117,4,Kacang Panjang,kg,1,10000
 2025-06-25,1709,117,5,Sawi Hijau,kg,1,8000
 2025-06-25,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-06-25,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-06-25,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-06-25,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-06-25,1709,117,13,Bawang Merah,kg,1,44000
 2025-06-25,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -14159,7 +14159,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-26,1709,117,4,Kacang Panjang,kg,1,10000
 2025-06-26,1709,117,5,Sawi Hijau,kg,1,8000
 2025-06-26,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-06-26,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-06-26,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-06-26,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-06-26,1709,117,13,Bawang Merah,kg,1,40000
 2025-06-26,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -14289,7 +14289,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-06-30,1709,117,4,Kacang Panjang,kg,1,10000
 2025-06-30,1709,117,5,Sawi Hijau,kg,1,8000
 2025-06-30,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-06-30,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-06-30,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-06-30,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-06-30,1709,117,13,Bawang Merah,kg,1,40000
 2025-06-30,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -14419,7 +14419,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-01,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-01,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-01,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-01,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-01,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-01,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-07-01,1709,117,13,Bawang Merah,kg,1,40000
 2025-07-01,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -14549,7 +14549,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-02,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-02,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-02,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-02,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-02,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-02,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-07-02,1709,117,13,Bawang Merah,kg,1,40000
 2025-07-02,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -14679,7 +14679,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-03,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-03,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-03,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-07-03,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-03,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-03,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-07-03,1709,117,13,Bawang Merah,kg,1,40000
 2025-07-03,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -14809,7 +14809,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-04,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-04,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-04,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-07-04,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-04,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-04,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-07-04,1709,117,13,Bawang Merah,kg,1,40000
 2025-07-04,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -14939,7 +14939,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-07,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-07,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-07,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-07-07,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-07,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-07,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-07-07,1709,117,13,Bawang Merah,kg,1,40000
 2025-07-07,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15069,7 +15069,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-08,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-08,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-08,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-07-08,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-08,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-08,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-07-08,1709,117,13,Bawang Merah,kg,1,40000
 2025-07-08,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15199,7 +15199,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-09,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-09,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-09,1709,117,9,Cabai Merah Besar,kg,1,25000
-2025-07-09,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-09,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-09,1709,117,11,Cabai Rawit Hijau,kg,1,35000
 2025-07-09,1709,117,13,Bawang Merah,kg,1,40000
 2025-07-09,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15329,7 +15329,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-10,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-10,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-10,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-10,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-10,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-10,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-10,1709,117,13,Bawang Merah,kg,1,46000
 2025-07-10,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15459,7 +15459,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-11,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-11,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-11,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-11,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-11,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-07-11,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-11,1709,117,13,Bawang Merah,kg,1,46000
 2025-07-11,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15589,7 +15589,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-14,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-14,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-14,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-14,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-14,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-14,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-14,1709,117,13,Bawang Merah,kg,1,46000
 2025-07-14,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15719,7 +15719,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-15,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-15,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-15,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-15,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-15,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-15,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-15,1709,117,13,Bawang Merah,kg,1,46000
 2025-07-15,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15850,7 +15850,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-16,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-16,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-16,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-16,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-16,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-16,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-16,1709,117,13,Bawang Merah,kg,1,46000
 2025-07-16,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -15981,7 +15981,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-17,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-17,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-17,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-17,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-17,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-17,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-17,1709,117,13,Bawang Merah,kg,1,48000
 2025-07-17,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -16112,7 +16112,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-18,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-18,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-18,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-18,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-18,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-18,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-18,1709,117,13,Bawang Merah,kg,1,48000
 2025-07-18,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -16243,7 +16243,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-21,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-21,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-21,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-21,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-21,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-21,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-21,1709,117,13,Bawang Merah,kg,1,48000
 2025-07-21,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -16374,7 +16374,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-22,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-22,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-22,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-22,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-22,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-22,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-22,1709,117,13,Bawang Merah,kg,1,48000
 2025-07-22,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -16505,7 +16505,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-23,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-23,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-23,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-23,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-23,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-23,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-23,1709,117,13,Bawang Merah,kg,1,48000
 2025-07-23,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -16636,7 +16636,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-24,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-24,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-24,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-07-24,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-24,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-24,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-24,1709,117,13,Bawang Merah,kg,1,50000
 2025-07-24,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -16767,7 +16767,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-25,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-25,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-25,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-07-25,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-25,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-25,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-25,1709,117,13,Bawang Merah,kg,1,50000
 2025-07-25,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -16898,7 +16898,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-28,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-28,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-28,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-07-28,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-28,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-28,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-28,1709,117,13,Bawang Merah,kg,1,50000
 2025-07-28,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17029,7 +17029,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-29,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-29,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-29,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-07-29,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-29,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-29,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-29,1709,117,13,Bawang Merah,kg,1,50000
 2025-07-29,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17160,7 +17160,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-30,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-30,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-30,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-07-30,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-30,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-30,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-30,1709,117,13,Bawang Merah,kg,1,50000
 2025-07-30,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17291,7 +17291,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-07-31,1709,117,4,Kacang Panjang,kg,1,10000
 2025-07-31,1709,117,5,Sawi Hijau,kg,1,8000
 2025-07-31,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-07-31,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-07-31,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-07-31,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-07-31,1709,117,13,Bawang Merah,kg,1,60000
 2025-07-31,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17422,7 +17422,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-01,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-01,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-01,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-01,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-01,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-01,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-01,1709,117,13,Bawang Merah,kg,1,60000
 2025-08-01,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17553,7 +17553,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-04,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-04,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-04,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-04,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-04,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-04,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-04,1709,117,13,Bawang Merah,kg,1,60000
 2025-08-04,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17593,7 +17593,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-04,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-04,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-04,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-04,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-04,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-04,1771,118,10,Cabai Rawit Merah,kg,1,65000
 2025-08-04,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-04,1771,118,13,Bawang Merah,kg,1,61667
@@ -17684,7 +17684,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-05,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-05,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-05,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-05,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-05,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-05,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-05,1709,117,13,Bawang Merah,kg,1,60000
 2025-08-05,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17724,7 +17724,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-05,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-05,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-05,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-05,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-05,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-05,1771,118,10,Cabai Rawit Merah,kg,1,65000
 2025-08-05,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-05,1771,118,13,Bawang Merah,kg,1,61667
@@ -17815,7 +17815,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-06,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-06,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-06,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-06,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-06,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-06,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-06,1709,117,13,Bawang Merah,kg,1,60000
 2025-08-06,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17855,7 +17855,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-06,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-06,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-06,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-06,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-06,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-06,1771,118,10,Cabai Rawit Merah,kg,1,62667
 2025-08-06,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-06,1771,118,13,Bawang Merah,kg,1,61667
@@ -17947,7 +17947,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-07,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-07,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-07,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-07,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-07,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-07,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-07,1709,117,13,Bawang Merah,kg,1,55000
 2025-08-07,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -17987,7 +17987,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-07,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-07,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-07,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-07,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-07,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-07,1771,118,10,Cabai Rawit Merah,kg,1,62667
 2025-08-07,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-07,1771,118,13,Bawang Merah,kg,1,61667
@@ -18079,7 +18079,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-08,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-08,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-08,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-08,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-08,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-08,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-08,1709,117,13,Bawang Merah,kg,1,55000
 2025-08-08,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -18119,7 +18119,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-08,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-08,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-08,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-08,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-08,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-08,1771,118,10,Cabai Rawit Merah,kg,1,62667
 2025-08-08,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-08,1771,118,13,Bawang Merah,kg,1,61667
@@ -18211,7 +18211,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-11,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-11,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-11,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-11,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-11,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-11,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-11,1709,117,13,Bawang Merah,kg,1,55000
 2025-08-11,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -18251,7 +18251,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-11,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-11,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-11,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-11,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-11,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-11,1771,118,10,Cabai Rawit Merah,kg,1,62667
 2025-08-11,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-11,1771,118,13,Bawang Merah,kg,1,61667
@@ -18343,7 +18343,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-12,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-12,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-12,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-12,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-12,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-12,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-12,1709,117,13,Bawang Merah,kg,1,55000
 2025-08-12,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -18383,7 +18383,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-12,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-12,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-12,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-12,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-12,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-12,1771,118,10,Cabai Rawit Merah,kg,1,62667
 2025-08-12,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-12,1771,118,13,Bawang Merah,kg,1,61667
@@ -18475,7 +18475,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-13,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-13,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-13,1709,117,9,Cabai Merah Besar,kg,1,30000
-2025-08-13,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-13,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-13,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-13,1709,117,13,Bawang Merah,kg,1,55000
 2025-08-13,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -18515,7 +18515,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-13,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-13,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-13,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-13,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-13,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-13,1771,118,10,Cabai Rawit Merah,kg,1,62667
 2025-08-13,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-13,1771,118,13,Bawang Merah,kg,1,61667
@@ -18607,7 +18607,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-14,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-14,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-14,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-08-14,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-14,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-14,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-14,1709,117,13,Bawang Merah,kg,1,50000
 2025-08-14,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -18647,7 +18647,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-14,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-14,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-14,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-14,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-14,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-14,1771,118,10,Cabai Rawit Merah,kg,1,62667
 2025-08-14,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-14,1771,118,13,Bawang Merah,kg,1,61667
@@ -18739,7 +18739,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-15,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-15,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-15,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-08-15,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-15,1709,117,10,Cabai Rawit Merah,kg,1,50000
 2025-08-15,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-15,1709,117,13,Bawang Merah,kg,1,50000
 2025-08-15,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -18779,7 +18779,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-15,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-15,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-15,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-15,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-15,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-15,1771,118,10,Cabai Rawit Merah,kg,1,59333
 2025-08-15,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-15,1771,118,13,Bawang Merah,kg,1,61667
@@ -18871,7 +18871,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-19,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-19,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-19,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-08-19,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-19,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-08-19,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-19,1709,117,13,Bawang Merah,kg,1,50000
 2025-08-19,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -18911,7 +18911,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-19,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-19,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-19,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-19,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-19,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-19,1771,118,10,Cabai Rawit Merah,kg,1,61667
 2025-08-19,1771,118,11,Cabai Rawit Hijau,kg,1,59333
 2025-08-19,1771,118,13,Bawang Merah,kg,1,65000
@@ -19003,7 +19003,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-20,1709,117,4,Kacang Panjang,kg,1,10000
 2025-08-20,1709,117,5,Sawi Hijau,kg,1,8000
 2025-08-20,1709,117,9,Cabai Merah Besar,kg,1,35000
-2025-08-20,1709,117,10,Cabai Rawit Merah,kg,1,40000
+2025-08-20,1709,117,10,Cabai Rawit Merah,kg,1,35000
 2025-08-20,1709,117,11,Cabai Rawit Hijau,kg,1,40000
 2025-08-20,1709,117,13,Bawang Merah,kg,1,50000
 2025-08-20,1709,117,14,Gula Pasir Curah,kg,1,18000
@@ -19043,7 +19043,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-20,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-20,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-20,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-20,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-20,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-20,1771,118,10,Cabai Rawit Merah,kg,1,61667
 2025-08-20,1771,118,11,Cabai Rawit Hijau,kg,1,59333
 2025-08-20,1771,118,13,Bawang Merah,kg,1,65000
@@ -19176,7 +19176,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-21,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-21,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-21,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-21,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-21,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-21,1771,118,10,Cabai Rawit Merah,kg,1,61667
 2025-08-21,1771,118,11,Cabai Rawit Hijau,kg,1,59333
 2025-08-21,1771,118,13,Bawang Merah,kg,1,65000
@@ -19309,7 +19309,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-22,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-22,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-22,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-22,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-22,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-22,1771,118,10,Cabai Rawit Merah,kg,1,51667
 2025-08-22,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-22,1771,118,13,Bawang Merah,kg,1,61667
@@ -19442,7 +19442,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-25,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-25,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-25,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-25,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-25,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-25,1771,118,10,Cabai Rawit Merah,kg,1,51667
 2025-08-25,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-25,1771,118,13,Bawang Merah,kg,1,61667
@@ -19575,7 +19575,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-26,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-26,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-26,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-26,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-26,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-26,1771,118,10,Cabai Rawit Merah,kg,1,51667
 2025-08-26,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-26,1771,118,13,Bawang Merah,kg,1,61667
@@ -19708,7 +19708,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-27,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-27,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-27,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-27,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-27,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-27,1771,118,10,Cabai Rawit Merah,kg,1,51667
 2025-08-27,1771,118,11,Cabai Rawit Hijau,kg,1,52667
 2025-08-27,1771,118,13,Bawang Merah,kg,1,61667
@@ -19841,7 +19841,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-28,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-28,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-28,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-28,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-28,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-28,1771,118,10,Cabai Rawit Merah,kg,1,41667
 2025-08-28,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-08-28,1771,118,13,Bawang Merah,kg,1,56667
@@ -19888,7 +19888,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-29,1708,116,4,Kacang Panjang,kg,1,10000
 2025-08-29,1708,116,5,Sawi Hijau,kg,1,8000
 2025-08-29,1708,116,9,Cabai Merah Besar,kg,1,35000
-2025-08-29,1708,116,10,Cabai Rawit Merah,kg,1,40000
+2025-08-29,1708,116,10,Cabai Rawit Merah,kg,1,35000
 2025-08-29,1708,116,11,Cabai Rawit Hijau,kg,1,50000
 2025-08-29,1708,116,13,Bawang Merah,kg,1,43000
 2025-08-29,1708,116,14,Gula Pasir Curah,kg,1,17000
@@ -19974,7 +19974,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-08-29,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-08-29,1771,118,4,Kacang Panjang,kg,1,15000
 2025-08-29,1771,118,5,Sawi Hijau,kg,1,15000
-2025-08-29,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-08-29,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-08-29,1771,118,10,Cabai Rawit Merah,kg,1,41667
 2025-08-29,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-08-29,1771,118,13,Bawang Merah,kg,1,56667
@@ -20107,7 +20107,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-01,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-01,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-01,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-01,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-09-01,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-09-01,1771,118,10,Cabai Rawit Merah,kg,1,41667
 2025-09-01,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-09-01,1771,118,13,Bawang Merah,kg,1,56667
@@ -20240,7 +20240,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-02,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-09-02,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-02,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-02,1771,118,9,Cabai Merah Besar,kg,1,20000
+2025-09-02,1771,118,9,Cabai Merah Besar,kg,1,25000
 2025-09-02,1771,118,10,Cabai Rawit Merah,kg,1,58333
 2025-09-02,1771,118,11,Cabai Rawit Hijau,kg,1,60000
 2025-09-02,1771,118,13,Bawang Merah,kg,1,50000
@@ -21570,7 +21570,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-17,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-17,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-17,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-17,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-17,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-17,1771,118,10,Cabai Rawit Merah,kg,1,68333
 2025-09-17,1771,118,11,Cabai Rawit Hijau,kg,1,58333
 2025-09-17,1771,118,13,Bawang Merah,kg,1,45000
@@ -21703,7 +21703,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-18,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-18,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-18,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-18,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-18,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-18,1771,118,10,Cabai Rawit Merah,kg,1,68333
 2025-09-18,1771,118,11,Cabai Rawit Hijau,kg,1,58333
 2025-09-18,1771,118,13,Bawang Merah,kg,1,45000
@@ -21836,7 +21836,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-19,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-19,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-19,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-19,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-19,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-19,1771,118,10,Cabai Rawit Merah,kg,1,58667
 2025-09-19,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-19,1771,118,13,Bawang Merah,kg,1,43333
@@ -21969,7 +21969,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-22,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-22,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-22,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-22,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-22,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-22,1771,118,10,Cabai Rawit Merah,kg,1,58667
 2025-09-22,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-22,1771,118,13,Bawang Merah,kg,1,43333
@@ -22102,7 +22102,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-23,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-23,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-23,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-23,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-23,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-23,1771,118,10,Cabai Rawit Merah,kg,1,58667
 2025-09-23,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-23,1771,118,13,Bawang Merah,kg,1,43333
@@ -22235,7 +22235,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-24,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-24,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-24,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-24,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-24,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-24,1771,118,10,Cabai Rawit Merah,kg,1,58667
 2025-09-24,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-24,1771,118,13,Bawang Merah,kg,1,43333
@@ -22368,7 +22368,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-25,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-25,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-25,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-25,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-25,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-25,1771,118,10,Cabai Rawit Merah,kg,1,55333
 2025-09-25,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-25,1771,118,13,Bawang Merah,kg,1,43333
@@ -22501,7 +22501,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-26,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-26,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-26,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-26,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-26,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-26,1771,118,10,Cabai Rawit Merah,kg,1,55333
 2025-09-26,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-26,1771,118,13,Bawang Merah,kg,1,43333
@@ -22634,7 +22634,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-29,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-29,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-29,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-29,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-29,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-29,1771,118,10,Cabai Rawit Merah,kg,1,55333
 2025-09-29,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-29,1771,118,13,Bawang Merah,kg,1,43333
@@ -22767,7 +22767,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-09-30,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-09-30,1771,118,4,Kacang Panjang,kg,1,15000
 2025-09-30,1771,118,5,Sawi Hijau,kg,1,15000
-2025-09-30,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-09-30,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-09-30,1771,118,10,Cabai Rawit Merah,kg,1,55333
 2025-09-30,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-09-30,1771,118,13,Bawang Merah,kg,1,43333
@@ -22900,7 +22900,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-01,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-01,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-01,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-01,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-01,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-01,1771,118,10,Cabai Rawit Merah,kg,1,55333
 2025-10-01,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-10-01,1771,118,13,Bawang Merah,kg,1,43333
@@ -23033,7 +23033,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-02,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-02,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-02,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-02,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-02,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-02,1771,118,10,Cabai Rawit Merah,kg,1,48000
 2025-10-02,1771,118,11,Cabai Rawit Hijau,kg,1,55333
 2025-10-02,1771,118,13,Bawang Merah,kg,1,43333
@@ -23166,9 +23166,9 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-03,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-03,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-03,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-03,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-03,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-03,1771,118,10,Cabai Rawit Merah,kg,1,48000
-2025-10-03,1771,118,11,Cabai Rawit Hijau,kg,1,55333
+2025-10-03,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-03,1771,118,13,Bawang Merah,kg,1,43333
 2025-10-03,1771,118,14,Gula Pasir Curah,kg,1,17000
 2025-10-03,1771,118,15,Gula Pasir Kemasan,kg,1,18000
@@ -23299,9 +23299,9 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-06,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-06,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-06,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-06,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-06,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-06,1771,118,10,Cabai Rawit Merah,kg,1,48000
-2025-10-06,1771,118,11,Cabai Rawit Hijau,kg,1,55333
+2025-10-06,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-06,1771,118,13,Bawang Merah,kg,1,43333
 2025-10-06,1771,118,14,Gula Pasir Curah,kg,1,17000
 2025-10-06,1771,118,15,Gula Pasir Kemasan,kg,1,18000
@@ -23432,9 +23432,9 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-07,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-07,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-07,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-07,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-07,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-07,1771,118,10,Cabai Rawit Merah,kg,1,48000
-2025-10-07,1771,118,11,Cabai Rawit Hijau,kg,1,55333
+2025-10-07,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-07,1771,118,13,Bawang Merah,kg,1,43333
 2025-10-07,1771,118,14,Gula Pasir Curah,kg,1,17000
 2025-10-07,1771,118,15,Gula Pasir Kemasan,kg,1,18000
@@ -23565,7 +23565,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-08,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-08,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-08,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-08,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-08,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-08,1771,118,10,Cabai Rawit Merah,kg,1,48333
 2025-10-08,1771,118,11,Cabai Rawit Hijau,kg,1,48667
 2025-10-08,1771,118,13,Bawang Merah,kg,1,41667
@@ -23698,7 +23698,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-09,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-09,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-09,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-09,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-09,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-09,1771,118,10,Cabai Rawit Merah,kg,1,48333
 2025-10-09,1771,118,11,Cabai Rawit Hijau,kg,1,48667
 2025-10-09,1771,118,13,Bawang Merah,kg,1,41667
@@ -23831,7 +23831,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-10,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-10,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-10,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-10,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-10,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-10,1771,118,10,Cabai Rawit Merah,kg,1,48333
 2025-10-10,1771,118,11,Cabai Rawit Hijau,kg,1,48667
 2025-10-10,1771,118,13,Bawang Merah,kg,1,41667
@@ -23964,7 +23964,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-13,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-13,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-13,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-13,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-13,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-13,1771,118,10,Cabai Rawit Merah,kg,1,48333
 2025-10-13,1771,118,11,Cabai Rawit Hijau,kg,1,48667
 2025-10-13,1771,118,13,Bawang Merah,kg,1,41667
@@ -24097,7 +24097,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-14,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-14,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-14,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-14,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-14,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-14,1771,118,10,Cabai Rawit Merah,kg,1,48333
 2025-10-14,1771,118,11,Cabai Rawit Hijau,kg,1,48667
 2025-10-14,1771,118,13,Bawang Merah,kg,1,41667
@@ -24230,7 +24230,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-15,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-15,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-15,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-15,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-15,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-15,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-15,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-15,1771,118,13,Bawang Merah,kg,1,41667
@@ -24363,7 +24363,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-16,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-16,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-16,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-16,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-16,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-16,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-16,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-16,1771,118,13,Bawang Merah,kg,1,41667
@@ -24496,7 +24496,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-17,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-17,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-17,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-17,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-17,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-17,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-17,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-17,1771,118,13,Bawang Merah,kg,1,41667
@@ -24629,7 +24629,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-20,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-20,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-20,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-20,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-20,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-20,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-20,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-20,1771,118,13,Bawang Merah,kg,1,41667
@@ -24762,7 +24762,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-21,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-21,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-21,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-21,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-21,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-21,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-21,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-21,1771,118,13,Bawang Merah,kg,1,41667
@@ -24895,7 +24895,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-22,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-22,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-22,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-22,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-22,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-22,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-22,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-22,1771,118,13,Bawang Merah,kg,1,41667
@@ -24987,7 +24987,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-23,1709,117,4,Kacang Panjang,kg,1,10000
 2025-10-23,1709,117,5,Sawi Hijau,kg,1,8000
 2025-10-23,1709,117,9,Cabai Merah Besar,kg,1,55000
-2025-10-23,1709,117,10,Cabai Rawit Merah,kg,1,35000
+2025-10-23,1709,117,10,Cabai Rawit Merah,kg,1,45000
 2025-10-23,1709,117,11,Cabai Rawit Hijau,kg,1,30000
 2025-10-23,1709,117,13,Bawang Merah,kg,1,40000
 2025-10-23,1709,117,14,Gula Pasir Curah,kg,1,17000
@@ -25028,7 +25028,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-23,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-23,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-23,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-23,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-23,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-23,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-23,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-23,1771,118,13,Bawang Merah,kg,1,41667
@@ -25120,7 +25120,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-24,1709,117,4,Kacang Panjang,kg,1,10000
 2025-10-24,1709,117,5,Sawi Hijau,kg,1,8000
 2025-10-24,1709,117,9,Cabai Merah Besar,kg,1,55000
-2025-10-24,1709,117,10,Cabai Rawit Merah,kg,1,35000
+2025-10-24,1709,117,10,Cabai Rawit Merah,kg,1,45000
 2025-10-24,1709,117,11,Cabai Rawit Hijau,kg,1,30000
 2025-10-24,1709,117,13,Bawang Merah,kg,1,40000
 2025-10-24,1709,117,14,Gula Pasir Curah,kg,1,17000
@@ -25161,7 +25161,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-24,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-10-24,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-24,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-24,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-24,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-24,1771,118,10,Cabai Rawit Merah,kg,1,56667
 2025-10-24,1771,118,11,Cabai Rawit Hijau,kg,1,49333
 2025-10-24,1771,118,13,Bawang Merah,kg,1,41667
@@ -25253,7 +25253,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-27,1709,117,4,Kacang Panjang,kg,1,10000
 2025-10-27,1709,117,5,Sawi Hijau,kg,1,8000
 2025-10-27,1709,117,9,Cabai Merah Besar,kg,1,55000
-2025-10-27,1709,117,10,Cabai Rawit Merah,kg,1,35000
+2025-10-27,1709,117,10,Cabai Rawit Merah,kg,1,45000
 2025-10-27,1709,117,11,Cabai Rawit Hijau,kg,1,30000
 2025-10-27,1709,117,13,Bawang Merah,kg,1,40000
 2025-10-27,1709,117,14,Gula Pasir Curah,kg,1,17000
@@ -25294,7 +25294,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-27,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-10-27,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-27,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-27,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-27,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-27,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-10-27,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-27,1771,118,13,Bawang Merah,kg,1,45000
@@ -25386,7 +25386,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-28,1709,117,4,Kacang Panjang,kg,1,10000
 2025-10-28,1709,117,5,Sawi Hijau,kg,1,8000
 2025-10-28,1709,117,9,Cabai Merah Besar,kg,1,55000
-2025-10-28,1709,117,10,Cabai Rawit Merah,kg,1,35000
+2025-10-28,1709,117,10,Cabai Rawit Merah,kg,1,45000
 2025-10-28,1709,117,11,Cabai Rawit Hijau,kg,1,30000
 2025-10-28,1709,117,13,Bawang Merah,kg,1,40000
 2025-10-28,1709,117,14,Gula Pasir Curah,kg,1,17000
@@ -25427,7 +25427,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-28,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-10-28,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-28,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-28,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-28,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-28,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-10-28,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-28,1771,118,13,Bawang Merah,kg,1,45000
@@ -25519,7 +25519,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-29,1709,117,4,Kacang Panjang,kg,1,10000
 2025-10-29,1709,117,5,Sawi Hijau,kg,1,8000
 2025-10-29,1709,117,9,Cabai Merah Besar,kg,1,55000
-2025-10-29,1709,117,10,Cabai Rawit Merah,kg,1,35000
+2025-10-29,1709,117,10,Cabai Rawit Merah,kg,1,45000
 2025-10-29,1709,117,11,Cabai Rawit Hijau,kg,1,30000
 2025-10-29,1709,117,13,Bawang Merah,kg,1,40000
 2025-10-29,1709,117,14,Gula Pasir Curah,kg,1,17000
@@ -25560,7 +25560,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-29,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-10-29,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-29,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-29,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-29,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-29,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-10-29,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-29,1771,118,13,Bawang Merah,kg,1,45000
@@ -25652,7 +25652,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-30,1709,117,4,Kacang Panjang,kg,1,10000
 2025-10-30,1709,117,5,Sawi Hijau,kg,1,8000
 2025-10-30,1709,117,9,Cabai Merah Besar,kg,1,55000
-2025-10-30,1709,117,10,Cabai Rawit Merah,kg,1,35000
+2025-10-30,1709,117,10,Cabai Rawit Merah,kg,1,45000
 2025-10-30,1709,117,11,Cabai Rawit Hijau,kg,1,30000
 2025-10-30,1709,117,13,Bawang Merah,kg,1,40000
 2025-10-30,1709,117,14,Gula Pasir Curah,kg,1,17000
@@ -25693,7 +25693,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-30,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-10-30,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-30,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-30,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-30,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-30,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-10-30,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-30,1771,118,13,Bawang Merah,kg,1,45000
@@ -25785,7 +25785,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-31,1709,117,4,Kacang Panjang,kg,1,10000
 2025-10-31,1709,117,5,Sawi Hijau,kg,1,8000
 2025-10-31,1709,117,9,Cabai Merah Besar,kg,1,55000
-2025-10-31,1709,117,10,Cabai Rawit Merah,kg,1,35000
+2025-10-31,1709,117,10,Cabai Rawit Merah,kg,1,45000
 2025-10-31,1709,117,11,Cabai Rawit Hijau,kg,1,30000
 2025-10-31,1709,117,13,Bawang Merah,kg,1,40000
 2025-10-31,1709,117,14,Gula Pasir Curah,kg,1,17000
@@ -25826,7 +25826,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-10-31,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-10-31,1771,118,4,Kacang Panjang,kg,1,15000
 2025-10-31,1771,118,5,Sawi Hijau,kg,1,15000
-2025-10-31,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-10-31,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-10-31,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-10-31,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-10-31,1771,118,13,Bawang Merah,kg,1,45000
@@ -25959,7 +25959,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-03,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-11-03,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-03,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-03,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-03,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-03,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-03,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-11-03,1771,118,13,Bawang Merah,kg,1,45000
@@ -26092,7 +26092,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-04,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-11-04,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-04,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-04,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-04,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-04,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-04,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-11-04,1771,118,13,Bawang Merah,kg,1,45000
@@ -26225,7 +26225,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-05,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-11-05,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-05,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-05,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-05,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-05,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-05,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-11-05,1771,118,13,Bawang Merah,kg,1,45000
@@ -26358,7 +26358,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-06,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-11-06,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-06,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-06,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-06,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-06,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-06,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-11-06,1771,118,13,Bawang Merah,kg,1,45000
@@ -26491,7 +26491,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-07,1771,118,3,Ketimun Sedang,kg,1,6000
 2025-11-07,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-07,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-07,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-07,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-07,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-07,1771,118,11,Cabai Rawit Hijau,kg,1,46000
 2025-11-07,1771,118,13,Bawang Merah,kg,1,45000
@@ -26624,7 +26624,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-10,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-10,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-10,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-10,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-10,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-10,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-10,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-10,1771,118,13,Bawang Merah,kg,1,48333
@@ -26757,7 +26757,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-11,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-11,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-11,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-11,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-11,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-11,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-11,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-11,1771,118,13,Bawang Merah,kg,1,48333
@@ -26890,7 +26890,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-12,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-12,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-12,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-12,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-12,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-12,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-12,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-12,1771,118,13,Bawang Merah,kg,1,48333
@@ -27023,7 +27023,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-13,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-13,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-13,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-13,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-13,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-13,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-13,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-13,1771,118,13,Bawang Merah,kg,1,48333
@@ -27156,7 +27156,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-14,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-14,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-14,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-14,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-14,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-14,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-14,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-14,1771,118,13,Bawang Merah,kg,1,48333
@@ -27289,7 +27289,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-17,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-17,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-17,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-17,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-17,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-17,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-17,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-17,1771,118,13,Bawang Merah,kg,1,48333
@@ -27422,7 +27422,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-18,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-18,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-18,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-18,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-18,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-18,1771,118,10,Cabai Rawit Merah,kg,1,50000
 2025-11-18,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-18,1771,118,13,Bawang Merah,kg,1,48333
@@ -27555,7 +27555,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-19,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-19,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-19,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-19,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-19,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-19,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-19,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-19,1771,118,13,Bawang Merah,kg,1,55000
@@ -27688,7 +27688,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-20,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-20,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-20,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-20,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-20,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-20,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-20,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-20,1771,118,13,Bawang Merah,kg,1,55000
@@ -27821,7 +27821,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-21,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-11-21,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-21,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-21,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-21,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-21,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-21,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-21,1771,118,13,Bawang Merah,kg,1,55000
@@ -27954,7 +27954,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-24,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-11-24,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-24,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-24,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-24,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-24,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-24,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-24,1771,118,13,Bawang Merah,kg,1,55000
@@ -28087,7 +28087,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-25,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-11-25,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-25,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-25,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-25,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-25,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-25,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-25,1771,118,13,Bawang Merah,kg,1,55000
@@ -28220,7 +28220,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-26,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-11-26,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-26,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-26,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-26,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-26,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-26,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-26,1771,118,13,Bawang Merah,kg,1,55000
@@ -28353,7 +28353,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-27,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-11-27,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-27,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-27,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-27,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-27,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-27,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-27,1771,118,13,Bawang Merah,kg,1,55000
@@ -28486,7 +28486,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-11-28,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-11-28,1771,118,4,Kacang Panjang,kg,1,15000
 2025-11-28,1771,118,5,Sawi Hijau,kg,1,15000
-2025-11-28,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-11-28,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-11-28,1771,118,10,Cabai Rawit Merah,kg,1,43333
 2025-11-28,1771,118,11,Cabai Rawit Hijau,kg,1,50000
 2025-11-28,1771,118,13,Bawang Merah,kg,1,55000
@@ -28619,7 +28619,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-01,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-01,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-01,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-01,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-01,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-01,1771,118,10,Cabai Rawit Merah,kg,1,73333
 2025-12-01,1771,118,11,Cabai Rawit Hijau,kg,1,63333
 2025-12-01,1771,118,13,Bawang Merah,kg,1,56000
@@ -28752,7 +28752,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-02,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-02,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-02,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-02,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-02,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-02,1771,118,10,Cabai Rawit Merah,kg,1,73333
 2025-12-02,1771,118,11,Cabai Rawit Hijau,kg,1,63333
 2025-12-02,1771,118,13,Bawang Merah,kg,1,56000
@@ -28885,7 +28885,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-03,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-03,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-03,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-03,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-03,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-03,1771,118,10,Cabai Rawit Merah,kg,1,83333
 2025-12-03,1771,118,11,Cabai Rawit Hijau,kg,1,66667
 2025-12-03,1771,118,13,Bawang Merah,kg,1,56000
@@ -29018,7 +29018,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-04,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-04,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-04,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-04,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-04,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-04,1771,118,10,Cabai Rawit Merah,kg,1,83333
 2025-12-04,1771,118,11,Cabai Rawit Hijau,kg,1,66667
 2025-12-04,1771,118,13,Bawang Merah,kg,1,56000
@@ -29106,7 +29106,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-05,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-05,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-05,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-05,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-05,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-05,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-05,1771,118,11,Cabai Rawit Hijau,kg,1,63333
 2025-12-05,1771,118,13,Bawang Merah,kg,1,56000
@@ -29239,7 +29239,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-08,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-08,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-08,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-08,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-08,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-08,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-08,1771,118,11,Cabai Rawit Hijau,kg,1,63333
 2025-12-08,1771,118,13,Bawang Merah,kg,1,56000
@@ -29372,7 +29372,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-09,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-09,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-09,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-09,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-09,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-09,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-09,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-09,1771,118,13,Bawang Merah,kg,1,61667
@@ -29505,7 +29505,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-10,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-10,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-10,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-10,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-10,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-10,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-10,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-10,1771,118,13,Bawang Merah,kg,1,61667
@@ -29638,7 +29638,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-11,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-11,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-11,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-11,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-11,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-11,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-11,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-11,1771,118,13,Bawang Merah,kg,1,61667
@@ -29771,7 +29771,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-12,1771,118,3,Ketimun Sedang,kg,1,10000
 2025-12-12,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-12,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-12,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-12,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-12,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-12,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-12,1771,118,13,Bawang Merah,kg,1,61667
@@ -29904,7 +29904,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-15,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-15,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-15,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-15,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-15,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-15,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-15,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-15,1771,118,13,Bawang Merah,kg,1,61667
@@ -30037,7 +30037,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-16,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-16,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-16,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-16,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-16,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-16,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-16,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-16,1771,118,13,Bawang Merah,kg,1,61667
@@ -30170,7 +30170,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-17,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-17,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-17,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-17,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-17,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-17,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-17,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-17,1771,118,13,Bawang Merah,kg,1,61667
@@ -30303,7 +30303,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-18,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-18,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-18,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-18,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-18,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-18,1771,118,10,Cabai Rawit Merah,kg,1,86667
 2025-12-18,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-18,1771,118,13,Bawang Merah,kg,1,61667
@@ -30436,8 +30436,8 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-19,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-19,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-19,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-19,1771,118,9,Cabai Merah Besar,kg,1,35000
-2025-12-19,1771,118,10,Cabai Rawit Merah,kg,1,86667
+2025-12-19,1771,118,9,Cabai Merah Besar,kg,1,45000
+2025-12-19,1771,118,10,Cabai Rawit Merah,kg,1,88000
 2025-12-19,1771,118,11,Cabai Rawit Hijau,kg,1,56667
 2025-12-19,1771,118,13,Bawang Merah,kg,1,61667
 2025-12-19,1771,118,14,Gula Pasir Curah,kg,1,17000
@@ -30569,7 +30569,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-22,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-22,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-22,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-22,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-22,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-22,1771,118,10,Cabai Rawit Merah,kg,1,85000
 2025-12-22,1771,118,11,Cabai Rawit Hijau,kg,1,78333
 2025-12-22,1771,118,13,Bawang Merah,kg,1,52667
@@ -30702,7 +30702,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-23,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-23,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-23,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-23,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-23,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-23,1771,118,10,Cabai Rawit Merah,kg,1,85000
 2025-12-23,1771,118,11,Cabai Rawit Hijau,kg,1,78333
 2025-12-23,1771,118,13,Bawang Merah,kg,1,52667
@@ -30835,7 +30835,7 @@ tanggal,kode_wilayah,pasar_id,variant_id,variant,satuan,kuantitas,harga
 2025-12-24,1771,118,3,Ketimun Sedang,kg,1,8000
 2025-12-24,1771,118,4,Kacang Panjang,kg,1,15000
 2025-12-24,1771,118,5,Sawi Hijau,kg,1,15000
-2025-12-24,1771,118,9,Cabai Merah Besar,kg,1,35000
+2025-12-24,1771,118,9,Cabai Merah Besar,kg,1,45000
 2025-12-24,1771,118,10,Cabai Rawit Merah,kg,1,85000
 2025-12-24,1771,118,11,Cabai Rawit Hijau,kg,1,78333
 2025-12-24,1771,118,13,Bawang Merah,kg,1,52667
