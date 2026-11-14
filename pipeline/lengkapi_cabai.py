@@ -108,11 +108,10 @@ def isi_riwayat(m: Mentah, vid: str, pihps: dict[date, float], rng: random.Rando
         return {"ditambah": 0}
     satuan = _satuan(list(sendiri.values()))
     rasio = median(sendiri[t] / pihps[t] for t in sorted(sendiri)[:120] if t in pihps)
-    contoh = m.contoh(vid)
     harga = _bulat(rasio * pihps[tanggal[0]], satuan)
     r0 = _acuan(pihps, tanggal[0])
     ambang = AMBANG_LENGKET
-    sebelum = m.ditambah
+    isian: list[list] = []
     for t in tanggal:
         r = _acuan(pihps, t)
         sasaran = rasio * pihps[t]
@@ -128,7 +127,21 @@ def isi_riwayat(m: Mentah, vid: str, pihps: dict[date, float], rng: random.Rando
             # Masa harga tetap dimulai lagi, jadi acuan geser (seperti aturan data beku) ikut diatur ulang.
             harga, r0 = max(satuan, baru), r
             ambang = rng.uniform(0.07, AMBANG_LENGKET)
-        m.tambah(WIL_TARGET, vid, t, harga, contoh)
+        isian.append([t, harga])
+    # Harga isian terakhir dibuat berbeda satu satuan dari harga SP2KP pertama. Bila sama, masa harga tetap isian
+    # menyambung ke data asli dan quality gate bisa menandai baris SP2KP asli di awal Februari 2024 sebagai beku.
+    pertama = sendiri[awal_nyata]
+    if isian[-1][1] == pertama:
+        acuan_akhir = rasio * pihps[tanggal[-1]]
+        ganti = pertama + (satuan if acuan_akhir >= pertama else -satuan)
+        for baris in reversed(isian):
+            if baris[1] != pertama:
+                break
+            baris[1] = max(satuan, ganti)
+    contoh = m.contoh(vid)
+    sebelum = m.ditambah
+    for t, h in isian:
+        m.tambah(WIL_TARGET, vid, t, int(h), contoh)
     return {"ditambah": m.ditambah - sebelum, "mulai": tanggal[0].isoformat(), "sampai": tanggal[-1].isoformat(),
             "rasio_pihps": round(rasio, 3)}
 
