@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-13T07:03:38+07:00",
+ "diperbarui": "2026-11-14T07:16:14+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-14",
+   "metode": "ai",
+   "penyedia": "openrouter",
+   "ringkas": "Pertemuan ini bertujuan untuk koordinasi kebijakan sektor daerah seluruh Indonesia pada tahun 2026. Kondisi dampak harga belum diketahui dan perlu dipantau.",
+   "poin": [
+    "Pembukaan Rapat Forsesdasi Provinsi Bengkulu",
+    "Ketidakjelasan dampak harga"
+   ],
+   "perlu_dipantau": [
+    "Perubahan harga barang di wilayah Kabupaten Bengkulu Tengah",
+    "Hasil kerja forum sekretaris daerah"
+   ],
+   "kalimat_dibuang": 1
+  },
   {
    "tanggal": "2026-11-13",
    "metode": "ekstraktif",
@@ -388,26 +403,42 @@
     "Potensi rembetan perubahan harga komoditas dari Kota Bengkulu ke Bengkulu Tengah."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-14",
-   "metode": "ai",
-   "penyedia": "openrouter",
-   "ringkas": "Berita yang tersedia mencakup pasar murah lima hari di Pekanbaru, Riau, dan bazar pasar murah di Kota Bengkulu yang bertujuan menjaga stabilitas harga pangan serta menekan inflasi. Selain itu, disebutkan pasokan daging ayam terbatas yang disuplai dari Lampung ke Bengkulu.",
-   "poin": [
-    "Pemprov Riau mengadakan pasar murah di Pekanbaru selama lima hari.",
-    "Pemkot Bengkulu menggelar bazar pasar murah untuk menjaga stabilitas harga pangan.",
-    "Pemkot Bengkulu juga melaksanakan bazar pangan murah minimal dua kali sebulan untuk menekan inflasi.",
-    "Pasokan daging ayam di Bengkulu terbatas dan disuplai dari Lampung."
-   ],
-   "perlu_dipantau": [
-    "Pengaruh pasar murah dan bazar pangan murah terhadap harga dan stabilitas pangan di wilayah terkait.",
-    "Kondisi pasokan daging ayam yang terbatas dan ketergantungan pada suplai dari Lampung."
-   ],
-   "kalimat_dibuang": 1
   }
  ],
  "berita": [
+  {
+   "id": "97ebf59fb82e",
+   "url": "https://bengkulutengahkab.go.id/postingan/detail_postingan/Bupati-Bengkulu-Tengah-Buka-Rapat-Forsesdasi-Se-Provinsi-Bengkulu-di-Wisata-Kampung-Durian",
+   "judul": "Bupati Bengkulu Tengah Buka Rapat Forsesdasi Se-Provinsi Bengkulu di Wisata Kampung Durian",
+   "sumber": "bengkulutengahkab.go.id",
+   "tanggal": "2026-11-13",
+   "diakses": "2026-11-14T07:16:14+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": true,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 6353,
+   "sidik_sha256": "85bec6b63fbb322695fc93c77b54e44df1694a7eb3bf8525844736e65cd6e111",
+   "kutipan": "\"Ketangguhan ekonomi harus dimulai dari kemampuan daerah dalam menjaga stabilitas harga, memperkuat ketahanan pangan, meningkatkan produktivitas sektor unggulan, serta mengantisipasi berbagai risiko yang dapat mengganggu",
+   "ringkasan": "Bupati Bengkulu Tengah membuka Rapat Kerja Forum Sekretaris Daerah Seluruh Indonesia (Forsesdasi) Komisariat Wilayah Bengkulu Tahun 2026 di Wisata Kampung Durian, Kabupaten Bengkulu Tengah.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "a0a06c78e7ab",
    "url": "https://rri.co.id/bengkulu/regional/2881297/harga-cabai-di-pasar-purwodadi-arga-makmur-masih-tinggi",
@@ -6292,15 +6323,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 205,
-  "setelah_duplikat": 167,
-  "berita_baru": 0,
-  "total_arsip": 75,
+  "hasil_pencarian": 208,
+  "setelah_duplikat": 161,
+  "berita_baru": 1,
+  "total_arsip": 76,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 0,
-  "penyedia_ai": "",
-  "model_ai": ""
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.5-flash-lite"
  },
  "galat": []
 }
