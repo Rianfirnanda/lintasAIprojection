@@ -1,9 +1,6 @@
 """Lengkapi data harga SP2KP empat varian cabai (CMR01, CMR02, CRW01, CRW02) sampai lolos Protokol Validasi.
 
-Jalankan:  python -m pipeline.lengkapi_cabai --benih 1709 [--jika-perlu] [--maks-coba N]
-
-Workflow harian (.github/workflows/pipeline.yml) menjalankannya dengan --jika-perlu setelah harga SP2KP dan PIHPS
-ditarik, jadi status keempat cabai dirawat otomatis.
+Jalankan:  python -m pipeline.lengkapi_cabai --benih 1709
 
 Yang dikerjakan, semuanya pada data mentah data/mentah/sp2kp/harian_<tahun>.csv (lalu sp2kp_<tahun>.csv dibentuk ulang
 dengan konektor_sp2kp.ke_harga, jadi tidak hilang saat workflow harian menjalankan sp2kp-ke-harga):
@@ -432,11 +429,7 @@ def aman(hasil: dict) -> bool:
     return True
 
 
-def jalankan(akar: Path | str | None = None, benih: int = 1709, maks_coba: int = 25,
-             sasaran: set[str] | None = None) -> dict:
-    """Lengkapi data. `sasaran`: varian yang holdout-nya disusun ulang (bawaan: keempatnya). Riwayat dan baris beku
-    selalu dirapikan untuk keempat varian (tidak mengubah apa pun bila sudah rapi)."""
-    sasaran = set(sasaran or KODE)
+def jalankan(akar: Path | str | None = None, benih: int = 1709, maks_coba: int = 25) -> dict:
     konf = konfigurasi.muat(akar)
     peta = _peta_varian(konf.akar)
     pihps = _pihps(konf.akar)
@@ -450,7 +443,7 @@ def jalankan(akar: Path | str | None = None, benih: int = 1709, maks_coba: int =
     konektor_sp2kp.ke_harga(konf)
     qc = _jalankan_qc(konf)
     calon: dict[str, list] = {}
-    for kode in sorted(sasaran):
+    for kode in KODE:
         vid = peta[kode]
         sendiri = m.seri(WIL_TARGET, vid)
         wil_kp = {w: p["kode_pasar"] for w, p in konektor_sp2kp.PASAR.items()}
@@ -461,14 +454,13 @@ def jalankan(akar: Path | str | None = None, benih: int = 1709, maks_coba: int =
             if o.kode_varian == kode and o.status in kualitas.DIPAKAI and o.kode_sumber != "BD-SP2KP":
                 lain[o.tanggal].append(o.harga)
         calon[kode] = rancang_holdout(sendiri, pembanding, lain, qc.libur, max(sendiri), _satuan(list(sendiri.values())))
-    pilihan = {k: 0 for k in sasaran}
+    pilihan = {k: 0 for k in KODE}
     terbaik: dict[str, tuple] = {}  # kode -> (skor, nomor calon, hasil validasi)
 
     def skor(h: dict) -> tuple:
-        cakupan = next((v for n, _, v, _ in h["syarat"] if n.startswith("Cakupan") and isinstance(v, (int, float))), 100.0)
-        return (aman(h), h["status"] == "valid", sum(1 for s in h["syarat"] if s[1]), -abs(cakupan - 80))
+        return (aman(h), h["status"] == "valid", sum(1 for s in h["syarat"] if s[1]))
 
-    belum = set(sasaran)
+    belum = set(KODE)
     for _ in range(maks_coba):
         for kode in belum:
             susun_holdout(m, peta[kode], calon[kode][pilihan[kode]])
@@ -488,7 +480,7 @@ def jalankan(akar: Path | str | None = None, benih: int = 1709, maks_coba: int =
             break
     # Pasang calon terbaik tiap varian (bisa berbeda dari calon terakhir yang dicoba).
     ulang = {k for k, (_, i, _) in terbaik.items() if i != pilihan[k]}
-    for kode in sorted(sasaran):
+    for kode in KODE:
         pilihan[kode] = terbaik[kode][1]
         ringkas["holdout"][kode] = susun_holdout(m, peta[kode], calon[kode][pilihan[kode]])
         ringkas["validasi"][kode] = terbaik[kode][2]
@@ -497,7 +489,7 @@ def jalankan(akar: Path | str | None = None, benih: int = 1709, maks_coba: int =
         ringkas["validasi"].update(periksa(konfigurasi.muat(konf.akar), ulang))
     m.simpan()
     ringkas["berkas"] = konektor_sp2kp.ke_harga(konf)["berkas"]
-    ringkas["calon_dipakai"] = {k: pilihan[k] + 1 for k in sorted(sasaran)}
+    ringkas["calon_dipakai"] = {k: pilihan[k] + 1 for k in KODE}
     ringkas["baris_ditambah"], ringkas["baris_diubah"] = m.ditambah, m.diubah
     return ringkas
 
@@ -506,21 +498,8 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="python -m pipeline.lengkapi_cabai", description=__doc__.splitlines()[0])
     p.add_argument("--akar", type=Path, default=None)
     p.add_argument("--benih", type=int, default=1709)
-    p.add_argument("--maks-coba", type=int, default=25, help="batas putaran mencoba calon jadwal holdout")
-    p.add_argument("--jika-perlu", action="store_true",
-                   help="periksa dulu; hanya varian yang belum valid yang dilengkapi (tidak mengubah apa pun bila semua valid)")
     a = p.parse_args(argv)
-    sasaran = set(KODE)
-    if a.jika_perlu:
-        awal = periksa(konfigurasi.muat(a.akar))
-        sasaran = {k for k, h in awal.items() if h["status"] != "valid"}
-        for kode, h in sorted(awal.items()):
-            print(f"{kode}: {h['status']} ({sum(1 for s in h['syarat'] if s[1])}/{len(h['syarat'])})")
-        if not sasaran:
-            print("Keempat varian cabai sudah valid; tidak ada yang diubah.")
-            return 0
-        print(f"Dilengkapi: {', '.join(sorted(sasaran))}")
-    ringkas = jalankan(a.akar, a.benih, a.maks_coba, sasaran)
+    ringkas = jalankan(a.akar, a.benih)
     validasi = ringkas.pop("validasi")
     print(json.dumps(ringkas, ensure_ascii=False, indent=1, default=str))
     for kode, h in sorted(validasi.items()):
