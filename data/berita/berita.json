@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-14T07:16:14+07:00",
+ "diperbarui": "2026-11-15T07:07:24+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-15",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-14",
    "metode": "ai",
@@ -385,24 +393,6 @@
     "Karena bahan berita tidak menyebutkan kondisi di Kabupaten Bengkulu Tengah, perlu dilakukan pemantauan langsung di pasar-pasar dalam wilayah Bengkulu Tengah untuk memastikan apakah kenaikan harga cabai merah dan kendala pasokan dari Kepahiang juga berdampak ke daerah ini."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-15",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Laporan hari ini hanya mencakup wilayah Kota Bengkulu dan Bengkulu secara umum, tanpa menyebutkan kondisi di Kabupaten Bengkulu Tengah. Di pasar Kota Bengkulu, harga cabai merah berada pada kisaran Rp70–85 ribu per kilogram, sementara harga beras dilaporkan naik dengan dugaan pengaruh kemarau. Untuk menjaga keterjangkauan bahan pokok, Pemerintah Kota Bengkulu menyelenggarakan bazar pangan murah. Mengingat sebagian isi rincian berita tidak terbaca lengkap, TPID Bengkulu Tengah perlu memantau potensi rambatan harga beras dan cabai merah ke wilayah setempat.",
-   "poin": [
-    "Pemkot Bengkulu menggelar bazar pangan murah guna menyediakan bahan pokok harga terjangkau bagi warga.",
-    "Harga cabai merah di pasar Kota Bengkulu terpantau berada di angka Rp70–85 ribu per kilogram.",
-    "Pedagang menyebut kemarau diduga memicu kenaikan harga beras di Bengkulu.",
-    "Seluruh berita berasal dari luar Kabupaten Bengkulu Tengah dan rincian berita terkait beras serta cabai tidak dapat dibaca otomatis."
-   ],
-   "perlu_dipantau": [
-    "Kenaikan harga beras yang diduga terpengaruh kondisi kemarau.",
-    "Tingginya harga cabai merah di pasar sekitar.",
-    "Potensi rembetan perubahan harga komoditas dari Kota Bengkulu ke Bengkulu Tengah."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
@@ -436,7 +426,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -6323,15 +6313,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 208,
-  "setelah_duplikat": 161,
-  "berita_baru": 1,
+  "hasil_pencarian": 205,
+  "setelah_duplikat": 153,
+  "berita_baru": 0,
   "total_arsip": 76,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 0,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.5-flash-lite"
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
