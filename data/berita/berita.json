@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-11-15T07:07:24+07:00",
+ "diperbarui": "2026-11-16T07:10:56+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-16",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Informasi yang tersedia pada hari ini sangat terbatas karena rincian berita tidak dapat dibaca otomatis. Berita hanya menyebutkan bahwa Bulog Bengkulu Utara memastikan stok beras aman hingga awal tahun 2027. Wilayah Kabupaten Bengkulu Tengah tidak disebutkan secara spesifik dan dampak terhadap harga tidak jelas. Oleh karena itu, perkembangan pasokan serta harga beras di Bengkulu Tengah tetap perlu dipantau secara langsung.",
+   "poin": [
+    "Bulog Bengkulu Utara memastikan stok beras aman hingga awal tahun 2027.",
+    "Isi rincian berita tidak dapat dibaca otomatis sehingga informasi sangat minim.",
+    "Tidak terdapat penyebutan spesifik wilayah Bengkulu Tengah maupun kejelasan dampak harga."
+   ],
+   "perlu_dipantau": [
+    "Realisasi stok dan pergerakan harga beras di wilayah Bengkulu Tengah.",
+    "Keterangan lebih lanjut dari berita terkait cakupan wilayah penyaluran stok Bulog."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-15",
    "metode": "ekstraktif",
@@ -379,23 +395,42 @@
     "Ketersediaan pasokan pangan lokal mengingat minimnya informasi langsung dari wilayah Bengkulu Tengah."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-16",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Berdasarkan ringkasan berita, tidak ada informasi spesifik mengenai perkembangan harga dan pasokan yang terjadi di wilayah Kabupaten Bengkulu Tengah. Informasi yang tersedia hanya mencakup wilayah Kota Bengkulu, di mana harga cabai merah di Pasar Panorama mengalami kenaikan signifikan dari Rp40.000-Rp50.000 menjadi Rp70.000-Rp85.000 per kilogram akibat berkurangnya pasokan dari Kabupaten Kepahiang karena musim kemarau dan gagal panen, serta adanya kegiatan bazar pangan murah oleh Pemerintah Kota Bengkulu.",
-   "poin": [
-    "Harga cabai merah di Kota Bengkulu naik menjadi Rp70.000-Rp85.000 per kg karena pasokan dari Kabupaten Kepahiang berkurang akibat kemarau dan gagal panen.",
-    "Pemerintah Kota Bengkulu mengadakan bazar pangan murah untuk menyediakan kebutuhan dengan harga terjangkau."
-   ],
-   "perlu_dipantau": [
-    "Karena bahan berita tidak menyebutkan kondisi di Kabupaten Bengkulu Tengah, perlu dilakukan pemantauan langsung di pasar-pasar dalam wilayah Bengkulu Tengah untuk memastikan apakah kenaikan harga cabai merah dan kendala pasokan dari Kepahiang juga berdampak ke daerah ini."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
+  {
+   "id": "e6b33c3642b0",
+   "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOQlFoLTN3UHYweENuMlhPOWo1TENVZnRqU2lHZndCWmJtbnUtQThETzlaaFpwZkdvNnlvSUY4UWczNzgxcEJzMzlvc0R5Wkt4bzNvOXhVTGphSkdrbVY4akJIOGduM1JZbzdjaktMVjVhZUFNVjRESGp0RzFDcElaWUZnS1FlZmlDWURBMnBjaUxHVW11dXF5dUVrNWFDS0ttTWREUzZCUEVvYjduZmx4aG5B?oc=5",
+   "judul": "Bulog Bengkulu Utara Pastikan Stok Beras Aman hingga Awal Tahun 2027",
+   "sumber": "RRI.co.id",
+   "tanggal": "2026-11-15",
+   "diakses": "2026-11-16T07:10:56+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "97ebf59fb82e",
    "url": "https://bengkulutengahkab.go.id/postingan/detail_postingan/Bupati-Bengkulu-Tengah-Buka-Rapat-Forsesdasi-Se-Provinsi-Bengkulu-di-Wisata-Kampung-Durian",
@@ -6313,13 +6348,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 205,
+  "hasil_pencarian": 204,
   "setelah_duplikat": 153,
-  "berita_baru": 0,
-  "total_arsip": 76,
+  "berita_baru": 1,
+  "total_arsip": 77,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
+  "isi_tidak_terbaca": 1,
   "penyedia_ai": "",
   "model_ai": ""
  },
