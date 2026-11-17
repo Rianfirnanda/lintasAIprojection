@@ -1356,7 +1356,7 @@
  ],
  "terkini": {
   "BRS01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.336,
@@ -1365,7 +1365,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "BRS02": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 1.557,
@@ -1374,7 +1374,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "BRS03": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 1.779,
@@ -1383,7 +1383,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "BRS04": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.405,
@@ -1392,7 +1392,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "BRS05": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.0,
@@ -1401,7 +1401,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "BRS06": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.429,
@@ -1410,7 +1410,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "BWM01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 2.74,
@@ -1419,7 +1419,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "BWP01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 2.577,
@@ -1428,7 +1428,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "CMR01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 21.09,
@@ -1437,7 +1437,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "CMR02": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 18.104,
@@ -1446,7 +1446,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "CRW01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 12.472,
@@ -1455,7 +1455,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "CRW02": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "hari_raya",
    "smape_uji_akhir": 9.236,
@@ -1464,7 +1464,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "DAY01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 4.308,
@@ -1473,7 +1473,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "DSP01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.0,
@@ -1482,7 +1482,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "DSP02": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.0,
@@ -1491,7 +1491,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "GLP01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.0,
@@ -1500,7 +1500,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "GLP02": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.0,
@@ -1509,7 +1509,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "MGR01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.0,
@@ -1518,7 +1518,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "MGR02": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 1.027,
@@ -1527,7 +1527,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "MGR03": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.165,
@@ -1536,7 +1536,7 @@
    "versi_konfigurasi": "2c98ffbb3093bc5fdb0e221e890cff03d49904e2d303cee6f1ecc2b984e94ef6"
   },
   "TLR01": {
-   "commit": "de0e5c2e2145f7e88dd03532a1ce79cb58fb3089",
+   "commit": "e1e2d03f0eb771e042988c1144d65e764558b4b2",
    "data_hingga": "2026-11-16",
    "model": "naif",
    "smape_uji_akhir": 0.484,
