@@ -1,6 +1,22 @@
 {
- "diperbarui": "2026-11-17T07:13:41+07:00",
+ "diperbarui": "2026-11-18T07:07:20+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-18",
+   "metode": "ai",
+   "penyedia": "openrouter",
+   "ringkas": "Harga cabai merah di Pasar Panorama, Kota Bengkulu turun menjadi Rp60 ribu per kg, lebih rendah dari harga pasar sebelumnya. Berbagai laporan menyebutkan peningkatan harga cabai hingga Rp100 ribu per kg di berbagai wilayah Bengkulu, dengan dampak harga yang tidak jelas atau naik. Pasokan cabai tidak secara eksplisit diatur, tetapi operasi pasar dilakukan untuk mengatasi lonjakan harga. Perlu dipantau perubahan harga cabai dan ketersediaan pasokan di pasar.",
+   "poin": [
+    "Harga cabai merah turun di Pasar Panorama, Kota Bengkulu",
+    "Harga cabai di berbagai wilayah Bengkulu naik hingga Rp100 ribu per kg",
+    "Dampak harga tidak jelas pada beberapa laporan"
+   ],
+   "perlu_dipantau": [
+    "peningkatan harga cabai",
+    "ketersediaan pasokan di pasar"
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-17",
    "metode": "ai",
@@ -382,23 +398,199 @@
    "ringkas": "Tidak ada berita baru yang relevan hari ini.",
    "poin": [],
    "perlu_dipantau": []
-  },
-  {
-   "tanggal": "2026-10-18",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Sementara itu, informasi kenaikan harga cabai di Pasar Panorama Kota Bengkulu dan kenaikan harga beras akibat kemarau terjadi di luar wilayah Kabupaten Bengkulu Tengah. TPID perlu memantau perkembangan harga ayam potong secara langsung di pasaran wilayah Bengkulu Tengah.",
-   "poin": [
-    "Kenaikan harga cabai terjadi di Pasar Panorama, Kota Bengkulu.",
-    "Kenaikan harga beras akibat kemarau dilaporkan terjadi di wilayah lain di Bengkulu."
-   ],
-   "perlu_dipantau": [
-    "Pergerakan harga ayam potong di pasar-pasar dalam wilayah Kabupaten Bengkulu Tengah."
-   ],
-   "kalimat_dibuang": 1
   }
  ],
  "berita": [
+  {
+   "id": "fc09ba6aca02",
+   "url": "https://rri.co.id/bengkulu/regional/2901865/harga-cabai-tembus-rp100-ribu-tpid-bengkulu-gelar-operasi-pasar",
+   "judul": "Harga Cabai Tembus Rp100 Ribu, TPID Bengkulu Gelar Operasi Pasar",
+   "sumber": "rri.co.id",
+   "tanggal": "2026-11-17",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "gagal diunduh: HTTPError",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "Harga Cabai Tembus Rp100 Ribu, TPID Bengkulu Gelar ・ lebih dari Rp100 ribu per kilogram ・ dengan harga Rp60 ribu per kilogram di Pasar Panorama, tepatnya di",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "a82e73979222",
+   "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOMk9fck5Hemtnd0IyZm5Vb2pUeWNfVDJzUHktS24wWUdGYzk4VjBHZTVnUTBxRG5nbEJiS09oY19YU2t2dFdRSWptXzJSdTFhVS1NbHIzamxZcHo1ZFhDbDl3N3I4QjVFdzlhVjdMMmhBSFNsVzVNSkZxemxLR0RTUUNHNnpCc2lfQjNWd1BWcjFQRXVXejVFN2kzY25FUjNVWGNXMk1XWEtjaEpYQmxoeTkzRi1halRJek9Bd3k5TWVJVlQzQ0hxZNIBvgFBVV95cUxOMjV4N0M1bkpNV28xeTNxYS1lWGVFaTlZZ3dxZmlSV0YxWmp3XzZWUUgtTkRkUDRlYXI2WGdvYnR3WlY4bVNlVHhmdVR6TXlEMEliVzF3aGFncXZxbXZPLU9fX1VMbUd1UDJtYThqRkgwVnY4OHg4LTNIOG1XbVcxMjVmbFFmVFNRdk53QV81eU5wR1dGRUJXS3M4Rk5pMWRqbjY5Vm02QWoxbmxGLUNBb3lsdncydUJCR25iMl9R?oc=5",
+   "judul": "Harga Cabai Melonjak Naik, Pemprov Bengkulu Turun Tangan Gelar Operasi Pasar - bengkuluekspress.disway.id",
+   "sumber": "Bengkulu Ekspress",
+   "tanggal": "2026-11-17",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "e6d7dd996393",
+   "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxPNExiRmwxRlBoUjExNVQtdXptSzdwdHN5ZXZZV2xGYzQ1cGRyeFdTVDF4TlZrdll0RDhERjZqOFRNZEVNMUJnOXVRbWRQek52bGNHRl9BMWJDN3dFWkV3SHY4dFA5cnEzS2VybzVKTU9qVUU3ZzFxOWRSeFZCWk14RlRhRF9YbTVoYU5WUDl1b28wb0JyUU11RzU1TkhpbzNlUi03YkJvT1N5X3d4c1BBUl9VTkxjdW9tWnA4TlFlWmpDVGJHQWdQMHY1RkI3TXBubWQ5MHQyN3RZZ0Zx0gHcAUFVX3lxTE80TGJGbDFGUGhSMTE1VC11em1LN3B0c3lldllXbEZjNDVwZHJ4V1NUMXhOVmt2WXREOERGNmo4VE1kRU0xQmc5dVFtZFB6TnZsY0dGX0ExYkM3d0VaRXdIdjh0UDlycTNLZXJvNUpNT2pVRTdnMXE5ZFJ4VkJaTXhGVGFEX1htNWhhTlZQOXVvbzBvQnJRTXVHNTVOSGlvM2VSLTdiQm9PU3lfd3hzUEFSX1VOTGN1b21acDhOUWVaakNUYkdBZ1AwdjVGQjdNcG5tZDkwdDI3dFlnRnE?oc=5",
+   "judul": "Daftar Harga Tanah di Kota Bengkulu per Meter Tahun 2026, Kawasan Strategis Melonjak hingga 25 Persen - radarkepahiang.disway.id",
+   "sumber": "Radar Kepahiang",
+   "tanggal": "2026-11-17",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "73319ede822d",
+   "url": "https://bengkulu.antaranews.com/berita/486563/pemprov-bengkulu-gelar-operasi-pasar-hadapi-lonjakan-harga-cabai",
+   "judul": "Pemprov Bengkulu gelar operasi pasar hadapi lonjakan harga cabai",
+   "sumber": "bengkulu.antaranews.com",
+   "tanggal": "2026-11-16",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 6,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "intervensi"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 2464,
+   "sidik_sha256": "3fbcbb61f024f8c035d4dfef782e5df2663f56d3149db808e7ff8ba777560855",
+   "kutipan": "Dia mengatakan TPID menyediakan cabai merah dengan harga Rp60 ribu per kilogram dalam operasi pasar tersebut. harganya Rp60 ribu per kilogram,\"",
+   "ringkasan": "Pemprov Bengkulu menggelar operasi pasar cabai merah di Pasar Panorama, Kota Bengkulu, dengan harga Rp60 ribu per kg, lebih rendah dari harga pasar yang mencapai lebih dari Rp100 ribu per kg, untuk membantu masyarakat menghadapi lonjakan harga.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "turun",
+   "tindak_lanjut": true,
+   "harga": [
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 60000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Dia mengatakan TPID menyediakan cabai merah dengan harga Rp60 ribu per kilogram dalam operasi pasar tersebut.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "program",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah dalam operasi pasar Pemprov di Kota Bengkulu.",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-18"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": null,
+     "nilai": 100000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Harga itu lebih rendah dibandingkan harga cabai di pasaran yang telah mencapai lebih dari Rp100 ribu per kilogram dalam hampir sebulan terakhir.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "pasar",
+      "lingkup": "wilayah lain di provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai di pasaran Kota Bengkulu, lebih tinggi dari operasi pasar.",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-18"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "openrouter"
+  },
   {
    "id": "f4a80ff30d47",
    "url": "https://bengkulu.antaranews.com/amp/berita/486563/pemprov-bengkulu-gelar-operasi-pasar-hadapi-lonjakan-harga-cabai",
@@ -477,7 +669,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -559,7 +751,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -641,8 +833,152 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
+  },
+  {
+   "id": "25043fe0e35e",
+   "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNZ2xZYzRNWVhZWWlKZjlsWDloTWU2MXRsZGFGeVFvWjJ4MllTVzRYcVkxc1piQWdaTFdBNkNMZmtyblp1SG5TaTN5cTRHSTk5RTV0VjZ2MTd0WkU0dFRZZUVoektjRXZhSVh5V1BLTS0ybDFoMUFvdW9aUGhpNHU1V3RTY1UydFJiU0hCeWpRam9xdzhPSTh4VHViOXV5RmE5Zzk4M1NiVWlfWm95VTdOVVVVTExqNFlQWVE?oc=5",
+   "judul": "Harga Cabai Tembus Rp100 Ribu, Pemprov Bengkulu Gelar Operasi Pasar Rp60 Ribu per Kilogram",
+   "sumber": "Teropong Publik",
+   "tanggal": "2026-11-16",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "b9c6c0e8964a",
+   "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOQWE2SVRTQUdSZWtMYnYzQjlDZXM2bk1nekRYRUNWc3BWQ0JiZU51T2djbkxDcDZ6N0NmYk9yTkduTEppRXlqd24ydTFDWUxMQ0ZsV09YUnpmRTU3V3l3NnJodTkwN3lqRjdmU3FWZUhPbzlHNFJJQnJNVXpJeGdrTDhka0VhaG0zQU45MFZXeFZydDZPQmN1ZzhmMjdJNWNLLTlVcXJVONIBpwFBVV95cUxOQWE2SVRTQUdSZWtMYnYzQjlDZXM2bk1nekRYRUNWc3BWQ0JiZU51T2djbkxDcDZ6N0NmYk9yTkduTEppRXlqd24ydTFDWUxMQ0ZsV09YUnpmRTU3V3l3NnJodTkwN3lqRjdmU3FWZUhPbzlHNFJJQnJNVXpJeGdrTDhka0VhaG0zQU45MFZXeFZydDZPQmN1ZzhmMjdJNWNLLTlVcXJVOA?oc=5",
+   "judul": "Harga Cabai Tembus Rp100 Ribu, TPID Provinsi Bengkulu Gelar Pasar Murah",
+   "sumber": "Bencoolen Times",
+   "tanggal": "2026-11-16",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "7eeb3dbcd698",
+   "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPUkhOMEJxM2dDMWg2WndDc1N0WmVoM0E0djBpSlM2cEQwVUd1d3VHSHk0eDhILUh1bjROUWlYNVRiZWNnMDR6SmRfNEpXb3AtZExrcVRGNEFTSTl3Ri1DWTllZ1VDQkY2Q0ZQQ1JFT2VCaVRBWmZhb08wM3N3d29Md3pGd0NUX1lPMDI4YlNiQ2c1Znd0VXRmYlpvbkN1djNINUxNcFJHX1lUcVNFczE5WU0zYWJUZ9IBuwFBVV95cUxOam51aWF1RkFtV0l4dl9BdS1xQ3Y5MWJNOF9YX1BCd29ySjZyd3F1aHl1T0ViaW5GdVNxNTJoLUl6QjlWQk5McWRJUVppaDdpUlNvQTM0cEg1WThyWUpiZDU3aUc1VWFfWFg1SzlCYjljb3FrQmNQSTdkb3g5c2ZQME01ZnJ5S01wcVhKZXVCZVJlcVlIQnI5QzQ5REwwNU52Z1ViR3VRNjJRaGZCdWFtbERib2VXRFRGdWNV?oc=5",
+   "judul": "Harga Cabai Tembus Rp 100 Ribu, Ini yang Dilakukan Pemprov Bengkulu",
+   "sumber": "detikcom",
+   "tanggal": "2026-11-16",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "c11d39cc6ff9",
+   "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPUlA0RzFKRW0xeGlfYVpsUHZfUTVYVkI1M2hSTUNQWUk5SkwyQTRIMHRzazM2TXJjSDR0djZxR1U3QzVKNkdWZ25nQ3JLYjNNMDh1UUFVRmYtdEtuYkFtUkJjTnZoblhtMDlBV0hVUXVlaWZmNUY4NVVLVS1fSzVjeVd4eTRVcU5lR0VSN2hLcWFIMmI4TkNCcDhEczJZYzlZRHFUQzF3?oc=5",
+   "judul": "Harga Cabai Melambung Tinggi TPID Provinsi Bengkulu Gelar Operasi Pasar",
+   "sumber": "Radar Informasi News",
+   "tanggal": "2026-11-16",
+   "diakses": "2026-11-18T07:07:20+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah"
+   ],
+   "tag": [
+    "harga_naik",
+    "intervensi"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
   },
   {
    "id": "793026b8b93c",
@@ -679,7 +1015,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "37805fcdd49d",
@@ -715,7 +1051,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "21d95f75b4b2",
@@ -752,7 +1088,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "aab573434f94",
@@ -789,7 +1125,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "91a180cab7f2",
@@ -825,7 +1161,7 @@
    "dampak_harga": "turun",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "ee5468a5fd6c",
@@ -860,7 +1196,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "b28a6863f31f",
@@ -896,7 +1232,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "e6b33c3642b0",
@@ -975,7 +1311,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": true,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -6895,21 +7231,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 126,
-  "setelah_duplikat": 90,
-  "berita_baru": 11,
-  "total_arsip": 88,
-  "kandidat_harga_baru": 6,
-  "harga_dinilai_ai": 6,
+  "hasil_pencarian": 191,
+  "setelah_duplikat": 153,
+  "berita_baru": 8,
+  "total_arsip": 96,
+  "kandidat_harga_baru": 2,
+  "harga_dinilai_ai": 2,
   "isi_tidak_terbaca": 7,
   "penyedia_ai": "openrouter",
-  "model_ai": "dots-studio/dots-3-note-preview:free"
+  "model_ai": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
  },
- "galat": [
-  "Google Berita: harga cabai bawang Bengkulu: HTTPError: HTTP Error 429: Too Many Requests",
-  "Google Berita: harga LPG 3 kg Bengkulu Tengah: HTTPError: HTTP Error 429: Too Many Requests",
-  "Google Berita: harga pasar Karang Tinggi Bengkulu Tengah: HTTPError: HTTP Error 429: Too Many Requests",
-  "Google Berita: harga pangan site:radarbengkulu.bacakoran.co: HTTPError: HTTP Error 429: Too Many Requests",
-  "Google Berita: harga pangan site:bengkuluekspress.disway.id: HTTPError: HTTP Error 429: Too Many Requests"
- ]
+ "galat": []
 }
