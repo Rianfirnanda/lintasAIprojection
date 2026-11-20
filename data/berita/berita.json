@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-19T07:08:42+07:00",
+ "diperbarui": "2026-11-20T07:13:32+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-20",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-19",
    "metode": "ai",
@@ -391,21 +399,6 @@
     "Perlu memantau pelaksanaan Pasar Murah di Bengkulu Selatan serta dampaknya terhadap harga pangan."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-20",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Berdasarkan laporan berita, harga cabai merah di wilayah Bengkulu dilaporkan masih tinggi. Namun, isi berita tidak dapat dibaca secara otomatis sehingga informasi mengenai kondisi pasokan dan besaran dampak harga tidak jelas. Berita ini juga tidak menyebutkan Kabupaten Bengkulu Tengah secara spesifik. Oleh karena itu, perkembangan harga dan pasokan cabai merah di pasar lokal Bengkulu Tengah tetap perlu dipantau secara langsung.",
-   "poin": [
-    "Harga cabai merah di wilayah Bengkulu masih tinggi berdasarkan judul berita RRI.co.id.",
-    "Informasi sangat terbatas karena isi berita tidak dapat dibaca otomatis dan dampak harga tidak jelas.",
-    "Kabupaten Bengkulu Tengah tidak disebutkan secara spesifik dalam berita tersebut."
-   ],
-   "perlu_dipantau": [
-    "Harga cabai merah di wilayah Bengkulu Tengah"
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
@@ -438,7 +431,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "f31cd5ee76ae",
@@ -539,7 +532,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "openrouter"
   },
   {
@@ -576,7 +569,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "fc09ba6aca02",
@@ -1046,7 +1039,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "f7252a0dfb12",
@@ -1082,7 +1075,7 @@
    "dampak_harga": "naik",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "25043fe0e35e",
@@ -7479,15 +7472,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 185,
-  "setelah_duplikat": 156,
-  "berita_baru": 5,
+  "hasil_pencarian": 184,
+  "setelah_duplikat": 154,
+  "berita_baru": 0,
   "total_arsip": 101,
-  "kandidat_harga_baru": 3,
-  "harga_dinilai_ai": 3,
-  "isi_tidak_terbaca": 4,
-  "penyedia_ai": "openrouter",
-  "model_ai": "liquid/lfm-3-1.7b:free"
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
+  "isi_tidak_terbaca": 0,
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
