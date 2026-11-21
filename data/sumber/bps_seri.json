@@ -1,5 +1,5 @@
 {
- "waktu": "2026-11-20T00:14:46+00:00",
+ "waktu": "2026-11-21T00:05:19+00:00",
  "sumber": "BPS Web API (webapi.bps.go.id)",
  "kunci": "ada",
  "seri": {
@@ -10,7 +10,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-20T00:14:46+00:00",
+   "diambil": "2026-11-21T00:05:19+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -1093,7 +1093,7 @@
    "judul": "Inflasi tahun kalender (y-to-d) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-20T00:14:46+00:00",
+   "diambil": "2026-11-21T00:05:19+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -2061,7 +2061,7 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-20T00:14:46+00:00",
+   "diambil": "2026-11-21T00:05:19+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3139,7 +3139,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-20T00:14:46+00:00",
+   "diambil": "2026-11-21T00:05:19+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3482,8 +3482,8 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-20T00:14:46+00:00",
-   "terbaru": "2026-09",
+   "diambil": "2026-11-21T00:05:19+00:00",
+   "terbaru": "2026-10",
    "label_lain": [],
    "data": [
     {
@@ -3980,6 +3980,21 @@
      "periode": "2026-09",
      "kategori": "Provinsi Bengkulu",
      "nilai": 3.38
+    },
+    {
+     "periode": "2026-10",
+     "kategori": "Kab. Mukomuko",
+     "nilai": 5.0
+    },
+    {
+     "periode": "2026-10",
+     "kategori": "Kota Bengkulu",
+     "nilai": 3.29
+    },
+    {
+     "periode": "2026-10",
+     "kategori": "Provinsi Bengkulu",
+     "nilai": 3.72
     }
    ]
   },
@@ -3990,8 +4005,8 @@
    "judul": "Indeks harga yang diterima petani (It)",
    "judul_bps": "Indeks Harga yang Diterima oleh Petani (lt)",
    "satuan": null,
-   "diambil": "2026-11-20T00:14:46+00:00",
-   "terbaru": "2026-09",
+   "diambil": "2026-11-21T00:05:19+00:00",
+   "terbaru": "2026-10",
    "label_lain": [],
    "data": [
     {
@@ -4157,7 +4172,12 @@
     {
      "periode": "2026-09",
      "kategori": "Umum",
-     "nilai": 279.04
+     "nilai": 277.36
+    },
+    {
+     "periode": "2026-10",
+     "kategori": "Umum",
+     "nilai": 281.13
     }
    ]
   },
@@ -4168,8 +4188,8 @@
    "judul": "Indeks harga yang dibayar petani (Ib)",
    "judul_bps": "Indeks Harga yang Dibayar oleh Petani (Ib)",
    "satuan": null,
-   "diambil": "2026-11-20T00:14:46+00:00",
-   "terbaru": "2026-09",
+   "diambil": "2026-11-21T00:05:19+00:00",
+   "terbaru": "2026-10",
    "label_lain": [],
    "data": [
     {
@@ -4335,7 +4355,12 @@
     {
      "periode": "2026-09",
      "kategori": "Umum",
-     "nilai": 134.16
+     "nilai": 134.13
+    },
+    {
+     "periode": "2026-10",
+     "kategori": "Umum",
+     "nilai": 134.98
     }
    ]
   }
@@ -4442,5 +4467,5 @@
    "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/170964/nilai-tukar-petani--ntp--provinsi-bengkulu-mei-2026-sebesar-201-95-atau-turun-0-02-persen.html"
   }
  ],
- "pesan": "7 dari 7 deret BPS berhasil diambil, data terbaru 2026-09."
+ "pesan": "7 dari 7 deret BPS berhasil diambil, data terbaru 2026-10."
 }
