@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-20T07:13:32+07:00",
+ "diperbarui": "2026-11-21T07:04:09+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-21",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-20",
    "metode": "ekstraktif",
@@ -384,21 +392,6 @@
     "Perkembangan harga dan pasokan pangan khusus di wilayah Kabupaten Bengkulu Tengah."
    ],
    "kalimat_dibuang": 1
-  },
-  {
-   "tanggal": "2026-10-21",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "DKP Bengkulu Selatan berencana mengadakan Pasar Murah untuk menurunkan harga pangan. Kegiatan ini tidak menyebutkan wilayah target yang spesifik di Bengkulu Tengah, karena berada di wilayah Bengkulu Selatan.",
-   "poin": [
-    "DKP Bengkulu Selatan akan menggelar Pasar Murah untuk menurunkan harga pangan.",
-    "Berita ini tidak menyebutkan wilayah target secara spesifik.",
-    "Perlu dibedakan bahwa kejadian ini berada di wilayah Bengkulu Selatan, bukan Bengkulu Tengah."
-   ],
-   "perlu_dipantau": [
-    "Perlu memantau pelaksanaan Pasar Murah di Bengkulu Selatan serta dampaknya terhadap harga pangan."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
@@ -7472,8 +7465,8 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 184,
-  "setelah_duplikat": 154,
+  "hasil_pencarian": 186,
+  "setelah_duplikat": 157,
   "berita_baru": 0,
   "total_arsip": 101,
   "kandidat_harga_baru": 0,
