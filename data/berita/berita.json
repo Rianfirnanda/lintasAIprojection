@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-21T07:04:09+07:00",
+ "diperbarui": "2026-11-22T07:07:31+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-22",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-21",
    "metode": "ekstraktif",
@@ -378,20 +386,6 @@
    "ringkas": "Tidak ada berita baru yang relevan hari ini.",
    "poin": [],
    "perlu_dipantau": []
-  },
-  {
-   "tanggal": "2026-10-22",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Berita yang tersedia hanya mencakup wilayah Kota Bengkulu terkait anggaran pasar murah dan wilayah Bengkulu Utara terkait Gerakan Pangan Murah.",
-   "poin": [
-    "Pemerintah Kota Bengkulu menganggarkan Rp200 juta untuk pasar murah di 67 kelurahan.",
-    "Bengkulu Utara mengadakan Gerakan Pangan Murah dengan beras SPHP dijual Rp58 ribu per 5 kilogram."
-   ],
-   "perlu_dipantau": [
-    "Perkembangan harga dan pasokan pangan khusus di wilayah Kabupaten Bengkulu Tengah."
-   ],
-   "kalimat_dibuang": 1
   }
  ],
  "berita": [
@@ -7465,8 +7459,8 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 186,
-  "setelah_duplikat": 157,
+  "hasil_pencarian": 175,
+  "setelah_duplikat": 151,
   "berita_baru": 0,
   "total_arsip": 101,
   "kandidat_harga_baru": 0,
