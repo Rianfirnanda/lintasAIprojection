@@ -1955,3 +1955,9 @@ tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
 2026-11-22,1709,suhu_rata_c,27.0,C,,BD-CUACA
 2026-11-22,1771,curah_hujan_mm,14.0,mm,,BD-CUACA
 2026-11-22,1771,suhu_rata_c,27.7,C,,BD-CUACA
+2026-11-23,1708,curah_hujan_mm,17.3,mm,,BD-CUACA
+2026-11-23,1708,suhu_rata_c,24.3,C,,BD-CUACA
+2026-11-23,1709,curah_hujan_mm,34.7,mm,,BD-CUACA
+2026-11-23,1709,suhu_rata_c,26.9,C,,BD-CUACA
+2026-11-23,1771,curah_hujan_mm,18.5,mm,,BD-CUACA
+2026-11-23,1771,suhu_rata_c,27.6,C,,BD-CUACA

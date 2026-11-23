@@ -212,10 +212,14 @@ tanggal,kode_wilayah,indikator,nilai,satuan,kode_varian,kode_sumber
 2026-11-23,1771,prakiraan_hujan_mm,1.2,mm,,BD-BMKG
 2026-11-23,1771,prakiraan_suhu_c,25.0,C,,BD-BMKG
 2026-11-24,1709,prakiraan_hujan_mm,2.8,mm,,BD-BMKG
-2026-11-24,1709,prakiraan_suhu_c,25.9,C,,BD-BMKG
-2026-11-24,1771,prakiraan_hujan_mm,3.6,mm,,BD-BMKG
-2026-11-24,1771,prakiraan_suhu_c,26.1,C,,BD-BMKG
+2026-11-24,1709,prakiraan_suhu_c,26.1,C,,BD-BMKG
+2026-11-24,1771,prakiraan_hujan_mm,3.1,mm,,BD-BMKG
+2026-11-24,1771,prakiraan_suhu_c,26.4,C,,BD-BMKG
 2026-11-25,1709,prakiraan_hujan_mm,3.4,mm,,BD-BMKG
 2026-11-25,1709,prakiraan_suhu_c,25.6,C,,BD-BMKG
 2026-11-25,1771,prakiraan_hujan_mm,3.8,mm,,BD-BMKG
 2026-11-25,1771,prakiraan_suhu_c,25.9,C,,BD-BMKG
+2026-11-26,1709,prakiraan_hujan_mm,0.2,mm,,BD-BMKG
+2026-11-26,1709,prakiraan_suhu_c,24.0,C,,BD-BMKG
+2026-11-26,1771,prakiraan_hujan_mm,0.4,mm,,BD-BMKG
+2026-11-26,1771,prakiraan_suhu_c,24.0,C,,BD-BMKG
