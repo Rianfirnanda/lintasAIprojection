@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-22T07:07:31+07:00",
+ "diperbarui": "2026-11-23T07:10:24+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-23",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-22",
    "metode": "ekstraktif",
@@ -378,14 +386,6 @@
     "Pelaksanaan intervensi pasar murah di Bengkulu Tengah menyusul kegiatan serupa di daerah tetangga seperti Rejang Lebong."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-23",
-   "metode": "ekstraktif",
-   "penyedia": "",
-   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
-   "poin": [],
-   "perlu_dipantau": []
   }
  ],
  "berita": [
@@ -7459,7 +7459,7 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 175,
+  "hasil_pencarian": 179,
   "setelah_duplikat": 151,
   "berita_baru": 0,
   "total_arsip": 101,
