@@ -83,14 +83,14 @@ try {
 }
 const $ = (id) => document.getElementById(id);
 const NAMA_KELOMPOK = { pokok: "Pokok", volatil: "Mudah bergejolak", protein: "Protein hewani", pabrikan: "Olahan pabrik" };
-const varian = master.varian;
+const varian = master.varian.filter((v) => v.aktif);
 const aktif = varian.filter((v) => v.aktif);
 const pasar = master.pasar.filter((p) => p.aktif);
 const daftarSumber = sumber.sumber || [];
 
 $("kpi").innerHTML = [
-  ind({ i: "keranjang", label: "Komoditas", nilai: master.komoditas.length, sub: "dipantau rutin" }),
-  ind({ i: "dokumen", label: "Varian", nilai: aktif.length, sub: `${varian.length - aktif.length} varian tidak aktif` }),
+  ind({ i: "keranjang", label: "Komoditas", nilai: new Set(varian.map((v) => v.kode_komoditas)).size, sub: "dipantau rutin" }),
+  ind({ i: "dokumen", label: "Varian", nilai: aktif.length, sub: "varian aktif" }),
   ind({ i: "toko", label: "Pasar", nilai: pasar.length, sub: `${pasar.filter((p) => p.blank_spot).length} di wilayah sulit sinyal` }),
   ind({ i: "database", label: "Sumber data", nilai: daftarSumber.length, sub: `${daftarSumber.filter((s) => s.status === "aktif").length} aktif` }),
 ].join("");
