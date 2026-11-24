@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-23T07:10:24+07:00",
+ "diperbarui": "2026-11-24T07:11:23+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-24",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Stok beras Bulog Bengkulu dilaporkan sebanyak 10.800 ton dan dinyatakan aman hingga akhir tahun, namun tidak disebutkan secara spesifik untuk wilayah Bengkulu Tengah serta dampaknya terhadap harga tidak jelas. Berita ini berskala regional Bengkulu secara umum, bukan khusus Bengkulu Tengah. TPID perlu memantau perkembangan ketersediaan stok tersebut secara lebih mendalam.",
+   "poin": [
+    "Stok beras Bulog Bengkulu mencapai 10.800 ton dan aman hingga akhir tahun.",
+    "Wilayah target spesifik dan dampak harga tidak disebutkan dalam ringkasan."
+   ],
+   "perlu_dipantau": [
+    "Ketersediaan pasokan beras di wilayah Kabupaten Bengkulu Tengah.",
+    "Kepastian distribusi stok Bulog ke pasaran lokal Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-23",
    "metode": "ekstraktif",
@@ -369,26 +384,42 @@
     "Ketersediaan pasokan dan harga komoditas pangan pokok seperti beras SPHP, Minyak Kita, cabai merah, bawang, telur, dan daging ayam ras."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-24",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Laporan hari ini tidak memuat informasi mengenai perkembangan harga maupun pasokan pangan secara khusus di Kabupaten Bengkulu Tengah. Di wilayah lain, Pemkab Rejang Lebong dan Pemkab OKI menggelar pasar murah untuk menekan inflasi dan menyediakan pangan bersubsidi, meskipun rincian dampaknya tidak dijelaskan. Sementara itu, BULOG Bengkulu mengadakan Gerakan Pangan Murah dengan menjual beras SPHP seharga Rp58 ribu per 5 kg yang berdampak menurunkan harga. TPID perlu memantau ketersediaan pasokan beras SPHP serta potensi pelaksanaan pasar murah serupa di wilayah Bengkulu Tengah.",
-   "poin": [
-    "Tidak ada berita yang secara spesifik menyebutkan kondisi harga atau pasokan di Kabupaten Bengkulu Tengah.",
-    "Pemkab Rejang Lebong menggelar pasar murah atau Gerakan Pangan Murah (GPM) untuk menekan laju inflasi.",
-    "Pemkab OKI mengadakan pasar murah pangan bersubsidi bagi warga.",
-    "BULOG Bengkulu menjual beras SPHP seharga Rp58 ribu per 5 kg melalui Gerakan Pangan Murah yang berdampak pada penurunan harga."
-   ],
-   "perlu_dipantau": [
-    "Penyaluran dan ketersediaan beras SPHP dari BULOG Bengkulu untuk wilayah Kabupaten Bengkulu Tengah.",
-    "Pelaksanaan intervensi pasar murah di Bengkulu Tengah menyusul kegiatan serupa di daerah tetangga seperti Rejang Lebong."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
+  {
+   "id": "26e548c19c8d",
+   "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQODY0WTFqYWZpa0ZpNWR4eExoV1FMcXZDX3ZMTXRoV3g1bGlHenV1azQ5VmY5T0xoX3VoRDRlQTFlNUtxVGtqblZhT1Zxemd4QlNTMnY4eVdoN1l0OUw0dUc3Mm9MMlBMZWt0aWtDaWpmNFhFM2VNaXYtdnZaVjV3X1g0Y29LWVNWNnR0MFRJc3ItX0Zra296NHBHak9ET2lrbFhadm1n?oc=5",
+   "judul": "Stok Beras Bulog Bengkulu 10.800 Ton, Aman hingga Akhir Tahun",
+   "sumber": "RRI.co.id",
+   "tanggal": "2026-11-23",
+   "diakses": "2026-11-24T07:11:23+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Beras"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "511065a73205",
    "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxNdlFQZFhGazVoVm4wQ0FPalluZUV0M1hFcEREcTZEMzJ4WlZBa25HbXIzRHJMcENhaUV0SjRyR1VRaW5NdUFtbVVpN1lxa0h5TDRtLUVmVTd5b0RjQVpFUHVYMzdzVHVBUjg2N0ZPNnVqb0FMMnJnLXB2LWxmdExVeERGb19IdDhYbDU0VmZsNnFnLVRRMW02bWEwV1N6blhRZkZRdU5BMnhSWW94V3ZEVTg0T0M5NDdvczhIUGFHLXc3OXJCRGRic1FERm_SAdIBQVVfeXFMT2g5QXI0MFBRVFBwMVlZYll3d3JuNU5Jbk1KeFRRdFJFaHZqLUtWVWp6enZWNTY4eDNwWUdrY3lJSTZYQzk1VHcxZkdic2N1VjZiRGQzSEJpVFVyaW8zRUxRTEtBMHVZbnVmMUdaNGFCeVQtOFhReTNWTzJETWMwdkpGMG13bEZhMk41cHlCZlVxQlpreTh0UUs4cjdaTVRKN1kwWTBwbFkzcWdnSW5HZmFraWk5V01YeWJWVExJWDlJcUM5bWsxMWM3cENnYTY5Qk13?oc=5",
@@ -7459,13 +7490,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 179,
-  "setelah_duplikat": 151,
-  "berita_baru": 0,
-  "total_arsip": 101,
+  "hasil_pencarian": 238,
+  "setelah_duplikat": 201,
+  "berita_baru": 1,
+  "total_arsip": 102,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
+  "isi_tidak_terbaca": 1,
   "penyedia_ai": "",
   "model_ai": ""
  },
