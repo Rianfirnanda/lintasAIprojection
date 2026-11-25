@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-24T07:11:23+07:00",
+ "diperbarui": "2026-11-25T07:04:39+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-25",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Berita tersebut tidak menyebutkan wilayah target secara khusus, termasuk tidak adanya informasi spesifik mengenai Kabupaten Bengkulu Tengah. Oleh karena itu, perkembangan harga dan pasokan di tingkat lokal Bengkulu Tengah perlu terus dipantau untuk melihat apakah tren penurunan nasional tersebut juga berdampak di daerah.",
+   "poin": [
+    "Harga cabai, daging sapi, dan daging ayam mengalami penurunan.",
+    "Penurunan harga terjadi secara nasional dan tidak menyebutkan wilayah Bengkulu Tengah."
+   ],
+   "perlu_dipantau": [
+    "Perkembangan harga pangan lokal di Kabupaten Bengkulu Tengah.",
+    "Ketersediaan pasokan komoditas cabai dan daging di pasar wilayah Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 1
+  },
   {
    "tanggal": "2026-11-24",
    "metode": "ai",
@@ -367,26 +382,295 @@
     "Perkembangan harga dan ketersediaan beras serta bahan pokok secara langsung di pasar-pasar dalam wilayah Kabupaten Bengkulu Tengah."
    ],
    "kalimat_dibuang": 2
-  },
-  {
-   "tanggal": "2026-10-25",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Seluruh laporan yang diterima hari ini berasal dari wilayah sekitar dan tidak ada berita yang menyebutkan kondisi Kabupaten Bengkulu Tengah secara langsung. Di Kabupaten Rejang Lebong, terjadi kenaikan harga sejumlah bahan pokok sehingga pemerintah setempat menggelar pasar murah untuk menekan laju inflasi. Sementara itu, Bengkulu Utara menyalurkan bahan pangan seperti beras SPHP, Minyak Kita, bawang, telur, ayam, dan cabai merah di bawah harga pasar melalui Gerakan Pangan Murah, serta Bengkulu Selatan turut menggelar pasar murah meski rincian harga dan komoditasnya belum jelas. TPID perlu mewaspadai dan memantau potensi perembetan kenaikan harga bahan pokok dari daerah tetangga ke pasar Bengkulu Tengah.",
-   "poin": [
-    "Tidak ada laporan berita mengenai perkembangan harga maupun pasokan di Kabupaten Bengkulu Tengah.",
-    "Pemkab Rejang Lebong menggelar pasar murah di Curup Tengah untuk menekan inflasi akibat kenaikan harga sejumlah bahan pokok.",
-    "Dinas Ketahanan Pangan Bengkulu Utara mengadakan Gerakan Pangan Murah menjual beras SPHP, Minyak Kita, bawang, telur, daging ayam ras, dan cabai merah keriting di bawah harga pasar.",
-    "DKP Bengkulu Selatan menggelar pasar murah Hari Pangan, namun rincian komoditas dan harganya belum jelas."
-   ],
-   "perlu_dipantau": [
-    "Dampak kenaikan harga bahan pokok di Rejang Lebong terhadap stabilitas harga di Bengkulu Tengah.",
-    "Ketersediaan pasokan dan harga komoditas pangan pokok seperti beras SPHP, Minyak Kita, cabai merah, bawang, telur, dan daging ayam ras."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
+  {
+   "id": "1bd3ef13447b",
+   "url": "https://www.pedomanbengkulu.com/2026/11/harga-pangan-hari-ini-cabai-hingga-ayam.html",
+   "judul": "Harga Pangan Hari Ini, Cabai hingga Ayam Kompak Turun - Pedoman Bengkulu",
+   "sumber": "pedomanbengkulu.com",
+   "tanggal": "2026-11-23",
+   "diakses": "2026-11-25T07:04:39+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 8,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Cabai Merah",
+    "Beras",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Daging Sapi",
+    "Bawang Merah",
+    "Bawang Putih",
+    "Cabai Rawit",
+    "Gula Pasir"
+   ],
+   "tag": [
+    "harga_naik",
+    "harga_turun"
+   ],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 1824,
+   "sidik_sha256": "3228f8d697df52263cdc47d37694d2d29f7c046d9469310931b66299d826b677",
+   "kutipan": "PedomanBengkulu.com, Jakarta -Harga komoditas pangan nasional seperti cabai merah, cabai rawit, beras, hingga telur ayam tercatat mengalami penurunan hari ini Senin (20/11/2026). Harga cabai merah besar mencatatkan penur",
+   "ringkasan": "Harga sejumlah komoditas pangan nasional seperti cabai, daging sapi, dan daging ayam mengalami penurunan secara nasional.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "turun",
+   "tindak_lanjut": false,
+   "harga": [
+    {
+     "komoditas": "Cabai Rawit",
+     "kode_komoditas": "CRW",
+     "kode_varian": "CRW02",
+     "nilai": 91100,
+     "satuan": "kg",
+     "peran_wilayah": "nasional",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Berdasarkan data Pusat Informasi Harga Pangan Strategis (PIHPS) Bank Indonesia per pukul 09.00 WIB, cabai rawit merah turun 6.95% atau Rp6.800 di harga Rp91.100/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Data PIHPS Bank Indonesia",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR02",
+     "nilai": 100350,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Kemudian, cabai merah keriting turun di harga Rp100.350/kg, naik 2.65% atau Rp2.200.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah keriting PIHPS",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Cabai Merah",
+     "kode_komoditas": "CMR",
+     "kode_varian": "CMR01",
+     "nilai": 66200,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Sedangkan, cabai merah besar turun 1.12% di harga Rp66.200/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga cabai merah besar PIHPS",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 15000,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Beras kualitas bawah 1 di Rp15.000/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga beras kualitas bawah",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 14800,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sementara itu beras kualitas medium 2 di harga Rp14.800/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga beras kualitas medium",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Beras",
+     "kode_komoditas": "BRS",
+     "kode_varian": null,
+     "nilai": 17500,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Sementara itu, beras kualitas super 2 di harga Rp17.500/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga beras kualitas super",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Daging Sapi",
+     "kode_komoditas": "DSP",
+     "kode_varian": null,
+     "nilai": 152850,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Daging sapi kualitas 1 turun 0.23% yaitu di harga Rp152.850/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga daging sapi kualitas",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Daging Sapi",
+     "kode_komoditas": "DSP",
+     "kode_varian": null,
+     "nilai": 143800,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Daging sapi kualitas 2 turun 0.83% di harga Rp143.800/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga daging sapi kualitas",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Daging Ayam",
+     "kode_komoditas": "DAY",
+     "kode_varian": "DAY01",
+     "nilai": 48550,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Adapun, daging ayam ras segar turun 1.03% di harga Rp48.550/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga daging ayam ras segar",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": "GLP02",
+     "nilai": 20800,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "",
+     "bukti": "Selanjutnya, harga gula pasir premium di harga tetap Rp20.800/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga gula pasir premium",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Gula Pasir",
+     "kode_komoditas": "GLP",
+     "kode_varian": "GLP01",
+     "nilai": 19600,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Sedangkan, gula pasir lokal di harga Rp19.600/kg atau turun 0.51%.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga gula pasir lokal",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    },
+    {
+     "komoditas": "Bawang Putih",
+     "kode_komoditas": "BWP",
+     "kode_varian": null,
+     "nilai": 37900,
+     "satuan": "kg",
+     "peran_wilayah": "tidak jelas",
+     "pasar": null,
+     "arah": "turun",
+     "bukti": "Sementara itu harga bawang putih ukuran sedang turun 1.81% di harga Rp37.900/kg.",
+     "status": "kandidat",
+     "cek_ai": {
+      "jenis": "rata_rata",
+      "lingkup": "provinsi bengkulu",
+      "komoditas_cocok": true,
+      "alasan": "Harga bawang putih ukuran sedang",
+      "penyedia": "openrouter",
+      "tanggal": "2026-11-25"
+     }
+    }
+   ],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "26e548c19c8d",
    "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQODY0WTFqYWZpa0ZpNWR4eExoV1FMcXZDX3ZMTXRoV3g1bGlHenV1azQ5VmY5T0xoX3VoRDRlQTFlNUtxVGtqblZhT1Zxemd4QlNTMnY4eVdoN1l0OUw0dUc3Mm9MMlBMZWt0aWtDaWpmNFhFM2VNaXYtdnZaVjV3X1g0Y29LWVNWNnR0MFRJc3ItX0Zra296NHBHak9ET2lrbFhadm1n?oc=5",
@@ -418,7 +702,7 @@
    "dampak_harga": "tidak jelas",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true
+   "baru": false
   },
   {
    "id": "511065a73205",
@@ -7490,15 +7774,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 238,
-  "setelah_duplikat": 201,
+  "hasil_pencarian": 231,
+  "setelah_duplikat": 195,
   "berita_baru": 1,
-  "total_arsip": 102,
-  "kandidat_harga_baru": 0,
-  "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 1,
-  "penyedia_ai": "",
-  "model_ai": ""
+  "total_arsip": 103,
+  "kandidat_harga_baru": 12,
+  "harga_dinilai_ai": 12,
+  "isi_tidak_terbaca": 0,
+  "penyedia_ai": "gemini",
+  "model_ai": "gemini-3.5-flash-lite"
  },
  "galat": []
 }
