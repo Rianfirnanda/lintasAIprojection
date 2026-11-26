@@ -1,6 +1,21 @@
 {
- "diperbarui": "2026-11-25T07:04:39+07:00",
+ "diperbarui": "2026-11-26T07:10:09+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-26",
+   "metode": "ai",
+   "penyedia": "gemini",
+   "ringkas": "Informasi perkembangan harga yang tersedia sangat terbatas dan hanya mencakup tingkat Provinsi Bengkulu tanpa menyebutkan kondisi spesifik di Kabupaten Bengkulu Tengah. Harga komoditas minyak goreng di tingkat provinsi dilaporkan stabil per 4 November 2026. Tercatat harga minyak goreng curah sebesar Rp20.000 per kg, serta kemasan bermerk 1 dan 2 masing-masing Rp24.000 dan Rp23.500 per kg. TPID perlu memantau apakah stabilitas harga minyak goreng di tingkat provinsi ini juga terjadi di pasar-pasar wilayah Bengkulu Tengah.",
+   "poin": [
+    "Berita tidak menyebutkan kondisi harga maupun pasokan di Kabupaten Bengkulu Tengah secara khusus.",
+    "Harga minyak goreng di tingkat Provinsi Bengkulu terpantau stabil.",
+    "Minyak goreng curah tercatat Rp20.000 per kg, kemasan bermerk 1 Rp24.000 per kg, dan kemasan bermerk 2 Rp23.500 per kg."
+   ],
+   "perlu_dipantau": [
+    "Kesesuaian harga minyak goreng curah dan kemasan di pasar lokal Kabupaten Bengkulu Tengah dengan tingkat provinsi."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-25",
    "metode": "ai",
@@ -369,22 +384,43 @@
     "Pemkot Bengkulu anggarkan Rp200 juta untuk pasar murah di 67 titik - ANTARA News Bengkulu (bengkulu.antaranews.com)"
    ],
    "perlu_dipantau": []
-  },
-  {
-   "tanggal": "2026-10-26",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Sementara itu, tidak ada informasi spesifik mengenai harga dan pasokan yang secara khusus menyebutkan wilayah Kabupaten Bengkulu Tengah.",
-   "poin": [
-    "Bulog Bengkulu menargetkan penyaluran 5.000 ton beras SPHP hingga akhir 2026 untuk menjaga stabilitas harga."
-   ],
-   "perlu_dipantau": [
-    "Perkembangan harga dan ketersediaan beras serta bahan pokok secara langsung di pasar-pasar dalam wilayah Kabupaten Bengkulu Tengah."
-   ],
-   "kalimat_dibuang": 2
   }
  ],
  "berita": [
+  {
+   "id": "fc0dee1ba262",
+   "url": "https://hargapasaran.id/bengkulu/minyak-goreng",
+   "judul": "Harga Minyak Goreng di Bengkulu Hari Ini | Hargapasaran.id",
+   "sumber": "hargapasaran.id",
+   "tanggal": "2026-11-25",
+   "diakses": "2026-11-26T07:10:09+07:00",
+   "via": [
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 5,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Minyak Goreng"
+   ],
+   "tag": [],
+   "isi_terbaca": true,
+   "catatan_baca": "",
+   "panjang_teks": 413,
+   "sidik_sha256": "0bac0d08679e391042fdb661ae55081b6f892cd8f272e10a2fda15760ddbb796",
+   "kutipan": "Logo Hargapasaran # HargaPasaran.id Akses daftar harga pasaran barang dan komoditas dengan cepat dan ringan per 4 November 2026 ## Provinsi Bengkulu | Nama Bahan Pokok | Harga (per kg) | Perubahan | --- | Minyak Goreng |",
+   "ringkasan": "Harga minyak goreng di Provinsi Bengkulu terpantau tetap per 4 November 2026. Minyak goreng curah tercatat Rp20.000 per kg, sedangkan minyak goreng kemasan bermerk 1 seharga Rp24.000 per kg dan bermerk 2 seharga Rp23.500 per kg.",
+   "metode_ringkas": "ai",
+   "dampak_harga": "stabil",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true,
+   "penyedia_ai": "gemini"
+  },
   {
    "id": "1bd3ef13447b",
    "url": "https://www.pedomanbengkulu.com/2026/11/harga-pangan-hari-ini-cabai-hingga-ayam.html",
@@ -668,7 +704,7 @@
      }
     }
    ],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -7774,15 +7810,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 231,
-  "setelah_duplikat": 195,
+  "hasil_pencarian": 204,
+  "setelah_duplikat": 176,
   "berita_baru": 1,
-  "total_arsip": 103,
-  "kandidat_harga_baru": 12,
-  "harga_dinilai_ai": 12,
+  "total_arsip": 104,
+  "kandidat_harga_baru": 0,
+  "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 0,
   "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.5-flash-lite"
+  "model_ai": "gemini-3.8-flash"
  },
  "galat": []
 }
