@@ -1,5 +1,5 @@
 {
- "waktu": "2026-11-25T18:54:20+00:00",
+ "waktu": "2026-11-26T18:43:06+00:00",
  "sumber": "BPS Web API (webapi.bps.go.id)",
  "kunci": "ada",
  "seri": {
@@ -10,7 +10,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-25T18:54:20+00:00",
+   "diambil": "2026-11-26T18:43:06+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -1093,7 +1093,7 @@
    "judul": "Inflasi tahun kalender (y-to-d) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-to-Date (y-to-d) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-23T20:38:16+00:00",
+   "diambil": "2026-11-26T18:43:06+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -2061,7 +2061,7 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kelompok pengeluaran",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kelompok Komoditas di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-23T20:38:16+00:00",
+   "diambil": "2026-11-26T18:43:06+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3139,7 +3139,7 @@
    "judul": "Inflasi bulanan (m-to-m) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Laju Inflasi Bulanan (m-to-m) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-25T18:54:20+00:00",
+   "diambil": "2026-11-26T18:43:06+00:00",
    "terbaru": "2026-05",
    "label_lain": [],
    "data": [
@@ -3482,7 +3482,7 @@
    "judul": "Inflasi tahunan (y-on-y) menurut kabupaten/kota IHK",
    "judul_bps": "[2022=100] Inflasi Year-on-Year (y-on-y) Menurut Kabupaten/Kota di Provinsi Bengkulu",
    "satuan": "Persen",
-   "diambil": "2026-11-25T18:54:20+00:00",
+   "diambil": "2026-11-26T18:43:06+00:00",
    "terbaru": "2026-10",
    "label_lain": [],
    "data": [
@@ -4005,7 +4005,7 @@
    "judul": "Indeks harga yang diterima petani (It)",
    "judul_bps": "Indeks Harga yang Diterima oleh Petani (lt)",
    "satuan": null,
-   "diambil": "2026-11-23T20:38:16+00:00",
+   "diambil": "2026-11-26T18:43:06+00:00",
    "terbaru": "2026-10",
    "label_lain": [],
    "data": [
@@ -4188,10 +4188,70 @@
    "judul": "Indeks harga yang dibayar petani (Ib)",
    "judul_bps": "Indeks Harga yang Dibayar oleh Petani (Ib)",
    "satuan": null,
-   "diambil": "2026-11-24T19:46:17+00:00",
+   "diambil": "2026-11-26T18:43:06+00:00",
    "terbaru": "2026-10",
    "label_lain": [],
    "data": [
+    {
+     "periode": "2024-01",
+     "kategori": "Umum",
+     "nilai": 121.89
+    },
+    {
+     "periode": "2024-02",
+     "kategori": "Umum",
+     "nilai": 123.24
+    },
+    {
+     "periode": "2024-03",
+     "kategori": "Umum",
+     "nilai": 124.37
+    },
+    {
+     "periode": "2024-04",
+     "kategori": "Umum",
+     "nilai": 124.79
+    },
+    {
+     "periode": "2024-05",
+     "kategori": "Umum",
+     "nilai": 124.72
+    },
+    {
+     "periode": "2024-06",
+     "kategori": "Umum",
+     "nilai": 125.92
+    },
+    {
+     "periode": "2024-07",
+     "kategori": "Umum",
+     "nilai": 125.54
+    },
+    {
+     "periode": "2024-08",
+     "kategori": "Umum",
+     "nilai": 124.92
+    },
+    {
+     "periode": "2024-09",
+     "kategori": "Umum",
+     "nilai": 124.57
+    },
+    {
+     "periode": "2024-10",
+     "kategori": "Umum",
+     "nilai": 124.29
+    },
+    {
+     "periode": "2024-11",
+     "kategori": "Umum",
+     "nilai": 124.53
+    },
+    {
+     "periode": "2024-12",
+     "kategori": "Umum",
+     "nilai": 125.35
+    },
     {
      "periode": "2025-01",
      "kategori": "Umum",
@@ -4305,13 +4365,7 @@
    ]
   }
  },
- "galat": [
-  "Inflasi tahun kalender (y-to-d) menurut kelompok pengeluaran (var 556): URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1018)>",
-  "Inflasi tahunan (y-on-y) menurut kelompok pengeluaran (var 557): URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1018)>",
-  "Indeks harga yang diterima petani (It) (var 421): URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1018)>",
-  "Indeks harga yang dibayar petani (Ib) (var 422): URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1018)>",
-  "Berita Resmi Statistik inflasi: URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1018)>"
- ],
+ "galat": [],
  "rilis": [
   {
    "periode": "2026-10",
@@ -4413,5 +4467,5 @@
    "url": "https://bengkulu.bps.go.id/id/pressrelease/2026/06/02/170964/nilai-tukar-petani--ntp--provinsi-bengkulu-mei-2026-sebesar-201-95-atau-turun-0-02-persen.html"
   }
  ],
- "pesan": "3 dari 7 deret BPS berhasil diambil, data terbaru 2026-10."
+ "pesan": "7 dari 7 deret BPS berhasil diambil, data terbaru 2026-10."
 }
