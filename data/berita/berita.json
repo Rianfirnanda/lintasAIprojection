@@ -1,6 +1,14 @@
 {
- "diperbarui": "2026-11-26T07:10:09+07:00",
+ "diperbarui": "2026-11-27T07:11:04+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-27",
+   "metode": "ekstraktif",
+   "penyedia": "",
+   "ringkas": "Tidak ada berita baru yang relevan hari ini.",
+   "poin": [],
+   "perlu_dipantau": []
+  },
   {
    "tanggal": "2026-11-26",
    "metode": "ai",
@@ -374,16 +382,6 @@
     "Ketersediaan dan fluktuasi harga komoditas utama seperti cabai dan beras."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-27",
-   "metode": "ekstraktif",
-   "penyedia": "",
-   "ringkas": "1 berita baru dan 37 berita dalam 14 hari terakhir yang relevan dengan harga pangan Bengkulu. 1 di antaranya menyebut Bengkulu Tengah. 1 berita menyebut harga naik (Beras, Daging Ayam). 1 berita menyebut harga turun (Beras, Daging Ayam). 1 berita menyebut intervensi pemerintah (Beras, Daging Ayam).",
-   "poin": [
-    "Pemkot Bengkulu anggarkan Rp200 juta untuk pasar murah di 67 titik - ANTARA News Bengkulu (bengkulu.antaranews.com)"
-   ],
-   "perlu_dipantau": []
   }
  ],
  "berita": [
@@ -418,7 +416,7 @@
    "dampak_harga": "stabil",
    "tindak_lanjut": false,
    "harga": [],
-   "baru": true,
+   "baru": false,
    "penyedia_ai": "gemini"
   },
   {
@@ -7810,15 +7808,15 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 204,
-  "setelah_duplikat": 176,
-  "berita_baru": 1,
+  "hasil_pencarian": 209,
+  "setelah_duplikat": 182,
+  "berita_baru": 0,
   "total_arsip": 104,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
   "isi_tidak_terbaca": 0,
-  "penyedia_ai": "gemini",
-  "model_ai": "gemini-3.8-flash"
+  "penyedia_ai": "",
+  "model_ai": ""
  },
  "galat": []
 }
