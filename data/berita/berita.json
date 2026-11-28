@@ -1,6 +1,23 @@
 {
- "diperbarui": "2026-11-27T07:11:04+07:00",
+ "diperbarui": "2026-11-28T07:13:27+07:00",
  "kesimpulan": [
+  {
+   "tanggal": "2026-11-28",
+   "metode": "ai",
+   "penyedia": "openrouter",
+   "ringkas": "Ringkasan berita hari ini tidak memuat informasi yang secara khusus menyebut Bengkulu Tengah. Di Bengkulu Selatan disebutkan harga cabai Rp 80 ribu per kilogram dan daging sapi Rp 140 ribu per kilogram, tetapi dampak harga tidak dijelaskan dan isi berita belum terbaca otomatis. Di Kota Bengkulu disebutkan tren harga tanah naik sepanjang 2026, namun ini bukan wilayah Bengkulu Tengah dan rinciannya belum terbaca. Karena bahan terbatas dan tidak jelas, kesimpulan untuk Bengkulu Tengah belum dapat ditarik; perlu verifikasi ke tautan berita.",
+   "poin": [
+    "Tidak ada berita yang secara khusus menyebut Bengkulu Tengah.",
+    "Berita Bengkulu Selatan menyebut harga cabai dan daging sapi, tetapi dampak harga tidak jelas dan isi berita belum terbaca.",
+    "Berita Kota Bengkulu menyebut tren harga tanah naik, tetapi bukan wilayah Bengkulu Tengah dan rinciannya belum terbaca."
+   ],
+   "perlu_dipantau": [
+    "Verifikasi isi tautan berita Bengkulu Selatan dan Kota Bengkulu.",
+    "Pantau informasi harga dan pasokan yang khusus menyebut Bengkulu Tengah.",
+    "Klarifikasi relevansi berita wilayah lain bagi TPID Bengkulu Tengah."
+   ],
+   "kalimat_dibuang": 0
+  },
   {
    "tanggal": "2026-11-27",
    "metode": "ekstraktif",
@@ -366,25 +383,82 @@
     "Kondisi dan ketersediaan pasokan cabai rawit di pasar lokal."
    ],
    "kalimat_dibuang": 0
-  },
-  {
-   "tanggal": "2026-10-28",
-   "metode": "ai",
-   "penyedia": "gemini",
-   "ringkas": "Berdasarkan ringkasan berita yang tersedia, tidak ada informasi spesifik mengenai perkembangan harga dan pasokan pangan di Kabupaten Bengkulu Tengah. Berita yang ada hanya mencakup informasi umum bahwa mayoritas harga pangan turun sementara cabai dan beras masih tinggi, serta harga cabai rawit stabil di pasar modern, namun wilayah spesifiknya tidak disebutkan.",
-   "poin": [
-    "Mayoritas harga pangan dilaporkan turun, tetapi harga cabai dan beras masih tinggi.",
-    "Harga cabai rawit di pasar modern tercatat stabil di angka Rp91,2 ribu per kg tanpa menyebutkan lokasi spesifik.",
-    "Terdapat halaman repositori institusi UIN FAS Bengkulu untuk tahun 2026 yang tidak memuat data harga."
-   ],
-   "perlu_dipantau": [
-    "Perkembangan harga pangan khusus di wilayah Kabupaten Bengkulu Tengah karena data saat ini belum spesifik.",
-    "Ketersediaan dan fluktuasi harga komoditas utama seperti cabai dan beras."
-   ],
-   "kalimat_dibuang": 0
   }
  ],
  "berita": [
+  {
+   "id": "df70e4bea402",
+   "url": "https://bengkulu.tribunnews.com/bengkulu-selatan/109118/harga-pangan-di-bengkulu-selatan-terbaru-cabai-rp-80-ribu-per-kilogram-daging-sapi-rp-140-ribu",
+   "judul": "Harga Pangan di Bengkulu Selatan Terbaru, Cabai Rp 80 Ribu per Kilogram, Daging Sapi Rp 140 Ribu",
+   "sumber": "bengkulu.tribunnews.com",
+   "tanggal": "2026-11-27",
+   "diakses": "2026-11-28T07:13:27+07:00",
+   "via": [
+    "google_berita",
+    "tavily"
+   ],
+   "relevansi": "sedang",
+   "skor": 10,
+   "wilayah": {
+    "target": false,
+    "pembanding": [],
+    "provinsi": true
+   },
+   "komoditas": [
+    "Daging Sapi",
+    "Cabai Merah",
+    "Daging Ayam",
+    "Telur Ayam",
+    "Cabai Rawit"
+   ],
+   "tag": [],
+   "isi_terbaca": false,
+   "catatan_baca": "isi artikel tidak terbaca (halaman kosong, berbayar, atau memakai JavaScript)",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "Harga cabai merah keriting dan cabai rawit merah mencapai Rp80.000 per kilogram. · Harga daging sapi Rp140.000, ayam ras Rp38.000, dan telur Rp27.733 per",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "tidak jelas",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
+  {
+   "id": "333ba3881b5f",
+   "url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQNFFjcWJ4OFgtdjl0RkN3bjBHaDRILWNvTHVUbnVXVWNiSVJsb0JESXpyNktTX2pUeUtBTnIzaV9oRExfV1dfeEdEblE5eHB2Vi02NVlVWVNGMXVoNXlkVHVaVURtTmNPSGZ3Nl9xTHBySWpwOGJfd24tN1kza25NSjZZcHNpMGdMWWZEY2M4S2dtNzlZMDBNQmNMMlBNcndHOXMxVDJ2azFPT1JuTEphbERvSnRMZEpMbXpiTWYxTFhqWEFpSVFkc0x3M2VaTVVxZUU0NVVURXNLd19EOW9QajQzbUtrU29Yai1pYtIB2AFBVV95cUxQRkl0TndrM19uV0RhV2RkLTJ2OUUzV0NEOHBMbkVtZnpZbjBoRVlZVzJsVEtiNEFJLThYejN5M1NBTWxjWk9DNDl2WHE3SEhGVWJreVlEQ2VHU0FHZkRqRXlMb1VRRk9xOElkbDFuNlBnQjR6NnVzVFNDSTZ4QTBBUk4wQW5KUlFBR3dHeGtZaGNlMGxocWhTZ3FqQ0FTaWZSTFFCTGpfVlJodThiUm84X1IySkxlRU5TNDQwcFBiYU5vRkhoMDZnSTNrTkVnOC0yRi0wcWVhaXA?oc=5",
+   "judul": "Tren Harga Tanah di Kota Bengkulu Naik Sepanjang 2026, Kawasan Strategis Tembus Rp6 Juta Per Meter - radarkepahiang.disway.id",
+   "sumber": "Radar Kepahiang",
+   "tanggal": "2026-11-27",
+   "diakses": "2026-11-28T07:13:27+07:00",
+   "via": [
+    "google_berita"
+   ],
+   "relevansi": "rendah",
+   "skor": 4,
+   "wilayah": {
+    "target": false,
+    "pembanding": [
+     "kota bengkulu"
+    ],
+    "provinsi": true
+   },
+   "komoditas": [],
+   "tag": [
+    "harga_naik"
+   ],
+   "isi_terbaca": false,
+   "catatan_baca": "robots.txt melarang",
+   "panjang_teks": 0,
+   "sidik_sha256": "",
+   "kutipan": "",
+   "ringkasan": "Isi berita tidak bisa dibaca otomatis. Buka tautan untuk membaca beritanya.",
+   "metode_ringkas": "judul",
+   "dampak_harga": "naik",
+   "tindak_lanjut": false,
+   "harga": [],
+   "baru": true
+  },
   {
    "id": "fc0dee1ba262",
    "url": "https://hargapasaran.id/bengkulu/minyak-goreng",
@@ -7808,13 +7882,13 @@
   }
  ],
  "statistik": {
-  "hasil_pencarian": 209,
-  "setelah_duplikat": 182,
-  "berita_baru": 0,
-  "total_arsip": 104,
+  "hasil_pencarian": 286,
+  "setelah_duplikat": 235,
+  "berita_baru": 2,
+  "total_arsip": 106,
   "kandidat_harga_baru": 0,
   "harga_dinilai_ai": 0,
-  "isi_tidak_terbaca": 0,
+  "isi_tidak_terbaca": 2,
   "penyedia_ai": "",
   "model_ai": ""
  },
